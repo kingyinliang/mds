@@ -85,7 +85,7 @@
                                         </el-table-column>
                                         <el-table-column min-width="180" label="品项">
                                             <template slot-scope="scope">
-                                                {{ scope.row.materialCode + ' ' + scope.row.materialName }}
+                                                {{ scope.row.materialName+ ' ' + scope.row.materialCode }}
                                             </template>
                                         </el-table-column>
                                         <el-table-column width="70" label="数量" show-overflow-tooltip>
@@ -207,7 +207,7 @@
                         </el-table-column>
                         <el-table-column label="品项" width="180">
                             <template slot-scope="scope">
-                                {{ scope.row.materialCode + ' ' + scope.row.materialName }}
+                                {{ scope.row.materialName + ' ' + scope.row.materialCode }}
                             </template>
                         </el-table-column>
                         <el-table-column label="订单日期" width="100">

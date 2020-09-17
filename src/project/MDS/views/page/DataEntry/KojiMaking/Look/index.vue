@@ -357,7 +357,7 @@
                     { type: 'p', icon: 'factory-shengchanchejian', label: '生产车间', value: 'workShopName' },
                     { type: 'p', icon: 'factory--ICONxiugai_chepaihaoma', label: '制曲房号', value: 'houseNoName' },
                     { type: 'p', icon: 'factory-bianhao', label: '订单编号', value: 'orderNo' },
-                    { type: 'tooltip', icon: 'factory-pinleiguanli', label: '生产品项', value: ['materialCode', 'materialName'] },
+                    { type: 'tooltip', icon: 'factory-pinleiguanli', label: '生产品项', value: ['materialName', 'materialCode'] },
                     { type: 'p', icon: 'factory-dingdan', label: '生产日期', value: 'productDate' },
                     { type: 'p', icon: 'factory-xianchangrenyuan', label: '提交人员', value: 'changer' },
                     { type: 'tooltip', icon: 'factory-riqi', label: '提交时间', value: 'changed' },

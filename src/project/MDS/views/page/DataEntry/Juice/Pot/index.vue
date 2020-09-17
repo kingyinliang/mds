@@ -176,7 +176,7 @@
                         {{ formTransfer.holderName }}
                     </el-form-item>
                     <el-form-item label="物料：">
-                        {{ formTransfer.materialCode }} {{ formTransfer.materialName }}
+                        {{ formTransfer.materialName }} {{ formTransfer.materialCode }}
                     </el-form-item>
                     <el-form-item label="类别：">
                         {{ formTransfer.type }}
@@ -207,7 +207,7 @@
                         </el-select>
                     </el-form-item>
                     <el-form-item label="物料：">
-                        {{ formTransfer.materialCode }} {{ formTransfer.materialName }}
+                        {{ formTransfer.materialName }} {{ formTransfer.materialCode }}
                     </el-form-item>
                     <el-form-item label="类别：">
                         {{ formTransfer.type }}
@@ -240,7 +240,7 @@
                         {{ formAdd.holderName }}
                     </el-form-item>
                     <el-form-item label="物料：">
-                        {{ formAdd.materialCode }} {{ formAdd.materialName }}
+                        {{ formAdd.materialName }} {{ formAdd.materialCode }}
                     </el-form-item>
                     <el-form-item label="类别：">
                         {{ formAdd.type }}
@@ -265,7 +265,7 @@
                         </el-select>
                     </el-form-item>
                     <el-form-item label="物料：">
-                        {{ formAdd.materialCode }} {{ formAdd.materialName }}
+                        {{ formAdd.materialName }} {{ formAdd.materialCode }}
                     </el-form-item>
                 </el-form>
             </div>
@@ -280,7 +280,7 @@
             </div>
             <el-form ref="judge" :model="judge" size="small" label-width="130px" :rules="judgerules">
                 <el-form-item label="物料：">
-                    {{ judge.materialCode }}{{ judge.materialName }}
+                    {{ judge.materialName }}{{ judge.materialCode }}
                 </el-form-item>
                 <el-form-item label="发酵天数：">
                     {{ judge.ferDays }} 天

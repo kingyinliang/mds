@@ -87,7 +87,7 @@
                         </el-table-column>
                         <el-table-column label="物料" :show-overflow-tooltip="true" width="120">
                             <template slot-scope="scope">
-                                {{ scope.row.materialCode + ' ' + scope.row.materialName }}
+                                {{ scope.row.materialName + ' ' + scope.row.materialCode }}
                             </template>
                         </el-table-column>
                         <el-table-column label="原汁批次" width="120">

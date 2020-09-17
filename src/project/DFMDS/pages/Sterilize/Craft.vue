@@ -151,6 +151,8 @@
                 steControlInsertDto: craftRequest.steControlInsertDto,
                 steControlUpdateDto: craftRequest.steControlUpdateDto,
                 steItemRemoveDto: craftRequest.ids,
+                insertItem: craftRequest.insertItem,
+                updateItem: craftRequest.updateItem,
                 steExceptionInsertDtos: excRequest.InsertDto,
                 steExceptionUpdateDtos: excRequest.UpdateDto,
                 steExceptionRemoveDto: excRequest.ids,

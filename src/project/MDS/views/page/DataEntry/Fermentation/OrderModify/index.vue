@@ -26,7 +26,7 @@
                         <el-form-item label="生产物料：">
                             <el-select v-model="form.materialCode" class="selectwpx" filterable style="width: 140px;">
                                 <el-option label="请选择" value="" />
-                                <el-option v-for="sole in materialList" :key="sole.materialCode" :label="sole.materialCode + ' ' + sole.materialName" :value="sole.materialCode" />
+                                <el-option v-for="sole in materialList" :key="sole.materialCode" :label="sole.materialName + ' ' + sole.materialCode" :value="sole.materialCode" />
                             </el-select>
                         </el-form-item>
                         <el-form-item label="订单日期：">
