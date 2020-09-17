@@ -231,8 +231,10 @@
                 this.pageSize = data.data.size;
                 this.totalCount = data.data.total;
             } else {
+                this.queryResultList = [];
                 this.$infoToast('暂无任何内容');
             }
+            this.splitTable = [];
         }
 
         getHolder(params) {
