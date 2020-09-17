@@ -1,44 +1,40 @@
 <template>
-    <div>
-        <mds-card title="时间(单位:min)" :pack-up="false">
-            <el-form :inline="true" :model="craftInfo" label-width="115px">
-                <el-form-item>
-                    <template slot="label">
-                        <span class="notNull">* </span>入料开始时间：
-                    </template>
-                    <el-date-picker v-model="craftInfo.feedStartDate" type="datetime" value-format="yyyy-MM-dd HH:mm" format="yyyy-MM-dd HH:mm" placeholder="选择" :disabled="!isRedact" size="small" style="width: 175px;" />
-                </el-form-item>
-                <el-form-item>
-                    <template slot="label">
-                        <span class="notNull">* </span>入料结束时间：
-                    </template>
-                    <el-date-picker v-model="craftInfo.feeEndDate" type="datetime" value-format="yyyy-MM-dd HH:mm" format="yyyy-MM-dd HH:mm" placeholder="选择" :disabled="!isRedact" size="small" style="width: 175px;" />
-                </el-form-item>
-                <el-form-item>
-                    <template slot="label">
-                        <span class="notNull">* </span>升温开始时间：
-                    </template>
-                    <el-date-picker v-model="craftInfo.riseStartDate" type="datetime" value-format="yyyy-MM-dd HH:mm" format="yyyy-MM-dd HH:mm" placeholder="选择" :disabled="!isRedact" size="small" style="width: 175px;" />
-                </el-form-item>
-                <el-form-item>
-                    <template slot="label">
-                        <span class="notNull">* </span>升温结束时间：
-                    </template>
-                    <el-date-picker v-model="craftInfo.riseEndDate" type="datetime" value-format="yyyy-MM-dd HH:mm" format="yyyy-MM-dd HH:mm" placeholder="选择" :disabled="!isRedact" size="small" style="width: 175px;" />
-                </el-form-item>
-            </el-form>
-        </mds-card>
-        <mds-card title="杀菌时间及温度" name="table1" icon-bg="#ffbf00">
-            <template slot="titleBtn">
-                <el-button type="primary" size="small" :disabled="!isRedact" style="float: right;" @click="addDataRow()">
-                    新增
-                </el-button>
-            </template>
-            <el-table header-row-class-name="tableHead" class="newTable" :data="craftTable" :row-class-name="RowDelFlag" border tooltip-effect="dark">
+    <div class="koji-process-control">
+        <mds-card title="筛豆记录" name="table1" icon-bg="#487BFF">
+            <div>
+                <el-form :inline="true" :model="craftInfo" label-width="115px">
+                    <el-form-item>
+                        <template slot="label">
+                            <span class="notNull">* </span>筛豆开始时间：
+                        </template>
+                        <el-date-picker v-model="craftInfo.feedStartDate" type="datetime" value-format="yyyy-MM-dd HH:mm" format="yyyy-MM-dd HH:mm" placeholder="选择" :disabled="!isRedact" size="small" style="width: 175px;" />
+                    </el-form-item>
+                    <el-form-item>
+                        <template slot="label">
+                            <span class="notNull">* </span>筛豆结束时间：
+                        </template>
+                        <el-date-picker v-model="craftInfo.feeEndDate" type="datetime" value-format="yyyy-MM-dd HH:mm" format="yyyy-MM-dd HH:mm" placeholder="选择" :disabled="!isRedact" size="small" style="width: 175px;" />
+                    </el-form-item>
+                    <el-form-item>
+                        <template slot="label">
+                            停机时长：
+                        </template>
+                        <el-input v-model="craftInfo.consumeAmount" placeholder="" :disabled="!isRedact" size="small" style="width: 175px;">
+                            <span slot="suffix" class="stock-form_item_input_suffix">min</span>
+                        </el-input>
+                    </el-form-item>
+                    <el-form-item class="floatr">
+                        <el-button type="primary" size="small" :disabled="!isRedact" @click="addDataRow()">
+                            新增
+                        </el-button>
+                    </el-form-item>
+                </el-form>
+            </div>
+            <el-table header-row-class-name="tableHead" class="newTable" :data="craftTable" :row-class-name="RowDelFlag" border tooltip-effect="dark" size="small">
                 <el-table-column type="index" label="序号" width="50px" fixed />
                 <el-table-column>
                     <template slot="header">
-                        <span class="notNull">* </span>类型
+                        <span class="notNull">* </span>大豆批次
                     </template>
                     <template slot-scope="scope">
                         <el-select v-model="scope.row.controlType" placeholder="请选择" :disabled="!isRedact" size="small" style="width: 100%;" @change="controlTypeChange($event, scope.row)">
@@ -46,9 +42,14 @@
                         </el-select>
                     </template>
                 </el-table-column>
+                <el-table-column label="大豆厂家" width="140">
+                    <template slot-scope="scope">
+                        {{ scope.row.changer }}
+                    </template>
+                </el-table-column>
                 <el-table-column>
                     <template slot="header" min-width="100">
-                        <span class="notNull">* </span>阶段
+                        <span class="notNull">* </span>设备
                     </template>
                     <template slot-scope="scope">
                         <el-select v-model="scope.row.controlStage" placeholder="请选择" :disabled="!isRedact" size="small" style="width: 100%;">
@@ -56,17 +57,34 @@
                         </el-select>
                     </template>
                 </el-table-column>
-                <el-table-column min-width="120">
-                    <template slot="header">
-                        <span class="notNull">* </span>记录时间
+                <el-table-column>
+                    <template slot="header" min-width="100">
+                        <span class="notNull">* </span>杂质类
                     </template>
                     <template slot-scope="scope">
-                        <el-date-picker v-model="scope.row.recordDate" type="datetime" value-format="yyyy-MM-dd HH:mm" format="yyyy-MM-dd HH:mm" placeholder="选择" :disabled="!isRedact" style="width: 180px;" size="small" />
+                        <el-select v-model="scope.row.controlStage" placeholder="请选择" :disabled="!isRedact" size="small" style="width: 100%;">
+                            <el-option v-for="(subItem, index) in scope.row.controlStageList" :key="index" :label="subItem.dictValue" :value="subItem.dictCode" />
+                        </el-select>
                     </template>
                 </el-table-column>
-                <el-table-column label="温度(℃)">
+                <el-table-column label="杂质数量">
                     <template slot-scope="scope">
                         <el-input v-model.trim="scope.row.temp" size="small" placeholder="请输入" :disabled="!isRedact" />
+                    </template>
+                </el-table-column>
+                <el-table-column label="单位" width="140">
+                    <template slot-scope="scope">
+                        {{ scope.row.changer }}
+                    </template>
+                </el-table-column>
+                <el-table-column label="筛豆操作人" width="140">
+                    <template slot-scope="scope">
+                        <div class="required" style="min-height: 32px; line-height: 32px;">
+                            <span v-if="isRedact && scope.row.userType !== 'EXTERNAL' && scope.row.userType !== 'TEMP'" style="cursor: pointer;" @click="selectUser(scope.row)">
+                                <em v-for="(item, index) in scope.row.userList" :key="index">{{ item }}，</em>
+                                <em>点击选择人员</em>
+                            </span>
+                        </div>
                     </template>
                 </el-table-column>
                 <el-table-column label="备注">
@@ -84,7 +102,7 @@
                         {{ scope.row.changed }}
                     </template>
                 </el-table-column>
-                <el-table-column width="70" fixed="right">
+                <el-table-column label="操作" width="70" fixed="right">
                     <template slot-scope="scope">
                         <el-button class="delBtn" type="text" icon="el-icon-delete" size="mini" :disabled="!isRedact" @click="removeRow(scope.row)">
                             删除
@@ -93,29 +111,148 @@
                 </el-table-column>
             </el-table>
             <el-form :inline="true" :model="craftInfo" style="margin-top: 5px;">
-                <el-form-item label="保温阶段-ZK：" style="margin-bottom: 5px;">
-                    <el-radio-group v-model="craftInfo.keepZkFlag" :disabled="!isRedact">
-                        <el-radio label="Y">
-                            是
-                        </el-radio>
-                        <el-radio label="N">
-                            否
-                        </el-radio>
-                    </el-radio-group>
-                </el-form-item>
-                <el-form-item label="降温阶段-ZK：" label-width="150px" style="margin-bottom: 5px;">
-                    <el-radio-group v-model="craftInfo.coolZkFlag" :disabled="!isRedact">
-                        <el-radio label="Y">
-                            是
-                        </el-radio>
-                        <el-radio label="N">
-                            否
-                        </el-radio>
-                    </el-radio-group>
+                <el-form-item label="杂质数量合计：" style="margin-bottom: 5px;">
+                    <span>{{ '222' }} KG</span>
                 </el-form-item>
             </el-form>
         </mds-card>
+        <mds-card title="洗豆记录" name="table2" icon-bg="#487BFF">
+            <div>
+                <el-form :inline="true" :model="craftInfo" label-width="115px">
+                    <el-form-item>
+                        <template slot="label">
+                            <span class="notNull">* </span>泡豆水洁净度：
+                        </template>
+                        <el-select v-model="craftInfo.moveType" class="stock-form_item_style" size="small" placeholder="请选择" clearable>
+                            <el-option v-for="(item, index) in []" :key="index" :label="item.label" :value="item.value" />
+                        </el-select>
+                    </el-form-item>
+                    <el-form-item>
+                        <template slot="label">
+                            <span class="notNull">* </span>洗豆操作人：
+                        </template>
+                        <span>点击选择人员</span>
+                    </el-form-item>
+                    <el-form-item>
+                        <template slot="label">
+                            <span class="notNull">* </span>洗豆开始时间：
+                        </template>
+                        <el-date-picker v-model="craftInfo.feeEndDate" type="datetime" value-format="yyyy-MM-dd HH:mm" format="yyyy-MM-dd HH:mm" placeholder="选择" :disabled="!isRedact" size="small" style="width: 175px;" />
+                    </el-form-item>
+                    <el-form-item>
+                        <template slot="label">
+                            <span class="notNull">* </span>洗豆结束时间：
+                        </template>
+                        <el-date-picker v-model="craftInfo.feeEndDate" type="datetime" value-format="yyyy-MM-dd HH:mm" format="yyyy-MM-dd HH:mm" placeholder="选择" :disabled="!isRedact" size="small" style="width: 175px;" />
+                    </el-form-item>
+                </el-form>
+            </div>
+        </mds-card>
+        <mds-card title="泡豆记录" name="table3" icon-bg="#487BFF">
+            <template slot="titleBtn">
+                <el-form :inline="true" :model="craftInfo" label-width="115px">
+                    <el-form-item class="floatr">
+                        <el-button type="primary" size="small" :disabled="!isRedact" @click="addDataRow()">
+                            新增
+                        </el-button>
+                    </el-form-item>
+                </el-form>
+            </template>
+            <el-table header-row-class-name="tableHead" class="newTable" :data="craftTable" :row-class-name="RowDelFlag" border tooltip-effect="dark" size="mini">
+                <el-table-column type="index" label="序号" width="50px" fixed />
+                <el-table-column label="泡豆罐号" width="140">
+                    <template slot-scope="scope">
+                        <div class="required" style="min-height: 32px; line-height: 32px;">
+                            <span v-if="isRedact && scope.row.userType !== 'EXTERNAL' && scope.row.userType !== 'TEMP'" style="cursor: pointer;" @click="selectUser(scope.row)">
+                                <em v-for="(item, index) in scope.row.userList" :key="index">{{ item }}，</em>
+                                <em>点击选择</em>
+                            </span>
+                        </div>
+                    </template>
+                </el-table-column>
+                <el-table-column min-width="120">
+                    <template slot="header">
+                        <span class="notNull">* </span>加水开始时间
+                    </template>
+                    <template slot-scope="scope">
+                        <el-date-picker v-model="scope.row.recordDate" type="datetime" value-format="yyyy-MM-dd HH:mm" format="yyyy-MM-dd HH:mm" placeholder="选择" :disabled="!isRedact" style="width: 180px;" size="small" />
+                    </template>
+                </el-table-column>
+                <el-table-column min-width="120">
+                    <template slot="header">
+                        <span class="notNull">* </span>加水结束时间
+                    </template>
+                    <template slot-scope="scope">
+                        <el-date-picker v-model="scope.row.recordDate" type="datetime" value-format="yyyy-MM-dd HH:mm" format="yyyy-MM-dd HH:mm" placeholder="选择" :disabled="!isRedact" style="width: 180px;" size="small" />
+                    </template>
+                </el-table-column>
+                <el-table-column label="加水操作人" width="140">
+                    <template slot-scope="scope">
+                        <div class="required" style="min-height: 32px; line-height: 32px;">
+                            <span v-if="isRedact && scope.row.userType !== 'EXTERNAL' && scope.row.userType !== 'TEMP'" style="cursor: pointer;" @click="selectUser(scope.row)">
+                                <em v-for="(item, index) in scope.row.userList" :key="index">{{ item }}，</em>
+                                <em>点击选择人员</em>
+                            </span>
+                        </div>
+                    </template>
+                </el-table-column>
+                <el-table-column min-width="120">
+                    <template slot="header">
+                        <span class="notNull">* </span>排水开始时间
+                    </template>
+                    <template slot-scope="scope">
+                        <el-date-picker v-model="scope.row.recordDate" type="datetime" value-format="yyyy-MM-dd HH:mm" format="yyyy-MM-dd HH:mm" placeholder="选择" :disabled="!isRedact" style="width: 180px;" size="small" />
+                    </template>
+                </el-table-column>
+                <el-table-column min-width="120">
+                    <template slot="header">
+                        <span class="notNull">* </span>排水结束时间
+                    </template>
+                    <template slot-scope="scope">
+                        <el-date-picker v-model="scope.row.recordDate" type="datetime" value-format="yyyy-MM-dd HH:mm" format="yyyy-MM-dd HH:mm" placeholder="选择" :disabled="!isRedact" style="width: 180px;" size="small" />
+                    </template>
+                </el-table-column>
+                <el-table-column label="排水操作人" width="140">
+                    <template slot-scope="scope">
+                        <div class="required" style="min-height: 32px; line-height: 32px;">
+                            <span v-if="isRedact && scope.row.userType !== 'EXTERNAL' && scope.row.userType !== 'TEMP'" style="cursor: pointer;" @click="selectUser(scope.row)">
+                                <em v-for="(item, index) in scope.row.userList" :key="index">{{ item }}，</em>
+                                <em>点击选择人员</em>
+                            </span>
+                        </div>
+                    </template>
+                </el-table-column>
+                <el-table-column label="泡豆时长">
+                    <template slot-scope="scope">
+                        <el-input v-model.trim="scope.row.remark" size="small" placeholder="请输入" :disabled="!isRedact" />
+                    </template>
+                </el-table-column>
+                <el-table-column label="备注">
+                    <template slot-scope="scope">
+                        <el-input v-model.trim="scope.row.remark" size="small" placeholder="请输入" :disabled="!isRedact" />
+                    </template>
+                </el-table-column>
+                <el-table-column label="操作人" width="140">
+                    <template slot-scope="scope">
+                        {{ scope.row.changer }}
+                    </template>
+                </el-table-column>
+                <el-table-column label="操作时间" width="160">
+                    <template slot-scope="scope">
+                        {{ scope.row.changed }}
+                    </template>
+                </el-table-column>
+                <el-table-column label="操作" width="70" fixed="right">
+                    <template slot-scope="scope">
+                        <el-button class="delBtn" type="text" icon="el-icon-delete" size="mini" :disabled="!isRedact" @click="removeRow(scope.row)">
+                            删除
+                        </el-button>
+                    </template>
+                </el-table-column>
+            </el-table>
+        </mds-card>
         <audit-log :table-data="craftAudit" :verify-man="'verifyMan'" :verify-date="'verifyDate'" :status="true" />
+        <official-worker ref="officialWorker" @changeUser="changeUser" />
     </div>
 </template>
 
@@ -124,7 +261,14 @@ import { Vue, Component, Prop } from 'vue-property-decorator';
 import { COMMON_API, STE_API } from 'common/api/api';
 import { dateFormat, getUserNameNumber } from 'utils/utils';
 
-@Component
+import OfficialWorker from 'components/OfficialWorker.vue';
+
+@Component({
+    name: '',
+    components: {
+        OfficialWorker
+    }
+})
 export default class Crafts extends Vue {
     @Prop({ default: false }) isRedact: boolean;
 
@@ -137,6 +281,7 @@ export default class Crafts extends Vue {
     };
 
     doAction = '';
+    row = {};
 
     init(formHeader) {
         this.getControlTypeList();
@@ -154,6 +299,22 @@ export default class Crafts extends Vue {
                 })
             }
         });
+    }
+
+    // 选择人员 正式借调
+    selectUser(row: CurrentDataTable) {
+        this.row = row;
+        if (row.userType === 'FORMAL') { // 正式
+            this.$nextTick(() => {
+                this.$refs.officialWorker.init(row.deptId, row.userList);
+            });
+        } else if (row.userType === 'INTERNAL' || row.userType === 'STUDY') { // 内部借调、学习
+            this.$nextTick(() => {
+                this.$refs.loanedPersonnel.init(row.userList);
+            });
+        } else {
+            this.$warningToast('请选择人员属性');
+        }
     }
 
     ruleSubmit() {
@@ -258,6 +419,27 @@ export default class Crafts extends Vue {
     }
 }
 
+interface CurrentDataTable {
+    factory?: string;
+    orderId?: string;
+    orderNo?: string;
+    classes?: string;
+    deptId?: string;
+    userType?: string;
+    userList: string[];
+    startDate?: string;
+    dinner?: number;
+    endDate?: string;
+    duration?: number;
+    durationUnit?: string;
+    remark?: string;
+    changed?: string;
+    changer?: string;
+    delFlag?: number;
+    id?: string;
+    editedMark?: boolean;
+}
+
 interface Craft {
     feedStartDate?: string;
     feeEndDate?: string;
@@ -283,6 +465,11 @@ interface CraftList {
 }
 </script>
 
-<style scoped>
-
+<style lang="scss" scoped>
+.koji-process-control {
+    .stock-form_item_input_suffix {
+        margin-right: 20px;
+    }
+}
 </style>
+
