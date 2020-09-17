@@ -10,10 +10,18 @@
             <el-table-column label="批次" width="120" :show-overflow-tooltip="true" prop="batch" align="center" />
             <el-table-column label="厂家" width="120" :show-overflow-tooltip="true" prop="supplier" align="center" />
             <el-table-column label="入库日期" width="160" :show-overflow-tooltip="true" prop="inStorageDate" align="center" :formatter="formatterProductDate" />
-            <el-table-column label="生产日期" width="120" :show-overflow-tooltip="true" prop="productDate" align="center" :formatter="formatterProductDate" />
+            <el-table-column label="生产日期" width="160" :show-overflow-tooltip="true" prop="productDate" align="center" :formatter="formatterProductDate" />
             <el-table-column v-if="!isHistoryPage" label="存储天数" :show-overflow-tooltip="true" prop="days" align="center" :formatter="formatterSaveDays" />
-            <el-table-column label="入库数量(KG)" width="100" :show-overflow-tooltip="true" prop="inStorageAmount" align="right" />
-            <el-table-column label="当前数量(KG)" width="100" :show-overflow-tooltip="true" prop="currentAmount" align="right" />
+            <el-table-column label="入库数量(KG)" width="140" :show-overflow-tooltip="true" prop="inStorageAmount" align="right">
+                <template slot-scope="scope">
+                    {{ scope.row.inStorageAmount ? scope.row.inStorageAmount.toLocaleString() : '' }}
+                </template>
+            </el-table-column>
+            <el-table-column label="当前数量(KG)" width="140" :show-overflow-tooltip="true" prop="currentAmount" align="right">
+                <template slot-scope="scope">
+                    {{ scope.row.currentAmount ? scope.row.currentAmount.toLocaleString(): '' }}
+                </template>
+            </el-table-column>
             <el-table-column v-if="stockType!=='Y158'" label="杂质率" :show-overflow-tooltip="true" prop="impurityRate" align="center" />
             <el-table-column label="操作" width="140" align="center">
                 <template slot-scope="scope">
