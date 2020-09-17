@@ -101,7 +101,7 @@
 
          get stockMaterial() {
             if (this.stockInfoObj.detailsList && this.stockInfoObj.detailsList.length) {
-                return this.stockInfoObj.detailsList[0].materialCode + ' ' + this.stockInfoObj.detailsList[0].materialName
+                return this.stockInfoObj.detailsList[0].materialName + ' ' + this.stockInfoObj.detailsList[0].materialCode
             }
 
             return ''
