@@ -46,13 +46,13 @@
                 <span slot="label" class="spanview">
                     当前库存信息
                 </span>
-                <stock-table-data :work-shop="$store.state.koji.StockFlourInfo.workShopId" stock-type="FLOUR" />
+                <stock-table-data :work-shop="$store.state.koji.StockFlourInfo.workShop" stock-type="FLOUR" />
             </el-tab-pane>
             <el-tab-pane name="2">
                 <span slot="label" class="spanview">
                     历史库存信息
                 </span>
-                <stock-table-data :work-shop="$store.state.koji.StockFlourInfo.workShopId" :is-history-page="true" stock-type="FLOUR" />
+                <stock-table-data :work-shop="$store.state.koji.StockFlourInfo.workShop" :is-history-page="true" stock-type="FLOUR" />
             </el-tab-pane>
         </el-tabs>
     </div>
@@ -89,7 +89,7 @@
             this.stockInfoObj.detailsList && this.stockInfoObj.detailsList.map(item => {
                 total += item.currentAmount
             })
-            return total
+            return total ? total.toLocaleString() : ''
         }
 
         get stockUnit() {

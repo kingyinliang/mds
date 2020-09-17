@@ -5,11 +5,15 @@
     >
         <el-table height="185" :data="currentData" border tooltip-effect="dark" class="newTable" size="mini">
             <el-table-column type="index" label="序号" width="55" fixed align="center" />
-            <el-table-column label="物料" :show-overflow-tooltip="true" prop="materialName" width="120" align="center" />
-            <el-table-column label="批次" :show-overflow-tooltip="true" prop="batch" width="100" align="center" />
-            <el-table-column label="数量" :show-overflow-tooltip="true" prop="currentAmount" width="120" align="center">
+            <el-table-column label="物料" :show-overflow-tooltip="true" width="120" align="center">
                 <template slot-scope="scope">
-                    {{ scope.row.currentAmount +' '+ scope.row.unit }}
+                    {{ scope.row.materialName +' '+ scope.row.materialCode }}
+                </template>
+            </el-table-column>
+            <el-table-column label="批次" :show-overflow-tooltip="true" prop="batch" width="100" align="center" />
+            <el-table-column label="数量" :show-overflow-tooltip="true" prop="currentAmount" width="120" align="right">
+                <template slot-scope="scope">
+                    {{ scope.row.currentAmount ? scope.row.currentAmount.toLocaleString()+' '+ scope.row.unit : '' }}
                 </template>
             </el-table-column>
             <el-table-column label="生产日期" width="160" prop="productDate" align="center" :formatter="formatterProductDate" />

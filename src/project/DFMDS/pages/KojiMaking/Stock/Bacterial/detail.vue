@@ -16,10 +16,6 @@
                     </p>
                     <div class="dataEntry-head-leftRight-message">
                         <div class="dataEntry-head-leftRight-message__item">
-                            <p>{{ stockInfoObj.workShopName ? stockInfoObj.workShopName : '' }}</p>
-                            <p><em class="iconfont factory-quyu" />车间</p>
-                        </div>
-                        <div class="dataEntry-head-leftRight-message__item">
                             <p class="dataEntry-head-leftRight-message__item_info">
                                 {{ stockInfoObj.wareHouseNo || stockInfoObj.materialLocation || '' }}
                             </p>
@@ -46,13 +42,13 @@
                 <span slot="label" class="spanview">
                     当前库存信息
                 </span>
-                <stock-table-data :work-shop="$store.state.koji.StockY158Info.workShopId" stock-type="Y158" />
+                <stock-table-data :work-shop="$store.state.koji.StockY158Info.workShop" stock-type="Y158" />
             </el-tab-pane>
             <el-tab-pane name="2">
                 <span slot="label" class="spanview">
                     历史库存信息
                 </span>
-                <stock-table-data :work-shop="$store.state.koji.StockY158Info.workShopId" :is-history-page="true" stock-type="Y158" />
+                <stock-table-data :work-shop="$store.state.koji.StockY158Info.workShop" :is-history-page="true" stock-type="Y158" />
             </el-tab-pane>
         </el-tabs>
     </div>
@@ -86,7 +82,7 @@
             this.stockInfoObj.detailsList && this.stockInfoObj.detailsList.map(item => {
                 total += item.currentAmount
             })
-            return total
+            return total ? total.toLocaleString() : ''
         }
 
         get stockUnit() {
