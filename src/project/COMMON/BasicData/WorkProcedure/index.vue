@@ -9,7 +9,7 @@
                             el-select(v-model="controllableForm.workShop" placeholder="生产车间" clearable @clear="clearSearchKeyWords")
                                 el-option(v-for="(opt, optIndex) in workShopList" :key="opt+optIndex" :label="opt.optLabel" :value="opt.optValue" )
                         el-form-item(style="height: 32px;")
-                            el-button(type="primary" size="small" :disabled="controllableForm.workShop===''" @click="getItemsList(true,'normal')") 查询
+                            el-button(type="primary" size="small" @click="getItemsList(true,'normal')") 查询
                             el-button(type="primary" size="small" @click="btnAdvanceSearch") 高级查询
                             el-button(type="primary" size="small" @click="btnAddItem") 新增
                             el-button(type="danger" size="small" @click="btnRemoveItems" v-if="tableData.length!==0" :disabled="chechDeleteList===0") 批量删除
@@ -82,7 +82,7 @@
                     content: ['workShop'],
 
                     // eslint-disable-next-line no-invalid-this
-                    // transList: this.workShopListObject
+                    // transList: this.test
                     transFn: () => {
                         return new Promise((resolve) => {
                             COMMON_API.ORG_QUERY_WORKSHOP_API({
@@ -125,6 +125,7 @@
                     transFn: () => {
                         return new Promise((resolve) => {
                             COMMON_API.ORG_QUERY_CHILDREN_API({
+                                factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
                                 parentId: '83001011',
                                 deptType: 'PROCESS'
                             }).then(({ data }) => {
@@ -170,7 +171,7 @@
                     control: [{
                             buttonName: '编辑',
                             btn: 'editBtn',
-                            icon: 'el-icon-edit',
+                            icon: '',
                             isAuth: 'specEdit'
                         }]
                 }
@@ -196,9 +197,9 @@
                     defaultOptionsFn: () => {
                         return new Promise((resolve) => {
                             COMMON_API.ORG_QUERY_WORKSHOP_API({
-                            factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
-                            deptType: ['WORK_SHOP'],
-                            deptName: '制曲'
+                                factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
+                                deptType: ['WORK_SHOP'],
+                                deptName: '制曲'
                             }).then(({ data }) => {
                                 const optionList = data.data;
                                 optionList.forEach(item => {
@@ -230,7 +231,10 @@
                     rules: [],
                     defaultOptionsFn: () => {
                         return new Promise((resolve) => {
-                            COMMON_API.DICTQUERY_API({ dictType: 'COMMON_PROCEDURE' }).then(({ data }) => {
+                            COMMON_API.DICTQUERY_API({
+                                factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
+                                dictType: 'COMMON_PROCEDURE'
+                                }).then(({ data }) => {
                                 const optionList = data.data;
                                 optionList.forEach(item => {
                                     // eslint-disable-next-line no-invalid-this
@@ -253,6 +257,7 @@
                     emitChange: (val) => {
                         return new Promise((resolve) => {
                             COMMON_API.ORG_QUERY_CHILDREN_API({
+                                factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
                                 parentId: val || '',
                                 deptType: 'PROCESS'
                             }).then(({ data }) => {
@@ -285,7 +290,7 @@
             dialogAddItemSetting={
             props: {
                 labelWidth: 120,
-                title: '新增報工中間表'
+                title: '新增报工'
             },
             data: [
                 {
@@ -300,9 +305,9 @@
                     defaultOptionsFn: () => {
                         return new Promise((resolve) => {
                             COMMON_API.ORG_QUERY_WORKSHOP_API({
-                            factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
-                            deptType: ['WORK_SHOP'],
-                            deptName: '制曲'
+                                factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
+                                deptType: ['WORK_SHOP'],
+                                deptName: '制曲'
                             }).then(({ data }) => {
                                 const optionList = data.data;
                                 optionList.forEach(item => {
@@ -355,7 +360,10 @@
                     ],
                     defaultOptionsFn: () => {
                         return new Promise((resolve) => {
-                            COMMON_API.DICTQUERY_API({ dictType: 'COMMON_PROCEDURE' }).then(({ data }) => {
+                            COMMON_API.DICTQUERY_API({
+                                factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
+                                dictType: 'COMMON_PROCEDURE'
+                            }).then(({ data }) => {
                                 const optionList = data.data;
                                 optionList.forEach(item => {
                                     // eslint-disable-next-line no-invalid-this
@@ -379,6 +387,7 @@
                     emitChange: (val) => {
                         return new Promise((resolve) => {
                             COMMON_API.ORG_QUERY_CHILDREN_API({
+                                factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
                                 parentId: val || '',
                                 deptType: 'PROCESS'
                             }).then(({ data }) => {
@@ -446,9 +455,9 @@
                 defaultOptionsFn: () => {
                     return new Promise((resolve) => {
                         COMMON_API.ORG_QUERY_WORKSHOP_API({
-                        factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
-                        deptType: ['WORK_SHOP'],
-                        deptName: '制曲'
+                            factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
+                            deptType: ['WORK_SHOP'],
+                            deptName: '制曲'
                         }).then(({ data }) => {
                             const optionList = data.data;
                             optionList.forEach(item => {
@@ -499,18 +508,21 @@
                     { required: true, message: '请选择报工工序', trigger: 'change' }
                 ],
                 defaultOptionsFn: () => {
-                        return new Promise((resolve) => {
-                            COMMON_API.DICTQUERY_API({ dictType: 'COMMON_PROCEDURE' }).then(({ data }) => {
-                                const optionList = data.data;
-                                optionList.forEach(item => {
-                                    // eslint-disable-next-line no-invalid-this
-                                    this.$set(item, 'optLabel', `${item.dictValue}`)
-                                    // eslint-disable-next-line no-invalid-this
-                                    this.$set(item, 'optValue', `${item.dictCode}`)
-                                })
-                                resolve(optionList)
+                    return new Promise((resolve) => {
+                        COMMON_API.DICTQUERY_API({
+                            factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
+                            dictType: 'COMMON_PROCEDURE'
+                        }).then(({ data }) => {
+                            const optionList = data.data;
+                            optionList.forEach(item => {
+                                // eslint-disable-next-line no-invalid-this
+                                this.$set(item, 'optLabel', `${item.dictValue}`)
+                                // eslint-disable-next-line no-invalid-this
+                                this.$set(item, 'optValue', `${item.dictCode}`)
                             })
+                            resolve(optionList)
                         })
+                    })
                 }
             },
             {
@@ -524,6 +536,7 @@
                 emitChange: (val) => {
                         return new Promise((resolve) => {
                             COMMON_API.ORG_QUERY_CHILDREN_API({
+                                factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
                                 parentId: val || '',
                                 deptType: 'PROCESS'
                             }).then(({ data }) => {
@@ -578,8 +591,10 @@
         async mounted() {
             // 获取车间下拉
             await this.getWorkShop()
+            console.log('tttttttttttt')
             await this.$refs.showTable.init();
-            await this.getItemsList();
+            console.log('qqqqqq')
+            this.getItemsList();
         }
 
 
@@ -597,7 +612,6 @@
         addItem(dataForm) {
 
             KOJI_API.WORKPROCEDURE_INSERT_API({
-                factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
                 workShop: dataForm.workShop,
                 jobBookingProcess: dataForm.jobBookingProcess,
                 productProcess: dataForm.productProcess,
@@ -617,7 +631,6 @@
         updateItem(dataForm) {
             console.log(dataForm)
             KOJI_API.WORKPROCEDURE_UPDATE_API({
-                factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
                 id: dataForm.id,
                 jobBookingProcess: dataForm.jobBookingProcess,
                 materialCode: dataForm.materialCode,
@@ -644,7 +657,6 @@
                 this.controllableForm.material = ''
             }
             KOJI_API.WORKPROCEDURE_QUERY_API({
-                factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
                 workShop: this.controllableForm.workShop,
                 material: this.controllableForm.material,
                 jobBookingProcess: this.controllableForm.jobBookingProcess,
@@ -657,8 +669,12 @@
                 if (haveParas && data.data.records.length === 0) {
                         this.$infoToast('暂无任何内容');
                 }
-                // this.$refs.showTable.init();
                 this.tableData = data.data.records;
+                // 处理掉生产物料组成字串单元空格
+                this.tableData.forEach(item => {
+                    item.materialCode = item.materialCode.replace(/\s*/g, '');
+                    item.materialName = item.materialName.replace(/\s*/g, '');
+                })
                 this.currPage = data.data.current;
                 this.pageSize = data.data.size;
                 this.totalCount = data.data.total;
@@ -703,8 +719,6 @@
         // [btn] 批量删除
         btnRemoveItems() {
             const tempMultipleSelection = this.$refs.showTable.getMultipleSelection()
-            console.log('tempMultipleSelection')
-            console.log(tempMultipleSelection)
             if (tempMultipleSelection.length === 0) {
                 this.$warningToast('请选择要删除的条目');
             } else {
@@ -714,10 +728,7 @@
                     type: 'warning'
                 })
                     .then(() => {
-                        KOJI_API.WORKPROCEDURE_DELETE_API({
-                            factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
-                            ids: tempMultipleSelection
-                        }).then(() => {
+                        KOJI_API.WORKPROCEDURE_DELETE_API(tempMultipleSelection).then(() => {
                             this.$successToast('刪除成功')
                             this.$nextTick(() => {
                                 this.getItemsList();
@@ -749,6 +760,11 @@
                     resolve()
                 })
             })
+        }
+
+
+        get test() {
+            return this.workShopList
         }
 
         // [BTN] 高级查询
