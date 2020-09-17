@@ -46,13 +46,13 @@
                 <span slot="label" class="spanview">
                     当前库存信息
                 </span>
-                <stock-table-data :work-shop="$store.state.koji.StockSoybeanInfo.workShopId" stock-type="BEAN" />
+                <stock-table-data :work-shop="$store.state.koji.StockSoybeanInfo.workShop" stock-type="BEAN" />
             </el-tab-pane>
             <el-tab-pane name="2">
                 <span slot="label" class="spanview">
                     历史库存信息
                 </span>
-                <stock-table-data :work-shop="$store.state.koji.StockSoybeanInfo.workShopId" :is-history-page="true" stock-type="BEAN" />
+                <stock-table-data :work-shop="$store.state.koji.StockSoybeanInfo.workShop" :is-history-page="true" stock-type="BEAN" />
             </el-tab-pane>
         </el-tabs>
     </div>
@@ -88,9 +88,10 @@
             this.stockInfoObj.detailsList && this.stockInfoObj.detailsList.map(item => {
                 total += item.currentAmount
             })
-            return total
+            return total ? total.toLocaleString() : ''
         }
 
+        // 获取库存明细第一条的单位
         get stockUnit() {
             if (this.stockInfoObj.detailsList && this.stockInfoObj.detailsList.length) {
                 return this.stockInfoObj.detailsList[0].unit
@@ -98,11 +99,11 @@
             return 'KG'
         }
 
-         get stockMaterial() {
+        // 获取库存明细第一条的物料
+        get stockMaterial() {
             if (this.stockInfoObj.detailsList && this.stockInfoObj.detailsList.length) {
-                return this.stockInfoObj.detailsList[0].materialCode + ' ' + this.stockInfoObj.detailsList[0].materialName
+                return this.stockInfoObj.detailsList[0].materialName + ' ' + this.stockInfoObj.detailsList[0].materialCode
             }
-
             return ''
         }
     }

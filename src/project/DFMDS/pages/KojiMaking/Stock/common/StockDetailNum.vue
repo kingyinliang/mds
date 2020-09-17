@@ -11,9 +11,9 @@
                 <i class="iconfont factory-zongliangguanli" />
                 <div class="stock-image_info_num">
                     <el-tooltip effect="dark" :content="totalNum+stockUnit" placement="top">
-                        <span class="stock-image_info_num_toolTip">{{ totalNum&&totalNum > 10000? (totalNum+'').substr(0,4): totalNum }}</span>
+                        <span class="stock-image_info_num_toolTip">{{ totalNum&&totalNum > 999999? (totalNum+'').substr(0,6): totalNum }}</span>
                     </el-tooltip>
-                    <span class="stock-image_info_num_span">{{ totalNum&&totalNum > 10000?'...  ':'' }}{{ stockUnit }}</span>
+                    <span class="stock-image_info_num_span">{{ totalNum&&totalNum > 999999?'...  ':'' }}{{ stockUnit }}</span>
                 </div>
                 <div class="stock-image_info_title">
                     库存总量
@@ -40,7 +40,7 @@
             this.currentData.detailsList && this.currentData.detailsList.map(item => {
                 total += item.currentAmount
             })
-            return total
+            return total ? total.toLocaleString() : ''
         }
 
         get stockUnit() {
@@ -98,7 +98,7 @@
                 font-size: 18px;
             }
             .stock-image_info_num_toolTip {
-                font-size: 72px;
+                font-size: 40px;
             }
             .stock-image_info_title {
                 height: 28px;
