@@ -47,7 +47,6 @@
 
         testShow=false
 
-
         currPage= 1
         pageSize= 10
         totalCount= 1
@@ -79,21 +78,22 @@
                     minWidth: 100,
                     width: 0, // width 会覆盖 minWidth
                     content: ['workShop'],
-                    transFn: () => {
-                        return new Promise((resolve) => {
-                            COMMON_API.ORG_QUERY_WORKSHOP_API({
-                                factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
-                                deptType: ['WORK_SHOP'],
-                                deptName: '制曲'
-                            }).then(({ data }) => {
-                                const wrapperObject = {};
-                                data.data.forEach(item => {
-                                    wrapperObject[item.deptCode] = item.deptName
-                                })
-                                resolve(wrapperObject)
-                            })
-                        })
-                    }
+                    transList: {}
+                    // transFn: () => {
+                    //     return new Promise((resolve) => {
+                    //         COMMON_API.ORG_QUERY_WORKSHOP_API({
+                    //             factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
+                    //             deptType: ['WORK_SHOP'],
+                    //             deptName: '制曲'
+                    //         }).then(({ data }) => {
+                    //             const wrapperObject = {};
+                    //             data.data.forEach(item => {
+                    //                 wrapperObject[item.deptCode] = item.deptName
+                    //             })
+                    //             resolve(wrapperObject)
+                    //         })
+                    //     })
+                    // }
                 },
                 {
                     type: 'multiple', // 表格元件
@@ -463,9 +463,11 @@
         }
 
         async mounted() {
+
             await this.getWorkShop()
+            this.tableItemSetting.data[0].transList = this.workShopListObject
             console.log('tttttttttttt')
-            await this.$refs.showTable.init();
+            this.$refs.showTable.init();
             console.log('qqqqqq')
             this.getItemsList();
         }
@@ -540,11 +542,6 @@
                 }
                 console.log('data in')
                 this.tableData = data.data.records;
-                // 处理掉生产物料组成字串单元空格
-                this.tableData.forEach(item => {
-                    item.materialCode = item.materialCode.replace(/\s*/g, '');
-                    item.materialName = item.materialName.replace(/\s*/g, '');
-                })
                 this.currPage = data.data.current;
                 this.pageSize = data.data.size;
                 this.totalCount = data.data.total;
