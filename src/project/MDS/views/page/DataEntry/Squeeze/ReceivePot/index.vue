@@ -56,7 +56,7 @@
                                     {{ item.batch }}
                                 </div>
                                 <div class="box_bottom_sole">
-                                    {{ item.sumAmount / 1000 || 0 }}方
+                                    {{ (item.sumAmount / 1000).toFixed(2) || 0 }}方
                                 </div>
                             </div>
                         </div>
