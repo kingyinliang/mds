@@ -3,7 +3,7 @@
  * @Anthor: Telliex
  * @Date: 2020-09-02 10:21:15
  * @LastEditors: Telliex
- * @LastEditTime: 2020-09-18 10:59:12
+ * @LastEditTime: 2020-09-21 16:13:47
 -->
 <template lang="pug">
     el-table(ref="targetTable" class="newTable" border header-row-class-name="tableHead" :data="targetTable" :height="tableElementSetting.props.height" tooltip-effect="dark" @selection-change="handleSelectionChange" style="width:100%")
@@ -52,19 +52,7 @@
         currPage= 1
         pageSize= 10
 
-
-        created() {
-            console.log('table created')
-            //
-        }
-
-        mounted() {
-            console.log('table mounted')
-            //
-        }
-
         init() {
-            console.log('table init')
             this.setting()
         }
 

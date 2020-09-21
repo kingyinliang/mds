@@ -559,27 +559,18 @@
         }
 
         // [dialog][data] 编辑工序
-        dataOfEditItem={
-        }
-
-
-        get mainClientHeight() {
-            return this.$store.state.common.mainClientHeight;
-        }
-
-        // created() {
-
-        // }
+        dataOfEditItem={}
 
         async mounted() {
             await this.getWorkShop()
             this.tableItemSetting.data[0].transList = this.workShopListObject
-            console.log('tttttttttttt')
             this.$refs.showTable.init();
-            console.log('qqqqqq')
             this.getItemsList();
         }
 
+        get mainClientHeight() {
+            return this.$store.state.common.mainClientHeight;
+        }
 
         clearSearchKeyWords() {
             this.controllableForm = {
@@ -601,14 +592,11 @@
                 materialCode: dataForm.material.split('&')[0],
                 materialName: dataForm.material.split('&')[1],
                 remark: dataForm.remark
-                // changed: dataForm.changed,
-                // changer: dataForm.changer
             }).then(() => {
                 this.$successToast('新增成功')
                 this.getItemsList(true, 'normal');
             });
         }
-
 
         // from dialog
         updateItem(dataForm) {
@@ -624,7 +612,6 @@
                 this.$successToast('编辑成功')
                 this.getItemsList(true, 'normal');
             });
-
         }
 
         getItemsList(haveParas = false, type = 'normal') {
@@ -647,18 +634,12 @@
                 size: this.pageSize
             }).then(({ data }) => {
                 if (haveParas && data.data.records.length === 0) {
-                        this.$infoToast('暂无任何内容');
+                    this.$infoToast('暂无任何内容');
                 }
                 this.tableData = data.data.records;
-                // 处理掉生产物料组成字串单元空格
-                // this.tableData.forEach(item => {
-                //     item.materialCode = item.materialCode.replace(/\s*/g, '');
-                //     item.materialName = item.materialName.replace(/\s*/g, '');
-                // })
                 this.currPage = data.data.current;
                 this.pageSize = data.data.size;
                 this.totalCount = data.data.total;
-                console.log('數據準備好了')
             });
         }
 
@@ -696,7 +677,6 @@
             });
         }
 
-
         // [btn] 批量删除
         btnRemoveItems() {
             const tempMultipleSelection = this.$refs.showTable.getMultipleSelection()
@@ -731,13 +711,10 @@
                 const optionList = data.data;
                         this.workShopListObject = {}
                         optionList.forEach(item => {
-                            // eslint-disable-next-line no-invalid-this
                             this.$set(item, 'optLabel', `${item.deptName}`)
-                            // eslint-disable-next-line no-invalid-this
                             this.$set(item, 'optValue', `${item.deptCode}`)
                             this.workShopListObject[item.deptCode] = item.deptName
                         })
-                        console.log('车间下拉完成！！')
                         this.workShopList = optionList
                         resolve()
                     })

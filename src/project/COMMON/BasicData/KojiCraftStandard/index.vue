@@ -463,12 +463,9 @@
         }
 
         async mounted() {
-
             await this.getWorkShop()
             this.tableItemSetting.data[0].transList = this.workShopListObject
-            console.log('tttttttttttt')
             this.$refs.showTable.init();
-            console.log('qqqqqq')
             this.getItemsList();
         }
 
@@ -480,12 +477,9 @@
                 workShop: dataForm.workShop,
                 standardAmount: dataForm.standardAmount,
                 standardDuration: dataForm.standardDuration,
-                // material: dataForm.material,
                 materialCode: dataForm.materialCode,
                 materialName: dataForm.materialName,
                 remark: dataForm.remark
-                // changed: dataForm.changed,
-                // changer: dataForm.changer
             }).then(() => {
                 this.$successToast('新增成功')
                 this.getItemsList(true, 'normal');
@@ -494,8 +488,6 @@
 
         // from dialog
         updateItem(dataForm) {
-            console.log('dataForm')
-            console.log(dataForm)
             dataForm.materialCode = dataForm.material.split(' ')[0]
             dataForm.materialName = dataForm.material.split(' ')[1]
             KOJI_API.CRAFTSTANDARD_UPDATE_API({
@@ -506,13 +498,10 @@
                 standardDuration: dataForm.standardDuration,
                 remark: dataForm.remark,
                 workShop: dataForm.workShop
-                // changed: dataForm.changed,
-                // changer: dataForm.changer
             }).then(() => {
                 this.$successToast('编辑成功')
                 this.getItemsList(true, 'normal');
             });
-
         }
 
         getItemsList(haveParas = false, type = 'normal') {
@@ -535,12 +524,9 @@
                 current: this.currPage,
                 size: this.pageSize
             }).then(({ data }) => {
-                console.log('data')
-                console.log(data)
                 if (haveParas && data.data.records.length === 0) {
                         this.$infoToast('暂无任何内容');
                 }
-                console.log('data in')
                 this.tableData = data.data.records;
                 this.currPage = data.data.current;
                 this.pageSize = data.data.size;
@@ -549,7 +535,6 @@
         }
 
         getItemsListFromDialog() {
-            // this.controllableForm.material = data.productMaterial
             this.nowSearchModle = 'advance'
             this.getItemsList(true, 'advance')
         }
@@ -585,8 +570,6 @@
         // [btn] 批量删除
         btnRemoveItems() {
             const tempMultipleSelection = this.$refs.showTable.getMultipleSelection()
-            console.log('tempMultipleSelection')
-            console.log(tempMultipleSelection)
             if (tempMultipleSelection.length === 0) {
                 this.$warningToast('请选择要删除的条目');
             } else {
@@ -618,13 +601,10 @@
                     const optionList = data.data;
                     this.workShopListObject = {}
                     optionList.forEach(item => {
-                        // eslint-disable-next-line no-invalid-this
                         this.$set(item, 'optLabel', `${item.deptName}`)
-                        // eslint-disable-next-line no-invalid-this
                         this.$set(item, 'optValue', `${item.deptCode}`)
                         this.workShopListObject[item.deptCode] = item.deptName
                     })
-                    console.log('车间下拉完成！！')
                     this.workShopList = optionList
                     resolve()
                 })
