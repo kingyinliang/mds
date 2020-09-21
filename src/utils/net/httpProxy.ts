@@ -110,7 +110,7 @@ export default (url: string, method: string = HTTP_METHOD.GET, data = {}, bussin
             HOST = 'https://alb02-in-uat-vpc03.shinho.net.cn/rdm-common';
         } else if (process.env.VUE_APP_BASE_API === 'production') {
             //prd
-            HOST = '';
+            HOST = 'https://alb0011-shinho-micro-prd.shinho.net.cn/rdm-common';
         } else {
             // pre
             HOST = 'https://alb03-in-uat-vpc03.shinho.net.cn/rdm-common';
