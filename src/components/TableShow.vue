@@ -3,7 +3,7 @@
  * @Anthor: Telliex
  * @Date: 2020-09-02 10:21:15
  * @LastEditors: Telliex
- * @LastEditTime: 2020-09-17 15:26:23
+ * @LastEditTime: 2020-09-21 16:13:47
 -->
 <template lang="pug">
     el-table(ref="targetTable" class="newTable" border header-row-class-name="tableHead" :data="targetTable" :height="tableElementSetting.props.height" tooltip-effect="dark" @selection-change="handleSelectionChange" style="width:100%")
@@ -12,9 +12,11 @@
         template(v-for="(tableElement,index) in tableElementSetting.data")
             el-table-column(v-if="tableElement.type==='multiple'" :key="'targetTable'+tableElement.prop+index" :prop="tableElement.prop" :label="tableElement.label" :show-overflow-tooltip="true" :min-width="tableElement.minWidth" :width="tableElement.minWidth===0?tableElement.width:null" :align="tableElement.align || 'left'" :header-align="tableElement.headerAlign || 'left'")
                 template(slot-scope="scope")
-                    span(v-for="val in tableElement.content" :key="'targetTable'+val" style="padding-right:5px") {{ scope.row[val] }}
+                    span(v-for="val in tableElement.content" :key="'targetTable'+val" style="padding-right:5px") {{ scope.row[val].replace(/\s*/g, '') }}
             el-table-column(v-else-if="tableElement.type==='single'&&tableElement.transFn" :key="'targetTable'+tableElement.prop+index" :prop="tableElement.prop" :label="tableElement.label" :min-width="tableElement.minWidth" :width="tableElement.minWidth===0?tableElement.width:null" :show-overflow-tooltip="true" :align="tableElement.align || 'left'" :header-align="tableElement.headerAlign || 'left'")
-                template(slot-scope="scope") {{ tableElement.wrapper[scope.row[tableElement.prop]]  }}
+                template(slot-scope="scope") {{ scope.row[tableElement.prop] | itemValue(tableElement.wrapper) }}
+            el-table-column(v-else-if="tableElement.type==='single'&&tableElement.transList" :key="'targetTable'+tableElement.prop+index" :prop="tableElement.prop" :label="tableElement.label" :min-width="tableElement.minWidth" :width="tableElement.minWidth===0?tableElement.width:null" :show-overflow-tooltip="true" :align="tableElement.align || 'left'" :header-align="tableElement.headerAlign || 'left'")
+                template(slot-scope="scope") {{ scope.row[tableElement.prop] | itemValue(tableElement.wrapper) }}
             el-table-column(v-else-if="tableElement.type==='single'" :key="'targetTable'+tableElement.prop+index" :prop="tableElement.prop" :label="tableElement.label" :min-width="tableElement.minWidth" :width="tableElement.minWidth===0?tableElement.width:null" :show-overflow-tooltip="true" :align="tableElement.align || 'left'" :header-align="tableElement.headerAlign || 'left'")
                 template(slot-scope="scope") {{ scope.row[tableElement.prop]  }}
             el-table-column(v-else-if="tableElement.type==='button'" :key="'targetTable'+tableElement.prop+index"  :width="tableElement.minWidth===0?tableElement.width:null" :label="tableElement.label" fixed="right")
@@ -31,8 +33,9 @@
         },
         filters: {
             itemValue(value: string, target: object) {
-                console.log(value)
-                console.log(target)
+                return target[value]
+            },
+            combineValue(value: string, target: object) {
                 return target[value]
             }
         }
@@ -49,19 +52,7 @@
         currPage= 1
         pageSize= 10
 
-
-        created() {
-            console.log('table created')
-            //
-        }
-
-        mounted() {
-            console.log('table mounted')
-            //
-        }
-
         init() {
-            console.log('table init')
             this.setting()
         }
 
@@ -101,6 +92,20 @@
                         this.$set(item, 'wrapper', res)
                     });
                 }
+
+                // if (item.linkageProp) {
+                //     console.log(this.targetTable)
+                //     const linkagePropItemObj = this.targetTable.filter(element => element.prop === item.linkageProp[0])[0];
+
+                //     console.log('linkagePropItemObj')
+                //     console.log(linkagePropItemObj)
+
+                //     if (linkagePropItemObj.transLinkFn) {
+                //         linkagePropItemObj.transLinkFn('83001011').then((res) => {
+                //             this.$set(item, 'wrapper', res)
+                //         });
+                //     }
+                // }
             })
         }
 

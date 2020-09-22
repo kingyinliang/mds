@@ -26,13 +26,13 @@
                 <el-input v-model="dataForm.consumeUnit" placeholder="手动输入" disabled />
             </el-form-item>
             <el-form-item label="领用数量：" prop="consumeAmount">
-                <el-input v-model="dataForm.consumeAmount" placeholder="手动输入" />
+                <el-input v-model="dataForm.consumeAmount" type="number" placeholder="手动输入" />
             </el-form-item>
             <el-form-item label="领用批次：" prop="consumeBatch">
                 <el-input v-model="dataForm.consumeBatch" maxlength="10" placeholder="手动输入" />
             </el-form-item>
             <el-form-item v-if="dataForm.consumeType === '1'" label="发酵罐库存：">
-                <el-input v-model="dataForm.fermentStorage" placeholder="手动输入" />
+                <el-input v-model="dataForm.fermentStorage" type="number" placeholder="手动输入" />
             </el-form-item>
             <el-form-item label="转运罐号：">
                 <el-select v-model="dataForm.tankNo" placeholder="请选择" size="small" clearable filterable style="width: 100%;">

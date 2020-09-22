@@ -31,7 +31,6 @@
                                 </el-table-column>
                                 <el-table-column label="计划数量" width="120" prop="planOutput" />
                                 <el-table-column label="单位" width="70" prop="outputUnit" />
-                                <el-table-column label="备注" width="70" prop="remark" />
                                 <el-table-column label="操作" fixed="right" align="center" width="80">
                                     <template slot-scope="scope">
                                         <el-button v-if="isAuth('steSplit')" type="text" @click="orderSplit(scope.row)">
@@ -64,19 +63,16 @@
                             </template>
                             <el-table :data="splitTable" header-row-class-name="tableHead" class="newTable" :height="mainClientHeight - 61 - 62 - 47" border tooltip-effect="dark">
                                 <el-table-column type="index" width="55" label="序号" fixed />
+                                <el-table-column label="1曲房状态" width="120" prop="planOutput" :show-overflow-tooltip="true" />
+
                                 <el-table-column label="生产订单" width="120" prop="orderNo" :show-overflow-tooltip="true" />
-                                <el-table-column min-width="180" label="生产物料" :show-overflow-tooltip="true">
-                                    <template slot-scope="scope">
-                                        {{ scope.row.materialCode + ' ' + scope.row.materialName }}
-                                    </template>
-                                </el-table-column>
-                                <el-table-column label="计划数量" width="120" prop="planOutput" :show-overflow-tooltip="true" />
-                                <el-table-column label="单位" width="70" prop="outputUnit" :show-overflow-tooltip="true" />
-                                <el-table-column label="生产日期" width="100" prop="productDate" :show-overflow-tooltip="true" />
-                                <el-table-column label="锅号" width="100" prop="potNo" :show-overflow-tooltip="true" />
-                                <el-table-column label="锅数" width="100" prop="potCount" :show-overflow-tooltip="true" />
-                                <el-table-column label="每锅数量" width="100" prop="potAmount" :show-overflow-tooltip="true" />
-                                <el-table-column label="备注" width="100" prop="remark" />
+
+                                <el-table-column label="1发酵罐号" width="70" prop="outputUnit" :show-overflow-tooltip="true" />
+
+                                <el-table-column label="1入曲日期" width="100" prop="productDate" :show-overflow-tooltip="true" />
+                                <el-table-column label="1出曲日期" width="100" prop="productDate" :show-overflow-tooltip="true" />
+
+
                                 <el-table-column label="操作人" width="100" prop="changer" :show-overflow-tooltip="true" />
                                 <el-table-column label="操作时间" width="100" prop="changed" :show-overflow-tooltip="true" />
                                 <el-table-column label="操作" fixed="right" align="center" width="140">
@@ -99,17 +95,15 @@
                 </el-row>
             </template>
         </query-table>
-        <order-split-dialog v-if="dialogFormVisible1" ref="orderSplitDialog" @getList="getData" />
-        <order-split-detail-dialog v-if="dialogFormVisible2" ref="orderSplitDetailDialog" @getList="getSplitTable" />
     </div>
 </template>
 
 <script lang="ts">
     import { Vue, Component } from 'vue-property-decorator';
-    import { COMMON_API, STE_API } from 'common/api/api';
+    import { COMMON_API, KOJI_API } from 'common/api/api';
     import { dateFormat } from 'utils/utils';
-    import OrderSplitDialog from './common/OrderSplitDialog.vue'
-    import OrderSplitDetailDialog from './common/OrderSplitDetailDialog.vue'
+    import OrderSplitDialog from '../common/OrderSplitDialog.vue'
+    import OrderSplitDetailDialog from '../common/OrderSplitDetailDialog.vue'
 
     @Component({
         name: 'OrderSplit',
@@ -163,7 +157,7 @@
                     return COMMON_API.ORG_QUERY_WORKSHOP_API({
                         factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
                         deptType: ['WORK_SHOP'],
-                        deptName: '杀菌'
+                        deptName: '制曲'
                     })
                 },
                 resVal: {
@@ -174,7 +168,7 @@
             },
             {
                 type: 'date-picker',
-                label: '订单日期',
+                label: '生产日期',
                 prop: 'productDate',
                 valueFormat: 'yyyy-MM-dd hh:mm:ss',
                 defaultValue: dateFormat(new Date(), 'yyyy-MM-dd hh:mm:ss')
@@ -261,15 +255,15 @@
                 this.$warningToast('请双击订单后操作')
                 return false
             }
-            STE_API.STE_SPLIT_LIST_API(this.splitForm).then(({ data }) => {
-                if (!data.data.records.length) {
-                    this.$infoToast('暂无任何内容');
-                }
-                this.splitTable = data.data.records
-                this.splitForm.current = data.data.current;
-                this.splitForm.size = data.data.size;
-                this.splitForm.total = data.data.total;
-            })
+            // KOJI_API.STE_SPLIT_LIST_API(this.splitForm).then(({ data }) => {
+            //     if (!data.data.records.length) {
+            //         this.$infoToast('暂无任何内容');
+            //     }
+            //     this.splitTable = data.data.records
+            //     this.splitForm.current = data.data.current;
+            //     this.splitForm.size = data.data.size;
+            //     this.splitForm.total = data.data.total;
+            // })
         }
 
         // 拆分
@@ -296,7 +290,7 @@
                 cancelButtonText: '取消',
                 type: 'warning'
             }).then(() => {
-                STE_API.STE_SPLIT_SAVE_API({
+                KOJI_API.ORDER_SPLITE_SAVE_API({
                     deletes: [row.id]
                 }).then(({ data }) => {
                     this.$successToast(data.msg);
