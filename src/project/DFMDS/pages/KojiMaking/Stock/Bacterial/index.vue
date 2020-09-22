@@ -65,7 +65,7 @@
         // 制曲车间下拉列表查询
        private getWorkShop() {
             COMMON_API.ORG_QUERY_WORKSHOP_API({
-                // factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
+                factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
                 deptType: ['WORK_SHOP'],
                 deptName: '制曲'
             }).then(({ data }) => {
