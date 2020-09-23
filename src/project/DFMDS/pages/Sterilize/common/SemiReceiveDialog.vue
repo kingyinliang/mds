@@ -152,7 +152,11 @@
                 if (valid) {
                     if (this.dataForm.consumeType === '0') {
                         this.dataForm.fermentPotNo = '';
+                        this.dataForm.fermentPotNoName = '';
                         this.dataForm.fermentStorage = '';
+                    } else {
+                        const filterArr1: (any) = this.potArr.filter(it => it.holderNo === this.dataForm.fermentPotNo);// eslint-disable-line
+                        this.dataForm.fermentPotNoName = filterArr1[0].holderName;
                     }
                     this.visible = false;
                     this.$emit('success', this.dataForm)
@@ -171,6 +175,7 @@
     interface DataObj {
         id?: string;
         consumeType?: string;
+        fermentPotNoName?: string;
         stePotNo?: string;
         potOrderId?: string;
         potOrderNo?: string;

@@ -43,6 +43,7 @@
             semiReceive: HTMLFormElement;
             excRecord: HTMLFormElement;
             textRecord: HTMLFormElement;
+            dataEntry: HTMLFormElement;
         }
 
         formHeader: OrderData = {};
@@ -131,6 +132,7 @@
                 this.formHeader.potOrderString = '第' + data.data.potOrder + '锅';
                 this.formHeader.textStage = 'semiReceive';
                 this.tabs[0].status = (data.data.steTagPot ? data.data.steTagPot.semiMaterialStatus : '未录入');
+                this.$refs.dataEntry.updateTabs();
                 this.$refs.semiReceive.init(this.formHeader);
                 this.$refs.excRecord.init(this.formHeader, 'semiReceive');
                 this.$refs.textRecord.init(this.formHeader, 'sterilize');

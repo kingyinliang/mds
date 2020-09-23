@@ -114,7 +114,7 @@
                         <span class="notNull">* </span>领用批次
                     </template>
                     <template slot-scope="scope">
-                        <el-input v-model.trim="scope.row.useBatch" size="small" placeholder="请输入" :disabled="!(isRedact && scope.row.checkStatus !== 'C' && scope.row.checkStatus !== 'D' && scope.row.checkStatus !== 'P')" />
+                        <el-input v-model.trim="scope.row.useBatch" maxlength="10" size="small" placeholder="请输入" :disabled="!(isRedact && scope.row.checkStatus !== 'C' && scope.row.checkStatus !== 'D' && scope.row.checkStatus !== 'P')" />
                     </template>
                 </el-table-column>
                 <el-table-column width="200">
@@ -201,7 +201,7 @@
                         <span class="notNull">* </span>领用批次
                     </template>
                     <template slot-scope="scope">
-                        <el-input v-model.trim="scope.row.useBatch" size="small" placeholder="请输入" :disabled="!(isRedact && scope.row.checkStatus !== 'C' && scope.row.checkStatus !== 'D' && scope.row.checkStatus !== 'P')" />
+                        <el-input v-model.trim="scope.row.useBatch" size="small" maxlength="10" placeholder="请输入" :disabled="!(isRedact && scope.row.checkStatus !== 'C' && scope.row.checkStatus !== 'D' && scope.row.checkStatus !== 'P')" />
                     </template>
                 </el-table-column>
                 <el-table-column>
@@ -278,6 +278,10 @@
                     this.$warningToast('请填写辅料领用必填项');
                     return false
                 }
+                if (item.useBatch.length !== 10) {
+                    this.$warningToast('请填写辅料领用10位批次');
+                    return false
+                }
             }
             for (const item of newSteAccessoriesConsume) {
                 if (!item.useAmount || item.useAmount === '0') {
@@ -286,6 +290,10 @@
                 }
                 if (!item.useMaterialCode || !item.addDate || !item.useBatch) {
                     this.$warningToast('请填写增补料必填项');
+                    return false
+                }
+                if (item.useBatch.length !== 10) {
+                    this.$warningToast('请填写增补料10位批次');
                     return false
                 }
             }

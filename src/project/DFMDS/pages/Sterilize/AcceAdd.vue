@@ -43,6 +43,7 @@
             acceadd: HTMLFormElement;
             excRecord: HTMLFormElement;
             textRecord: HTMLFormElement;
+            dataEntry: HTMLFormElement;
         };
 
         formHeader: OrderData = {};
@@ -127,6 +128,7 @@
                 this.formHeader.potOrderString = '第' + data.data.potOrder + '锅';
                 this.formHeader.textStage = 'acceadd';
                 this.tabs[0].status = (data.data.steTagPot ? data.data.steTagPot.accessoriesStatus : '未录入');
+                this.$refs.dataEntry.updateTabs();
                 this.$refs.acceadd.init(this.formHeader);
                 this.$refs.excRecord.init(this.formHeader, 'acceadd');
                 this.$refs.textRecord.init(this.formHeader, 'sterilize');
