@@ -241,10 +241,12 @@ export default class DissolveBucketDetail extends Vue {
     }
 
     chechMoveType(typeString) {
-        if (typeString === 'R') {
-            return '投料'
+        if (typeString === 'I') {
+            return '入罐'
+        } else if (typeString === 'F') {
+            return '领用'
         }
-        return '领用'
+        return ''
     }
 }
 interface ImportData{
