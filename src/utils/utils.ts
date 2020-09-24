@@ -380,12 +380,16 @@ export function dataEntryData(formHeader, data: DataEntryDataObj[], orgData: Dat
             }
         } else if (item.id) {
             const orgObj = orgData.filter(it => it.id === item.id)[0];
-            if (!_.isEqual(orgObj, item)) {
-                item.orderId = formHeader.id;
-                if (processingData) {
-                    processingData(item);
+            if (orgObj) {
+                if (!_.isEqual(orgObj, item)) {
+                    item.orderId = formHeader.id;
+                    if (processingData) {
+                        processingData(item);
+                    }
+                    updateArr.push(item);
                 }
-                updateArr.push(item);
+            } else {
+                insertArr.push(item);
             }
         } else {
             item.factory = JSON.parse(sessionStorage.getItem('factory') || '{}').id;
