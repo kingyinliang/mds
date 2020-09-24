@@ -6,60 +6,62 @@
             </el-button>
         </div>
         <el-table :data="splitTable" :row-class-name="rowDelFlag" header-row-class-name="tableHead" class="newTable" border tooltip-effect="dark">
-            <el-table-column type="index" width="55" label="序号" fixed />
+            <el-table-column type="index" width="55" label="序号" fixed align="center" />
+            <el-table-column label="曲房状态" width="80" prop="status" :show-overflow-tooltip="true" />
             <el-table-column label="生产订单" width="120" prop="orderNo" :show-overflow-tooltip="true" />
-            <el-table-column min-width="180" label="生产物料" :show-overflow-tooltip="true">
+            <el-table-column min-width="250" label="生产物料" :show-overflow-tooltip="true">
                 <template slot-scope="scope">
-                    {{ scope.row.materialCode + ' ' + scope.row.materialName }}
+                    {{ scope.row.materialName + ' ' + scope.row.materialCode }}
                 </template>
             </el-table-column>
-            <el-table-column label="订单日期" width="100" prop="orderDate" :show-overflow-tooltip="true" />
             <el-table-column label="计划数量" width="100" prop="planOutput" />
             <el-table-column label="单位" width="70" prop="outputUnit" />
-            <el-table-column label="生产日期" width="160" prop="productDate" :show-overflow-tooltip="true">
+            <el-table-column label="曲房号" width="160" prop="kojiHouseNo" :show-overflow-tooltip="true">
                 <template slot="header">
-                    <span class="notNull">* </span>生产日期
+                    <span class="notNull">* </span>曲房号
                 </template>
                 <template slot-scope="scope">
-                    <el-date-picker v-model="scope.row.productDate" type="date" placeholder="选择日期" size="small" style="width: 140px;" value-format="yyyy-MM-dd" format="yyyy-MM-dd" />
-                </template>
-            </el-table-column>
-            <el-table-column label="锅号" width="100" prop="potNo" :show-overflow-tooltip="true">
-                <template slot="header">
-                    <span class="notNull">* </span>锅号
-                </template>
-                <template slot-scope="scope">
-                    <el-select v-model="scope.row.potNo" size="small" placeholder="请选择" @change="potNoChange(scope.row)">
-                        <el-option v-for="(subItem, subIndex) in holder" :key="subIndex" :label="subItem.holderName" :value="subItem.holderNo" />
+                    <el-select v-model="scope.row.kojiHouseNo" size="small" filterable clearable :disabled="!['N','S','R'].includes(scope.row.status)">
+                        <el-option
+                            v-for="item in kojiHouseNoOptions"
+                            :key="item.optValue"
+                            :label="item.optLabel"
+                            :value="item.optValue"
+                        />
                     </el-select>
                 </template>
             </el-table-column>
-            <el-table-column label="锅数" width="100" prop="potCount" :show-overflow-tooltip="true">
+            <el-table-column label="发酵罐/池" width="160" prop="fermentPotNo" :show-overflow-tooltip="true">
+                <template slot-scope="scope">
+                    <el-select v-model="scope.row.fermentPotNo" size="small" :disabled="!['N','S','R'].includes(scope.row.status)" filterable clearable>
+                        <el-option
+                            v-for="item in fermentPotNoOptions"
+                            :key="item.optValue"
+                            :label="item.optLabel"
+                            :value="item.optValue"
+                        />
+                    </el-select>
+                </template>
+            </el-table-column>
+            <el-table-column label="入曲日期" width="180" prop="addKojiDate" :show-overflow-tooltip="true">
                 <template slot="header">
-                    <span class="notNull">* </span>锅数
+                    <span class="notNull">* </span>入曲日期
                 </template>
                 <template slot-scope="scope">
-                    <el-input v-model="scope.row.potCount" size="small" placeholder="请输入" />
+                    <el-date-picker v-model="scope.row.addKojiDate" type="date" placeholder="选择日期" size="small" style="width: 150px;" value-format="yyyy-MM-dd" format="yyyy-MM-dd" :disabled="!['N','S','R'].includes(scope.row.status)" @change="val=>{checkDate(val,scope.row)}" />
                 </template>
             </el-table-column>
-            <el-table-column label="每锅数量" width="100" prop="potAmount" :show-overflow-tooltip="true">
-                <template slot="header">
-                    <span class="notNull">* </span>每锅数量
-                </template>
+            <el-table-column label="出曲日期" width="160" prop="outKojiDate" :show-overflow-tooltip="true">
                 <template slot-scope="scope">
-                    <el-input v-model="scope.row.potAmount" size="small" placeholder="请输入" />
+                    <!-- <el-date-picker v-model="scope.row.outKojiDate" type="date" placeholder="选择日期" size="small" style="width: 140px;" value-format="yyyy-MM-dd" format="yyyy-MM-dd" /> -->
+                    {{ scope.row.outKojiDate }}
                 </template>
             </el-table-column>
-            <el-table-column label="备注" width="100" prop="remark">
-                <template slot-scope="scope">
-                    <el-input v-model="scope.row.remark" size="small" placeholder="请输入" />
-                </template>
-            </el-table-column>
-            <el-table-column label="操作人" width="100" prop="changer" :show-overflow-tooltip="true" />
-            <el-table-column label="操作时间" width="100" prop="changed" :show-overflow-tooltip="true" />
+            <el-table-column label="操作人" width="160" prop="changer" :show-overflow-tooltip="true" />
+            <el-table-column label="操作时间" width="180" prop="changed" :show-overflow-tooltip="true" />
             <el-table-column label="操作" fixed="right" align="center" width="80">
                 <template slot-scope="scope">
-                    <el-button v-if="isAuth('steSplit')" type="text" icon="el-icon-delete" @click="removeDataRow(scope.row)">
+                    <el-button v-if="isAuth('steSplit')" type="text" icon="el-icon-delete" :disabled="['D','C','P'].includes(orderObj.orderStatus)" @click="removeDataRow(scope.row)">
                         删除
                     </el-button>
                 </template>
@@ -67,87 +69,134 @@
         </el-table>
         <span slot="footer" class="dialog-footer">
             <el-button @click="dialogFormVisible = false">取消</el-button>
-            <el-button type="primary" @click="SubmitForm()">确定</el-button>
+            <el-button type="primary" :disabled="splitTable.length===0" @click="submitForm()">确定</el-button>
         </span>
     </el-dialog>
 </template>
 
 <script lang="ts">
     import { Vue, Component } from 'vue-property-decorator';
-    import { COMMON_API, STE_API } from 'common/api/api';
-    import { dateFormat, getUserNameNumber } from 'utils/utils';
+    import { COMMON_API, KOJI_API } from 'common/api/api';
+    import { dateFormat, getUserNameNumber, getNewDay } from 'utils/utils';
     import _ from 'lodash';
 
     @Component
     export default class OrderSplitDialog extends Vue {
         dialogFormVisible = false;
-        holder: HolderObj[] = [];
+        fermentPotNoOptions: OptionObj[] = [];
+        kojiHouseNoOptions: OptionObj[] = [];
         splitTable: SplitObj[] = [];
         orgSplitTable: SplitObj[] = [];
-        orderObj: SplitObj = {};
+        orderObj: OrderObject;
+
 
         init(row) {
-            STE_API.STE_SPLIT_LIST_API({
+            console.log('弹窗过来数据！')
+            console.log(row)
+            this.getFermentationHolder() // 发酵罐下拉
+            this.getKojiHolder(row) // 曲房号下拉
+            KOJI_API.ORDER_SPLITE_QUERY_BY_ID_API({
                 current: 1,
                 size: 9999,
                 orderNo: row.orderNo
             }).then(({ data }) => {
+                console.log('拆分回传！')
+                console.log(data)
                 this.orderObj = row;
                 this.dialogFormVisible = true;
                 this.splitTable = JSON.parse(JSON.stringify(data.data.records))
                 this.orgSplitTable = JSON.parse(JSON.stringify(data.data.records))
             })
-            this.getHolder(row)
+
         }
 
-        getHolder(params) {
+        // 确认同日期下是否有多车间
+        checkDate(val, row) {
+            console.log(val)
+            console.log(row)
+            // this.splitTable.forEach(item => {
+            //     if (item.addKojiDate === val) {
+            //         if (item.status === 'C' && item.id !== row.id) {
+            //             this.$warningToast('关联订单人工工时已提交，此订单不可调整入曲日期，请取消已审核订单：831000019423，831000019423');
+            //             return false
+            //         }
+            //     }
+            // })
+
+            row.outKojiDate = getNewDay(row.addKojiDate, 2)
+        }
+
+        getFermentationHolder() {
             COMMON_API.HOLDER_QUERY_API({
-                deptId: params.workShop,
-                holderType: '014',
+                // deptId: params.workShop,
+                factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
+                holderType: '001',
                 size: 99999,
                 current: 1
             }).then(({ data }) => {
-                this.holder = data.data.records
+                this.fermentPotNoOptions = []
+                data.data.records.forEach(item => {
+                    this.fermentPotNoOptions.push({ optLabel: item.holderName, optValue: item.holderNo })
+                })
             })
         }
 
-        potNoChange(row) {
-            const holderObj: (any) = this.holder.filter(it => it.holderNo === row.potNo);// eslint-disable-line
-            row.potCount = holderObj[0].holderBatch;
-            row.potAmount = holderObj[0].holderVolume;
+        getKojiHolder(params) {
+            COMMON_API.HOLDER_QUERY_API({
+                factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
+                deptId: params.workShop,
+                holderType: '005',
+                size: 99999,
+                current: 1
+            }).then(({ data }) => {
+                this.kojiHouseNoOptions = []
+                data.data.records.forEach(item => {
+                    this.kojiHouseNoOptions.push({ optLabel: item.holderName, optValue: item.holderNo })
+                })
+            })
         }
+
+        // potNoChange(row) {
+        //     const holderObj: (any) = this.holder.filter(it => it.holderNo === row.potNo);// eslint-disable-line
+        //     row.potCount = holderObj[0].holderBatch;
+        //     row.potAmount = holderObj[0].holderVolume;
+        // }
 
         addSplitTable() {
             this.splitTable.push({
                 id: '',
                 delFlag: 0,
-                potUnit: this.orderObj.outputUnit,
-                workShop: this.orderObj.workShop,
-                productLine: this.orderObj.productLine,
-                orderType: this.orderObj.orderType,
-                orderId: this.orderObj.id,
+                addKojiDate: this.orderObj.orderStartDate,
+                // fermentPotId: this.orderObj.fermentPotId,
+                // fermentPotNo: this.orderObj.fermentPotNo,
                 orderNo: this.orderObj.orderNo,
-                orderDate: this.orderObj.productDate,
+                // kojiHouseId: string;
+                // kojiHouseNo: string;
                 materialCode: this.orderObj.materialCode,
                 materialName: this.orderObj.materialName,
+                // orderId: string;
+                // orderNo: string;
+                // orderType: string;
+                outKojiDate: getNewDay(this.orderObj.orderStartDate, 2),
+                // productDate: Date;
+                status: 'N',
+                // workShop: string;
+                // workShopName: string;
                 planOutput: this.orderObj.planOutput,
                 outputUnit: this.orderObj.outputUnit,
-                productDate: this.orderObj.productDate,
-                potNo: '',
-                potCount: '',
-                potAmount: '',
-                remark: '',
+                outputUnitName: this.orderObj.outputUnitName,
                 changed: dateFormat(new Date(), 'yyyy-MM-dd hh:mm:ss'),
                 changer: getUserNameNumber()
             })
         }
 
-        SubmitForm() {
+        submitForm() {
             const dataArr = this.splitTable.filter(it => it.delFlag !== 1)
             // eslint-disable-next-line
             const productDateMap: any[] = [];
+
             for (let i = 0; i < dataArr.length; i++) {
-                if (!dataArr[i].productDate || !dataArr[i].potNo || !dataArr[i].potCount || !dataArr[i].potAmount || dataArr[i].potAmount === '0') {
+                if (!dataArr[i].kojiHouseNo || !dataArr[i].addKojiDate) {
                     this.$warningToast('请填写必填项');
                     return false
                 }
@@ -160,29 +209,41 @@
                     productDateMap.push(dataArr[i].productDate);
                 }
             }
-            if ([...new Set(productDateMap)].length !== 1) {
-                this.$warningToast('同一订单不允许跨天生产');
-                return false;
-            }
+
+            const tempObj: string[] = []
+
+            this.splitTable.forEach((item) => {
+
+                if (!tempObj.includes(`${item.kojiHouseNo}+${item.addKojiDate}`)) {
+                    tempObj.push(`${item.kojiHouseNo}+${item.addKojiDate}`)
+                } else {
+                    this.$warningToast('同日期下曲房不可重复');
+                    return false
+                }
+            })
+
             const submitObj: SubmitObj = {
-                deletes: [],
-                inserts: [],
-                updates: []
+                orderId: this.orderObj.id,
+                orderNo: this.orderObj.orderNo,
+                orderStatus: this.orderObj.orderStatus,
+                deleteIds: [],
+                insertList: [],
+                updateList: []
             };
             this.splitTable.forEach((item, index) => {
                 if (item.delFlag === 1) {
                     if (item.id) {
-                        submitObj.deletes.push(item.id);
+                        submitObj.deleteIds.push(item.id);
                     }
                 } else if (item.id) {
                     if (!_.isEqual(this.orgSplitTable[index], item)) {
-                        submitObj.updates.push(item);
+                        submitObj.updateList.push(item);
                     }
                 } else {
-                    submitObj.inserts.push(item);
+                    submitObj.insertList.push(item);
                 }
             })
-            STE_API.STE_SPLIT_SAVE_API(submitObj).then(({ data }) => {
+            KOJI_API.ORDER_SPLITE_SAVE_API(submitObj).then(({ data }) => {
                 this.$successToast(data.msg);
                 this.dialogFormVisible = false;
                 this.$emit('getList');
@@ -191,7 +252,13 @@
 
         // 删除行
         removeDataRow(row) {
-            row.delFlag = 1;
+            this.$confirm('确定是否删除？', '提示', {
+                confirmButtonText: '确定',
+                cancelButtonText: '取消',
+                type: 'warning'
+            }).then(() => {
+                row.delFlag = 1;
+            });
         }
 
         rowDelFlag({ row }) {
@@ -201,36 +268,84 @@
             return '';
         }
     }
-    interface HolderObj {
-        holderNo?: string;
+    interface OptionObj {
+        optLabel?: string;
+        optValue?: string;
     }
+
+    interface CheckObj {
+        kojiHouseNo?: string;
+        addKojiDate?: string;
+    }
+
     interface SubmitObj {
-        deletes: string[];
-        inserts: SplitObj[];
-        updates: SplitObj[];
-    }
-    interface SplitObj {
-        id?: string;
-        delFlag?: number;
-        countOutputUnit?: string;
-        potUnit?: string;
-        workShop?: string;
-        orderType?: string;
-        productLine?: string;
         orderId?: string;
         orderNo?: string;
-        orderDate?: string;
-        materialCode?: string;
-        materialName?: string;
-        planOutput?: string;
-        outputUnit?: string;
-        productDate?: string;
-        potNo?: string;
-        potCount?: string;
-        potAmount?: string;
-        remark?: string;
+        orderStatus?: string;
+        deleteIds: string[];
+        insertList: SplitObj[];
+        updateList: SplitObj[];
+    }
+    interface SplitObj {
+        delFlag?: number;
+        addKojiDate?: string;
         changed?: string;
         changer?: string;
+        fermentPotId?: string;
+        fermentPotNo?: string;
+        id?: string;
+        kojiHouseId?: string;
+        kojiHouseNo?: string;
+        materialCode?: string;
+        materialName?: string;
+        orderId?: string;
+        orderNo?: string;
+        orderType?: string;
+        outKojiDate?: string;
+        productDate?: string;
+        status?: string;
+        workShop?: string;
+        workShopName?: string;
+        planOutput?: number;
+        outputUnit?: string;
+        outputUnitName?: string;
+    }
+
+    interface OrderObject {
+        changed: string;
+        changer: string;
+        countMan: number;
+        countOutput: number;
+        countOutputUnit: string;
+        deviceTime: number;
+        dispatchMan: string;
+        exceptionDateCount: number;
+        factory: string;
+        factoryName: string;
+        germs: number;
+        id: string;
+        materialCode: string;
+        materialName: string;
+        operator: string;
+        operatorDate: string;
+        orderEndDate: string;
+        orderNo: string;
+        orderStartDate: string;
+        orderStatus: string;
+        orderStatusName: string;
+        orderType: string;
+        outputUnit: string;
+        outputUnitName: string;
+        planOutput: number;
+        productDate: string;
+        productLine: string;
+        productLineName: string;
+        readyTime: number;
+        realInAmount: number;
+        realOutput: number;
+        userTime: number;
+        workShop: string;
+        workShopName: string;
     }
 </script>
 

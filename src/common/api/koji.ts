@@ -3,7 +3,7 @@
  * @Anthor: Telliex
  * @Date: 2020-08-27 14:28:27
  * @LastEditors: Telliex
- * @LastEditTime: 2020-09-21 13:59:56
+ * @LastEditTime: 2020-09-23 21:10:58
  */
 import httpProxy from 'utils/net/httpProxy';
 const KOJI_API = {
@@ -106,11 +106,19 @@ const KOJI_API = {
     /**
      * @property ORDER_SPLITE_QUERY_BY_ID_API 制曲车间-订单拆分-根据车间订单Id查询曲房订单明细
      */
-    ORDER_SPLITE_QUERY_BY_ID_API: params => httpProxy(' ', 'POST', params),
+    ORDER_SPLITE_QUERY_BY_ID_API: params => httpProxy('/koji/kojiHouseSplit/batchQueryByOrderNo', 'POST', params),
     /**
      * @property ORDER_SPLITE_SAVE_API 制曲车间-订单拆分-保存订单拆分明细
      */
-    ORDER_SPLITE_SAVE_API: params => httpProxy('/koji/kojiHouseSplit/save', 'POST', params)
+    ORDER_SPLITE_SAVE_API: params => httpProxy('/koji/kojiHouseSplit/save', 'POST', params),
+    /**
+     * @property KOJI_INDEX_QUERY_ORDER_API 制曲车间-制曲首页-查询制曲订单列表
+     */
+    KOJI_INDEX_QUERY_ORDER_API: params => httpProxy('/kojiIndex/batchQueryHouseSplit', 'POST', params),
+    /**
+     * @property KOJI_INDEX_QUERY_SC_ORDER_API 制曲车间-制曲首页-查询Sc蒸豆订单列表
+     */
+    KOJI_INDEX_QUERY_SC_ORDER_API: params => httpProxy('/kojiIndex/batchQueryScOrder', 'POST', params)
 };
 
 export default KOJI_API;

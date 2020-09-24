@@ -221,8 +221,9 @@ export default class DissolveBucketDetail extends Vue {
             cycle: this.importData.cycle,
             factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
             potId: this.importData.potId,
-            potNo: this.importData.potNo
+            potNo: this.importData.potNo,
             // potStatus: this.importData.potStatus
+            workShop: this.importData.workShop
             }).then(({ data }) => {
                 console.log('详细数据')
                 console.log(data)
@@ -257,6 +258,7 @@ interface ImportData{
     prodcutMaterial?: string;
     prodcutMaterialName?: string;
     ratio?: number;
+    workShop?: string;
 }
 
 </script>
