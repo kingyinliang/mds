@@ -5,7 +5,7 @@
             redact-auth="steAccEdit"
             save-auth="steAccEdit"
             submit-auth="steAccSubmit"
-            :order-status="formHeader.statusName"
+            :order-status="formHeader.steTagPot?formHeader.steTagPot.accessoriesStatus:'未录入'"
             :header-base="headerBase"
             :form-header="formHeader"
             :tabs="tabs"
