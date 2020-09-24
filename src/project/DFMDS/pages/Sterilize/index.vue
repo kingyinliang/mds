@@ -117,6 +117,10 @@
                 type: 'select',
                 label: '生产车间',
                 prop: 'workShop',
+                labelWidth: 90,
+                rule: [
+                    { required: true, message: ' ', trigger: 'change' }
+                ],
                 defaultOptionsFn: () => {
                     return COMMON_API.ORG_QUERY_WORKSHOP_API({
                         factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
@@ -134,17 +138,20 @@
                 type: 'date-picker',
                 label: '生产日期',
                 prop: 'productDate',
+                labelWidth: 90,
                 valueFormat: 'yyyy-MM-dd hh:mm:ss',
                 defaultValue: dateFormat(new Date(), 'yyyy-MM-dd hh:mm:ss')
             },
             {
                 type: 'input',
                 label: '生产订单',
+                labelWidth: 90,
                 prop: 'orderNo'
             },
             {
                 type: 'input',
                 label: '生产锅号',
+                labelWidth: 90,
                 prop: 'potNo'
             }
         ];
