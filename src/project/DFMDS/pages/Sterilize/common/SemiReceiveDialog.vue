@@ -71,7 +71,7 @@
 
         $refs: {dataForm: HTMLFormElement};
         visible = false;
-        potArr = [];
+        potArr: PotObject[] = [];
         transferTank = [];
         materialArr: MaterialObj[] = [];
         dataRule = {
@@ -192,6 +192,25 @@
         changer?: string;
         changed?: string;
     }
+
+    interface PotMaterial {
+        materialCode: string;
+        materialName: string;
+    }
+
+    interface PotObject {
+        deptId: string;
+        holderArea: string;
+        holderBatch: string;
+        holderName: string;
+        holderNo: string;
+        holderStatus: string;
+        holderType: string;
+        holderVolume: number;
+        id: string;
+        material: PotMaterial[];
+    }
+
 </script>
 
 <style scoped>
