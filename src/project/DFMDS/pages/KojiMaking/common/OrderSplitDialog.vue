@@ -7,7 +7,7 @@
         </div>
         <el-table :data="splitTable" :row-class-name="rowDelFlag" header-row-class-name="tableHead" class="newTable" border tooltip-effect="dark">
             <el-table-column type="index" width="55" label="序号" fixed align="center" />
-            <el-table-column label="曲房状态" width="80" prop="status" :show-overflow-tooltip="true" />
+            <el-table-column label="曲房状态" width="80" prop="statusName" :show-overflow-tooltip="true" />
             <el-table-column label="生产订单" width="120" prop="orderNo" :show-overflow-tooltip="true" />
             <el-table-column min-width="250" label="生产物料" :show-overflow-tooltip="true">
                 <template slot-scope="scope">
@@ -21,7 +21,7 @@
                     <span class="notNull">* </span>曲房号
                 </template>
                 <template slot-scope="scope">
-                    <el-select v-model="scope.row.kojiHouseNo" size="small" filterable clearable :disabled="!['N','S','R'].includes(scope.row.status)">
+                    <el-select v-model="scope.row.kojiHouseNo" size="small" filterable clearable :disabled="!['N','S','R'].includes(scope.row.status)" @change="changeKojiHouseNoControl">
                         <el-option
                             v-for="item in kojiHouseNoOptions"
                             :key="item.optValue"
@@ -88,13 +88,16 @@
         splitTable: SplitObj[] = [];
         orgSplitTable: SplitObj[] = [];
         orderObj: OrderObject;
+        orderStatusMapping: object={}
 
 
-        init(row) {
+        init(row, orderStatusMapping) {
             console.log('弹窗过来数据！')
             console.log(row)
             this.getFermentationHolder() // 发酵罐下拉
             this.getKojiHolder(row) // 曲房号下拉
+            this.orderObj = row;
+            this.orderStatusMapping = orderStatusMapping
             KOJI_API.ORDER_SPLITE_QUERY_BY_ID_API({
                 current: 1,
                 size: 9999,
@@ -102,11 +105,34 @@
             }).then(({ data }) => {
                 console.log('拆分回传！')
                 console.log(data)
-                this.orderObj = row;
                 this.dialogFormVisible = true;
                 this.splitTable = JSON.parse(JSON.stringify(data.data.records))
-                this.orgSplitTable = JSON.parse(JSON.stringify(data.data.records))
+                this.splitTable.forEach(item => {
+                    this.$set(item, 'statusName', this.orderStatusMapping[item.status])
+                })
+
+                this.orgSplitTable = JSON.parse(JSON.stringify(this.splitTable))
             })
+
+        }
+
+        changeKojiHouseNoControl() {
+            console.log(this.checkTheSame())
+        }
+
+        checkTheSame() {
+            const tempCheckArray: string[] = []
+            this.splitTable.forEach(item => {
+                const temp = `${item.kojiHouseNo}-${item.addKojiDate}`
+                if (!(tempCheckArray.includes(temp))) {
+                    tempCheckArray.push(`${item.kojiHouseNo}-${item.addKojiDate}`)
+                } else {
+                    return false
+                }
+            })
+            console.log('tempCheckArray')
+            console.log(tempCheckArray)
+            return true
 
         }
 
@@ -170,18 +196,17 @@
                 // fermentPotId: this.orderObj.fermentPotId,
                 // fermentPotNo: this.orderObj.fermentPotNo,
                 orderNo: this.orderObj.orderNo,
-                // kojiHouseId: string;
-                // kojiHouseNo: string;
+                // kojiHouseId: this.orderObj.kojiHouseId,
+                // kojiHouseNo: this.orderObj.kojiHouseNo,
                 materialCode: this.orderObj.materialCode,
                 materialName: this.orderObj.materialName,
                 // orderId: string;
-                // orderNo: string;
-                // orderType: string;
+                orderType: this.orderObj.orderType,
                 outKojiDate: getNewDay(this.orderObj.orderStartDate, 2),
-                // productDate: Date;
+                productDate: this.orderObj.productDate,
                 status: 'N',
-                // workShop: string;
-                // workShopName: string;
+                workShopName: this.orderObj.workShopName,
+                workShop: this.orderObj.workShop,
                 planOutput: this.orderObj.planOutput,
                 outputUnit: this.orderObj.outputUnit,
                 outputUnitName: this.orderObj.outputUnitName,
@@ -303,7 +328,7 @@
         orderType?: string;
         outKojiDate?: string;
         productDate?: string;
-        status?: string;
+        status: string;
         workShop?: string;
         workShopName?: string;
         planOutput?: number;

@@ -3,7 +3,7 @@
  * @Anthor: Telliex
  * @Date: 2020-08-27 14:28:27
  * @LastEditors: Telliex
- * @LastEditTime: 2020-09-23 21:10:58
+ * @LastEditTime: 2020-09-24 15:48:21
  */
 import httpProxy from 'utils/net/httpProxy';
 const KOJI_API = {
@@ -107,6 +107,14 @@ const KOJI_API = {
      * @property ORDER_SPLITE_QUERY_BY_ID_API 制曲车间-订单拆分-根据车间订单Id查询曲房订单明细
      */
     ORDER_SPLITE_QUERY_BY_ID_API: params => httpProxy('/koji/kojiHouseSplit/batchQueryByOrderNo', 'POST', params),
+    /**
+     * @property ORDER_SPLITE_REMOVE_API 制曲车间-订单拆分-曲房订单批量删除
+     */
+    ORDER_SPLITE_REMOVE_API: params => httpProxy('/koji/kojiHouseSplit/batchRemove', 'POST', params),
+    /**
+     * @property ORDER_SPLITE_DELETE_VALIDATEDATE_API 制曲车间-订单拆分-根据日期判断是否可以修改日期或删除记录
+     */
+    ORDER_SPLITE_DELETE_VALIDATEDATE_API: params => httpProxy('/koji/kojiHouseSplit/validateDate', 'POST', params),
     /**
      * @property ORDER_SPLITE_SAVE_API 制曲车间-订单拆分-保存订单拆分明细
      */
