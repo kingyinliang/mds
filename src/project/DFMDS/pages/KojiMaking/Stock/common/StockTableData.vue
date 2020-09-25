@@ -59,7 +59,16 @@
         }
     })
     export default class StockTableData extends Vue {
-        @Prop({ default: '' }) workShop: number | string;
+        @Prop({
+            default: {
+                workShop: '',
+                wareHouseNo: '',
+                materialLocation: '',
+                beanWareHouse: '',
+                beanLocation: ''
+            }
+        }) workShopInfo: WorkShopInfo;
+
         @Prop({ default: false }) isHistoryPage: boolean;
         @Prop({ default: false }) stockType: string;
 
@@ -94,7 +103,11 @@
                 current: this.tablePage,
                 // factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
                 size: this.tableSize,
-                workShopId: this.workShop
+                workShop: this.workShopInfo.workShop,
+                wareHouseNo: this.workShopInfo.wareHouseNo || null,
+                beanWareHouse: this.workShopInfo.beanWareHouse || null,
+                beanLocation: this.workShopInfo.beanLocation || null,
+                materialLocation: this.workShopInfo.materialLocation || null
             };
             if (!this.isHistoryPage) {
                 KOJI_API[`KOJI_STOCK_${this.stockType}_DETAIL_CUR_LIST_API`](queryObj).then(({ data }) => {
@@ -141,6 +154,14 @@
         private btnCheckStock(row) {
             this.$refs.stockCheckDialog.init(row, []);
         }
+    }
+
+    interface WorkShopInfo {
+        workShop?: string;
+        wareHouseNo?: string;
+        materialLocation?: string;
+        beanWareHouse?: string;
+        beanLocation?: string;
     }
 </script>
 <style lang="scss" scoped>

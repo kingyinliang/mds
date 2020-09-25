@@ -4,9 +4,17 @@
             <el-table-column type="index" width="55" label="序号" fixed />
             <el-table-column label="状态" width="100" prop="statusName" :show-overflow-tooltip="true" />
             <el-table-column label="锅单号" width="100" prop="potOrderNo" :show-overflow-tooltip="true" />
-            <el-table-column label="生产锅序" width="100" prop="potOrder" :show-overflow-tooltip="true" />
+            <el-table-column label="生产锅序" width="100" prop="potOrder" :show-overflow-tooltip="true">
+                <template slot-scope="scope">
+                    {{ `第${scope.row.potOrder}锅` }}
+                </template>
+            </el-table-column>
             <el-table-column label="生产日期" width="100" prop="productDate" :show-overflow-tooltip="true" />
-            <el-table-column label="锅号" width="100" prop="potNo" :show-overflow-tooltip="true" />
+            <el-table-column label="锅号" width="100" prop="potNoName" :show-overflow-tooltip="true">
+                <template slot-scope="scope">
+                    {{ `${scope.row.potNoName}` }}
+                </template>
+            </el-table-column>
             <el-table-column min-width="180" label="生产物料" :show-overflow-tooltip="true">
                 <template slot-scope="scope">
                     {{ scope.row.materialCode + ' ' + scope.row.materialName }}

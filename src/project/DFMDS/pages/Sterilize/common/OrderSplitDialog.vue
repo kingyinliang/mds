@@ -113,6 +113,7 @@
 
         potNoChange(row) {
             const holderObj: (any) = this.holder.filter(it => it.holderNo === row.potNo);// eslint-disable-line
+            row.potName = holderObj[0].holderName;
             row.potCount = holderObj[0].holderBatch;
             row.potAmount = holderObj[0].holderVolume;
         }

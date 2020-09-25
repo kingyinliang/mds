@@ -3,7 +3,7 @@
  * @Anthor: Telliex
  * @Date: 2020-08-27 14:28:27
  * @LastEditors: Telliex
- * @LastEditTime: 2020-09-14 16:53:39
+ * @LastEditTime: 2020-09-25 13:33:14
  */
 import httpProxy from 'utils/net/httpProxy';
 const KOJI_API = {
@@ -16,12 +16,12 @@ const KOJI_API = {
      */
     KOJI_STOCK_FLOUR_INDEX_LIST_API: params => httpProxy('/koji/kojiWheatStorage/queryDetailList', 'GET', params),
     /**
-    * @property {string} KOJI_STOCK_FLOUR_DETAIL_CUR_LIST_API 麦粉库存-当前详情-分页
-    */
+     * @property {string} KOJI_STOCK_FLOUR_DETAIL_CUR_LIST_API 麦粉库存-当前详情-分页
+     */
     KOJI_STOCK_FLOUR_DETAIL_CUR_LIST_API: params => httpProxy('/koji/kojiWheatStorage/queryPage/currentDetails', 'POST', params),
     /**
-    * @property {string} KOJI_STOCK_FLOUR_DETAIL_HISTORY_LIST_API 麦粉库存-历史详情-分页
-    */
+     * @property {string} KOJI_STOCK_FLOUR_DETAIL_HISTORY_LIST_API 麦粉库存-历史详情-分页
+     */
     KOJI_STOCK_FLOUR_DETAIL_HISTORY_LIST_API: params => httpProxy('/koji/kojiWheatStorage/queryPage/historyDetails', 'POST', params),
 
     /**
@@ -33,12 +33,12 @@ const KOJI_API = {
      */
     KOJI_STOCK_BEAN_INDEX_LIST_API: params => httpProxy('/koji/kojiBeanStorage/queryDetailList', 'GET', params),
     /**
-    * @property {string} KOJI_STOCK_BEAN_DETAIL_CUR_LIST_API 大豆库存-当前详情-分页
-    */
+     * @property {string} KOJI_STOCK_BEAN_DETAIL_CUR_LIST_API 大豆库存-当前详情-分页
+     */
     KOJI_STOCK_BEAN_DETAIL_CUR_LIST_API: params => httpProxy('/koji/kojiBeanStorage/queryPage/currentDetails', 'POST', params),
     /**
-    * @property {string} KOJI_STOCK_BEAN_DETAIL_HISTORY_LIST_API 大豆库存-历史详情-分页
-    */
+     * @property {string} KOJI_STOCK_BEAN_DETAIL_HISTORY_LIST_API 大豆库存-历史详情-分页
+     */
     KOJI_STOCK_BEAN_DETAIL_HISTORY_LIST_API: params => httpProxy('/koji/kojiBeanStorage/queryPage/historyDetails', 'POST', params),
 
     /**
@@ -50,21 +50,21 @@ const KOJI_API = {
      */
     KOJI_STOCK_Y158_INDEX_LIST_API: params => httpProxy('/koji/kojiStrainStorage/queryDetailList', 'GET', params),
     /**
-    * @property {string} KOJI_STOCK_Y158_DETAIL_CUR_LIST_API Y158菌库存-当前详情-分页
-    */
+     * @property {string} KOJI_STOCK_Y158_DETAIL_CUR_LIST_API Y158菌库存-当前详情-分页
+     */
     KOJI_STOCK_Y158_DETAIL_CUR_LIST_API: params => httpProxy('/koji/kojiStrainStorage/queryPage/currentDetails', 'POST', params),
     /**
-    * @property {string} KOJI_STOCK_Y158_DETAIL_HISTORY_LIST_API Y158菌库存-历史详情-分页
-    */
+     * @property {string} KOJI_STOCK_Y158_DETAIL_HISTORY_LIST_API Y158菌库存-历史详情-分页
+     */
     KOJI_STOCK_Y158_DETAIL_HISTORY_LIST_API: params => httpProxy('/koji/kojiStrainStorage/queryPage/historyDetails', 'POST', params),
 
     /**
-    * @property {string} KOJI_STOCK_Y158_DETAIL_ADJUST_API 执行调整
-    */
+     * @property {string} KOJI_STOCK_Y158_DETAIL_ADJUST_API 执行调整
+     */
     KOJI_STOCK_Y158_DETAIL_ADJUST_API: params => httpProxy('/koji/kojiStorageAdjust/adjust', 'POST', params),
     /**
-    * @property {string} KOJI_STOCK_Y158_DETAIL_ADJUST_LIST_API 库存调整-分页查询
-    */
+     * @property {string} KOJI_STOCK_Y158_DETAIL_ADJUST_LIST_API 库存调整-分页查询
+     */
     KOJI_STOCK_Y158_DETAIL_ADJUST_LIST_API: params => httpProxy('/koji/kojiStorageAdjust/queryPage', 'POST', params),
 
     /**
@@ -147,8 +147,40 @@ const KOJI_API = {
     /**
     * @property {string} KOJI_MATERIAL_GET_EDIT_QUERY_API 制曲车间-修改编辑物料领用
     */
-    KOJI_MATERIAL_GET_EDIT_QUERY_API: params => httpProxy('/kojiMaterial/update', 'POST', params)
+    KOJI_MATERIAL_GET_EDIT_QUERY_API: params => httpProxy('/kojiMaterial/update', 'POST', params),
 
+    /**
+     * @property ORDER_SPLITE_QUERY_BY_ID_API 制曲车间-订单拆分-根据车间订单Id查询曲房订单明细
+     */
+    ORDER_SPLITE_QUERY_BY_ID_API: params => httpProxy('/koji/kojiHouseSplit/batchQueryByOrderNo', 'POST', params),
+    /**
+     * @property ORDER_SPLITE_REMOVE_API 制曲车间-订单拆分-曲房订单批量删除
+     */
+    ORDER_SPLITE_REMOVE_API: params => httpProxy('/koji/kojiHouseSplit/batchRemove', 'POST', params),
+    /**
+     * @property ORDER_SPLITE_DELETE_VALIDATEDATE_API 制曲车间-订单拆分-根据日期判断是否可以修改日期或删除记录
+     */
+    ORDER_SPLITE_DELETE_VALIDATEDATE_API: params => httpProxy('/koji/kojiHouseSplit/validateDate', 'POST', params),
+    /**
+     * @property ORDER_SPLITE_REMOVE_VALIDATEDATE_API 制曲车间-订单拆分-根据曲房订单号查询是否满足删除条件
+     */
+    ORDER_SPLITE_REMOVE_VALIDATEDATE_API: params => httpProxy('/koji/kojiHouseSplit/validateDelete', 'GET', params),
+    /**
+     * @property ORDER_SPLITE_SAVE_API 制曲车间-订单拆分-保存订单拆分明细
+     */
+    ORDER_SPLITE_SAVE_API: params => httpProxy('/koji/kojiHouseSplit/save', 'POST', params),
+    /**
+     * @property KOJI_INDEX_QUERY_ORDER_API 制曲车间-制曲首页-查询制曲订单列表
+     */
+    KOJI_INDEX_QUERY_ORDER_API: params => httpProxy('/kojiIndex/batchQueryHouseSplit', 'POST', params),
+    /**
+     * @property KOJI_INDEX_QUERY_SC_ORDER_API 制曲车间-制曲首页-查询Sc蒸豆订单列表
+     */
+    KOJI_INDEX_QUERY_SC_ORDER_API: params => httpProxy('/kojiIndex/batchQueryScOrder', 'POST', params),
+    /**
+     * @propertyKOJI_ORDER_QUERY_API 基础数据-订单管理-根据车间Id查询车间订单列表
+     */
+    KOJI_ORDER_QUERY_API: params => httpProxy('/order/queryListKoji', 'POST', params)
 };
 
 export default KOJI_API;

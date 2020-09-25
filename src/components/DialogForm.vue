@@ -3,7 +3,7 @@
  * @Anthor: Telliex
  * @Date: 2020-09-02 10:21:15
  * @LastEditors: Telliex
- * @LastEditTime: 2020-09-15 19:13:20
+ * @LastEditTime: 2020-09-21 16:15:12
 -->
 <template lang="pug">
     el-dialog(:title="formElementSetting.props.title" :close-on-click-modal="false" :visible.sync="isCurrentDailogShow")
@@ -14,7 +14,6 @@
                         el-option(v-for="(opt, optIndex) in formElement.optionList" :key="opt+optIndex" :label="opt.optLabel" :value="opt.optValue" )
                 el-form-item(v-else-if="formElement.type==='select'" :key="formElement.prop+index" :label="`${formElement.label}：` || ''" :prop="formElement.prop" :label-width="`${formElement.labelWidth || formElementSetting.props.labelWidth}px`" :rules="formElement.rules" )
                     el-select(:ref="formElement.prop" v-model="dataForm[formElement.prop]" filterable :placeholder="formElement.placeholder" style="width: 100%;" clearable @clear="clearVal(formElement)" :disabled="formElement.disabled || false" @change="((val)=>{emitChange(val,formElement,index)})")
-                        //- el-option(v-for="(opt, optIndex) in formElement.optionList" :key="opt+optIndex" :label="setLabel(opt, formElement)" :value="opt[formElement.resVal.value]")
                         el-option(v-for="(opt, optIndex) in formElement.optionList" :key="opt+optIndex" :label="opt.optLabel" :value="opt.optValue")
                 el-form-item(v-else-if="formElement.type==='input'&&formElement.typeof==='number'" :key="formElement.prop+index" :label="`${formElement.label}：` || ''" :prop="formElement.prop" :label-width="`${formElement.labelWidth || 100}px`" :rules="formElement.rules")
                     el-input(:ref="formElement.prop" v-model.number="dataForm[formElement.prop]" :placeholder="formElement.placeholder" :oninput="formElement.oninput" clearable :disabled="formElement.disabled || false" )
@@ -120,15 +119,11 @@
                     }
 
                 }
-
-
             });
         }
 
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
         emitChange(val, element, index) {
-            console.log(val)
-            console.log(element)
-            console.log(index)
             // TODO 目前只接受一个连动，后续在添加
             if (element.linkageProp) {
                 // 連動對象
@@ -137,58 +132,6 @@
                     this.$set(target, 'optionList', JSON.parse(JSON.stringify(res)))
                 })
             }
-
-
-            // 联动监听事件对象
-            // if (element.linkageProp) {
-            //     console.log('有1个')
-            //     this.$nextTick(() => {
-            //         // 添加监听
-            //         this.$refs[item.prop].emitChange = val => {
-            //             console.log('有动静了！！！！')
-            //             // this.clearTableAndPage();
-            //             item.linkageProp.forEach(linkagePropItem => {
-            //                 // 联动的对象
-            //                 const linkagePropItemObj = this.formElementSetting.data.filter(it => it.prop === linkagePropItem)[0];
-            //                 // 联动的对象赋值
-            //                 this.dataForm[linkagePropItemObj.prop] = ''; // 先清空
-            //                 this.$refs[linkagePropItemObj.prop].emitChange('');
-            //                 // 获取联动的下拉
-            //                 if (val) {
-            //                     const secondVal = '';
-            //                     const fromVal = '';
-            //                     // if (linkagePropItemObj.returnValue) {
-            //                     //     // 抓取其他接口返回的其他参数
-            //                     //     secondVal = this.optionLists[linkagePropItemObj.returnValue.findList].find(it => it[linkagePropItemObj.returnValue.findId] === val)[linkagePropItemObj.returnValue.findField]
-            //                     // }
-            //                     // if (linkagePropItemObj.formValue) {
-            //                     //     fromVal = this.dataForm[linkagePropItemObj.formValue];
-            //                     // }
-            //                     linkagePropItemObj.optionsFn(val, secondVal, fromVal).then(res => {
-            //                         console.log(res)
-            //                         // let dataTemp = data
-            //                         // if (linkagePropItemObj.resVal.resDataArray) {
-            //                         //     linkagePropItemObj.resVal.resDataArray.map(sole => {
-            //                         //         dataTemp = dataTemp[sole]
-            //                         //     })
-            //                         // } else {
-            //                         //     dataTemp = data[linkagePropItemObj.resVal.resData];
-            //                         // }
-            //                         // this.$set(this.optionLists, linkagePropItemObj.prop, dataTemp);
-            //                         // if (dataTemp.length > 0 && linkagePropItemObj.defaultValue === '') {
-            //                         //     this.$set(this.dataForm, linkagePropItemObj.prop, dataTemp[0][linkagePropItemObj.resVal.value]);
-            //                         //     this.$nextTick(() => {
-            //                         //         this.$refs[linkagePropItemObj.prop][0].emitChange(dataTemp[0][linkagePropItemObj.resVal.value]);
-            //                         //     });
-            //                         // }
-            //                     });
-            //                 } else {
-            //                     // this.$set(this.optionLists, linkagePropItemObj.prop, []);
-            //                 }
-            //             });
-            //         };
-            //     });
-            // }
         }
 
         remoteMethod(query, index) {
@@ -203,8 +146,6 @@
                 this.formElementSetting.data[index].optionList = [];
             }
         }
-
-
     }
 </script>
 <style lang="sass" scoped></style>

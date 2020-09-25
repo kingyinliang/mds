@@ -62,7 +62,7 @@
         }
 
         workShopList: Options[]= [] // 车间缓存
-        workShopListObject: object= {}
+        workShopListObject = {}
 
         tableItemSetting={
             props: {
@@ -80,24 +80,22 @@
                     minWidth: 0,
                     width: 160, // width 会覆盖 minWidth
                     content: ['workShop'],
-
-                    // eslint-disable-next-line no-invalid-this
-                    // transList: this.test
-                    transFn: () => {
-                        return new Promise((resolve) => {
-                            COMMON_API.ORG_QUERY_WORKSHOP_API({
-                                factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
-                                deptType: ['WORK_SHOP'],
-                                deptName: '制曲'
-                            }).then(({ data }) => {
-                                const wrapperObject = {};
-                                data.data.forEach(item => {
-                                    wrapperObject[item.deptCode] = item.deptName
-                                })
-                                resolve(wrapperObject)
-                            })
-                        })
-                    }
+                    transList: {}
+                    // transFn: () => {
+                    //     return new Promise((resolve) => {
+                    //         COMMON_API.ORG_QUERY_WORKSHOP_API({
+                    //             factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
+                    //             deptType: ['WORK_SHOP'],
+                    //             deptName: '制曲'
+                    //         }).then(({ data }) => {
+                    //             const wrapperObject = {};
+                    //             data.data.forEach(item => {
+                    //                 wrapperObject[item.deptCode] = item.deptName
+                    //             })
+                    //             resolve(wrapperObject)
+                    //         })
+                    //     })
+                    // }
                 },
                 {
                     type: 'multiple', // 表格元件
@@ -117,26 +115,11 @@
                 },
                 {
                     type: 'single', // 表格元件
-                    prop: 'productProcess',
+                    prop: 'productProcessName',
                     label: '生产工序', // 表单元件名称
                     minWidth: 0,
                     width: 180,
-                    content: ['productProcess'],
-                    transFn: () => {
-                        return new Promise((resolve) => {
-                            COMMON_API.ORG_QUERY_CHILDREN_API({
-                                factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
-                                parentId: '83001011',
-                                deptType: 'PROCESS'
-                            }).then(({ data }) => {
-                                const wrapperObject = {};
-                                data.data.forEach(item => {
-                                    wrapperObject[item.deptCode] = item.deptName
-                                })
-                                resolve(wrapperObject)
-                            })
-                        })
-                    }
+                    content: ['productProcessName']
                 },
                 {
                     type: 'single', // 表格元件
@@ -576,27 +559,18 @@
         }
 
         // [dialog][data] 编辑工序
-        dataOfEditItem={
-        }
+        dataOfEditItem={}
 
+        async mounted() {
+            await this.getWorkShop()
+            this.tableItemSetting.data[0].transList = this.workShopListObject
+            this.$refs.showTable.init();
+            this.getItemsList();
+        }
 
         get mainClientHeight() {
             return this.$store.state.common.mainClientHeight;
         }
-
-        created() {
-            //
-        }
-
-        async mounted() {
-            // 获取车间下拉
-            await this.getWorkShop()
-            console.log('tttttttttttt')
-            await this.$refs.showTable.init();
-            console.log('qqqqqq')
-            this.getItemsList();
-        }
-
 
         clearSearchKeyWords() {
             this.controllableForm = {
@@ -618,18 +592,14 @@
                 materialCode: dataForm.material.split('&')[0],
                 materialName: dataForm.material.split('&')[1],
                 remark: dataForm.remark
-                // changed: dataForm.changed,
-                // changer: dataForm.changer
             }).then(() => {
                 this.$successToast('新增成功')
                 this.getItemsList(true, 'normal');
             });
         }
 
-
         // from dialog
         updateItem(dataForm) {
-            console.log(dataForm)
             KOJI_API.WORKPROCEDURE_UPDATE_API({
                 id: dataForm.id,
                 jobBookingProcess: dataForm.jobBookingProcess,
@@ -642,7 +612,6 @@
                 this.$successToast('编辑成功')
                 this.getItemsList(true, 'normal');
             });
-
         }
 
         getItemsList(haveParas = false, type = 'normal') {
@@ -664,17 +633,10 @@
                 current: this.currPage,
                 size: this.pageSize
             }).then(({ data }) => {
-                console.log('data')
-                console.log(data)
                 if (haveParas && data.data.records.length === 0) {
-                        this.$infoToast('暂无任何内容');
+                    this.$infoToast('暂无任何内容');
                 }
                 this.tableData = data.data.records;
-                // 处理掉生产物料组成字串单元空格
-                this.tableData.forEach(item => {
-                    item.materialCode = item.materialCode.replace(/\s*/g, '');
-                    item.materialName = item.materialName.replace(/\s*/g, '');
-                })
                 this.currPage = data.data.current;
                 this.pageSize = data.data.size;
                 this.totalCount = data.data.total;
@@ -715,7 +677,6 @@
             });
         }
 
-
         // [btn] 批量删除
         btnRemoveItems() {
             const tempMultipleSelection = this.$refs.showTable.getMultipleSelection()
@@ -747,25 +708,19 @@
                     deptType: ['WORK_SHOP'],
                     deptName: '制曲'
                 }).then(({ data }) => {
-                    const optionList = data.data;
-                    this.workShopListObject = {}
-                    optionList.forEach(item => {
-                        // eslint-disable-next-line no-invalid-this
-                        this.$set(item, 'optLabel', `${item.deptName}`)
-                        // eslint-disable-next-line no-invalid-this
-                        this.$set(item, 'optValue', `${item.deptCode}`)
-                        this.workShopListObject[item.deptCode] = item.deptName
+                const optionList = data.data;
+                        this.workShopListObject = {}
+                        optionList.forEach(item => {
+                            this.$set(item, 'optLabel', `${item.deptName}`)
+                            this.$set(item, 'optValue', `${item.deptCode}`)
+                            this.workShopListObject[item.deptCode] = item.deptName
+                        })
+                        this.workShopList = optionList
+                        resolve()
                     })
-                    this.workShopList = optionList
-                    resolve()
-                })
             })
         }
 
-
-        get test() {
-            return this.workShopList
-        }
 
         // [BTN] 高级查询
         btnAdvanceSearch() {

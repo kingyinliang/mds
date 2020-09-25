@@ -1,16 +1,16 @@
 <template>
     <div>
         <el-card class="searchCard" style="margin-bottom: 5px;">
-            <el-form :model="queryForm" :rules="queryFormRules" :inline="true" size="small" label-width="70px" class="multi_row clearfix" style="font-size: 0;">
+            <el-form :model="queryForm" :rules="queryFormRules" :inline="true" size="small" label-width="70px" class="sole_row clearfix" style="font-size: 0;">
                 <template v-for="item in queryFormData">
                     <template v-if="!item.hide">
                         <el-form-item v-if="item.type === 'select'" :key="item.prop" :label="`${item.label}：` || ''" :prop="item.prop" :rules="item.rule" :label-width="`${item.labelWidth ? item.labelWidth : 70}px`">
                             <el-select v-if="item.defaultOptionsList" :ref="item.prop" v-model="queryForm[item.prop]" :style="`width: ${item.width ? item.width : 170}px;`" :filterable="item.filterable" :clearable="!item.clearable" :disabled="item.disabled" :placeholder="'请选择' + item.label">
-                                <el-option label="请选择" value="" />
+                                <!-- <el-option label="请选择" value="" /> -->
                                 <el-option v-for="(opt, optIndex) in item.defaultOptionsList" :key="optIndex" :label="opt.label" :value="opt.value" />
                             </el-select>
                             <el-select v-else :ref="item.prop" v-model="queryForm[item.prop]" :style="`width: ${item.width ? item.width : 170}px;`" :filterable="item.filterable" :clearable="!item.clearable" :disabled="item.disabled" :placeholder="'请选择' + item.label">
-                                <el-option label="请选择" value="" />
+                                <!-- <el-option label="请选择" value="" /> -->
                                 <el-option v-for="(opt, optIndex) in optionLists[item.prop]" :key="optIndex" :label="setLabel(opt, item)" :value="opt[item.resVal.value]" />
                             </el-select>
                         </el-form-item>
@@ -604,5 +604,14 @@
         }
     };
 </script>
+<style scoped>
+.searchCard >>> .el-form-item.is-error .el-input__inner,
+.searchCard >>> .el-form-item.is-success .el-input__inner,
+.searchCard >>> .el-form-item.is-error .el-input__inner:focus,
+.searchCard >>> .el-form-item.is-success .el-input__inner:focus {
+    border-color: #dcdfe6;
+}
+
+</style>
 
 <style scoped></style>

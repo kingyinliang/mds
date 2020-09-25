@@ -10,11 +10,14 @@
                     el-form-item.must-fill(label="生产订单：")
                         el-select(v-model="formHeader.orderNo" placeholder="请选择" style="width: 180px;" clearable="" @change="selectOrder"): el-option(v-for="(item) in orderNoList" :key="item.id" :label="item.orderNo" :value="item.orderNo")
                     el-form-item(label="生产物料：")
-                        p.input_border_bg(style="width: 180px;") {{ formHeader.material }}
+                        el-tooltip(class="item" effect="dark" :content="formHeader.material" placement="top-start" :disabled="formHeader.material===''")
+                            p.input_border_bg(style="width: 200px;") {{ formHeader.material }}
                     el-form-item(label="提交人员：")
-                        p.input_border_bg(style="width: 180px;") {{ formHeader.changer }}
+                        el-tooltip(class="item" effect="dark" :content="formHeader.changer" placement="top-start" :disabled="formHeader.changer===''")
+                            p.input_border_bg(style="width: 180px;") {{ formHeader.changer }}
                     el-form-item(label="提交时间：")
-                        p.input_border_bg(style="width: 180px;") {{ formHeader.changed }}
+                        el-tooltip(class="item" effect="dark" :content="formHeader.changed" placement="top-start" :disabled="formHeader.changed===''")
+                            p.input_border_bg(style="width: 180px;") {{ formHeader.changed }}
                 .searchCard__control
                     div
                         el-button(type="primary" size="small" @click="btnGetResult") 查询
@@ -27,12 +30,13 @@
                     template(slot="1"): in-storage(ref="inStorage" :is-redact="isRedact" card-title="入库列表" :table-data="tableData" :order-info="orderData" :pkg-work-shop-list="pkgWorkShopList")
                     template(slot="2"): exc-record(ref="excRecord" :is-redact="isRedact" :form-header="formHeader")
                     template(slot="3"): text-record(ref="textRecord" :is-redact="isRedact")
-                redact-box
-                    template(slot="button")
-                        el-button.button(v-if="isAuth('steStgEdit') && searchCard" type="primary" size="small" @click="isRedact = !isRedact" :disabled="!alreadySearch") {{ isRedact ? '取消' : '编辑' }}
-                        template(v-if="isRedact && searchCard" style="float: right; margin-left: 10px;")
-                            el-button(v-if="isAuth('steStgEdit')" type="primary" size="small" @click="savedDatas()") 保存
-                            el-button(v-if="isAuth('steStgSubmit')" type="primary" size="small" @click="submitDatas()") 提交
+                //- redact-box
+                //-     template(slot="button")
+                //-         el-button.button(v-if="isAuth('steStgEdit') && searchCard" type="primary" size="small" @click="isRedact = !isRedact" :disabled="!alreadySearch") {{ isRedact ? '取消' : '编辑' }}
+                //-         template(v-if="isRedact && searchCard" style="float: right; margin-left: 10px;")
+                //-             el-button(v-if="isAuth('steStgSubmit')" type="primary" size="small" @click="submitDatas()") 提交
+                //-             el-button(v-if="isAuth('steStgEdit')" type="primary" size="small" @click="savedDatas()") 保存
+            redact-box(:disabled="redactBoxDisable" :is-redact.sync='isRedact' redact-auth="steStgEdit" save-auth="steStgEdit" submit-auth="steStgSubmit" :urgent-submit="false" :submit-rules="submitRules" :saved-rules="savedRules" :saved-datas="savedDatas" :submit-datas="submitDatas")
 </template>
 
 <script lang="ts">
@@ -47,7 +51,7 @@
     import InStorage from './InStorage.vue'
     import ExcRecord from './ExcRecord.vue' // tab3 文本记录
     import TextRecord from './TextRecord.vue' // tab3 文本记录
-
+    import RedactBox from './RedactBox.vue' // 下方状态 bar
 
     @Component({
         name: 'Instorage',
@@ -55,7 +59,8 @@
             TieTabs,
             InStorage,
             ExcRecord,
-            TextRecord
+            TextRecord,
+            RedactBox
         }
     })
     export default class Instorage extends Vue {
@@ -69,6 +74,7 @@
             workShop: '',
             inKjmDate: dateFormat(new Date(), 'yyyy-MM-dd'),
             orderNo: '',
+            material: '',
             materialCode: '',
             materialName: '',
             changer: '',
@@ -86,11 +92,16 @@
         }
 
         orderData: OptionsInList={}
-        isRedact = false;
+
         workshopList: OptionsInList[] = [];
         pkgWorkShopList: OptionsInList[]=[]
         orderNoList: OptionsInList[] = [];
-        searchCard = true;
+        searchCard=true
+
+        isRedact = false;
+
+        globalOrderNumber=''
+        redactBoxDisable=true
 
         alreadySearch=false;
 
@@ -239,8 +250,25 @@
             })
         }
 
+
         // 车间选择触发
         selectWorkshop(val) {
+            this.formHeader.orderNo = ''
+            this.formHeader.material = ''
+            this.formHeader.status = ''
+            this.formHeader.changer = ''
+            this.formHeader.changed = ''
+            this.formHeader.material = ''
+            this.formHeader.materialCode = ''
+            this.formHeader.materialName = ''
+            this.formHeader.outputUnit = ''
+            this.formHeader.outputUnitName = ''
+            this.formHeader.factory = ''
+            this.formHeader.orderId = ''
+            this.formHeader.orderStatus = ''
+            this.formHeader.orderType = ''
+            this.formHeader.productDate = ''
+            this.formHeader.productLine = ''
             if (val !== '') {
                 this.formHeader.workShop = val;
                 this.formHeader.workShopName = this.workshopList.filter(item => item.targetCode === val)[0].targetName
@@ -251,6 +279,22 @@
         // 时间选择触发
         selectTime(val) {
             if (val !== '') {
+                this.formHeader.orderNo = ''
+                this.formHeader.material = ''
+                this.formHeader.status = ''
+                this.formHeader.changer = ''
+                this.formHeader.changed = ''
+                this.formHeader.material = ''
+                this.formHeader.materialCode = ''
+                this.formHeader.materialName = ''
+                this.formHeader.outputUnit = ''
+                this.formHeader.outputUnitName = ''
+                this.formHeader.factory = ''
+                this.formHeader.orderId = ''
+                this.formHeader.orderStatus = ''
+                this.formHeader.orderType = ''
+                this.formHeader.productDate = ''
+                this.formHeader.productLine = ''
                 this.formHeader.inKjmDate = val;
                 this.getOrderList()
             }
@@ -271,6 +315,7 @@
 
         // 订单选择触发
         selectOrder(val) {
+            this.globalOrderNumber = val
             if (this.formHeader.inKjmDate === '') {
                 this.$infoToast('请选择生产日期');
                 return false
@@ -362,9 +407,11 @@
                 this.getPkgWorkShopList()
                 this.$refs.excRecord.init(this.formHeader, 'INSTORAGE');
                 this.$refs.textRecord.init(this.formHeader.orderNo, 'sterilize');
+                this.redactBoxDisable = false
             })
         }
 
+        // {redact-box} 保存
         savedDatas() {
             const inStorageRequest = this.$refs.inStorage.getSavedOrSubmitData();
             const excRequest = this.$refs.excRecord.getSavedOrSubmitData(this.formHeader, 'INSTORAGE');
@@ -385,9 +432,11 @@
                 this.isRedact = false;
                 // 重整数据
                 this.btnGetResult();
+                this.selectOrder(this.globalOrderNumber)
             })
         }
 
+        // {redact-box} 提交
         submitDatas() {
             const inStorageRequest = this.$refs.inStorage.getSavedOrSubmitData();
             const excRequest = this.$refs.excRecord.getSavedOrSubmitData(this.formHeader, 'INSTORAGE');
@@ -408,9 +457,22 @@
                 this.isRedact = false;
                 // 重整数据
                 this.btnGetResult();
+                this.selectOrder(this.globalOrderNumber)
             })
         }
+
+        // {redact-box} 提交需跑的验证 function
+        submitRules(): Function[] {
+            return [this.$refs.inStorage.ruleSubmit, this.$refs.excRecord.ruleSubmit, this.$refs.textRecord.ruleSubmit]
+        }
+
+        // {redact-box} 保存需跑的验证 function
+        savedRules(): Function[] {
+            return []
+        }
+
     }
+
 
     interface FormHeader{
             workShop?: string;

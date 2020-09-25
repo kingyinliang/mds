@@ -26,13 +26,13 @@
                 <el-input v-model="dataForm.consumeUnit" placeholder="手动输入" disabled />
             </el-form-item>
             <el-form-item label="领用数量：" prop="consumeAmount">
-                <el-input v-model="dataForm.consumeAmount" placeholder="手动输入" />
+                <el-input v-model="dataForm.consumeAmount" type="number" placeholder="手动输入" />
             </el-form-item>
             <el-form-item label="领用批次：" prop="consumeBatch">
                 <el-input v-model="dataForm.consumeBatch" maxlength="10" placeholder="手动输入" />
             </el-form-item>
             <el-form-item v-if="dataForm.consumeType === '1'" label="发酵罐库存：">
-                <el-input v-model="dataForm.fermentStorage" placeholder="手动输入" />
+                <el-input v-model="dataForm.fermentStorage" type="number" placeholder="手动输入" />
             </el-form-item>
             <el-form-item label="转运罐号：">
                 <el-select v-model="dataForm.tankNo" placeholder="请选择" size="small" clearable filterable style="width: 100%;">
@@ -71,7 +71,7 @@
 
         $refs: {dataForm: HTMLFormElement};
         visible = false;
-        potArr = [];
+        potArr: PotObject[] = [];
         transferTank = [];
         materialArr: MaterialObj[] = [];
         dataRule = {
@@ -152,7 +152,11 @@
                 if (valid) {
                     if (this.dataForm.consumeType === '0') {
                         this.dataForm.fermentPotNo = '';
+                        this.dataForm.fermentPotNoName = '';
                         this.dataForm.fermentStorage = '';
+                    } else {
+                        const filterArr1: (any) = this.potArr.filter(it => it.holderNo === this.dataForm.fermentPotNo);// eslint-disable-line
+                        this.dataForm.fermentPotNoName = filterArr1[0].holderName;
                     }
                     this.visible = false;
                     this.$emit('success', this.dataForm)
@@ -171,6 +175,7 @@
     interface DataObj {
         id?: string;
         consumeType?: string;
+        fermentPotNoName?: string;
         stePotNo?: string;
         potOrderId?: string;
         potOrderNo?: string;
@@ -187,6 +192,25 @@
         changer?: string;
         changed?: string;
     }
+
+    interface PotMaterial {
+        materialCode: string;
+        materialName: string;
+    }
+
+    interface PotObject {
+        deptId: string;
+        holderArea: string;
+        holderBatch: string;
+        holderName: string;
+        holderNo: string;
+        holderStatus: string;
+        holderType: string;
+        holderVolume: number;
+        id: string;
+        material: PotMaterial[];
+    }
+
 </script>
 
 <style scoped>
