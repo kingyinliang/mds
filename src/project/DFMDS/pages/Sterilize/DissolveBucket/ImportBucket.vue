@@ -210,7 +210,7 @@
         currentCycle=''
 
         productMaterialList: ProductMaterial[]=[] // 生产物料清单
-        feedMateriallList: object[]=[] // 投料物料清单
+        // feedMateriallList: object[]=[] // 投料物料清单
 
         importBucketStatus=false // 是否满罐
 
@@ -251,6 +251,8 @@
 
 
         changeProdcutMaterialOption(val) {
+            console.log('val')
+            console.log(val)
             if (val.prodcutMaterial !== '') {
                 val.productMaterialName = this.optionsTree.filter(item => item.productMaterialList[0].dictCode === val.prodcutMaterial)[0].productMaterialList[0].dictValue
             }
@@ -264,11 +266,18 @@
         }
 
         findIndex(val) {
+            if (val === '') {
+                return []
+            }
             return this.optionsTree.filter(item => item.productMaterialList[0].dictCode === val)[0].feedMateriallList
         }
 
         // 入罐
         async init(item, workshop) {
+            console.log('item')
+            console.log(item)
+            console.log('workshop')
+            console.log(workshop)
             this.isTableDialogVisible = true
             this.currentPotId = item.potId
             this.currentPotNo = item.potNo
@@ -309,7 +318,6 @@
                                 if (target.data) {
                                     target.data.forEach(items => {
                                         this.optionsTree[index].feedMateriallList.push({ dictCode: items.useMaterial, dictValue: items.useMaterial + ' ' + items.useMaterialName })
-                                        // this.feedMateriallList.push({ dictCode: items.useMaterial, dictValue: items.useMaterial + ' ' + items.useMaterialName })
                                     })
                                 }
                             });
@@ -358,24 +366,24 @@
             // });
         }
 
-        changeOption(val) {
-            // val.productMaterialName=this.productMaterialList.filter(item=>item.dictCode===scope.row.prodcutMaterial)[0].dictValue
-            // API 辅料前处理-查询不带分页 (查询生产物料)
-            STE_API.STE_PREACCESSORIES_LIST_API({
-                factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
-                productMaterial: val,
-                preStage: 'DISSOLUTION'
-            }).then(({ data }) => {
-                console.log('辅料前处理')
-                console.log(data)
-                this.feedMateriallList = []
-                if (data.data) {
-                    data.data.forEach(element => {
-                        this.feedMateriallList.push({ dictCode: element.useMaterial, dictValue: element.useMaterial + ' ' + element.useMaterialName })
-                    })
-                }
-            });
-        }
+        // changeOption(val) {
+        //     // val.productMaterialName=this.productMaterialList.filter(item=>item.dictCode===scope.row.prodcutMaterial)[0].dictValue
+        //     // API 辅料前处理-查询不带分页 (查询生产物料)
+        //     STE_API.STE_PREACCESSORIES_LIST_API({
+        //         factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
+        //         productMaterial: val,
+        //         preStage: 'DISSOLUTION'
+        //     }).then(({ data }) => {
+        //         console.log('辅料前处理')
+        //         console.log(data)
+        //         this.feedMateriallList = []
+        //         if (data.data) {
+        //             data.data.forEach(element => {
+        //                 this.feedMateriallList.push({ dictCode: element.useMaterial, dictValue: element.useMaterial + ' ' + element.useMaterialName })
+        //             })
+        //         }
+        //     });
+        // }
 
         removeDataRow(row) {
             this.$confirm('是否删除?', '提示', {

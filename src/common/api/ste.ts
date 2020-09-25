@@ -82,7 +82,7 @@ const STE_API = {
      */
     STE_DISSOLUTIONBUCKET_ITEM_QUERY_API: params => httpProxy('/steDissolutionPot/item/query', 'POST', params),
     /**
-     * @property {string} STE_DISSOLUTIONBUCKET_ITEM_QUERY_API 杀菌车间-溶解罐管理-满罐、取消满罐
+     * @property {string} STE_DISSOLUTIONBUCKET_FULL_API 杀菌车间-溶解罐管理-满罐、取消满罐
      */
     STE_DISSOLUTIONBUCKET_FULL_API: params => httpProxy('/steDissolutionPot/full', 'POST', params),
     /**
@@ -90,11 +90,11 @@ const STE_API = {
      */
     STE_DISSOLUTIONBUCKET_CLEAN_API: params => httpProxy('/steDissolutionPot/clean', 'POST', params),
     /**
-     * @property {string} STE_DISSOLUTIONBUCKET_ITEM_QUERY_API 杀菌车间-溶解罐管理-入罐
+     * @property {string} STE_DISSOLUTIONBUCKET_SAVE_API 杀菌车间-溶解罐管理-入罐
      */
     STE_DISSOLUTIONBUCKET_SAVE_API: params => httpProxy('/steDissolutionPot/save', 'POST', params),
     /**
-     * @property {string} STE_DISSOLUTIONBUCKET_ITEM_QUERY_API 杀菌车间-溶解罐管理-查询入罐信息
+     * @property {string} STE_DISSOLUTIONBUCKET_ENTER_QUERY_API 杀菌车间-溶解罐管理-查询入罐信息
      */
     STE_DISSOLUTIONBUCKET_ENTER_QUERY_API: params => httpProxy('/steDissolutionPot/enter/query', 'POST', params),
     /**

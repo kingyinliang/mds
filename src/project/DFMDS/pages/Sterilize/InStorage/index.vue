@@ -99,6 +99,8 @@
         searchCard=true
 
         isRedact = false;
+
+        globalOrderNumber=''
         redactBoxDisable=true
 
         alreadySearch=false;
@@ -248,8 +250,25 @@
             })
         }
 
+
         // 车间选择触发
         selectWorkshop(val) {
+            this.formHeader.orderNo = ''
+            this.formHeader.material = ''
+            this.formHeader.status = ''
+            this.formHeader.changer = ''
+            this.formHeader.changed = ''
+            this.formHeader.material = ''
+            this.formHeader.materialCode = ''
+            this.formHeader.materialName = ''
+            this.formHeader.outputUnit = ''
+            this.formHeader.outputUnitName = ''
+            this.formHeader.factory = ''
+            this.formHeader.orderId = ''
+            this.formHeader.orderStatus = ''
+            this.formHeader.orderType = ''
+            this.formHeader.productDate = ''
+            this.formHeader.productLine = ''
             if (val !== '') {
                 this.formHeader.workShop = val;
                 this.formHeader.workShopName = this.workshopList.filter(item => item.targetCode === val)[0].targetName
@@ -260,6 +279,22 @@
         // 时间选择触发
         selectTime(val) {
             if (val !== '') {
+                this.formHeader.orderNo = ''
+                this.formHeader.material = ''
+                this.formHeader.status = ''
+                this.formHeader.changer = ''
+                this.formHeader.changed = ''
+                this.formHeader.material = ''
+                this.formHeader.materialCode = ''
+                this.formHeader.materialName = ''
+                this.formHeader.outputUnit = ''
+                this.formHeader.outputUnitName = ''
+                this.formHeader.factory = ''
+                this.formHeader.orderId = ''
+                this.formHeader.orderStatus = ''
+                this.formHeader.orderType = ''
+                this.formHeader.productDate = ''
+                this.formHeader.productLine = ''
                 this.formHeader.inKjmDate = val;
                 this.getOrderList()
             }
@@ -280,6 +315,7 @@
 
         // 订单选择触发
         selectOrder(val) {
+            this.globalOrderNumber = val
             if (this.formHeader.inKjmDate === '') {
                 this.$infoToast('请选择生产日期');
                 return false
@@ -396,6 +432,7 @@
                 this.isRedact = false;
                 // 重整数据
                 this.btnGetResult();
+                this.selectOrder(this.globalOrderNumber)
             })
         }
 
@@ -420,6 +457,7 @@
                 this.isRedact = false;
                 // 重整数据
                 this.btnGetResult();
+                this.selectOrder(this.globalOrderNumber)
             })
         }
 

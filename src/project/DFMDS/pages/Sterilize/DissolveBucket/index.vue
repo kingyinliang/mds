@@ -407,6 +407,7 @@
 
         // 去详请
         goTargetDetail(item) {
+            item.workShop = this.currentWorkShop
             this.$store.commit('sterilize/updateDissolveBucket', item);
             this.$store.commit('common/updateMainTabs', this.$store.state.common.mainTabs.filter(subItem => subItem.name !== 'DFMDS-pages-Sterilize-DissolveBucket-DissolveBucketDetail'))
             setTimeout(() => {
