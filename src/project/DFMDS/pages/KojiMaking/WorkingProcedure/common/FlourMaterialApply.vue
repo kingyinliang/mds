@@ -1,6 +1,45 @@
 <template>
     <div class="material-get-content">
-        <mds-card title="物料领用">
+        <mds-card title="Y158" name="table1" icon-bg="#487BFF">
+            <template slot="titleBtn">
+                <el-form inline label-width="115px">
+                    <el-form-item class="floatr cleanMarginBottom">
+                        <el-button type="primary" size="small" :disabled="!isRedact" @click="addDataRow()">
+                            新增
+                        </el-button>
+                    </el-form-item>
+                </el-form>
+            </template>
+            <el-table header-row-class-name="tableHead" class="newTable" :data="craftTable" :row-class-name="RowDelFlag" border tooltip-effect="dark" size="mini">
+                <el-table-column type="index" label="序号" width="50px" fixed />
+                <el-table-column label="领用库位" width="120" prop="a" :show-overflow-tooltip="true" />
+                <el-table-column label="领用物料" width="120" prop="a" :show-overflow-tooltip="true" />
+                <el-table-column label="领用批次" width="120" prop="a" :show-overflow-tooltip="true" />
+                <el-table-column label="库存数量" width="120" prop="a" :show-overflow-tooltip="true" />
+                <el-table-column label="领用数量" width="120" prop="a" :show-overflow-tooltip="true" />
+                <el-table-column label="单位" width="120" prop="a" :show-overflow-tooltip="true" />
+                <el-table-column label="添加人" width="120" prop="a" :show-overflow-tooltip="true" />
+                <el-table-column label="备注" width="120" prop="a" :show-overflow-tooltip="true" />
+                <el-table-column label="操作人" width="140">
+                    <template slot-scope="scope">
+                        {{ scope.row.changer }}
+                    </template>
+                </el-table-column>
+                <el-table-column label="操作时间" width="160">
+                    <template slot-scope="scope">
+                        {{ scope.row.changed }}
+                    </template>
+                </el-table-column>
+                <el-table-column label="操作" width="70" fixed="right">
+                    <template slot-scope="scope">
+                        <el-button class="delBtn" type="text" icon="el-icon-delete" size="mini" :disabled="!isRedact" @click="removeRow(scope.row)">
+                            删除
+                        </el-button>
+                    </template>
+                </el-table-column>
+            </el-table>
+        </mds-card>
+        <mds-card title="物料领用" name="table2">
             <el-row class="home_card__main" :gutter="10">
                 <el-col v-for="item in stockInfoList" :key="item.potId" :span="6">
                     <div class="card-stock">
@@ -10,7 +49,7 @@
                                 领用
                             </el-button>
                         </div>
-                        <material-detail-list :material-detail-data="item" />
+                        <flour-material-detail-list :material-detail-data="item" />
                     </div>
                 </el-col>
             </el-row>
@@ -53,33 +92,46 @@
             </div>
         </mds-card>
         <audit-log :table-data="semiAudit" :verify-man="'verifyMan'" :verify-date="'verifyDate'" :status="true" />
-        <semi-receive-dialog v-if="visible" ref="SemiReceiveDialog" :form-header="formHeader" @success="dataPush" />
+        <flour-material-apply-dialog v-if="flourVisible" ref="FlourMaterialApplyDialog" :form-header="formHeader" @success="flourDataPush" />
+        <y158-material-apply-dialog v-if="y158Visible" ref="Y158MaterialApplyDialog" :form-header="formHeader" @success="y158DataPush" />
     </div>
 </template>
 
 <script lang="ts">
     import { Vue, Component, Prop } from 'vue-property-decorator';
     import { STE_API } from 'common/api/api';
-    import SemiReceiveDialog from './SemiReceiveDialog.vue'
-    import MaterialDetailList from './MaterialDetailList.vue'
+    import FlourMaterialApplyDialog from './FlourMaterialApplyDialog.vue'
+    import FlourY158ApplyDialog from './FlourY158ApplyDialog.vue'
+    import FlourMaterialDetailList from './FlourMaterialDetailList.vue'
     import { dataEntryData } from 'utils/utils';
 
     @Component({
+        name: 'FlourMaterialApply',
         components: {
-            SemiReceiveDialog,
-            MaterialDetailList
+            FlourMaterialApplyDialog,
+            FlourY158ApplyDialog,
+            FlourMaterialDetailList
         }
     })
-    export default class SemiReceive extends Vue {
+    export default class FlourMaterialApply extends Vue {
         @Prop({ default: false }) isRedact: boolean;
 
-        $refs: {SemiReceiveDialog: HTMLFormElement};
+        $refs: {
+            FlourMaterialApplyDialog: HTMLFormElement;
+            FlourY158ApplyDialog: HTMLFormElement;
+        };
+
+        mounted() {
+            console.log(1)
+        }
 
         formHeader = {};
         semiAudit = [];
         semiTable: SemiObj[] = [];
         orgSemiTable: SemiObj[] = [];
-        visible = false;
+        flourVisible = false;
+        y158Visible = false;
+        craftTable = []
         // 物料list
         stockInfoList: object[] = [{}, {}, {}, {}];
 
@@ -111,6 +163,12 @@
             return true
         }
 
+        // Y158弹窗
+        addDataRow() {
+            console.log(3)
+             this.y158Visible = true;
+        }
+
         savedData(formHeader) {
             const delIds = [];
             const insertData = [];
@@ -137,9 +195,9 @@
         }
 
         receive() {
-            this.visible = true;
+            this.flourVisible = true;
             this.$nextTick(() => {
-                this.$refs.SemiReceiveDialog.init()
+                this.$refs.FlourMaterialApplyDialog.init()
             });
         }
 
@@ -151,13 +209,13 @@
                 delete it.modifiedId
             }
             row.modifiedId = 1;
-            this.visible = true;
+            this.flourVisible = true;
             this.$nextTick(() => {
-                this.$refs.SemiReceiveDialog.init(row)
+                this.$refs.FlourMaterialApplyDialog.init(row)
             });
         }
 
-        dataPush(data: SemiObj) {
+        flourDataPush(data: SemiObj) {
             if (data.modifiedId === 1) {
                 for (const it of this.semiTable) {
                     if (it.modifiedId === 1) {
@@ -170,7 +228,11 @@
             } else {
                 this.semiTable.push(data);
             }
-            this.visible = false;
+            this.flourVisible = false;
+        }
+
+        y158DataPush(data: SemiObj) {
+            console.log(data)
         }
 
         removeDataRow(row, index) {
@@ -263,6 +325,9 @@
         font-weight: 400;
         font-size: 14px;
         line-height: 22px;
+    }
+    .cleanMarginBottom {
+        margin-bottom: 10px;
     }
 }
 

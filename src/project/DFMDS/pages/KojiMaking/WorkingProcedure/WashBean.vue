@@ -15,16 +15,16 @@
             @success="getOrderList"
         >
             <template slot="1" slot-scope="data">
-                <semi-receive ref="semiReceive" :is-redact="data.isRedact" />
+                <wash-bean-material-apply ref="washBeanMaterialApply" :is-redact="data.isRedact" sieve-total-num="sieveTotalNum" @setMaterialTable="setMaterialTable" />
             </template>
             <template slot="2" slot-scope="data">
-                <craft ref="craft" :is-redact="data.isRedact" />
+                <wash-bean-material-craft ref="washBeanMaterialCraft" :is-redact="data.isRedact" :set-material-table-data="setMaterialTableData" @changeSieveTotalNum="changeSieveTotalNum" />
             </template>
             <template slot="3" slot-scope="data">
-                <exc-record ref="excRecord" :is-redact="data.isRedact" :form-header="formHeader" />
+                <koji-exc-record ref="excRecord" :is-redact="data.isRedact" :form-header="formHeader" />
             </template>
             <template slot="4" slot-scope="data">
-                <text-record ref="textRecord" :is-redact="data.isRedact" />
+                <koji-text-record ref="textRecord" :is-redact="data.isRedact" />
             </template>
         </data-entry>
     </div>
@@ -32,25 +32,45 @@
 
 <script lang="ts">
     import { Vue, Component } from 'vue-property-decorator';
-    import { STE_API } from 'common/api/api';
-    import SemiReceive from './common/SemiReceive.vue';
-    import Craft from './common/Craft.vue';
+    import { KOJI_API } from 'common/api/api';
+
+    import WashBeanMaterialApply from './common/WashBeanMaterialApply.vue';
+    import WashBeanMaterialCraft from './common/WashBeanMaterialCraft.vue';
+    import KojiExcRecord from './common/KojiExcRecord.vue';
+    import KojiTextRecord from './common/KojiTextRecord.vue';
 
     @Component({
         name: 'WashBeanIndex',
         components: {
-            SemiReceive,
-            Craft
+            WashBeanMaterialApply,
+            WashBeanMaterialCraft,
+            KojiExcRecord,
+            KojiTextRecord
         }
     })
     export default class WashBeanIndex extends Vue {
         $refs: {
-            semiReceive: HTMLFormElement;
+            washBeanMaterialApply: HTMLFormElement;
+            washBeanMaterialCraft: HTMLFormElement;
             excRecord: HTMLFormElement;
             textRecord: HTMLFormElement;
         }
 
         formHeader: OrderData = {};
+
+        // 杂质数量
+        sieveTotalNum = 0;
+        // 物料领用记录 == 批次信息
+        setMaterialTableData = [];
+
+        changeSieveTotalNum(num) {
+            this.sieveTotalNum = num;
+        }
+
+        setMaterialTable(data) {
+            this.setMaterialTableData = data
+        }
+
         headerBase = [
             {
                 type: 'p',
@@ -59,37 +79,37 @@
                 value: 'workShopName'
             },
             {
-                type: 'p',
+                type: 'tooltip',
                 label: '曲房编号',
                 icon: 'factory-qiyaguanjianhua',
-                value: 'potNo'
+                value: 'kojiHouseNo'
             },
             {
                 type: 'tooltip',
                 icon: 'factory-pinleiguanli',
                 label: '生产物料',
-                value: ['materialCode', 'materialName']
+                value: ['materialName', 'materialCode']
             },
             {
-                type: 'p',
+                type: 'tooltip',
                 label: '生产订单',
                 icon: 'factory-bianhao',
-                value: 'potOrder'
+                value: 'orderNo'
             },
             {
-                type: 'p',
+                type: 'tooltip',
                 label: '制曲日期',
                 icon: 'factory--meirijihuachanliangpeizhi',
-                value: 'potAmount'
+                value: 'addKojiDate'
             },
             {
-                type: 'p',
+                type: 'tooltip',
                 icon: 'factory-riqi1',
                 label: '发酵罐号',
-                value: 'productDate'
+                value: 'fermentPotNo'
             },
             {
-                type: 'p',
+                type: 'tooltip',
                 icon: 'factory-xianchangrenyuan',
                 label: '提交人员', // 操作人员
                 value: 'changer'
@@ -104,8 +124,7 @@
 
         tabs: TabsObj[] = [
             {
-                label: '物料领用',
-                status: '未录入'
+                label: '物料领用'
             },
             {
                 label: '工艺控制'
@@ -119,7 +138,7 @@
         ];
 
         submitRules(): Function[] {
-            return [this.$refs.semiReceive.ruleSubmit, this.$refs.excRecord.ruleSubmit]
+            return [this.$refs.washBeanMaterialApply.ruleSubmit, this.$refs.excRecord.ruleSubmit]
         }
 
         mounted() {
@@ -128,49 +147,51 @@
 
         // 查询表头
         getOrderList() {
-            if (!this.isAuth('steSemiQuery')) {
-                this.$warningToast('无权限');
-                return false
-            }
-            STE_API.STE_DETAIL_CRAFTHEADER_INFO_API({
-                potOrderNo: this.$store.state.sterilize.SemiReceive.potOrderMap.potOrderNo
+            KOJI_API.KOJI_CRAFT_HEAD_INFO_QUERY_API({
+                id: this.$store.state.koji.id || 513751908775628800
             }).then(({ data }) => {
                 this.formHeader = data.data;
-                this.formHeader.textStage = 'semiReceive';
-                this.tabs[0].status = (data.data.steTagPot ? data.data.steTagPot.semiMaterialStatus : '未录入');
-                this.$refs.semiReceive.init(this.formHeader);
-                this.$refs.excRecord.init(this.formHeader, 'semiReceive');
-                this.$refs.textRecord.init(this.formHeader, 'sterilize');
+                this.formHeader.textStage = 'XD';
+                this.formHeader.factoryName = JSON.parse(sessionStorage.getItem('factory') || '{}').deptShort;
+                this.$refs.washBeanMaterialApply.init(this.formHeader);
+                this.$refs.excRecord.init(this.formHeader, 'XD');
+                this.$refs.textRecord.init(this.formHeader, 'koji');
             })
         }
 
         savedDatas() {
-            const steSemi = this.$refs.semiReceive.savedData(this.formHeader);
-            const excRequest = this.$refs.excRecord.getSavedOrSubmitData(this.formHeader, 'semiReceive');
-            const textRequest = this.$refs.textRecord.savedData(this.formHeader, 'sterilize');
+            const steSemi = this.$refs.washBeanMaterialCraft.getSavedOrSubmitData();
+            const excRequest = this.$refs.excRecord.getSavedOrSubmitData(this.formHeader, 'XD');
+            const textRequest = this.$refs.textRecord.savedData(this.formHeader, 'koji');
 
-            return STE_API.STE_SEMI_SAVE_API({
+            return KOJI_API.KOJI_XD_SAVE_API({
                 ...steSemi,
-                steExceptionInsertDtos: excRequest.InsertDto,
-                steExceptionUpdateDtos: excRequest.UpdateDto,
-                steExceptionRemoveDto: excRequest.ids,
+                kojiExceptionSaveDto: {
+                    insertDatas: excRequest.InsertDto,
+                    removeIds: excRequest.ids,
+                    updateDatas: excRequest.UpdateDto
+                },
                 steTextInsertDto: textRequest.pkgTextInsert,
-                steTextUpdateDto: textRequest.pkgTextUpdate
+                kojiOrderNo: this.formHeader.kojiHouseNo,
+                orderNo: this.formHeader.orderNo
             })
         }
 
         submitDatas() {
-            const steSemi = this.$refs.semiReceive.savedData(this.formHeader);
-            const excRequest = this.$refs.excRecord.getSavedOrSubmitData(this.formHeader, 'semiReceive');
-            const textRequest = this.$refs.textRecord.savedData(this.formHeader, 'sterilize');
+            const steSemi = this.$refs.washBeanMaterialCraft.getSavedOrSubmitData();
+            const excRequest = this.$refs.excRecord.getSavedOrSubmitData(this.formHeader, 'XD');
+            const textRequest = this.$refs.textRecord.savedData(this.formHeader, 'koji');
 
-            return STE_API.STE_SEMI_SUBMIT_API({
+            return KOJI_API.KOJI_XD_SUBMIT_API({
                 ...steSemi,
-                steExceptionInsertDtos: excRequest.InsertDto,
-                steExceptionUpdateDtos: excRequest.UpdateDto,
-                steExceptionRemoveDto: excRequest.ids,
-                steTextInsertDto: textRequest.pkgTextInsert,
-                steTextUpdateDto: textRequest.pkgTextUpdate
+                kojiExceptionSaveDto: {
+                    insertDatas: excRequest.InsertDto,
+                    removeIds: excRequest.ids,
+                    updateDatas: excRequest.UpdateDto
+                },
+                kojiTextSaveDto: textRequest.pkgTextInsert,
+                kojiOrderNo: this.formHeader.kojiHouseNo,
+                orderNo: this.formHeader.orderNo
             })
         }
     }
@@ -182,6 +203,8 @@
         semiMaterialStatus?: string;
     }
     interface OrderData {
+        orderNo?: string;
+        kojiHouseNo?: string;
         textStage?: string;
         factoryName?: string;
         potNo?: string;
@@ -189,7 +212,3 @@
         steTagPot?: StatusObj;
     }
 </script>
-
-<style scoped>
-
-</style>

@@ -1,10 +1,7 @@
 <template>
-    <el-dialog title="大豆领用" width="458px" :close-on-click-modal="false" :visible.sync="visible">
+    <el-dialog title="Y158领用" width="458px" :close-on-click-modal="false" :visible.sync="visible">
         <el-form ref="dataForm" :model="dataForm" status-icon :rules="dataRule" label-width="125px" size="small" @keyup.enter.native="dataFormSubmit()">
             <el-form-item label="领用库位：" prop="stePotNo">
-                <el-input v-model="dataForm.stePotNo" placeholder="手动输入" disabled />
-            </el-form-item>
-            <el-form-item label="BOM物料：" prop="stePotNo">
                 <el-input v-model="dataForm.stePotNo" placeholder="手动输入" disabled />
             </el-form-item>
             <el-form-item v-if="dataForm.consumeType === '1'" label="领用批次：" prop="fermentPotNo">
@@ -21,14 +18,11 @@
             <el-form-item label="领用数量：" prop="consumeAmount">
                 <el-input v-model="dataForm.consumeAmount" placeholder="手动输入" />
             </el-form-item>
-            <el-form-item label="小豆数量：" prop="consumeBatch">
-                <el-input v-model="dataForm.consumeBatch" placeholder="手动输入" />
-            </el-form-item>
             <el-form-item label="单位：" prop="consumeUnit">
                 <el-input v-model="dataForm.consumeUnit" placeholder="手动输入" disabled />
             </el-form-item>
-            <el-form-item label="大豆厂家：" prop="consumeUnit">
-                <el-input v-model="dataForm.consumeUnit" placeholder="手动输入" disabled />
+            <el-form-item label="添加人：" prop="consumeUnit">
+                <el-input v-model="dataForm.consumeUnit" placeholder="手动输入" />
             </el-form-item>
             <el-form-item label="备注：">
                 <el-input v-model="dataForm.remark" placeholder="手动输入" />
@@ -56,8 +50,10 @@
     import { COMMON_API, ORDER_API } from 'common/api/api';
     import { dateFormat, getUserNameNumber } from 'utils/utils';
 
-    @Component
-    export default class SemiReceiveDialog extends Vue {
+    @Component({
+        name: 'Y158ApplyDialog'
+    })
+    export default class Y158ApplyDialog extends Vue {
         @Prop({ default: { workShop: '' } }) formHeader: FormHeaderobj;
 
         $refs: {dataForm: HTMLFormElement};

@@ -3,19 +3,19 @@
         <mds-card title="筛豆记录" name="table1" icon-bg="#487BFF">
             <div>
                 <el-form :inline="true" :model="craftInfo" label-width="115px">
-                    <el-form-item>
+                    <el-form-item class="cleanMarginBottom">
                         <template slot="label">
                             <span class="notNull">* </span>筛豆开始时间：
                         </template>
                         <el-date-picker v-model="craftInfo.feedStartDate" type="datetime" value-format="yyyy-MM-dd HH:mm" format="yyyy-MM-dd HH:mm" placeholder="选择" :disabled="!isRedact" size="small" style="width: 175px;" />
                     </el-form-item>
-                    <el-form-item>
+                    <el-form-item class="cleanMarginBottom">
                         <template slot="label">
                             <span class="notNull">* </span>筛豆结束时间：
                         </template>
                         <el-date-picker v-model="craftInfo.feeEndDate" type="datetime" value-format="yyyy-MM-dd HH:mm" format="yyyy-MM-dd HH:mm" placeholder="选择" :disabled="!isRedact" size="small" style="width: 175px;" />
                     </el-form-item>
-                    <el-form-item>
+                    <el-form-item class="cleanMarginBottom">
                         <template slot="label">
                             停机时长：
                         </template>
@@ -23,7 +23,7 @@
                             <span slot="suffix" class="stock-form_item_input_suffix">min</span>
                         </el-input>
                     </el-form-item>
-                    <el-form-item class="floatr">
+                    <el-form-item class="cleanMarginBottom floatr">
                         <el-button type="primary" size="small" :disabled="!isRedact" @click="addDataRow()">
                             新增
                         </el-button>
@@ -119,7 +119,7 @@
         <mds-card title="洗豆记录" name="table2" icon-bg="#487BFF">
             <div>
                 <el-form :inline="true" :model="craftInfo" label-width="115px">
-                    <el-form-item>
+                    <el-form-item class="cleanMarginBottom">
                         <template slot="label">
                             <span class="notNull">* </span>泡豆水洁净度：
                         </template>
@@ -127,19 +127,19 @@
                             <el-option v-for="(item, index) in []" :key="index" :label="item.label" :value="item.value" />
                         </el-select>
                     </el-form-item>
-                    <el-form-item>
+                    <el-form-item class="cleanMarginBottom">
                         <template slot="label">
                             <span class="notNull">* </span>洗豆操作人：
                         </template>
                         <span>点击选择人员</span>
                     </el-form-item>
-                    <el-form-item>
+                    <el-form-item class="cleanMarginBottom">
                         <template slot="label">
                             <span class="notNull">* </span>洗豆开始时间：
                         </template>
                         <el-date-picker v-model="craftInfo.feeEndDate" type="datetime" value-format="yyyy-MM-dd HH:mm" format="yyyy-MM-dd HH:mm" placeholder="选择" :disabled="!isRedact" size="small" style="width: 175px;" />
                     </el-form-item>
-                    <el-form-item>
+                    <el-form-item class="cleanMarginBottom">
                         <template slot="label">
                             <span class="notNull">* </span>洗豆结束时间：
                         </template>
@@ -151,7 +151,7 @@
         <mds-card title="泡豆记录" name="table3" icon-bg="#487BFF">
             <template slot="titleBtn">
                 <el-form :inline="true" :model="craftInfo" label-width="115px">
-                    <el-form-item class="floatr">
+                    <el-form-item class="cleanMarginBottom floatr">
                         <el-button type="primary" size="small" :disabled="!isRedact" @click="addDataRow()">
                             新增
                         </el-button>
@@ -257,219 +257,227 @@
 </template>
 
 <script lang="ts">
-import { Vue, Component, Prop } from 'vue-property-decorator';
-import { COMMON_API, STE_API } from 'common/api/api';
-import { dateFormat, getUserNameNumber } from 'utils/utils';
+    import { Vue, Component, Prop } from 'vue-property-decorator';
+    import { COMMON_API, STE_API } from 'common/api/api';
+    import { dateFormat, getUserNameNumber } from 'utils/utils';
 
-import OfficialWorker from 'components/OfficialWorker.vue';
+    import OfficialWorker from 'components/OfficialWorker.vue';
 
-@Component({
-    name: '',
-    components: {
-        OfficialWorker
-    }
-})
-export default class Crafts extends Vue {
-    @Prop({ default: false }) isRedact: boolean;
+    @Component({
+        name: 'WashBeanMaterialCraft',
+        components: {
+            OfficialWorker
+        }
+    })
+    export default class WashBeanMaterialCraft extends Vue {
+        @Prop({ default: false }) isRedact: boolean;
 
-    controlTypeList = [];
-    craftAudit = [];
-    craftTable: CraftList[] = [];
-    craftInfo: Craft = {
-        keepZkFlag: 'N',
-        coolZkFlag: 'N'
-    };
+        controlTypeList = [];
+        craftAudit = [];
+        craftTable: CraftList[] = [];
+        craftInfo: Craft = {
+            keepZkFlag: 'N',
+            coolZkFlag: 'N'
+        };
 
-    doAction = '';
-    row = {};
+        doAction = '';
+        row = {};
 
-    init(formHeader) {
-        this.getControlTypeList();
-        STE_API.STE_DETAIL_CRAFT_INFO_API({
-            potOrderNo: formHeader.potOrderNo
-        }).then(({ data }) => {
-            if (data.data === null) {
-                this.doAction = 'insert';
+        mounted() {
+            console.log(2);
+        }
+
+        init(formHeader) {
+            this.getControlTypeList();
+            STE_API.STE_DETAIL_CRAFT_INFO_API({
+                potOrderNo: formHeader.potOrderNo
+            }).then(({ data }) => {
+                if (data.data === null) {
+                    this.doAction = 'insert';
+                } else {
+                    this.doAction = 'update';
+                    this.craftInfo = data.data;
+                    this.craftTable = data.data.item;
+                    this.craftTable.map(item => {
+                        this.controlTypeChange(item.controlType, item, 'init');
+                    });
+                }
+            });
+        }
+
+        // 选择人员 正式借调
+        selectUser(row: CurrentDataTable) {
+            this.row = row;
+            if (row.userType === 'FORMAL') {
+                // 正式
+                this.$nextTick(() => {
+                    this.$refs.officialWorker.init(row.deptId, row.userList);
+                });
+            } else if (row.userType === 'INTERNAL' || row.userType === 'STUDY') {
+                // 内部借调、学习
+                this.$nextTick(() => {
+                    this.$refs.loanedPersonnel.init(row.userList);
+                });
             } else {
-                this.doAction = 'update';
-                this.craftInfo = data.data
-                this.craftTable = data.data.item
-                this.craftTable.map(item => {
-                    this.controlTypeChange(item.controlType, item, 'init');
-                })
+                this.$warningToast('请选择人员属性');
             }
-        });
-    }
-
-    // 选择人员 正式借调
-    selectUser(row: CurrentDataTable) {
-        this.row = row;
-        if (row.userType === 'FORMAL') { // 正式
-            this.$nextTick(() => {
-                this.$refs.officialWorker.init(row.deptId, row.userList);
-            });
-        } else if (row.userType === 'INTERNAL' || row.userType === 'STUDY') { // 内部借调、学习
-            this.$nextTick(() => {
-                this.$refs.loanedPersonnel.init(row.userList);
-            });
-        } else {
-            this.$warningToast('请选择人员属性');
-        }
-    }
-
-    ruleSubmit() {
-        if (!this.craftInfo.feedStartDate || !this.craftInfo.feeEndDate || !this.craftInfo.riseStartDate || !this.craftInfo.riseEndDate) {
-            this.$warningToast('请填写工艺控制页签时间必填项');
-            return false;
-        }
-        if (this.craftTable.filter(it => it.delFlag !== 1).length === 0) {
-            this.$warningToast('请录入工艺控制页签杀菌时间及温度数据');
-            return false;
         }
 
-        for (const item of this.craftTable.filter(it => it.delFlag !== 1)) {
-            if (!item.controlType || !item.controlStage) {
-                this.$warningToast('请填写工艺控制页签杀菌时间及温度类型、阶段');
+        ruleSubmit() {
+            if (!this.craftInfo.feedStartDate || !this.craftInfo.feeEndDate || !this.craftInfo.riseStartDate || !this.craftInfo.riseEndDate) {
+                this.$warningToast('请填写工艺控制页签时间必填项');
                 return false;
             }
-            if ((item.controlStage === 'START' || item.controlStage === 'END' || item.controlStage === 'DISCHARGE_START' || item.controlStage === 'DISCHARGE_END') && !item.recordDate) {
-                this.$warningToast('请填写工艺控制页签杀菌时间及温度下记录时间');
+            if (this.craftTable.filter(it => it.delFlag !== 1).length === 0) {
+                this.$warningToast('请录入工艺控制页签杀菌时间及温度数据');
                 return false;
             }
-        }
-        return true;
-    }
 
-    // 类型拉取
-    getControlTypeList() {
-        COMMON_API.DICTQUERY_API({ dictType: 'CRAFT_PHASE' }).then(({ data }) => {
-            this.controlTypeList = data.data
-        });
-    }
-
-    // 阶段拉取
-    controlTypeChange(dictType, row, type?) {
-        if (type !== 'init') {
-            row.controlStage = '';
-        }
-        if (dictType) {
-            COMMON_API.DICTQUERY_API({ dictType: dictType }).then(({ data }) => {
-                row.controlStageList = data.data
-            });
-        }
-    }
-
-    // 新增
-    addDataRow() {
-        this.craftTable.push({
-            controlType: '',
-            controlStage: '',
-            recordDate: '',
-            temp: '',
-            remark: '',
-            changed: dateFormat(new Date(), 'yyyy-MM-dd hh:mm:ss'),
-            changer: getUserNameNumber(),
-            delFlag: 0,
-            potOrderId: '',
-            potOrderNo: ''
-        });
-    }
-
-    getSavedOrSubmitData(formHeader) {
-        this.craftInfo['steItem'] = this.craftTable;
-        this.craftInfo['potOrderId'] = formHeader.id;
-        this.craftInfo['potOrderNo'] = formHeader.potOrderNo;
-        const ids: string[] = [];
-        let steControlInsertDto = {};
-        let steControlUpdateDto = {};
-        this.craftTable.forEach(item => {
-            if (item.delFlag === 1) {
-                if (item.id) {
-                    ids.push(item.id)
+            for (const item of this.craftTable.filter(it => it.delFlag !== 1)) {
+                if (!item.controlType || !item.controlStage) {
+                    this.$warningToast('请填写工艺控制页签杀菌时间及温度类型、阶段');
+                    return false;
+                }
+                if ((item.controlStage === 'START' || item.controlStage === 'END' || item.controlStage === 'DISCHARGE_START' || item.controlStage === 'DISCHARGE_END') && !item.recordDate) {
+                    this.$warningToast('请填写工艺控制页签杀菌时间及温度下记录时间');
+                    return false;
                 }
             }
-        })
-        if (this.doAction === 'insert') {
-            steControlInsertDto = this.craftInfo;
-        } else {
-            steControlUpdateDto = this.craftInfo;
+            return true;
         }
-        return {
-            steControlInsertDto,
-            steControlUpdateDto,
-            ids
+
+        // 类型拉取
+        getControlTypeList() {
+            COMMON_API.DICTQUERY_API({ dictType: 'CRAFT_PHASE' }).then(({ data }) => {
+                this.controlTypeList = data.data;
+            });
+        }
+
+        // 阶段拉取
+        controlTypeChange(dictType, row, type?) {
+            if (type !== 'init') {
+                row.controlStage = '';
+            }
+            if (dictType) {
+                COMMON_API.DICTQUERY_API({ dictType: dictType }).then(({ data }) => {
+                    row.controlStageList = data.data;
+                });
+            }
+        }
+
+        // 新增
+        addDataRow() {
+            this.craftTable.push({
+                controlType: '',
+                controlStage: '',
+                recordDate: '',
+                temp: '',
+                remark: '',
+                changed: dateFormat(new Date(), 'yyyy-MM-dd hh:mm:ss'),
+                changer: getUserNameNumber(),
+                delFlag: 0,
+                potOrderId: '',
+                potOrderNo: ''
+            });
+        }
+
+        getSavedOrSubmitData(formHeader) {
+            this.craftInfo['steItem'] = this.craftTable;
+            this.craftInfo['potOrderId'] = formHeader.id;
+            this.craftInfo['potOrderNo'] = formHeader.potOrderNo;
+            const ids: string[] = [];
+            let steControlInsertDto = {};
+            let steControlUpdateDto = {};
+            this.craftTable.forEach(item => {
+                if (item.delFlag === 1) {
+                    if (item.id) {
+                        ids.push(item.id);
+                    }
+                }
+            });
+            if (this.doAction === 'insert') {
+                steControlInsertDto = this.craftInfo;
+            } else {
+                steControlUpdateDto = this.craftInfo;
+            }
+            return {
+                steControlInsertDto,
+                steControlUpdateDto,
+                ids
+            };
+        }
+
+        removeRow(row) {
+            this.$confirm('是否删除?', '提示', {
+                confirmButtonText: '确定',
+                cancelButtonText: '取消',
+                type: 'warning'
+            }).then(() => {
+                row.delFlag = 1;
+            });
+        }
+
+        RowDelFlag({ row }) {
+            if (row.delFlag === 1) {
+                return 'rowDel';
+            }
+            return '';
         }
     }
 
-    removeRow(row) {
-        this.$confirm('是否删除?', '提示', {
-            confirmButtonText: '确定',
-            cancelButtonText: '取消',
-            type: 'warning'
-        }).then(() => {
-            row.delFlag = 1;
-        })
+    interface CurrentDataTable {
+        factory?: string;
+        orderId?: string;
+        orderNo?: string;
+        classes?: string;
+        deptId?: string;
+        userType?: string;
+        userList: string[];
+        startDate?: string;
+        dinner?: number;
+        endDate?: string;
+        duration?: number;
+        durationUnit?: string;
+        remark?: string;
+        changed?: string;
+        changer?: string;
+        delFlag?: number;
+        id?: string;
+        editedMark?: boolean;
     }
 
-    RowDelFlag({ row }) {
-        if (row.delFlag === 1) {
-            return 'rowDel';
-        }
-        return '';
+    interface Craft {
+        feedStartDate?: string;
+        feeEndDate?: string;
+        riseStartDate?: string;
+        riseEndDate?: string;
+        craftTable?: object[];
+        coolZkFlag?: string;
+        keepZkFlag?: string;
     }
-}
-
-interface CurrentDataTable {
-    factory?: string;
-    orderId?: string;
-    orderNo?: string;
-    classes?: string;
-    deptId?: string;
-    userType?: string;
-    userList: string[];
-    startDate?: string;
-    dinner?: number;
-    endDate?: string;
-    duration?: number;
-    durationUnit?: string;
-    remark?: string;
-    changed?: string;
-    changer?: string;
-    delFlag?: number;
-    id?: string;
-    editedMark?: boolean;
-}
-
-interface Craft {
-    feedStartDate?: string;
-    feeEndDate?: string;
-    riseStartDate?: string;
-    riseEndDate?: string;
-    craftTable?: object[];
-    coolZkFlag?: string;
-    keepZkFlag?: string;
-}
-interface CraftList {
-    id?: string;
-    controlType?: string;
-    controlStage?: string;
-    recordDate?: string;
-    temp?: string;
-    remark?: string;
-    changer?: string;
-    changed?: string;
-    delFlag?: number;
-    potOrderId?: string;
-    potOrderNo?: string;
-    controlStageList?: object[];
-}
+    interface CraftList {
+        id?: string;
+        controlType?: string;
+        controlStage?: string;
+        recordDate?: string;
+        temp?: string;
+        remark?: string;
+        changer?: string;
+        changed?: string;
+        delFlag?: number;
+        potOrderId?: string;
+        potOrderNo?: string;
+        controlStageList?: object[];
+    }
 </script>
 
 <style lang="scss" scoped>
-.koji-process-control {
-    .stock-form_item_input_suffix {
-        margin-right: 20px;
+    .koji-process-control {
+        .stock-form_item_input_suffix {
+            margin-right: 20px;
+        }
+        .cleanMarginBottom {
+            margin-bottom: 10px;
+        }
     }
-}
 </style>
-
