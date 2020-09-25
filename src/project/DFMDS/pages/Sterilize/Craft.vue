@@ -58,7 +58,7 @@
                 type: 'p',
                 label: '生产锅号',
                 icon: 'factory-qiyaguanjianhua',
-                value: 'potNo'
+                value: 'potName'
             },
             {
                 type: 'tooltip',
