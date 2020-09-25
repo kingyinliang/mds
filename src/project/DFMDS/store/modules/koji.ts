@@ -1,3 +1,10 @@
+/*
+ * @Description:
+ * @Anthor: Telliex
+ * @Date: 2020-09-17 15:29:26
+ * @LastEditors: Telliex
+ * @LastEditTime: 2020-09-25 16:31:26
+ */
 export default {
     namespaced: true,
     state: {
@@ -6,7 +13,11 @@ export default {
         // 麦粉库存当前详情所属车间库位信息
         StockFlourInfo: {},
         // Y158库存当前详情所属车间库位信息
-        StockY158Info: {}
+        StockY158Info: {},
+        // 首頁发酵罐讯息
+        orderKojiInfo: {},
+        // 首頁泡豆罐讯息
+        orderScInfo: {}
     },
     mutations: {
         updateStockSoybeanInfo(state, infoObj) {
@@ -17,6 +28,12 @@ export default {
         },
         updateStockY158Info(state, infoObj) {
             state.StockY158Info = infoObj;
+        },
+        updateOrderKojiInfo(state, infoObj) {
+            state.orderKojiInfo = infoObj;
+        },
+        updateOrderScInfo(state, infoObj) {
+            state.orderScInfo = infoObj;
         }
     }
 };

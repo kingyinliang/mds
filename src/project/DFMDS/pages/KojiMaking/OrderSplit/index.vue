@@ -33,8 +33,8 @@
                                 <el-table-column label="单位" width="60" prop="outputUnit" />
                                 <el-table-column label="操作" fixed="right" align="center" width="80">
                                     <template slot-scope="scope">
-                                        <el-button v-if="isAuth('steSplit')" type="text" :disabled="['C','P'].includes(scope.row.orderStatus)" @click="orderSplit(scope.row)">
-                                            <em class="iconfont factory-chaifen" />拆分
+                                        <el-button v-if="isAuth('steSplit')" class="iconfont factory-chaifen" type="text" :disabled="['C','P'].includes(scope.row.orderStatus)" @click="orderSplit(scope.row)">
+                                            拆分
                                         </el-button>
                                     </template>
                                 </el-table-column>
@@ -63,14 +63,14 @@
                             </template> -->
                             <el-table :data="splitTable" header-row-class-name="tableHead" class="newTable" :height="mainClientHeight - 61 - 62 - 47" border tooltip-effect="dark">
                                 <el-table-column type="index" width="55" label="序号" align="center" fixed />
-                                <el-table-column label="曲房状态" width="120" prop="statusName" :show-overflow-tooltip="true" />
+                                <el-table-column label="曲房状态" width="100" prop="statusName" :show-overflow-tooltip="true" />
 
                                 <el-table-column label="生产订单" min-width="120" prop="orderNo" :show-overflow-tooltip="true" />
 
                                 <el-table-column label="发酵罐号" min-width="100" prop="fermentPotNo" :show-overflow-tooltip="true" />
 
-                                <el-table-column label="入曲日期" width="180" prop="addKojiDate" :show-overflow-tooltip="true" />
-                                <el-table-column label="出曲日期" width="180" prop="outKojiDate" :show-overflow-tooltip="true" />
+                                <el-table-column label="入曲日期" width="140" prop="addKojiDate" :show-overflow-tooltip="true" />
+                                <el-table-column label="出曲日期" width="140" prop="outKojiDate" :show-overflow-tooltip="true" />
 
                                 <el-table-column label="操作人" width="160" prop="changer" :show-overflow-tooltip="true" />
                                 <el-table-column label="操作时间" width="180" prop="changed" :show-overflow-tooltip="true" />
@@ -95,7 +95,6 @@
             </template>
         </query-table>
         <order-split-dialog v-if="dialogFormVisible1" ref="orderSplitDialog" @getList="getData" />
-        <order-split-detail-dialog v-if="dialogFormVisible2" ref="orderSplitDetailDialog" @getList="getSplitTable" />
     </div>
 </template>
 
@@ -104,13 +103,11 @@
     import { COMMON_API, KOJI_API } from 'common/api/api';
     import { dateFormat } from 'utils/utils';
     import OrderSplitDialog from '../common/OrderSplitDialog.vue'
-    import OrderSplitDetailDialog from '../common/OrderSplitDetailDialog.vue'
 
     @Component({
         name: 'OrderSplit',
         components: {
-            OrderSplitDialog,
-            OrderSplitDetailDialog
+            OrderSplitDialog
         }
     })
     export default class OrderSplit extends Vue {
@@ -178,9 +175,9 @@
                 type: 'date-picker',
                 label: '生产日期',
                 labelWidth: 90,
-                prop: 'productDate',
-                valueFormat: 'yyyy-MM-dd hh:mm:ss',
-                defaultValue: dateFormat(new Date(), 'yyyy-MM-dd hh:mm:ss')
+                prop: 'orderStartDate',
+                valueFormat: 'yyyy-MM-dd',
+                defaultValue: dateFormat(new Date(), 'yyyy-MM-dd')
             },
             {
                 type: 'input',
@@ -191,7 +188,7 @@
             {
                 type: 'select',
                 label: '状态',
-                prop: 'OrgOrderStatus',
+                prop: 'status',
                 defaultOptionsFn: () => {
                     return COMMON_API.DICTQUERY_API({
                         dictType: 'COMMON_CHECK_STATUS'
@@ -218,11 +215,13 @@
 
         // 查询请求
         listInterface(params) {
-            params.OrgOrderStatus ? params.orderStatus = [params.OrgOrderStatus] : params.orderStatus = [];
-            params.current = this.currPage; // eslint-disable-line
-            params.size = this.pageSize; // eslint-disable-line
+            console.log('params')
+            console.log(params)
+            // params.OrgOrderStatus ? params.orderStatus = [params.OrgOrderStatus] : params.orderStatus = [];
+            params.current = this.currPage;
+            params.size = this.pageSize;
             params.factory = JSON.parse(sessionStorage.getItem('factory') || '{}').id;
-            return COMMON_API.ORDER_QUERY_API(params);
+            return KOJI_API.KOJI_ORDER_QUERY_API(params);
         }
 
         createdEnd() {
@@ -288,7 +287,7 @@
             }
             KOJI_API.ORDER_SPLITE_QUERY_BY_ID_API(this.splitForm).then(({ data }) => {
                 if (!data.data.records.length) {
-                    this.$infoToast('暂无任何内容');
+                    this.$infoToast('暂无任何拆分内容');
                 }
                 console.log('拆分')
                 console.log(data)
