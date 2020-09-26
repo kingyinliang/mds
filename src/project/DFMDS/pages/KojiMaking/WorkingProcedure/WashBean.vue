@@ -138,7 +138,7 @@
         ];
 
         submitRules(): Function[] {
-            return [this.$refs.washBeanMaterialApply.ruleSubmit, this.$refs.excRecord.ruleSubmit]
+            return [this.$refs.washBeanMaterialCraft.ruleSubmit, this.$refs.excRecord.ruleSubmit]
         }
 
         mounted() {
@@ -148,12 +148,13 @@
         // 查询表头
         getOrderList() {
             KOJI_API.KOJI_CRAFT_HEAD_INFO_QUERY_API({
-                id: this.$store.state.koji.id || 513751908775628800
+                id: this.$store.state.koji.orderKojiInfo.houseSplitList[0].id || ''
             }).then(({ data }) => {
                 this.formHeader = data.data;
                 this.formHeader.textStage = 'XD';
                 this.formHeader.factoryName = JSON.parse(sessionStorage.getItem('factory') || '{}').deptShort;
                 this.$refs.washBeanMaterialApply.init(this.formHeader);
+                this.$refs.washBeanMaterialCraft.init(this.formHeader);
                 this.$refs.excRecord.init(this.formHeader, 'XD');
                 this.$refs.textRecord.init(this.formHeader, 'koji');
             })
