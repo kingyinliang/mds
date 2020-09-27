@@ -65,9 +65,9 @@
         $refs: {dataForm: HTMLFormElement};
 
         // 库存信息
-        stockInfoList: DataObj[] = [];
+        stockInfoList = [];
         // 批次list
-        batchList: DataObj[] = [];
+        batchList = [];
 
         visible = false;
         type = '';
@@ -80,12 +80,12 @@
         };
 
         // 表单对象
-        dataForm: DataForm = {};
+        dataForm = {};
 
         async init(infoData, type) {
             this.type = type;
             this.visible = true;
-            let Data: DataForm = {};
+            let Data = {};
             // 查询
             await KOJI_API.KOJI_STOCK_BEAN_INDEX_LIST_API({
                 workShopId: this.formHeader.workShop
@@ -105,7 +105,7 @@
                 })
             } else {
                 this.stockInfoList.map(item => {
-                    if (item.workShop === infoData.materialLocation || item.beanLocation === infoData.materialLocation || item.beanWareHouse === infoData.materialLocation) {
+                    if (item.workShop === infoData.kojiOrderNo || item.beanLocation === infoData.kojiOrderNo || item.beanWareHouse === infoData.kojiOrderNo) {
                         this.batchList = item.detailsList;
                     }
                 });
@@ -127,6 +127,7 @@
                 supplier: Data.supplier,
                 stockAmount: Data.stockAmount || Data.currentAmount,
                 orderNo: Data.orderNo,
+                kojiOrderNo: this.formHeader.kojiOrderNo,
                 smallBeanAmount: Data.smallBeanAmount,
                 unit: 'KG',
                 remark: Data.remark,
@@ -168,64 +169,6 @@
             })
         }
     }
-    interface FormHeaderobj {
-        workShop?: string;
-    }
-    interface MaterialObj {
-        matnr?: string;
-        materialName?: string;
-        erfme?: string;
-    }
-    interface DataObj {
-        workShop?: string;
-        id?: string;
-        materialLocation?: string;
-        batch?: string;
-        consumeType?: string;
-        supplier?: string;
-        potOrderId?: string;
-        orderNo?: string;
-        fermentPotNo?: string;
-        materialCode?: string;
-        materialType?: string;
-        materialName?: string;
-        material?: string;
-        materialLink?: string;
-        consumeUnit?: string;
-        consumeAmount?: string;
-        amount?: string|number;
-        stockAmount?: string|number;
-        consumeBatch?: string;
-        smallBeanAmount?: string;
-        unit?: string;
-        remark?: string;
-        changer?: string;
-        changed?: string;
-        beanLocation?: string;
-        currentAmount?: string;
-        detailsList: object[];
-        beanWareHouse: string;
-    }
 
-    interface DataForm {
-        materialCode?: string;
-        materialType?: string;
-        materialName?: string;
-        material?: string;
-        materialLink?: string;
-        consumeUnit?: string;
-        consumeAmount?: string;
-        amount?: string|number;
-        stockAmount?: string|number;
-        consumeBatch?: string;
-        smallBeanAmount?: string;
-        unit?: string;
-        remark?: string;
-        changer?: string;
-        changed?: string;
-        beanLocation?: string;
-        currentAmount?: string;
-        detailsList: object[];
-        beanWareHouse: string;
-    }
+
 </script>

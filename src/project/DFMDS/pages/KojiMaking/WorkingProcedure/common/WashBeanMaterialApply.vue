@@ -6,7 +6,7 @@
                     <div class="card-stock">
                         <div class="card-stock__head">
                             <span>{{ `${item.workShopName}${item.beanWareHouse || item.beanLocation ? '：' + (item.beanWareHouse || item.beanLocation) : ''}` }}</span>
-                            <el-button class="floatr" type="text" @click="addRow(item)">
+                            <el-button class="floatr" type="text" :disabled="!isRedact" @click="addRow(item)">
                                 领用
                             </el-button>
                         </div>
@@ -104,11 +104,11 @@
         // 物料领用记录查询
         materialGetList() {
             KOJI_API.KOJI_MATERIAL_GET_QUERY_API({
-                kojiOrderNo: this.formHeader.kojiHouseNo,
+                kojiOrderNo: this.formHeader.kojiOrderNo,
                 materialType: 'BEAN'
             }).then(({ data }) => {
                 this.$emit('setMaterialTable', data.data || [])
-                this.materialTableList = data.data;
+                this.materialTableList = data.data || [];
             });
         }
 
@@ -156,9 +156,10 @@
 
         deleteRow(row) {
             KOJI_API.KOJI_MATERIAL_DELETE_QUERY_API({
-                deleteDto: [row.id]
+                deleteDto: row.id
             }).then(({ data }) => {
                 this.materialTableList = data.data;
+                this.materialGetList()
             });
         }
 
@@ -190,6 +191,7 @@
         }
     }
     interface SemiObj {
+        kojiOrderNo?: string;
         kojiHouseNo?: string;
         delFlag?: number;
         modifiedId?: number;
