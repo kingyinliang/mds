@@ -26,16 +26,11 @@
                                         }"
                                     />
                                     &nbsp;曲房状态：
-                                    <!-- <em
-                                        :style="{
-                                            color: item.status === 'noPass' ? 'red' : item.status === 'checked' ? '#67C23A' : '',
-                                        }"
-                                    >{{ item.status === 'submit' ? '已提交' : item.status === 'checked' ? '审核通过' : item.status === 'noPass' ? '审核不通过' : item.status === 'saved' ? '已保存' : item.status === '已同步' ? '未录入' : item.status }}</em> -->
                                     <em
                                         :style="{
                                             color: item.houseSplitList[item.nowIndex].status === 'R' ? 'red' : item.houseSplitList[item.nowIndex].status === 'C' ? '#67C23A' : '',
                                         }"
-                                    >{{ orderStatusMapping[item.houseSplitList[item.nowIndex].status] }}</em>
+                                    >{{ item.houseSplitList[item.nowIndex].statusName }}</em>
                                 </div>
                             </div>
                             <div class="box-item__content" :gutter="20">
@@ -45,27 +40,23 @@
                                 <div class="right">
                                     <ul>
                                         <li class="lines">
-                                            <span>订单号：</span>
-                                            <el-select v-model="item.houseSplitList[item.nowIndex].orderNo" filterable size="mini" style="flex: 1;" @change="val=>{changeFirstOrder(val,item)}">
+                                            <span>生产订单：</span>
+                                            <el-select v-model="item.houseSplitList[item.nowIndex].orderNoTemp" filterable size="mini" style="flex: 1;" @change="val=>changeFirstOrder(val,item)">
                                                 <el-option v-for="(subItems) in item.houseSplitList" :key="subItems.id" :value="subItems.orderNo" :label="subItems.orderNo" />
                                             </el-select>
-                                            <!--
-                                            <span>
-                                                {{ item.houseSplitList[item.nowIndex].orderNo }}
-                                            </span> -->
                                         </li>
                                         <li class="lines">
                                             <span>
                                                 生产物料：
                                             </span>
-                                            <el-tooltip class="item" effect="dark" :content="item.houseSplitList[item.nowIndex].materialName + item.houseSplitList[item.nowIndex].materialCode" placement="top-start">
+                                            <el-tooltip class="item" effect="dark" :content="item.houseSplitList[item.nowIndex].materialName + item.houseSplitList[item.nowIndex].materialCode" placement="bottom-start">
                                                 <span>
                                                     {{ item.houseSplitList[item.nowIndex].materialName }} {{ item.houseSplitList[item.nowIndex].materialCode }}
                                                 </span>
                                             </el-tooltip>
                                         </li>
                                         <li class="lines">
-                                            <span>制曲时长：</span><span>{{ item.houseSplitList[item.nowIndex].kojiDuration || '?' }} H</span>
+                                            <span>制曲时长：</span><span>{{ item.houseSplitList[item.nowIndex].kojiDuration?`${item.houseSplitList[item.nowIndex].kojiDuration} H`: '' }} </span>
                                         </li>
                                         <li class="lines">
                                             <span>入曲时间：</span><span>{{ item.houseSplitList[item.nowIndex].kojiStartTime }}</span>
@@ -102,7 +93,6 @@
                         </div>
                     </el-col>
 
-
                     <el-col v-if="querySecondResultList.length!==0" :span="6">
                         <div class="box-item">
                             <div class="box-item__top">
@@ -116,11 +106,6 @@
                                         }"
                                     />
                                     &nbsp;状态：
-                                    <!-- <em
-                                        :style="{
-                                            color: item.status === 'noPass' ? 'red' : item.status === 'checked' ? '#67C23A' : '',
-                                        }"
-                                    >{{ item.status === 'submit' ? '已提交' : item.status === 'checked' ? '审核通过' : item.status === 'noPass' ? '审核不通过' : item.status === 'saved' ? '已保存' : item.status === '已同步' ? '未录入' : item.status }}</em> -->
                                     <em
                                         :style="{
                                             color: querySecondResultList[secondObjIndex].orderStatus === 'R' ? 'red' : querySecondResultList[secondObjIndex].orderStatus === 'C' ? '#67C23A' : '',
@@ -135,14 +120,10 @@
                                 <div class="right">
                                     <ul>
                                         <li class="lines">
-                                            <span>订单号：</span>
-                                            <el-select v-model="querySecondResultList[secondObjIndex].orderNo" filterable size="mini" style="flex: 1;" @change="val=>{changeSecondOrder(val,querySecondResultList[secondObjIndex])}">
+                                            <span>生产订单：</span>
+                                            <el-select v-model="querySecondResultList[secondObjIndex].orderNoTemp" filterable size="mini" style="flex: 1;" @change="val=>changeSecondOrder(val)">
                                                 <el-option v-for="(subItems) in querySecondResultList[secondObjIndex]" :key="subItems.id" :value="subItems.orderNo" :label="subItems.orderNo" />
                                             </el-select>
-                                            <!--
-                                            <span>
-                                                {{ item.houseSplitList[item.nowIndex].orderNo }}
-                                            </span> -->
                                         </li>
                                         <li class="lines">
                                             <span>
@@ -195,14 +176,10 @@
     import { Vue, Component } from 'vue-property-decorator';
     import { COMMON_API, KOJI_API } from 'common/api/api';
     import { dateFormat } from 'utils/utils';
-    // import OrderSplitDialog from '../common/OrderSplitDialog.vue'
-    // import OrderSplitDetailDialog from '../common/OrderSplitDetailDialog.vue'
 
     @Component({
         name: 'OrderSplit',
         components: {
-            // OrderSplitDialog,
-            // OrderSplitDetailDialog
         }
     })
     export default class OrderSplit extends Vue {
@@ -212,28 +189,13 @@
 
         $refs: {
             queryTable: HTMLFormElement;
-            orderSplitDialog: HTMLFormElement;
-            orderSplitDetailDialog: HTMLFormElement;
         };
 
-        currPage = 1;
-        pageSize = 10;
-        totalCount = 0;
-        dialogFormVisible1 = false;
-        dialogFormVisible2 = false;
         secondObjIndex=0 // 蒸豆 index
 
-        splitForm = {
-            current: 1,
-            size: 10,
-            total: 0,
-            orderNo: '',
-            potNo: ''
-        };
-
-        orderStatusMapping={}
+        orderStatusMapping={} // 状态中文与简写对照
         orderSplitRow = {};
-        holder = [];
+        // holder = [];
         queryFirstResultList: KojiFirstObj[] = [];
         querySecondResultList: KojiSecondObj[] = [];
         rules = [
@@ -278,27 +240,11 @@
                 label: '生产订单',
                 labelWidth: 90,
                 prop: 'orderNo'
-            },
-            {
-                type: 'select',
-                label: '状态',
-                prop: 'OrgOrderStatus',
-                defaultOptionsFn: () => {
-                    return COMMON_API.DICTQUERY_API({
-                        dictType: 'COMMON_CHECK_STATUS'
-                    })
-                },
-                defaultValue: '',
-                resVal: {
-                    resData: 'data',
-                    label: ['dictValue'],
-                    value: 'dictCode'
-                }
             }
         ];
 
         mounted() {
-            // 订单状态 mapping
+            // 订单审核状态对照 mapping
             COMMON_API.DICTQUERY_API({ dictType: 'COMMON_CHECK_STATUS' }).then(({ data }) => {
                 this.orderStatusMapping = {}
                 data.data.forEach(item => {
@@ -310,9 +256,17 @@
 
         // 查询请求
         listInterface(params) {
+            // 针对查找必填关键字进行提示
+            if ((params.orderStartDate === '' || !params.orderStartDate) && params.orderNo === '') {
+                this.$warningToast('日期或订单请选填一项');// eslint-disable-line
+                return new Promise((resolve, reject) => {
+                    reject('error') // eslint-disable-line
+                });
+            }
 
             params.factory = JSON.parse(sessionStorage.getItem('factory') || '{}').id;
 
+            // 呼叫蒸豆
             KOJI_API.KOJI_INDEX_QUERY_SC_ORDER_API({
                     params
                 }).then(({ data }) => {
@@ -320,6 +274,9 @@
                     console.log(data)
                 if (data.data.length !== 0) {
                     this.querySecondResultList = data.data;
+                    this.querySecondResultList.forEach(item => {
+                        this.$set(item, 'orderNoTemp', item.orderNo)
+                    })
 
                 } else {
                     this.querySecondResultList = [];
@@ -331,48 +288,21 @@
         }
 
         changeFirstOrder(val, item) {
-
-            console.log(val)
-            console.log(item)
-
             item.houseSplitList.forEach((sunItem, subIndex) => {
                 if (sunItem.orderNo === val) {
                     item.nowIndex = subIndex
+                    sunItem.orderNoTemp = val
                 }
             })
-            // item.nowIndex =
-            // const sole = this.AllList.find(items => items.orderNo === event);
-            // item.orderStatus = sole.orderStatus;
-            // item.materialCode = sole.materialCode;
-            // item.materialName = sole.materialName;
-            // item.planOutput = sole.planOutput;
-            // item.outputUnit = sole.outputUnit;
-            // item.realOutput = sole.realOutput;
-            // item.orderId = sole.orderId;
-            // item.orderNo = sole.orderNo;
-            // item.craftDataStatus = sole.craftDataStatus;
-            // item.qualityStatus = sole.qualityStatus;
         }
 
-        changeSecondOrder(val, item) {
-            console.log(item)
+        changeSecondOrder(val) {
             this.querySecondResultList.forEach((sunItem, subIndex) => {
                 if (sunItem.orderNo === val) {
                     this.secondObjIndex = subIndex
+                    sunItem.orderNoTemp = val
                 }
             })
-            // item.nowIndex =
-            // const sole = this.AllList.find(items => items.orderNo === event);
-            // item.orderStatus = sole.orderStatus;
-            // item.materialCode = sole.materialCode;
-            // item.materialName = sole.materialName;
-            // item.planOutput = sole.planOutput;
-            // item.outputUnit = sole.outputUnit;
-            // item.realOutput = sole.realOutput;
-            // item.orderId = sole.orderId;
-            // item.orderNo = sole.orderNo;
-            // item.craftDataStatus = sole.craftDataStatus;
-            // item.qualityStatus = sole.qualityStatus;
         }
 
         createdEnd() {
@@ -383,90 +313,30 @@
             })
         }
 
-        getData() {
-            this.$refs.queryTable.getDataList();
-            this.showSplitTable(this.orderSplitRow);
-        }
+        // getData() {
+        //     this.$refs.queryTable.getDataList();
+        //     // this.showSplitTable(this.orderSplitRow);
+        // }
 
         setData(data) {
-            console.log('data')
-            console.log(data)
             if (data.data.length !== 0) {
                 this.queryFirstResultList = data.data;
                 this.queryFirstResultList.forEach(item => {
-                    item.nowIndex = 0
+                    this.$set(item, 'nowIndex', 0)
                     item.houseSplitList.forEach(subItem => {
-                        subItem.statusName = this.orderStatusMapping[subItem.status]
+                        this.$set(subItem, 'statusName', this.orderStatusMapping[subItem.status])
+                        this.$set(subItem, 'orderNoTemp', subItem.orderNo)
                     })
                 })
-
             } else {
                 this.queryFirstResultList = [];
                 this.$infoToast('暂无任何内容');
             }
         }
 
-        getHolder(params) {
-            COMMON_API.HOLDER_QUERY_API({
-                deptId: params.workShop,
-                holderType: '014',
-                size: 99999,
-                current: 1
-            }).then(({ data }) => {
-                this.holder = data.data.records
-            })
-        }
-
-        // 表格双击
-        showSplitTable(row) {
-            this.splitForm.orderNo = row.orderNo;
-            this.getHolder(row)
-            this.getSplitTable()
-        }
-
-        // 获取拆分表格
-        getSplitTable() {
-            if (!this.splitForm.orderNo) {
-                this.$warningToast('请双击订单后操作')
-                return false
-            }
-        }
-
-        // 拆分
-        orderSplit(row) {
-            this.orderSplitRow = row;
-            this.dialogFormVisible1 = true;
-            this.$nextTick(() => {
-                this.$refs.orderSplitDialog.init(row);
-            });
-        }
-
-        // 拆分详情
-        orderSplitDetail(row) {
-            this.dialogFormVisible2 = true;
-            this.$nextTick(() => {
-                this.$refs.orderSplitDetailDialog.init(row);
-            });
-        }
-
-        // 删除订单
-        delSplitRow(row) {
-            this.$confirm('是否删除？', '提示', {
-                confirmButtonText: '确定',
-                cancelButtonText: '取消',
-                type: 'warning'
-            }).then(() => {
-                KOJI_API.ORDER_SPLITE_SAVE_API({
-                    deletes: [row.id]
-                }).then(({ data }) => {
-                    this.$successToast(data.msg);
-                    this.getSplitTable();
-                })
-            });
-        }
-
         goDetail(who, num, item) {
-            let url;
+            let url = '';
+            // 曲房工序跳转
             if (who === 'first') {
                 this.$store.commit('koji/updateOrderKojiInfo', item);
 
@@ -489,7 +359,7 @@
                 );
 
             }
-
+            // 蒸豆工序跳转
             if (who === 'second') {
                 this.$store.commit('koji/updateOrderScInfo', item);
                 switch (num) {
@@ -515,24 +385,7 @@
                 });
             }, 100);
 
-
         }
-    }
-
-    interface HouseTag {
-        changed: string;
-        changer: string;
-        discCraft: string;
-        discInStorage: string;
-        id: string;
-        kojiOrderNo: string;
-        orderNo: string;
-        steamBeanCraft: string;
-        steamBeanInStorage: string;
-        steamFlourCraft: string;
-        steamFlourMaterial: string;
-        washBeanCraft: string;
-        washBeanMaterail: string;
     }
 
     interface KojiFirstObj {
@@ -543,6 +396,7 @@
     }
 
     interface KojiFirstInfoObj{
+        orderNoTemp: string;
         statusName: string;
         addKojiDate: string;
         changed: string;
@@ -589,6 +443,7 @@
     }
 
     interface KojiSecondObj {
+        orderNoTemp: string;
         id: string;
         factory: string;
         factoryName: string;
