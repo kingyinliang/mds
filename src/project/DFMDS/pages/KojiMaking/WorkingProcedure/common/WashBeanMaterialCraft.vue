@@ -565,7 +565,7 @@
             for (const item of this.craftSeiveBeanTable.filter(it => it.delFlag !== 1)) {
                 if (
                     !item.sieveBeanBatch ||
-                    !item.sieveBeanSupplier ||
+                    // !item.sieveBeanSupplier ||
                     !item.sieveImpurityType ||
                     !item.sieveImpurityAmount ||
                     !item.sieveMans

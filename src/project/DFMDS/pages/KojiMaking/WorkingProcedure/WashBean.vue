@@ -148,7 +148,7 @@
         // 查询表头
         getOrderList() {
             KOJI_API.KOJI_CRAFT_HEAD_INFO_QUERY_API({
-                id: this.$store.state.koji.orderKojiInfo.houseSplitList[0].id || ''
+                id: this.$store.state.koji.orderKojiInfo.id || ''
             }).then(({ data }) => {
                 this.formHeader = data.data;
                 this.formHeader.textStage = 'XD';

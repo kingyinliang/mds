@@ -136,7 +136,7 @@
         // 查询表头
         getOrderList() {
             COMMON_API.OREDER_QUERY_BY_NO_API({
-                orderNo: this.$store.state.koji.orderKojiInfo.houseSplitList[0].orderNo || ''
+                orderNo: this.$store.state.koji.orderKojiInfo.orderNo || ''
             }).then(({ data }) => {
                 this.formHeader = data.data;
                 this.formHeader.textStage = 'SC';
