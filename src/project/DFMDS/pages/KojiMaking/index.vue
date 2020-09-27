@@ -13,16 +13,16 @@
         >
             <template slot="home">
                 <el-row class="potList" :gutter="10" style="min-height: 150px; margin-top: 5px;">
-                    <el-col v-for="(item, index) in queryFirstResultList" :key="index" :span="8">
+                    <el-col v-for="(item, index) in queryFirstResultList" :key="index" :span="6">
                         <div class="box-item">
                             <div class="box-item__top">
-                                <div><i class="title-icon" />{{ item.kojiHouseNo }}</div>
+                                <div><i class="title-icon" />{{ item.kojiHouseNo }}  <span>{{ item.houseSplitList[item.nowIndex].kojiHouseNo }} 发酵罐</span></div>
                                 <div class="status">
                                     <span
                                         class="points"
                                         :style="{
                                             'margin-top': '8px',
-                                            background: item.status === 'noPass' ? 'red' : item.status === 'checked' ? '#67C23A' : item.status === 'submit' ? '#1890ff' : item.status === 'saved' ? '#1890ff' : '#7ED321',
+                                            background: item.houseSplitList[item.nowIndex].status === 'D' ? 'red' : item.houseSplitList[item.nowIndex].status === 'C' ? '#67C23A' : item.houseSplitList[item.nowIndex].status === 'M' ? '#1890ff' : item.houseSplitList[item.nowIndex].status === 'S' ? '#1890ff' : '#7ED321',
                                         }"
                                     />
                                     &nbsp;曲房状态：
@@ -33,42 +33,42 @@
                                     >{{ item.status === 'submit' ? '已提交' : item.status === 'checked' ? '审核通过' : item.status === 'noPass' ? '审核不通过' : item.status === 'saved' ? '已保存' : item.status === '已同步' ? '未录入' : item.status }}</em> -->
                                     <em
                                         :style="{
-                                            color: item.status === 'R' ? 'red' : item.status === 'C' ? '#67C23A' : '',
+                                            color: item.houseSplitList[item.nowIndex].status === 'R' ? 'red' : item.houseSplitList[item.nowIndex].status === 'C' ? '#67C23A' : '',
                                         }"
-                                    >{{ orderStatusMapping[item.status] }}</em>
+                                    >{{ orderStatusMapping[item.houseSplitList[item.nowIndex].status] }}</em>
                                 </div>
                             </div>
                             <div class="box-item__content" :gutter="20">
-                                <div class="img">
-                                    <img src="@/assets/img/bottle.png" style="width: 130px;">
+                                <div class="img" style="margin: 0; padding: 5px 10px; background-color: #f6f5f8; border-radius: 5px;">
+                                    <img src="@/assets/img/koji_01.png" style="width: 130px;">
                                 </div>
                                 <div class="right">
                                     <ul>
                                         <li class="lines">
                                             <span>订单号：</span>
-                                            <!-- <el-select v-model="item.orderNo" filterable size="mini" style="flex: 1;" @change="changeOrder($event, item)">
-                                                <el-option v-for="(subItems, subIndex) in item.orderList" :key="subIndex" :value="subItems.orderNo" :label="subItems.orderNo" />
-                                            </el-select> -->
-
+                                            <el-select v-model="item.houseSplitList[item.nowIndex].orderNo" filterable size="mini" style="flex: 1;" @change="val=>{changeFirstOrder(val,item)}">
+                                                <el-option v-for="(subItems) in item.houseSplitList" :key="subItems.id" :value="subItems.orderNo" :label="subItems.orderNo" />
+                                            </el-select>
+                                            <!--
                                             <span>
-                                                {{ item.orderNo }}
-                                            </span>
+                                                {{ item.houseSplitList[item.nowIndex].orderNo }}
+                                            </span> -->
                                         </li>
                                         <li class="lines">
                                             <span>
                                                 生产物料：
                                             </span>
-                                            <el-tooltip class="item" effect="dark" :content="item.materialName + item.materialCode" placement="bottom-start">
+                                            <el-tooltip class="item" effect="dark" :content="item.houseSplitList[item.nowIndex].materialName + item.houseSplitList[item.nowIndex].materialCode" placement="top-start">
                                                 <span>
-                                                    {{ item.materialName }}{{ item.materialCode }}
+                                                    {{ item.houseSplitList[item.nowIndex].materialName }} {{ item.houseSplitList[item.nowIndex].materialCode }}
                                                 </span>
                                             </el-tooltip>
                                         </li>
                                         <li class="lines">
-                                            <span>制曲时长：</span><span>{{ item.kojiDuration }} H</span>
+                                            <span>制曲时长：</span><span>{{ item.houseSplitList[item.nowIndex].kojiDuration || '?' }} H</span>
                                         </li>
                                         <li class="lines">
-                                            <span>入曲时间：</span><span>{{ item.kojiStartTime }}</span>
+                                            <span>入曲时间：</span><span>{{ item.houseSplitList[item.nowIndex].kojiStartTime }}</span>
                                         </li>
                                     </ul>
                                 </div>
@@ -77,23 +77,23 @@
                                 <el-tooltip
                                     class="item"
                                     effect="dark"
-                                    :content="item.orderStatus === 'submit' ? '已提交' : item.orderStatus === 'checked' ? '审核通过' : item.orderStatus === 'noPass' ? '审核不通过' : item.orderStatus === 'saved' ? '已保存' : item.orderStatus === '已同步' ? '未录入' : item.orderStatus"
+                                    :content="orderStatusMapping[item.houseSplitList[item.nowIndex].houseTag.washBeanCraft]"
                                     placement="top-start"
                                 >
-                                    <el-button class="bottom-item" @click="goDetail('first',1, item)">
+                                    <el-button class="bottom-item" @click="goDetail('first',1, item.houseSplitList[item.nowIndex])">
                                         <!-- <el-button :disabled="!isAuth('bottle:inStorage:list')" class="bottom-item" @click="goDetail('first',1, item)"> -->
                                         洗豆
                                     </el-button>
                                 </el-tooltip>
 
-                                <el-tooltip class="item" effect="dark" :content="item.craftDataStatus" placement="top-start">
-                                    <el-button class="bottom-item" @click="goDetail('first',2, item)">
+                                <el-tooltip class="item" effect="dark" :content="orderStatusMapping[item.houseSplitList[item.nowIndex].houseTag.steamFlourCraft]" placement="top-start">
+                                    <el-button class="bottom-item" @click="goDetail('first',2, item.houseSplitList[item.nowIndex])">
                                         <!-- <el-button :disabled="!isAuth('bottle:workshop:techProductParameterList')" class="bottom-item" @click="goDetail('first',2, item)"> -->
                                         蒸面
                                     </el-button>
                                 </el-tooltip>
-                                <el-tooltip class="item" effect="dark" :content="item.qualityStatus" placement="top-start">
-                                    <el-button class="bottom-item" @click="goDetail('first',3, item)">
+                                <el-tooltip class="item" effect="dark" :content="orderStatusMapping[item.houseSplitList[item.nowIndex].houseTag.discCraft]" placement="top-start">
+                                    <el-button class="bottom-item" @click="goDetail('first',3, item.houseSplitList[item.nowIndex])">
                                         <!-- <el-button :disabled="!isAuth('bottle:workshop:qualityInspectionList')" class="bottom-item" @click="goDetail('first',3, item)"> -->
                                         圆盘
                                     </el-button>
@@ -101,19 +101,21 @@
                             </div>
                         </div>
                     </el-col>
-                    <el-col v-for="(item, index) in querySecondResultList" :key="index" :span="8">
+
+
+                    <el-col v-if="querySecondResultList.length!==0" :span="6">
                         <div class="box-item">
                             <div class="box-item__top">
-                                <div><i class="title-icon" />{{ item.kojiHouseNo }}</div>
+                                <div><i class="title-icon" />蒸豆 <span>{{ querySecondResultList[secondObjIndex].productLineName }} </span></div>
                                 <div class="status">
                                     <span
                                         class="points"
                                         :style="{
                                             'margin-top': '8px',
-                                            background: item.status === 'noPass' ? 'red' : item.status === 'checked' ? '#67C23A' : item.status === 'submit' ? '#1890ff' : item.status === 'saved' ? '#1890ff' : '#7ED321',
+                                            background: querySecondResultList[secondObjIndex].orderStatus === 'D' ? 'red' : querySecondResultList[secondObjIndex].orderStatus === 'C' ? '#67C23A' : querySecondResultList[secondObjIndex].orderStatus === 'M' ? '#1890ff' : querySecondResultList[secondObjIndex].orderStatus === 'S' ? '#1890ff' : '#7ED321',
                                         }"
                                     />
-                                    &nbsp;曲房状态：
+                                    &nbsp;状态：
                                     <!-- <em
                                         :style="{
                                             color: item.status === 'noPass' ? 'red' : item.status === 'checked' ? '#67C23A' : '',
@@ -121,42 +123,42 @@
                                     >{{ item.status === 'submit' ? '已提交' : item.status === 'checked' ? '审核通过' : item.status === 'noPass' ? '审核不通过' : item.status === 'saved' ? '已保存' : item.status === '已同步' ? '未录入' : item.status }}</em> -->
                                     <em
                                         :style="{
-                                            color: item.status === 'R' ? 'red' : item.status === 'C' ? '#67C23A' : '',
+                                            color: querySecondResultList[secondObjIndex].orderStatus === 'R' ? 'red' : querySecondResultList[secondObjIndex].orderStatus === 'C' ? '#67C23A' : '',
                                         }"
-                                    >{{ orderStatusMapping[item.status] }}</em>
+                                    >{{ querySecondResultList[secondObjIndex].orderStatusName }}</em>
                                 </div>
                             </div>
                             <div class="box-item__content" :gutter="20">
-                                <div class="img">
-                                    <img src="@/assets/img/bottle.png" style="width: 130px;">
+                                <div class="img" style="margin: 0; padding: 5px 10px; background-color: #f6f5f8; border-radius: 5px;">
+                                    <img src="@/assets/img/koji_01.png" style="width: 130px;">
                                 </div>
                                 <div class="right">
                                     <ul>
                                         <li class="lines">
                                             <span>订单号：</span>
-                                            <!-- <el-select v-model="item.orderNo" filterable size="mini" style="flex: 1;" @change="changeOrder($event, item)">
-                                                <el-option v-for="(subItems, subIndex) in item.orderList" :key="subIndex" :value="subItems.orderNo" :label="subItems.orderNo" />
-                                            </el-select> -->
-
+                                            <el-select v-model="querySecondResultList[secondObjIndex].orderNo" filterable size="mini" style="flex: 1;" @change="val=>{changeSecondOrder(val,querySecondResultList[secondObjIndex])}">
+                                                <el-option v-for="(subItems) in querySecondResultList[secondObjIndex]" :key="subItems.id" :value="subItems.orderNo" :label="subItems.orderNo" />
+                                            </el-select>
+                                            <!--
                                             <span>
-                                                {{ item.orderNo }}
-                                            </span>
+                                                {{ item.houseSplitList[item.nowIndex].orderNo }}
+                                            </span> -->
                                         </li>
                                         <li class="lines">
                                             <span>
                                                 生产物料：
                                             </span>
-                                            <el-tooltip class="item" effect="dark" :content="item.materialName + item.materialCode" placement="bottom-start">
+                                            <el-tooltip class="item" effect="dark" :content="querySecondResultList[secondObjIndex].materialName + querySecondResultList[secondObjIndex].materialCode" placement="top-start">
                                                 <span>
-                                                    {{ item.materialName }}{{ item.materialCode }}
+                                                    {{ querySecondResultList[secondObjIndex].materialName }} {{ querySecondResultList[secondObjIndex].materialCode }}
                                                 </span>
                                             </el-tooltip>
                                         </li>
                                         <li class="lines">
-                                            <span>制曲时长：</span><span>{{ item.kojiDuration }} H</span>
+                                            <span>订单产量：</span><span>{{ querySecondResultList[secondObjIndex].planOutput }} {{ querySecondResultList[secondObjIndex].outputUnit }}</span>
                                         </li>
                                         <li class="lines">
-                                            <span>入曲时间：</span><span>{{ item.kojiStartTime }}</span>
+                                            <span>实际产量：</span><span>{{ querySecondResultList[secondObjIndex].realOutput }}</span>
                                         </li>
                                     </ul>
                                 </div>
@@ -165,18 +167,18 @@
                                 <el-tooltip
                                     class="item"
                                     effect="dark"
-                                    :content="item.orderStatus === 'submit' ? '已提交' : item.orderStatus === 'checked' ? '审核通过' : item.orderStatus === 'noPass' ? '审核不通过' : item.orderStatus === 'saved' ? '已保存' : item.orderStatus === '已同步' ? '未录入' : item.orderStatus"
+                                    :content="orderStatusMapping[querySecondResultList[secondObjIndex].houseTag.washBeanCraft]"
                                     placement="top-start"
                                 >
                                     <el-button class="bottom-item" @click="goDetail('second',1, item)">
-                                        <!-- <el-button :disabled="!isAuth('bottle:inStorage:list')" class="bottom-item" @click="goDetail('second',1, item)"> -->
+                                        <!-- <el-button :disabled="!isAuth('bottle:inStorage:list')" class="bottom-item" @click="goDetail('first',1, item)"> -->
                                         洗豆
                                     </el-button>
                                 </el-tooltip>
 
-                                <el-tooltip class="item" effect="dark" :content="item.craftDataStatus" placement="top-start">
+                                <el-tooltip class="item" effect="dark" :content="orderStatusMapping[querySecondResultList[secondObjIndex].houseTag.steamBeanCraft]" placement="top-start">
                                     <el-button class="bottom-item" @click="goDetail('second',2, item)">
-                                        <!-- <el-button :disabled="!isAuth('bottle:workshop:techProductParameterList')" class="bottom-item" @click="goDetail('second',2, item)"> -->
+                                        <!-- <el-button :disabled="!isAuth('bottle:workshop:techProductParameterList')" class="bottom-item" @click="goDetail('first',2, item)"> -->
                                         蒸豆
                                     </el-button>
                                 </el-tooltip>
@@ -219,6 +221,7 @@
         totalCount = 0;
         dialogFormVisible1 = false;
         dialogFormVisible2 = false;
+        secondObjIndex=0 // 蒸豆 index
 
         splitForm = {
             current: 1,
@@ -233,7 +236,6 @@
         holder = [];
         queryFirstResultList: KojiFirstObj[] = [];
         querySecondResultList: KojiSecondObj[] = [];
-        splitTable: KojiFirstObj[] = [];
         rules = [
             {
                 prop: 'workShop',
@@ -311,15 +313,66 @@
 
             params.factory = JSON.parse(sessionStorage.getItem('factory') || '{}').id;
 
-            // return new Promise((resolve) => {
-            //             KOJI_API.KOJI_INDEX_QUERY_ORDER_API({
-            //                 params
-            //             }).then((data) => {
+            KOJI_API.KOJI_INDEX_QUERY_SC_ORDER_API({
+                    params
+                }).then(({ data }) => {
+                    console.log('蒸豆')
+                    console.log(data)
+                if (data.data.length !== 0) {
+                    this.querySecondResultList = data.data;
 
-            //                     resolve(data)
-            //             })
-            //         })
+                } else {
+                    this.querySecondResultList = [];
+                    // this.$infoToast('蒸豆暂无任何内容');
+                }
+
+            })
             return KOJI_API.KOJI_INDEX_QUERY_ORDER_API(params);
+        }
+
+        changeFirstOrder(val, item) {
+
+            console.log(val)
+            console.log(item)
+
+            item.houseSplitList.forEach((sunItem, subIndex) => {
+                if (sunItem.orderNo === val) {
+                    item.nowIndex = subIndex
+                }
+            })
+            // item.nowIndex =
+            // const sole = this.AllList.find(items => items.orderNo === event);
+            // item.orderStatus = sole.orderStatus;
+            // item.materialCode = sole.materialCode;
+            // item.materialName = sole.materialName;
+            // item.planOutput = sole.planOutput;
+            // item.outputUnit = sole.outputUnit;
+            // item.realOutput = sole.realOutput;
+            // item.orderId = sole.orderId;
+            // item.orderNo = sole.orderNo;
+            // item.craftDataStatus = sole.craftDataStatus;
+            // item.qualityStatus = sole.qualityStatus;
+        }
+
+        changeSecondOrder(val, item) {
+            console.log(item)
+            this.querySecondResultList.forEach((sunItem, subIndex) => {
+                if (sunItem.orderNo === val) {
+                    this.secondObjIndex = subIndex
+                }
+            })
+            // item.nowIndex =
+            // const sole = this.AllList.find(items => items.orderNo === event);
+            // item.orderStatus = sole.orderStatus;
+            // item.materialCode = sole.materialCode;
+            // item.materialName = sole.materialName;
+            // item.planOutput = sole.planOutput;
+            // item.outputUnit = sole.outputUnit;
+            // item.realOutput = sole.realOutput;
+            // item.orderId = sole.orderId;
+            // item.orderNo = sole.orderNo;
+            // item.craftDataStatus = sole.craftDataStatus;
+            // item.qualityStatus = sole.qualityStatus;
         }
 
         createdEnd() {
@@ -341,14 +394,16 @@
             if (data.data.length !== 0) {
                 this.queryFirstResultList = data.data;
                 this.queryFirstResultList.forEach(item => {
-                    item.statusName = this.orderStatusMapping[item.status]
+                    item.nowIndex = 0
+                    item.houseSplitList.forEach(subItem => {
+                        subItem.statusName = this.orderStatusMapping[subItem.status]
+                    })
                 })
 
             } else {
                 this.queryFirstResultList = [];
                 this.$infoToast('暂无任何内容');
             }
-            this.splitTable = [];
         }
 
         getHolder(params) {
@@ -375,15 +430,6 @@
                 this.$warningToast('请双击订单后操作')
                 return false
             }
-            // KOJI_API.STE_SPLIT_LIST_API(this.splitForm).then(({ data }) => {
-            //     if (!data.data.records.length) {
-            //         this.$infoToast('暂无任何内容');
-            //     }
-            //     this.splitTable = data.data.records
-            //     this.splitForm.current = data.data.current;
-            //     this.splitForm.size = data.data.size;
-            //     this.splitForm.total = data.data.total;
-            // })
         }
 
         // 拆分
@@ -490,6 +536,13 @@
     }
 
     interface KojiFirstObj {
+        kojiHouseId: string;
+        kojiHouseNo: string;
+        nowIndex: number;
+        houseSplitList: KojiFirstInfoObj[];
+    }
+
+    interface KojiFirstInfoObj{
         statusName: string;
         addKojiDate: string;
         changed: string;
@@ -505,6 +558,7 @@
         kojiStartTime: string;
         materialCode: string;
         materialName: string;
+        houseTag: KojiFirstObjHouseTag;
         orderId: string;
         orderNo: string;
         orderType: string;
@@ -518,42 +572,74 @@
         workShopName: string;
     }
 
-    interface KojiSecondObj {
+    interface KojiFirstObjHouseTag{
+        id: string;
+        orderNo: string;
+        kojiOrderNo: string;
+        washBeanMaterail: string;
+        washBeanCraft: string;
+        steamFlourMaterial: string;
+        steamFlourCraft: string;
+        steamBeanInStorage: string;
+        steamBeanCraft: string;
+        discInStorage: string;
+        discCraft: string;
         changed: string;
         changer: string;
-        countMan: number;
-        countOutput: number;
-        countOutputUnit: string;
-        deviceTime: number;
-        dispatchMan: string;
-        exceptionDateCount: number;
+    }
+
+    interface KojiSecondObj {
+        id: string;
         factory: string;
         factoryName: string;
-        germs: number;
-        houseTag: HouseTag;
-        id: string;
-        materialCode: string;
-        materialName: string;
-        operator: string;
-        operatorDate: string;
-        orderEndDate: string;
-        orderNo: string;
-        orderStartDate: string;
-        orderStatus: string;
-        orderStatusName: string;
-        orderType: string;
-        outputUnit: string;
-        outputUnitName: string;
-        planOutput: number;
+        workShop: string;
+        workShopName: string;
         productDate: string;
         productLine: string;
         productLineName: string;
-        readyTime: number;
-        realInAmount: number;
-        realOutput: number;
-        userTime: number;
-        workShop: string;
-        workShopName: string;
+        orderNo: string;
+        orderType: string;
+        orderStartDate: string;
+        orderEndDate: string;
+        materialCode: string;
+        materialName: string;
+        planOutput: number;
+        realOutput?: number;
+        outputUnit: string;
+        outputUnitName: string;
+        operator: string;
+        operatorDate?: string;
+        orderStatus: string;
+        orderStatusName: string;
+        countMan?: string;
+        countOutput?: number;
+        countOutputUnit: string;
+        germs?: string;
+        realInAmount?: string;
+        exceptionDateCount?: string;
+        changer: string;
+        changed: string;
+        dispatchMan: string;
+        readyTime?: string;
+        userTime?: string;
+        deviceTime?: string;
+        houseTag: KojiSecondObjHouseTag;
+    }
+
+    interface KojiSecondObjHouseTag {
+        id: string;
+        orderNo: string;
+        kojiOrderNo: string;
+        washBeanMaterail: string;
+        washBeanCraft: string;
+        steamFlourMaterial: string;
+        steamFlourCraft: string;
+        steamBeanInStorage: string;
+        steamBeanCraft: string;
+        discInStorage: string;
+        discCraft: string;
+        changed?: string;
+        changer: string;
     }
 
 </script>
@@ -582,15 +668,18 @@
     .box-item__content {
         display: flex;
         flex-direction: row;
+        margin-bottom: 10px;
         .img {
-            margin-top: 10px;
+            padding: 5px 10px;
+            background-color: #f6f5f8;
+            border-radius: 5px;
         }
         .right {
             .lines {
                 display: flex;
                 flex-direction: row;
                 height: 32px;
-                margin-bottom: 10px;
+                margin-bottom: 15px;
                 padding-left: 10px;
                 color: #333;
                 font-size: 12px;
