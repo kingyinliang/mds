@@ -127,6 +127,7 @@
                 supplier: Data.supplier,
                 stockAmount: Data.stockAmount || Data.currentAmount,
                 orderNo: Data.orderNo,
+                kojiOrderNo: Data.kojiHouseNo,
                 smallBeanAmount: Data.smallBeanAmount,
                 unit: 'KG',
                 remark: Data.remark,
