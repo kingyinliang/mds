@@ -121,7 +121,7 @@
                 this.splitTable = JSON.parse(JSON.stringify(data.data.records))
                 this.splitTable.forEach(item => {
                     this.$set(item, 'statusName', this.orderStatusMapping[item.status])
-                    this.$set(item, ' isChangeAddKojiDate', true)
+                    this.$set(item, 'isChangeAddKojiDate', true)
                 })
 
                 this.orgSplitTable = JSON.parse(JSON.stringify(this.splitTable))
@@ -193,14 +193,6 @@
         checkKojiDate(val, item) {
             console.log('change')
             console.log(val)
-            // this.splitTable.forEach(item => {
-            //     if (item.addKojiDate === val) {
-            //         if (item.status === 'C' && item.id !== row.id) {
-            //             this.$warningToast('关联订单人工工时已提交，此订单不可调整入曲日期，请取消已审核订单：831000019423，831000019423');
-            //             return false
-            //         }
-            //     }
-            // })
 
             if (this.checkTheSame()) {
                 this.$warningToast('同一个订单同一个制曲日期下，不允许曲房重复')
@@ -270,6 +262,7 @@
                 orderType: this.orderObj.orderType,
                 outKojiDate: getNewDay(this.orderObj.orderStartDate, 2),
                 productDate: this.orderObj.productDate,
+                statusName: '未录入',
                 status: 'N',
                 workShopName: this.orderObj.workShopName,
                 workShop: this.orderObj.workShop,
@@ -393,6 +386,7 @@
     }
     interface SplitObj {
         isChangeAddKojiDate?: boolean;
+        statusName?: string;
         delFlag?: number;
         addKojiDate?: string;
         changed?: string;

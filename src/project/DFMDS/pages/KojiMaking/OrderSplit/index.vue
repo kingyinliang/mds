@@ -46,43 +46,21 @@
                     </el-col>
                     <el-col :span="14">
                         <mds-card title="拆分管理" name="split" :pack-up="false" style="margin-bottom: 0; background: #fff;">
-                            <!-- <template slot="titleBtn">
-                                <el-form :inline="true" :model="splitForm" size="small" label-width="125px" style="float: right; height: 42px;">
-                                    <el-form-item label="锅号：" style="margin-bottom: 10px;">
-                                        <el-select v-model="splitForm.potNo" placeholder="请选择" clearable>
-                                            <el-option label="请选择" value="" />
-                                            <el-option v-for="(subItem, subIndex) in holder" :key="subIndex" :label="subItem.holderName" :value="subItem.holderNo" />
-                                        </el-select>
-                                    </el-form-item>
-                                    <el-form-item style="margin-bottom: 10px;">
-                                        <el-button v-if="isAuth('steSplitQuery')" type="primary" size="small" @click="getSplitTable">
-                                            查询
-                                        </el-button>
-                                    </el-form-item>
-                                </el-form>
-                            </template> -->
                             <el-table :data="splitTable" header-row-class-name="tableHead" class="newTable" :height="mainClientHeight - 61 - 62 - 47" border tooltip-effect="dark">
                                 <el-table-column type="index" width="55" label="序号" align="center" fixed />
                                 <el-table-column label="曲房状态" width="100" prop="statusName" :show-overflow-tooltip="true" />
-
                                 <el-table-column label="生产订单" min-width="120" prop="orderNo" :show-overflow-tooltip="true" />
-
+                                <el-table-column label="曲房号" min-width="100" prop="kojiHouseNo" :show-overflow-tooltip="true" />
                                 <el-table-column label="发酵罐号" min-width="100" prop="fermentPotNo" :show-overflow-tooltip="true" />
-
                                 <el-table-column label="入曲日期" width="140" prop="addKojiDate" :show-overflow-tooltip="true" />
                                 <el-table-column label="出曲日期" width="140" prop="outKojiDate" :show-overflow-tooltip="true" />
-
                                 <el-table-column label="操作人" width="160" prop="changer" :show-overflow-tooltip="true" />
                                 <el-table-column label="操作时间" width="180" prop="changed" :show-overflow-tooltip="true" />
                                 <el-table-column label="操作" fixed="right" align="center" width="140">
                                     <template slot-scope="scope">
-                                        <el-button v-if="isAuth('steSplitDel')" type="text" icon="el-icon-delete" :disabled="['C','D'].includes(scope.row.status)" @click="delSplitRow(scope.row)">
+                                        <el-button v-if="isAuth('steSplitDel')" type="text" icon="el-icon-delete" :disabled="['C','D','P'].includes(scope.row.status)" @click="delSplitRow(scope.row)">
                                             删除
                                         </el-button>
-                                        <!-- <el-button v-if="isAuth('steSplitMx')" type="text" @click="orderSplitDetail(scope.row)">
-                                            <em class="iconfont factory-liebiao" />
-                                            <span style="margin-left: 5px;">详情</span>
-                                        </el-button> -->
                                     </template>
                                 </el-table-column>
                             </el-table>
@@ -94,7 +72,7 @@
                 </el-row>
             </template>
         </query-table>
-        <order-split-dialog v-if="dialogFormVisible1" ref="orderSplitDialog" @getList="getData" />
+        <order-split-dialog v-if="dialogFormVisible" ref="orderSplitDialog" @getList="getData" />
     </div>
 </template>
 
@@ -124,8 +102,9 @@
         currPage = 1;
         pageSize = 10;
         totalCount = 0;
-        dialogFormVisible1 = false;
-        dialogFormVisible2 = false;
+        dialogFormVisible = false;
+        fermentPotNoOptions: OptionObj[] = [];
+        kojiHouseNoOptions: OptionObj[] = [];
 
         splitForm = {
             current: 1,
@@ -204,6 +183,7 @@
         ];
 
         mounted() {
+
             // 订单状态 mapping
             COMMON_API.DICTQUERY_API({ dictType: 'COMMON_CHECK_STATUS' }).then(({ data }) => {
                 this.orderStatusMapping = {}
@@ -217,7 +197,13 @@
         listInterface(params) {
             console.log('params')
             console.log(params)
-            // params.OrgOrderStatus ? params.orderStatus = [params.OrgOrderStatus] : params.orderStatus = [];
+            if ((params.orderStartDate === '' || !params.orderStartDate) && params.orderNo === '') {
+                this.$warningToast('日期或订单请选填一项');// eslint-disable-line
+                return new Promise((resolve, reject) => {
+                    reject('error') // eslint-disable-line
+                });
+            }
+
             params.current = this.currPage;
             params.size = this.pageSize;
             params.factory = JSON.parse(sessionStorage.getItem('factory') || '{}').id;
@@ -253,27 +239,46 @@
             this.splitTable = [];
         }
 
-        // getHolder(params) {
-        //     COMMON_API.HOLDER_QUERY_API({
-        //         deptId: params.workShop,
-        //         holderType: '001',
-        //         size: 99999,
-        //         current: 1
-        //     }).then(({ data }) => {
-        //         console.log('发酵罐')
-        //         console.log(data)
-        //         this.holder = data.data.records
-        //     })
-        // }
+       // 获取溶解罐下拉选项
+        getFermentationHolder() {
+            COMMON_API.HOLDER_QUERY_API({
+                // deptId: params.workShop,
+                factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
+                holderType: '001',
+                size: 99999,
+                current: 1
+            }).then(({ data }) => {
+                this.fermentPotNoOptions = []
+                data.data.records.forEach(item => {
+                    this.fermentPotNoOptions.push({ optLabel: item.holderName, optValue: item.holderNo })
+                })
+
+            })
+        }
+
+        // 获取曲房下拉选项
+        getKojiHolder(params) {
+            COMMON_API.HOLDER_QUERY_API({
+                factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
+                deptId: params.workShop,
+                holderType: '005',
+                size: 99999,
+                current: 1
+            }).then(({ data }) => {
+                this.kojiHouseNoOptions = []
+                data.data.records.forEach(item => {
+                    this.kojiHouseNoOptions.push({ optLabel: item.holderName, optValue: item.holderNo })
+                })
+            })
+        }
 
         // 表格双击
         showSplitTable(row) {
             console.log('双击后传值')
             console.log(row)
-            if (!(row.orderStatus === 'C' || row.orderStatus === 'P')) {
+            if (!(row.orderStatus === 'D' || row.orderStatus === 'P')) {
                 this.splitForm.orderNo = row.orderNo
                 this.nowRow = row
-                // this.getHolder(row)
                 this.getSplitTable()
             }
 
@@ -307,19 +312,12 @@
         // 拆分
         orderSplit(row) {
             this.orderSplitRow = row;
-            this.dialogFormVisible1 = true;
+            this.dialogFormVisible = true;
             this.$nextTick(() => {
                 this.$refs.orderSplitDialog.init(row, this.orderStatusMapping);
             });
         }
 
-        // x 拆分详情
-        // orderSplitDetail(row) {
-        //     this.dialogFormVisible2 = true;
-        //     this.$nextTick(() => {
-        //         this.$refs.orderSplitDetailDialog.init(row);
-        //     });
-        // }
 
         // 删除订单
         delSplitRow(row) {
@@ -431,6 +429,11 @@
         status: string;
         workShop: string;
         workShopName: string;
+    }
+
+    interface OptionObj {
+        optLabel?: string;
+        optValue?: string;
     }
 </script>
 
