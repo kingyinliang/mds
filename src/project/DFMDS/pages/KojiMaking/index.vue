@@ -16,7 +16,7 @@
                     <el-col v-for="(item, index) in queryFirstResultList" :key="index" :span="6">
                         <div class="box-item">
                             <div class="box-item__top">
-                                <div><i class="title-icon" />{{ item.kojiHouseNo }}  <span>{{ item.houseSplitList[item.nowIndex].kojiHouseNo }} 发酵罐</span></div>
+                                <div><i class="title-icon" />{{ item.houseSplitList[item.nowIndex].kojiHouseName }}  <span>{{ item.houseSplitList[item.nowIndex].fermentPotName }}</span></div>
                                 <div class="status">
                                     <span
                                         class="points"
