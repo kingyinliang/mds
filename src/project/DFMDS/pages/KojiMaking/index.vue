@@ -195,7 +195,6 @@
 
         orderStatusMapping={} // 状态中文与简写对照
         orderSplitRow = {};
-        // holder = [];
         queryFirstResultList: KojiFirstObj[] = [];
         querySecondResultList: KojiSecondObj[] = [];
         rules = [
@@ -263,7 +262,6 @@
                     reject('error') // eslint-disable-line
                 });
             }
-
             params.factory = JSON.parse(sessionStorage.getItem('factory') || '{}').id;
 
             // 呼叫蒸豆
@@ -277,7 +275,6 @@
                     this.querySecondResultList.forEach(item => {
                         this.$set(item, 'orderNoTemp', item.orderNo)
                     })
-
                 } else {
                     this.querySecondResultList = [];
                     // this.$infoToast('蒸豆暂无任何内容');
@@ -312,11 +309,6 @@
                 }
             })
         }
-
-        // getData() {
-        //     this.$refs.queryTable.getDataList();
-        //     // this.showSplitTable(this.orderSplitRow);
-        // }
 
         setData(data) {
             if (data.data.length !== 0) {
