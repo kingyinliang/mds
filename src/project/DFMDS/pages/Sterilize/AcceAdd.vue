@@ -5,7 +5,7 @@
             redact-auth="steAccEdit"
             save-auth="steAccEdit"
             submit-auth="steAccSubmit"
-            :order-status="formHeader.steTagPot?formHeader.steTagPot.accessoriesStatus:'未录入'"
+            :order-status="formHeader.steTagPot?formHeader.steTagPot.accessoriesStatusName:'未录入'"
             :header-base="headerBase"
             :form-header="formHeader"
             :tabs="tabs"
@@ -58,7 +58,7 @@
                 type: 'p',
                 label: '生产锅号',
                 icon: 'factory-qiyaguanjianhua',
-                value: 'potNo'
+                value: 'potName'
             },
             {
                 type: 'tooltip',
