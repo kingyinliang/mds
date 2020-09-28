@@ -51,7 +51,7 @@
     import InStorage from './InStorage.vue'
     import ExcRecord from './ExcRecord.vue' // tab3 文本记录
     import TextRecord from './TextRecord.vue' // tab3 文本记录
-    import RedactBox from './RedactBox.vue' // 下方状态 bar
+    import RedactBox from 'components/RedactBox.vue' // 下方状态 bar
 
     @Component({
         name: 'Instorage',

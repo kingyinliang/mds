@@ -7,7 +7,7 @@
         </div>
         <el-table :data="splitTable" :row-class-name="rowDelFlag" header-row-class-name="tableHead" class="newTable" border tooltip-effect="dark">
             <el-table-column type="index" width="55" label="序号" fixed align="center" />
-            <el-table-column label="曲房状态" width="80" prop="status" :show-overflow-tooltip="true" />
+            <el-table-column label="曲房状态" width="80" prop="statusName" :show-overflow-tooltip="true" />
             <el-table-column label="生产订单" width="120" prop="orderNo" :show-overflow-tooltip="true" />
             <el-table-column min-width="250" label="生产物料" :show-overflow-tooltip="true">
                 <template slot-scope="scope">
@@ -21,7 +21,7 @@
                     <span class="notNull">* </span>曲房号
                 </template>
                 <template slot-scope="scope">
-                    <el-select v-model="scope.row.kojiHouseNo" size="small" filterable clearable :disabled="!['N','S','R'].includes(scope.row.status)">
+                    <el-select v-model="scope.row.kojiHouseNo" size="small" filterable clearable :disabled="!['N','S','R'].includes(scope.row.status)" @change="changeKojiHouseNoControl(scope.row)">
                         <el-option
                             v-for="item in kojiHouseNoOptions"
                             :key="item.optValue"
@@ -33,7 +33,7 @@
             </el-table-column>
             <el-table-column label="发酵罐/池" width="160" prop="fermentPotNo" :show-overflow-tooltip="true">
                 <template slot-scope="scope">
-                    <el-select v-model="scope.row.fermentPotNo" size="small" :disabled="!['N','S','R'].includes(scope.row.status)" filterable clearable>
+                    <el-select v-model="scope.row.fermentPotNo" size="small" :disabled="!['N','S','R'].includes(scope.row.status)" filterable clearable @change="setTheSameFermentPot">
                         <el-option
                             v-for="item in fermentPotNoOptions"
                             :key="item.optValue"
@@ -48,7 +48,19 @@
                     <span class="notNull">* </span>入曲日期
                 </template>
                 <template slot-scope="scope">
-                    <el-date-picker v-model="scope.row.addKojiDate" type="date" placeholder="选择日期" size="small" style="width: 150px;" value-format="yyyy-MM-dd" format="yyyy-MM-dd" :disabled="!['N','S','R'].includes(scope.row.status)" @change="val=>{checkDate(val,scope.row)}" />
+                    <el-date-picker
+                        v-model="scope.row.addKojiDate"
+                        type="date"
+                        placeholder="选择日期"
+                        size="small"
+                        style="width: 150px;"
+                        value-format="yyyy-MM-dd"
+                        format="yyyy-MM-dd"
+                        :disabled="!['N','S','R'].includes(scope.row.status)||!scope.row.isChangeAddKojiDate"
+                        @change="val=>{checkKojiDate(val,scope.row)}"
+                        @blur="checkKojiDateBlur(scope.row)"
+                        @focus="checkKojiDateFocus(scope.row)"
+                    />
                 </template>
             </el-table-column>
             <el-table-column label="出曲日期" width="160" prop="outKojiDate" :show-overflow-tooltip="true">
@@ -88,13 +100,16 @@
         splitTable: SplitObj[] = [];
         orgSplitTable: SplitObj[] = [];
         orderObj: OrderObject;
+        orderStatusMapping: object={}
 
 
-        init(row) {
+        init(row, orderStatusMapping) {
             console.log('弹窗过来数据！')
             console.log(row)
             this.getFermentationHolder() // 发酵罐下拉
             this.getKojiHolder(row) // 曲房号下拉
+            this.orderObj = row;
+            this.orderStatusMapping = orderStatusMapping
             KOJI_API.ORDER_SPLITE_QUERY_BY_ID_API({
                 current: 1,
                 size: 9999,
@@ -102,30 +117,95 @@
             }).then(({ data }) => {
                 console.log('拆分回传！')
                 console.log(data)
-                this.orderObj = row;
                 this.dialogFormVisible = true;
                 this.splitTable = JSON.parse(JSON.stringify(data.data.records))
-                this.orgSplitTable = JSON.parse(JSON.stringify(data.data.records))
+                this.splitTable.forEach(item => {
+                    this.$set(item, 'statusName', this.orderStatusMapping[item.status])
+                    this.$set(item, 'isChangeAddKojiDate', true)
+                })
+
+                this.orgSplitTable = JSON.parse(JSON.stringify(this.splitTable))
             })
 
         }
 
-        // 确认同日期下是否有多车间
-        checkDate(val, row) {
-            console.log(val)
-            console.log(row)
-            // this.splitTable.forEach(item => {
-            //     if (item.addKojiDate === val) {
-            //         if (item.status === 'C' && item.id !== row.id) {
-            //             this.$warningToast('关联订单人工工时已提交，此订单不可调整入曲日期，请取消已审核订单：831000019423，831000019423');
-            //             return false
-            //         }
-            //     }
-            // })
-
-            row.outKojiDate = getNewDay(row.addKojiDate, 2)
+        // 同步溶解罐值
+        setTheSameFermentPot(val) {
+            this.splitTable.forEach(item => {
+                item.fermentPotNo = val
+            })
         }
 
+        // 确认同曲房下是否有同日期
+        changeKojiHouseNoControl(item) {
+
+            if (this.checkTheSame()) {
+                this.$warningToast('同一个订单同一个制曲日期下，不允许曲房重复')
+                item.kojiHouseNo = ''
+            }
+        }
+
+        checkTheSame() {
+            const tempCheckArray: string[] = []
+            this.splitTable.forEach(item => {
+                const temp = `${item.kojiHouseNo}-${item.addKojiDate}`
+                if (!(tempCheckArray.includes(temp))) {
+                    tempCheckArray.push(`${item.kojiHouseNo}-${item.addKojiDate}`)
+                }
+            })
+
+            if (tempCheckArray.length === this.splitTable.length) {
+                return false
+            }
+
+            return true
+
+        }
+
+        checkKojiDateBlur(item) {
+            console.log('blur')
+            KOJI_API.ORDER_SPLITE_DELETE_VALIDATEDATE_API({
+                date: item.addKojiDate,
+                workShop: this.orderObj.workShop
+            }).then((data) => {
+                if (data.data.length !== 0) {
+                    this.$warningToast(`此日期关联订单人工工时已提交，订单不调整至此日期下，请取消已审核订单：${data.data.join(',')}`)
+                    item.outKojiDate = ''
+                    item.addKojiDate = ''
+                }
+            })
+        }
+
+        checkKojiDateFocus(item) {
+            console.log('focus')
+            KOJI_API.ORDER_SPLITE_DELETE_VALIDATEDATE_API({
+                date: item.addKojiDate,
+                workShop: this.orderObj.workShop
+            }).then((data) => {
+                if (data.data.length !== 0) {
+                    this.$warningToast(`关联订单人工工时已提交，此订单不可调整入曲日期，请取消已审核订单：${data.data.join(',')}`)
+                    item.isChangeAddKojiDate = false
+                }
+            })
+        }
+
+        // 确认同日期下是否有同曲房
+        checkKojiDate(val, item) {
+            console.log('change')
+            console.log(val)
+
+            if (this.checkTheSame()) {
+                this.$warningToast('同一个订单同一个制曲日期下，不允许曲房重复')
+                item.addKojiDate = ''
+                item.outKojiDate = ''
+            } else {
+                item.outKojiDate = getNewDay(item.addKojiDate, 2)
+            }
+
+
+        }
+
+        // 获取溶解罐下拉选项
         getFermentationHolder() {
             COMMON_API.HOLDER_QUERY_API({
                 // deptId: params.workShop,
@@ -138,9 +218,11 @@
                 data.data.records.forEach(item => {
                     this.fermentPotNoOptions.push({ optLabel: item.holderName, optValue: item.holderNo })
                 })
+
             })
         }
 
+        // 获取曲房下拉选项
         getKojiHolder(params) {
             COMMON_API.HOLDER_QUERY_API({
                 factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
@@ -162,26 +244,28 @@
         //     row.potAmount = holderObj[0].holderVolume;
         // }
 
+        // 新增 item
         addSplitTable() {
             this.splitTable.push({
                 id: '',
                 delFlag: 0,
+                isChangeAddKojiDate: true, // 是否可改变入曲时间改变
                 addKojiDate: this.orderObj.orderStartDate,
                 // fermentPotId: this.orderObj.fermentPotId,
                 // fermentPotNo: this.orderObj.fermentPotNo,
                 orderNo: this.orderObj.orderNo,
-                // kojiHouseId: string;
-                // kojiHouseNo: string;
+                // kojiHouseId: this.orderObj.kojiHouseId,
+                // kojiHouseNo: this.orderObj.kojiHouseNo,
                 materialCode: this.orderObj.materialCode,
                 materialName: this.orderObj.materialName,
                 // orderId: string;
-                // orderNo: string;
-                // orderType: string;
+                orderType: this.orderObj.orderType,
                 outKojiDate: getNewDay(this.orderObj.orderStartDate, 2),
-                // productDate: Date;
+                productDate: this.orderObj.productDate,
+                statusName: '未录入',
                 status: 'N',
-                // workShop: string;
-                // workShopName: string;
+                workShopName: this.orderObj.workShopName,
+                workShop: this.orderObj.workShop,
                 planOutput: this.orderObj.planOutput,
                 outputUnit: this.orderObj.outputUnit,
                 outputUnitName: this.orderObj.outputUnitName,
@@ -210,17 +294,17 @@
                 }
             }
 
-            const tempObj: string[] = []
+            // const tempObj: string[] = []
 
-            this.splitTable.forEach((item) => {
+            // this.splitTable.forEach((item) => {
 
-                if (!tempObj.includes(`${item.kojiHouseNo}+${item.addKojiDate}`)) {
-                    tempObj.push(`${item.kojiHouseNo}+${item.addKojiDate}`)
-                } else {
-                    this.$warningToast('同日期下曲房不可重复');
-                    return false
-                }
-            })
+            //     if (!tempObj.includes(`${item.kojiHouseNo}+${item.addKojiDate}`)) {
+            //         tempObj.push(`${item.kojiHouseNo}+${item.addKojiDate}`)
+            //     } else {
+            //         this.$warningToast('同日期下曲房不可重复');
+            //         return false
+            //     }
+            // })
 
             const submitObj: SubmitObj = {
                 orderId: this.orderObj.id,
@@ -250,14 +334,28 @@
             })
         }
 
-        // 删除行
+        // 删除 item
         removeDataRow(row) {
+            console.log(row)
             this.$confirm('确定是否删除？', '提示', {
                 confirmButtonText: '确定',
                 cancelButtonText: '取消',
                 type: 'warning'
             }).then(() => {
-                row.delFlag = 1;
+                if (row.id) {
+                    console.log('确认＠')
+                    KOJI_API.ORDER_SPLITE_REMOVE_VALIDATEDATE_API({
+                        kojiOrderNo: row.kojiOrderNo
+                    }).then(({ data }) => {
+                        if (data.data === true) {
+                            console.log('可删除')
+                            row.delFlag = 1;
+                        } else {
+                            console.log('不可删除')
+                            this.$warningToast(`该曲房订单下存在领料数据，请删除数据后再删除曲房订单`)
+                        }
+                    })
+                }
             });
         }
 
@@ -287,6 +385,8 @@
         updateList: SplitObj[];
     }
     interface SplitObj {
+        isChangeAddKojiDate?: boolean;
+        statusName?: string;
         delFlag?: number;
         addKojiDate?: string;
         changed?: string;
@@ -303,7 +403,7 @@
         orderType?: string;
         outKojiDate?: string;
         productDate?: string;
-        status?: string;
+        status: string;
         workShop?: string;
         workShopName?: string;
         planOutput?: number;

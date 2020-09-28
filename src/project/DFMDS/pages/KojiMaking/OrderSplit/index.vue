@@ -33,8 +33,8 @@
                                 <el-table-column label="单位" width="60" prop="outputUnit" />
                                 <el-table-column label="操作" fixed="right" align="center" width="80">
                                     <template slot-scope="scope">
-                                        <el-button v-if="isAuth('steSplit')" type="text" @click="orderSplit(scope.row)">
-                                            <em class="iconfont factory-chaifen" />拆分
+                                        <el-button v-if="isAuth('steSplit')" class="iconfont factory-chaifen" type="text" :disabled="['C','P'].includes(scope.row.orderStatus)" @click="orderSplit(scope.row)">
+                                            拆分
                                         </el-button>
                                     </template>
                                 </el-table-column>
@@ -46,43 +46,21 @@
                     </el-col>
                     <el-col :span="14">
                         <mds-card title="拆分管理" name="split" :pack-up="false" style="margin-bottom: 0; background: #fff;">
-                            <!-- <template slot="titleBtn">
-                                <el-form :inline="true" :model="splitForm" size="small" label-width="125px" style="float: right; height: 42px;">
-                                    <el-form-item label="锅号：" style="margin-bottom: 10px;">
-                                        <el-select v-model="splitForm.potNo" placeholder="请选择" clearable>
-                                            <el-option label="请选择" value="" />
-                                            <el-option v-for="(subItem, subIndex) in holder" :key="subIndex" :label="subItem.holderName" :value="subItem.holderNo" />
-                                        </el-select>
-                                    </el-form-item>
-                                    <el-form-item style="margin-bottom: 10px;">
-                                        <el-button v-if="isAuth('steSplitQuery')" type="primary" size="small" @click="getSplitTable">
-                                            查询
-                                        </el-button>
-                                    </el-form-item>
-                                </el-form>
-                            </template> -->
                             <el-table :data="splitTable" header-row-class-name="tableHead" class="newTable" :height="mainClientHeight - 61 - 62 - 47" border tooltip-effect="dark">
                                 <el-table-column type="index" width="55" label="序号" align="center" fixed />
-                                <el-table-column label="曲房状态" width="120" prop="status" :show-overflow-tooltip="true" />
-
+                                <el-table-column label="曲房状态" width="100" prop="statusName" :show-overflow-tooltip="true" />
                                 <el-table-column label="生产订单" min-width="120" prop="orderNo" :show-overflow-tooltip="true" />
-
+                                <el-table-column label="曲房号" min-width="100" prop="kojiHouseNo" :show-overflow-tooltip="true" />
                                 <el-table-column label="发酵罐号" min-width="100" prop="fermentPotNo" :show-overflow-tooltip="true" />
-
-                                <el-table-column label="入曲日期" width="100" prop="addKojiDate" :show-overflow-tooltip="true" />
-                                <el-table-column label="出曲日期" width="100" prop="outKojiDate" :show-overflow-tooltip="true" />
-
-                                <el-table-column label="操作人" width="100" prop="changer" :show-overflow-tooltip="true" />
-                                <el-table-column label="操作时间" width="100" prop="changed" :show-overflow-tooltip="true" />
+                                <el-table-column label="入曲日期" width="140" prop="addKojiDate" :show-overflow-tooltip="true" />
+                                <el-table-column label="出曲日期" width="140" prop="outKojiDate" :show-overflow-tooltip="true" />
+                                <el-table-column label="操作人" width="160" prop="changer" :show-overflow-tooltip="true" />
+                                <el-table-column label="操作时间" width="180" prop="changed" :show-overflow-tooltip="true" />
                                 <el-table-column label="操作" fixed="right" align="center" width="140">
                                     <template slot-scope="scope">
-                                        <el-button v-if="isAuth('steSplitDel')" type="text" icon="el-icon-delete" @click="delSplitRow(scope.row)">
+                                        <el-button v-if="isAuth('steSplitDel')" type="text" icon="el-icon-delete" :disabled="['C','D','P'].includes(scope.row.status)" @click="delSplitRow(scope.row)">
                                             删除
                                         </el-button>
-                                        <!-- <el-button v-if="isAuth('steSplitMx')" type="text" @click="orderSplitDetail(scope.row)">
-                                            <em class="iconfont factory-liebiao" />
-                                            <span style="margin-left: 5px;">详情</span>
-                                        </el-button> -->
                                     </template>
                                 </el-table-column>
                             </el-table>
@@ -94,8 +72,7 @@
                 </el-row>
             </template>
         </query-table>
-        <order-split-dialog v-if="dialogFormVisible1" ref="orderSplitDialog" @getList="getData" />
-        <order-split-detail-dialog v-if="dialogFormVisible2" ref="orderSplitDetailDialog" @getList="getSplitTable" />
+        <order-split-dialog v-if="dialogFormVisible" ref="orderSplitDialog" @getList="getData" />
     </div>
 </template>
 
@@ -104,13 +81,11 @@
     import { COMMON_API, KOJI_API } from 'common/api/api';
     import { dateFormat } from 'utils/utils';
     import OrderSplitDialog from '../common/OrderSplitDialog.vue'
-    import OrderSplitDetailDialog from '../common/OrderSplitDetailDialog.vue'
 
     @Component({
         name: 'OrderSplit',
         components: {
-            OrderSplitDialog,
-            OrderSplitDetailDialog
+            OrderSplitDialog
         }
     })
     export default class OrderSplit extends Vue {
@@ -127,8 +102,9 @@
         currPage = 1;
         pageSize = 10;
         totalCount = 0;
-        dialogFormVisible1 = false;
-        dialogFormVisible2 = false;
+        dialogFormVisible = false;
+        fermentPotNoOptions: OptionObj[] = [];
+        kojiHouseNoOptions: OptionObj[] = [];
 
         splitForm = {
             current: 1,
@@ -140,7 +116,7 @@
 
         orderSplitRow = {};
         // holder = [];
-        queryResultList: KojiObj[] = []; // 订单查询结果
+        queryResultList: OrderObj[] = []; // 订单查询结果
         splitTable: KojiObj[] = []; // 拆分
         rules = [
             {
@@ -148,6 +124,9 @@
                 text: '请选择生产车间'
             }
         ];
+
+        orderStatusMapping={}
+        nowRow: KojiObj
 
         queryFormData = [
             {
@@ -175,9 +154,9 @@
                 type: 'date-picker',
                 label: '生产日期',
                 labelWidth: 90,
-                prop: 'productDate',
-                valueFormat: 'yyyy-MM-dd hh:mm:ss',
-                defaultValue: dateFormat(new Date(), 'yyyy-MM-dd hh:mm:ss')
+                prop: 'orderStartDate',
+                valueFormat: 'yyyy-MM-dd',
+                defaultValue: dateFormat(new Date(), 'yyyy-MM-dd')
             },
             {
                 type: 'input',
@@ -188,7 +167,7 @@
             {
                 type: 'select',
                 label: '状态',
-                prop: 'OrgOrderStatus',
+                prop: 'status',
                 defaultOptionsFn: () => {
                     return COMMON_API.DICTQUERY_API({
                         dictType: 'COMMON_CHECK_STATUS'
@@ -203,13 +182,32 @@
             }
         ];
 
+        mounted() {
+
+            // 订单状态 mapping
+            COMMON_API.DICTQUERY_API({ dictType: 'COMMON_CHECK_STATUS' }).then(({ data }) => {
+                this.orderStatusMapping = {}
+                data.data.forEach(item => {
+                    this.orderStatusMapping[item.dictCode] = item.dictValue
+                })
+            });
+        }
+
         // 查询请求
         listInterface(params) {
-            params.OrgOrderStatus ? params.orderStatus = [params.OrgOrderStatus] : params.orderStatus = [];
-            params.current = this.currPage; // eslint-disable-line
-            params.size = this.pageSize; // eslint-disable-line
+            console.log('params')
+            console.log(params)
+            if ((params.orderStartDate === '' || !params.orderStartDate) && params.orderNo === '') {
+                this.$warningToast('日期或订单请选填一项');// eslint-disable-line
+                return new Promise((resolve, reject) => {
+                    reject('error') // eslint-disable-line
+                });
+            }
+
+            params.current = this.currPage;
+            params.size = this.pageSize;
             params.factory = JSON.parse(sessionStorage.getItem('factory') || '{}').id;
-            return COMMON_API.ORDER_QUERY_API(params);
+            return KOJI_API.KOJI_ORDER_QUERY_API(params);
         }
 
         createdEnd() {
@@ -227,6 +225,8 @@
 
         // 查询回传 data
         setData(data) {
+            console.log('订单回传')
+            console.log(data)
             if (data.data.records.length) {
                 this.queryResultList = data.data.records;
                 this.currPage = data.data.current;
@@ -239,26 +239,49 @@
             this.splitTable = [];
         }
 
-        // getHolder(params) {
-        //     COMMON_API.HOLDER_QUERY_API({
-        //         deptId: params.workShop,
-        //         holderType: '001',
-        //         size: 99999,
-        //         current: 1
-        //     }).then(({ data }) => {
-        //         console.log('发酵罐')
-        //         console.log(data)
-        //         this.holder = data.data.records
-        //     })
-        // }
+       // 获取溶解罐下拉选项
+        getFermentationHolder() {
+            COMMON_API.HOLDER_QUERY_API({
+                // deptId: params.workShop,
+                factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
+                holderType: '001',
+                size: 99999,
+                current: 1
+            }).then(({ data }) => {
+                this.fermentPotNoOptions = []
+                data.data.records.forEach(item => {
+                    this.fermentPotNoOptions.push({ optLabel: item.holderName, optValue: item.holderNo })
+                })
+
+            })
+        }
+
+        // 获取曲房下拉选项
+        getKojiHolder(params) {
+            COMMON_API.HOLDER_QUERY_API({
+                factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
+                deptId: params.workShop,
+                holderType: '005',
+                size: 99999,
+                current: 1
+            }).then(({ data }) => {
+                this.kojiHouseNoOptions = []
+                data.data.records.forEach(item => {
+                    this.kojiHouseNoOptions.push({ optLabel: item.holderName, optValue: item.holderNo })
+                })
+            })
+        }
 
         // 表格双击
         showSplitTable(row) {
             console.log('双击后传值')
             console.log(row)
-            this.splitForm.orderNo = row.orderNo
-            // this.getHolder(row)
-            this.getSplitTable()
+            if (!(row.orderStatus === 'D' || row.orderStatus === 'P')) {
+                this.splitForm.orderNo = row.orderNo
+                this.nowRow = row
+                this.getSplitTable()
+            }
+
         }
 
         // 获取拆分表格
@@ -267,15 +290,19 @@
                 this.$warningToast('请双击订单后操作')
                 return false
             }
-            console.log('this.splitForm')
-            console.log(this.splitForm)
             KOJI_API.ORDER_SPLITE_QUERY_BY_ID_API(this.splitForm).then(({ data }) => {
                 if (!data.data.records.length) {
-                    this.$infoToast('暂无任何内容');
+                    this.$infoToast('暂无任何拆分内容');
                 }
                 console.log('拆分')
                 console.log(data)
                 this.splitTable = data.data.records
+
+                this.splitTable.forEach(item => {
+                    item.statusName = this.orderStatusMapping[item.status]
+                    item.orderStatus = this.nowRow.orderStatus
+                })
+
                 this.splitForm.current = data.data.current;
                 this.splitForm.size = data.data.size;
                 this.splitForm.total = data.data.total;
@@ -285,29 +312,26 @@
         // 拆分
         orderSplit(row) {
             this.orderSplitRow = row;
-            this.dialogFormVisible1 = true;
+            this.dialogFormVisible = true;
             this.$nextTick(() => {
-                this.$refs.orderSplitDialog.init(row);
+                this.$refs.orderSplitDialog.init(row, this.orderStatusMapping);
             });
         }
 
-        // x 拆分详情
-        // orderSplitDetail(row) {
-        //     this.dialogFormVisible2 = true;
-        //     this.$nextTick(() => {
-        //         this.$refs.orderSplitDetailDialog.init(row);
-        //     });
-        // }
 
         // 删除订单
         delSplitRow(row) {
+            console.log(row)
             this.$confirm('删除后数据将丢失，是否删除？', '提示', {
                 confirmButtonText: '确定',
                 cancelButtonText: '取消',
                 type: 'warning'
             }).then(() => {
-                KOJI_API.ORDER_SPLITE_SAVE_API({
-                    deleteIds: [row.id]
+                KOJI_API.ORDER_SPLITE_REMOVE_API({
+                    deleteIds: [row.id],
+                    orderId: row.orderId,
+                    orderNo: row.orderNo,
+                    orderStatus: this.nowRow.orderStatus
                 }).then(({ data }) => {
                     this.$successToast(data.msg);
                     this.getSplitTable();
@@ -337,7 +361,12 @@
             this.getSplitTable()
         }
     }
-    interface KojiObj{
+
+    interface OptionObj {
+        optLabel?: string;
+        optValue?: string;
+    }
+    interface OrderObj{
         changed?: Date;
         changer?: string;
         countMan?: number;
@@ -372,6 +401,39 @@
         userTime?: number;
         workShop?: string;
         workShopName?: string;
+    }
+
+    interface KojiObj{
+        orderStatus: string;
+        statusName: string;
+        orderStatu: string;
+        addKojiDate: string;
+        changed: string;
+        changer: string;
+        fermentPotId: string;
+        fermentPotNo: string;
+        id: string;
+        kojiHouseId: string;
+        kojiHouseNo: string;
+        kojiOrderNo: string;
+        materialCode: string;
+        materialName: string;
+        orderId: string;
+        orderNo: string;
+        orderType: string;
+        outKojiDate: string;
+        outputUnit: string;
+        outputUnitName: string;
+        planOutput: number;
+        productDate: string;
+        status: string;
+        workShop: string;
+        workShopName: string;
+    }
+
+    interface OptionObj {
+        optLabel?: string;
+        optValue?: string;
     }
 </script>
 

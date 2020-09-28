@@ -13,54 +13,53 @@
         >
             <template slot="home">
                 <el-row class="potList" :gutter="10" style="min-height: 150px; margin-top: 5px;">
-                    <el-col v-for="(item, index) in dataList" :key="index" :span="8">
+                    <el-col v-for="(item, index) in queryFirstResultList" :key="index" :span="6">
                         <div class="box-item">
                             <div class="box-item__top">
-                                <div><i class="title-icon" />{{ item.kojiHouseNo }}</div>
+                                <div><i class="title-icon" />{{ item.kojiHouseNo }}  <span>{{ item.houseSplitList[item.nowIndex].kojiHouseNo }} 发酵罐</span></div>
                                 <div class="status">
                                     <span
                                         class="points"
                                         :style="{
                                             'margin-top': '8px',
-                                            background: item.status === 'noPass' ? 'red' : item.status === 'checked' ? '#67C23A' : item.status === 'submit' ? '#1890ff' : item.status === 'saved' ? '#1890ff' : '#7ED321',
+                                            background: item.houseSplitList[item.nowIndex].status === 'D' ? 'red' : item.houseSplitList[item.nowIndex].status === 'C' ? '#67C23A' : item.houseSplitList[item.nowIndex].status === 'M' ? '#1890ff' : item.houseSplitList[item.nowIndex].status === 'S' ? '#1890ff' : '#7ED321',
                                         }"
                                     />
                                     &nbsp;曲房状态：
                                     <em
                                         :style="{
-                                            color: item.status === 'noPass' ? 'red' : item.status === 'checked' ? '#67C23A' : '',
+                                            color: item.houseSplitList[item.nowIndex].status === 'R' ? 'red' : item.houseSplitList[item.nowIndex].status === 'C' ? '#67C23A' : '',
                                         }"
-                                    >{{ item.status === 'submit' ? '已提交' : item.status === 'checked' ? '审核通过' : item.status === 'noPass' ? '审核不通过' : item.status === 'saved' ? '已保存' : item.status === '已同步' ? '未录入' : item.status }}</em>
+                                    >{{ item.houseSplitList[item.nowIndex].statusName }}</em>
                                 </div>
                             </div>
                             <div class="box-item__content" :gutter="20">
-                                <div class="img">
-                                    <img src="@/assets/img/bottle.png" style="width: 130px;">
+                                <div class="img" style="margin: 0; padding: 5px 10px; background-color: #f6f5f8; border-radius: 5px;">
+                                    <img src="@/assets/img/koji_01.png" style="width: 130px;">
                                 </div>
                                 <div class="right">
                                     <ul>
                                         <li class="lines">
-                                            <span>订单号：</span>
-                                            <!-- <el-select v-model="item.orderNo" filterable size="mini" style="flex: 1;" @change="changeOrder($event, item)">
-                                                <el-option v-for="(subItems, subIndex) in item.orderList" :key="subIndex" :value="subItems.orderNo" :label="subItems.orderNo" />
-                                            </el-select> -->
-                                            {{ item.orderNo }}
+                                            <span>生产订单：</span>
+                                            <el-select v-model="item.houseSplitList[item.nowIndex].orderNoTemp" filterable size="mini" style="flex: 1;" @change="val=>changeFirstOrder(val,item)">
+                                                <el-option v-for="(subItems) in item.houseSplitList" :key="subItems.id" :value="subItems.orderNo" :label="subItems.orderNo" />
+                                            </el-select>
                                         </li>
                                         <li class="lines">
                                             <span>
                                                 生产物料：
                                             </span>
-                                            <el-tooltip class="item" effect="dark" :content="item.materialName + item.materialCode" placement="bottom-start">
+                                            <el-tooltip class="item" effect="dark" :content="item.houseSplitList[item.nowIndex].materialName + item.houseSplitList[item.nowIndex].materialCode" placement="bottom-start">
                                                 <span>
-                                                    {{ item.materialName }}{{ item.materialCode }}
+                                                    {{ item.houseSplitList[item.nowIndex].materialName }} {{ item.houseSplitList[item.nowIndex].materialCode }}
                                                 </span>
                                             </el-tooltip>
                                         </li>
                                         <li class="lines">
-                                            <span>制曲时长：</span><span>{{ item.planOutput }} {{ item.outputUnit }}</span>
+                                            <span>制曲时长：</span><span>{{ item.houseSplitList[item.nowIndex].kojiDuration?`${item.houseSplitList[item.nowIndex].kojiDuration} H`: '' }} </span>
                                         </li>
                                         <li class="lines">
-                                            <span>入曲时间：</span><span>{{ item.realOutput }} {{ item.realOutput ? item.outputUnit : '' }}</span>
+                                            <span>入曲时间：</span><span>{{ item.houseSplitList[item.nowIndex].kojiStartTime }}</span>
                                         </li>
                                     </ul>
                                 </div>
@@ -69,22 +68,99 @@
                                 <el-tooltip
                                     class="item"
                                     effect="dark"
-                                    :content="item.orderStatus === 'submit' ? '已提交' : item.orderStatus === 'checked' ? '审核通过' : item.orderStatus === 'noPass' ? '审核不通过' : item.orderStatus === 'saved' ? '已保存' : item.orderStatus === '已同步' ? '未录入' : item.orderStatus"
+                                    :content="orderStatusMapping[item.houseSplitList[item.nowIndex].houseTag.washBeanCraft]"
                                     placement="top-start"
                                 >
-                                    <el-button :disabled="!isAuth('bottle:inStorage:list')" class="bottom-item" @click="GoDetail(1, item)">
+                                    <el-button class="bottom-item" @click="goDetail('first',1, item.houseSplitList[item.nowIndex])">
+                                        <!-- <el-button :disabled="!isAuth('bottle:inStorage:list')" class="bottom-item" @click="goDetail('first',1, item)"> -->
                                         洗豆
                                     </el-button>
                                 </el-tooltip>
 
-                                <el-tooltip class="item" effect="dark" :content="item.craftDataStatus" placement="top-start">
-                                    <el-button :disabled="!isAuth('bottle:workshop:techProductParameterList')" class="bottom-item" @click="GoDetail(2, item)">
+                                <el-tooltip class="item" effect="dark" :content="orderStatusMapping[item.houseSplitList[item.nowIndex].houseTag.steamFlourCraft]" placement="top-start">
+                                    <el-button class="bottom-item" @click="goDetail('first',2, item.houseSplitList[item.nowIndex])">
+                                        <!-- <el-button :disabled="!isAuth('bottle:workshop:techProductParameterList')" class="bottom-item" @click="goDetail('first',2, item)"> -->
                                         蒸面
                                     </el-button>
                                 </el-tooltip>
-                                <el-tooltip class="item" effect="dark" :content="item.qualityStatus" placement="top-start">
-                                    <el-button :disabled="!isAuth('bottle:workshop:qualityInspectionList')" class="bottom-item" @click="GoDetail(3, item)">
+                                <el-tooltip class="item" effect="dark" :content="orderStatusMapping[item.houseSplitList[item.nowIndex].houseTag.discCraft]" placement="top-start">
+                                    <el-button class="bottom-item" @click="goDetail('first',3, item.houseSplitList[item.nowIndex])">
+                                        <!-- <el-button :disabled="!isAuth('bottle:workshop:qualityInspectionList')" class="bottom-item" @click="goDetail('first',3, item)"> -->
                                         圆盘
+                                    </el-button>
+                                </el-tooltip>
+                            </div>
+                        </div>
+                    </el-col>
+
+                    <el-col v-if="querySecondResultList.length!==0" :span="6">
+                        <div class="box-item">
+                            <div class="box-item__top">
+                                <div><i class="title-icon" />蒸豆 <span>{{ querySecondResultList[secondObjIndex].productLineName }} </span></div>
+                                <div class="status">
+                                    <span
+                                        class="points"
+                                        :style="{
+                                            'margin-top': '8px',
+                                            background: querySecondResultList[secondObjIndex].orderStatus === 'D' ? 'red' : querySecondResultList[secondObjIndex].orderStatus === 'C' ? '#67C23A' : querySecondResultList[secondObjIndex].orderStatus === 'M' ? '#1890ff' : querySecondResultList[secondObjIndex].orderStatus === 'S' ? '#1890ff' : '#7ED321',
+                                        }"
+                                    />
+                                    &nbsp;状态：
+                                    <em
+                                        :style="{
+                                            color: querySecondResultList[secondObjIndex].orderStatus === 'R' ? 'red' : querySecondResultList[secondObjIndex].orderStatus === 'C' ? '#67C23A' : '',
+                                        }"
+                                    >{{ querySecondResultList[secondObjIndex].orderStatusName }}</em>
+                                </div>
+                            </div>
+                            <div class="box-item__content" :gutter="20">
+                                <div class="img" style="margin: 0; padding: 5px 10px; background-color: #f6f5f8; border-radius: 5px;">
+                                    <img src="@/assets/img/koji_01.png" style="width: 130px;">
+                                </div>
+                                <div class="right">
+                                    <ul>
+                                        <li class="lines">
+                                            <span>生产订单：</span>
+                                            <el-select v-model="querySecondResultList[secondObjIndex].orderNoTemp" filterable size="mini" style="flex: 1;" @change="val=>changeSecondOrder(val)">
+                                                <el-option v-for="(subItems) in querySecondResultList[secondObjIndex]" :key="subItems.id" :value="subItems.orderNo" :label="subItems.orderNo" />
+                                            </el-select>
+                                        </li>
+                                        <li class="lines">
+                                            <span>
+                                                生产物料：
+                                            </span>
+                                            <el-tooltip class="item" effect="dark" :content="querySecondResultList[secondObjIndex].materialName + querySecondResultList[secondObjIndex].materialCode" placement="top-start">
+                                                <span>
+                                                    {{ querySecondResultList[secondObjIndex].materialName }} {{ querySecondResultList[secondObjIndex].materialCode }}
+                                                </span>
+                                            </el-tooltip>
+                                        </li>
+                                        <li class="lines">
+                                            <span>订单产量：</span><span>{{ querySecondResultList[secondObjIndex].planOutput }} {{ querySecondResultList[secondObjIndex].outputUnit }}</span>
+                                        </li>
+                                        <li class="lines">
+                                            <span>实际产量：</span><span>{{ querySecondResultList[secondObjIndex].realOutput }}</span>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <div class="box-item__footer">
+                                <el-tooltip
+                                    class="item"
+                                    effect="dark"
+                                    :content="orderStatusMapping[querySecondResultList[secondObjIndex].houseTag.washBeanCraft]"
+                                    placement="top-start"
+                                >
+                                    <el-button class="bottom-item" @click="goDetail('second',1, item)">
+                                        <!-- <el-button :disabled="!isAuth('bottle:inStorage:list')" class="bottom-item" @click="goDetail('first',1, item)"> -->
+                                        洗豆
+                                    </el-button>
+                                </el-tooltip>
+
+                                <el-tooltip class="item" effect="dark" :content="orderStatusMapping[querySecondResultList[secondObjIndex].houseTag.steamBeanCraft]" placement="top-start">
+                                    <el-button class="bottom-item" @click="goDetail('second',2, item)">
+                                        <!-- <el-button :disabled="!isAuth('bottle:workshop:techProductParameterList')" class="bottom-item" @click="goDetail('first',2, item)"> -->
+                                        蒸豆
                                     </el-button>
                                 </el-tooltip>
                             </div>
@@ -100,14 +176,10 @@
     import { Vue, Component } from 'vue-property-decorator';
     import { COMMON_API, KOJI_API } from 'common/api/api';
     import { dateFormat } from 'utils/utils';
-    // import OrderSplitDialog from '../common/OrderSplitDialog.vue'
-    // import OrderSplitDetailDialog from '../common/OrderSplitDetailDialog.vue'
 
     @Component({
         name: 'OrderSplit',
         components: {
-            // OrderSplitDialog,
-            // OrderSplitDetailDialog
         }
     })
     export default class OrderSplit extends Vue {
@@ -117,28 +189,15 @@
 
         $refs: {
             queryTable: HTMLFormElement;
-            orderSplitDialog: HTMLFormElement;
-            orderSplitDetailDialog: HTMLFormElement;
         };
 
-        currPage = 1;
-        pageSize = 10;
-        totalCount = 0;
-        dialogFormVisible1 = false;
-        dialogFormVisible2 = false;
+        secondObjIndex=0 // 蒸豆 index
 
-        splitForm = {
-            current: 1,
-            size: 10,
-            total: 0,
-            orderNo: '',
-            potNo: ''
-        };
-
+        orderStatusMapping={} // 状态中文与简写对照
         orderSplitRow = {};
-        holder = [];
-        queryResultList: SteObj[] = [];
-        splitTable: SteObj[] = [];
+        // holder = [];
+        queryFirstResultList: KojiFirstObj[] = [];
+        querySecondResultList: KojiSecondObj[] = [];
         rules = [
             {
                 prop: 'workShop',
@@ -181,34 +240,69 @@
                 label: '生产订单',
                 labelWidth: 90,
                 prop: 'orderNo'
-            },
-            {
-                type: 'select',
-                label: '状态',
-                prop: 'OrgOrderStatus',
-                defaultOptionsFn: () => {
-                    return COMMON_API.DICTQUERY_API({
-                        dictType: 'COMMON_CHECK_STATUS'
-                    })
-                },
-                defaultValue: '',
-                resVal: {
-                    resData: 'data',
-                    label: ['dictValue'],
-                    value: 'dictCode'
-                }
             }
         ];
 
+        mounted() {
+            // 订单审核状态对照 mapping
+            COMMON_API.DICTQUERY_API({ dictType: 'COMMON_CHECK_STATUS' }).then(({ data }) => {
+                this.orderStatusMapping = {}
+                data.data.forEach(item => {
+                    this.orderStatusMapping[item.dictCode] = item.dictValue
+                })
+            });
+        }
+
+
         // 查询请求
         listInterface(params) {
-            console.log('9999999')
-            console.log(params)
-            // params.OrgOrderStatus ? params.orderStatus = [params.OrgOrderStatus] : params.orderStatus = [];
-            // params.current = this.currPage; // eslint-disable-line
-            // params.size = this.pageSize; // eslint-disable-line
-            // params.factory = JSON.parse(sessionStorage.getItem('factory') || '{}').id;
+            // 针对查找必填关键字进行提示
+            if ((params.orderStartDate === '' || !params.orderStartDate) && params.orderNo === '') {
+                this.$warningToast('日期或订单请选填一项');// eslint-disable-line
+                return new Promise((resolve, reject) => {
+                    reject('error') // eslint-disable-line
+                });
+            }
+
+            params.factory = JSON.parse(sessionStorage.getItem('factory') || '{}').id;
+
+            // 呼叫蒸豆
+            KOJI_API.KOJI_INDEX_QUERY_SC_ORDER_API({
+                    params
+                }).then(({ data }) => {
+                    console.log('蒸豆')
+                    console.log(data)
+                if (data.data.length !== 0) {
+                    this.querySecondResultList = data.data;
+                    this.querySecondResultList.forEach(item => {
+                        this.$set(item, 'orderNoTemp', item.orderNo)
+                    })
+
+                } else {
+                    this.querySecondResultList = [];
+                    // this.$infoToast('蒸豆暂无任何内容');
+                }
+
+            })
             return KOJI_API.KOJI_INDEX_QUERY_ORDER_API(params);
+        }
+
+        changeFirstOrder(val, item) {
+            item.houseSplitList.forEach((sunItem, subIndex) => {
+                if (sunItem.orderNo === val) {
+                    item.nowIndex = subIndex
+                    sunItem.orderNoTemp = val
+                }
+            })
+        }
+
+        changeSecondOrder(val) {
+            this.querySecondResultList.forEach((sunItem, subIndex) => {
+                if (sunItem.orderNo === val) {
+                    this.secondObjIndex = subIndex
+                    sunItem.orderNoTemp = val
+                }
+            })
         }
 
         createdEnd() {
@@ -219,119 +313,190 @@
             })
         }
 
-        getData() {
-            this.$refs.queryTable.getDataList();
-            this.showSplitTable(this.orderSplitRow);
-        }
+        // getData() {
+        //     this.$refs.queryTable.getDataList();
+        //     // this.showSplitTable(this.orderSplitRow);
+        // }
 
         setData(data) {
-            console.log('data')
-            console.log(data)
-        //     if (data.data.records.length) {
-        //         this.queryResultList = data.data.records;
-        //         this.currPage = data.data.current;
-        //         this.pageSize = data.data.size;
-        //         this.totalCount = data.data.total;
-        //     } else {
-        //         this.queryResultList = [];
-        //         this.$infoToast('暂无任何内容');
-        //     }
-        //     this.splitTable = [];
-        }
-
-        getHolder(params) {
-            COMMON_API.HOLDER_QUERY_API({
-                deptId: params.workShop,
-                holderType: '014',
-                size: 99999,
-                current: 1
-            }).then(({ data }) => {
-                this.holder = data.data.records
-            })
-        }
-
-        // 表格双击
-        showSplitTable(row) {
-            this.splitForm.orderNo = row.orderNo;
-            this.getHolder(row)
-            this.getSplitTable()
-        }
-
-        // 获取拆分表格
-        getSplitTable() {
-            if (!this.splitForm.orderNo) {
-                this.$warningToast('请双击订单后操作')
-                return false
-            }
-            // KOJI_API.STE_SPLIT_LIST_API(this.splitForm).then(({ data }) => {
-            //     if (!data.data.records.length) {
-            //         this.$infoToast('暂无任何内容');
-            //     }
-            //     this.splitTable = data.data.records
-            //     this.splitForm.current = data.data.current;
-            //     this.splitForm.size = data.data.size;
-            //     this.splitForm.total = data.data.total;
-            // })
-        }
-
-        // 拆分
-        orderSplit(row) {
-            this.orderSplitRow = row;
-            this.dialogFormVisible1 = true;
-            this.$nextTick(() => {
-                this.$refs.orderSplitDialog.init(row);
-            });
-        }
-
-        // 拆分详情
-        orderSplitDetail(row) {
-            this.dialogFormVisible2 = true;
-            this.$nextTick(() => {
-                this.$refs.orderSplitDetailDialog.init(row);
-            });
-        }
-
-        // 删除订单
-        delSplitRow(row) {
-            this.$confirm('删除后数据将丢失，是否删除？', '提示', {
-                confirmButtonText: '确定',
-                cancelButtonText: '取消',
-                type: 'warning'
-            }).then(() => {
-                KOJI_API.ORDER_SPLITE_SAVE_API({
-                    deletes: [row.id]
-                }).then(({ data }) => {
-                    this.$successToast(data.msg);
-                    this.getSplitTable();
+            if (data.data.length !== 0) {
+                this.queryFirstResultList = data.data;
+                this.queryFirstResultList.forEach(item => {
+                    this.$set(item, 'nowIndex', 0)
+                    item.houseSplitList.forEach(subItem => {
+                        this.$set(subItem, 'statusName', this.orderStatusMapping[subItem.status])
+                        this.$set(subItem, 'orderNoTemp', subItem.orderNo)
+                    })
                 })
-            });
+            } else {
+                this.queryFirstResultList = [];
+                this.$infoToast('暂无任何内容');
+            }
         }
 
-        // 改变每页条数
-        handleSizeChange(val: number) {
-            this.pageSize = val;
-            this.$refs.queryTable.getDataList();
-        }
+        goDetail(who, num, item) {
+            let url = '';
+            // 曲房工序跳转
+            if (who === 'first') {
+                this.$store.commit('koji/updateOrderKojiInfo', item);
 
-        handleCurrentChange(val: number) {
-            this.currPage = val;
-            this.$refs.queryTable.getDataList();
-        }
+                switch (num) {
+                    case 1:
+                        url = 'DFMDS-pages-KojiMaking-WorkingProcedure-WashBean';
+                        break;
+                    case 2:
+                        url = 'DFMDS-pages-KojiMaking-WorkingProcedure-SteamedFlour';
+                        break;
+                    case 3:
+                        url = 'DFMDS-pages-KojiMaking-WorkingProcedure-disc';
+                        break;
+                    default:
+                }
 
-        // 改变每页条数
-        handleSizeChange1(val: number) {
-            this.splitForm.size = val;
-            this.getSplitTable()
-        }
+                this.$store.commit(
+                    'common/updateMainTabs',
+                    this.$store.state.common.mainTabs.filter(subItem => subItem.name !== url)
+                );
 
-        handleCurrentChange1(val: number) {
-            this.splitForm.current = val;
-            this.getSplitTable()
+            }
+            // 蒸豆工序跳转
+            if (who === 'second') {
+                this.$store.commit('koji/updateOrderScInfo', item);
+                switch (num) {
+                    case 1:
+                        url = 'DFMDS-pages-KojiMaking-WorkingProcedure-SCWashBean';
+                        break;
+                    case 2:
+                        url = 'DFMD-page-KojiMakin-WorkingProcedur-SCSteamBean';
+                        break;
+                    default:
+                }
+
+                this.$store.commit(
+                    'common/updateMainTabs',
+                    this.$store.state.common.mainTabs.filter(subItem => subItem.name !== url)
+                );
+
+            }
+
+            setTimeout(() => {
+                this.$router.push({
+                    name: url
+                });
+            }, 100);
+
         }
     }
-    interface SteObj{
-        id?: string;
+
+    interface KojiFirstObj {
+        kojiHouseId: string;
+        kojiHouseNo: string;
+        nowIndex: number;
+        houseSplitList: KojiFirstInfoObj[];
     }
+
+    interface KojiFirstInfoObj{
+        orderNoTemp: string;
+        statusName: string;
+        addKojiDate: string;
+        changed: string;
+        changer: string;
+        fermentPotId: string;
+        fermentPotNo: string;
+        id: string;
+        kojiDuration: string;
+        kojiEndTime: string;
+        kojiHouseId: string;
+        kojiHouseNo: string;
+        kojiOrderNo: string;
+        kojiStartTime: string;
+        materialCode: string;
+        materialName: string;
+        houseTag: KojiFirstObjHouseTag;
+        orderId: string;
+        orderNo: string;
+        orderType: string;
+        outKojiDate: string;
+        outputUnit: string;
+        outputUnitName: string;
+        planOutput: number;
+        productDate: string;
+        status: string;
+        workShop: string;
+        workShopName: string;
+    }
+
+    interface KojiFirstObjHouseTag{
+        id: string;
+        orderNo: string;
+        kojiOrderNo: string;
+        washBeanMaterail: string;
+        washBeanCraft: string;
+        steamFlourMaterial: string;
+        steamFlourCraft: string;
+        steamBeanInStorage: string;
+        steamBeanCraft: string;
+        discInStorage: string;
+        discCraft: string;
+        changed: string;
+        changer: string;
+    }
+
+    interface KojiSecondObj {
+        orderNoTemp: string;
+        id: string;
+        factory: string;
+        factoryName: string;
+        workShop: string;
+        workShopName: string;
+        productDate: string;
+        productLine: string;
+        productLineName: string;
+        orderNo: string;
+        orderType: string;
+        orderStartDate: string;
+        orderEndDate: string;
+        materialCode: string;
+        materialName: string;
+        planOutput: number;
+        realOutput?: number;
+        outputUnit: string;
+        outputUnitName: string;
+        operator: string;
+        operatorDate?: string;
+        orderStatus: string;
+        orderStatusName: string;
+        countMan?: string;
+        countOutput?: number;
+        countOutputUnit: string;
+        germs?: string;
+        realInAmount?: string;
+        exceptionDateCount?: string;
+        changer: string;
+        changed: string;
+        dispatchMan: string;
+        readyTime?: string;
+        userTime?: string;
+        deviceTime?: string;
+        houseTag: KojiSecondObjHouseTag;
+    }
+
+    interface KojiSecondObjHouseTag {
+        id: string;
+        orderNo: string;
+        kojiOrderNo: string;
+        washBeanMaterail: string;
+        washBeanCraft: string;
+        steamFlourMaterial: string;
+        steamFlourCraft: string;
+        steamBeanInStorage: string;
+        steamBeanCraft: string;
+        discInStorage: string;
+        discCraft: string;
+        changed?: string;
+        changer: string;
+    }
+
 </script>
 
 <style lang="scss" scoped>
@@ -358,15 +523,18 @@
     .box-item__content {
         display: flex;
         flex-direction: row;
+        margin-bottom: 10px;
         .img {
-            margin-top: 10px;
+            padding: 5px 10px;
+            background-color: #f6f5f8;
+            border-radius: 5px;
         }
         .right {
             .lines {
                 display: flex;
                 flex-direction: row;
                 height: 32px;
-                margin-bottom: 10px;
+                margin-bottom: 15px;
                 padding-left: 10px;
                 color: #333;
                 font-size: 12px;
