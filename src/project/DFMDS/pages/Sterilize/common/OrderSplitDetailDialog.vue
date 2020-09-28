@@ -12,7 +12,7 @@
             <el-table-column label="生产日期" width="100" prop="productDate" :show-overflow-tooltip="true" />
             <el-table-column label="锅号" width="100" prop="potNoName" :show-overflow-tooltip="true">
                 <template slot-scope="scope">
-                    {{ `${scope.row.potNoName}` }}
+                    {{ `${scope.row.potName}` }}
                 </template>
             </el-table-column>
             <el-table-column min-width="180" label="生产物料" :show-overflow-tooltip="true">
