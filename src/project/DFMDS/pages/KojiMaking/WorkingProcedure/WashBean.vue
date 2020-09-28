@@ -79,7 +79,7 @@
                 value: 'workShopName'
             },
             {
-                type: 'tooltip',
+                type: 'p',
                 label: '曲房编号',
                 icon: 'factory-qiyaguanjianhua',
                 value: 'kojiHouseNo'
@@ -91,25 +91,25 @@
                 value: ['materialName', 'materialCode']
             },
             {
-                type: 'tooltip',
+                type: 'p',
                 label: '生产订单',
                 icon: 'factory-bianhao',
                 value: 'orderNo'
             },
             {
-                type: 'tooltip',
+                type: 'p',
                 label: '制曲日期',
                 icon: 'factory--meirijihuachanliangpeizhi',
                 value: 'addKojiDate'
             },
             {
-                type: 'tooltip',
+                type: 'p',
                 icon: 'factory-riqi1',
                 label: '发酵罐号',
                 value: 'fermentPotNo'
             },
             {
-                type: 'tooltip',
+                type: 'p',
                 icon: 'factory-xianchangrenyuan',
                 label: '提交人员', // 操作人员
                 value: 'changer'
@@ -161,7 +161,7 @@
         }
 
         savedDatas() {
-            const steSemi = this.$refs.washBeanMaterialCraft.getSavedOrSubmitData();
+            const steSemi = this.$refs.washBeanMaterialCraft.getSavedOrSubmitData(this.formHeader);
             const excRequest = this.$refs.excRecord.getSavedOrSubmitData(this.formHeader, 'XD');
             const textRequest = this.$refs.textRecord.savedData(this.formHeader, 'koji');
 
@@ -179,7 +179,7 @@
         }
 
         submitDatas() {
-            const steSemi = this.$refs.washBeanMaterialCraft.getSavedOrSubmitData();
+            const steSemi = this.$refs.washBeanMaterialCraft.getSavedOrSubmitData(this.formHeader);
             const excRequest = this.$refs.excRecord.getSavedOrSubmitData(this.formHeader, 'XD');
             const textRequest = this.$refs.textRecord.savedData(this.formHeader, 'koji');
 

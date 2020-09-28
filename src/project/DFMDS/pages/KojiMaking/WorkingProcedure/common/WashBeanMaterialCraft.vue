@@ -320,7 +320,7 @@
         scanRow: Craft = {};
 
         // 提交保存时获取处理数据
-        getSavedOrSubmitData() {
+        getSavedOrSubmitData(orderInfo) {
             function filterTableData(whichTable: CraftList[], type) {
                 if (type === 'insert') {
                     return whichTable.filter(item => !item.id && item.delFlag !== 1);
@@ -332,6 +332,8 @@
                     return whichTable.filter(item => item.id && item.delFlag === 0);
                 }
             }
+
+            console.log(orderInfo.orderNo, 666)
 
             return {
                 kojiBeanSieveSaveDto: {
@@ -377,7 +379,7 @@
         init(formHeader) {
             const { orderNo, workShop } = formHeader;
 
-            console.log(formHeader)
+            console.log(formHeader, 88)
             this.formHeader = formHeader;
             // 查询设备list
             this.getSieveDeviceList(workShop);
@@ -393,9 +395,8 @@
         // 新增筛豆记录
         addSeiveBeanDataRow() {
             this.craftSeiveBeanTable.push({
-                potSaveDto: [],
-                kojiOrderNo: '',
-                orderNo: '',
+                kojiOrderNo: this.formHeader.kojiOrderNo,
+                orderNo: this.formHeader.orderNo,
                 sieveBeanBatch: '',
                 sieveBeanSupplier: '',
                 sieveDeviceId: '',
@@ -419,8 +420,8 @@
                 drainMans: '',
                 drainStartDate: '',
                 relStr: '',
-                kojiOrderNo: '',
-                orderNo: '',
+                kojiOrderNo: this.formHeader.kojiOrderNo,
+                orderNo: this.formHeader.orderNo,
                 steepDuration: '',
                 washBeanId: '',
                 waterEndDate: '',
@@ -495,7 +496,7 @@
                 selArr = row.field.split(',');
             }
             this.$nextTick(() => {
-                this.$refs.loanedPersonnel.init([], typeName, selArr);
+                this.$refs.loanedPersonnel.init(selArr, typeName);
             });
         }
 
@@ -681,7 +682,7 @@
         waterStartDate?: string;
         batch?: string;
         supplier?: string;
-        potSaveDto: ItemPotDtos[];
+        potSaveDto?: ItemPotDtos[];
         relStr?: string;
     }
     interface ItemPotDtos {

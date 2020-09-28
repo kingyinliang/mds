@@ -56,6 +56,49 @@
     import { KOJI_API } from 'common/api/api';
     import { dateFormat, getUserNameNumber } from 'utils/utils';
 
+    interface FormHeaderobj {
+        workShop?: string;
+        kojiOrderNo?: string;
+    }
+
+    interface StockInfoList {
+        workShop?: string;
+        beanLocation?: string;
+        beanWareHouse?: string;
+        detailsList: object[];
+    }
+
+    interface BatchList {
+        batch?: string;
+        materialName?: string;
+        materialCode?: string;
+        stockAmount?: string;
+        supplier?: string;
+    }
+
+    interface DataForm {
+        id?: string;
+        materialLocation?: string;
+        batch?: string;
+        material?: string;
+        materialCode?: string;
+        materialName?: string;
+        materialLink?: string;
+        materialType?: string;
+        amount?: string;
+        supplier?: string;
+        orderNo?: string;
+        kojiOrderNo?: string;
+        smallBeanAmount?: string;
+        unit?: string;
+        remark?: string;
+        changer?: string;
+        changed?: string;
+        stockAmount?: string;
+        currentAmount?: string;
+    }
+
+
     @Component({
         name: 'WashBeanMaterialApplyDialog'
     })
@@ -65,9 +108,9 @@
         $refs: {dataForm: HTMLFormElement};
 
         // 库存信息
-        stockInfoList = [];
+        stockInfoList: StockInfoList[] = [];
         // 批次list
-        batchList = [];
+        batchList: BatchList[] = [];
 
         visible = false;
         type = '';
@@ -80,12 +123,12 @@
         };
 
         // 表单对象
-        dataForm = {};
+        dataForm: DataForm = {};
 
         async init(infoData, type) {
             this.type = type;
             this.visible = true;
-            let Data = {};
+            let Data: DataForm = {};
             // 查询
             await KOJI_API.KOJI_STOCK_BEAN_INDEX_LIST_API({
                 workShopId: this.formHeader.workShop
@@ -118,7 +161,7 @@
                 id: Data.id,
                 materialLocation: Data.materialLocation,
                 batch: Data.batch,
-                material: Data.materialName + Data.materialCode,
+                material: String(Data.materialName) + String(Data.materialCode),
                 materialCode: Data.materialCode,
                 materialName: Data.materialName,
                 materialLink: Data.materialCode ? Data.materialName + Data.materialCode : '',
@@ -139,7 +182,7 @@
         batchChange() {
             this.batchList.map(item => {
                 if (item.batch === this.dataForm.batch) {
-                    this.dataForm.materialLink = item.materialName + item.materialCode;
+                    this.dataForm.materialLink = String(item.materialName) + String(item.materialCode);
                     this.dataForm.stockAmount = item.stockAmount;
                     this.dataForm.supplier = item.supplier;
                 }
