@@ -83,6 +83,8 @@ export default {
             this.$warningToast('请填写批次')
             return false
         }
+        this.num = 1;
+        this.dataList = [];
         this.loadings = Loading.service({
             lock: true,
             spinner: 'loadingGif',
