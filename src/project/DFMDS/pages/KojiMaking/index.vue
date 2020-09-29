@@ -12,7 +12,7 @@
             @created-end="createdEnd"
         >
             <template slot="home">
-                <el-row class="potList" :gutter="10" style="min-height: 150px; margin-top: 5px;">
+                <el-row class="potList" :gutter="10" style="min-height: 150px; margin-top: 5px; margin-bottom: 30px;">
                     <el-col v-for="(item, index) in queryFirstResultList" :key="index" :span="6">
                         <div class="box-item">
                             <div class="box-item__top">
@@ -92,7 +92,8 @@
                             </div>
                         </div>
                     </el-col>
-
+                </el-row>
+                <el-row class="potList" :gutter="10" style="min-height: 150px; margin-top: 5px;">
                     <el-col v-if="querySecondResultList.length!==0" :span="6">
                         <div class="box-item">
                             <div class="box-item__top">
@@ -122,14 +123,14 @@
                                         <li class="lines">
                                             <span>生产订单：</span>
                                             <el-select v-model="querySecondResultList[secondObjIndex].orderNoTemp" filterable size="mini" style="flex: 1;" @change="val=>changeSecondOrder(val)">
-                                                <el-option v-for="(subItems) in querySecondResultList[secondObjIndex]" :key="subItems.id" :value="subItems.orderNo" :label="subItems.orderNo" />
+                                                <el-option v-for="(subItems) in querySecondResultList" :key="subItems.id" :value="subItems.orderNo" :label="subItems.orderNo" />
                                             </el-select>
                                         </li>
                                         <li class="lines">
                                             <span>
                                                 生产物料：
                                             </span>
-                                            <el-tooltip class="item" effect="dark" :content="querySecondResultList[secondObjIndex].materialName + querySecondResultList[secondObjIndex].materialCode" placement="top-start">
+                                            <el-tooltip class="item" effect="dark" :content="`${querySecondResultList[secondObjIndex].materialName} ${querySecondResultList[secondObjIndex].materialCode}`" placement="bottom-start">
                                                 <span>
                                                     {{ querySecondResultList[secondObjIndex].materialName }} {{ querySecondResultList[secondObjIndex].materialCode }}
                                                 </span>
@@ -255,6 +256,13 @@
 
         // 查询请求
         listInterface(params) {
+
+            const paramsTemp = {
+                factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
+                orderNo: params.orderNo,
+                workShop: params.workShop,
+                orderStartDate: params.orderStartDate
+            }
             // 针对查找必填关键字进行提示
             if ((params.orderStartDate === '' || !params.orderStartDate) && params.orderNo === '') {
                 this.$warningToast('日期或订单请选填一项');// eslint-disable-line
@@ -265,13 +273,15 @@
             params.factory = JSON.parse(sessionStorage.getItem('factory') || '{}').id;
 
             // 呼叫蒸豆
-            KOJI_API.KOJI_INDEX_QUERY_SC_ORDER_API({
-                    params
-                }).then(({ data }) => {
+            KOJI_API.KOJI_INDEX_QUERY_SC_ORDER_API(
+                    paramsTemp
+                ).then(({ data }) => {
                     console.log('蒸豆')
                     console.log(data)
                 if (data.data.length !== 0) {
                     this.querySecondResultList = data.data;
+                    console.log('this.querySecondResultList')
+                    console.log(this.querySecondResultList)
                     this.querySecondResultList.forEach(item => {
                         this.$set(item, 'orderNoTemp', item.orderNo)
                     })
@@ -281,7 +291,7 @@
                 }
 
             })
-            return KOJI_API.KOJI_INDEX_QUERY_ORDER_API(params);
+            return KOJI_API.KOJI_INDEX_QUERY_ORDER_API(paramsTemp);
         }
 
         changeFirstOrder(val, item) {
@@ -359,7 +369,7 @@
                         url = 'DFMDS-pages-KojiMaking-WorkingProcedure-SCWashBean';
                         break;
                     case 2:
-                        url = 'DFMD-page-KojiMakin-WorkingProcedur-SCSteamBean';
+                        url = 'DFMDS-pages-KojiMaking-WorkingProcedure-SCSteamBean';
                         break;
                     default:
                 }
@@ -436,57 +446,57 @@
 
     interface KojiSecondObj {
         orderNoTemp: string;
-        id: string;
+        changed: string;
+        changer: string;
+        countMan: number;
+        countOutput: number;
+        countOutputUnit: string;
+        deviceTime: number;
+        dispatchMan: string;
+        exceptionDateCount: number;
         factory: string;
         factoryName: string;
-        workShop: string;
-        workShopName: string;
+        germs: number;
+        houseTag: KojiSecondObjHouseTag;
+        id: string;
+        materialCode: string;
+        materialName: string;
+        operator: string;
+        operatorDate: string;
+        orderEndDate: string;
+        orderNo: string;
+        orderStartDate: string;
+        orderStatus: string;
+        orderStatusName: string;
+        orderType: string;
+        outputUnit: string;
+        outputUnitName: string;
+        planOutput: number;
         productDate: string;
         productLine: string;
         productLineName: string;
-        orderNo: string;
-        orderType: string;
-        orderStartDate: string;
-        orderEndDate: string;
-        materialCode: string;
-        materialName: string;
-        planOutput: number;
-        realOutput?: number;
-        outputUnit: string;
-        outputUnitName: string;
-        operator: string;
-        operatorDate?: string;
-        orderStatus: string;
-        orderStatusName: string;
-        countMan?: string;
-        countOutput?: number;
-        countOutputUnit: string;
-        germs?: string;
-        realInAmount?: string;
-        exceptionDateCount?: string;
-        changer: string;
-        changed: string;
-        dispatchMan: string;
-        readyTime?: string;
-        userTime?: string;
-        deviceTime?: string;
-        houseTag: KojiSecondObjHouseTag;
+        readyTime: number;
+        realInAmount: number;
+        realOutput: number;
+        userTime: number;
+        workShop: string;
+        workShopName: string;
     }
 
     interface KojiSecondObjHouseTag {
-        id: string;
-        orderNo: string;
-        kojiOrderNo: string;
-        washBeanMaterail: string;
-        washBeanCraft: string;
-        steamFlourMaterial: string;
-        steamFlourCraft: string;
-        steamBeanInStorage: string;
-        steamBeanCraft: string;
-        discInStorage: string;
-        discCraft: string;
-        changed?: string;
+        changed: string;
         changer: string;
+        discCraft: string;
+        discInStorage: string;
+        id: string;
+        kojiOrderNo: string;
+        orderNo: string;
+        steamBeanCraft: string;
+        steamBeanInStorage: string;
+        steamFlourCraft: string;
+        steamFlourMaterial: string;
+        washBeanCraft: string;
+        washBeanMaterail: string;
     }
 
 </script>
@@ -522,6 +532,7 @@
             border-radius: 5px;
         }
         .right {
+            width: 100%;
             .lines {
                 display: flex;
                 flex-direction: row;
