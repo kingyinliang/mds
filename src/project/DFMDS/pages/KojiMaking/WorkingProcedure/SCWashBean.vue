@@ -15,7 +15,7 @@
             @success="getOrderList"
         >
             <template slot="1" slot-scope="data">
-                <wash-bean-material-apply ref="washBeanMaterialApply" :is-redact="data.isRedact" sieve-total-num="sieveTotalNum" @setMaterialTable="setMaterialTable" />
+                <wash-bean-material-apply ref="washBeanMaterialApply" :is-redact="data.isRedact" :sieve-total-num="sieveTotalNum" @setMaterialTable="setMaterialTable" />
             </template>
             <template slot="2" slot-scope="data">
                 <wash-bean-material-craft ref="washBeanMaterialCraft" :is-redact="data.isRedact" :set-material-table-data="setMaterialTableData" @changeSieveTotalNum="changeSieveTotalNum" />
@@ -85,13 +85,13 @@
                 value: ['materialName', 'materialCode']
             },
             {
-                type: 'tooltip',
+                type: 'p',
                 label: '生产订单',
                 icon: 'factory-bianhao',
                 value: 'orderNo'
             },
             {
-                type: 'tooltip',
+                type: 'p',
                 label: '订单日期',
                 icon: 'factory--meirijihuachanliangpeizhi',
                 value: 'orderStartDate'
@@ -149,7 +149,7 @@
         }
 
         savedDatas() {
-            const steSemi = this.$refs.washBeanMaterialCraft.getSavedOrSubmitData();
+            const steSemi = this.$refs.washBeanMaterialCraft.getSavedOrSubmitData(this.formHeader);
             const excRequest = this.$refs.excRecord.getSavedOrSubmitData(this.formHeader, 'SC');
             const textRequest = this.$refs.textRecord.savedData(this.formHeader, 'koji');
 
@@ -160,18 +160,18 @@
                     removeIds: excRequest.ids,
                     updateDatas: excRequest.UpdateDto
                 },
-                steTextInsertDto: textRequest.pkgTextInsert,
-                kojiOrderNo: this.formHeader.kojiHouseNo,
+                kojiTextSaveDto: textRequest.pkgTextInsert,
+                kojiOrderNo: this.formHeader.kojiOrderNo,
                 orderNo: this.formHeader.orderNo
             })
         }
 
         submitDatas() {
-            const steSemi = this.$refs.washBeanMaterialCraft.getSavedOrSubmitData();
+            const steSemi = this.$refs.washBeanMaterialCraft.getSavedOrSubmitData(this.formHeader);
             const excRequest = this.$refs.excRecord.getSavedOrSubmitData(this.formHeader, 'SC');
             const textRequest = this.$refs.textRecord.savedData(this.formHeader, 'koji');
 
-            return KOJI_API.KOJI_XD_SUBMIT_API({
+             return KOJI_API.KOJI_XD_SUBMIT_API({
                 ...steSemi,
                 kojiExceptionSaveDto: {
                     insertDatas: excRequest.InsertDto,
@@ -179,7 +179,7 @@
                     updateDatas: excRequest.UpdateDto
                 },
                 kojiTextSaveDto: textRequest.pkgTextInsert,
-                kojiOrderNo: this.formHeader.kojiHouseNo,
+                kojiOrderNo: this.formHeader.kojiOrderNo,
                 orderNo: this.formHeader.orderNo
             })
         }
@@ -194,6 +194,7 @@
     interface OrderData {
         orderNo?: string;
         kojiHouseNo?: string;
+        kojiOrderNo?: string;
         textStage?: string;
         factoryName?: string;
         potNo?: string;

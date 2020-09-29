@@ -32,13 +32,13 @@
             </div>
             <el-table header-row-class-name="tableHead" class="newTable" :data="craftSeiveBeanTable" :row-class-name="RowDelFlag" border tooltip-effect="dark" size="small">
                 <el-table-column type="index" :index="index => getIndexMethod(index, craftSeiveBeanTable)" label="序号" width="50px" fixed />
-                <el-table-column>
+                <el-table-column width="160">
                     <template slot="header">
                         <span class="notNull">* </span>大豆批次
                     </template>
                     <template slot-scope="scope">
                         <el-select v-model="scope.row.sieveBeanBatch" placeholder="请选择" :disabled="!isRedact" size="small" style="width: 100%;" @change="controlTypeChange($event, scope.row)">
-                            <el-option v-for="(subItem, index) in setMaterialTableData" :key="index" :label="subItem.batch" :value="subItem.batch" />
+                            <el-option v-for="(subItem, index) in filterMaterialTableData" :key="index" :label="subItem.batch" :value="subItem.batch" />
                         </el-select>
                     </template>
                 </el-table-column>
@@ -47,18 +47,18 @@
                         {{ scope.row.sieveBeanSupplier }}
                     </template>
                 </el-table-column>
-                <el-table-column>
-                    <template slot="header" min-width="100">
+                <el-table-column width="120">
+                    <template slot="header">
                         <span class="notNull">* </span>设备
                     </template>
                     <template slot-scope="scope">
-                        <el-select v-model="scope.row.sieveDeviceId" placeholder="请选择" :disabled="!isRedact" size="small" style="width: 100%;">
+                        <el-select v-model="scope.row.sieveDeviceId" placeholder="请选择" :disabled="!isRedact" size="small" style="width: 100%;" @change="setSieveDeviceName(scope.row)">
                             <el-option v-for="(subItem, index) in sieveDeviceList" :key="index" :label="subItem.deviceName" :value="subItem.deviceNo" />
                         </el-select>
                     </template>
                 </el-table-column>
-                <el-table-column>
-                    <template slot="header" min-width="100">
+                <el-table-column width="120">
+                    <template slot="header">
                         <span class="notNull">* </span>杂质类
                     </template>
                     <template slot-scope="scope">
@@ -67,15 +67,15 @@
                         </el-select>
                     </template>
                 </el-table-column>
-                <el-table-column>
-                    <template slot="header" min-width="100">
+                <el-table-column width="100">
+                    <template slot="header">
                         <span class="notNull">* </span>杂质数量
                     </template>
                     <template slot-scope="scope">
                         <el-input v-model.trim="scope.row.sieveImpurityAmount" size="small" placeholder="请输入" :disabled="!isRedact" />
                     </template>
                 </el-table-column>
-                <el-table-column label="单位" width="140">
+                <el-table-column label="单位" width="60">
                     <template slot-scope="scope">
                         {{ scope.row.unit }}
                     </template>
@@ -86,7 +86,7 @@
                     </template>
                     <template slot-scope="scope">
                         <div class="required" style="min-height: 32px; line-height: 32px;">
-                            <span v-if="isRedact" style="cursor: pointer;" @click="selectUser(scope.row, '筛豆操作人', 'sieveMans')">
+                            <span style="cursor: pointer;" @click="selectUser(scope.row, '筛豆操作人', 'sieveMans')">
                                 <em>{{ scope.row.sieveMans }}</em>
                                 <em>点击选择人员</em>
                             </span>
@@ -137,7 +137,11 @@
                         <template slot="label">
                             <span class="notNull">* </span>洗豆操作人：
                         </template>
-                        <span v-if="isRedact" style="cursor: pointer;" @click="selectUser(craftWashBeanInfo, '洗豆操作人', 'washMans')">{{ craftWashBeanInfo.washMans }} 点击选择人员</span>
+                        <el-tooltip class="item" effect="dark" :content="craftWashBeanInfo.washMans + '点击选择人员'" placement="top">
+                            <div class="koji-control-form_select" @click="selectUser(craftWashBeanInfo, '洗豆操作人', 'washMans')">
+                                {{ craftWashBeanInfo.washMans }} 点击选择人员
+                            </div>
+                        </el-tooltip>
                     </el-form-item>
                     <el-form-item class="cleanMarginBottom">
                         <template slot="label">
@@ -172,9 +176,9 @@
                     </template>
                     <template slot-scope="scope">
                         <div class="required" style="min-height: 32px; line-height: 32px;">
-                            <span v-if="isRedact" style="cursor: pointer;" @click="selectScan(scope.row)">
+                            <span style="cursor: pointer;" @click="selectScan(scope.row)">
                                 <em>{{ scope.row.relStr }}</em>
-                                <em>  点击选择</em>
+                                <em> 点击选择</em>
                             </span>
                         </div>
                     </template>
@@ -201,7 +205,7 @@
                     </template>
                     <template slot-scope="scope">
                         <div class="required" style="min-height: 32px; line-height: 32px;">
-                            <span v-if="isRedact" style="cursor: pointer;" @click="selectUser(scope.row, '加水操作人', 'waterMans')">
+                            <span style="cursor: pointer;" @click="selectUser(scope.row, '加水操作人', 'waterMans')">
                                 <em>{{ scope.row.waterMans }}</em>
                                 <em> 点击选择人员</em>
                             </span>
@@ -230,7 +234,7 @@
                     </template>
                     <template slot-scope="scope">
                         <div class="required" style="min-height: 32px; line-height: 32px;">
-                            <span v-if="isRedact" style="cursor: pointer;" @click="selectUser(scope.row, '排水操作人', 'drainMans')">
+                            <span style="cursor: pointer;" @click="selectUser(scope.row, '排水操作人', 'drainMans')">
                                 <em>{{ scope.row.drainMans }}</em>
                                 <em> 点击选择人员</em>
                             </span>
@@ -239,10 +243,10 @@
                 </el-table-column>
                 <el-table-column label="泡豆时长" width="80">
                     <template slot-scope="scope">
-                        <p>{{ (scope.row.steepDuration = Number(workTime(scope.row.drainEndDate, scope.row.waterStartDate, scope.row))) }}H</p>
+                        <p>{{ (scope.row.steepDuration = Number(workTime(scope.row.drainStartDate, scope.row.waterEndDate, scope.row))) }}H</p>
                     </template>
                 </el-table-column>
-                <el-table-column label="备注">
+                <el-table-column label="备注" width="150">
                     <template slot-scope="scope">
                         <el-input v-model.trim="scope.row.remark" size="small" placeholder="请输入" :disabled="!isRedact" />
                     </template>
@@ -267,7 +271,7 @@
             </el-table>
         </mds-card>
         <audit-log :table-data="craftAuditList" :verify-man="'verifyMan'" :verify-date="'verifyDate'" :status="true" />
-        <scan-select-dialog ref="scanSelectDialog" @changeUser="setScanValue" />
+        <scan-select-dialog v-if="potScanStatus" ref="scanSelectDialog" @changeUser="setScanValue" />
         <loaned-personnel v-if="loanedPersonnelStatus" ref="loanedPersonnel" @changeUser="changeUser" />
     </div>
 </template>
@@ -289,7 +293,7 @@
     })
     export default class WashBeanMaterialCraft extends Vue {
         @Prop({ default: false }) isRedact: boolean;
-        @Prop({ default: [] }) setMaterialTableData: CraftList[];
+        @Prop({ default: [] }) setMaterialTableData;
 
         $refs: {
             loanedPersonnel: HTMLFormElement;
@@ -312,15 +316,28 @@
 
         // 人员组织选择
         loanedPersonnelStatus = false;
+        // 泡豆罐选择显示
+        potScanStatus = false;
 
         // 人员操作对象
         row: Craft = {};
-        rowField = ''
+        rowField = '';
         // 泡豆罐操作对象
         scanRow: Craft = {};
 
+        get filterMaterialTableData() {
+            const TEMObject = {};
+            return this.setMaterialTableData.reduce((totalArr, currentItem) => {
+                if (!TEMObject[currentItem.batch]) {
+                    TEMObject[currentItem.batch] = true;
+                    totalArr.push(currentItem);
+                }
+                return totalArr;
+            }, []);
+        }
+
         // 提交保存时获取处理数据
-        getSavedOrSubmitData(orderInfo) {
+        getSavedOrSubmitData() {
             function filterTableData(whichTable: CraftList[], type) {
                 if (type === 'insert') {
                     return whichTable.filter(item => !item.id && item.delFlag !== 1);
@@ -333,17 +350,17 @@
                 }
             }
 
-            console.log(orderInfo.orderNo, 666)
-
             return {
                 kojiBeanSieveSaveDto: {
                     ...this.craftSeiveBeanInfo,
-                    item: {
+                    items: {
                         insertDtos: filterTableData(this.craftSeiveBeanTable, 'insert'),
                         updateDtos: filterTableData(this.craftSeiveBeanTable, 'update'),
                         removeIds: filterTableData(this.craftSeiveBeanTable, 'del')
                     },
-                    orderNo: this.formHeader.orderNo
+                    orderNo: this.formHeader.orderNo,
+                    kojiOrderNo: this.formHeader.kojiOrderNo,
+                    sieveImpurityAmount: this.totalSieveImpurityAmount
                 },
                 kojiBeanWashSaveDto: {
                     ...this.craftWashBeanInfo,
@@ -352,13 +369,14 @@
                         updateDatas: filterTableData(this.craftWashBeanTable, 'update'),
                         removeIds: filterTableData(this.craftWashBeanTable, 'del')
                     },
-                    orderNo: this.formHeader.orderNo
+                    orderNo: this.formHeader.orderNo,
+                    kojiOrderNo: this.formHeader.kojiOrderNo
                 }
             };
         }
 
         // 设备list
-        sieveDeviceList: object[] = [];
+        sieveDeviceList: SieveDeviceList[] = [];
         // 杂质类list
         sieveImpurityTypeList: object[] = [
             { label: '豆皮', value: 'BEAN_SKIN' },
@@ -377,24 +395,47 @@
 
         // 初始化数据
         init(formHeader) {
-            const { orderNo, workShop } = formHeader;
-
-            console.log(formHeader, 88)
+            const { orderNo, workShop, kojiOrderNo } = formHeader;
             this.formHeader = formHeader;
             // 查询设备list
             this.getSieveDeviceList(workShop);
             // 查询筛豆记录
-            this.getSeiveBeanLogList(orderNo);
+            this.getSeiveBeanLogList(kojiOrderNo);
             // 查询洗豆记录
-            this.getWashBeanLogList(orderNo);
+            this.getWashBeanLogList(kojiOrderNo);
             // 查询审核记录
             this.getAuditList(orderNo);
         }
+
+        // 选择设备赋值设备名称
+        setSieveDeviceName(row) {
+            this.sieveDeviceList.map(item => {
+                if (item.deviceNo === row.sieveDeviceId) {
+                    row.sieveDeviceName = item.deviceName;
+                }
+            });
+        }
+
+        statusObj = { // 已同步 、已保存、待审核、已审核、已过账、已退回
+            T: '已同步',
+            S: '已保存',
+            D: '待审核',
+            P: '已过账',
+            R: '已退回',
+            C: '已审核',
+            F: '接口失败',
+            M: '已提交',
+            N: '未录入',
+            X: '反审'
+        };
+
+        statusOrderList = ['T', 'S', 'D', 'P', 'R'];
 
         // === 数据处理 === //
         // 新增筛豆记录
         addSeiveBeanDataRow() {
             this.craftSeiveBeanTable.push({
+                id: '',
                 kojiOrderNo: this.formHeader.kojiOrderNo,
                 orderNo: this.formHeader.orderNo,
                 sieveBeanBatch: '',
@@ -415,6 +456,7 @@
         // 新增泡豆记录
         addWashBeanDataRow() {
             this.craftWashBeanTable.push({
+                id: '',
                 potSaveDto: [],
                 drainEndDate: '',
                 drainMans: '',
@@ -485,24 +527,23 @@
             return diff;
         }
 
-        // 内部借调
+        // 内部借调弹窗选择
         selectUser(row, typeName, field) {
+            if (!this.isRedact) return;
             this.row = row;
-            this.rowField = field
+            this.rowField = field;
             this.loanedPersonnelStatus = true;
-
-            let selArr = [];
-            if (row.field) {
-                selArr = row.field.split(',');
-            }
             this.$nextTick(() => {
+                let selArr = [];
+                if (row[field]) {
+                    selArr = row[field].split(',');
+                }
                 this.$refs.loanedPersonnel.init(selArr, typeName);
             });
         }
 
         // 操作人数据回显处理
         changeUser(userIds) {
-            console.log(userIds);
             this.loanedPersonnelStatus = false;
             const arr = [...userIds];
             let relStr = '';
@@ -516,16 +557,21 @@
 
         // 泡豆罐选择
         selectScan(row) {
+            if (!this.isRedact) return;
             this.scanRow = row;
-            // 内部借调、学习
+            this.potScanStatus = true;
             this.$nextTick(() => {
-                this.$refs.scanSelectDialog.init(this.formHeader.workShop, '筛豆人员选择');
+                const selectedList: string[] = [];
+                row.potSaveDto && row.potSaveDto.map(item => {
+                    selectedList.push(item.beanJarName + ',' + item.beanJarNo + ',' + item.beanJarId)
+                });
+                this.$refs.scanSelectDialog.init(this.formHeader.workShop, selectedList, '泡豆罐选择');
             });
         }
 
-        // 泡豆罐回显处理
+        // 泡豆罐弹窗回显处理
         setScanValue(result) {
-            console.log(result);
+            this.potScanStatus = false;
             const arr = [...result];
             const relArr: ItemPotDtos[] = [];
             let relStr = '';
@@ -536,8 +582,8 @@
                         beanJarId: tem[2],
                         beanJarName: tem[0],
                         beanJarNo: tem[1]
-                    })
-                    relStr += `${index > 0 ? ',' : ''}${tem[0]}`
+                    });
+                    relStr += `${index > 0 ? ',' : ''}${tem[0]}`;
                 }
             });
             this.scanRow.potSaveDto = relArr;
@@ -562,46 +608,37 @@
                 return false;
             }
 
-
             for (const item of this.craftSeiveBeanTable.filter(it => it.delFlag !== 1)) {
-                if (
-                    !item.sieveBeanBatch ||
-                    // !item.sieveBeanSupplier ||
-                    !item.sieveImpurityType ||
-                    !item.sieveImpurityAmount ||
-                    !item.sieveMans
-                ) {
-                    this.$warningToast('请填写工艺控制页签筛豆记录必填项');
+                if (!item.sieveBeanBatch || !item.sieveImpurityType || !item.sieveImpurityAmount || !item.sieveMans) {
+                    this.$warningToast('请填写工艺控制页签"筛豆记录"必填项');
                     return false;
                 }
             }
 
-            if (
-                !this.craftWashBeanInfo.cleanliness ||
-                !this.craftWashBeanInfo.washMans ||
-                !this.craftWashBeanInfo.washStartDate ||
-                !this.craftWashBeanInfo.washEndDate
-            ) {
-                this.$warningToast('请填写工艺控制页签洗豆记录相关必填项');
+            if (!this.craftWashBeanInfo.cleanliness || !this.craftWashBeanInfo.washMans || !this.craftWashBeanInfo.washStartDate || !this.craftWashBeanInfo.washEndDate) {
+                this.$warningToast('请填写工艺控制页签"洗豆记录"相关必填项');
                 return false;
             }
 
             for (const item of this.craftWashBeanTable.filter(it => it.delFlag !== 1)) {
-                if (
-                    !item.relStr ||
-                    !item.waterStartDate ||
-                    !item.waterEndDate ||
-                    !item.waterMans ||
-                    !item.drainStartDate ||
-                    !item.drainEndDate ||
-                    !item.drainMans
-                ) {
-                    this.$warningToast('请填写工艺控制页签泡豆记录先关必填项');
+                if (!item.relStr || !item.waterStartDate || !item.waterEndDate || !item.waterMans || !item.drainStartDate || !item.drainEndDate || !item.drainMans) {
+                    this.$warningToast('请填写工艺控制页签"泡豆记录"相关必填项');
                     return false;
                 }
             }
 
             return true;
+        }
+
+        // 泡豆罐显示处理
+        setRelStrScanShow() {
+            this.craftWashBeanTable.map(item => {
+                let str = '';
+                item.potSaveDto && item.potSaveDto.map((pItem, pIndex) => {
+                    str += `${pIndex > 0 ? ',' : ''}${pItem.beanJarName}`;
+                });
+                item.relStr = str;
+            });
         }
 
         // === 查询 汇总 ==== //
@@ -612,17 +649,19 @@
                 kojiOrderNo
             }).then(({ data }) => {
                 this.craftSeiveBeanInfo = data.data;
-                this.craftSeiveBeanTable = data.data.item || [];
+                this.craftSeiveBeanTable = data.data.items || [];
             });
         }
 
-        // 查询最新筛豆记录
+        // 查询最新洗豆记录
         getWashBeanLogList(kojiOrderNo) {
             KOJI_API.KOJI_SBEAN_WASH_QUERY_API({
                 kojiOrderNo
             }).then(({ data }) => {
                 this.craftWashBeanInfo = data.data;
-                this.craftWashBeanTable = data.data.item || [];
+                this.craftWashBeanTable = data.data.items || [];
+                // 泡豆罐显示处理
+                this.setRelStrScanShow();
             });
         }
 
@@ -657,7 +696,7 @@
         washEndDate?: string;
     }
     interface CraftList {
-        id?: number;
+        id?: number|string;
         kojiOrderNo?: string;
         orderNo?: string;
         sieveBeanBatch?: string;
@@ -691,6 +730,13 @@
         beanJarNo?: string;
         id?: string;
     }
+
+    interface SieveDeviceList {
+        sieveDeviceId?: string;
+        sieveDeviceName?: string;
+        deviceNo?: string;
+        deviceName?: string;
+    }
 </script>
 
 <style lang="scss" scoped>
@@ -700,6 +746,13 @@
         }
         .cleanMarginBottom {
             margin-bottom: 10px;
+        }
+        .koji-control-form_select {
+            max-width: 200px;
+            overflow: hidden;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+            cursor: pointer;
         }
     }
 </style>
