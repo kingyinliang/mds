@@ -19,10 +19,10 @@
                 <el-input v-model="dataForm.stockAmount" placeholder="手动输入" disabled />
             </el-form-item>
             <el-form-item label="领用数量：" prop="amount">
-                <el-input v-model="dataForm.amount" placeholder="手动输入" />
+                <el-input v-model.number="dataForm.amount" placeholder="手动输入" @blur="calcStockAmount" />
             </el-form-item>
             <el-form-item label="小豆数量：" prop="smallBeanAmount">
-                <el-input v-model="dataForm.smallBeanAmount" placeholder="手动输入" />
+                <el-input v-model.number="dataForm.smallBeanAmount" placeholder="手动输入" />
             </el-form-item>
             <el-form-item label="单位：">
                 <el-input v-model="dataForm.unit" placeholder="手动输入" disabled />
@@ -94,7 +94,7 @@
         remark?: string;
         changer?: string;
         changed?: string;
-        stockAmount?: string;
+        stockAmount?: string| number;
         currentAmount?: string;
     }
 
@@ -112,14 +112,22 @@
         // 批次list
         batchList: BatchList[] = [];
 
+        // 保存库存量初始值
+        STOCK_AMOUNT = 0;
+
         visible = false;
         type = '';
 
         dataRule = {
-            amount: [{ required: true, message: '领用数量不能为空', trigger: 'blur' }],
-            batch: [{ required: true, message: '领用批次不能为空', trigger: 'change' }],
-            smallBeanAmount: [{ required: true, message: '小豆数量不能为空', trigger: 'blur' }],
-            remark: [{ required: true, message: '备注不能为空', trigger: 'blur' }]
+            amount: [
+                { required: true, message: '领用数量不能为空', trigger: 'blur' },
+                { type: 'number', message: '必须为数字值' }
+            ],
+            batch: [{ required: true, message: '请选择领用批次', trigger: 'change' }],
+            smallBeanAmount: [
+                { required: true, message: '小豆数量不能为空', trigger: 'blur' },
+                { type: 'number', message: '必须为数字值' }
+            ]
         };
 
         // 表单对象
@@ -157,6 +165,9 @@
                 }
             }
 
+            this.STOCK_AMOUNT = (Data.stockAmount || Data.currentAmount) ? Number(Data.stockAmount) || Number(Data.currentAmount) : 0;
+            if (Data.amount) { this.STOCK_AMOUNT += Number(Data.amount); }
+
             this.dataForm = {
                 id: Data.id,
                 materialLocation: Data.materialLocation,
@@ -176,6 +187,16 @@
                 remark: Data.remark,
                 changer: getUserNameNumber(),
                 changed: dateFormat(new Date(), 'yyyy-MM-dd hh:mm:ss')
+            }
+        }
+
+        calcStockAmount() {
+            const amount = this.dataForm.amount;
+            if (amount === '') {
+                this.dataForm.stockAmount = Number(this.STOCK_AMOUNT)
+            }
+            if (/^[1-9]?([0-9]+$)/.test(String(amount))) {
+                this.dataForm.stockAmount = Number(this.STOCK_AMOUNT) - Number(amount)
             }
         }
 

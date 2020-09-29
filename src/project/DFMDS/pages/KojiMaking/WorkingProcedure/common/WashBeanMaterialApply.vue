@@ -2,7 +2,7 @@
     <div class="material-get-content">
         <mds-card title="物料领用">
             <el-row class="home_card__main" :gutter="10">
-                <el-col v-for="item in stockInfoList" :key="item.workShop" :span="6">
+                <el-col v-for="(item, opIndex) in stockInfoList" :key="opIndex" :span="6">
                     <div class="card-stock">
                         <div class="card-stock__head">
                             <span>{{ `${item.workShopName}${item.beanWareHouse || item.beanLocation ? '：' + (item.beanWareHouse || item.beanLocation) : ''}` }}</span>
@@ -29,7 +29,7 @@
                             {{ scope.row.materialName + ' ' + scope.row.materialCode }}
                         </template>
                     </el-table-column>
-                    <el-table-column prop="stockAmount" label="库存量" width="70" :show-overflow-tooltip="true" />
+                    <el-table-column prop="stockAmount" label="库存量" width="90" :show-overflow-tooltip="true" />
                     <el-table-column prop="amount" label="领用数量" min-width="100" :show-overflow-tooltip="true" />
                     <el-table-column prop="smallBeanAmount" label="小豆数量" min-width="100" :show-overflow-tooltip="true" />
                     <el-table-column prop="unit" label="单位" min-width="100" :show-overflow-tooltip="true" />
@@ -90,21 +90,22 @@
 
         init(formHeader) {
             this.formHeader = formHeader;
-            // 查询领用仓库list
-            KOJI_API.KOJI_STOCK_BEAN_INDEX_LIST_API({
-                workShopId: formHeader.workShop
-            }).then(({ data }) => {
-                this.stockInfoList = data.data || [];
-            });
-
+            this.warehouseQuery();
             this.materialGetList();
             this.getAuditList();
+        }
+
+        // 查询领用仓库list
+        warehouseQuery() {
+            KOJI_API.KOJI_STOCK_BEAN_INDEX_LIST_ALL_API({}).then(({ data }) => {
+                this.stockInfoList = data.data || [];
+            });
         }
 
         // 物料领用记录查询
         materialGetList() {
             KOJI_API.KOJI_MATERIAL_GET_QUERY_API({
-                kojiOrderNo: this.formHeader.kojiOrderNo,
+                kojiOrderNo: this.$store.state.koji.orderKojiInfo.kojiOrderNo,
                 materialType: 'BEAN'
             }).then(({ data }) => {
                 this.$emit('setMaterialTable', data.data || [])
@@ -141,6 +142,8 @@
 
         handleCallback() {
             this.materialGetList();
+            this.warehouseQuery();
+            this.getAuditList();
             this.visible = false;
         }
 
@@ -157,9 +160,10 @@
         deleteRow(row) {
             KOJI_API.KOJI_MATERIAL_DELETE_QUERY_API({
                 deleteDto: row.id
-            }).then(({ data }) => {
-                this.materialTableList = data.data;
-                this.materialGetList()
+            }).then(() => {
+                this.materialGetList();
+                this.warehouseQuery();
+                this.getAuditList();
             });
         }
 
@@ -216,6 +220,7 @@
         stockAmount?: number;
         unit?: string;
         smallBeanAmount?: string;
+        workShop?: string;
     }
 </script>
 

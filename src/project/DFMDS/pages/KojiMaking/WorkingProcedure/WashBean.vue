@@ -15,7 +15,7 @@
             @success="getOrderList"
         >
             <template slot="1" slot-scope="data">
-                <wash-bean-material-apply ref="washBeanMaterialApply" :is-redact="data.isRedact" sieve-total-num="sieveTotalNum" @setMaterialTable="setMaterialTable" />
+                <wash-bean-material-apply ref="washBeanMaterialApply" :is-redact="data.isRedact" :sieve-total-num="sieveTotalNum" @setMaterialTable="setMaterialTable" />
             </template>
             <template slot="2" slot-scope="data">
                 <wash-bean-material-craft ref="washBeanMaterialCraft" :is-redact="data.isRedact" :set-material-table-data="setMaterialTableData" @changeSieveTotalNum="changeSieveTotalNum" />
@@ -82,7 +82,7 @@
                 type: 'p',
                 label: '曲房编号',
                 icon: 'factory-qiyaguanjianhua',
-                value: 'kojiHouseNo'
+                value: ['kojiHouseName', 'kojiHouseNo']
             },
             {
                 type: 'tooltip',
@@ -109,7 +109,7 @@
                 value: 'fermentPotNo'
             },
             {
-                type: 'p',
+                type: 'tooltip',
                 icon: 'factory-xianchangrenyuan',
                 label: '提交人员', // 操作人员
                 value: 'changer'
@@ -124,7 +124,8 @@
 
         tabs: TabsObj[] = [
             {
-                label: '物料领用'
+                label: '物料领用',
+                status: '未录入'
             },
             {
                 label: '工艺控制'
@@ -172,8 +173,8 @@
                     removeIds: excRequest.ids,
                     updateDatas: excRequest.UpdateDto
                 },
-                steTextInsertDto: textRequest.pkgTextInsert,
-                kojiOrderNo: this.formHeader.kojiHouseNo,
+                kojiTextSaveDto: textRequest.pkgTextInsert,
+                kojiOrderNo: this.formHeader.kojiOrderNo,
                 orderNo: this.formHeader.orderNo
             })
         }
@@ -191,7 +192,7 @@
                     updateDatas: excRequest.UpdateDto
                 },
                 kojiTextSaveDto: textRequest.pkgTextInsert,
-                kojiOrderNo: this.formHeader.kojiHouseNo,
+                kojiOrderNo: this.formHeader.kojiOrderNo,
                 orderNo: this.formHeader.orderNo
             })
         }
@@ -206,6 +207,7 @@
     interface OrderData {
         orderNo?: string;
         kojiHouseNo?: string;
+        kojiOrderNo?: string;
         textStage?: string;
         factoryName?: string;
         potNo?: string;
