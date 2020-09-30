@@ -13,7 +13,7 @@
         >
             <template slot="home">
                 <el-row class="potList" :gutter="10" style="min-height: 150px; margin-top: 5px; margin-bottom: 30px;">
-                    <el-col v-for="(item, index) in queryFirstResultList" :key="index" :span="6">
+                    <el-col v-for="(item, index) in queryFirstResultList" :key="index" :span="8">
                         <div class="box-item">
                             <div class="box-item__top">
                                 <div><i class="title-icon" />{{ item.houseSplitList[item.nowIndex].kojiHouseName }}  <span>{{ item.houseSplitList[item.nowIndex].fermentPotName }}</span></div>
@@ -33,7 +33,7 @@
                                     >{{ item.houseSplitList[item.nowIndex].statusName }}</em>
                                 </div>
                             </div>
-                            <div class="box-item__content" :gutter="20">
+                            <div class="box-item__content">
                                 <div class="img" style="margin: 0; padding: 5px 10px; background-color: #f6f5f8; border-radius: 5px;">
                                     <img src="@/assets/img/koji_01.png" style="width: 130px;">
                                 </div>
@@ -94,7 +94,7 @@
                     </el-col>
                 </el-row>
                 <el-row class="potList" :gutter="10" style="min-height: 150px; margin-top: 5px;">
-                    <el-col v-if="querySecondResultList.length!==0" :span="6">
+                    <el-col v-if="querySecondResultList.length!==0" :span="8">
                         <div class="box-item">
                             <div class="box-item__top">
                                 <div><i class="title-icon" />蒸豆 <span>{{ querySecondResultList[secondObjIndex].productLineName }} </span></div>
@@ -114,7 +114,7 @@
                                     >{{ querySecondResultList[secondObjIndex].orderStatusName }}</em>
                                 </div>
                             </div>
-                            <div class="box-item__content" :gutter="20">
+                            <div class="box-item__content">
                                 <div class="img" style="margin: 0; padding: 5px 10px; background-color: #f6f5f8; border-radius: 5px;">
                                     <img src="@/assets/img/koji_01.png" style="width: 130px;">
                                 </div>
@@ -152,14 +152,14 @@
                                     :content="orderStatusMapping[querySecondResultList[secondObjIndex].houseTag.washBeanCraft]"
                                     placement="top-start"
                                 >
-                                    <el-button class="bottom-item" @click="goDetail('second',1, item)">
+                                    <el-button class="bottom-item" @click="goDetail('second',1, querySecondResultList[secondObjIndex])">
                                         <!-- <el-button :disabled="!isAuth('bottle:inStorage:list')" class="bottom-item" @click="goDetail('first',1, item)"> -->
                                         洗豆
                                     </el-button>
                                 </el-tooltip>
 
                                 <el-tooltip class="item" effect="dark" :content="orderStatusMapping[querySecondResultList[secondObjIndex].houseTag.steamBeanCraft]" placement="top-start">
-                                    <el-button class="bottom-item" @click="goDetail('second',2, item)">
+                                    <el-button class="bottom-item" @click="goDetail('second',2, querySecondResultList[secondObjIndex])">
                                         <!-- <el-button :disabled="!isAuth('bottle:workshop:techProductParameterList')" class="bottom-item" @click="goDetail('first',2, item)"> -->
                                         蒸豆
                                     </el-button>
@@ -505,6 +505,7 @@
 .box-item {
     display: flex;
     flex-direction: column;
+    min-width: 400px;
     padding: 10px;
     background: rgba(255, 255, 255, 1);
     border: 1px solid rgba(232, 232, 232, 1);
