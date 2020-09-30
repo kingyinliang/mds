@@ -2,7 +2,7 @@
     <el-dialog title="半成品领用" :close-on-click-modal="false" :visible.sync="visible">
         <el-form ref="dataForm" :model="dataForm" status-icon :rules="dataRule" label-width="125px" size="small" @keyup.enter.native="dataFormSubmit()">
             <el-form-item label="生产锅号：" prop="stePotNo">
-                <el-input v-model="dataForm.stePotNo" placeholder="手动输入" disabled />
+                <el-input v-model="dataForm.stePotName" placeholder="手动输入" disabled />
             </el-form-item>
             <el-form-item label="发酵罐领用：">
                 <el-radio v-model="dataForm.consumeType" label="1">
@@ -104,7 +104,7 @@
             })
         }
 
-        init(Data) {
+        init(Data, formHeader) {
             COMMON_API.HOLDER_QUERY_API({
                 deptId: this.formHeader.workShop,
                 holderType: '022',
@@ -120,6 +120,7 @@
                 this.dataForm = {
                     id: '',
                     stePotNo: this.$store.state.sterilize.SemiReceive.potNo,
+                    stePotName: formHeader.potName,
                     potOrderId: this.$store.state.sterilize.SemiReceive.potOrderMap.id,
                     potOrderNo: this.$store.state.sterilize.SemiReceive.potOrderMap.potOrderNo,
                     consumeType: '1',
@@ -177,6 +178,7 @@
         consumeType?: string;
         fermentPotNoName?: string;
         stePotNo?: string;
+        stePotName?: string;
         potOrderId?: string;
         potOrderNo?: string;
         fermentPotNo?: string;

@@ -65,7 +65,6 @@
             </el-table-column>
             <el-table-column label="出曲日期" width="160" prop="outKojiDate" :show-overflow-tooltip="true">
                 <template slot-scope="scope">
-                    <!-- <el-date-picker v-model="scope.row.outKojiDate" type="date" placeholder="选择日期" size="small" style="width: 140px;" value-format="yyyy-MM-dd" format="yyyy-MM-dd" /> -->
                     {{ scope.row.outKojiDate }}
                 </template>
             </el-table-column>
@@ -102,7 +101,6 @@
         orderObj: OrderObject;
         orderStatusMapping: object={}
 
-
         init(row, orderStatusMapping) {
             console.log('弹窗过来数据！')
             console.log(row)
@@ -121,9 +119,8 @@
                 this.splitTable = JSON.parse(JSON.stringify(data.data.records))
                 this.splitTable.forEach(item => {
                     this.$set(item, 'statusName', this.orderStatusMapping[item.status])
-                    this.$set(item, ' isChangeAddKojiDate', true)
+                    this.$set(item, 'isChangeAddKojiDate', true)
                 })
-
                 this.orgSplitTable = JSON.parse(JSON.stringify(this.splitTable))
             })
 
@@ -138,7 +135,6 @@
 
         // 确认同曲房下是否有同日期
         changeKojiHouseNoControl(item) {
-
             if (this.checkTheSame()) {
                 this.$warningToast('同一个订单同一个制曲日期下，不允许曲房重复')
                 item.kojiHouseNo = ''
@@ -157,9 +153,7 @@
             if (tempCheckArray.length === this.splitTable.length) {
                 return false
             }
-
             return true
-
         }
 
         checkKojiDateBlur(item) {
@@ -193,14 +187,6 @@
         checkKojiDate(val, item) {
             console.log('change')
             console.log(val)
-            // this.splitTable.forEach(item => {
-            //     if (item.addKojiDate === val) {
-            //         if (item.status === 'C' && item.id !== row.id) {
-            //             this.$warningToast('关联订单人工工时已提交，此订单不可调整入曲日期，请取消已审核订单：831000019423，831000019423');
-            //             return false
-            //         }
-            //     }
-            // })
 
             if (this.checkTheSame()) {
                 this.$warningToast('同一个订单同一个制曲日期下，不允许曲房重复')
@@ -246,12 +232,6 @@
             })
         }
 
-        // potNoChange(row) {
-        //     const holderObj: (any) = this.holder.filter(it => it.holderNo === row.potNo);// eslint-disable-line
-        //     row.potCount = holderObj[0].holderBatch;
-        //     row.potAmount = holderObj[0].holderVolume;
-        // }
-
         // 新增 item
         addSplitTable() {
             this.splitTable.push({
@@ -270,6 +250,7 @@
                 orderType: this.orderObj.orderType,
                 outKojiDate: getNewDay(this.orderObj.orderStartDate, 2),
                 productDate: this.orderObj.productDate,
+                statusName: '未录入',
                 status: 'N',
                 workShopName: this.orderObj.workShopName,
                 workShop: this.orderObj.workShop,
@@ -291,28 +272,10 @@
                     this.$warningToast('请填写必填项');
                     return false
                 }
-                // console.log(dataArr[i + 1].productDate)
-                // if (dataArr[i].productDate !== dataArr[i + 1].productDate) {
-                //     this.$warningToast('同一订单不允许跨天生产');
-                //     return false
-                // }
                 if (dataArr[i].productDate) {
                     productDateMap.push(dataArr[i].productDate);
                 }
             }
-
-            // const tempObj: string[] = []
-
-            // this.splitTable.forEach((item) => {
-
-            //     if (!tempObj.includes(`${item.kojiHouseNo}+${item.addKojiDate}`)) {
-            //         tempObj.push(`${item.kojiHouseNo}+${item.addKojiDate}`)
-            //     } else {
-            //         this.$warningToast('同日期下曲房不可重复');
-            //         return false
-            //     }
-            // })
-
             const submitObj: SubmitObj = {
                 orderId: this.orderObj.id,
                 orderNo: this.orderObj.orderNo,
@@ -393,6 +356,7 @@
     }
     interface SplitObj {
         isChangeAddKojiDate?: boolean;
+        statusName?: string;
         delFlag?: number;
         addKojiDate?: string;
         changed?: string;

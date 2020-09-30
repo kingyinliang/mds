@@ -611,6 +611,9 @@
 .searchCard >>> .el-form-item.is-success .el-input__inner:focus {
     border-color: #dcdfe6;
 }
+.searchCard >>> .el-form-item__error {
+    display: none;
+}
 
 </style>
 
