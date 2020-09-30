@@ -1,3 +1,10 @@
+<!--
+ * @Description:
+ * @Anthor: Telliex
+ * @Date: 2020-09-30 12:08:32
+ * @LastEditors: Telliex
+ * @LastEditTime: 2020-09-30 15:33:29
+-->
 <template>
     <mds-card title="文本记录" :name="'textRecord'">
         <el-input v-model="currentFormDataGroup.text" type="textarea" :rows="7" :disabled="!isRedact" style="width: 100%; height: 200px;" />

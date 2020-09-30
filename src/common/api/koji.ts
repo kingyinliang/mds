@@ -3,7 +3,7 @@
  * @Anthor: Telliex
  * @Date: 2020-08-27 14:28:27
  * @LastEditors: Telliex
- * @LastEditTime: 2020-09-25 13:33:14
+ * @LastEditTime: 2020-10-10 11:15:28
  */
 import httpProxy from 'utils/net/httpProxy';
 const KOJI_API = {
@@ -105,48 +105,48 @@ const KOJI_API = {
     WORKPROCEDURE_QUERY_API: params => httpProxy('/koji/kojiWorkProcedure/query', 'POST', params),
 
     /**
-    * @property {string} KOJI_CRAFT_HEAD_INFO_QUERY_API 制曲车间-制曲头部信息查询
-    */
+     * @property {string} KOJI_CRAFT_HEAD_INFO_QUERY_API 制曲车间-制曲头部信息查询
+     */
     KOJI_CRAFT_HEAD_INFO_QUERY_API: params => httpProxy('/kojiProcess/wheat/getHouseSplite', 'GET', params),
     /**
-    * @property {string} KOJI_SBEAN_SIEVE_QUERY_API 制曲车间-筛豆查询
-    */
+     * @property {string} KOJI_SBEAN_SIEVE_QUERY_API 制曲车间-筛豆查询
+     */
     KOJI_SBEAN_SIEVE_QUERY_API: params => httpProxy('/koji/kojiBeanSieve/query', 'POST', params),
     /**
-    * @property {string} KOJI_SBEAN_WASH_QUERY_API 制曲车间-洗豆记录查询
-    */
+     * @property {string} KOJI_SBEAN_WASH_QUERY_API 制曲车间-洗豆记录查询
+     */
     KOJI_SBEAN_WASH_QUERY_API: params => httpProxy('/koji/kojiBeanWash/query', 'POST', params),
     /**
-    * @property {string} KOJI_EXCEPTION_QUERY_API 制曲车间-查询异常记录
-    */
+     * @property {string} KOJI_EXCEPTION_QUERY_API 制曲车间-查询异常记录
+     */
     KOJI_EXCEPTION_QUERY_API: params => httpProxy('/koji/kojiException/query', 'POST', params),
     /**
-    * @property {string} KOJI_TEXT_QUERY_API 制曲车间-文本记录查询
-    */
+     * @property {string} KOJI_TEXT_QUERY_API 制曲车间-文本记录查询
+     */
     KOJI_TEXT_QUERY_API: params => httpProxy('/koji/kojiText/query', 'POST', params),
     /**
-    * @property {string} KOJI_XD_SAVE_API 制曲车间-洗豆保存
-    */
+     * @property {string} KOJI_XD_SAVE_API 制曲车间-洗豆保存
+     */
     KOJI_XD_SAVE_API: params => httpProxy('/koji/kojiBeanWash/info/save', 'POST', params),
     /**
-    * @property {string} KOJI_XD_SUBMIT_API 制曲车间-洗豆提交
-    */
+     * @property {string} KOJI_XD_SUBMIT_API 制曲车间-洗豆提交
+     */
     KOJI_XD_SUBMIT_API: params => httpProxy('/koji/kojiBeanWash/info/submit', 'POST', params),
     /**
-    * @property {string} KOJI_MATERIAL_GET_QUERY_API 制曲车间-物料领用记录查询
-    */
+     * @property {string} KOJI_MATERIAL_GET_QUERY_API 制曲车间-物料领用记录查询
+     */
     KOJI_MATERIAL_GET_QUERY_API: params => httpProxy('/kojiMaterial/query', 'POST', params),
     /**
-    * @property {string} KOJI_MATERIAL_DELETE_QUERY_API 制曲车间-物料领用删除
-    */
+     * @property {string} KOJI_MATERIAL_DELETE_QUERY_API 制曲车间-物料领用删除
+     */
     KOJI_MATERIAL_DELETE_QUERY_API: params => httpProxy('/kojiMaterial/delete', 'POST', params),
     /**
-    * @property {string} KOJI_MATERIAL_GET_ADD_QUERY_API 制曲车间-新增物料领用
-    */
+     * @property {string} KOJI_MATERIAL_GET_ADD_QUERY_API 制曲车间-新增物料领用
+     */
     KOJI_MATERIAL_GET_ADD_QUERY_API: params => httpProxy('/kojiMaterial/insert', 'POST', params),
     /**
-    * @property {string} KOJI_MATERIAL_GET_EDIT_QUERY_API 制曲车间-修改编辑物料领用
-    */
+     * @property {string} KOJI_MATERIAL_GET_EDIT_QUERY_API 制曲车间-修改编辑物料领用
+     */
     KOJI_MATERIAL_GET_EDIT_QUERY_API: params => httpProxy('/kojiMaterial/update', 'POST', params),
 
     /**
@@ -180,7 +180,43 @@ const KOJI_API = {
     /**
      * @propertyKOJI_ORDER_QUERY_API 基础数据-订单管理-根据车间Id查询车间订单列表
      */
-    KOJI_ORDER_QUERY_API: params => httpProxy('/order/queryListKoji', 'POST', params)
+    KOJI_ORDER_QUERY_API: params => httpProxy('/order/queryListKoji', 'POST', params),
+    /**
+     * @KOJI_DISC_QUERY_IN_API 制曲车间-圆盘-查询入曲情况
+     */
+    KOJI_DISC_QUERY_IN_API: params => httpProxy('/kojiDisc/queryDiscIn', 'GET', params),
+    /**
+     * @KOJI_DISC_QUERY_EVALUATE_API 制曲车间-圆盘-查询曲料生长评价记录
+     */
+    KOJI_DISC_QUERY_EVALUATE_API: params => httpProxy('/kojiDisc/queryDiscEvaluate', 'GET', params),
+    /**
+     * @KOJI_DISC_QUERY_EXCEPTION_API 制曲车间-圆盘-查询圆盘异常情况
+     */
+    KOJI_DISC_QUERY_EXCEPTION_API: params => httpProxy('/kojiDisc/queryDiscException', 'GET', params),
+    /**
+     * @KOJI_DISC_QUERY_GUARD_API 制曲车间-圆盘-查询看曲记录
+     */
+    KOJI_DISC_QUERY_GUARD_API: params => httpProxy('/kojiDisc/queryDiscGuard', 'GET', params),
+    /**
+     * @KOJI_DISC_QUERY_KOJIOUT_API 制曲车间-圆盘-查询圆盘出曲情况
+     */
+    KOJI_DISC_QUERY_KOJIOUT_API: params => httpProxy('/kojiDisc/queryDiscOut', 'GET', params),
+    /**
+     * @KOJI_DISC_QUERY_TURN_API 制曲车间-圆盘-查询翻曲记录
+     */
+    KOJI_DISC_QUERY_TURN_API: params => httpProxy('/kojiDisc/queryDiscTurn', 'GET', params),
+    /**
+     * @KOJI_DISC_QUERY_INSTORAGE_API 制曲车间-圆盘-查询圆盘生产入库记录
+     */
+    KOJI_DISC_QUERY_INSTORAGE_API: params => httpProxy('/kojiDisc/queryInStorage', 'GET', params),
+    /**
+     * @KOJI_DISC_QUERY_SAVE_API 制曲车间-圆盘-保存圆盘记录
+     */
+    KOJI_DISC_QUERY_SAVE_API: params => httpProxy('/kojiDisc/saveKojiDisc', 'GET', params),
+    /**
+     * @KOJI_DISC_QUERY_SUBMIT_API 制曲车间-圆盘-提交圆盘记录
+     */
+    KOJI_DISC_QUERY_SUBMIT_API: params => httpProxy('/kojiDisc/submitKojiDisc', 'GET', params)
 };
 
 export default KOJI_API;
