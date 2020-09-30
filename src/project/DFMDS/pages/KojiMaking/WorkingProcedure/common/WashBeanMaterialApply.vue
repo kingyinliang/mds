@@ -105,8 +105,9 @@
         // 物料领用记录查询
         materialGetList() {
             KOJI_API.KOJI_MATERIAL_GET_QUERY_API({
-                kojiOrderNo: this.$store.state.koji.orderKojiInfo.kojiOrderNo,
-                materialType: 'BEAN'
+                kojiOrderNo: this.formHeader.kojiOrderNo,
+                materialType: 'BEAN',
+                orderNo: this.formHeader.orderNo
             }).then(({ data }) => {
                 this.$emit('setMaterialTable', data.data || [])
                 this.materialTableList = data.data || [];

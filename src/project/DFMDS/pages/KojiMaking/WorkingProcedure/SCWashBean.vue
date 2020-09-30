@@ -130,13 +130,13 @@
         }
 
         mounted() {
-            this.getOrderList()
+            this.getOrderList();
         }
 
         // 查询表头
         getOrderList() {
             COMMON_API.OREDER_QUERY_BY_NO_API({
-                orderNo: this.$store.state.koji.orderKojiInfo.orderNo || ''
+                orderNo: this.$store.state.koji.orderScInfo.orderNo || ''
             }).then(({ data }) => {
                 this.formHeader = data.data;
                 this.formHeader.textStage = 'SC';

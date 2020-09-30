@@ -125,7 +125,6 @@
             ],
             batch: [{ required: true, message: '请选择领用批次', trigger: 'change' }],
             smallBeanAmount: [
-                { required: true, message: '小豆数量不能为空', trigger: 'blur' },
                 { type: 'number', message: '必须为数字值' }
             ]
         };

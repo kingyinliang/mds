@@ -11,8 +11,8 @@
                 <div class="stock-image_info stock-image_info_right">
                     <i class="iconfont factory-zongliangguanli" />
                     <div class="stock-image_info_num">
-                        <el-tooltip effect="dark" :content="'999,999kg'" placement="top">
-                            <span class="stock-image_info_num_toolTip">999,999</span>
+                        <el-tooltip effect="dark" :content="totalNum&&totalNum > 999999? (totalNum+'').substr(0,6): totalNum +'kg'" placement="top">
+                            <span class="stock-image_info_num_toolTip">{{ totalNum&&totalNum > 999999? (totalNum+'').substr(0,6): totalNum }}</span>
                         </el-tooltip>
                         <span class="stock-image_info_num_span">kg</span>
                     </div>
@@ -27,13 +27,18 @@
                 class="stock-detail-table-content"
             >
                 <el-table height="120" :data="materialDetailData.detailsList" border tooltip-effect="dark" class="newTable" size="mini">
-                    <el-table-column label="物料" :show-overflow-tooltip="true" prop="material" width="60" align="center" />
-                    <el-table-column label="日期" align="center" :formatter="formatterProductDate" />
-                    <el-table-column label="数量" :show-overflow-tooltip="true" prop="currentAmount" width="60" align="right">
+                    <el-table-column label="物料" :show-overflow-tooltip="true" width="120">
+                        <template slot-scope="scope">
+                            {{ scope.row.materialName +' '+ scope.row.materialCode }}
+                        </template>
+                    </el-table-column>
+                    <el-table-column label="批次" prop="batch" align="center" min-width="100" />
+                    <el-table-column label="数量" :show-overflow-tooltip="true" prop="currentAmount" width="100" align="right">
                         <template slot-scope="scope">
                             {{ scope.row.currentAmount ? scope.row.currentAmount.toLocaleString()+' '+ scope.row.unit : '' }}
                         </template>
                     </el-table-column>
+                    <el-table-column label="生产日期" prop="productDate" align="center" :formatter="formatterProductDate" min-width="100" />
                 </el-table>
             </div>
         </mds-card>
@@ -47,11 +52,28 @@
         components: {}
     })
     export default class MaterialDetailList extends Vue {
-        @Prop({ default: {} }) materialDetailData: object;
+        @Prop({
+            default: {}
+        }) materialDetailData: MaterialDetailDatas;
 
         private formatterProductDate(row, column, cellValue) {
             return dateFormat(new Date(cellValue), 'yyyy-MM-dd')
         }
+
+        get totalNum() {
+            let total = 0;
+            this.materialDetailData.detailsList && this.materialDetailData.detailsList.map(item => {
+                total += item.currentAmount
+            })
+            return total ? total.toLocaleString() : ''
+        }
+
+    }
+    interface MaterialDetailDatas {
+        detailsList?: DetailD[];
+    }
+    interface DetailD {
+        currentAmount: number;
     }
 </script>
 

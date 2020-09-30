@@ -31,7 +31,7 @@
             if (workShop === 'koji') {
                 KOJI_API.KOJI_TEXT_QUERY_API({
                     orderNo: formHeader.orderNo,
-                    kojiOrderNo: formHeader.kojiHouseNo,
+                    kojiOrderNo: formHeader.kojiOrderNo,
                     textStage: formHeader.textStage
                 }).then(({ data }) => {
                     this.getData(data, formHeader);
@@ -47,7 +47,7 @@
                     kojiText: '', // 文本
                     id: '', // 主键
                     orderNo: formHeader.orderNo, // 订单号
-                    kojiOrderNo: formHeader.kojiHouseNo || '', // 曲房单号
+                    kojiOrderNo: formHeader.kojiOrderNo, // 制曲订单号
                     textStage: formHeader.textStage // 工艺
                 }
             }

@@ -82,7 +82,7 @@
                 type: 'p',
                 label: '曲房编号',
                 icon: 'factory-qiyaguanjianhua',
-                value: ['kojiHouseName', 'kojiHouseNo']
+                value: 'kojiHouseName'
             },
             {
                 type: 'tooltip',
@@ -106,7 +106,7 @@
                 type: 'p',
                 icon: 'factory-riqi1',
                 label: '发酵罐号',
-                value: 'fermentPotNo'
+                value: 'fermentPotName'
             },
             {
                 type: 'tooltip',
