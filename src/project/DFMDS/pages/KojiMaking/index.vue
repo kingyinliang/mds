@@ -12,89 +12,87 @@
             @created-end="createdEnd"
         >
             <template slot="home">
-                <el-row class="potList" :gutter="10" style="min-height: 150px; margin-top: 5px; margin-bottom: 30px;">
-                    <el-col v-for="(item, index) in queryFirstResultList" :key="index" :span="8">
-                        <div class="box-item">
-                            <div class="box-item__top">
-                                <div><i class="title-icon" />{{ item.houseSplitList[item.nowIndex].kojiHouseName }}  <span>{{ item.houseSplitList[item.nowIndex].fermentPotName }}</span></div>
-                                <div class="status">
-                                    <span
-                                        class="points"
-                                        :style="{
-                                            'margin-top': '8px',
-                                            background: item.houseSplitList[item.nowIndex].status === 'D' ? 'red' : item.houseSplitList[item.nowIndex].status === 'C' ? '#67C23A' : item.houseSplitList[item.nowIndex].status === 'M' ? '#1890ff' : item.houseSplitList[item.nowIndex].status === 'S' ? '#1890ff' : '#7ED321',
-                                        }"
-                                    />
-                                    &nbsp;曲房状态：
-                                    <em
-                                        :style="{
-                                            color: item.houseSplitList[item.nowIndex].status === 'R' ? 'red' : item.houseSplitList[item.nowIndex].status === 'C' ? '#67C23A' : '',
-                                        }"
-                                    >{{ item.houseSplitList[item.nowIndex].statusName }}</em>
-                                </div>
-                            </div>
-                            <div class="box-item__content">
-                                <div class="img" style="margin: 0; padding: 5px 10px; background-color: #f6f5f8; border-radius: 5px;">
-                                    <img src="@/assets/img/koji_01.png" style="width: 130px;">
-                                </div>
-                                <div class="right">
-                                    <ul>
-                                        <li class="lines">
-                                            <span>生产订单：</span>
-                                            <el-select v-model="item.houseSplitList[item.nowIndex].orderNoTemp" filterable size="mini" style="flex: 1;" @change="val=>changeFirstOrder(val,item)">
-                                                <el-option v-for="(subItems) in item.houseSplitList" :key="subItems.id" :value="subItems.orderNo" :label="subItems.orderNo" />
-                                            </el-select>
-                                        </li>
-                                        <li class="lines">
-                                            <span>
-                                                生产物料：
-                                            </span>
-                                            <el-tooltip class="item" effect="dark" :content="item.houseSplitList[item.nowIndex].materialName + item.houseSplitList[item.nowIndex].materialCode" placement="bottom-start">
-                                                <span>
-                                                    {{ item.houseSplitList[item.nowIndex].materialName }} {{ item.houseSplitList[item.nowIndex].materialCode }}
-                                                </span>
-                                            </el-tooltip>
-                                        </li>
-                                        <li class="lines">
-                                            <span>制曲时长：</span><span>{{ item.houseSplitList[item.nowIndex].kojiDuration?`${item.houseSplitList[item.nowIndex].kojiDuration} H`: '' }} </span>
-                                        </li>
-                                        <li class="lines">
-                                            <span>入曲时间：</span><span>{{ item.houseSplitList[item.nowIndex].kojiStartTime }}</span>
-                                        </li>
-                                    </ul>
-                                </div>
-                            </div>
-                            <div class="box-item__footer">
-                                <el-tooltip
-                                    class="item"
-                                    effect="dark"
-                                    :content="orderStatusMapping[item.houseSplitList[item.nowIndex].houseTag.washBeanCraft]"
-                                    placement="top-start"
-                                >
-                                    <el-button class="bottom-item" @click="goDetail('first',1, item.houseSplitList[item.nowIndex])">
-                                        <!-- <el-button :disabled="!isAuth('bottle:inStorage:list')" class="bottom-item" @click="goDetail('first',1, item)"> -->
-                                        洗豆
-                                    </el-button>
-                                </el-tooltip>
-
-                                <el-tooltip class="item" effect="dark" :content="orderStatusMapping[item.houseSplitList[item.nowIndex].houseTag.steamFlourCraft]" placement="top-start">
-                                    <el-button class="bottom-item" @click="goDetail('first',2, item.houseSplitList[item.nowIndex])">
-                                        <!-- <el-button :disabled="!isAuth('bottle:workshop:techProductParameterList')" class="bottom-item" @click="goDetail('first',2, item)"> -->
-                                        蒸面
-                                    </el-button>
-                                </el-tooltip>
-                                <el-tooltip class="item" effect="dark" :content="orderStatusMapping[item.houseSplitList[item.nowIndex].houseTag.discCraft]" placement="top-start">
-                                    <el-button class="bottom-item" @click="goDetail('first',3, item.houseSplitList[item.nowIndex])">
-                                        <!-- <el-button :disabled="!isAuth('bottle:workshop:qualityInspectionList')" class="bottom-item" @click="goDetail('first',3, item)"> -->
-                                        圆盘
-                                    </el-button>
-                                </el-tooltip>
+                <div class="item-sort-container">
+                    <div v-for="(item, index) in queryFirstResultList" :key="index" class="box-item">
+                        <div class="box-item__top">
+                            <div><i class="title-icon" />{{ item.houseSplitList[item.nowIndex].kojiHouseName }}  <span>{{ item.houseSplitList[item.nowIndex].fermentPotName }}</span></div>
+                            <div class="status">
+                                <span
+                                    class="points"
+                                    :style="{
+                                        'margin-top': '8px',
+                                        background: item.houseSplitList[item.nowIndex].status === 'D' ? 'red' : item.houseSplitList[item.nowIndex].status === 'C' ? '#67C23A' : item.houseSplitList[item.nowIndex].status === 'M' ? '#1890ff' : item.houseSplitList[item.nowIndex].status === 'S' ? '#1890ff' : '#7ED321',
+                                    }"
+                                />
+                                &nbsp;曲房状态：
+                                <em
+                                    :style="{
+                                        color: item.houseSplitList[item.nowIndex].status === 'R' ? 'red' : item.houseSplitList[item.nowIndex].status === 'C' ? '#67C23A' : '',
+                                    }"
+                                >{{ item.houseSplitList[item.nowIndex].statusName }}</em>
                             </div>
                         </div>
-                    </el-col>
-                </el-row>
-                <el-row class="potList" :gutter="10" style="min-height: 150px; margin-top: 5px;">
-                    <el-col v-if="querySecondResultList.length!==0" :span="8">
+                        <div class="box-item__content">
+                            <div class="img" style="margin: 0; padding: 5px 10px; background-color: #f6f5f8; border-radius: 5px;">
+                                <img src="@/assets/img/koji_01.png" style="width: 130px;">
+                            </div>
+                            <div class="right">
+                                <ul>
+                                    <li class="lines">
+                                        <span>生产订单：</span>
+                                        <el-select v-model="item.houseSplitList[item.nowIndex].orderNoTemp" filterable size="mini" style="flex: 1;" @change="val=>changeFirstOrder(val,item)">
+                                            <el-option v-for="(subItems) in item.houseSplitList" :key="subItems.id" :value="subItems.orderNo" :label="subItems.orderNo" />
+                                        </el-select>
+                                    </li>
+                                    <li class="lines">
+                                        <span>
+                                            生产物料：
+                                        </span>
+                                        <el-tooltip class="item" effect="dark" :content="item.houseSplitList[item.nowIndex].materialName + item.houseSplitList[item.nowIndex].materialCode" placement="bottom-start">
+                                            <span>
+                                                {{ item.houseSplitList[item.nowIndex].materialName }} {{ item.houseSplitList[item.nowIndex].materialCode }}
+                                            </span>
+                                        </el-tooltip>
+                                    </li>
+                                    <li class="lines">
+                                        <span>制曲时长：</span><span>{{ item.houseSplitList[item.nowIndex].kojiDuration?`${item.houseSplitList[item.nowIndex].kojiDuration} H`: '' }} </span>
+                                    </li>
+                                    <li class="lines">
+                                        <span>入曲时间：</span><span>{{ item.houseSplitList[item.nowIndex].kojiStartTime }}</span>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="box-item__footer">
+                            <el-tooltip
+                                class="item"
+                                effect="dark"
+                                :content="orderStatusMapping[item.houseSplitList[item.nowIndex].houseTag.washBeanCraft]"
+                                placement="top-start"
+                            >
+                                <el-button class="bottom-item" @click="goDetail('first',1, item.houseSplitList[item.nowIndex])">
+                                    <!-- <el-button :disabled="!isAuth('bottle:inStorage:list')" class="bottom-item" @click="goDetail('first',1, item)"> -->
+                                    洗豆
+                                </el-button>
+                            </el-tooltip>
+
+                            <el-tooltip class="item" effect="dark" :content="orderStatusMapping[item.houseSplitList[item.nowIndex].houseTag.steamFlourCraft]" placement="top-start">
+                                <el-button class="bottom-item" @click="goDetail('first',2, item.houseSplitList[item.nowIndex])">
+                                    <!-- <el-button :disabled="!isAuth('bottle:workshop:techProductParameterList')" class="bottom-item" @click="goDetail('first',2, item)"> -->
+                                    蒸面
+                                </el-button>
+                            </el-tooltip>
+                            <el-tooltip class="item" effect="dark" :content="orderStatusMapping[item.houseSplitList[item.nowIndex].houseTag.discCraft]" placement="top-start">
+                                <el-button class="bottom-item" @click="goDetail('first',3, item.houseSplitList[item.nowIndex])">
+                                    <!-- <el-button :disabled="!isAuth('bottle:workshop:qualityInspectionList')" class="bottom-item" @click="goDetail('first',3, item)"> -->
+                                    圆盘
+                                </el-button>
+                            </el-tooltip>
+                        </div>
+                    </div>
+                </div>
+                <div class="item-sort-container">
+                    <template v-if="querySecondResultList.length!==0">
                         <div class="box-item">
                             <div class="box-item__top">
                                 <div><i class="title-icon" />蒸豆 <span>{{ querySecondResultList[secondObjIndex].productLineName }} </span></div>
@@ -166,8 +164,8 @@
                                 </el-tooltip>
                             </div>
                         </div>
-                    </el-col>
-                </el-row>
+                    </template>
+                </div>
             </template>
         </query-table>
     </div>
@@ -502,6 +500,17 @@
 </script>
 
 <style lang="scss" scoped>
+.item-sort-container {
+    display: grid;
+    flex-grow: 1;
+    grid-auto-flow: row;
+    grid-gap: 10px;
+    grid-template-columns: 1fr 1fr 1fr;
+    min-width: 1250px;
+    margin-bottom: 20px;
+}
+
+
 .box-item {
     display: flex;
     flex-direction: column;
@@ -600,4 +609,6 @@
     background: #487bff;
     border-radius: 2px;
 }
+
+
 </style>
