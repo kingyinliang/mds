@@ -63,7 +63,7 @@
             <el-table ref="table1" class="newTable" header-row-class-name="tableHead" :data="materielDataList" :row-class-name="rowDelFlag" border tooltip-effect="dark" style="width: 100%; margin-bottom: 20px;" @row-dblclick="editReceive">
                 <el-table-column label="物料">
                     <template slot-scope="scope">
-                        {{ scope.row.materialCode }} {{ scope.row.materialName }}
+                        {{ scope.row.materialName }} {{ scope.row.materialCode }}
                     </template>
                 </el-table-column>
                 <el-table-column label="粮仓" :show-overflow-tooltip="true" prop="holderName" />
@@ -96,7 +96,7 @@
                     </el-select>
                 </el-form-item>
                 <el-form-item label="物料：" :label-width="formLabelWidth">
-                    {{ cang.materialCode }} {{ cang.materialName }}
+                    {{ cang.materialName }} {{ cang.materialCode }}
                 </el-form-item>
                 <el-form-item label="剩余量（KG）：" :label-width="formLabelWidth">
                     {{ cang.currentQuantity }}

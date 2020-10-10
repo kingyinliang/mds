@@ -1,127 +1,549 @@
-<template>
-    <div class="header_main">
-        <mds-card title="规格列表" :name="'spe'" :pack-up="false" style="margin-bottom: 0; background: #fff;">
-            <template slot="titleBtn">
-                <el-row style="float: right;">
-                    <el-form :inline="true" :model="controllableForm" size="small" label-width="68px" class="topforms2" @submit.native.prevent>
-                        <el-form-item>
-                            <el-input v-model="controllableForm.materialCode" placeholder="物料" suffix-icon="el-icon-search" clearable @clear="getItemsList" @blur="controllableForm.materialCode===''?getItemsList():false" />
-                        </el-form-item>
-                        <el-form-item style="height: 32px;">
-                            <el-button v-if="isAuth('specQuery')" type="primary" size="small" :disabled="controllableForm.materialCode.trim()===''" @click="getItemsList(true,'normal')">
-                                查询
-                            </el-button>
-                            <el-button v-if="isAuth('specQuery')" type="primary" size="small" @click="isAdvanceSearchDailogShow = true">
-                                高级查询
-                            </el-button>
-                            <el-button v-if="isAuth('specInsert')" type="primary" size="small" @click="addOrupdateItem()">
-                                新增
-                            </el-button>
-                            <el-button v-if="isAuth('specDel')" type="danger" size="small" :disabled="multipleSelection.length===0" @click="removeItems">
-                                批量删除
-                            </el-button>
-                        </el-form-item>
-                    </el-form>
-                </el-row>
-            </template>
-            <el-table ref="targetInfoList" class="newTable" border header-row-class-name="tableHead" :data="targetInfoList" :height="mainClientHeight - 70 - 47" tooltip-effect="dark" style="width: 100%;" @selection-change="handleSelectionChange">
-                <el-table-column v-if="targetInfoList.length!==0" type="selection" width="50" fixed />
-                <el-table-column type="index" label="序号" :index="indexMethod" width="55" fixed />
-                <el-table-column label="物料" :show-overflow-tooltip="true" min-width="200">
-                    <template slot-scope="scope">
-                        {{ scope.row.materialCode }} {{ scope.row.materialName }}
-                    </template>
-                </el-table-column>
-                <el-table-column prop="brand" label="品牌" min-width="200" :show-overflow-tooltip="true" />
-                <el-table-column label="大类" width="80" :show-overflow-tooltip="true">
-                    <template slot-scope="scope">
-                        {{ largeClassObject[scope.row.largeClass] }}
-                    </template>
-                </el-table-column>
-                <el-table-column prop="boxSpec" width="70" label="箱规格" :show-overflow-tooltip="true" />
-                <el-table-column label="单位" width="70" :show-overflow-tooltip="true">
-                    <template slot-scope="scope">
-                        {{ unitClassObject[scope.row.boxSpecUnit] }}
-                    </template>
-                </el-table-column>
-                <el-table-column prop="bottleSpec" width="70" label="瓶规格" :show-overflow-tooltip="true" />
-                <el-table-column label="单位" width="70" :show-overflow-tooltip="true">
-                    <template slot-scope="scope">
-                        {{ unitClassObject[scope.row.bottleSpecUnit] }}
-                    </template>
-                </el-table-column>
-                <el-table-column prop="changer" label="维护人" width="160" :show-overflow-tooltip="true" />
-                <el-table-column width="60" label="操作" fixed="right">
-                    <template slot-scope="scope">
-                        <el-button v-if="isAuth('specEdit')" style="padding: 0;" type="text" @click="addOrupdateItem(scope.row)">
-                            编辑
-                        </el-button>
-                    </template>
-                </el-table-column>
-            </el-table>
-            <el-pagination :current-page="currPage" :page-sizes="[10, 20, 50]" :page-size="pageSize" layout="total, sizes, prev, pager, next, jumper" :total="totalCount" @size-change="handleSizeChange" @current-change="handleCurrentChange" />
-        </mds-card>
-        <specification-add-or-update v-if="isAddOrUpdateDailogShow" ref="SpecificationAddOrUpdate" :large-class-list="largeClassList" :unit-class-list="unitClassList" @refreshDataList="getItemsList" />
-        <el-dialog title="高级查询" :close-on-click-modal="false" :visible.sync="isAdvanceSearchDailogShow" @close="closeDialog">
-            <div class="formdata">
-                <el-form :model="controllableForm" size="small" label-width="110px" class="orderdialog" :rules="checkRules">
-                    <el-form-item label="物料：">
-                        <el-input v-model="controllableForm.materialCode" placeholder="手工录入" clearable />
-                    </el-form-item>
-                    <el-form-item label="品牌：">
-                        <el-input v-model="controllableForm.brand" placeholder="手工录入" clearable />
-                    </el-form-item>
-                    <el-form-item label="箱规格：" prop="boxSpec">
-                        <el-input v-model="controllableForm.boxSpec" placeholder="手工录入" oninput="value=value.replace(/\D*/g,'')" clearable />
-                    </el-form-item>
-                    <el-form-item label="瓶规格：" prop="productSpec">
-                        <el-input v-model="controllableForm.productSpec" placeholder="手工录入" oninput="value=value.replace(/\D*/g,'')" clearable />
-                    </el-form-item>
-                </el-form>
-            </div>
-            <div slot="footer" class="dialog-footer">
-                <el-button @click="closeDialog">
-                    取消
-                </el-button>
-                <el-button type="primary" @click="getItemsList(true,'Advance')">
-                    确定
-                </el-button>
-            </div>
-        </el-dialog>
-    </div>
+<template lang="pug">
+    div.header_main
+        mds-card(title="规格列表" :name="'spe'" :pack-up="false" style="margin-bottom: 0; background: #fff;")
+            template(slot="titleBtn")
+                el-row(style="float: right;")
+                    el-form(:inline="true" :model="dataOfSearch" size="small" label-width="68px" class="topforms2" @submit.native.prevent)
+                        el-form-item
+                            el-input(v-model="dataOfSearch.materialCode" placeholder="物料" suffix-icon="el-icon-search" clearable @clear="getItemsList" @blur="dataOfSearch.materialCode===''?getItemsList():false")
+                        el-form-item(style="height: 32px;")
+                            el-button(v-if="isAuth('specQuery')" type="primary" size="small" :disabled="dataOfSearch.materialCode.trim()===''" @click="getItemsList(true,'normal')") 查询
+                            el-button(v-if="isAuth('specQuery')" type="primary" size="small" @click="btnAdvanceSearch") 高级查询
+                            el-button(v-if="isAuth('specInsert')" type="primary" size="small" @click="btnAddItem") 新增
+                            el-button(v-if="isAuth('specDel')&&targetInfoList.length!==0" type="danger" size="small"  @click="btnRemoveItems" :disabled="chechDeleteList===0" ) 批量删除
+            //- show table
+            table-show(ref="targetInfoList" :table-element-setting="tableItemSetting" :target-table.sync="targetInfoList" :check-delete.sync="chechDeleteList" @updateItem="btnUpdateItem")
+            el-pagination(:current-page="currPage" :page-sizes="[10, 20, 50]" :page-size="pageSize" layout="total, sizes, prev, pager, next, jumper" :total="totalCount" @size-change="handleSizeChange" @current-change="handleCurrentChange")
+        //- 编辑规格
+        dialog-form(ref="updateSpecification" :form-element-setting="dialogUpdateItemSetting" :data-form.sync="dataOfUpdateItem" @send-dialog-form-data="updateItem")
+        //- 新增规格
+        dialog-form(ref="addSpecification" :form-element-setting="dialogAddItemSetting" :data-form.sync="dataOfAddItem" @send-dialog-form-data="addItem")
+        //- 高级查询
+        dialog-form(ref="advanceSearch" :form-element-setting="dialogSearchSetting" :data-form.sync="dataOfSearch" @send-dialog-form-data="getItemsListFromDialog")
 </template>
 <script lang="ts">
     import { Vue, Component } from 'vue-property-decorator';
+    import { getUserNameNumber } from 'utils/utils';
     import { COMMON_API } from 'common/api/api';
-    import SpecificationAddOrUpdate from './SpecificationAddOrUpdate.vue';
+    import DialogForm from 'components/DialogForm.vue';
+    import TableShow from 'components/TableShow.vue';
 
     @Component({
-        name: 'WorkProcedureManage',
+        name: 'Specification',
         components: {
-            SpecificationAddOrUpdate
+            TableShow,
+            DialogForm
         }
     })
     export default class WorkProcedureManage extends Vue {
 
         $refs: {
-            SpecificationAddOrUpdate: HTMLFormElement;
+            targetInfoList: HTMLFormElement; // 表格数据
+            addSpecification: HTMLFormElement; // 新增数据 dialog
+            updateSpecification: HTMLFormElement; // 更新数据 dialog
+            advanceSearch: HTMLFormElement; // 高级查询 dialog
         }
 
-        serchSpecListObject= {}
         unitClassList: Options[]=[] // 单位缓存
         unitClassObject = {}
         largeClassList: Options[]= [] // 大类缓存
         largeClassObject= {}
         targetInfoList: CurrentDataTable[]= []
         multipleSelection: CurrentDataTable[]= []
-        isAddOrUpdateDailogShow= false
-        isAdvanceSearchDailogShow= false
-        controllableForm= {
+
+        nowSearchModle='normal'
+        chechDeleteList=0 // 删除都选统计
+        tableItemSetting={
+            props: {
+                // eslint-disable-next-line no-invalid-this
+                height: this.mainClientHeight - 70 - 47,
+                title: 'TableSpecification'
+            },
+            data: [
+                {
+                    type: 'multiple', // 表格元件
+                    prop: 'material',
+                    headerAlign: 'left',
+                    align: 'left',
+                    label: '物料', // 表单元件名称
+                    minWidth: 300,
+                    width: 0, // width 会覆盖 minWidth
+                    content: ['materialCode', 'materialName']
+                },
+                {
+                    type: 'single', // 表格元件
+                    prop: 'brand',
+                    label: '品牌', // 表单元件名称
+                    minWidth: 0,
+                    width: 100,
+                    content: ['brand']
+                },
+                {
+                    type: 'single', // 表格元件
+                    prop: 'largeClass',
+                    label: '大类', // 表单元件名称
+                    minWidth: 0,
+                    width: 160,
+                    content: ['largeClass'],
+                    // eslint-disable-next-line no-invalid-this
+                    // transList: this.largeClassObject
+                    transFn: () => {
+                        return new Promise((resolve) => {
+                            COMMON_API.DICTQUERY_API({
+                                dictType: 'COMMON_CATEGORY'
+                                }).then(({ data }) => {
+                                const wrapperObject = {};
+                                data.data.forEach(item => {
+                                    wrapperObject[item.dictCode] = item.dictValue
+                                })
+                                resolve(wrapperObject)
+                            })
+                        })
+                    }
+                },
+                {
+                    type: 'single', // 表格元件
+                    prop: 'boxSpec',
+                    label: '箱规格', // 表单元件名称
+                    minWidth: 0,
+                    width: 70,
+                    content: ['boxSpec']
+                },
+                {
+                    type: 'single', // 表格元件
+                    prop: 'boxSpecUnit',
+                    label: '单位', // 表单元件名称
+                    minWidth: 0,
+                    width: 70,
+                    content: ['boxSpecUnit'],
+                    // eslint-disable-next-line no-invalid-this
+                    // transList: this.unitClassObject
+                    transFn: () => {
+                        return new Promise((resolve) => {
+                            COMMON_API.DICTQUERY_API({
+                            dictType: 'COMMON_SPEC_UNIT'
+                            }).then(({ data }) => {
+                                const wrapperObject = {};
+                                data.data.forEach(item => {
+                                    wrapperObject[item.dictCode] = item.dictValue
+                                })
+                                resolve(wrapperObject)
+                            })
+                        })
+                    }
+                },
+                {
+                    type: 'single', // 表格元件
+                    prop: 'bottleSpec',
+                    label: '瓶规格', // 表单元件名称
+                    minWidth: 0,
+                    width: 70,
+                    content: ['bottleSpec']
+                },
+                {
+                    type: 'single', // 表格元件
+                    prop: 'bottleSpecUnit',
+                    label: '单位', // 表单元件名称
+                    minWidth: 0,
+                    width: 70,
+                    content: ['bottleSpecUnit'],
+                    // eslint-disable-next-line no-invalid-this
+                    // transList: this.unitClassObject
+                    transFn: () => {
+                        return new Promise((resolve) => {
+                            COMMON_API.DICTQUERY_API({
+                            dictType: 'COMMON_SPEC_UNIT'
+                            }).then(({ data }) => {
+                                const wrapperObject = {};
+                                data.data.forEach(item => {
+                                    wrapperObject[item.dictCode] = item.dictValue
+                                })
+                                resolve(wrapperObject)
+                            })
+                        })
+                    }
+                },
+                {
+                    type: 'single', // 表格元件
+                    prop: 'changer',
+                    label: '维护人', // 表单元件名称
+                    minWidth: 0,
+                    width: 160,
+                    content: ['changer']
+                },
+                {
+                    type: 'button', // 表格元件
+                    prop: 'control',
+                    label: '操作', // 表单元件名称
+                    minWidth: 0,
+                    width: 100,
+                    control: [{
+                            buttonName: '编辑',
+                            btn: 'editBtn',
+                            icon: 'el-icon-edit',
+                            isAuth: 'specEdit'
+                        }]
+                }
+            ]
+        }
+
+        // [dialog][setting] 高级查询
+        dialogSearchSetting={
+            props: {
+                labelWidth: 100,
+                title: '高级查询'
+            },
+            data: [
+                {
+                    type: 'input', // 表单元件类型下拉選單
+                    prop: 'materialCode',
+                    label: '物料', // 表单元件名称
+                    placeholder: '手工录入',
+                    rules: []
+                },
+                {
+                    type: 'input',
+                    prop: 'brand',
+                    label: '品牌',
+                    placeholder: '手工录入',
+                    rules: []
+                },
+                {
+                    type: 'input',
+                    prop: 'boxSpec',
+                    label: '箱规格',
+                    placeholder: '手工录入',
+                    oninput: "value=value.replace(/\D*/g,'')",
+                    rules: []
+                },
+                {
+                    type: 'input',
+                    prop: 'productSpec',
+                    label: '瓶规格',
+                    placeholder: '手工录入',
+                    oninput: "value=value.replace(/\D*/g,'')",
+                    rules: []
+                }
+            ]
+        }
+
+         // [dialog][data] 高级查询
+        dataOfSearch= {
             brand: '',
             materialCode: '',
             boxSpec: '',
             productSpec: ''
         }
+
+        // [dialog][setting] 新增规格
+        dialogAddItemSetting={
+            props: {
+                labelWidth: 100,
+                title: '新增规格'
+            },
+            data: [
+                {
+                    type: 'select:remote',
+                    prop: 'material',
+                    label: '物料',
+                    placeholder: '请输入物料',
+                    disabled: false,
+                    rules: [
+                        { required: true, message: '物料不能为空', trigger: 'blur' }
+                    ],
+                    remoteMethod: (query) => {
+                        return new Promise((resolve) => {
+                            COMMON_API.ALLMATERIAL_API({
+                                materialTypes: ['ZFER'],
+                                material: query
+                            }).then(({ data }) => {
+                                const tempOptionList = data.data
+                                tempOptionList.forEach(item => {
+                                    item.optValue = item.materialCode + ' ' + item.materialName + ' ' + item.materialTypeName
+                                    item.optLabel = item.materialCode + ' ' + item.materialName + ' ' + item.materialTypeName
+                                })
+                                resolve(tempOptionList)
+                            })
+                        })
+                    },
+                    linkageProp: ['brand']
+                },
+                {
+                    type: 'input',
+                    prop: 'brand',
+                    label: '品牌',
+                    placeholder: '请先选择物料',
+                    disabled: true,
+                    rules: [
+                        { required: true, message: '品牌不能为空', trigger: 'blur' }
+                    ],
+                    emitChange: (val, element) => {
+                        return new Promise((resolve) => {
+                            // eslint-disable-next-line no-invalid-this
+                            this.dataOfAddItem.brand = element.optionList.find(item => item.materialCode === val.split(' ')[0]).kondm
+                            resolve({ prop: 'brand', value: element.optionList.find(item => item.materialCode === val.split(' ')[0]).kondm })
+                        })
+                    }
+                    // defaultOptionsFn: () => {
+                    //     return new Promise((resolve) => {
+                    //         resolve()
+                    //     })
+                    // }
+                },
+                {
+                    type: 'select',
+                    prop: 'largeClass',
+                    label: '大类',
+                    placeholder: '请选择',
+                    disabled: false,
+                    rules: [
+                        { required: true, message: '大类不能为空', trigger: 'blur' }
+                    ],
+                    // eslint-disable-next-line no-invalid-this
+                    // options: this.largeClassList
+                    defaultOptionsFn: () => {
+                        return new Promise((resolve) => {
+                            COMMON_API.DICTQUERY_API({
+                                dictType: 'COMMON_CATEGORY'
+                            }).then(({ data }) => {
+                                const optionList = data.data
+                                optionList.forEach(item => {
+                                    // optionList.push({ 'optValue': item.dictCode, 'optLabel': item.dictValue })
+                                    // eslint-disable-next-line no-invalid-this
+                                    this.$set(item, 'optLabel', item.dictValue)
+                                    // eslint-disable-next-line no-invalid-this
+                                    this.$set(item, 'optValue', item.dictCode)
+                                })
+                                resolve(optionList)
+                            })
+                        })
+                    }
+                },
+                {
+                    type: 'input',
+                    prop: 'boxSpec',
+                    label: '箱规格',
+                    placeholder: '请选择',
+                    disabled: false,
+                    rules: [
+                        { required: true, message: '箱规格不能为空', trigger: 'blur' }
+                    ]
+                },
+                {
+                    type: 'select',
+                    prop: 'boxSpecUnit',
+                    label: '单位',
+                    disabled: false,
+                    placeholder: '请输入',
+                    rules: [
+                        { required: true, message: '箱规格单位不能为空', trigger: 'blur' }
+                    ],
+                    defaultOptionsFn: () => {
+                        return new Promise((resolve) => {
+                            COMMON_API.DICTQUERY_API({
+                                dictType: 'COMMON_SPEC_UNIT'
+                            }).then(({ data }) => {
+                                const optionList = data.data;
+                                optionList.forEach(item => {
+                                    // optionList.push({ 'optValue': item.dictCode, 'optLabel': item.dictValue })
+                                    // eslint-disable-next-line no-invalid-this
+                                    this.$set(item, 'optLabel', item.dictValue)
+                                    // eslint-disable-next-line no-invalid-this
+                                    this.$set(item, 'optValue', item.dictCode)
+                                })
+                                resolve(optionList)
+                            })
+                        })
+                    }
+                },
+                {
+                    type: 'input',
+                    prop: 'bottleSpec',
+                    label: '瓶规格',
+                    placeholder: '',
+                    disabled: false,
+                    rules: []
+                },
+                {
+                    type: 'select',
+                    prop: 'bottleSpecUnit',
+                    label: '单位',
+                    placeholder: '请选择',
+                    disabled: false,
+                    rules: [],
+                    defaultOptionsFn: () => {
+                        return new Promise((resolve) => {
+                            COMMON_API.DICTQUERY_API({
+                                dictType: 'COMMON_SPEC_UNIT'
+                            }).then(({ data }) => {
+                                const optionList = data.data
+                                optionList.forEach(item => {
+                                    // eslint-disable-next-line no-invalid-this
+                                    this.$set(item, 'optLabel', item.dictValue)
+                                    // eslint-disable-next-line no-invalid-this
+                                    this.$set(item, 'optValue', item.dictCode)
+                                })
+                                resolve(optionList)
+                            })
+                        })
+                    }
+                }
+            ]
+        }
+
+
+        // [dialog][data] 新增规格
+        dataOfAddItem={
+            id: '',
+            material: '',
+            brand: '',
+            largeClass: '',
+            boxSpec: '',
+            boxSpecUnit: '',
+            bottleSpec: '',
+            bottleSpecUnit: '',
+            changer: getUserNameNumber(),
+            version: 0,
+            materialCode: '',
+            materialName: ''
+        }
+
+        // [dialog][setting] 编辑规格
+        dialogUpdateItemSetting={
+            props: {
+                labelWidth: 100,
+                title: '新增规格'
+            },
+            data: [
+                {
+                    type: 'input',
+                    prop: 'material',
+                    label: '物料',
+                    placeholder: '请输入物料',
+                    disabled: true,
+                    rules: [
+                        { required: true, message: '物料不能为空', trigger: 'blur' }
+                    ]
+                },
+                {
+                    type: 'input',
+                    prop: 'brand',
+                    label: '品牌',
+                    placeholder: '请先选择物料',
+                    disabled: true,
+                    rules: [
+                        { required: true, message: '品牌不能为空', trigger: 'blur' }
+                    ]
+                },
+                {
+                    type: 'select',
+                    prop: 'largeClass',
+                    label: '大类',
+                    placeholder: '请选择',
+                    disabled: false,
+                    rules: [
+                        { required: true, message: '大类不能为空', trigger: 'blur' }
+                    ],
+                    // eslint-disable-next-line no-invalid-this
+                    // options: this.largeClassList
+                    defaultOptionsFn: () => {
+                        return new Promise((resolve) => {
+                            COMMON_API.DICTQUERY_API({
+                                dictType: 'COMMON_CATEGORY'
+                            }).then(({ data }) => {
+                                const optionList = data.data;
+                                optionList.forEach(item => {
+                                    // eslint-disable-next-line no-invalid-this
+                                    this.$set(item, 'optLabel', item.dictValue)
+                                    // eslint-disable-next-line no-invalid-this
+                                    this.$set(item, 'optValue', item.dictCode)
+                                })
+                                resolve(optionList)
+                            })
+                        })
+                    }
+                },
+                {
+                    type: 'input',
+                    prop: 'boxSpec',
+                    label: '箱规格',
+                    placeholder: '请选择',
+                    disabled: false,
+                    rules: [
+                        { required: true, message: '箱规格不能为空', trigger: 'blur' }
+                    ]
+                },
+                {
+                    type: 'select',
+                    prop: 'boxSpecUnit',
+                    label: '单位',
+                    disabled: false,
+                    placeholder: '请输入',
+                    rules: [
+                        { required: true, message: '箱规格单位不能为空', trigger: 'blur' }
+                    ],
+                    defaultOptionsFn: () => {
+                        return new Promise((resolve) => {
+                            COMMON_API.DICTQUERY_API({
+                                dictType: 'COMMON_SPEC_UNIT'
+                            }).then(({ data }) => {
+                                const optionList = data.data
+                                optionList.forEach(item => {
+                                    // eslint-disable-next-line no-invalid-this
+                                    this.$set(item, 'optLabel', item.dictValue)
+                                    // eslint-disable-next-line no-invalid-this
+                                    this.$set(item, 'optValue', item.dictCode)
+                                })
+                                resolve(optionList)
+                            })
+                        })
+                    }
+                },
+                {
+                    type: 'input',
+                    prop: 'bottleSpec',
+                    label: '瓶规格',
+                    placeholder: '',
+                    disabled: false,
+                    rules: []
+                },
+                {
+                    type: 'select',
+                    prop: 'bottleSpecUnit',
+                    label: '单位',
+                    placeholder: '请选择',
+                    disabled: false,
+                    rules: [],
+                    defaultOptionsFn: () => {
+                        return new Promise((resolve) => {
+                            COMMON_API.DICTQUERY_API({
+                                dictType: 'COMMON_SPEC_UNIT'
+                            }).then(({ data }) => {
+                                const optionList = data.data;
+                                optionList.forEach(item => {
+                                    // optionList.push({ 'optValue': item.dictCode, 'optLabel': item.dictValue })
+                                    // eslint-disable-next-line no-invalid-this
+                                    this.$set(item, 'optLabel', item.dictValue)
+                                    // eslint-disable-next-line no-invalid-this
+                                    this.$set(item, 'optValue', item.dictCode)
+                                })
+                                resolve(optionList)
+                            })
+                        })
+                    }
+                },
+                {
+                    type: 'input',
+                    prop: 'changer',
+                    label: '维护人',
+                    placeholder: '',
+                    disabled: true,
+                    rules: []
+                }
+            ]
+        }
+
+        dataOfUpdateItem: CurrentDataTable={}
 
         currPage= 1
         pageSize= 10
@@ -137,63 +559,51 @@
             return this.$store.state.common.mainClientHeight;
         }
 
-        mounted() {
-            this.getItemsList();
-            this.getLargeClass();
-            this.getUnit();
+        // async created() {
+        //     this.getLargeClass(); // 大类下拉选单
+        //     this.getUnit(); // 单位下拉选单
+        //     this.getItemsList(); // 获取数据
+        // }
+
+        async mounted() {
+            await this.getLargeClass(); // 大类下拉选单
+            await this.getUnit(); // 单位下拉选单
+            await this.getItemsList(); // 获取数据
+            await this.$refs.targetInfoList.init();
         }
 
-        closeDialog() {
-            this.isAdvanceSearchDailogShow = false;
-            this.controllableForm.brand = '';
-            this.controllableForm.boxSpec = '';
-            this.controllableForm.productSpec = '';
-        }
-
-        getItemsList(haveParas = false, type = 'normal') {
-            if (haveParas) {
-                this.currPage = 1;
+        // [BTN] 新增
+        btnAddItem() {
+            this.dataOfAddItem = {
+                id: '',
+                material: '',
+                brand: '',
+                largeClass: '',
+                boxSpec: '',
+                boxSpecUnit: '',
+                bottleSpec: '',
+                bottleSpecUnit: '',
+                changer: getUserNameNumber(),
+                version: 0,
+                materialCode: '',
+                materialName: ''
             }
-            if (type === 'normal') {
-                this.controllableForm.brand = '';
-                this.controllableForm.boxSpec = '';
-                this.controllableForm.productSpec = '';
-            }
-
-
-            COMMON_API.SPECS_QUERY_API({
-                factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
-                boxSpec: this.controllableForm.boxSpec.trim(),
-                bottleSpec: this.controllableForm.productSpec.trim(),
-                brand: this.controllableForm.brand.trim(),
-                material: this.controllableForm.materialCode.trim(),
-                current: JSON.stringify(this.currPage),
-                size: JSON.stringify(this.pageSize)
-            }).then(({ data }) => {
-                if (haveParas && data.data.records.length === 0) {
-                        this.$infoToast('暂无任何内容');
-                }
-                this.targetInfoList = data.data.records;
-                this.currPage = data.data.current;
-                this.pageSize = data.data.size;
-                this.totalCount = data.data.total;
-                this.isAddOrUpdateDailogShow = false;
-                this.isAdvanceSearchDailogShow = false;
-            });
-        }
-
-        // 新增  修改
-        addOrupdateItem(data) {
-            console.log('data')
-            console.log(data)
-            this.isAddOrUpdateDailogShow = true;
             this.$nextTick(() => {
-                this.$refs.SpecificationAddOrUpdate.init(data);
+                this.$refs.addSpecification.init();
             });
         }
 
-        // 删除
-        removeItems() {
+        // [BTN] 高级查询
+        btnAdvanceSearch() {
+            this.$nextTick(() => {
+                this.$refs.advanceSearch.init();
+            });
+        }
+
+        // [BTN] 删除
+        btnRemoveItems() {
+            this.multipleSelection = [];
+            this.multipleSelection = this.$refs.targetInfoList.getMultipleSelection()
             if (this.multipleSelection.length === 0) {
                 this.$warningToast('请选择要删除的规格');
             } else {
@@ -209,7 +619,8 @@
                         }).then(() => {
                             this.multipleSelection = [];
                             this.$nextTick(() => {
-                                this.getItemsList();
+                                this.$successToast('删除成功')
+                                this.getItemsList(true, 'normal');
                             });
                         });
                     })
@@ -217,11 +628,34 @@
             }
         }
 
-        // 表格选中
-        handleSelectionChange(val) {
-            this.multipleSelection = [];
-            val.forEach((item) => {
-                this.multipleSelection.push(item.id);
+        // 查询
+        getItemsList(haveParas = false, type = 'normal') {
+            if (haveParas) {
+                this.currPage = 1;
+            }
+            if (type === 'normal') {
+                this.nowSearchModle = 'normal'
+                this.dataOfSearch.brand = '';
+                this.dataOfSearch.boxSpec = '';
+                this.dataOfSearch.productSpec = '';
+            }
+            COMMON_API.SPECS_QUERY_API({
+                factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
+                boxSpec: this.dataOfSearch.boxSpec.trim(),
+                bottleSpec: this.dataOfSearch.productSpec.trim(),
+                brand: this.dataOfSearch.brand.trim(),
+                material: this.dataOfSearch.materialCode.trim(),
+                current: JSON.stringify(this.currPage),
+                size: JSON.stringify(this.pageSize)
+            }).then(({ data }) => {
+                if (haveParas && data.data.records.length === 0) {
+                        this.$infoToast('暂无任何内容');
+                }
+                this.targetInfoList = data.data.records;
+                this.currPage = data.data.current;
+                this.pageSize = data.data.size;
+                this.totalCount = data.data.total;
+                this.$refs.targetInfoList.init();
             });
         }
 
@@ -230,8 +664,11 @@
             COMMON_API.DICTQUERY_API({
                 dictType: 'COMMON_CATEGORY'
                 }).then(({ data }) => {
+                    this.largeClassObject = {}
                     this.largeClassList = data.data;
                     this.largeClassList.forEach(item => {
+                        this.$set(item, 'optLabel', item.dictValue)
+                        this.$set(item, 'optValue', item.dictCode)
                         this.largeClassObject[item.dictCode] = item.dictValue
                     })
                 });
@@ -242,28 +679,85 @@
             COMMON_API.DICTQUERY_API({
                 dictType: 'COMMON_SPEC_UNIT'
                 }).then(({ data }) => {
+                    this.unitClassObject = {}
                     this.unitClassList = data.data;
                     this.unitClassList.forEach(item => {
+                        this.$set(item, 'optLabel', item.dictValue)
+                        this.$set(item, 'optValue', item.dictCode)
                         this.unitClassObject[item.dictCode] = item.dictValue
                     })
                 });
         }
 
-        // 序号
-        indexMethod(index) {
-            return index + 1 + (Number(this.currPage) - 1) * Number(this.pageSize);
+        getItemsListFromDialog() {
+            this.nowSearchModle = 'advance'
+            this.getItemsList(true, 'advance')
         }
 
         // 改变每页条数
         handleSizeChange(val) {
             this.pageSize = val;
-            this.getItemsList();
+            this.getItemsList(false, this.nowSearchModle);
         }
 
         // 跳转页数
         handleCurrentChange(val) {
             this.currPage = val;
-            this.getItemsList();
+            this.getItemsList(false, this.nowSearchModle);
+        }
+
+        addItem(dataForm) {
+            COMMON_API.SPECS_INSERT_API({
+                factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
+                brand: dataForm.brand,
+                largeClass: dataForm.largeClass,
+                boxSpec: dataForm.boxSpec,
+                boxSpecUnit: dataForm.boxSpecUnit,
+                bottleSpec: dataForm.bottleSpec,
+                bottleSpecUnit: dataForm.bottleSpecUnit,
+                materialName: dataForm.material.split(' ')[1],
+                materialCode: dataForm.material.split(' ')[0]
+            }).then(() => {
+                this.$successToast('新增成功')
+                this.getItemsList(true, 'normal');
+            });
+        }
+
+        updateItem(dataForm) {
+            console.log(dataForm)
+            COMMON_API.SPECS_UPDATE_API({
+                factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
+                id: dataForm.id,
+                brand: dataForm.brand,
+                largeClass: dataForm.largeClass,
+                boxSpec: dataForm.boxSpec,
+                boxSpecUnit: dataForm.boxSpecUnit,
+                bottleSpec: dataForm.bottleSpec,
+                bottleSpecUnit: dataForm.bottleSpecUnit,
+                materialName: dataForm.materialName,
+                materialCode: dataForm.materialCode,
+                version: dataForm.version
+            }).then(() => {
+                this.$successToast('编辑成功')
+                this.getItemsList(true, 'normal');
+            });
+
+        }
+
+        // [BTN] 更新
+        btnUpdateItem(dataForm) {
+            console.log(dataForm)
+            this.dataOfUpdateItem = JSON.parse(JSON.stringify(dataForm))
+            COMMON_API.ALLMATERIAL_API({
+                materialTypes: ['ZFER'],
+                material: dataForm.materialCode
+            }).then(({ data }) => {
+                const tempOptionList = data.data
+                this.$set(this.dataOfUpdateItem, 'material', this.dataOfUpdateItem.materialCode + ' ' + this.dataOfUpdateItem.materialName + ' ' + tempOptionList[0].materialTypeName)
+                this.$nextTick(() => {
+                    this.$refs.updateSpecification.init();
+                });
+            })
         }
     }
 
@@ -280,16 +774,18 @@ interface CurrentDataTable {
     materialCode?: string;
     materialName?: string;
     version?: number;
+    materialTypeName?: number;
 }
 
 interface Options {
     dictCode: string;
-    dictId?: string;
+    // dictId?: string;
     dictValue: string;
-    factoryName?: string;
-    id?: string;
+    optValue?: string;
+    optLabel?: string;
+    // factoryName?: string;
+    // id?: string;
 }
 
 </script>
-
 <style scoped></style>

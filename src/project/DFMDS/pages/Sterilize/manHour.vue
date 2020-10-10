@@ -1,96 +1,46 @@
-<template>
-    <div class="header_main">
-        <el-card class="searchCard">
-            <el-row type="flex">
-                <el-col :span="22">
-                    <el-form :inline="true" :model="formHeader" size="small" label-width="80px" class="topform multi_row">
-                        <el-form-item>
-                            <template slot="label">
-                                <span class="notNull">*</span>生产车间：
-                            </template>
-                            <el-select v-model="formHeader.workShop" placeholder="请选择" style="width: 180px;">
-                                <el-option v-for="(item, index) in workshopList" :key="index" :label="item.deptName" :value="item.id" />
-                            </el-select>
-                        </el-form-item>
-                        <el-form-item>
-                            <template slot="label">
-                                <span class="notNull">*</span>生产日期：
-                            </template>
-                            <el-date-picker v-model="formHeader.productDate" type="date" value-format="yyyy-MM-dd" format="yyyy-MM-dd" placeholder="选择" style="width: 180px;" />
-                        </el-form-item>
-                        <el-form-item>
-                            <template slot="label">
-                                <span class="notNull">*</span>生产订单：
-                            </template>
-                            <el-select v-model="formHeader.orderNo" placeholder="请选择" style="width: 180px;">
-                                <el-option v-for="(item, index) in orderNoList" :key="index" :label="item.orderNo" :value="item.orderNo" />
-                            </el-select>
-                        </el-form-item>
-                        <el-form-item label="生产物料：">
-                            <el-tooltip class="item" effect="dark" :content="formHeader.materialCode + ' ' + formHeader.materialName" placement="top-start">
-                                <p class="input_border_bg" style="width: 180px;">
-                                    {{ formHeader.materialCode }} {{ formHeader.materialName }}
-                                </p>
-                            </el-tooltip>
-                        </el-form-item>
-                        <el-form-item label="提交人员：">
-                            <p class="input_border_bg" style="width: 180px;">
-                                {{ formHeader.changer }}
-                            </p>
-                        </el-form-item>
-                        <el-form-item label="提交时间：">
-                            <p class="input_border_bg" style="width: 180px;">
-                                {{ formHeader.changed }}
-                            </p>
-                        </el-form-item>
-                    </el-form>
-                </el-col>
-                <el-col :span="2" style="font-size: 14px; line-height: 32px;">
-                    <div style=" float: right; overflow: hidden; text-align: left;">
-                        <span
-                            class="point"
-                            :style="{
-                                background: formHeader.checkStatus === 'R' ? 'red' : formHeader.checkStatus === 'S' ? '#1890f' : formHeader.checkStatus === 'M' ? '#1890ff' : formHeader.checkStatus === '已同步' ? '#f5f7fa' : 'rgb(103, 194, 58)',
-                            }"
-                        />状态：
-                        <span
-                            :style="{
-                                color: formHeader.checkStatus === 'R' ? 'red' : '',
-                            }"
-                        >{{ formHeader.checkStatusName }}</span>
-                    </div>
-                    <div style="clear: both;" />
-                    <div style="width: 100%; margin-top: 10px; text-align: right;">
-                        <template style="float: right; margin-left: 10px;">
-                            <el-button v-if="isAuth('steTimeQuery')" type="primary" size="small" @click="getList()">
-                                查询
-                            </el-button>
-                        </template>
-                    </div>
-                </el-col>
-            </el-row>
-        </el-card>
-        <div v-show="searchCard">
-            <ready-time ref="readyTime" :is-redact="isRedact" style="margin-top: 10px;" />
-            <work-hour ref="workHour" :is-redact="isRedact" />
-            <audit-log :table-data="manHourAudit" :verify-man="'verifyMan'" :verify-date="'verifyDate'" :status="true" />
-            <redact-box>
-                <template slot="button">
-                    <el-button v-if="searchCard && formHeader.checkStatus !== 'M' && isAuth('steTimeEdit')" type="primary" class="button" size="small" @click="changeIsRedact">
-                        {{ isRedact ? '取消' : '编辑' }}
-                    </el-button>
-                    <template v-if="isRedact && searchCard" style="float: right; margin-left: 10px;">
-                        <el-button v-if="isAuth('steTimeSave')" type="primary" size="small" @click="savedDatas()">
-                            保存
-                        </el-button>
-                        <el-button v-if="isAuth('steTimeSubmit')" type="primary" size="small" @click="submitDatas()">
-                            提交
-                        </el-button>
-                    </template>
-                </template>
-            </redact-box>
-        </div>
-    </div>
+<template lang="pug">
+    div.header_main
+        el-card.searchCard
+            el-row.flex
+                el-col(:span="22")
+                    el-form(:inline="true" :model="formHeader" size="small" label-width="80px" class="topform multi_row")
+                        el-form-item
+                            template(slot="label")
+                                span(class="notNull") *
+                                span 生产车间：
+                            el-select(v-model="formHeader.workShop" placeholder="请选择" style="width: 180px;")
+                                el-option(v-for="(item, index) in workshopList" :key="index" :label="item.deptName" :value="item.id")
+                        el-form-item
+                            template(slot="label")
+                                span(class="notNull") *
+                                span 生产日期：
+                            el-date-picker(v-model="formHeader.productDate" type="date" value-format="yyyy-MM-dd" format="yyyy-MM-dd" placeholder="选择" style="width: 180px;")
+                        el-form-item
+                            template(slot="label")
+                                span(class="notNull") *
+                                span 生产订单：
+                            el-select(v-model="formHeader.orderNo" placeholder="请选择" style="width: 180px;")
+                                el-option(v-for="(item, index) in orderNoList" :key="index" :label="item.orderNo" :value="item.orderNo")
+                        el-form-item(label="生产物料：")
+                            el-tooltip(class="item" effect="dark" :content="formHeader.materialName + ' ' + formHeader.materialCode " placement="top-start")
+                                p(class="input_border_bg" style="width: 220px;")  {{ formHeader.materialName }} {{ formHeader.materialCode }}
+                        el-form-item(label="提交人员：")
+                            p(class="input_border_bg" style="width: 180px;") {{ formHeader.changer }}
+                        el-form-item(label="提交时间：")
+                            p(class="input_border_bg" style="width: 180px;") {{ formHeader.changed }}
+                el-col(:span="2" style="font-size: 14px; line-height: 32px;")
+                    div(style="display: flex;flex-direction: row;justify-content: flex-end;align-items: center;")
+                        span.dot(:style="{background: formHeader.checkStatus === 'R' ? 'red' : formHeader.checkStatus === 'S' ? '#1890f' : formHeader.checkStatus === 'M' ? '#1890ff' : formHeader.checkStatus === '已同步' ? '#f5f7fa' : 'rgb(103, 194, 58)'}")
+                        span {{'状态：'}}
+                        span(:style="{color: formHeader.checkStatus === 'R' ? 'red' : ''}") {{ formHeader.checkStatusName }}
+                    div(style="width: 100%; margin-top: 10px; text-align: right;")
+                        template(style="float: right; margin-left: 10px;")
+                            el-button(v-if="isAuth('steTimeQuery')" type="primary" size="small" @click="getList()") 查询
+        div(v-show="searchCard")
+            ready-time(ref="readyTime" :is-redact="isRedact" style="margin-top: 10px;")
+            work-hour(ref="workHour" :is-redact="isRedact")
+            audit-log(:table-data="manHourAudit" :verify-man="'verifyMan'" :verify-date="'verifyDate'" :status="true")
+        redact-box(:disabled="redactBoxDisable" :is-redact.sync='isRedact' redact-auth="steTimeEdit" save-auth="steTimeSave" submit-auth="steTimeSubmit" :urgent-submit="false" :submit-rules="submitRules" :saved-rules="savedRules" :saved-datas="savedDatas" :submit-datas="submitDatas")
 </template>
 
 <script lang="ts">
@@ -101,13 +51,15 @@ import ReadyTime from 'components/ReadyTimes.vue';
 import OfficialWorker from 'components/OfficialWorker.vue';
 import LoanedPersonnel from 'components/LoanedPersonnel.vue';
 import TemporaryWorker from 'components/TemporaryWorker.vue';
+import RedactBox from 'components/RedactBox.vue' // 下方状态 bar
 @Component({
     name: 'manHour',
     components: {
         ReadyTime,
         OfficialWorker,
         LoanedPersonnel,
-        TemporaryWorker
+        TemporaryWorker,
+        RedactBox
     }
 })
 export default class ManHour extends Vue {
@@ -128,6 +80,9 @@ export default class ManHour extends Vue {
         changer: '',
         changed: ''
     }
+
+    redactBoxDisable=true
+
 
     isRedact = false;
     workshopList = [];
@@ -232,6 +187,7 @@ export default class ManHour extends Vue {
             verifyType: 'TIMESHEET'
         }).then(({ data }) => {
             this.manHourAudit = data.data;
+            this.redactBoxDisable = false
         })
     }
 
@@ -245,11 +201,10 @@ export default class ManHour extends Vue {
             steUserInsertDto: userRequest.userInsertDto,
             steUserUpdateDto: userRequest.userUpdateDto,
             ids: userRequest.ids
-        }).then(({ data }) => {
-            if (data.code === 200) {
-                this.getList();
-                this.isRedact = false;
-            }
+        }).then(() => {
+            this.$successToast('保存成功');
+            this.getList();
+            this.isRedact = false;
         })
     }
 
@@ -274,13 +229,22 @@ export default class ManHour extends Vue {
                 steUserInsertDto: userRequest.userInsertDto,
                 steUserUpdateDto: userRequest.userUpdateDto,
                 ids: userRequest.ids
-            }).then(({ data }) => {
-                if (data.code === 200) {
-                    this.getList();
-                    this.isRedact = false;
-                }
+            }).then(() => {
+                this.$successToast('提交成功');
+                this.getList();
+                this.isRedact = false;
             })
         }
+    }
+
+    // {redact-box} 提交需跑的验证 function
+    submitRules(): Function[] {
+        return [this.$refs.readyTime.ruleSubmit, this.$refs.workHour.ruleSubmit]
+    }
+
+    // {redact-box} 保存需跑的验证 function
+    savedRules(): Function[] {
+        return []
     }
 }
 interface OrderList{
@@ -290,3 +254,15 @@ interface OrderList{
     materialName: string;
 }
 </script>
+
+<style lang="scss"  scoped>
+
+.dot {
+    display: inline-block;
+    width: 5px;
+    height: 5px;
+    margin-right: 8px;
+    line-height: 16px;
+    border-radius: 50%;
+}
+</style>

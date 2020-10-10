@@ -186,7 +186,7 @@
                         let no = 0;
                         let sav = 0;
                         this.MaterielDate.forEach(item => {
-                            item.material = item.materialCode + ' ' + item.materialName;
+                            item.material = item.materialName + ' ' + item.materialCode;
                             if (item.status === 'noPass') {
                                 no = no + 1;
                             } else if (item.status === 'submit') {
@@ -233,8 +233,8 @@
                 this.MaterielDate.forEach(item => {
                     item.orderHouseId = this.formHeader.id;
                     if (item.material) {
-                        item.materialCode = item.material.substring(0, item.material.indexOf(' '));
-                        item.materialName = item.material.substring(item.material.indexOf(' ') + 1);
+                        item.materialCode = item.material.substring(item.material.indexOf(' ') + 1);
+                        item.materialName = item.material.substring(0, item.material.indexOf(' '));
                     }
                     if (item.status) {
                         if (item.status === 'saved') {

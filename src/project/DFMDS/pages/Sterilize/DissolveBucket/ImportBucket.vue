@@ -29,12 +29,12 @@
                                 </template>
                                 <template slot-scope="scope">
                                     <el-form-item prop="prodcutMaterial">
-                                        <el-select v-model="scope.row.prodcutMaterial" size="small" clearable @change="scope.row.productMaterialName=productMaterialList.filter(item=>item.dictCode===scope.row.prodcutMaterial)[0].dictValue">
+                                        <el-select v-model="scope.row.prodcutMaterial" size="small" @change="changeProdcutMaterialOption(scope.row)">
                                             <el-option
-                                                v-for="item in productMaterialList"
-                                                :key="'b'+item.dictCode"
-                                                :label="item.dictValue"
-                                                :value="item.dictCode"
+                                                v-for="item in optionsTree"
+                                                :key="item.productMaterialList[0].dictCode"
+                                                :label="item.productMaterialList[0].dictValue"
+                                                :value="item.productMaterialList[0].dictCode"
                                             />
                                         </el-select>
                                     </el-form-item>
@@ -50,16 +50,16 @@
                                     </el-form-item>
                                 </template>
                             </el-table-column>
-                            <el-table-column min-width="160" :show-overflow-tooltip="true">
+                            <el-table-column min-width="200" :show-overflow-tooltip="true">
                                 <template slot="header">
                                     <span class="notNull">*</span>投料物料
                                 </template>
                                 <template slot-scope="scope">
                                     <el-form-item prop="feedMaterial">
-                                        <el-select v-model="scope.row.feedMaterial" size="small" clearable @change="scope.row.feedMaterialName=feedMateriallList.filter(item=>item.dictCode===scope.row.feedMaterial)[0].dictValue">
+                                        <el-select v-model="scope.row.feedMaterial" size="small" @change="changeFeedMaterialOption(scope.row)">
                                             <el-option
-                                                v-for="item in feedMateriallList"
-                                                :key="item.id"
+                                                v-for="item in findIndex(scope.row.prodcutMaterial)"
+                                                :key="item.dictCode"
                                                 :label="item.dictValue"
                                                 :value="item.dictCode"
                                             />
@@ -135,8 +135,8 @@
                                             type="datetime"
                                             placeholder="选择日期时间"
                                             style="width: 220px;"
-                                            value-format="yyyy-MM-dd HH:mm:ss"
-                                            format="yyyy-MM-dd HH:mm:ss"
+                                            value-format="yyyy-MM-dd HH:mm"
+                                            format="yyyy-MM-dd HH:mm"
                                             size="small"
                                         />
                                     </el-form-item>
@@ -210,13 +210,14 @@
         currentCycle=''
 
         productMaterialList: ProductMaterial[]=[] // 生产物料清单
-        feedMateriallList: object[]=[] // 投料物料清单
+        // feedMateriallList: object[]=[] // 投料物料清单
 
         importBucketStatus=false // 是否满罐
 
         currentRowIndex=0
         dissolveBucketCode = ''
 
+        optionsTree: OptionsTree[]=[]
 
         importBucketInfo: CurrentDataTable[]=[] // 主 data
         orgFormDataGroup: CurrentDataTable[] = [] // 主 data 复制
@@ -248,16 +249,86 @@
             return []
         }
 
+
+        changeProdcutMaterialOption(val) {
+            console.log('val')
+            console.log(val)
+            if (val.prodcutMaterial !== '') {
+                val.productMaterialName = this.optionsTree.filter(item => item.productMaterialList[0].dictCode === val.prodcutMaterial)[0].productMaterialList[0].dictValue
+            }
+            val.feedMaterial = ''
+        }
+
+        changeFeedMaterialOption(val) {
+            if (val.feedMaterial !== '') {
+                val.feedMaterialName = this.findIndex(val.prodcutMaterial).filter(item => item.dictCode === val.feedMaterial)[0].dictValue
+            }
+        }
+
+        findIndex(val) {
+            if (val === '') {
+                return []
+            }
+            return this.optionsTree.filter(item => item.productMaterialList[0].dictCode === val)[0].feedMateriallList
+        }
+
         // 入罐
-        init(item, workshop) {
+        async init(item, workshop) {
+            console.log('item')
+            console.log(item)
+            console.log('workshop')
+            console.log(workshop)
             this.isTableDialogVisible = true
             this.currentPotId = item.potId
             this.currentPotNo = item.potNo
             this.currentPotStatus = item.potStatus
             this.currentWorkShop = workshop
             this.currentCycle = item.cycle
+
+            // API 容器管理-分页查询-查询生产物料
+            await COMMON_API.HOLDER_QUERY_API({
+                factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
+                deptId: this.currentWorkShop,
+                current: 1,
+                size: 9999,
+                holderNo: this.currentPotNo,
+                holderType: '019' // 溶解罐参数编码
+            }).then(({ data }) => {
+                console.log('查询生产物料')
+                console.log(data)
+                // this.productMaterialList = []
+                this.optionsTree = []
+                if (data.data.records[0].material) {
+                    data.data.records[0].material.forEach((element, index) => {
+                        this.optionsTree.push({
+                                                productMaterialList: [{ dictCode: element.materialCode, dictValue: element.materialName }],
+                                                feedMateriallList: []
+                                            })
+                        //this.productMaterialList.push({ dictCode: element.materialCode, dictValue: element.materialName, id: element.id })
+
+                            // API 辅料前处理-查询不带分页 (查询生产物料)
+                            STE_API.STE_PREACCESSORIES_LIST_API({
+                                factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
+                                productMaterial: element.materialCode,
+                                preStage: 'DISSOLUTION'
+                            }).then(({ data: target }) => {
+                                console.log('辅料前处理')
+                                console.log(target)
+                                // this.feedMateriallList = []
+                                if (target.data) {
+                                    target.data.forEach(items => {
+                                        this.optionsTree[index].feedMateriallList.push({ dictCode: items.useMaterial, dictValue: items.useMaterial + ' ' + items.useMaterialName })
+                                    })
+                                }
+                            });
+
+                    })
+                }
+            });
+
+
             // API 溶解罐管理-查询入罐信息
-            STE_API.STE_DISSOLUTIONBUCKET_ENTER_QUERY_API({
+            await STE_API.STE_DISSOLUTIONBUCKET_ENTER_QUERY_API({
                 cycle: item.cycle,
                 id: item.id,
                 factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
@@ -271,44 +342,48 @@
                 this.importBucketInfo = []
                 if (data.data) {
                     this.importBucketInfo = data.data
+                    this.importBucketInfo.forEach(items => {
+                        this.$set(items, 'cycle', this.currentCycle)
+                    })
+
                     this.orgFormDataGroup = JSON.parse(JSON.stringify(this.importBucketInfo))
                 }
             });
 
-            // API 容器管理-分页查询-查询生产物料
-            COMMON_API.HOLDER_QUERY_API({
-                factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
-                deptId: this.currentWorkShop,
-                current: 1,
-                size: 9999,
-                holderNo: this.currentPotNo,
-                holderType: '019' // 溶解罐参数编码
-            }).then(({ data }) => {
-                console.log('查询生产物料')
-                console.log(data)
-                this.productMaterialList = []
-                if (data.data.records[0].material) {
-                    data.data.records[0].material.forEach(element => {
-                        this.productMaterialList.push({ dictCode: element.materialCode, dictValue: element.materialName, id: element.id })
-                    })
-                }
-            });
-
-            // API 辅料前处理-查询不带分页 (查询生产物料)
-            STE_API.STE_PREACCESSORIES_LIST_API({
-                factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
-                preStage: 'DISSOLUTION'
-            }).then(({ data }) => {
-                console.log('辅料前处理')
-                console.log(data)
-                this.feedMateriallList = []
-                if (data.data) {
-                    data.data.forEach(element => {
-                        this.feedMateriallList.push({ dictCode: element.useMaterial, dictValue: element.useMaterial + ' ' + element.useMaterialName })
-                    })
-                }
-            });
+            // // API 辅料前处理-查询不带分页 (查询生产物料)
+            // STE_API.STE_PREACCESSORIES_LIST_API({
+            //     factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
+            //     preStage: 'DISSOLUTION'
+            // }).then(({ data }) => {
+            //     console.log('辅料前处理')
+            //     console.log(data)
+            //     this.feedMateriallList = []
+            //     if (data.data) {
+            //         data.data.forEach(element => {
+            //             this.feedMateriallList.push({ dictCode: element.useMaterial, dictValue: element.useMaterial + ' ' + element.useMaterialName })
+            //         })
+            //     }
+            // });
         }
+
+        // changeOption(val) {
+        //     // val.productMaterialName=this.productMaterialList.filter(item=>item.dictCode===scope.row.prodcutMaterial)[0].dictValue
+        //     // API 辅料前处理-查询不带分页 (查询生产物料)
+        //     STE_API.STE_PREACCESSORIES_LIST_API({
+        //         factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
+        //         productMaterial: val,
+        //         preStage: 'DISSOLUTION'
+        //     }).then(({ data }) => {
+        //         console.log('辅料前处理')
+        //         console.log(data)
+        //         this.feedMateriallList = []
+        //         if (data.data) {
+        //             data.data.forEach(element => {
+        //                 this.feedMateriallList.push({ dictCode: element.useMaterial, dictValue: element.useMaterial + ' ' + element.useMaterialName })
+        //             })
+        //         }
+        //     });
+        // }
 
         removeDataRow(row) {
             this.$confirm('是否删除?', '提示', {
@@ -513,6 +588,17 @@ interface HolderStatus{
     dictValue?: string;
 }
 
+interface ProductMaterial{
+    dictCode?: string;
+    dictValue?: string;
+    id?: string;
+}
+
+interface OptionsTree{
+    productMaterialList: ProductMaterial[];
+    feedMateriallList: HolderStatus[];
+}
+
 interface CurrentDataTable{
     cycle?: string;
     potId?: string;
@@ -554,11 +640,7 @@ interface FinalDataTable{
     delFlag?: number;
 }
 
-interface ProductMaterial{
-    dictCode?: string;
-    dictValue?: string;
-    id?: string;
-}
+
 </script>
 <style scoped>
 .el-pagination >>> .el-pager li.active {

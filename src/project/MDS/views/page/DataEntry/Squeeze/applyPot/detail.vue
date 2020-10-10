@@ -19,7 +19,7 @@
                         <el-form-item label="酱醪名称：">
                             <el-select v-model="formHeader.materialCode" filterable class="selectwpx" style="width: 140px;" :disabled="!isEdit" @change="changeOptions('material')">
                                 <el-option label="请选择" value="" />
-                                <el-option v-for="sole in materialList" :key="sole.materialCode" :label="sole.materialCode + ' ' + sole.materialName" :value="sole.materialCode" />
+                                <el-option v-for="sole in materialList" :key="sole.materialCode" :label="sole.materialName + ' ' + sole.materialCode" :value="sole.materialCode" />
                             </el-select>
                         </el-form-item>
                         <el-form-item label="半成品类别：" label-width="100px">

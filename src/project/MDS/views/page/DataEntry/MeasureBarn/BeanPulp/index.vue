@@ -127,7 +127,7 @@
                     <el-form-item label="物料：">
                         <template>
                             <p class="disabled-text" style="width: 220px;">
-                                {{ inParnForm.materialCode + ' ' + inParnForm.materialName }}
+                                {{ inParnForm.materialName + ' ' + inParnForm.materialCode }}
                             </p>
                         </template>
                     </el-form-item>

@@ -5,7 +5,7 @@
             redact-auth="steAccEdit"
             save-auth="steAccEdit"
             submit-auth="steAccSubmit"
-            :order-status="formHeader.statusName"
+            :order-status="formHeader.steTagPot?formHeader.steTagPot.accessoriesStatusName:'未录入'"
             :header-base="headerBase"
             :form-header="formHeader"
             :tabs="tabs"
@@ -43,6 +43,7 @@
             acceadd: HTMLFormElement;
             excRecord: HTMLFormElement;
             textRecord: HTMLFormElement;
+            dataEntry: HTMLFormElement;
         };
 
         formHeader: OrderData = {};
@@ -57,7 +58,7 @@
                 type: 'p',
                 label: '生产锅号',
                 icon: 'factory-qiyaguanjianhua',
-                value: 'potNo'
+                value: 'potName'
             },
             {
                 type: 'tooltip',
@@ -66,10 +67,10 @@
                 value: ['materialCode', 'materialName']
             },
             {
-                type: 'p',
+                type: 'tooltip',
                 label: '生产锅序',
                 icon: 'factory-bianhao',
-                value: 'potOrder'
+                value: ['potOrderString', 'potOrderNo']
             },
             {
                 type: 'p',
@@ -124,8 +125,10 @@
                 potOrderNo: this.$store.state.sterilize.AcceAdd.potOrderMap.potOrderNo
             }).then(({ data }) => {
                 this.formHeader = data.data;
+                this.formHeader.potOrderString = '第' + data.data.potOrder + '锅';
                 this.formHeader.textStage = 'acceadd';
                 this.tabs[0].status = (data.data.steTagPot ? data.data.steTagPot.accessoriesStatus : '未录入');
+                this.$refs.dataEntry.updateTabs();
                 this.$refs.acceadd.init(this.formHeader);
                 this.$refs.excRecord.init(this.formHeader, 'acceadd');
                 this.$refs.textRecord.init(this.formHeader, 'sterilize');
@@ -177,6 +180,7 @@
     interface OrderData {
         textStage?: string;
         factoryName?: string;
+        potOrderString?: string;
         potNo?: string;
         potOrder?: string;
         steTagPot?: StatusObj;

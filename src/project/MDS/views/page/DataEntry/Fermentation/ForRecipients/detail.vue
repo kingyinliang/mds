@@ -155,7 +155,7 @@
                         </el-table-column>
                         <el-table-column label="物料" width="180" :show-overflow-tooltip="true">
                             <template slot-scope="scope">
-                                {{ scope.row.materialCode }}{{ scope.row.materialName }}
+                                {{ scope.row.materialName }} {{ scope.row.materialCode }}
                             </template>
                         </el-table-column>
                         <el-table-column label="酱醪类别" prop="halfName" show-overflow-tooltip />

@@ -6,6 +6,7 @@ import pkgApi from './pkg';
 import steApi from './ste';
 import messageApi from './message';
 import rdmApi from './rdm';
+import kojiApi from './koji';
 
 export const COMMON_API = commonApi;
 export const ORDER_API = orderApi;
@@ -15,3 +16,4 @@ export const AUDIT_API = auditApi;
 export const PKG_API = pkgApi;
 export const STE_API = steApi;
 export const RDM_API = rdmApi;
+export const KOJI_API = kojiApi;

@@ -69,7 +69,7 @@
                     <el-table-column label="车间" :show-overflow-tooltip="true" prop="workShop" min-width="70" />
                     <el-table-column label="物料" :show-overflow-tooltip="true" min-width="220">
                         <template slot-scope="scope">
-                            {{ scope.row.materialCode }}{{ scope.row.materialName }}
+                            {{ scope.row.materialName }} {{ scope.row.materialCode }}
                         </template>
                     </el-table-column>
                     <el-table-column label="类别" :show-overflow-tooltip="true" prop="type" min-width="70" />
@@ -121,7 +121,7 @@
                     <el-table-column label="车间" :show-overflow-tooltip="true" prop="workShop" min-width="70" />
                     <el-table-column label="物料" :show-overflow-tooltip="true" min-width="220">
                         <template slot-scope="scope">
-                            {{ scope.row.materialCode }}{{ scope.row.materialName }}
+                            {{ scope.row.materialName }} {{ scope.row.materialCode }}
                         </template>
                     </el-table-column>
                     <el-table-column label="类别" :show-overflow-tooltip="true" prop="type" min-width="70" />

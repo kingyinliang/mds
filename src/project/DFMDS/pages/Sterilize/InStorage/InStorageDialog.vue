@@ -3,7 +3,7 @@
  * @Anthor: Telliex
  * @Date: 2020-08-03 18:13:58
  * @LastEditors: Telliex
- * @LastEditTime: 2020-08-24 18:25:06
+ * @LastEditTime: 2020-09-24 16:47:41
 -->
 <template lang="pug">
     el-dialog(:title="title" :width="width" :close-on-click-modal="false" :visible.sync="isShowCurrentDialog")
@@ -182,8 +182,8 @@
                 COMMON_API.ORDER_LIST_API({
                     factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
                     productLine: val,
-                    productDate: this.currentProductDate,
-                    workShop: this.currentWorkShop
+                    productDate: this.currentProductDate
+                    // workShop: this.currentWorkShop
                 }).then(({ data }) => {
                     console.log('获取所有订单讯息')
                     console.log(data)

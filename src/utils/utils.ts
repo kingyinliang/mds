@@ -380,12 +380,16 @@ export function dataEntryData(formHeader, data: DataEntryDataObj[], orgData: Dat
             }
         } else if (item.id) {
             const orgObj = orgData.filter(it => it.id === item.id)[0];
-            if (!_.isEqual(orgObj, item)) {
-                item.orderId = formHeader.id;
-                if (processingData) {
-                    processingData(item);
+            if (orgObj) {
+                if (!_.isEqual(orgObj, item)) {
+                    item.orderId = formHeader.id;
+                    if (processingData) {
+                        processingData(item);
+                    }
+                    updateArr.push(item);
                 }
-                updateArr.push(item);
+            } else {
+                insertArr.push(item);
             }
         } else {
             item.factory = JSON.parse(sessionStorage.getItem('factory') || '{}').id;
@@ -623,4 +627,24 @@ export function getIndexMethod(tableIndex, data): number {
         return total + (tableIndex < index ? 0 : currentValue.delFlag === 1 ? 1 : 0);
     }, 0);
     return tableIndex + 1 - num;
+}
+
+/**
+ * 年月日往后加天数
+ * @param {strig} date // '2020-01-01'
+ * @param {number} days // 2
+ * @return {string} // '2020-01-03'
+ */
+
+export function getNewDay(date, days) {
+    // const dateTemp = date.split('-');
+    const nDate = new Date(date); //转换为MM-DD-YYYY格式
+    const millSeconds = Math.abs(nDate.getTime()) + days * 24 * 60 * 60 * 1000;
+    const rDate = new Date(millSeconds);
+    const year = rDate.getFullYear();
+    let month = String(rDate.getMonth() + 1);
+    if (rDate.getMonth() + 1 < 10) month = '0' + month;
+    let newDate = String(rDate.getDate());
+    if (rDate.getDate() < 10) newDate = '0' + newDate;
+    return year + '-' + month + '-' + newDate;
 }

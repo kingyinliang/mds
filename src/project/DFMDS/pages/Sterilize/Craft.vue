@@ -58,7 +58,7 @@
                 type: 'p',
                 label: '生产锅号',
                 icon: 'factory-qiyaguanjianhua',
-                value: 'potNo'
+                value: 'potName'
             },
             {
                 type: 'tooltip',
@@ -134,7 +134,7 @@
                 this.formHeader.potOrderString = '第' + data.data.potOrder + '锅';
                 this.formHeader.textStage = 'CRAFT';
                 this.$refs.craft.init(this.formHeader);
-                this.$refs.excRecord.init(this.formHeader, 'CRAFT');
+                this.$refs.excRecord.init(this.formHeader, 'craft');
                 this.$refs.textRecord.init(this.formHeader, 'sterilize');
             });
         }
@@ -143,7 +143,7 @@
         savedDatas() {
             // this.formHeader.textStage = 'craft';
             const craftRequest = this.$refs.craft.getSavedOrSubmitData(this.formHeader);
-            const excRequest = this.$refs.excRecord.getSavedOrSubmitData(this.formHeader, 'CRAFT');
+            const excRequest = this.$refs.excRecord.getSavedOrSubmitData(this.formHeader, 'craft');
             const textRequest = this.$refs.textRecord.savedData(this.formHeader, 'sterilize');
 
             return STE_API.STE_DETAIL_CRAFT_SAVED_API({
@@ -151,6 +151,8 @@
                 steControlInsertDto: craftRequest.steControlInsertDto,
                 steControlUpdateDto: craftRequest.steControlUpdateDto,
                 steItemRemoveDto: craftRequest.ids,
+                insertItem: craftRequest.insertItem,
+                updateItem: craftRequest.updateItem,
                 steExceptionInsertDtos: excRequest.InsertDto,
                 steExceptionUpdateDtos: excRequest.UpdateDto,
                 steExceptionRemoveDto: excRequest.ids,
@@ -167,7 +169,7 @@
         // 提交
         submitDatas() {
             const craftRequest = this.$refs.craft.getSavedOrSubmitData(this.formHeader);
-            const excRequest = this.$refs.excRecord.getSavedOrSubmitData(this.formHeader, 'CRAFT');
+            const excRequest = this.$refs.excRecord.getSavedOrSubmitData(this.formHeader, 'craft');
             const textRequest = this.$refs.textRecord.savedData(this.formHeader, 'sterilize');
 
             return STE_API.STE_DETAIL_CRAFT_SUBMIT_API({

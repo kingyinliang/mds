@@ -123,6 +123,7 @@
 import { Vue, Component, Prop } from 'vue-property-decorator';
 import { COMMON_API, STE_API } from 'common/api/api';
 import { dateFormat, getUserNameNumber } from 'utils/utils';
+import _ from 'lodash';
 
 @Component
 export default class Crafts extends Vue {
@@ -131,6 +132,7 @@ export default class Crafts extends Vue {
     controlTypeList = [];
     craftAudit = [];
     craftTable: CraftList[] = [];
+    craftTableOrg: CraftList[] = [];
     craftInfo: Craft = {
         keepZkFlag: 'N',
         coolZkFlag: 'N'
@@ -149,6 +151,7 @@ export default class Crafts extends Vue {
                 this.doAction = 'update';
                 this.craftInfo = data.data
                 this.craftTable = data.data.item
+                this.craftTableOrg = JSON.parse(JSON.stringify(data.data.item))
                 this.craftTable.map(item => {
                     this.controlTypeChange(item.controlType, item, 'init');
                 })
@@ -215,28 +218,43 @@ export default class Crafts extends Vue {
     }
 
     getSavedOrSubmitData(formHeader) {
-        this.craftInfo['steItem'] = this.craftTable;
+        this.craftTable.map((item) => {
+            item.potOrderNo = formHeader.potOrderNo
+        })
+        // this.craftInfo['steItem'] = this.craftTable;
         this.craftInfo['potOrderId'] = formHeader.id;
         this.craftInfo['potOrderNo'] = formHeader.potOrderNo;
         const ids: string[] = [];
         let steControlInsertDto = {};
         let steControlUpdateDto = {};
-        this.craftTable.forEach(item => {
+        let insertItem: CraftList[] = [];
+        let updateItem: CraftList[] = [];
+        this.craftTable.forEach((item, index) => {
             if (item.delFlag === 1) {
                 if (item.id) {
                     ids.push(item.id)
                 }
+            } else if (item.id) {
+                if (!_.isEqual(this.craftTableOrg[index], item)) {
+                    updateItem.push(item)
+                }
+            } else {
+                insertItem.push(item)
             }
         })
         if (this.doAction === 'insert') {
             steControlInsertDto = this.craftInfo;
+            insertItem = this.craftTable;
         } else {
             steControlUpdateDto = this.craftInfo;
+            updateItem = this.craftTable;
         }
         return {
             steControlInsertDto,
             steControlUpdateDto,
-            ids
+            ids,
+            insertItem,
+            updateItem
         }
     }
 
