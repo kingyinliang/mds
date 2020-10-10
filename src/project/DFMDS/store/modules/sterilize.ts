@@ -6,7 +6,8 @@ export default {
         dissolveBucketDetail: {},
         SemiReceive: {},
         AcceAdd: {},
-        auditDetail: {}
+        auditDetail: {},
+        auditDetailDetail: {}
     },
     mutations: {
         updateAcceAdd(state, AcceAdd) {
@@ -26,6 +27,9 @@ export default {
         },
         updateAuditDetail(state, auditDetail) {
             state.auditDetail = auditDetail;
+        },
+        updateAuditDetailDetail(state, auditDetailDetail) {
+            state.auditDetailDetail = auditDetailDetail;
         }
     }
 };
