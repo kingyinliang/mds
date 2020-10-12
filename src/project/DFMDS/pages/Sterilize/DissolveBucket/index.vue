@@ -442,6 +442,7 @@
                     console.log('满罐')
                     console.log(data)
                     this.$refs.queryTable.getDataList(true)
+                    this.isBucketDialogVisible = false
                 });
             } else {
                 if (this.dialogForm.clear.form.doit === true) {
@@ -461,6 +462,7 @@
                     console.log('清罐')
                     console.log(data)
                     this.$refs.queryTable.getDataList(true)
+                    this.isBucketDialogVisible = false
                 });
             }
         }
