@@ -77,6 +77,26 @@
                 </el-table>
             </template>
             <template slot="4">
+                <el-row class="solerow">
+                    <div>
+                        订单产量：
+                    </div>
+                    <div class="input_bottom">
+                        {{ computedSoy }}&nbsp;
+                    </div>
+                    <div>
+                        实际产量：
+                    </div>
+                    <div class="input_bottom">
+                        {{ computedSoy }}&nbsp;
+                    </div>
+                    <div>
+                        生产锅数：
+                    </div>
+                    <div class="input_bottom">
+                        {{ computedSoy }}&nbsp;
+                    </div>
+                </el-row>
                 <el-table ref="inStorage" class="newTable" :data="inStorageList" header-row-class-name="tableHead" border tooltip-effect="dark">
                     <el-table-column type="index" label="序号" width="50" align="center" fixed />
                     <el-table-column label="正常入库" prop="" min-width="120" />

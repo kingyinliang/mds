@@ -42,7 +42,10 @@
             </div>
         </div>
         <!--tabs-->
-        <el-tabs id="DaatTtabs" ref="tabs" v-model="activeName" class="NewDaatTtabs tabsPages" type="border-card" :before-leave="beforeLeave" @tab-click="tabClick">
+        <div v-if="tabs.length === 0" class="box-card" style=" margin-top: 10px; padding: 10px !important; background: white;">
+            <slot name="contentBox" />
+        </div>
+        <el-tabs v-else id="DaatTtabs" ref="tabs" v-model="activeName" class="NewDaatTtabs tabsPages" type="border-card" :before-leave="beforeLeave" @tab-click="tabClick">
             <el-tab-pane v-for="(item, index) in tabs" :key="index" :name="setKey(index)">
                 <span v-if="item.status !== undefined" slot="label" class="spanview">
                     <el-tooltip class="item" effect="dark" :content="getTagStatus(item.status)" placement="top-start">

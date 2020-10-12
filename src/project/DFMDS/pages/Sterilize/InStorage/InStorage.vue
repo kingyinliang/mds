@@ -1,3 +1,11 @@
+<!--
+ * @Description:
+ * @Anthor: Telliex
+ * @Date: 2020-08-03 18:13:58
+ * @LastEditors: Telliex
+ * @LastEditTime: 2020-10-12 17:04:08
+ * @Describe 弹窗式新增
+-->
 <template lang="pug">
 div
     mds-card(:title="cardTitle")
@@ -21,8 +29,7 @@ div
                     :show-overflow-tooltip="true"
                     )
                     template(slot-scope="scope")
-                        template(v-for="(val,indexs) in item.content" ) {{ scope.row[val] }}
-
+                        template(v-for="(val,indexs) in item.content" ) {{ scope.row[val] | itemValue(item.wrapper) }}
                 el-table-column(
                     v-if="item.type==='control'"
                     :width="item.width"
@@ -37,14 +44,21 @@ div
 
 <script lang="ts">
     import { Vue, Component, Prop } from 'vue-property-decorator';
-    // import { STE_API } from 'common/api/api';
-    // import { dataEntryData } from 'utils/utils';
     import InStorageDialog from './InStorageDialog.vue';
     import _ from 'lodash';
 
     @Component({
         components: {
             InStorageDialog
+        },
+        filters: {
+            itemValue(value: string, target: object) {
+                if (target) {
+                    return target[value]
+                }
+                return value
+
+            }
         }
     })
     export default class SemiReceive extends Vue {
@@ -71,8 +85,6 @@ div
         }
 
         conformDataFromAdd(item) {
-            console.log('item')
-            console.log(item)
             this.currentFormDataGroup.push(JSON.parse(JSON.stringify(item)))
         }
 
@@ -101,8 +113,6 @@ div
         }
 
         btnAddOrEditDataRow(val) {
-
-            console.log(val)
             if (this.isRedact === true) {
                 if (val) {
                     this.$refs.inStorageDialogForEdit.init(this.orderData, this.pkgWorkShopList, val);
