@@ -44,7 +44,7 @@
                                         <el-button v-else-if="isAuth('steDisFull')" size="small" plain @click="btnCannelFillBucket(item)">
                                             取消<br>满罐
                                         </el-button>
-                                        <el-button v-if="isAuth('steDisClear')" size="small" plain :disabled="!(item.potStatus==='C')" @click="btnClearBucket(item)">
+                                        <el-button v-if="isAuth('steDisClear')" size="small" plain :disabled="!(item.potStatus==='U')" @click="btnClearBucket(item)">
                                             <!-- <el-button size="small" plain @click="btnClearBucket(item)"> -->
                                             清罐
                                         </el-button>
