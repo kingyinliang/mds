@@ -25,7 +25,7 @@
                             {{ scope.row.consumeType==='1'?'是':'否' }}
                         </template>
                     </el-table-column>
-                    <el-table-column prop="fermentPotNoName" label="发酵罐号" min-width="100" :show-overflow-tooltip="true" />
+                    <el-table-column prop="fermentPotName" label="发酵罐号" min-width="100" :show-overflow-tooltip="true" />
                     <el-table-column prop="aiShelves" label="领用物料" min-width="120" :show-overflow-tooltip="true">
                         <template slot-scope="scope">
                             {{ scope.row.materialCode }}
