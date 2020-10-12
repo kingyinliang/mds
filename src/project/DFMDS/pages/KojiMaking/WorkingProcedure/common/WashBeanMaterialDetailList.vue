@@ -32,12 +32,13 @@
                             {{ scope.row.materialName +' '+ scope.row.materialCode }}
                         </template>
                     </el-table-column>
-                    <el-table-column label="日期" prop="productDate" align="center" :formatter="formatterProductDate" min-width="100" />
+                    <el-table-column label="批次" prop="batch" align="center" min-width="100" />
                     <el-table-column label="数量" :show-overflow-tooltip="true" prop="currentAmount" width="100" align="right">
                         <template slot-scope="scope">
                             {{ scope.row.currentAmount ? scope.row.currentAmount.toLocaleString()+' '+ scope.row.unit : '' }}
                         </template>
                     </el-table-column>
+                    <el-table-column label="日期" prop="productDate" align="center" :formatter="formatterProductDate" min-width="100" />
                 </el-table>
             </div>
         </mds-card>

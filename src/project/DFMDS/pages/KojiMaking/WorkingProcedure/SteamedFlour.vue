@@ -8,7 +8,7 @@
             :order-status="formHeader.statusName"
             :header-base="headerBase"
             :form-header="formHeader"
-            :tabs="tabs"
+            :tabs="currentTabs"
             :submit-rules="submitRules"
             :saved-datas="savedDatas"
             :submit-datas="submitDatas"
@@ -122,21 +122,35 @@
             }
         ];
 
-        tabs: TabsObj[] = [
-            {
-                label: '物料领用',
-                status: '未录入'
-            },
-            {
-                label: '工艺控制'
-            },
-            {
-                label: '异常记录'
-            },
-            {
-                label: '文本记录'
-            }
-        ];
+        get currentTabs() {
+            const { steamFlourMaterialName, steamFlourCraftName } = this.$store.state.koji.houseTagInfo;
+            return [
+                {
+                    label: '物料领用',
+                    status: steamFlourMaterialName || ''
+                },
+                {
+                    label: '工艺控制',
+                    status: steamFlourCraftName || ''
+                },
+                {
+                    label: '异常记录'
+                },
+                {
+                    label: '文本记录'
+                }
+            ]
+        }
+
+        // 获取页签状态
+        getHouseTag() {
+            KOJI_API.KOJI_PAGE_TAG_STATUS_QUERY_API({
+                orderNo: this.formHeader.orderNo,
+                kojiOrderNo: this.formHeader.kojiOrderNo
+            }).then(({ data }) => {
+                this.$store.commit('koji/updateHouseTag', data.data);
+            })
+        }
 
         submitRules(): Function[] {
             return [this.$refs.flourMaterialCraft.ruleSubmit, this.$refs.excRecord.ruleSubmit]
@@ -152,6 +166,8 @@
                 id: this.$store.state.koji.orderKojiInfo.id || ''
             }).then(({ data }) => {
                 this.formHeader = data.data;
+                // 获取页签状态
+                this.getHouseTag();
                 this.formHeader.textStage = 'ZM';
                 this.formHeader.factoryName = JSON.parse(sessionStorage.getItem('factory') || '{}').deptShort;
                 this.$refs.flourMaterialApply.init(this.formHeader);
@@ -165,35 +181,41 @@
             const steSemi = this.$refs.flourMaterialCraft.getSavedOrSubmitData(this.formHeader);
             const excRequest = this.$refs.excRecord.getSavedOrSubmitData(this.formHeader, 'ZM');
             const textRequest = this.$refs.textRecord.savedData(this.formHeader, 'koji');
-
-            return KOJI_API.KOJI_XD_SAVE_API({
+            return KOJI_API.KOJI_CRAFT_STEAM_SAVE_API({
                 ...steSemi,
-                kojiExceptionSaveDto: {
+                exception: {
                     insertDatas: excRequest.InsertDto,
                     removeIds: excRequest.ids,
                     updateDatas: excRequest.UpdateDto
                 },
-                kojiTextSaveDto: textRequest.pkgTextInsert,
+                text: textRequest.pkgTextInsert,
                 kojiOrderNo: this.formHeader.kojiOrderNo,
-                orderNo: this.formHeader.orderNo
+                orderNo: this.formHeader.orderNo,
+                kojiHouseNo: this.formHeader.kojiHouseNo
             })
         }
 
         submitDatas() {
-            const steSemi = this.$refs.flourMaterialCraft.getSavedOrSubmitData(this.formHeader);
+            const materialTableList = this.$refs.flourMaterialApply.getSavedOrSubmitData(this.formHeader);
+            const steSemi = this.$refs.flourMaterialCraft.getSavedOrSubmitData(this.formHeader, 'submit');
             const excRequest = this.$refs.excRecord.getSavedOrSubmitData(this.formHeader, 'ZM');
             const textRequest = this.$refs.textRecord.savedData(this.formHeader, 'koji');
-
-            return KOJI_API.KOJI_XD_SUBMIT_API({
+            return KOJI_API.KOJI_CRAFT_STEAM_SUBMIT_API({
                 ...steSemi,
-                kojiExceptionSaveDto: {
+                material: {
+                    deleteDto: [],
+                    insertDto: [],
+                    updateDto: materialTableList
+                },
+                exception: {
                     insertDatas: excRequest.InsertDto,
                     removeIds: excRequest.ids,
                     updateDatas: excRequest.UpdateDto
                 },
-                kojiTextSaveDto: textRequest.pkgTextInsert,
+                text: textRequest.pkgTextInsert,
                 kojiOrderNo: this.formHeader.kojiOrderNo,
-                orderNo: this.formHeader.orderNo
+                orderNo: this.formHeader.orderNo,
+                kojiHouseNo: this.formHeader.kojiHouseNo
             })
         }
     }

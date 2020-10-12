@@ -3,12 +3,12 @@
         <el-dialog title="Y158领用" width="458px" :close-on-click-modal="false" :visible.sync="visible">
             <el-form ref="dataForm" :model="dataForm" status-icon :rules="dataRule" label-width="125px" size="small" @keyup.enter.native="dataFormSubmit()">
                 <el-form-item label="领用库位：">
-                    <el-select v-model="dataForm.materialLocation" placeholder="请选择" style="width: 100%;" @change="workShopChange">
+                    <el-select v-model="dataForm.materialLocation" :disabled="type !== 'add'" placeholder="请选择" style="width: 100%;" @change="workShopChange">
                         <el-option v-for="(item, index) in workShopList" :key="index" :label="item.materialLocation" :value="item.materialLocation" />
                     </el-select>
                 </el-form-item>
                 <el-form-item label="领用批次：" prop="batch">
-                    <el-select v-model="dataForm.batch" placeholder="请选择" style="width: 100%;" @change="batchChange">
+                    <el-select v-model="dataForm.batch" :disabled="type !== 'add'" placeholder="请选择" style="width: 100%;" @change="batchChange">
                         <el-option v-for="(item, index) in batchList" :key="index" :label="item.batch" :value="item.batch" />
                     </el-select>
                 </el-form-item>
@@ -60,52 +60,6 @@
     import { dateFormat, getUserNameNumber } from 'utils/utils';
 
     import LoanedPersonnel from 'components/LoanedPersonnel.vue';
-
-    interface FormHeaderobj {
-        workShop?: string;
-        kojiOrderNo?: string;
-        orderNo?: string;
-    }
-
-    interface StockInfoList {
-        workShop?: string;
-        beanLocation?: string;
-        beanWareHouse?: string;
-        detailsList: object[];
-    }
-
-    interface BatchList {
-        batch?: string;
-        materialName?: string;
-        materialCode?: string;
-        stockAmount?: string;
-        supplier?: string;
-        currentAmount?: string;
-    }
-
-    interface DataForm {
-        id?: string;
-        materialLocation?: string;
-        batch?: string;
-        material?: string;
-        materialCode?: string;
-        materialName?: string;
-        materialLink?: string;
-        materialType?: string;
-        amount?: string;
-        supplier?: string;
-        orderNo?: string;
-        kojiOrderNo?: string;
-        smallBeanAmount?: string;
-        unit?: string;
-        remark?: string;
-        changer?: string;
-        changed?: string;
-        stockAmount?: string| number;
-        currentAmount?: string;
-        operationMans?: string;
-    }
-
 
     @Component({
         name: 'Y158MaterialApplyDialog',
@@ -225,12 +179,14 @@
                 amount: Data.amount,
                 operationMans: Data.operationMans || '',
                 stockAmount: Data.stockAmount || Data.currentAmount,
-                orderNo: this.formHeader.orderNo,
-                kojiOrderNo: this.formHeader.kojiOrderNo,
                 unit: '盒',
                 remark: Data.remark,
                 changer: getUserNameNumber(),
-                changed: dateFormat(new Date(), 'yyyy-MM-dd hh:mm:ss')
+                changed: dateFormat(new Date(), 'yyyy-MM-dd hh:mm:ss'),
+                wareHouseNo: this.formHeader.wareHouseNo,
+                orderNo: this.formHeader.orderNo,
+                kojiOrderNo: this.formHeader.kojiOrderNo,
+                workShop: this.formHeader.workShop
             }
         }
 
@@ -267,22 +223,70 @@
                 if (valid) {
                     if (this.type === 'add') {
                         KOJI_API.KOJI_MATERIAL_GET_ADD_QUERY_API({
-                            insertDto: this.dataForm
+                            insertDto: [this.dataForm]
                         }).then(() => {
                             this.visible = false;
-                            this.$emit('success', this.dataForm)
+                            this.$emit('success', this.dataForm);
                         })
                     } else {
                         KOJI_API.KOJI_MATERIAL_GET_EDIT_QUERY_API({
-                            updateDto: this.dataForm
+                            updateDto: [this.dataForm]
                         }).then(() => {
                             this.visible = false;
-                            this.$emit('success', this.dataForm)
+                            this.$emit('success', this.dataForm);
                         })
                     }
                 }
             })
         }
+    }
+
+    interface FormHeaderobj {
+        workShop?: string;
+        kojiOrderNo?: string;
+        orderNo?: string;
+        wareHouseNo?: string;
+    }
+
+    interface StockInfoList {
+        workShop?: string;
+        beanLocation?: string;
+        beanWareHouse?: string;
+        detailsList: object[];
+    }
+
+    interface BatchList {
+        batch?: string;
+        materialName?: string;
+        materialCode?: string;
+        stockAmount?: string;
+        supplier?: string;
+        currentAmount?: string;
+    }
+
+    interface DataForm {
+        id?: string;
+        materialLocation?: string;
+        batch?: string;
+        material?: string;
+        materialCode?: string;
+        materialName?: string;
+        materialLink?: string;
+        materialType?: string;
+        amount?: string;
+        supplier?: string;
+        orderNo?: string;
+        kojiOrderNo?: string;
+        smallBeanAmount?: string;
+        unit?: string;
+        remark?: string;
+        changer?: string;
+        changed?: string;
+        stockAmount?: string| number;
+        currentAmount?: string;
+        operationMans?: string;
+        wareHouseNo?: string;
+        workShop?: string;
     }
 </script>
 <style lang="scss" scoped>

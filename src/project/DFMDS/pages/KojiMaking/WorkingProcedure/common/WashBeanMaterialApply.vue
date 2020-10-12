@@ -5,7 +5,7 @@
                 <el-col v-for="(item, opIndex) in stockInfoList" :key="opIndex" :span="6">
                     <div class="card-stock">
                         <div class="card-stock__head">
-                            <span>{{ `${item.workShopName}${item.beanWareHouse || item.beanLocation ? '：' + (item.beanWareHouse || item.beanLocation) : ''}` }}</span>
+                            <span>{{ `${item.workShopName}${item.wareHouseNo? '：' + item.wareHouseNo : ''}` }}</span>
                             <el-button class="floatr" type="text" :disabled="!isRedact" @click="addRow(item)">
                                 领用
                             </el-button>
@@ -17,13 +17,13 @@
             <div class="semi">
                 <el-table header-row-class-name="tableHead" class="newTable semi__pot_table" :data="materialTableList" :height="materialTableList.length > 4 ? '' : '196'" border tooltip-effect="dark" @row-dblclick="EditRow">
                     <el-table-column :index="index => getIndexMethod(index, materialTableList)" type="index" label="序号" width="50px" fixed />
-                    <el-table-column prop="materialLocation" label="领用库位" min-width="100" :show-overflow-tooltip="true" />
+                    <el-table-column label="领用库位" min-width="100" :show-overflow-tooltip="true" :formatter="materialLocationOrhouseNo" />
                     <el-table-column label="BOM物料" min-width="100" :show-overflow-tooltip="true">
                         <template slot-scope="scope">
                             {{ scope.row.materialName + ' ' + scope.row.materialCode }}
                         </template>
                     </el-table-column>
-                    <el-table-column prop="batch" label="领用批次" min-width="100" :show-overflow-tooltip="true" />
+                    <el-table-column prop="batch" label="领用批次" min-width="110" :show-overflow-tooltip="true" />
                     <el-table-column label="领用物料" min-width="120" :show-overflow-tooltip="true">
                         <template slot-scope="scope">
                             {{ scope.row.materialName + ' ' + scope.row.materialCode }}
@@ -88,6 +88,11 @@
         // 审核记录list
         auditList = [];
 
+        // 领用库位
+        materialLocationOrhouseNo(row) {
+            return row.wareHouseNo || row.materialLocation;
+        }
+
         init(formHeader) {
             this.formHeader = formHeader;
             this.warehouseQuery();
@@ -126,8 +131,9 @@
             this.$nextTick(() => {
                 this.$refs.washBeanMaterialApplyDialog.init({
                     ...item,
-                    orderNo: this.formHeader.orderNo
-                }, 'add');
+                    orderNo: this.formHeader.orderNo,
+                    kojiOrderNo: this.formHeader.kojiOrderNo
+                }, this.formHeader, 'add');
             });
         }
 
@@ -137,7 +143,11 @@
             }
             this.visible = true;
             this.$nextTick(() => {
-                this.$refs.washBeanMaterialApplyDialog.init(row, 'edit');
+                this.$refs.washBeanMaterialApplyDialog.init({
+                    ...row,
+                    orderNo: this.formHeader.orderNo,
+                    kojiOrderNo: this.formHeader.kojiOrderNo
+                }, this.formHeader, 'edit');
             });
         }
 
@@ -160,7 +170,7 @@
 
         deleteRow(row) {
             KOJI_API.KOJI_MATERIAL_DELETE_QUERY_API({
-                deleteDto: row.id
+                deleteDto: [row.id]
             }).then(() => {
                 this.materialGetList();
                 this.warehouseQuery();

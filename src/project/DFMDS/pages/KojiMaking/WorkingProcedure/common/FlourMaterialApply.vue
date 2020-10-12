@@ -13,13 +13,13 @@
             <div class="semi">
                 <el-table header-row-class-name="tableHead" class="newTable semi__pot_table" :data="materialY158TableList" :height="materialY158TableList.length > 4 ? '' : '196'" border tooltip-effect="dark" @row-dblclick="EditY158Row">
                     <el-table-column :index="index => getIndexMethod(index, materialY158TableList)" type="index" label="序号" width="50px" fixed />
-                    <el-table-column prop="materialLocation" label="领用库位" min-width="100" :show-overflow-tooltip="true" />
+                    <el-table-column :formatter="materialLocationOrhouseNo" label="领用库位" min-width="100" :show-overflow-tooltip="true" />
                     <el-table-column label="领用物料" min-width="120" :show-overflow-tooltip="true">
                         <template slot-scope="scope">
                             {{ scope.row.materialName + ' ' + scope.row.materialCode }}
                         </template>
                     </el-table-column>
-                    <el-table-column prop="batch" label="领用批次" min-width="100" :show-overflow-tooltip="true" />
+                    <el-table-column prop="batch" label="领用批次" min-width="110" :show-overflow-tooltip="true" />
                     <el-table-column prop="stockAmount" label="库存数量" width="90" :show-overflow-tooltip="true" />
                     <el-table-column prop="amount" label="领用数量" min-width="100" :show-overflow-tooltip="true" />
                     <el-table-column prop="unit" label="单位" min-width="100" :show-overflow-tooltip="true" />
@@ -59,7 +59,7 @@
             <div class="semi">
                 <el-table header-row-class-name="tableHead" class="newTable semi__pot_table" :data="materialTableList" :height="materialTableList.length > 4 ? '' : '196'" border tooltip-effect="dark" @row-dblclick="EditRow">
                     <el-table-column :index="index => getIndexMethod(index, materialTableList)" type="index" label="序号" width="50px" fixed />
-                    <el-table-column prop="materialLocation" label="领用库位" min-width="100" :show-overflow-tooltip="true" />
+                    <el-table-column :formatter="materialLocationOrhouseNo" label="领用库位" min-width="100" :show-overflow-tooltip="true" />
                     <el-table-column label="BOM物料" min-width="100" :show-overflow-tooltip="true">
                         <template slot-scope="scope">
                             {{ scope.row.materialName + ' ' + scope.row.materialCode }}
@@ -70,14 +70,12 @@
                             {{ scope.row.materialName + ' ' + scope.row.materialCode }}
                         </template>
                     </el-table-column>
-                    <el-table-column prop="batch" label="领用批次" min-width="100" :show-overflow-tooltip="true" />
-                    <el-table-column prop="stockAmount" label="库存量" width="90" :show-overflow-tooltip="true" />
+                    <el-table-column prop="batch" label="领用批次" min-width="110" :show-overflow-tooltip="true" />
                     <el-table-column prop="amount" label="领用数量" min-width="100" :show-overflow-tooltip="true" />
-                    <el-table-column prop="smallBeanAmount" label="小豆数量" min-width="100" :show-overflow-tooltip="true" />
                     <el-table-column prop="unit" label="单位" min-width="100" :show-overflow-tooltip="true" />
                     <el-table-column prop="supplier" label="面粉厂家" min-width="100" :show-overflow-tooltip="true" />
-                    <el-table-column prop="supplier" label="上面人" min-width="100" :show-overflow-tooltip="true" />
-                    <el-table-column prop="supplier" label="杂质数量(KG)" min-width="100" :show-overflow-tooltip="true" />
+                    <el-table-column prop="operationMans" label="上面人" min-width="120" :show-overflow-tooltip="true" />
+                    <el-table-column prop="impurityAmount" label="杂质数量(KG)" min-width="120" :show-overflow-tooltip="true" />
                     <el-table-column prop="remark" label="备注" min-width="100" :show-overflow-tooltip="true" />
                     <el-table-column label="操作人" prop="changer" width="140" />
                     <el-table-column label="操作时间" prop="changed" width="180" />
@@ -148,6 +146,11 @@
             this.getAuditList();
         }
 
+        // 领用库位
+        materialLocationOrhouseNo(row) {
+            return row.wareHouseNo || row.materialLocation;
+        }
+
         // 查询领用仓库list
         warehouseQuery() {
             KOJI_API.KOJI_STOCK_FLOUR_INDEX_LIST_ALL_API({}).then(({ data }) => {
@@ -182,6 +185,14 @@
             });
         }
 
+        // 获取 所有物料领用数据汇总
+        getSavedOrSubmitData() {
+            return [
+                ...this.materialY158TableList,
+                ...this.materialTableList
+            ]
+        }
+
         addY158DataRow() {
             this.Y158Visible = true;
             this.$nextTick(() => {
@@ -206,8 +217,9 @@
             this.$nextTick(() => {
                 this.$refs.flourMaterialApplyDialog.init({
                     ...item,
-                    orderNo: this.formHeader.orderNo
-                }, 'add');
+                    orderNo: this.formHeader.orderNo,
+                    kojiOrderNo: this.formHeader.kojiOrderNo
+                }, this.formHeader, 'add');
             });
         }
 
@@ -217,7 +229,11 @@
             }
             this.visible = true;
             this.$nextTick(() => {
-                this.$refs.flourMaterialApplyDialog.init(row, 'edit');
+                this.$refs.flourMaterialApplyDialog.init({
+                    ...row,
+                    orderNo: this.formHeader.orderNo,
+                    kojiOrderNo: this.formHeader.kojiOrderNo
+                }, this.formHeader, 'edit');
             });
         }
 
@@ -250,7 +266,7 @@
 
         deleteY158Row(row) {
             KOJI_API.KOJI_MATERIAL_DELETE_QUERY_API({
-                deleteDto: row.id
+                deleteDto: [row.id]
             }).then(() => {
                 this.materialY158GetList();
                 this.getAuditList();
@@ -259,7 +275,7 @@
 
         deleteRow(row) {
             KOJI_API.KOJI_MATERIAL_DELETE_QUERY_API({
-                deleteDto: row.id
+                deleteDto: [row.id]
             }).then(() => {
                 this.materialGetList();
                 this.warehouseQuery();

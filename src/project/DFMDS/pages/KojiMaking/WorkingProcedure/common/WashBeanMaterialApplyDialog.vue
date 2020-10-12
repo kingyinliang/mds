@@ -2,13 +2,13 @@
     <el-dialog title="大豆领用" width="458px" :close-on-click-modal="false" :visible.sync="visible">
         <el-form ref="dataForm" :model="dataForm" status-icon :rules="dataRule" label-width="125px" size="small" @keyup.enter.native="dataFormSubmit()">
             <el-form-item label="领用库位：">
-                <el-input v-model="dataForm.materialLocation" placeholder="手动输入" disabled />
+                <el-input v-model="dataForm.materialHL" placeholder="手动输入" disabled />
             </el-form-item>
             <el-form-item label="BOM物料：">
                 <el-input v-model="dataForm.material" placeholder="手动输入" disabled />
             </el-form-item>
             <el-form-item label="领用批次：" prop="batch">
-                <el-select v-model="dataForm.batch" placeholder="请选择" style="width: 100%;" @change="batchChange">
+                <el-select v-model="dataForm.batch" :disabled="type !== 'add'" placeholder="请选择" style="width: 100%;" @change="batchChange">
                     <el-option v-for="(item, index) in batchList" :key="index" :label="item.batch" :value="item.batch" />
                 </el-select>
             </el-form-item>
@@ -56,49 +56,6 @@
     import { KOJI_API } from 'common/api/api';
     import { dateFormat, getUserNameNumber } from 'utils/utils';
 
-    interface FormHeaderobj {
-        workShop?: string;
-        kojiOrderNo?: string;
-    }
-
-    interface StockInfoList {
-        workShop?: string;
-        beanLocation?: string;
-        beanWareHouse?: string;
-        detailsList: object[];
-    }
-
-    interface BatchList {
-        batch?: string;
-        materialName?: string;
-        materialCode?: string;
-        stockAmount?: string;
-        supplier?: string;
-    }
-
-    interface DataForm {
-        id?: string;
-        materialLocation?: string;
-        batch?: string;
-        material?: string;
-        materialCode?: string;
-        materialName?: string;
-        materialLink?: string;
-        materialType?: string;
-        amount?: string;
-        supplier?: string;
-        orderNo?: string;
-        kojiOrderNo?: string;
-        smallBeanAmount?: string;
-        unit?: string;
-        remark?: string;
-        changer?: string;
-        changed?: string;
-        stockAmount?: string| number;
-        currentAmount?: string;
-    }
-
-
     @Component({
         name: 'WashBeanMaterialApplyDialog'
     })
@@ -132,36 +89,30 @@
         // 表单对象
         dataForm: DataForm = {};
 
-        async init(infoData, type) {
+        async init(infoData, formHeader, type) {
+            console.log(infoData, 'infoData')
             this.type = type;
             this.visible = true;
             let Data: DataForm = {};
-            // 查询
-            await KOJI_API.KOJI_STOCK_BEAN_INDEX_LIST_API({
-                workShopId: this.formHeader.workShop
-            }).then(({ data }) => {
-                this.stockInfoList = data.data || []
-            });
+
             if (type === 'add') {
-                this.stockInfoList.map(item => {
-                    if (item.workShop === infoData.workShop || item.beanLocation === infoData.beanLocation || item.beanWareHouse === infoData.beanWareHouse) {
-                        Data = {
-                            ...item.detailsList[0],
-                            materialLocation: item.beanWareHouse || item.workShop,
-                            orderNo: infoData.orderNo
-                        }
-                        this.batchList = item.detailsList;
-                    }
-                })
+                this.batchList = infoData.detailsList || [];
+                Data = {
+                    ...infoData,
+                    ...infoData.detailsList[0]
+                }
             } else {
-                this.stockInfoList.map(item => {
-                    if (item.workShop === infoData.kojiOrderNo || item.beanLocation === infoData.kojiOrderNo || item.beanWareHouse === infoData.kojiOrderNo) {
-                        this.batchList = item.detailsList;
+                // 查询
+                await KOJI_API.KOJI_KOJIBEAN_DETAILS_QUERY_API({
+                    workShop: formHeader.workShop,
+                    wareHouseNo: infoData.wareHouseNo,
+                    materialLocation: infoData.materialLocation
+                }).then(({ data }) => {
+                    this.batchList = data.data;
+                    Data = {
+                        ...infoData
                     }
                 });
-                Data = {
-                    ...infoData
-                }
             }
 
             this.STOCK_AMOUNT = (Data.stockAmount || Data.currentAmount) ? Number(Data.stockAmount) || Number(Data.currentAmount) : 0;
@@ -169,8 +120,10 @@
 
             this.dataForm = {
                 id: Data.id,
+                materialHL: Data.wareHouseNo || Data.materialLocation,
                 materialLocation: Data.materialLocation,
                 batch: Data.batch,
+                wareHouseNo: Data.wareHouseNo,
                 material: String(Data.materialName) + String(Data.materialCode),
                 materialCode: Data.materialCode,
                 materialName: Data.materialName,
@@ -179,7 +132,7 @@
                 amount: Data.amount,
                 supplier: Data.supplier,
                 stockAmount: Data.stockAmount || Data.currentAmount,
-                orderNo: Data.orderNo,
+                orderNo: this.formHeader.orderNo,
                 kojiOrderNo: this.formHeader.kojiOrderNo,
                 smallBeanAmount: Data.smallBeanAmount,
                 unit: 'KG',
@@ -203,7 +156,9 @@
             this.batchList.map(item => {
                 if (item.batch === this.dataForm.batch) {
                     this.dataForm.materialLink = String(item.materialName) + String(item.materialCode);
-                    this.dataForm.stockAmount = item.stockAmount;
+                    this.dataForm.stockAmount = item.stockAmount || item.currentAmount;
+                    this.STOCK_AMOUNT = Number(item.stockAmount) || Number(item.currentAmount);
+                    this.dataForm.amount = '';
                     this.dataForm.supplier = item.supplier;
                 }
             })
@@ -215,14 +170,14 @@
                 if (valid) {
                     if (this.type === 'add') {
                         KOJI_API.KOJI_MATERIAL_GET_ADD_QUERY_API({
-                            insertDto: this.dataForm
+                            insertDto: [this.dataForm]
                         }).then(() => {
                             this.visible = false;
                             this.$emit('success', this.dataForm)
                         })
                     } else {
                         KOJI_API.KOJI_MATERIAL_GET_EDIT_QUERY_API({
-                            updateDto: this.dataForm
+                            updateDto: [this.dataForm]
                         }).then(() => {
                             this.visible = false;
                             this.$emit('success', this.dataForm)
@@ -233,5 +188,50 @@
         }
     }
 
+    interface FormHeaderobj {
+        workShop?: string;
+        kojiOrderNo?: string;
+        orderNo?: string;
+    }
+
+    interface StockInfoList {
+        workShop?: string;
+        beanLocation?: string;
+        beanWareHouse?: string;
+        detailsList: object[];
+    }
+
+    interface BatchList {
+        batch?: string;
+        materialName?: string;
+        materialCode?: string;
+        stockAmount?: string;
+        supplier?: string;
+        currentAmount?: string;
+    }
+
+    interface DataForm {
+        id?: string;
+        materialLocation?: string;
+        batch?: string;
+        material?: string;
+        materialCode?: string;
+        materialName?: string;
+        materialLink?: string;
+        materialType?: string;
+        amount?: string;
+        supplier?: string;
+        orderNo?: string;
+        kojiOrderNo?: string;
+        smallBeanAmount?: string;
+        unit?: string;
+        remark?: string;
+        changer?: string;
+        changed?: string;
+        stockAmount?: string| number;
+        currentAmount?: string;
+        wareHouseNo?: string;
+        materialHL?: string;
+    }
 
 </script>

@@ -40,7 +40,7 @@
         }
 
         getData(data, formHeader) {
-            if (data.data && data.data.kojiText) {
+            if (data.data && data.data.id) {
                 this.currentFormDataGroup = JSON.parse(JSON.stringify(data.data))
             } else {
                 this.currentFormDataGroup = {
