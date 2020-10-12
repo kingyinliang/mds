@@ -20,6 +20,7 @@
                                 :props="{ label: 'deptName' }"
                                 :expand-on-click-node="false"
                                 :default-expanded-keys="arrList"
+                                highlight-current
                                 :filter-node-method="filterNode"
                                 @node-click="treeNodeClick"
                                 @node-contextmenu="treeNodeContextMenu"
@@ -82,7 +83,7 @@
         }
 
         // 获取组织结构树
-        getTree(type = false) {
+        getTree(type = false, extendId = '') {
             let id = ''
             if (JSON.parse(sessionStorage.getItem('factory') || '{}').deptCode === '9999-xn') {
                 id = 'common'
@@ -94,7 +95,14 @@
             }).then(({ data }) => {
                 if (data.code === 200) {
                     this.OrgTree = data.data;
-                    this.arrList = [this.OrgTree[0]['children'][0]['id']];
+                    console.log('this.OrgTree')
+                    console.log(this.OrgTree)
+                    if (extendId !== '') {
+                        this.arrList = [extendId];
+                    } else {
+                        this.arrList = [this.OrgTree[0]['children'][0]['id']];
+                    }
+
                     if (type) {
                         this.$emit('getTreeSuccess', data.data);
                     }

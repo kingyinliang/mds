@@ -1,45 +1,35 @@
 <template>
     <div class="material-get-content">
-        <mds-card title="物料领用">
-            <el-row class="home_card__main" :gutter="10">
-                <el-col v-for="(item, opIndex) in stockInfoList" :key="opIndex" :span="6">
-                    <div class="card-stock">
-                        <div class="card-stock__head">
-                            <span>{{ `${item.workShopName}${item.wareHouseNo? '：' + item.wareHouseNo : ''}` }}</span>
-                            <el-button class="floatr" type="text" :disabled="!isRedact" @click="addRow(item)">
-                                领用
-                            </el-button>
-                        </div>
-                        <wash-bean-material-detail-list :material-detail-data="item" />
-                    </div>
-                </el-col>
-            </el-row>
+        <mds-card title="Y158领用">
+            <template slot="titleBtn">
+                <el-form :inline="true" label-width="115px">
+                    <el-form-item class="cleanMarginBottom floatr">
+                        <el-button type="primary" size="small" :disabled="!isRedact" @click="addY158DataRow()">
+                            新增
+                        </el-button>
+                    </el-form-item>
+                </el-form>
+            </template>
             <div class="semi">
-                <el-table header-row-class-name="tableHead" class="newTable semi__pot_table" :data="materialTableList" :height="materialTableList.length > 4 ? '' : '196'" border tooltip-effect="dark" @row-dblclick="EditRow">
-                    <el-table-column :index="index => getIndexMethod(index, materialTableList)" type="index" label="序号" width="50px" fixed />
-                    <el-table-column label="领用库位" min-width="100" :show-overflow-tooltip="true" :formatter="materialLocationOrhouseNo" />
-                    <el-table-column label="BOM物料" min-width="100" :show-overflow-tooltip="true">
-                        <template slot-scope="scope">
-                            {{ scope.row.materialName + ' ' + scope.row.materialCode }}
-                        </template>
-                    </el-table-column>
-                    <el-table-column prop="batch" label="领用批次" min-width="110" :show-overflow-tooltip="true" />
+                <el-table header-row-class-name="tableHead" class="newTable semi__pot_table" :data="materialY158TableList" :height="materialY158TableList.length > 4 ? '' : '196'" border tooltip-effect="dark" @row-dblclick="EditY158Row">
+                    <el-table-column :index="index => getIndexMethod(index, materialY158TableList)" type="index" label="序号" width="50px" fixed />
+                    <el-table-column :formatter="materialLocationOrhouseNo" label="领用库位" min-width="100" :show-overflow-tooltip="true" />
                     <el-table-column label="领用物料" min-width="120" :show-overflow-tooltip="true">
                         <template slot-scope="scope">
                             {{ scope.row.materialName + ' ' + scope.row.materialCode }}
                         </template>
                     </el-table-column>
-                    <el-table-column prop="stockAmount" label="库存量" width="90" :show-overflow-tooltip="true" />
+                    <el-table-column prop="batch" label="领用批次" min-width="110" :show-overflow-tooltip="true" />
+                    <el-table-column prop="stockAmount" label="库存数量" width="90" :show-overflow-tooltip="true" />
                     <el-table-column prop="amount" label="领用数量" min-width="100" :show-overflow-tooltip="true" />
-                    <el-table-column prop="smallBeanAmount" label="小豆数量" min-width="100" :show-overflow-tooltip="true" />
                     <el-table-column prop="unit" label="单位" min-width="100" :show-overflow-tooltip="true" />
-                    <el-table-column prop="supplier" label="大豆厂家" min-width="100" :show-overflow-tooltip="true" />
+                    <el-table-column prop="operationMans" label="添加人" min-width="100" :show-overflow-tooltip="true" />
                     <el-table-column prop="remark" label="备注" min-width="100" :show-overflow-tooltip="true" />
                     <el-table-column label="操作人" prop="changer" width="140" />
                     <el-table-column label="操作时间" prop="changed" width="180" />
                     <el-table-column width="70" label="操作" fixed="right">
                         <template slot-scope="scope">
-                            <el-button class="delBtn" type="text" icon="el-icon-delete" size="mini" :disabled="!isRedact" @click="removeDataRow(scope.row, scope.$index)">
+                            <el-button class="delBtn" type="text" icon="el-icon-delete" size="mini" :disabled="!isRedact" @click="removeDataRow(scope.row, 'Y158')">
                                 删除
                             </el-button>
                         </template>
@@ -48,62 +38,133 @@
             </div>
             <div>
                 <div class="material-get-content_addTotal">
-                    大豆数量合计：{{ getMaterialTotalNum }} KG
+                    Y158合计：{{ getY158MaterialTotalNum }} 盒
                 </div>
+            </div>
+        </mds-card>
+        <mds-card title="面粉领用">
+            <el-row class="home_card__main" :gutter="10">
+                <el-col v-for="(item, opIndex) in stockInfoList" :key="opIndex" :span="6">
+                    <div class="card-stock">
+                        <div class="card-stock__head">
+                            <span>{{ `${item.workShopName}${item.wareHouseNo || item.materialLocation? '：'+(item.wareHouseNo || item.materialLocation) : ''}` }}</span>
+                            <el-button class="floatr" type="text" :disabled="!isRedact" @click="addRow(item)">
+                                领用
+                            </el-button>
+                        </div>
+                        <flour-material-detail-list :material-detail-data="item" />
+                    </div>
+                </el-col>
+            </el-row>
+            <div class="semi">
+                <el-table header-row-class-name="tableHead" class="newTable semi__pot_table" :data="materialTableList" :height="materialTableList.length > 4 ? '' : '196'" border tooltip-effect="dark" @row-dblclick="EditRow">
+                    <el-table-column :index="index => getIndexMethod(index, materialTableList)" type="index" label="序号" width="50px" fixed />
+                    <el-table-column :formatter="materialLocationOrhouseNo" label="领用库位" min-width="100" :show-overflow-tooltip="true" />
+                    <el-table-column label="BOM物料" min-width="100" :show-overflow-tooltip="true">
+                        <template slot-scope="scope">
+                            {{ scope.row.materialName + ' ' + scope.row.materialCode }}
+                        </template>
+                    </el-table-column>
+                    <el-table-column label="领用物料" min-width="120" :show-overflow-tooltip="true">
+                        <template slot-scope="scope">
+                            {{ scope.row.materialName + ' ' + scope.row.materialCode }}
+                        </template>
+                    </el-table-column>
+                    <el-table-column prop="batch" label="领用批次" min-width="110" :show-overflow-tooltip="true" />
+                    <el-table-column prop="amount" label="领用数量" min-width="100" :show-overflow-tooltip="true" />
+                    <el-table-column prop="unit" label="单位" min-width="100" :show-overflow-tooltip="true" />
+                    <el-table-column prop="supplier" label="面粉厂家" min-width="100" :show-overflow-tooltip="true" />
+                    <el-table-column prop="operationMans" label="上面人" min-width="120" :show-overflow-tooltip="true" />
+                    <el-table-column prop="impurityAmount" label="杂质数量(KG)" min-width="120" :show-overflow-tooltip="true" />
+                    <el-table-column prop="remark" label="备注" min-width="100" :show-overflow-tooltip="true" />
+                    <el-table-column label="操作人" prop="changer" width="140" />
+                    <el-table-column label="操作时间" prop="changed" width="180" />
+                    <el-table-column width="70" label="操作" fixed="right">
+                        <template slot-scope="scope">
+                            <el-button class="delBtn" type="text" icon="el-icon-delete" size="mini" :disabled="!isRedact" @click="removeDataRow(scope.row)">
+                                删除
+                            </el-button>
+                        </template>
+                    </el-table-column>
+                </el-table>
+            </div>
+            <div>
                 <div class="material-get-content_addTotal">
-                    原豆数量合计：{{ getSmallTotalNum || 0 }} KG
+                    面粉量合计：{{ getMaterialTotalNum }} KG
                 </div>
             </div>
         </mds-card>
         <audit-log :table-data="auditList" :verify-man="'verifyMan'" :verify-date="'verifyDate'" :status="true" />
-        <wash-bean-material-apply-dialog v-if="visible" ref="washBeanMaterialApplyDialog" :form-header="formHeader" @success="handleCallback" />
+        <flour-material-apply-dialog v-if="visible" ref="flourMaterialApplyDialog" :form-header="formHeader" @success="handleCallback" />
+        <flour-y158-apply-dialog v-if="Y158Visible" ref="flourY158ApplyDialog" :form-header="formHeader" @success="handleY158Callback" />
     </div>
 </template>
 
 <script lang="ts">
     import { Vue, Component, Prop } from 'vue-property-decorator';
     import { AUDIT_API, KOJI_API } from 'common/api/api';
-    import WashBeanMaterialApplyDialog from './WashBeanMaterialApplyDialog.vue';
-    import WashBeanMaterialDetailList from './WashBeanMaterialDetailList.vue';
+    import FlourMaterialApplyDialog from './FlourMaterialApplyDialog.vue'
+    import FlourY158ApplyDialog from './FlourY158ApplyDialog.vue'
+    import FlourMaterialDetailList from './FlourMaterialDetailList.vue'
 
     @Component({
-        name: 'WashBeanMaterialApply',
+        name: 'FlourMaterialApply',
         components: {
-            WashBeanMaterialApplyDialog,
-            WashBeanMaterialDetailList
+            FlourMaterialApplyDialog,
+            FlourY158ApplyDialog,
+            FlourMaterialDetailList
         }
     })
-    export default class WashBeanMaterialApply extends Vue {
+    export default class FlourMaterialApply extends Vue {
         @Prop({ default: false }) isRedact: boolean;
         @Prop({ default: 0 }) sieveTotalNum: number | string;
 
-        $refs: { washBeanMaterialApplyDialog: HTMLFormElement };
+        $refs: {
+            flourMaterialApplyDialog: HTMLFormElement;
+            flourY158ApplyDialog: HTMLFormElement;
+        };
 
         formHeader: SemiObj = {};
+
+        Y158Visible = false;
         visible = false;
         // 物料list
         stockInfoList: object[] = [];
-        // 领用记录list
+        // Y158领用记录
+        materialY158TableList: SemiObj[] = [];
+        // 面粉领用记录list
         materialTableList: SemiObj[] = [];
         // 审核记录list
         auditList = [];
+
+        init(formHeader) {
+            this.formHeader = formHeader;
+            // 查询 物料仓列表 面粉记录 Y158记录 审核记录
+            this.warehouseQuery();
+            this.materialY158GetList();
+            this.materialGetList();
+            this.getAuditList();
+        }
 
         // 领用库位
         materialLocationOrhouseNo(row) {
             return row.wareHouseNo || row.materialLocation;
         }
 
-        init(formHeader) {
-            this.formHeader = formHeader;
-            this.warehouseQuery();
-            this.materialGetList();
-            this.getAuditList();
-        }
-
         // 查询领用仓库list
         warehouseQuery() {
-            KOJI_API.KOJI_STOCK_BEAN_INDEX_LIST_ALL_API({}).then(({ data }) => {
+            KOJI_API.KOJI_STOCK_FLOUR_INDEX_LIST_ALL_API({}).then(({ data }) => {
                 this.stockInfoList = data.data || [];
+            });
+        }
+
+        // Y158物料领用记录查询
+        materialY158GetList() {
+            KOJI_API.KOJI_MATERIAL_GET_QUERY_API({
+                kojiOrderNo: this.formHeader.kojiOrderNo,
+                materialType: 'Y158'
+            }).then(({ data }) => {
+                this.materialY158TableList = data.data || [];
             });
         }
 
@@ -111,10 +172,8 @@
         materialGetList() {
             KOJI_API.KOJI_MATERIAL_GET_QUERY_API({
                 kojiOrderNo: this.formHeader.kojiOrderNo,
-                materialType: 'BEAN',
-                orderNo: this.formHeader.orderNo
+                materialType: 'FLOUR'
             }).then(({ data }) => {
-                this.$emit('setMaterialTable', data.data || [])
                 this.materialTableList = data.data || [];
             });
         }
@@ -126,10 +185,37 @@
             });
         }
 
+        // 获取 所有物料领用数据汇总
+        getSavedOrSubmitData() {
+            return [
+                ...this.materialY158TableList,
+                ...this.materialTableList
+            ]
+        }
+
+        addY158DataRow() {
+            this.Y158Visible = true;
+            this.$nextTick(() => {
+                this.$refs.flourY158ApplyDialog.init({
+                    orderNo: this.formHeader.orderNo
+                }, 'add');
+            });
+        }
+
+        EditY158Row(row) {
+            if (!this.isRedact) {
+                return false;
+            }
+            this.Y158Visible = true;
+            this.$nextTick(() => {
+                this.$refs.flourY158ApplyDialog.init(row, 'edit');
+            });
+        }
+
         addRow(item) {
             this.visible = true;
             this.$nextTick(() => {
-                this.$refs.washBeanMaterialApplyDialog.init({
+                this.$refs.flourMaterialApplyDialog.init({
                     ...item,
                     orderNo: this.formHeader.orderNo,
                     kojiOrderNo: this.formHeader.kojiOrderNo
@@ -143,12 +229,18 @@
             }
             this.visible = true;
             this.$nextTick(() => {
-                this.$refs.washBeanMaterialApplyDialog.init({
+                this.$refs.flourMaterialApplyDialog.init({
                     ...row,
                     orderNo: this.formHeader.orderNo,
                     kojiOrderNo: this.formHeader.kojiOrderNo
                 }, this.formHeader, 'edit');
             });
+        }
+
+        handleY158Callback() {
+            this.materialY158GetList();
+            this.getAuditList();
+            this.Y158Visible = false;
         }
 
         handleCallback() {
@@ -158,13 +250,26 @@
             this.visible = false;
         }
 
-        removeDataRow(row) {
+        removeDataRow(row, type) {
             this.$confirm('是否删除?', '提示', {
                 confirmButtonText: '确定',
                 cancelButtonText: '取消',
                 type: 'warning'
             }).then(() => {
-                this.deleteRow(row);
+                if (type === 'Y158') {
+                    this.deleteY158Row(row);
+                } else {
+                    this.deleteRow(row);
+                }
+            });
+        }
+
+        deleteY158Row(row) {
+            KOJI_API.KOJI_MATERIAL_DELETE_QUERY_API({
+                deleteDto: [row.id]
+            }).then(() => {
+                this.materialY158GetList();
+                this.getAuditList();
             });
         }
 
@@ -178,7 +283,18 @@
             });
         }
 
-        // 计算领用总数
+        // Y158领用总数
+        get getY158MaterialTotalNum() {
+            let num = 0;
+            this.materialY158TableList.map(item => {
+                if (item.amount) {
+                    num += item.amount;
+                }
+            });
+            return num;
+        }
+
+        // 计算面粉领用总数
         get getMaterialTotalNum() {
             let num = 0;
             this.materialTableList.map(item => {
@@ -186,22 +302,6 @@
                     num += item.amount;
                 }
             });
-
-            return num;
-        }
-
-        // 计算原豆总数
-        get getSmallTotalNum() {
-            let num = 0;
-            this.materialTableList.map(item => {
-                if (item.amount) {
-                    num += item.amount;
-                }
-                if (item.smallBeanAmount) {
-                    num += Number(item.smallBeanAmount);
-                }
-            });
-            num = num - Number(this.sieveTotalNum);
             return num;
         }
     }

@@ -64,8 +64,8 @@
                 workShop: '',
                 wareHouseNo: '',
                 materialLocation: '',
-                beanWareHouse: '',
-                beanLocation: ''
+                wareHouse: '',
+                location: ''
             }
         }) workShopInfo: WorkShopInfo;
 
@@ -105,8 +105,8 @@
                 size: this.tableSize,
                 workShop: this.workShopInfo.workShop,
                 wareHouseNo: this.workShopInfo.wareHouseNo || null,
-                beanWareHouse: this.workShopInfo.beanWareHouse || null,
-                beanLocation: this.workShopInfo.beanLocation || null,
+                wareHouse: this.workShopInfo.wareHouse || null,
+                location: this.workShopInfo.location || null,
                 materialLocation: this.workShopInfo.materialLocation || null
             };
             if (!this.isHistoryPage) {
@@ -160,8 +160,8 @@
         workShop?: string;
         wareHouseNo?: string;
         materialLocation?: string;
-        beanWareHouse?: string;
-        beanLocation?: string;
+        wareHouse?: string;
+        location?: string;
     }
 </script>
 <style lang="scss" scoped>

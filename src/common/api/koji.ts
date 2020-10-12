@@ -105,9 +105,9 @@ const KOJI_API = {
     WORKPROCEDURE_QUERY_API: params => httpProxy('/koji/kojiWorkProcedure/query', 'POST', params),
 
     /**
-    * @property {string} KOJI_CRAFT_HEAD_INFO_QUERY_API 制曲车间-制曲头部信息查询
+    * @property {string} KOJI_CRAFT_HEAD_INFO_QUERY_API 制曲车间-制曲头部信息查询(洗豆 蒸面 圆盘 头部信息)
     */
-    KOJI_CRAFT_HEAD_INFO_QUERY_API: params => httpProxy('/kojiProcess/wheat/getHouseSplite', 'GET', params),
+    KOJI_CRAFT_HEAD_INFO_QUERY_API: params => httpProxy('/koji/kojiHouseSplit/getHouseSplite', 'GET', params),
     /**
     * @property {string} KOJI_SBEAN_SIEVE_QUERY_API 制曲车间-筛豆查询
     */
@@ -178,9 +178,48 @@ const KOJI_API = {
      */
     KOJI_INDEX_QUERY_SC_ORDER_API: params => httpProxy('/kojiIndex/batchQueryScOrder', 'POST', params),
     /**
-     * @propertyKOJI_ORDER_QUERY_API 基础数据-订单管理-根据车间Id查询车间订单列表
+     * @property KOJI_ORDER_QUERY_API 基础数据-订单管理-根据车间Id查询车间订单列表
      */
-    KOJI_ORDER_QUERY_API: params => httpProxy('/order/queryListKoji', 'POST', params)
+    KOJI_ORDER_QUERY_API: params => httpProxy('/order/queryListKoji', 'POST', params),
+
+
+    /**
+     * @property KOJI_KOJISTRAIN_DETAILS_QUERY_API 制曲车间-蒸面工序-物料领用-Y158领用下拉（库位+批次联动）
+     */
+    KOJI_KOJISTRAIN_DETAILS_QUERY_API: params => httpProxy('/koji/kojiStrainStorage/queryCurrentDetailsList', 'GET', params),
+    /**
+     * @property KOJI_KOJIBEAN_DETAILS_QUERY_API 制曲车间-洗豆工序-物料领用-大豆领用批次下拉（库位+批次联动）
+     */
+    KOJI_KOJIBEAN_DETAILS_QUERY_API: params => httpProxy('/koji/kojiBeanStorage/queryCurrentDetailsList', 'GET', params),
+    /**
+     * @property KOJI_KOJIFLOUR_DETAILS_QUERY_API 制曲车间-蒸面工序-物料领用-面粉领用下拉（库位+批次联动）
+     */
+    KOJI_KOJIFLOUR_DETAILS_QUERY_API: params => httpProxy('/koji/kojiWheatStorage/queryCurrentDetailsList', 'GET', params),
+    /**
+     * @property KOJI_PAGE_TAG_STATUS_QUERY_API 制曲车间-页签查询
+     */
+    KOJI_PAGE_TAG_STATUS_QUERY_API: params => httpProxy('/koji/houseTag/query', 'POST', params),
+    /**
+     * @property KOJI_CRAFT_STEAM_FLOUR_LOG_API 制曲车间-制曲首页-工艺控制-蒸面记录
+     */
+    KOJI_CRAFT_STEAM_FLOUR_LOG_API: params => httpProxy('/kojiSteamFlour/queryList', 'GET', params),
+    /**
+     * @property KOJI_CRAFT_STEAM_BEAN_LOG_API 制曲车间-制曲首页-工艺控制-蒸豆记录
+     */
+    KOJI_CRAFT_STEAM_BEAN_LOG_API: params => httpProxy('/kojiSteamBean/queryList', 'GET', params),
+    /**
+     * @property KOJI_CRAFT_STEAM_CONTROL_LOG_API 制曲车间-制曲首页-工艺控制-蒸面混合控制记录
+     */
+    KOJI_CRAFT_STEAM_CONTROL_LOG_API: params => httpProxy('/kojiSteamControl/queryList', 'GET', params),
+    /**
+     * @property KOJI_CRAFT_STEAM_SAVE_API 制曲车间-制曲首页-蒸面-保存
+     */
+    KOJI_CRAFT_STEAM_SAVE_API: params => httpProxy('/kojiSteamFlourOrder/save', 'POST', params),
+    /**
+     * @property KOJI_CRAFT_STEAM_SUBMIT_API 制曲车间-制曲首页-蒸面-提交
+     */
+    KOJI_CRAFT_STEAM_SUBMIT_API: params => httpProxy('/kojiSteamFlourOrder/submit', 'POST', params)
+
 };
 
 export default KOJI_API;

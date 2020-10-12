@@ -3,7 +3,7 @@
  * @Anthor: Telliex
  * @Date: 2020-09-02 10:21:15
  * @LastEditors: Telliex
- * @LastEditTime: 2020-09-21 16:13:47
+ * @LastEditTime: 2020-10-12 11:43:37
 -->
 <template lang="pug">
     el-table(ref="targetTable" class="newTable" border header-row-class-name="tableHead" :data="targetTable" :height="tableElementSetting.props.height" tooltip-effect="dark" @selection-change="handleSelectionChange" style="width:100%")

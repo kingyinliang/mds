@@ -2,23 +2,23 @@
     <div class="header_main" style=" margin: 10px; padding: 15px; background: #fff;">
         <el-form :model="formHeader" :inline="true" size="small" label-width="70px" class="multi clearfix" style="font-size: 0;">
             <el-form-item label="生产工厂：">
-                <el-select v-model="formHeader.werks">
+                <el-select v-model="formHeader.werks" :disabled="isDisabled">
                     <el-option v-for="sole in factory" :key="sole.deptId" :label="sole.deptName" :value="sole.deptId" />
                 </el-select>
             </el-form-item>
             <el-form-item label="物料：">
-                <el-input v-model="formHeader.materialCode" />
+                <el-input v-model="formHeader.materialCode" :disabled="isDisabled" />
             </el-form-item>
             <el-form-item label="批次：">
-                <el-input v-model="formHeader.batch" />
+                <el-input v-model="formHeader.batch" :disabled="isDisabled" />
             </el-form-item>
             <el-form-item class="floatr">
-                <el-button v-if="isAuth('material:view')" type="primary" size="small" @click="GetList(true)">
+                <el-button v-if="isAuth('material:view')" :disabled="isDisabled" type="primary" size="small" @click="GetList(true)">
                     查询
                 </el-button>
             </el-form-item>
         </el-form>
-        <el-table :data="dataList" class="newTable" border header-row-class-name="tableHead" style="margin-top: 10px;">
+        <el-table :data="dataList" class="newTable loading-area" border header-row-class-name="tableHead" style="margin-top: 10px;">
             <el-table-column label="车间" prop="workShop" width="110" />
             <el-table-column label="订单" prop="orderNo" width="130" />
             <!-- <el-table-column label="物料" prop="materialCode" treeKey="id"></el-table-column> -->
@@ -49,7 +49,10 @@ export default {
             },
             factory: '',
             dataList: [],
-            num: 1
+            num: 1,
+            isDisabled: false,
+            // loading: false,
+            loadingText: '加载中……'
         }
     },
     mounted() {
@@ -85,45 +88,71 @@ export default {
         }
         this.num = 1;
         this.dataList = [];
-        this.loadings = Loading.service({
+        this.loadingsArea = Loading.service({
             lock: true,
             spinner: 'loadingGif',
             text: '加载中……',
-            background: 'rgba(255, 255, 255, 0.7)'
+            background: 'rgba(255, 255, 255, 0.7)',
+            target: document.querySelector('.loading-area')
         })
+        this.isDisabled = true;
+        // this.loading = true;
         this.$http(`${REP_API.MaterialTraceability_LIST_API}`, 'POST', this.formHeader, false, false, false).then(({ data }) => {
             if (data.code === 0) {
-                this.GetCheckOver();
-                if (this.num > 1) {
-                    this.orderStatus = setInterval(() => {
-                        this.GetCheckOver();
-                    }, 4000);
+                if (!data.data) {
+                    this.loadingText = data.msg;
+                    this.loadingsArea.setText(this.loadingText);
+                    this.GetCheckOver();
+                    if (this.num > 1) {
+                        this.orderStatus = setInterval(() => {
+                            this.GetCheckOver();
+                        }, 4000);
+                    }
+                } else {
+                    this.dataList = [];
+                    this.dataList.push(data.data);
+                    this.RegroupData(this.dataList, 1);
+                    this.loadingsArea.close();
+                    this.isDisabled = false;
                 }
             } else {
-                this.loadings.close();
+                this.loadingsArea.close();
+                this.isDisabled = false;
                 this.$errorToast(data.msg);
             }
         })
     },
     GetCheckOver() {
         this.num += 1;
-        if (this.num < 15) {
+        if (this.num < 150) {
             this.$http(`${REP_API.MaterialTraceability_checkOver_API}`, 'POST', this.formHeader, false, false, false).then(({ data }) => {
                 if (data.code === 0) {
-                    if (data.msg !== null) {
+                    if (data.data !== null && data.data !== '{}') {
                         this.dataList = [];
-                        this.dataList.push(JSON.parse(data.msg));
+                        // this.dataList.push(data.msg);
+                        this.dataList.push(JSON.parse(data.data));
                         this.RegroupData(this.dataList, 1);
-                        this.loadings.close();
+                        this.loadingsArea.close();
+                        this.isDisabled = false;
                         clearInterval(this.orderStatus);
+                    } else if (data.times <= 0) {
+                        this.loadingsArea.close();
+                        this.isDisabled = false;
+                        clearInterval(this.orderStatus);
+                        this.$errorToast('请求超时');
+                    } else {
+                        this.loadingText = data.msg;
+                        this.loadingsArea.setText(this.loadingText);
                     }
                 } else {
-                    this.loadings.close();
+                    this.loadingsArea.close();
+                    this.isDisabled = false;
                     this.$errorToast(data.msg);
                 }
             })
         } else {
-            this.loadings.close();
+            this.loadingsArea.close();
+            this.isDisabled = false;
             clearInterval(this.orderStatus);
             this.$errorToast('请求超时');
         }
@@ -158,10 +187,11 @@ export default {
 }
 </script>
 
-<style scoped>
-.titleLeft {
-    float: left;
-    font-weight: 600;
-    line-height: 32px;
+<style lang="scss">
+.loading-area {
+    min-height: 250px;
+    .el-loading-mask {
+        z-index: 1000;
+    }
 }
 </style>

@@ -21,7 +21,7 @@
                         </div>
                         <div class="dataEntry-head-leftRight-message__item">
                             <p class="dataEntry-head-leftRight-message__item_info">
-                                {{ stockInfoObj.beanWareHouse || stockInfoObj.beanLocation || '' }}
+                                {{ stockInfoObj.wareHouse || stockInfoObj.location || '' }}
                             </p>
                             <p><em class="iconfont factory-bianhao" />库位</p>
                         </div>
