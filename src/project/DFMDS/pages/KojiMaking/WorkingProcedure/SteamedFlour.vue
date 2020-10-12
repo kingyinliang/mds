@@ -106,7 +106,7 @@
                 type: 'p',
                 icon: 'factory-riqi1',
                 label: '发酵罐号',
-                value: 'fermentPotNo'
+                value: 'fermentPotName'
             },
             {
                 type: 'tooltip',

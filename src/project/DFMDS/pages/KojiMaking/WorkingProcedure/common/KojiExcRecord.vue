@@ -76,7 +76,7 @@
                     {{ scope.row.changer }}
                 </template>
             </el-table-column>
-            <el-table-column label="操作时间" width="160">
+            <el-table-column label="操作时间" width="170">
                 <template slot-scope="scope">
                     {{ scope.row.changed }}
                 </template>
