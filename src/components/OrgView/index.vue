@@ -95,17 +95,25 @@
             }).then(({ data }) => {
                 if (data.code === 200) {
                     this.OrgTree = data.data;
-                    console.log('this.OrgTree')
-                    console.log(this.OrgTree)
                     if (extendId !== '') {
                         this.arrList = [extendId];
+                        // this.$nextTick(() => {
+                        //     console.log('extendId')
+                        //     console.log(extendId)
+                        //     this.$refs.tree.setCurrentKey(extendId)
+                        // });
                     } else {
                         this.arrList = [this.OrgTree[0]['children'][0]['id']];
+
+                        this.$nextTick(() => {
+                            this.$refs.tree.setCurrentKey('1')
+                        });
                     }
 
                     if (type) {
                         this.$emit('getTreeSuccess', data.data);
                     }
+
                 }
             });
         }

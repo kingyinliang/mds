@@ -147,7 +147,8 @@ export default class ManHour extends Vue {
 
     // 订单拉取
     getOrderList() {
-        COMMON_API.ORDER_LIST_QUERY_API({
+        this.formHeader.orderNo = '';
+        STE_API.STE_TIMESHEET_ORDERLIST_QUERY_API({
             workShop: this.formHeader.workShop,
             productDate: this.formHeader.productDate
         }).then(({ data }) => {
