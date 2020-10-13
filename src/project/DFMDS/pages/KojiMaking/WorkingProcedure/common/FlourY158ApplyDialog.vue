@@ -291,11 +291,15 @@
 </script>
 <style lang="scss" scoped>
 .koji-control-form_select {
-    max-width: 260px;
+    min-width: 200px;
+    max-width: 300px;
+    padding-left: 8px;
     overflow: hidden;
+    color: #333;
     white-space: nowrap;
-    text-align: center;
     text-overflow: ellipsis;
+    background: #f5f5f5;
+    border-radius: 4px;
     cursor: pointer;
 }
 </style>
