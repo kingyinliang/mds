@@ -262,8 +262,6 @@ export default class OrgStructure extends Vue {
 
     // 右键菜单
     showMenu(event, object) {
-        console.log('object')
-        console.log(object)
         this.clickTreeNode = object;
         this.menuVisible = true;
         const menu = document.querySelector('#menu') as HTMLDivElement;
