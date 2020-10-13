@@ -2,7 +2,7 @@
     <el-dialog title="半成品领用" :close-on-click-modal="false" :visible.sync="visible">
         <el-form ref="dataForm" :model="dataForm" status-icon :rules="dataRule" label-width="125px" size="small" @keyup.enter.native="dataFormSubmit()">
             <el-form-item label="生产锅号：" prop="stePotNo">
-                <el-input v-model="dataForm.stePotNo" placeholder="手动输入" disabled />
+                <el-input v-model="dataForm.stePotName" placeholder="手动输入" disabled />
             </el-form-item>
             <el-form-item label="发酵罐领用：">
                 <el-radio v-model="dataForm.consumeType" label="1">
@@ -72,7 +72,7 @@
         $refs: {dataForm: HTMLFormElement};
         visible = false;
         potArr: PotObject[] = [];
-        transferTank = [];
+        transferTank: PotObject[] = [];
         materialArr: MaterialObj[] = [];
         dataRule = {
             stePotNo: [{ required: true, message: '生产锅号不能为空', trigger: 'blur' }],
@@ -104,7 +104,7 @@
             })
         }
 
-        init(Data) {
+        init(Data, formHeader) {
             COMMON_API.HOLDER_QUERY_API({
                 deptId: this.formHeader.workShop,
                 holderType: '022',
@@ -120,6 +120,7 @@
                 this.dataForm = {
                     id: '',
                     stePotNo: this.$store.state.sterilize.SemiReceive.potNo,
+                    stePotName: formHeader.potName,
                     potOrderId: this.$store.state.sterilize.SemiReceive.potOrderMap.id,
                     potOrderNo: this.$store.state.sterilize.SemiReceive.potOrderMap.potOrderNo,
                     consumeType: '1',
@@ -152,11 +153,13 @@
                 if (valid) {
                     if (this.dataForm.consumeType === '0') {
                         this.dataForm.fermentPotNo = '';
-                        this.dataForm.fermentPotNoName = '';
+                        this.dataForm.fermentPotName = '';
                         this.dataForm.fermentStorage = '';
                     } else {
                         const filterArr1: (any) = this.potArr.filter(it => it.holderNo === this.dataForm.fermentPotNo);// eslint-disable-line
-                        this.dataForm.fermentPotNoName = filterArr1[0].holderName;
+                        const filterArr2: (any) = this.transferTank.filter(it => it.holderNo === this.dataForm.tankNo);// eslint-disable-line
+                        this.dataForm.fermentPotName = filterArr1[0].holderName;
+                        this.dataForm.tankName = filterArr2.length ? filterArr2[0].holderName : '';
                     }
                     this.visible = false;
                     this.$emit('success', this.dataForm)
@@ -175,8 +178,9 @@
     interface DataObj {
         id?: string;
         consumeType?: string;
-        fermentPotNoName?: string;
+        fermentPotName?: string;
         stePotNo?: string;
+        stePotName?: string;
         potOrderId?: string;
         potOrderNo?: string;
         fermentPotNo?: string;
@@ -188,6 +192,7 @@
         consumeBatch?: string;
         fermentStorage?: string;
         tankNo?: string;
+        tankName?: string;
         remark?: string;
         changer?: string;
         changed?: string;

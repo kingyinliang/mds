@@ -55,8 +55,9 @@
             return res;
         }
 
-        init(deptId) {
+        init(deptId, selectedIds) {
             this.visible = true;
+            this.selectId = selectedIds;
             COMMON_API.HOLDER_DROPDOWN_API({
                 deptId,
                 factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,

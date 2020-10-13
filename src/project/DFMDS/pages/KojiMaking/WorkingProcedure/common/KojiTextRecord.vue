@@ -7,14 +7,13 @@
 -->
 <template>
     <mds-card title="文本记录" :name="'textRecord'">
-        <el-input v-model="currentFormDataGroup.text" type="textarea" :rows="7" :disabled="!isRedact" style="width: 100%; height: 200px;" />
+        <el-input v-model="currentFormDataGroup.kojiText" type="textarea" :rows="7" :disabled="!isRedact" style="width: 100%; height: 200px;" />
     </mds-card>
 </template>
 
 <script lang="ts">
     import { Vue, Component, Prop } from 'vue-property-decorator';
     import { KOJI_API } from 'common/api/api';
-    // import _ from 'lodash';
 
     @Component({
         name: 'KojiTextRecord'
@@ -35,39 +34,34 @@
         isNewForm=false
 
         init(formHeader, workShop?) {
+            console.log(formHeader)
             if (workShop === 'koji') {
                 KOJI_API.KOJI_TEXT_QUERY_API({
-                    kojiOrderNo: formHeader.kojiHouseNo || formHeader.orderNo,
+                    orderNo: formHeader.orderNo,
+                    kojiOrderNo: formHeader.kojiOrderNo,
                     textStage: formHeader.textStage
                 }).then(({ data }) => {
-                    this.getData(data);
+                    this.getData(data, formHeader);
                 })
             }
         }
 
-        getData(data) {
-            if (data.data !== null) {
+        getData(data, formHeader) {
+            if (data.data && data.data.id) {
                 this.currentFormDataGroup = JSON.parse(JSON.stringify(data.data))
             } else {
                 this.currentFormDataGroup = {
                     kojiText: '', // 文本
                     id: '', // 主键
-                    orderNo: '', // 订单号
-                    kojiOrderNo: '', // 曲房单号
-                    textStage: '' // 工艺
+                    orderNo: formHeader.orderNo, // 订单号
+                    kojiOrderNo: formHeader.kojiOrderNo, // 制曲订单号
+                    textStage: formHeader.textStage // 工艺
                 }
             }
         }
 
-        savedData(formHeader, workShop?) {
+        savedData() {
             let pkgTextInsert: TextObj = {};
-            if (workShop === 'koji') {
-                this.currentFormDataGroup.kojiText = formHeader.kojiText;
-                this.currentFormDataGroup.id = formHeader.id;
-                this.currentFormDataGroup.orderNo = formHeader.orderNo;
-                this.currentFormDataGroup.kojiOrderNo = formHeader.kojiOrderNo;
-                this.currentFormDataGroup.textStage = formHeader.textStage;
-            }
             pkgTextInsert = this.currentFormDataGroup;
             return {
                 pkgTextInsert

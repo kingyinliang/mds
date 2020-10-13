@@ -17,7 +17,7 @@
                     <el-table-column :index="index => getIndexMethod(index, semiTable)" type="index" label="序号" width="50px" fixed />
                     <el-table-column prop="stePotNo" label="生产锅号" min-width="100" :show-overflow-tooltip="true">
                         <template slot-scope="scope">
-                            {{ `${scope.row.stePotNo}` }}
+                            {{ `${scope.row.stePotName}` }}
                         </template>
                     </el-table-column>
                     <el-table-column prop="consumeType" label="发酵罐领用" min-width="100" :show-overflow-tooltip="true">
@@ -25,7 +25,7 @@
                             {{ scope.row.consumeType==='1'?'是':'否' }}
                         </template>
                     </el-table-column>
-                    <el-table-column prop="fermentPotNoName" label="发酵罐号" min-width="100" :show-overflow-tooltip="true" />
+                    <el-table-column prop="fermentPotName" label="发酵罐号" min-width="100" :show-overflow-tooltip="true" />
                     <el-table-column prop="aiShelves" label="领用物料" min-width="120" :show-overflow-tooltip="true">
                         <template slot-scope="scope">
                             {{ scope.row.materialCode }}
@@ -131,7 +131,7 @@
         receive() {
             this.visible = true;
             this.$nextTick(() => {
-                this.$refs.SemiReceiveDialog.init()
+                this.$refs.SemiReceiveDialog.init(null, this.formHeader)
             });
         }
 

@@ -17,7 +17,9 @@ export default {
         // 首頁发酵罐讯息
         orderKojiInfo: {},
         // 首頁泡豆罐讯息
-        orderScInfo: {}
+        orderScInfo: {},
+        // 页签状态
+        houseTagInfo: {}
     },
     mutations: {
         updateStockSoybeanInfo(state, infoObj) {
@@ -34,6 +36,9 @@ export default {
         },
         updateOrderScInfo(state, infoObj) {
             state.orderScInfo = infoObj;
+        },
+        updateHouseTag(state, data) {
+            state.houseTagInfo = data;
         }
     }
 };

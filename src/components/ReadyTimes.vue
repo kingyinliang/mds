@@ -215,7 +215,7 @@ export default class ReadyTimes extends Vue {
         this.currentFormDataGroup = dataList;
         if (dataList === null) {
             this.currentFormDataGroup = {
-                classes: '',
+                classes: 'M',
                 dayQuality: null,
                 dayChange: null,
                 midQualiry: null,

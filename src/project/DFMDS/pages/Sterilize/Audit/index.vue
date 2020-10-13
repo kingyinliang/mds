@@ -73,8 +73,13 @@ export default class AuditIndex extends Vue {
             linkageProp: ['productLine']
         },
         {
+            type: 'input',
+            label: '生产订单',
+            prop: 'orderNo'
+        },
+        {
             type: 'select',
-            label: '生产产线',
+            label: '生产物料',
             prop: 'productLine',
             optionsFn: val => {
                 return COMMON_API.ORG_QUERY_CHILDREN_API({
@@ -88,11 +93,6 @@ export default class AuditIndex extends Vue {
                 value: 'id'
             },
             defaultValue: ''
-        },
-        {
-            type: 'input',
-            label: '生产订单',
-            prop: 'orderNo'
         },
         {
             type: 'date-interval',
@@ -325,14 +325,13 @@ export default class AuditIndex extends Vue {
     }
 
     getLineClick(row: object) {
-        this.$store.commit('Sterilize/updateAuditDetail', row);
+        this.$store.commit('sterilize/updateAuditDetail', row);
         this.$store.commit('common/updateMainTabs', this.$store.state.common.mainTabs.filter(subItem => subItem.name !== 'DFMDS-pages-Sterilize-Audit-AuditDetail'))
         setTimeout(() => {
             this.$router.push({
                 name: `DFMDS-pages-Sterilize-Audit-AuditDetail`
             });
         }, 100);
-
     }
 }
 </script>
