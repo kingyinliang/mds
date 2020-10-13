@@ -3,7 +3,7 @@
  * @Anthor: Telliex
  * @Date: 2020-09-30 12:08:32
  * @LastEditors: Telliex
- * @LastEditTime: 2020-10-13 15:14:20
+ * @LastEditTime: 2020-10-13 17:10:09
 -->
 <template>
     <mds-card title="文本记录" :name="'textRecord'">
@@ -28,18 +28,20 @@
             id: '', // 主键
             orderNo: '', // 订单号
             kojiOrderNo: '', // 曲房单号
-            textStage: '' // 工艺
+            textStage: 'YP' // 工艺
         }
 
         isChange=false
         isNewForm=false
 
-        init(formHeader, workShop?) {
+        init(formHeader, textStage, workShop?) {
             if (workShop === 'koji') {
                 KOJI_API.KOJI_TEXT_QUERY_API({
                     kojiOrderNo: formHeader.kojiHouseNo || formHeader.orderNo,
-                    textStage: formHeader.textStage
+                    textStage: textStage
                 }).then(({ data }) => {
+                    console.log('圆盘文本')
+                    console.log(data)
                     this.getData(data);
                 })
             }
@@ -54,24 +56,18 @@
                     id: '', // 主键
                     orderNo: '', // 订单号
                     kojiOrderNo: '', // 曲房单号
-                    textStage: '' // 工艺
+                    textStage: 'YP' // 工艺
                 }
             }
         }
 
-        savedData(formHeader, workShop?) {
-            let pkgTextInsert: TextObj = {};
-            if (workShop === 'koji') {
-                this.currentFormDataGroup.kojiText = formHeader.kojiText;
-                this.currentFormDataGroup.id = formHeader.id;
+        savedData(formHeader) {
+                // this.currentFormDataGroup.kojiText = formHeader.kojiText;
+                // this.currentFormDataGroup.id = formHeader.id;
                 this.currentFormDataGroup.orderNo = formHeader.orderNo;
                 this.currentFormDataGroup.kojiOrderNo = formHeader.kojiOrderNo;
                 this.currentFormDataGroup.textStage = formHeader.textStage;
-            }
-            pkgTextInsert = this.currentFormDataGroup;
-            return {
-                pkgTextInsert
-            }
+            return this.currentFormDataGroup
         }
     }
     interface TextObj{

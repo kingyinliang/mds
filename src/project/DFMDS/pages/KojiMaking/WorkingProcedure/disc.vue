@@ -32,10 +32,10 @@
     import { Vue, Component } from 'vue-property-decorator';
     import { COMMON_API, KOJI_API } from 'common/api/api';
 
-    import CraftControl from './common/DiscCraftControl.vue';
-    import ProductInStorage from './common/DiscProductInStorage.vue';
-    import kojiExcRecord from './common/KojiExcRecord.vue';
-    import kojiTextRecord from 'components/TextRecord/index_t.vue';
+    import CraftControl from './common/DiscCraftControl.vue'; // import tab 工艺控制
+    import ProductInStorage from './common/DiscProductInStorage.vue'; // import tab 生产入库
+    import kojiExcRecord from './common/DiscKojiExcRecord.vue'; // import 异常记录
+    import kojiTextRecord from './common/DiscKojiTextRecord.vue'; // import 文本记录
 
     @Component({
         name: 'DiscIndex',
@@ -48,10 +48,10 @@
     })
     export default class WashBeanIndex extends Vue {
         $refs: {
-            craftControl: HTMLFormElement;
-            productInStorage: HTMLFormElement;
-            excRecord: HTMLFormElement;
-            textRecord: HTMLFormElement;
+            craftControl: HTMLFormElement; // tab 工艺控制
+            productInStorage: HTMLFormElement; // tab 工艺控制
+            excRecord: HTMLFormElement; // 异常记录
+            textRecord: HTMLFormElement; // 文本记录
         }
 
         formHeader: OrderData = {};
@@ -143,22 +143,18 @@
             }
         ];
 
-        headerInfo={}
 
         submitRules(): Function[] {
-            return [this.$refs.craftControl.ruleSubmit, this.$refs.productInStorage, this.$refs.excRecord.ruleSubmit]
+            return [this.$refs.craftControl.ruleSubmit, this.$refs.productInStorage.ruleSubmit, this.$refs.excRecord.ruleSubmit]
         }
 
         mounted() {
-
             // 获取溶解罐下拉选项
             this.getFermentationHolder()
             // 班次下拉选项
             this.getClassesList()
 
-            this.formHeader = JSON.parse(JSON.stringify(this.$store.state.koji.orderKojiInfo))
-            this.$set(this.formHeader, 'factoryName', JSON.parse(sessionStorage.getItem('factory') || '{}').deptShort)
-            // this.getOrderList()
+            this.getOrderList()
 
         }
 
@@ -191,69 +187,105 @@
 
         // 查询表头
         getOrderList() {
-            KOJI_API.KOJI_CRAFT_HEAD_INFO_QUERY_API({
-                id: this.$store.state.koji.orderKojiInfo.id || ''
-            }).then(({ data }) => {
-                this.formHeader = data.data;
-                this.formHeader.textStage = 'XD';
-                this.formHeader.factoryName = JSON.parse(sessionStorage.getItem('factory') || '{}').deptShort;
+            // KOJI_API.KOJI_CRAFT_HEAD_INFO_QUERY_API({
+            //     id: this.$store.state.koji.orderKojiInfo.id || ''
+            // }).then(({ data }) => {
+            //     this.formHeader = data.data;
+            //     this.formHeader.textStage = 'YP';
+            //     this.formHeader.factoryName = JSON.parse(sessionStorage.getItem('factory') || '{}').deptShort;
+            //     this.$refs.craftControl.init(this.formHeader);
+            //     this.$refs.productInStorage.init(this.formHeader);
+            //     this.$refs.excRecord.init(this.formHeader, 'YP'); // 洗豆:XD;SC洗豆:SC;蒸豆:ZD;蒸面:ZM;圆盘:YP
+            //     this.$refs.textRecord.init(this.formHeader, 'YP', 'koji'); // 洗豆:XD;SC洗豆:SC;蒸豆:ZD;蒸面:ZM;圆盘:YP
+            // })
+
+                this.formHeader = JSON.parse(JSON.stringify(this.$store.state.koji.orderKojiInfo))
+                this.$set(this.formHeader, 'factoryName', JSON.parse(sessionStorage.getItem('factory') || '{}').deptShort)
+                this.$set(this.formHeader, 'textStage', 'YP')
+                console.log('this.formHeader')
+                console.log(this.formHeader)
                 this.$refs.craftControl.init(this.formHeader);
                 this.$refs.productInStorage.init(this.formHeader);
-                this.$refs.excRecord.init(this.formHeader, 'XD');
-                this.$refs.textRecord.init(this.formHeader, 'koji');
-            })
+                this.$refs.excRecord.init(this.formHeader, 'YP'); // 洗豆:XD;SC洗豆:SC;蒸豆:ZD;蒸面:ZM;圆盘:YP
+                this.$refs.textRecord.init(this.formHeader, 'YP', 'koji'); // 洗豆:XD;SC洗豆:SC;蒸豆:ZD;蒸面:ZM;圆盘:YP
+
         }
 
         savedDatas() {
             const craftControlTemp = this.$refs.craftControl.savedData(this.formHeader);
             const productInStorageTemp = this.$refs.productInStorage.savedData(this.formHeader);
-            // const excRecord = this.$refs.excRecord.savedData(this.formHeader);
-            // const textRecord = this.$refs.textRecord.savedData(this.formHeader);
+            const excRecordTemp = this.$refs.excRecord.savedData(this.formHeader);
+            const textRecordTemp = this.$refs.textRecord.savedData(this.formHeader);
 
 
             return KOJI_API.KOJI_DISC_QUERY_SAVE_API({
-                discEvaluateDeleteIds: '', // 曲料生长评价待删除id列表
-                discEvaluateInsertList: [], // 曲料生长评价新增列表
-                discEvaluateUpdateList: [], // 曲料生长评价更新列表
-                discGuardDeleteIds: '', // 看曲记录待删除id列表
-                discGuardException: '', // 看曲记录异常情况
-                discGuardInsertList: [], // 看曲记录新增列表
-                discGuardUpdateList: [], // 看曲记录更新列表
+                discEvaluate: {
+                    deleteIds: [], // 曲料生长评价待删除id列表
+                    insertList: [], // 曲料生长评价新增列表
+                    updateList: [] //曲料生长评价更新列表
+                },
+                discGuard: {
+                    deleteIds: [], // 看曲记录待删除id列表
+                    insertList: [], // 看曲记录新增列表
+                    updateList: [] // 看曲记录更新列表
+                },
                 discIn: [],
                 discOut: [],
                 discTurn1: craftControlTemp.discTurn1,
                 discTurn2: craftControlTemp.discTurn2,
-                discTurnException: '', // 翻曲记录异常情况
+                discGuardException: craftControlTemp.discGuardException, // 看曲记录异常情况
+                discTurnException: craftControlTemp.discTurnException, // 翻曲记录异常情况
+                exception: { // 异常记录
+                    insertDatas: excRecordTemp.insertDatas,
+                    removeIds: excRecordTemp.removeIds,
+                    updateDatas: excRecordTemp.updateDatas
+                }, // 异常记录
+                fermentPotId: this.formHeader.fermentPotId, // 发酵罐Id
+                fermentPotNo: this.formHeader.fermentPotNo, // 发酵罐号
                 inStorage: productInStorageTemp,
                 kojiOrderNo: this.formHeader.kojiHouseNo, // 曲房单号
-                orderNo: this.formHeader.orderNo // 订单号
+                orderNo: this.formHeader.orderNo, // 订单号
+                text: textRecordTemp
             })
         }
 
         submitDatas() {
-            const craftControlTemp = this.$refs.craftControl.savedData(this.formHeader);
-            const productInStorageTemp = this.$refs.productInStorage.savedData(this.formHeader);
-            // const excRecord = this.$refs.excRecord.savedData(this.formHeader);
-            // const textRecord = this.$refs.textRecord.savedData(this.formHeader);
+
+            if (this.$refs.craftControl.ruleSubmit() && this.$refs.productInStorage.ruleSubmit() && this.$refs.excRecord.ruleSubmit()) {
+
+                const craftControlTemp = this.$refs.craftControl.savedData(this.formHeader);
+                const productInStorageTemp = this.$refs.productInStorage.savedData(this.formHeader);
+                const excRecordTemp = this.$refs.excRecord.savedData(this.formHeader);
+                const textRecordTemp = this.$refs.textRecord.savedData(this.formHeader);
 
 
-            return KOJI_API.KOJI_DISC_QUERY_SUBMIT_API({
-                discEvaluateDeleteIds: '', // 曲料生长评价待删除id列表
-                discEvaluateInsertList: [], // 曲料生长评价新增列表
-                discEvaluateUpdateList: [], // 曲料生长评价更新列表
-                discGuardDeleteIds: '', // 看曲记录待删除id列表
-                discGuardException: '', // 看曲记录异常情况
-                discGuardInsertList: [], // 看曲记录新增列表
-                discGuardUpdateList: [], // 看曲记录更新列表
-                discIn: [],
-                discOut: [],
-                discTurn1: craftControlTemp.discTurn1,
-                discTurn2: craftControlTemp.discTurn2,
-                discTurnException: '', // 翻曲记录异常情况
-                inStorage: productInStorageTemp,
-                kojiOrderNo: this.formHeader.kojiHouseNo, // 曲房单号
-                orderNo: this.formHeader.orderNo // 订单号
-            })
+                return KOJI_API.KOJI_DISC_QUERY_SUBMIT_API({
+                discEvaluate: {
+                        deleteIds: [], // 曲料生长评价待删除id列表
+                        insertList: [], // 曲料生长评价新增列表
+                        updateList: [] //曲料生长评价更新列表
+                    },
+                    discGuard: {
+                        deleteIds: [], // 看曲记录待删除id列表
+                        insertList: [], // 看曲记录新增列表
+                        updateList: [] // 看曲记录更新列表
+                    },
+                    discIn: [],
+                    discOut: [],
+                    discTurn1: craftControlTemp.discTurn1,
+                    discTurn2: craftControlTemp.discTurn2,
+                    discGuardException: productInStorageTemp.discGuardException, // 看曲记录异常情况
+                    discTurnException: productInStorageTemp.discTurnException, // 翻曲记录异常情况
+                    exception: excRecordTemp, // 异常记录
+                    fermentPotId: this.formHeader.fermentPotId, // 发酵罐Id
+                    fermentPotNo: this.formHeader.fermentPotNo, // 发酵罐号
+                    inStorage: productInStorageTemp,
+                    kojiOrderNo: this.formHeader.kojiHouseNo, // 曲房单号
+                    orderNo: this.formHeader.orderNo, // 订单号
+                    text: textRecordTemp
+                })
+            }
+
         }
     }
 
@@ -293,5 +325,7 @@
         potNo?: string;
         potOrder?: string;
         steTagPot?: StatusObj;
+        fermentPotNo?: string;
+        fermentPotId?: string;
     }
 </script>

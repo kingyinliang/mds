@@ -1,79 +1,73 @@
 <template>
     <div>
         <mds-card :title="'生产入库'" :name="'productInStore'">
-            <el-form ref="ruleForm" :model="ruleForm" class="ruleForm">
-                <el-table header-row-class-name="tableHead" class="newTable" :data="currentFormDataGroup" :row-class-name="rowDelFlag" border tooltip-effect="dark" style="width: 100%; min-height: 90px;">
-                    <el-table-column type="index" label="序号" width="50" fixed="left" align="center" />
-                    <el-table-column label="大豆量" prop="beanAmount" width="210">
-                        <template slot="header">
-                            <span class="notNull">* </span>大豆量
-                        </template>
-                        <template slot-scope="scope">
-                            {{ scope.row.beanAmount }}
-                        </template>
-                    </el-table-column>
-                    <el-table-column label="面粉量" prop="flourAmount" width="210">
-                        <template slot="header">
-                            <span class="notNull">* </span>面粉量
-                        </template>
-                        <template slot-scope="scope">
-                            {{ scope.row.flourAmount }}
-                        </template>
-                    </el-table-column>
-                    <el-table-column label="菌种量" prop="strainAmount" width="210">
-                        <template slot="header">
-                            <span class="notNull">* </span>菌种量
-                        </template>
-                        <template slot-scope="scope">
-                            {{ scope.row.strainAmount }}
-                        </template>
-                    </el-table-column>
-                    <el-table-column label="入库数量" prop="inStorageAmount" width="210">
-                        <template slot="header">
-                            <span class="notNull">* </span>入库数量
-                        </template>
-                        <template slot-scope="scope">
-                            <el-form-item prop="inStorageAmount">
-                                <el-input v-model.trim="scope.row.inStorageAmount" size="small" placeholder="请输入" :disabled="!isRedact" />
-                            </el-form-item>
-                        </template>
-                    </el-table-column>
-                    <el-table-column label="入库批次" prop="inStorageBatch" width="210">
-                        <template slot="header">
-                            <span class="notNull">* </span>入库批次
-                        </template>
-                        <template slot-scope="scope">
-                            <el-form-item prop="inStorageBatch">
-                                <el-input v-model.trim="scope.row.inStorageBatch" size="small" placeholder="请输入" :disabled="!isRedact" />
-                            </el-form-item>
-                        </template>
-                    </el-table-column>
+            <el-table header-row-class-name="tableHead" class="newTable" :data="currentFormDataGroup" :row-class-name="rowDelFlag" border tooltip-effect="dark" style="width: 100%; min-height: 90px;">
+                <el-table-column type="index" label="序号" width="50" fixed="left" align="center" />
+                <el-table-column label="大豆量" prop="beanAmount" width="120">
+                    <template slot="header">
+                        <span class="notNull">* </span>大豆量
+                    </template>
+                    <template slot-scope="scope">
+                        {{ scope.row.beanAmount }}
+                    </template>
+                </el-table-column>
+                <el-table-column label="面粉量" prop="flourAmount" width="120">
+                    <template slot="header">
+                        <span class="notNull">* </span>面粉量
+                    </template>
+                    <template slot-scope="scope">
+                        {{ scope.row.flourAmount }}
+                    </template>
+                </el-table-column>
+                <el-table-column label="菌种量" prop="strainAmount" width="120">
+                    <template slot="header">
+                        <span class="notNull">* </span>菌种量
+                    </template>
+                    <template slot-scope="scope">
+                        {{ scope.row.strainAmount }}
+                    </template>
+                </el-table-column>
+                <el-table-column label="入库数量" prop="inStorageAmount" width="120">
+                    <template slot="header">
+                        <span class="notNull">* </span>入库数量
+                    </template>
+                    <template slot-scope="scope">
+                        <el-input v-model.trim="scope.row.inStorageAmount" size="small" placeholder="请输入" :disabled="!isRedact" />
+                    </template>
+                </el-table-column>
+                <el-table-column label="入库批次" prop="inStorageBatch" width="210">
+                    <template slot="header">
+                        <span class="notNull">* </span>入库批次
+                    </template>
+                    <template slot-scope="scope">
+                        <el-input v-model.trim="scope.row.inStorageBatch" maxlength="10" size="small" placeholder="请输入" :disabled="!isRedact" />
+                    </template>
+                </el-table-column>
 
-                    <el-table-column label="单位" prop="unit" width="210">
-                        <template slot="header">
-                            <span class="notNull">* </span>单位
-                        </template>
-                        <template slot-scope="scope">
-                            {{ scope.row.unit }}
-                        </template>
-                    </el-table-column>
-                    <el-table-column label="备注" prop="remark" width="100">
-                        <template slot-scope="scope">
-                            <el-input v-model.trim="scope.row.remark" size="small" placeholder="请输入" :disabled="!(isRedact && scope.row.checkStatus !== 'C' && scope.row.checkStatus !== 'D' && scope.row.checkStatus !== 'P')" />
-                        </template>
-                    </el-table-column>
-                    <el-table-column label="操作人" prop="changer" width="140">
-                        <template slot-scope="scope">
-                            {{ scope.row.changer }}
-                        </template>
-                    </el-table-column>
-                    <el-table-column label="操作时间" prop="changed" width="180">
-                        <template slot-scope="scope">
-                            {{ scope.row.changed }}
-                        </template>
-                    </el-table-column>
-                </el-table>
-            </el-form>
+                <el-table-column label="单位" prop="unit" width="80">
+                    <template slot="header">
+                        <span class="notNull">* </span>单位
+                    </template>
+                    <template slot-scope="scope">
+                        {{ scope.row.unit }}
+                    </template>
+                </el-table-column>
+                <el-table-column label="备注" prop="remark" min-width="200">
+                    <template slot-scope="scope">
+                        <el-input v-model.trim="scope.row.remark" size="small" placeholder="请输入" :disabled="!(isRedact && scope.row.checkStatus !== 'C' && scope.row.checkStatus !== 'D' && scope.row.checkStatus !== 'P')" />
+                    </template>
+                </el-table-column>
+                <el-table-column label="操作人" prop="changer" width="140">
+                    <template slot-scope="scope">
+                        {{ scope.row.changer }}
+                    </template>
+                </el-table-column>
+                <el-table-column label="操作时间" prop="changed" width="180">
+                    <template slot-scope="scope">
+                        {{ scope.row.changed }}
+                    </template>
+                </el-table-column>
+            </el-table>
         </mds-card>
         <audit-log :table-data="currentAudit" :verify-man="'verifyMan'" :verify-date="'verifyDate'" :status="true" />
     </div>
@@ -106,40 +100,31 @@
         currentFormDataGroup: CurrentDataTable[] = [] // 主 data
         // orgFormDataGroup: CurrentDataTable[] = [] // 主 data 复制
 
-
-        dataRules= {
-            inStorageAmount: [
-                { required: true, message: '请输入数量', trigger: 'blur' }
-            ],
-            inStorageBatch: [
-                { required: true, message: '请输入', trigger: 'blur' }
-            ]
-        }
-
-        mounted() {
-            this.targetOrderObj = this.$store.state.koji.orderKojiInfo
+        init(formHeader) {
+            this.targetOrderObj = formHeader
             // 生产入库
             this.getKojiStatus()
+            // 审核日志
+            this.getAudit(this.targetOrderObj, 'INSTORAGE');
         }
 
+        // 生产入库
         getKojiStatus() {
             KOJI_API.KOJI_DISC_QUERY_INSTORAGE_API({
                 kojiOrderNo: this.targetOrderObj.kojiOrderNo
             }).then(({ data }) => {
                 this.currentFormDataGroup = []
                 if (data.data) {
-                    this.currentFormDataGroup = data.data
+                    this.currentFormDataGroup[0] = data.data
                 }
             });
-            // this.currentAudit = await this.getAudit(formHeader, 'INSTORAGE');
         }
 
-        async getAudit(formHeader, verifyType) {
-            const result = await AUDIT_API.AUDIT_LOG_LIST_API({
-                orderNo: formHeader.orderNo,
-                verifyType: verifyType
+        // 审核日志
+        getAudit(formHeader, verifyType) {
+            AUDIT_API.AUDIT_LOG_LIST_API({ orderNo: formHeader.orderNo, verifyType: verifyType }).then(({ data }) => {
+                this.currentAudit = data.data
             })
-            return result.data.data
         }
 
         // 提交时跑校验
@@ -165,15 +150,16 @@
 
             // dataEntryData(formHeader, this.currentFormDataGroup, this.orgFormDataGroup, instorageDelete, instorageInsert, instorageUpdate);
 
-            // return {
-            //     countOutput: this.computedTotal,
-            //     counOutputUnit: this.unitOptions[0].key,
-            //     instorageDelete,
-            //     instorageInsert,
-            //     instorageUpdate
-            // }
+            return this.currentFormDataGroup
         }
 
+        //  rowDelFlag
+        rowDelFlag({ row }) {
+            if (row.delFlag === 1) {
+                return 'rowDel';
+            }
+            return '';
+        }
 
     }
 

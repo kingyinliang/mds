@@ -597,7 +597,7 @@
                 </el-form-item>
             </el-form>
         </mds-card>
-        <audit-log :table-data="MaterialAudit" :verify-man="'verifyMan'" :verify-date="'verifyDate'" :status="true" />
+        <audit-log :table-data="currentAudit" :verify-man="'verifyMan'" :verify-date="'verifyDate'" :status="true" />
         <loaned-personnel v-if="isLoanedPersonnelStatusDialogShow" ref="loanedPersonnel" @changeUser="changeUser" />
     </div>
 </template>
@@ -605,7 +605,7 @@
 <script lang="ts">
     import { Vue, Component, Prop } from 'vue-property-decorator';
     import { dateFormat, getUserNameNumber, getDateDiff } from 'utils/utils';
-    import { COMMON_API, KOJI_API } from 'common/api/api';
+    import { COMMON_API, KOJI_API, AUDIT_API } from 'common/api/api';
     import LoanedPersonnel from 'components/LoanedPersonnel.vue';
     // import _ from 'lodash';
 
@@ -660,10 +660,10 @@
         changeHotOptions: OptionObj[]=[]
 
 
-        MaterialAudit = [];
+        currentAudit = [];
 
 
-        mounted() {
+        init() {
             this.targetOrderObj = this.$store.state.koji.orderKojiInfo
             // 入曲情况
             this.getKojiStatus()
@@ -677,6 +677,8 @@
             this.getKojiDiscEvaluate()
             // 看曲记录
             this.getKojiDiscGuard()
+            // 审核日志
+            this.getAudit(this.targetOrderObj, 'CONTROL');
         }
 
 
@@ -1062,10 +1064,12 @@
         //     }
         }
 
-        init() {
-            //
+        // 审核日志
+        getAudit(formHeader, verifyType) {
+            AUDIT_API.AUDIT_LOG_LIST_API({ orderNo: formHeader.orderNo, verifyType: verifyType }).then(({ data }) => {
+                this.currentAudit = data.data
+            })
         }
-
 
         rowDelFlag({ row }) {
             if (row.delFlag === 1) {
