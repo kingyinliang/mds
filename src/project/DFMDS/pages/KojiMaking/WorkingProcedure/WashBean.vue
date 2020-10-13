@@ -8,7 +8,7 @@
             :order-status="formHeader.statusName"
             :header-base="headerBase"
             :form-header="formHeader"
-            :tabs="tabs"
+            :tabs="currentTabs"
             :submit-rules="submitRules"
             :saved-datas="savedDatas"
             :submit-datas="submitDatas"
@@ -82,7 +82,7 @@
                 type: 'p',
                 label: '曲房编号',
                 icon: 'factory-qiyaguanjianhua',
-                value: ['kojiHouseName', 'kojiHouseNo']
+                value: 'kojiHouseName'
             },
             {
                 type: 'tooltip',
@@ -106,7 +106,7 @@
                 type: 'p',
                 icon: 'factory-riqi1',
                 label: '发酵罐号',
-                value: 'fermentPotNo'
+                value: 'fermentPotName'
             },
             {
                 type: 'tooltip',
@@ -122,28 +122,33 @@
             }
         ];
 
-        tabs: TabsObj[] = [
-            {
-                label: '物料领用',
-                status: '未录入'
-            },
-            {
-                label: '工艺控制'
-            },
-            {
-                label: '异常记录'
-            },
-            {
-                label: '文本记录'
-            }
-        ];
+        get currentTabs() {
+            const { washBeanMaterailName, washBeanCraftName } = this.$store.state.koji.houseTagInfo;
+            console.log(washBeanMaterailName, washBeanCraftName, 333);
+            return [
+                {
+                    label: '物料领用',
+                    status: washBeanMaterailName || ''
+                },
+                {
+                    label: '工艺控制',
+                    status: washBeanCraftName || ''
+                },
+                {
+                    label: '异常记录'
+                },
+                {
+                    label: '文本记录'
+                }
+            ]
+        }
 
         submitRules(): Function[] {
             return [this.$refs.washBeanMaterialCraft.ruleSubmit, this.$refs.excRecord.ruleSubmit]
         }
 
         mounted() {
-            this.getOrderList()
+            this.getOrderList();
         }
 
         // 查询表头
@@ -152,12 +157,24 @@
                 id: this.$store.state.koji.orderKojiInfo.id || ''
             }).then(({ data }) => {
                 this.formHeader = data.data;
+                // 获取页签状态
+                this.getHouseTag();
                 this.formHeader.textStage = 'XD';
                 this.formHeader.factoryName = JSON.parse(sessionStorage.getItem('factory') || '{}').deptShort;
-                this.$refs.washBeanMaterialApply.init(this.formHeader);
+                // this.$refs.washBeanMaterialApply.init(this.formHeader);
                 this.$refs.washBeanMaterialCraft.init(this.formHeader);
                 this.$refs.excRecord.init(this.formHeader, 'XD');
                 this.$refs.textRecord.init(this.formHeader, 'koji');
+            })
+        }
+
+        // 获取页签状态
+        getHouseTag() {
+            KOJI_API.KOJI_PAGE_TAG_STATUS_QUERY_API({
+                orderNo: this.formHeader.orderNo,
+                kojiOrderNo: this.formHeader.kojiOrderNo
+            }).then(({ data }) => {
+                this.$store.commit('koji/updateHouseTag', data.data);
             })
         }
 

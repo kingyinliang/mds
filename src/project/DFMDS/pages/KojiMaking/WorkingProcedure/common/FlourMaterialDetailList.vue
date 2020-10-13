@@ -38,7 +38,7 @@
                             {{ scope.row.currentAmount ? scope.row.currentAmount.toLocaleString()+' '+ scope.row.unit : '' }}
                         </template>
                     </el-table-column>
-                    <el-table-column label="日期" prop="productDate" align="center" :formatter="formatterProductDate" min-width="100" />
+                    <el-table-column label="生产日期" prop="productDate" align="center" :formatter="formatterProductDate" min-width="100" />
                 </el-table>
             </div>
         </mds-card>

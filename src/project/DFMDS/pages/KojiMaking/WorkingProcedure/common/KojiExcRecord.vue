@@ -76,7 +76,7 @@
                     {{ scope.row.changer }}
                 </template>
             </el-table-column>
-            <el-table-column label="操作时间" width="160">
+            <el-table-column label="操作时间" width="170">
                 <template slot-scope="scope">
                     {{ scope.row.changed }}
                 </template>
@@ -180,7 +180,7 @@
         // 查询异常记录列表
         getExcList(formHeader, tagName) {
             KOJI_API.KOJI_EXCEPTION_QUERY_API({
-                kojiOrderNo: formHeader.orderNo,
+                kojiOrderNo: formHeader.kojiOrderNo,
                 orderNo: formHeader.orderNo,
                 exceptionStage: tagName
             }).then(({ data }) => {
