@@ -71,6 +71,7 @@
                         </template>
                     </el-table-column>
                     <el-table-column prop="batch" label="领用批次" min-width="110" :show-overflow-tooltip="true" />
+                    <el-table-column prop="stockAmount" label="库存数量" min-width="120" :show-overflow-tooltip="true" />
                     <el-table-column prop="amount" label="领用数量" min-width="100" :show-overflow-tooltip="true" />
                     <el-table-column prop="unit" label="单位" min-width="100" :show-overflow-tooltip="true" />
                     <el-table-column prop="supplier" label="面粉厂家" min-width="100" :show-overflow-tooltip="true" />
