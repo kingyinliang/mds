@@ -454,8 +454,8 @@
                             <span class="notNull">*</span>记录时间
                         </template>
                         <template slot-scope="scope">
-                            <el-form-item prop="startDate">
-                                <el-date-picker v-model="scope.row.startDate" type="datetime" size="small" value-format="yyyy-MM-dd HH:mm" format="yyyy-MM-dd HH:mm" placeholder="选择时间" style="width: 180px;" />
+                            <el-form-item prop="recordDate">
+                                <el-date-picker v-model="scope.row.recordDate" type="datetime" size="small" value-format="yyyy-MM-dd HH:mm" format="yyyy-MM-dd HH:mm" placeholder="选择时间" style="width: 180px;" />
                             </el-form-item>
                         </template>
                     </el-table-column>
@@ -563,9 +563,6 @@
                 <el-form-item
                     label="出曲操作人："
                     prop="outKojiMans"
-                    :rules="[
-                        { required: true, message: '请输入出曲操作人', trigger: 'blur' }
-                    ]"
                 >
                     <span :style="{cursor:isRedact? 'pointer':'default',color:isRedact? '#333':'#aaa'}" @click="selectUser(kojiOutCraftformData.outKojiMans)">
                         <el-tooltip v-if="kojiOutCraftformData.outKojiMans&&kojiOutCraftformData.outKojiMans!==''" class="item" effect="dark" :content="kojiOutCraftformData.outKojiMans" placement="top">
@@ -583,9 +580,6 @@
                 <el-form-item
                     label="出曲温度："
                     prop="outKojiTemp"
-                    :rules="[
-                        { required: true, message: '请输入出曲温度', trigger: 'blur' }
-                    ]"
                 >
                     <el-input
                         v-model="kojiOutCraftformData.outKojiTemp"
@@ -742,8 +736,8 @@
         // 翻曲记录
         getKojiDiscTurn() {
             KOJI_API.KOJI_DISC_QUERY_TURN_API({
-                kojiOrderNo: '85100000188700120200918162640'
-                // kojiOrderNo: this.targetOrderObj.kojiOrderNo
+                // kojiOrderNo: '85100000188700120200918162640'
+                kojiOrderNo: this.targetOrderObj.kojiOrderNo
             }).then(({ data }) => {
                 this.kojiDiscTurnData = []
                 if (data.data) {
@@ -756,8 +750,8 @@
         // 异常情况
         getKojiDiscException() {
             KOJI_API.KOJI_DISC_QUERY_EXCEPTION_API({
-                kojiOrderNo: '85100000188700120200918162640'
-                // kojiOrderNo: this.targetOrderObj.kojiOrderNo
+                // kojiOrderNo: '85100000188700120200918162640'
+                kojiOrderNo: this.targetOrderObj.kojiOrderNo
             }).then(({ data }) => {
                 this.kojiDiscExceptionInfo = {}
                 if (data.data) {
@@ -785,8 +779,8 @@
             });
 
             KOJI_API.KOJI_DISC_QUERY_EVALUATE_API({
-                kojiOrderNo: '85100000188700120200918162640'
-                // kojiOrderNo: this.targetOrderObj.kojiOrderNo
+                // kojiOrderNo: '85100000188700120200918162640'
+                kojiOrderNo: this.targetOrderObj.kojiOrderNo
             }).then(({ data }) => {
                 this.kojiEvaluateData = []
                 if (data.data) {
@@ -815,8 +809,8 @@
 
 
             KOJI_API.KOJI_DISC_QUERY_GUARD_API({
-                kojiOrderNo: '85100000188700120200918162640'
-                // kojiOrderNo: this.targetOrderObj.kojiOrderNo
+                // kojiOrderNo: '85100000188700120200918162640'
+                kojiOrderNo: this.targetOrderObj.kojiOrderNo
             }).then(({ data }) => {
                 this.kojiGuardData = []
                 if (data.data) {
@@ -886,27 +880,38 @@
         }
 
         ruleSubmit() {
-        //     for (const item of this.currentDataTable.filter(it => it.delFlag !== 1)) {
-        //         if (!item.realUseAmount) {
-        //             this.$warningToast('请填写物料领用页签包材领用实际用量');
-        //             return false
-        //         }
-        //     }
-        //     for (const item of this.materialS.filter(it => it.delFlag !== 1)) {
-        //         if (!item.sterilizeStorageNo) {
-        //             this.$warningToast('请填写物料领用页签半成品领用使用锅序');
-        //             return false
-        //         }
-        //         if (!item.realUsed) {
-        //             this.$warningToast('请填写物料领用页签半成品领用实际用量');
-        //             return false
-        //         }
-        //         if (!item.startDate) {
-        //             this.$warningToast('请填写物料领用页签半成品领用开始使用时间');
-        //             return false
-        //         }
-        //     }
-        //     return true
+            // 入曲情况
+            if (!this.kojiInformData.addKojiMans || !this.kojiInformData.addKojiTemp || !this.kojiInformData.addKojiStart || !this.kojiInformData.addKojiStart || !this.kojiInformData.addKojiEnd || !this.kojiInformData.addKojiDuration) {
+                this.$warningToast('请填写入曲情况必填栏位');
+                return false
+            }
+
+            for (const item of this.kojiGuardData.filter(it => it.delFlag !== 1)) {
+                if (!item.guardDate || !item.windTemp || !item.roomTemp || !item.windSpeed || !item.prodTemp || !item.outUpTemp || !item.outMidTemp || !item.testTempOne || !item.testTempTwo || !item.windDoor) {
+                    this.$warningToast('请填写看曲记录必填项');
+                    return false
+                }
+            }
+            for (const item of this.kojiDiscTurnData) {
+                if (!item.turnStart || !item.turnEnd || !item.turnMans) {
+                    this.$warningToast('请填写翻曲记录必填项');
+                    return false
+                }
+            }
+            for (const item of this.kojiEvaluateData) {
+                if (!item.kojiStage || !item.recordDate || !item.recordMans) {
+                    this.$warningToast('请填写曲料生长评价必填项');
+                    return false
+                }
+            }
+
+            if (!this.kojiOutCraftformData.outKojiStart || !this.kojiOutCraftformData.outKojiStart || !this.kojiOutCraftformData.outKojiEnd || !this.kojiOutCraftformData.outKojiMans || !this.kojiOutCraftformData.outKojiTemp) {
+                this.$warningToast('请填写出曲工艺必填项');
+                return false
+            }
+
+
+            return true
         }
 
         savedData() {

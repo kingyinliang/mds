@@ -1,5 +1,5 @@
 <template>
-    <mds-card :title="'录入数据单位：MIN'" :name="'exc'" :icon-bg="'#f05c4a'">
+    <mds-card :title="'异常记录'" :name="'exc'" :icon-bg="'#f05c4a'">
         <template slot="titleBtn">
             <div style="float: right;">
                 <el-button type="primary" size="small" :disabled="!isRedact" @click="AddExcDate()">

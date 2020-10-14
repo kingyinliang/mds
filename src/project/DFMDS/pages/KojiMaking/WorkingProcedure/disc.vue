@@ -214,7 +214,7 @@
         savedDatas() {
             const craftControlTemp = this.$refs.craftControl.savedData(this.formHeader);
             const productInStorageTemp = this.$refs.productInStorage.savedData(this.formHeader);
-            const excRecordTemp = this.$refs.excRecord.savedData(this.formHeader);
+            const excRecordTemp = this.$refs.excRecord.getSavedOrSubmitData(this.formHeader);
             const textRecordTemp = this.$refs.textRecord.savedData(this.formHeader);
 
 
@@ -236,9 +236,9 @@
                 discGuardException: craftControlTemp.discGuardException, // 看曲记录异常情况
                 discTurnException: craftControlTemp.discTurnException, // 翻曲记录异常情况
                 exception: { // 异常记录
-                    insertDatas: excRecordTemp.insertDatas,
-                    removeIds: excRecordTemp.removeIds,
-                    updateDatas: excRecordTemp.updateDatas
+                    insertDatas: excRecordTemp.InsertDto,
+                    removeIds: excRecordTemp.ids,
+                    updateDatas: excRecordTemp.UpdateDto
                 }, // 异常记录
                 fermentPotId: this.formHeader.fermentPotId, // 发酵罐Id
                 fermentPotNo: this.formHeader.fermentPotNo, // 发酵罐号
