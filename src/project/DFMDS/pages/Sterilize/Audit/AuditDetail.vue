@@ -11,22 +11,22 @@
                 <mds-card title="产量与人力" :name="'outputworker'">
                     <el-form :inline="true" :model="formHeader" label-width="75px" size="small" class="dataEntry-head-base__form">
                         <el-form-item label="订单产量：">
-                            <p>{{ prodPower.planOutput }} {{ prodPower.unitName }}</p>
+                            <p>{{ yieldAndManData.planOutput }} {{ yieldAndManData.unitName }}</p>
                         </el-form-item>
                         <el-form-item label="实际产量：">
-                            <p>{{ prodPower.countOutput }} {{ prodPower.unitName }}</p>
+                            <p>{{ yieldAndManData.actualOutput }} {{ yieldAndManData.unitName }}</p>
                         </el-form-item>
                         <el-form-item label="差异数量：">
-                            <p>{{ prodPower.differences }} {{ prodPower.unitName }}</p>
+                            <p>{{ yieldAndManData.diffNumber }} {{ yieldAndManData.unitName }}</p>
                         </el-form-item>
                         <el-form-item label="作业人力：">
-                            <p>{{ prodPower.countMan }}</p>
+                            <p>{{ yieldAndManData.manNumber }}</p>
                         </el-form-item>
                         <el-form-item label="计划锅数：">
-                            <p>{{ prodPower.standardMan }}</p>
+                            <p>{{ yieldAndManData.potNumber }}</p>
                         </el-form-item>
                         <el-form-item label="生产锅数：">
-                            <p>{{ prodPower.standardMan }}</p>
+                            <p>{{ yieldAndManData.productionPotNumber }}</p>
                         </el-form-item>
                     </el-form>
                 </mds-card>
@@ -70,39 +70,39 @@
                     </el-row>
                 </mds-card>
                 <mds-card title="异常情况" :name="'AbnormalCondition'">
-                    <el-table class="newTable" :data="AbnormalConditionList" header-row-class-name="tableHead" border tooltip-effect="dark" style="margin-top: 5px;">
-                        <el-table-column type="index" label="序号" fixed />
-                        <el-table-column prop="classes" label="生产锅号" />
-                        <el-table-column prop="stopTypeName" label="锅序" />
-                        <el-table-column prop="stopMode" label="锅单号" />
-                        <el-table-column prop="stopSituation" label="阶段" />
-                        <el-table-column prop="duration" label="班次" />
-                        <el-table-column prop="durationUnit" label="异常情况" />
-                        <el-table-column prop="exceptionCount" label="异常原因" />
-                        <el-table-column prop="duration" label="异常描述" />
-                        <el-table-column prop="durationUnit" label="时长" />
-                        <el-table-column prop="exceptionCount" label="单位" />
+                    <el-table class="newTable" :data="exceptionList" header-row-class-name="tableHead" border tooltip-effect="dark" style="margin-top: 5px;">
+                        <el-table-column type="index" label="序号" fixed min-width="80" />
+                        <el-table-column prop="classes" label="生产锅号" min-width="90" />
+                        <el-table-column prop="potNo" label="锅序" min-width="80" />
+                        <el-table-column prop="potOrderNo" label="锅单号" min-width="140" />
+                        <el-table-column prop="exceptionStage" label="阶段" min-width="80" />
+                        <el-table-column prop="className" label="班次" min-width="60" />
+                        <el-table-column prop="exceptionSituationName" label="异常情况" min-width="80" />
+                        <el-table-column prop="exceptionReasonName" label="异常原因" min-width="120" />
+                        <el-table-column prop="exceptionInfo" label="异常描述" min-width="120" />
+                        <el-table-column prop="duration" label="时长" min-width="60" />
+                        <el-table-column prop="durationUnit" label="单位" min-width="60" />
                     </el-table>
                     <el-row class="solerow">
                         <div>
                             总异常时间：
                         </div>
                         <div class="input_bottom">
-                            {{ computedSoy }} H
+                            {{ excTimeTotal }} H
                         </div>
                     </el-row>
                 </mds-card>
                 <mds-card title="物料领用" :name="'MaterialRecevie'">
-                    <el-table class="newTable" :data="MaterialRecevieList" header-row-class-name="tableHead" border tooltip-effect="dark" style="margin-top: 5px;">
+                    <el-table class="newTable" :data="materialRecevieList" header-row-class-name="tableHead" border tooltip-effect="dark" style="margin-top: 5px;">
                         <el-table-column label="领用物料" show-overflow-tooltip min-width="170">
                             <template slot-scope="scope">
                                 {{ scope.row.materialCode }} {{ scope.row.materialName }}
                             </template>
                         </el-table-column>
-                        <el-table-column prop="materialUnit" label="单位" min-width="35" />
+                        <el-table-column prop="unit" label="单位" min-width="35" />
                         <el-table-column prop="useAmount" label="领用数量" min-width="50" />
-                        <el-table-column prop="realUseAmount" label="领用批次" min-width="50" />
-                        <el-table-column prop="realLoss" label="发酵罐/池" min-width="40" />
+                        <el-table-column prop="batch" label="领用批次" min-width="50" />
+                        <el-table-column prop="holderName" label="发酵罐/池" min-width="40" />
                     </el-table>
                 </mds-card>
             </template>
@@ -115,23 +115,13 @@
                 </el-button>
             </template>
         </data-entry>
-        <el-dialog title="退回原因" :close-on-click-modal="false" :visible.sync="visibleRefuse">
-            <el-input v-model="ReText" type="textarea" :rows="6" class="textarea" style="width: 100%; height: 200px;" />
-            <div slot="footer" class="dialog-footer">
-                <el-button @click="visibleRefuse = false">
-                    取消
-                </el-button>
-                <el-button type="primary" @click="refuse()">
-                    确定
-                </el-button>
-            </div>
-        </el-dialog>
     </div>
 </template>
 
 <script lang="ts">
     import { Vue, Component } from 'vue-property-decorator';
-    // import { PKG_API } from 'common/api/api';
+    import { accAdd } from 'utils/utils';
+    import { STE_API, COMMON_API } from 'common/api/api';
     import echarts from 'echarts';
 
     @Component({
@@ -208,10 +198,46 @@
             exceptionInfo: []
         };
         // eslint-disable-next-line
+        yieldAndManData = {}; // 产量与人力
+        exceptionList: ExceptionList[] = []; // 异常情况
+        materialRecevieList = []; // 物料领用
+        classList: Dictionary[] = []; // 班次字典
+        excCondition: Dictionary[] = []; // 异常情况数据字典
+        excReasonTotal: ExcReasonTotal = { // 异常原因字典
+            FAULTSHUTDOWN: [],
+            POORPROCESSWAIT: [],
+            ENERGY: []
+        };
 
         mounted() {
             this.auditDetail = this.$store.state.sterilize.auditDetail;
             console.log(this.auditDetail);
+
+            // 班次
+            const net01 = new Promise(resolve => {
+                this.getDictionary('COMMON_CLASSES', resolve);
+            });
+            // 异常情况
+            const net02 = new Promise(resolve => {
+                this.getDictionary('ABNORMAL_HALT', resolve);
+            });
+            // 异常原因
+            const net03 = new Promise(resolve => {
+                this.getDictionary('POOR_PROCESS_WAIT', resolve);
+            });
+            const net04 = new Promise(resolve => {
+                this.getDictionary('ENERGY', resolve);
+            });
+            const net05 = new Promise(resolve => {
+                this.getExcConitionList(this.auditDetail['workShop'], resolve);
+            });
+            this.getYieldAndMan(this.auditDetail['orderNo']);
+            this.getMaterialList(this.auditDetail['orderNo']);
+            Promise.all([net01, net02, net03, net04, net05]).then(() => {
+                this.getException(this.auditDetail['orderNo']);
+            }).catch((reason) => {
+                this.$errorToast(reason);
+            });
 
             this.chartLine = echarts.init(document.getElementById('J_chartLineBoxTemp'));
             const option = {
@@ -455,6 +481,98 @@
             });
         }
 
+        get excTimeTotal() {
+            let MinNum = 0;
+            this.exceptionList.map((item: ExceptionList) => {
+                MinNum = accAdd(MinNum, item.duration);
+            });
+            return (MinNum / 60).toFixed(2);
+        }
+
+        // 数据字典
+        getDictionary(dictType, resolve) {
+            COMMON_API.DICTQUERY_API({ dictType: dictType }).then(({ data }) => {
+                if (dictType === 'COMMON_CLASSES') {
+                    this.classList = data.data
+                } else if (dictType === 'ABNORMAL_HALT') {
+                    this.excCondition = data.data
+                } else if (dictType === 'POOR_PROCESS_WAIT') {
+                    this.excReasonTotal.POORPROCESSWAIT = data.data
+                } else if (dictType === 'ENERGY') {
+                    this.excReasonTotal.ENERGY = data.data
+                }
+                if (resolve) {
+                    resolve('resolve');
+                }
+            });
+        }
+
+        // 异常原因第三种情况
+        getExcConitionList(workShop, resolve) {
+            COMMON_API.DEVICE_LISTBYTYPE_API({ deptId: workShop }).then(({ data }) => {
+                data.data.map(item => {
+                    this.excReasonTotal.FAULTSHUTDOWN.push({
+                        dictValue: item.deviceName,
+                        dictCode: item.deviceNo
+                    })
+                })
+                if (resolve) {
+                    resolve('resolve');
+                }
+            })
+        }
+
+        // 产量与人力
+        getYieldAndMan(orderNo) {
+            STE_API.STE_AUDIT_YIELD_MANQUERY_API({
+                orderNo: orderNo
+            }).then(({ data }) => {
+                this.yieldAndManData = data.data
+            })
+        }
+
+        // 异常情况
+        getException(orderNo) {
+            STE_API.STE_AUDIT_EXCEPTION_QUERY_API({
+                orderNo: orderNo
+            }).then(({ data }) => {
+                this.exceptionList = data.data
+                this.exceptionList.map((item) => {
+                    const classSole: (Dictionary | undefined) = this.classList.find((it: Dictionary) => it.dictCode === item.classes);
+                    if (classSole) {
+                        item.className = classSole['dictValue'];
+                    }
+                    // 异常情况
+                    const exceptionSituationSole = this.excCondition.find((it: Dictionary) => it.dictCode === item.exceptionSituation);
+                    if (exceptionSituationSole) {
+                        item.exceptionSituationName = exceptionSituationSole['dictValue'];
+                    }
+                    // 异常原因 exceptionReason
+                    let excReasonList: Dictionary[] = [];
+                    if (item.exceptionSituation === 'FAULT' || item.exceptionSituation === 'SHUTDOWN') {
+                        excReasonList = this.excReasonTotal.FAULTSHUTDOWN
+                    } else if (item.exceptionSituation === 'POOR_PROCESS' || item.exceptionSituation === 'WAIT') {
+                        excReasonList = this.excReasonTotal.POORPROCESSWAIT
+                    } else if (item.exceptionSituation === 'ENERGY') {
+                        excReasonList = this.excReasonTotal.ENERGY
+                    }
+                    const exceptionReasonSole = excReasonList.find((it: Dictionary) => it.dictCode === item.exceptionReason);
+                    if (exceptionReasonSole) {
+                        item.exceptionReasonName = exceptionReasonSole['dictValue'];
+                    }
+                })
+            })
+        }
+
+        // 物料领用
+        getMaterialList(orderNo) {
+            STE_API.STE_AUDIT_MATERIAL_QUERY_API({
+                orderNo: orderNo
+            }).then(({ data }) => {
+                this.materialRecevieList = data.data
+            })
+        }
+
         goDetail() {
             this.$store.commit('sterilize/updateAuditDetailDetail', this.$store.state.sterilize.auditDetail);
             this.$store.commit('common/updateMainTabs', this.$store.state.common.mainTabs.filter(subItem => subItem.name !== 'DFMDS-pages-Sterilize-Audit-'))
@@ -521,6 +639,33 @@
         version?: number;
         workShop?: string;
         workShopName?: string;
+    }
+    interface Dictionary {
+        dictCode?: string;
+        dictId?: string;
+        dictValue?: string;
+        factoryName?: string;
+        id?: string;
+    }
+    interface ExceptionList {
+        classes?: string;
+        className?: string | undefined;
+        exceptionSituationName?: string | undefined;
+        duration?: number;
+        durationUnit?: string;
+        exceptionInfo?: string;
+        exceptionReason?: string;
+        exceptionReasonName?: string | undefined;
+        exceptionSituation?: string;
+        exceptionStage?: string;
+        potNo?: string;
+        potOrder?: string;
+        potOrderNo?: string;
+    }
+    interface ExcReasonTotal {
+        FAULTSHUTDOWN: object[];
+        POORPROCESSWAIT: object[];
+        ENERGY: object[];
     }
 </script>
 
