@@ -306,10 +306,7 @@
                     insertDto: filterTableData(this.craftSteamBeanTable, 'insert'),
                     updateDto: filterTableData(this.craftSteamBeanTable, 'update'),
                     deleteDto: filterTableData(this.craftSteamBeanTable, 'del')
-                } : {
-                    ...tableSaveDto,
-                    deleteDto: tableSaveDto.deleteDto.map((item: CraftList) => item.id)
-                },
+                } : tableSaveDto,
                 steamControl: {
                     insertDto: filterTableData([{
                         ...this.craftControlInfo,
@@ -479,7 +476,7 @@
                 orderNo
             }).then(({ data }) => {
                 this.craftSteamBeanTable = data.data || [];
-                this.temCraftSteamBeanTable = data.data || [];
+                this.temCraftSteamBeanTable = JSON.parse(JSON.stringify(data.data || []));
             });
         }
 
@@ -598,10 +595,15 @@
             margin-bottom: 10px;
         }
         .koji-control-form_select {
-            max-width: 200px;
+            min-width: 200px;
+            max-width: 300px;
+            padding-left: 8px;
             overflow: hidden;
+            color: #333;
             white-space: nowrap;
             text-overflow: ellipsis;
+            background: #f5f5f5;
+            border-radius: 4px;
             cursor: pointer;
         }
     }
