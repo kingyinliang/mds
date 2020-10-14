@@ -306,10 +306,7 @@
                     insertDto: filterTableData(this.craftSteamBeanTable, 'insert'),
                     updateDto: filterTableData(this.craftSteamBeanTable, 'update'),
                     deleteDto: filterTableData(this.craftSteamBeanTable, 'del')
-                } : {
-                    ...tableSaveDto,
-                    deleteDto: tableSaveDto.deleteDto.map((item: CraftList) => item.id)
-                },
+                } : tableSaveDto,
                 steamControl: {
                     insertDto: filterTableData([{
                         ...this.craftControlInfo,
@@ -479,7 +476,7 @@
                 orderNo
             }).then(({ data }) => {
                 this.craftSteamBeanTable = data.data || [];
-                this.temCraftSteamBeanTable = data.data || [];
+                this.temCraftSteamBeanTable = JSON.parse(JSON.stringify(data.data || []));
             });
         }
 
