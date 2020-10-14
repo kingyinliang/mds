@@ -123,7 +123,6 @@ export default class ExcRecord extends Vue {
     @Prop({ type: Boolean, default: false }) isRedact
     @Prop({ type: Object, default: {} }) formHeader
 
-
     classesOptions: object[] = [];
     abnormalList: object[] = [];
     excReasonList = [];
@@ -194,8 +193,7 @@ export default class ExcRecord extends Vue {
             orderNo: formHeader.orderNo,
             exceptionStage: tagName
         }).then(({ data }) => {
-            this.excList = data.data;
-            this.excListOrg = JSON.parse(JSON.stringify(data.data));
+            this.excList = JSON.parse(JSON.stringify(data.data));
             this.excList.map(item => {
                 if (item.exceptionSituation === 'FAULT' || item.exceptionSituation === 'SHUTDOWN') {
                     item.excReasonList = this.excReasonTotal.FAULTSHUTDOWN
@@ -205,6 +203,7 @@ export default class ExcRecord extends Vue {
                     item.excReasonList = this.excReasonTotal.ENERGY
                 }
             })
+            this.excListOrg = JSON.parse(JSON.stringify(this.excList));
         });
     }
 
