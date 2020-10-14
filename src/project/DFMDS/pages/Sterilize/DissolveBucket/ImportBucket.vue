@@ -278,6 +278,7 @@
             this.currentPotStatus = item.potStatus
             this.currentWorkShop = workshop
             this.currentCycle = item.cycle
+            this.importBucketStatus = false
 
             // API 容器管理-分页查询-查询生产物料
             await COMMON_API.HOLDER_QUERY_API({

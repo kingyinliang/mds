@@ -36,7 +36,7 @@
                                 {{ formData.potAmount ? formData.potAmount.toLocaleString() : 0 }}
                                 {{ formData.unit ? formData.unit : 'KG' }}
                             </p>
-                            <p> <em class="iconfont factory-cunchurongliang" />数量 </p>
+                            <p> <em class="iconfont factory-cunchurongliang" />配置锅数数量 </p>
                         </div>
                     </div>
                 </div>
