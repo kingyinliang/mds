@@ -485,7 +485,7 @@
                         number: this.currentPotNo,
                         status: item.potStatus,
                         statusC: tempHolderStatus[0].dictValue,
-                        doit: false,
+                        doit: true,
                         remark: '',
                         id: this.currentPotId,
                         changer: getUserNameNumber(),

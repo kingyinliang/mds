@@ -109,7 +109,12 @@
             const updateData = [];
 
             dataEntryData(formHeader, this.semiTable, this.orgSemiTable, delIds, insertData, updateData);
-
+            // eslint-disable-next-line
+            insertData.map((item: any) => {
+                item['orderNo'] = formHeader.orderNo;
+                item['potOrderNo'] = formHeader.potOrderNo;
+                item['potOrderId'] = formHeader.id;
+            })
             return {
                 orderNo: this.$store.state.sterilize.SemiReceive.orderNoMap.orderNo,
                 potOrderNo: this.$store.state.sterilize.SemiReceive.potOrderMap.potOrderNo,
