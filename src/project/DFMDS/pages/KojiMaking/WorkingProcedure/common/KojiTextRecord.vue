@@ -17,7 +17,6 @@
 
         currentFormDataGroup: TextObj = {
             kojiText: '', // 文本
-            id: '', // 主键
             orderNo: '', // 订单号
             kojiOrderNo: '', // 曲房单号
             textStage: '' // 工艺
@@ -27,7 +26,6 @@
         isNewForm=false
 
         init(formHeader, workShop?) {
-            console.log(formHeader)
             if (workShop === 'koji') {
                 KOJI_API.KOJI_TEXT_QUERY_API({
                     orderNo: formHeader.orderNo,
@@ -45,7 +43,6 @@
             } else {
                 this.currentFormDataGroup = {
                     kojiText: '', // 文本
-                    id: '', // 主键
                     orderNo: formHeader.orderNo, // 订单号
                     kojiOrderNo: formHeader.kojiOrderNo, // 制曲订单号
                     textStage: formHeader.textStage // 工艺
