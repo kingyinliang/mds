@@ -235,7 +235,7 @@ export default {
                         this.PotDetail = {
                             amount: this.InStorageDate[0].inTankAmount + this.InStorageDate[0].unit,
                             batch: this.InStorageDate[0].batch,
-                            material: this.InStorageDate[0].materialCode + ' ' + this.InStorageDate[0].materialName
+                            material: this.InStorageDate[0].materialName + ' ' + this.InStorageDate[0].materialCode
                         };
                     }
                 } else {
@@ -326,7 +326,7 @@ export default {
                             this.PotDetail = {
                                 amount: this.InStorageDate.filter(item => item.delFlag !== '1')[0].inTankAmount + this.InStorageDate[0].unit,
                                 batch: this.InStorageDate.filter(item => item.delFlag !== '1')[0].batch,
-                                material: this.InStorageDate.filter(item => item.delFlag !== '1')[0].materialCode + ' ' + this.InStorageDate.filter(item => item.delFlag !== '1')[0].materialName
+                                material: this.InStorageDate.filter(item => item.delFlag !== '1')[0].materialName + ' ' + this.InStorageDate.filter(item => item.delFlag !== '1')[0].materialCode
                             };
                         } else {
                             this.PotDetail = {

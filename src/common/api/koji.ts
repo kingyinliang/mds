@@ -218,8 +218,23 @@ const KOJI_API = {
     /**
      * @property KOJI_CRAFT_STEAM_SUBMIT_API 制曲车间-制曲首页-蒸面-提交
      */
-    KOJI_CRAFT_STEAM_SUBMIT_API: params => httpProxy('/kojiSteamFlourOrder/submit', 'POST', params)
-
+    KOJI_CRAFT_STEAM_SUBMIT_API: params => httpProxy('/kojiSteamFlourOrder/submit', 'POST', params),
+    /**
+     * @property KOJI_STEAM_INSTORAGE_LIST_API 制曲车间-制曲首页-蒸豆-生产入库
+     */
+    KOJI_STEAM_INSTORAGE_LIST_API: params => httpProxy('/kojiInStorage/queryList', 'GET', params),
+    /**
+     * @property KOJI_STEAM_BEAN_HARD_LIST_API 制曲车间-制曲首页-蒸豆-硬度
+     */
+    KOJI_STEAM_BEAN_HARD_LIST_API: params => httpProxy('/kojiSteamBeanHardness/queryList', 'GET', params),
+    /**
+     * @property KOJI_STEAM_BEAN_SAVE_API 制曲车间-制曲首页-蒸豆订单-保存
+     */
+    KOJI_STEAM_BEAN_SAVE_API: params => httpProxy('/kojiSteamBeanOrder/batchSave', 'POST', params),
+    /**
+     * @property KOJI_STEAM_BEAN_SUBMIT_API 制曲车间-制曲首页-蒸豆订单-提交
+     */
+    KOJI_STEAM_BEAN_SUBMIT_API: params => httpProxy('/kojiSteamBeanOrder/batchSubmit', 'POST', params)
 };
 
 export default KOJI_API;

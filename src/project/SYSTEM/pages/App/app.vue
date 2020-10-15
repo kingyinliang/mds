@@ -85,7 +85,7 @@ export default class AppPage extends Vue {
 
     httpRequest(options) {
         COMMON_API.UPLOADAPK_API({
-            appVersion: this.dataForm.appVersion
+            appVersion: process.env.NODE_ENV + this.dataForm.appVersion
         }).then(({ data }) => {
             if (data.code === 200) {
                 this.FILE_API = data.data.url

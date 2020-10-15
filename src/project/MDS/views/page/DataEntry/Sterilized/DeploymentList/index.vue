@@ -77,7 +77,7 @@
                     <el-table-column label="调配单日期" prop="allocateDate" width="110" />
                     <el-table-column label="杀菌物料" width="190" :show-overflow-tooltip="true">
                         <template slot-scope="scope">
-                            {{ scope.row.materialCode }}{{ scope.row.materialName }}
+                            {{ scope.row.materialName }}{{ scope.row.materialCode }}
                         </template>
                     </el-table-column>
                     <el-table-column label="计划BL原汁总量" prop="planAmount" />
@@ -110,7 +110,7 @@
                     <el-table-column label="分配单日期" prop="allocateDate" width="110" />
                     <el-table-column label="杀菌物料" width="190" :show-overflow-tooltip="true">
                         <template slot-scope="scope">
-                            {{ scope.row.materialCode }}{{ scope.row.materialName }}
+                            {{ scope.row.materialName }}{{ scope.row.materialCode }}
                         </template>
                     </el-table-column>
                     <el-table-column label="原汁总量" prop="planAmount" />
@@ -137,8 +137,8 @@
                 <el-table-column label="订单号" prop="orderNo" width="120" />
                 <el-table-column label="物料" :show-overflow-tooltip="true" width="180">
                     <template slot-scope="scope">
-                        {{ scope.row.materialCode }}
                         {{ scope.row.materialName }}
+                        {{ scope.row.materialCode }}
                     </template>
                 </el-table-column>
                 <el-table-column label="订单数量" prop="planOutput" width="80" />
