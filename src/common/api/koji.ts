@@ -3,7 +3,7 @@
  * @Anthor: Telliex
  * @Date: 2020-08-27 14:28:27
  * @LastEditors: Telliex
- * @LastEditTime: 2020-10-13 17:43:04
+ * @LastEditTime: 2020-10-15 14:34:58
  */
 import httpProxy from 'utils/net/httpProxy';
 const KOJI_API = {
@@ -212,11 +212,11 @@ const KOJI_API = {
     /**
      * @KOJI_DISC_QUERY_SAVE_API 制曲车间-圆盘-保存圆盘记录
      */
-    KOJI_DISC_QUERY_SAVE_API: params => httpProxy('/kojiDisc/saveKojiDisc', 'GET', params),
+    KOJI_DISC_QUERY_SAVE_API: params => httpProxy('/kojiDisc/saveKojiDisc', 'POST', params),
     /**
      * @KOJI_DISC_QUERY_SUBMIT_API 制曲车间-圆盘-提交圆盘记录
      */
-    KOJI_DISC_QUERY_SUBMIT_API: params => httpProxy('/kojiDisc/submitKojiDisc', 'GET', params),
+    KOJI_DISC_QUERY_SUBMIT_API: params => httpProxy('/kojiDisc/submitKojiDisc', 'POST', params),
     /**
      * @property KOJI_KOJISTRAIN_DETAILS_QUERY_API 制曲车间-蒸面工序-物料领用-Y158领用下拉（库位+批次联动）
      */

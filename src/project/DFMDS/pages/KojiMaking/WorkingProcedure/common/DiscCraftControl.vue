@@ -4,7 +4,6 @@
             <el-form ref="kojiIn" :model="kojiInformData" size="small" label-width="120px" :inline="true">
                 <el-form-item
                     label="入曲情况："
-                    prop="addKojiInfo"
                 >
                     <el-input
                         v-model="kojiInformData.addKojiInfo"
@@ -12,16 +11,13 @@
                         clearable
                         style="width: 180px;"
                         :disabled="!isRedact"
+                        maxlength="30"
                     />
                 </el-form-item>
                 <el-form-item
                     label="入曲人："
-                    prop="addKojiMans"
-                    :rules="[
-                        { required: true, message: '请输入入曲人', trigger: 'blur' }
-                    ]"
                 >
-                    <span :style="{cursor:isRedact? 'pointer':'default',color:isRedact? '#333':'#aaa'}" @click="selectUser(kojiInformData.addKojiMans)">
+                    <span :style="{cursor:isRedact? 'pointer':'default',color:isRedact? '#333':'#aaa'}" @click="selectUser(kojiInformData,'addKojiMans','内部调借')">
                         <el-tooltip v-if="kojiInformData.addKojiMans&&kojiInformData.addKojiMans!==''" class="item" effect="dark" :content="kojiInformData.addKojiMans" placement="top">
                             <el-input
                                 v-if="kojiInformData.addKojiMans&&kojiInformData.addKojiMans!==''"
@@ -36,10 +32,6 @@
                 </el-form-item>
                 <el-form-item
                     label="入曲温度："
-                    prop="addKojiTemp"
-                    :rules="[
-                        { required: true, message: '请输入入曲温度', trigger: 'blur' }
-                    ]"
                 >
                     <el-input
                         v-model="kojiInformData.addKojiTemp"
@@ -47,9 +39,17 @@
                         clearable
                         style="width: 80px;"
                         :disabled="!isRedact"
+                        @input="(val) => {
+                            kojiInformData.addKojiTemp = val
+                                .replace(/[^0-9.]/g, '')
+                                .replace('.', '#*')
+                                .replace(/\./g, '')
+                                .replace('#*', '.')
+                                .replace(/\.[0-9]{3,}$/, '')
+                        }"
                     /> °C
                 </el-form-item>
-                <el-form-item label="入曲标准：" prop="kojiDurationStandard">
+                <el-form-item label="入曲标准：">
                     <el-input
                         v-model="kojiInformData.kojiDurationStandard"
                         readonly
@@ -59,10 +59,6 @@
                 </el-form-item>
                 <el-form-item
                     label="入曲开始时间："
-                    prop="addKojiStart"
-                    :rules="[
-                        { required: true, message: '请输入入曲开始时间', trigger: 'blur' }
-                    ]"
                 >
                     <el-date-picker
                         v-model="kojiInformData.addKojiStart"
@@ -77,10 +73,6 @@
                 </el-form-item>
                 <el-form-item
                     label="入曲结束时间："
-                    prop="addKojiEnd"
-                    :rules="[
-                        { required: true, message: '请输入入曲结束时间', trigger: 'blur' }
-                    ]"
                 >
                     <el-date-picker
                         v-model="kojiInformData.addKojiEnd"
@@ -93,8 +85,8 @@
                         :disabled="!isRedact"
                     />
                 </el-form-item>
-                <el-form-item label="入曲时长：" prop="addKojiDuration" :style="{color: (Number(kojiInformData.addKojiDuration)-Number(kojiInformData.kojiDurationStandard))>=0?'#f00':'#333'}">
-                    {{ addKojiDuration(kojiInformData.addKojiStart,kojiInformData.addKojiEnd) }} H
+                <el-form-item label="入曲时长：" :style="{color: (Number(kojiInformData.addKojiDuration)-Number(kojiInformData.kojiDurationStandard))>=0?'#f00':'#333'}">
+                    {{ addKojiInDuration(kojiInformData.addKojiStart,kojiInformData.addKojiEnd) }} H
                 </el-form-item>
             </el-form>
         </mds-card>
@@ -115,7 +107,7 @@
                         </template>
                         <template slot-scope="scope">
                             <el-form-item prop="guardDate">
-                                <el-date-picker v-model="scope.row.guardDate" type="datetime" size="small" value-format="yyyy-MM-dd HH:mm" format="yyyy-MM-dd HH:mm" placeholder="选择时间" style="width: 180px;" />
+                                <el-date-picker v-model="scope.row.guardDate" type="datetime" size="small" value-format="yyyy-MM-dd HH:mm" format="yyyy-MM-dd HH:mm" placeholder="选择时间" style="width: 180px;" @change="(val)=>kojiStartTimeChange(val,scope.row)" />
                             </el-form-item>
                         </template>
                     </el-table-column>
@@ -334,7 +326,7 @@
                 <div style="margin: 10px 5px;">
                     异常情况：
                 </div>
-                <el-input v-model="kojiDiscExceptionInfo.discGuardExceptionInfo" type="textarea" :rows="7" :disabled="!isRedact" style="width: 80%;" />
+                <el-input v-model="kojiDiscExceptionInfo.discGuardExceptionInfo" type="textarea" :rows="4" :disabled="!isRedact" style="width: 80%;" />
             </div>
         </mds-card>
 
@@ -342,7 +334,7 @@
             <el-table ref="kojiTurn" header-row-class-name="tableHead" class="newTable" max-height="267" :data="kojiDiscTurnData" :row-class-name="rowDelFlag" border tooltip-effect="dark">
                 <el-table-column type="index" label="序号" width="50px" align="center" />
                 <el-table-column label="翻曲" prop="turnStageName" width="100" />
-                <el-table-column label="翻曲开始时间" prop="turnStart" width="210">
+                <el-table-column label="翻曲开始时间" prop="turnStart" width="230">
                     <template slot="header">
                         <span class="notNull">* </span>翻曲开始时间
                     </template>
@@ -356,10 +348,11 @@
                             clearable
                             style="width: 200px;"
                             :disabled="!isRedact"
+                            @change="(val)=>turnStartTimeChange(val,scope.row)"
                         />
                     </template>
                 </el-table-column>
-                <el-table-column label="翻曲结束时间" prop="turnEnd" width="210">
+                <el-table-column label="翻曲结束时间" prop="turnEnd" width="230">
                     <template slot="header">
                         <span class="notNull">* </span>翻曲结束时间
                     </template>
@@ -376,14 +369,22 @@
                         />
                     </template>
                 </el-table-column>
-                <el-table-column label="制曲时长" prop="turnDuration" width="80" />
-                <el-table-column label="翻曲加水量" prop="turnAddWaterAmount" width="100" />
-                <el-table-column label="翻曲人" min-width="140">
+                <el-table-column label="制曲时长：H" prop="turnDuration" width="120">
+                    <template slot-scope="scope">
+                        {{ scope.row.turnDuration }}
+                    </template>
+                </el-table-column>
+                <el-table-column label="翻曲加水量" prop="turnAddWaterAmount" width="100">
+                    <template slot-scope="scope">
+                        <el-input v-model="scope.row.turnAddWaterAmount" maxlength="30" :disabled="!isRedact" size="small" placeholder="请输入" />
+                    </template>
+                </el-table-column>
+                <el-table-column label="翻曲人" min-width="230">
                     <template slot="header">
                         <span class="notNull">* </span>翻曲人
                     </template>
                     <template slot-scope="scope">
-                        <span :style="{cursor:isRedact? 'pointer':'default',color:isRedact? '#333':'#aaa'}" @click="selectUser(scope.row.turnMans)">
+                        <span :style="{cursor:isRedact? 'pointer':'default',color:isRedact? '#333':'#aaa'}" @click="selectUser(scope.row,'turnMans','内部调借')">
                             <el-tooltip v-if="scope.row.turnMans&&scope.row.turnMans!==''" class="item" effect="dark" :content="scope.row.turnMans" placement="top">
                                 <el-input
                                     v-if="scope.row.turnMans&&scope.row.turnMans!==''"
@@ -397,7 +398,7 @@
                         </span>
                     </template>
                 </el-table-column>
-                <el-table-column label="备注" prop="remark" min-width="140">
+                <el-table-column label="备注" prop="remark" min-width="200">
                     <template slot-scope="scope">
                         <el-input v-model="scope.row.remark" :disabled="!isRedact" size="small" placeholder="请输入" />
                     </template>
@@ -417,7 +418,7 @@
                 <div style="margin: 10px 5px;">
                     异常情况：
                 </div>
-                <el-input v-model="kojiDiscExceptionInfo.discTurnExceptionInfo" type="textarea" :rows="7" :disabled="!isRedact" style="width: 80%;" />
+                <el-input v-model="kojiDiscExceptionInfo.discTurnExceptionInfo" type="textarea" :rows="4" :disabled="!isRedact" style="width: 80%;" />
             </div>
         </mds-card>
 
@@ -487,7 +488,7 @@
                         width="150"
                     >
                         <template slot-scope="scope">
-                            <span :style="{cursor:isRedact? 'pointer':'default',color:isRedact? '#333':'#aaa'}" @click="selectUser(scope.row.recordMans)">
+                            <span :style="{cursor:isRedact? 'pointer':'default',color:isRedact? '#333':'#aaa'}" @click="selectUser(scope.row,'recordMans','内部调借')">
                                 <el-tooltip v-if="scope.row.recordMans&&scope.row.recordMans!==''" class="item" effect="dark" :content="scope.row.recordMans" placement="top">
                                     <el-input
                                         v-if="scope.row.recordMans&&scope.row.recordMans!==''"
@@ -558,13 +559,13 @@
                     />
                 </el-form-item>
                 <el-form-item label="出曲时长：" prop="outKojiDuration">
-                    {{ addKojiDuration(kojiOutCraftformData.outKojiStart,kojiOutCraftformData.outKojiEnd) }} H
+                    {{ addOutCraftDuration(kojiOutCraftformData.outKojiStart,kojiOutCraftformData.outKojiEnd) }} H
                 </el-form-item>
                 <el-form-item
                     label="出曲操作人："
                     prop="outKojiMans"
                 >
-                    <span :style="{cursor:isRedact? 'pointer':'default',color:isRedact? '#333':'#aaa'}" @click="selectUser(kojiOutCraftformData.outKojiMans)">
+                    <span :style="{cursor:isRedact? 'pointer':'default',color:isRedact? '#333':'#aaa'}" @click="selectUser(kojiOutCraftformData,'outKojiMans','内部调借')">
                         <el-tooltip v-if="kojiOutCraftformData.outKojiMans&&kojiOutCraftformData.outKojiMans!==''" class="item" effect="dark" :content="kojiOutCraftformData.outKojiMans" placement="top">
                             <el-input
                                 v-if="kojiOutCraftformData.outKojiMans&&kojiOutCraftformData.outKojiMans!==''"
@@ -601,7 +602,7 @@
     import { dateFormat, getUserNameNumber, getDateDiff } from 'utils/utils';
     import { COMMON_API, KOJI_API, AUDIT_API } from 'common/api/api';
     import LoanedPersonnel from 'components/LoanedPersonnel.vue';
-    // import _ from 'lodash';
+    import _ from 'lodash';
 
     @Component({
         name: 'DiscCraftControl',
@@ -649,12 +650,15 @@
 
         // 看曲记录
         kojiGuardData: KojiGuard[]=[]
+        kojiGuardDataOrg: KojiGuard[]=[]
         ruleKojiGuardForm= {}
         forceDrainOptions: OptionObj[]=[]
         changeHotOptions: OptionObj[]=[]
 
 
         currentAudit = [];
+        targetUserList={}
+        targetUserProp=''
 
 
         init() {
@@ -676,7 +680,7 @@
         }
 
 
-        addKojiDuration(start, end) {
+        addKojiInDuration(start, end) {
             let diff = '0';
             if (start && end) {
                 diff = getDateDiff(start, end, 'hour')
@@ -685,25 +689,44 @@
             return diff
         }
 
-        // 选择人员 内部借调
-        selectUser(userList) {
-            if (this.isRedact) {
+        addOutCraftDuration(start, end) {
+            let diff = '0';
+            if (start && end) {
+                diff = getDateDiff(start, end, 'hour')
+            }
+            this.kojiOutCraftformData.outKojiDuration = Number(diff)
+            return diff
+        }
 
+        // 选择人员 内部借调
+        selectUser(target, prop, who) {
+            if (this.isRedact) {
+                this.targetUserList = target
+                this.targetUserProp = prop
                 this.isLoanedPersonnelStatusDialogShow = true;
                 let tempUserList = []
-                if (userList) {
-                    tempUserList = userList.split(',')
+                if (target[prop]) {
+                    tempUserList = target[prop].split(',')
                 }
                 this.$nextTick(() => {
-                    this.$refs.loanedPersonnel.init(tempUserList, '内部调借');
+                    this.$refs.loanedPersonnel.init(tempUserList, who);
                 });
             }
         }
 
         // 员工确认
         changeUser(userId) {
-            this.kojiInformData.addKojiMans = userId.toString()
+            // const arr = [...userIds];
+            // let relStr = '';
+            // arr.map((item, index) => {
+            //     if (item) {
+            //         relStr += `${index > 0 ? ',' : ''}${item}`;
+            //     }
+            // });
+            this.targetUserList[this.targetUserProp] = userId.toString();
             this.isLoanedPersonnelStatusDialogShow = false;
+
+
         }
 
         // 入曲情况
@@ -714,7 +737,17 @@
                 this.kojiInformData = {}
                 if (data.data) {
                     this.kojiInformData = data.data
+                } else {
+                    this.kojiInformData.addKojiDuration = ''
+                    this.kojiInformData.addKojiEnd = ''
+                    this.kojiInformData.addKojiInfo = ''
+                    this.kojiInformData.addKojiMans = ''
+                    this.kojiInformData.addKojiStart = ''
+                    this.kojiInformData.addKojiTemp = 0
+                    this.kojiInformData.status = ''
                 }
+                this.kojiInformData.orderNo = this.targetOrderObj.orderNo;
+                this.kojiInformData.kojiOrderNo = this.targetOrderObj.kojiOrderNo;
             })
         }
 
@@ -729,7 +762,17 @@
                 this.kojiOutCraftformData = {}
                 if (data.data) {
                     this.kojiOutCraftformData = data.data
+                } else {
+                    this.kojiOutCraftformData.outKojiDuration = 0
+                    this.kojiOutCraftformData.outKojiEnd = ''
+                    this.kojiOutCraftformData.outKojiMans = ''
+                    this.kojiOutCraftformData.outKojiStart = ''
+                    this.kojiOutCraftformData.status = ''
+                    this.kojiOutCraftformData.outKojiTemp = 0
+
                 }
+                this.kojiOutCraftformData.orderNo = this.targetOrderObj.orderNo;
+                this.kojiOutCraftformData.kojiOrderNo = this.targetOrderObj.kojiOrderNo;
             })
         }
 
@@ -744,7 +787,30 @@
                     this.kojiDiscTurnData[0] = data.data.kojiDiscTurn1
                     this.kojiDiscTurnData[1] = data.data.kojiDiscTurn2
                 }
+                this.kojiDiscTurnData[0].orderNo = this.targetOrderObj.orderNo;
+                this.kojiDiscTurnData[0].kojiOrderNo = this.targetOrderObj.kojiOrderNo;
+                this.kojiDiscTurnData[1].orderNo = this.targetOrderObj.orderNo;
+                this.kojiDiscTurnData[1].kojiOrderNo = this.targetOrderObj.kojiOrderNo;
             })
+        }
+
+        // 翻曲开始时间 change
+        turnStartTimeChange(val, target) {
+            console.log(val)
+            if (val !== '') {
+                const timeTemp = new Date(val).getTime();
+                let result = 0
+                if (this.kojiGuardData.length !== 0) {
+                    this.kojiGuardData.forEach(item => {
+                        if (item.guardDate) {
+                            const time = new Date(item.guardDate).getTime();
+                            result = Math.max(result, timeTemp - time)
+                        }
+                    })
+                    result = result / 36000
+                }
+                target.turnDuration = result
+            }
         }
 
         // 异常情况
@@ -759,6 +825,7 @@
                 }
             })
         }
+
 
         // 曲料生长评价
         getKojiDiscEvaluate() {
@@ -814,9 +881,41 @@
             }).then(({ data }) => {
                 this.kojiGuardData = []
                 if (data.data) {
-                    this.kojiGuardData = data.data
+                    this.kojiGuardData = JSON.parse(JSON.stringify(data.data))
+                    this.kojiGuardDataOrg = JSON.parse(JSON.stringify(data.data))
                 }
             })
+        }
+
+        // 看曲时间 change
+        kojiStartTimeChange(val) {
+            if (val !== '') {
+                if (this.kojiDiscTurnData[0] && this.kojiDiscTurnData[0].turnStart !== '') {
+                    const timeTemp1 = new Date(this.kojiDiscTurnData[0].turnStart).getTime();
+                    let turn1Result = 0
+                    this.kojiGuardData.forEach(item => {
+                        if (item.guardDate) {
+                            const time = new Date(item.guardDate).getTime();
+                            turn1Result = Math.max(turn1Result, timeTemp1 - time)
+                        }
+                    })
+                    turn1Result = turn1Result / 36000
+                    this.kojiDiscTurnData[0].turnDuration = turn1Result
+                }
+
+                if (this.kojiDiscTurnData[1] && this.kojiDiscTurnData[1].turnStart !== '') {
+                    const timeTemp2 = new Date(this.kojiDiscTurnData[1].turnStart).getTime();
+                    let turn2Result = 0
+                    this.kojiGuardData.forEach(item => {
+                        if (item.guardDate) {
+                            const time = new Date(item.guardDate).getTime();
+                            turn2Result = Math.max(turn2Result, timeTemp2 - time)
+                        }
+                    })
+                    turn2Result = turn2Result / 36000
+                    this.kojiDiscTurnData[1].turnDuration = turn2Result
+                }
+            }
         }
 
 
@@ -915,12 +1014,52 @@
         }
 
         savedData() {
-        //     const pkgPackingMaterial: PkgMaterialObj = {
-        //         packingMaterialDelete: [],
-        //         packingMaterialItemDelete: [],
-        //         packingMaterialInsert: [],
-        //         packingMaterialUpdate: []
-        //     };
+            const discEvaluate: DiscEvaluate = {
+                    deleteIds: [], // 曲料生长评价待删除id列表
+                    insertList: [], // 曲料生长评价新增列表
+                    updateList: [] //曲料生长评价更新列表
+            };
+
+
+            this.kojiGuardData.forEach((item: KojiGuard, index) => {
+                if (item.delFlag === 1) {
+                    if (item.id) {
+                        discEvaluate.deleteIds.push(item.id)
+                    }
+                } else if (item.id) {
+                    if (!_.isEqual(this.kojiGuardDataOrg[index], item)) {
+                        discEvaluate.updateList.push(item)
+                    }
+                } else {
+                    discEvaluate.insertList.push(item)
+                }
+            })
+
+            const discGuard: DiscGuard = {
+                deleteIds: [], // 看曲记录待删除id列表
+                insertList: [], // 看曲记录新增列表
+                updateList: []// 看曲记录更新列表
+            }
+            this.kojiEvaluateData.forEach((item: KojiEvaluate, index) => {
+                if (item.delFlag === 1) {
+                    if (item.id) {
+                        discGuard.deleteIds.push(item.id)
+                    }
+                } else if (item.id) {
+                    if (!_.isEqual(this.kojiGuardDataOrg[index], item)) {
+                        discGuard.updateList.push(item)
+                    }
+                } else {
+                    discGuard.insertList.push(item)
+                }
+            })
+
+            const discTurn1 = this.kojiDiscTurnData[0]
+            const discTurn2 = this.kojiDiscTurnData[1]
+            const discIn = this.kojiInformData
+            const discOut = this.kojiOutCraftformData
+            const discGuardException = this.kojiDiscExceptionInfo.discGuardExceptionInfo
+            const discTurnException = this.kojiDiscExceptionInfo.discTurnExceptionInfo
         //     const pkgSemiMaterial: PkgMaterialSObj = {
         //         materialCount: this.materialCount,
         //         pkgSemiMaterialDelete: [],
@@ -1063,10 +1202,16 @@
         //             })
         //         }
         //     });
-        //     return {
-        //         pkgPackingMaterial,
-        //         pkgSemiMaterial
-        //     }
+            return {
+                discEvaluate,
+                discGuard,
+                discIn,
+                discOut,
+                discTurn1,
+                discTurn2,
+                discGuardException,
+                discTurnException
+            }
         }
 
         // 审核日志
@@ -1155,7 +1300,7 @@ interface KojiOutCraftObject{
     id?: string;
     kojiOrderNo?: string;
     orderNo?: string;
-    outKojiDuration?: string;
+    outKojiDuration?: number;
     outKojiEnd?: string;
     outKojiMans?: string;
     outKojiStart?: string;
@@ -1177,7 +1322,7 @@ interface KojiDiscTurn{
     turnMans?: string;
     turnStage?: string;
     turnStageName?: string;
-    turnStart?: string;
+    turnStart: string;
 }
 interface KojiDiscExceptionInfo{
     discGuardExceptionInfo?: string;
@@ -1230,6 +1375,19 @@ interface KojiGuard{
     windSpeed?: number;
     windTemp?: number;
     delFlag?: number;
+}
+
+
+interface DiscEvaluate {
+    deleteIds: string[];
+    insertList: KojiGuard[];
+    updateList: KojiGuard[];
+}
+
+interface DiscGuard {
+    deleteIds: string[];
+    insertList: KojiEvaluate[];
+    updateList: KojiEvaluate[];
 }
 </script>
 

@@ -32,7 +32,7 @@
                         <span class="notNull">* </span>入库数量
                     </template>
                     <template slot-scope="scope">
-                        <el-input v-model.trim="scope.row.inStorageAmount" size="small" placeholder="请输入" :disabled="!isRedact" />
+                        <el-input v-model.number="scope.row.inStorageAmount" size="small" placeholder="请输入" :disabled="!isRedact" />
                     </template>
                 </el-table-column>
                 <el-table-column label="入库批次" prop="inStorageBatch" width="210">
@@ -116,6 +116,8 @@
                 this.currentFormDataGroup = []
                 if (data.data) {
                     this.currentFormDataGroup[0] = data.data
+                    this.currentFormDataGroup[0].orderNo = this.targetOrderObj.orderNo;
+                    this.currentFormDataGroup[0].kojiOrderNo = this.targetOrderObj.kojiOrderNo;
                 }
             });
         }
@@ -150,7 +152,8 @@
 
             // dataEntryData(formHeader, this.currentFormDataGroup, this.orgFormDataGroup, instorageDelete, instorageInsert, instorageUpdate);
 
-            return this.currentFormDataGroup
+
+            return this.currentFormDataGroup[0]
         }
 
         //  rowDelFlag

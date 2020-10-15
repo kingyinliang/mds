@@ -200,6 +200,7 @@
             // })
 
                 this.formHeader = JSON.parse(JSON.stringify(this.$store.state.koji.orderKojiInfo))
+
                 this.$set(this.formHeader, 'factoryName', JSON.parse(sessionStorage.getItem('factory') || '{}').deptShort)
                 this.$set(this.formHeader, 'textStage', 'YP')
                 console.log('this.formHeader')
@@ -214,36 +215,27 @@
         savedDatas() {
             const craftControlTemp = this.$refs.craftControl.savedData(this.formHeader);
             const productInStorageTemp = this.$refs.productInStorage.savedData(this.formHeader);
-            const excRecordTemp = this.$refs.excRecord.getSavedOrSubmitData(this.formHeader);
+            const excRecordTemp = this.$refs.excRecord.getSavedOrSubmitData(this.formHeader, 'YP');
             const textRecordTemp = this.$refs.textRecord.savedData(this.formHeader);
 
-
             return KOJI_API.KOJI_DISC_QUERY_SAVE_API({
-                discEvaluate: {
-                    deleteIds: [], // 曲料生长评价待删除id列表
-                    insertList: [], // 曲料生长评价新增列表
-                    updateList: [] //曲料生长评价更新列表
-                },
-                discGuard: {
-                    deleteIds: [], // 看曲记录待删除id列表
-                    insertList: [], // 看曲记录新增列表
-                    updateList: [] // 看曲记录更新列表
-                },
-                discIn: [],
-                discOut: [],
+                discEvaluate: craftControlTemp.discEvaluate,
+                discGuard: craftControlTemp.discGuard,
+                discIn: craftControlTemp.discIn,
+                discOut: craftControlTemp.discOut,
                 discTurn1: craftControlTemp.discTurn1,
                 discTurn2: craftControlTemp.discTurn2,
                 discGuardException: craftControlTemp.discGuardException, // 看曲记录异常情况
                 discTurnException: craftControlTemp.discTurnException, // 翻曲记录异常情况
                 exception: { // 异常记录
-                    insertDatas: excRecordTemp.InsertDto,
+                    insertDatas: excRecordTemp.insertDto,
                     removeIds: excRecordTemp.ids,
-                    updateDatas: excRecordTemp.UpdateDto
+                    updateDatas: excRecordTemp.updateDto
                 }, // 异常记录
                 fermentPotId: this.formHeader.fermentPotId, // 发酵罐Id
                 fermentPotNo: this.formHeader.fermentPotNo, // 发酵罐号
                 inStorage: productInStorageTemp,
-                kojiOrderNo: this.formHeader.kojiHouseNo, // 曲房单号
+                kojiOrderNo: this.formHeader.kojiOrderNo, // 曲房单号
                 orderNo: this.formHeader.orderNo, // 订单号
                 text: textRecordTemp
             })
@@ -255,28 +247,23 @@
 
                 const craftControlTemp = this.$refs.craftControl.savedData(this.formHeader);
                 const productInStorageTemp = this.$refs.productInStorage.savedData(this.formHeader);
-                const excRecordTemp = this.$refs.excRecord.savedData(this.formHeader);
+                const excRecordTemp = this.$refs.excRecord.getSavedOrSubmitData(this.formHeader);
                 const textRecordTemp = this.$refs.textRecord.savedData(this.formHeader);
 
-
-                return KOJI_API.KOJI_DISC_QUERY_SUBMIT_API({
-                discEvaluate: {
-                        deleteIds: [], // 曲料生长评价待删除id列表
-                        insertList: [], // 曲料生长评价新增列表
-                        updateList: [] //曲料生长评价更新列表
-                    },
-                    discGuard: {
-                        deleteIds: [], // 看曲记录待删除id列表
-                        insertList: [], // 看曲记录新增列表
-                        updateList: [] // 看曲记录更新列表
-                    },
-                    discIn: [],
-                    discOut: [],
+                return KOJI_API.KOJI_DISC_QUERY_SAVE_API({
+                    discEvaluate: craftControlTemp.discEvaluate,
+                    discGuard: craftControlTemp.discGuard,
+                    discIn: craftControlTemp.discIn,
+                    discOut: craftControlTemp.discOut,
                     discTurn1: craftControlTemp.discTurn1,
                     discTurn2: craftControlTemp.discTurn2,
-                    discGuardException: productInStorageTemp.discGuardException, // 看曲记录异常情况
-                    discTurnException: productInStorageTemp.discTurnException, // 翻曲记录异常情况
-                    exception: excRecordTemp, // 异常记录
+                    discGuardException: craftControlTemp.discGuardException, // 看曲记录异常情况
+                    discTurnException: craftControlTemp.discTurnException, // 翻曲记录异常情况
+                    exception: { // 异常记录
+                        insertDatas: excRecordTemp.InsertDto,
+                        removeIds: excRecordTemp.ids,
+                        updateDatas: excRecordTemp.UpdateDto
+                    }, // 异常记录
                     fermentPotId: this.formHeader.fermentPotId, // 发酵罐Id
                     fermentPotNo: this.formHeader.fermentPotNo, // 发酵罐号
                     inStorage: productInStorageTemp,
@@ -327,5 +314,6 @@
         steTagPot?: StatusObj;
         fermentPotNo?: string;
         fermentPotId?: string;
+        kojiOrderNo?: string;
     }
 </script>

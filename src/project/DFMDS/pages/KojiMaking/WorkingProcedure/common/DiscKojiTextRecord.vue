@@ -3,18 +3,17 @@
  * @Anthor: Telliex
  * @Date: 2020-09-30 12:08:32
  * @LastEditors: Telliex
- * @LastEditTime: 2020-10-13 17:10:09
+ * @LastEditTime: 2020-10-15 17:39:54
 -->
 <template>
     <mds-card title="文本记录" :name="'textRecord'">
-        <el-input v-model="currentFormDataGroup.text" type="textarea" :rows="7" :disabled="!isRedact" style="width: 100%; height: 200px;" />
+        <el-input v-model="currentFormDataGroup.kojiText" type="textarea" :rows="7" :disabled="!isRedact" style="width: 100%; height: 200px;" />
     </mds-card>
 </template>
 
 <script lang="ts">
     import { Vue, Component, Prop } from 'vue-property-decorator';
     import { KOJI_API } from 'common/api/api';
-    // import _ from 'lodash';
 
     @Component({
         name: 'KojiTextRecord'
@@ -31,17 +30,13 @@
             textStage: 'YP' // 工艺
         }
 
-        isChange=false
-        isNewForm=false
-
         init(formHeader, textStage, workShop?) {
             if (workShop === 'koji') {
                 KOJI_API.KOJI_TEXT_QUERY_API({
-                    kojiOrderNo: formHeader.kojiHouseNo || formHeader.orderNo,
+                    kojiOrderNo: formHeader.kojiOrderNo,
+                    orderNo: formHeader.orderNo,
                     textStage: textStage
                 }).then(({ data }) => {
-                    console.log('圆盘文本')
-                    console.log(data)
                     this.getData(data);
                 })
             }
@@ -62,11 +57,9 @@
         }
 
         savedData(formHeader) {
-                // this.currentFormDataGroup.kojiText = formHeader.kojiText;
-                // this.currentFormDataGroup.id = formHeader.id;
-                this.currentFormDataGroup.orderNo = formHeader.orderNo;
-                this.currentFormDataGroup.kojiOrderNo = formHeader.kojiOrderNo;
-                this.currentFormDataGroup.textStage = formHeader.textStage;
+            this.currentFormDataGroup.orderNo = formHeader.orderNo;
+            this.currentFormDataGroup.kojiOrderNo = formHeader.kojiOrderNo;
+            this.currentFormDataGroup.textStage = formHeader.textStage;
             return this.currentFormDataGroup
         }
     }
