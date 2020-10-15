@@ -32,7 +32,13 @@
                         <span class="notNull">* </span>入库数量
                     </template>
                     <template slot-scope="scope">
-                        <el-input v-model.number="scope.row.inStorageAmount" size="small" placeholder="请输入" :disabled="!isRedact" />
+                        <el-input
+                            v-model.number="scope.row.inStorageAmount"
+                            size="small"
+                            placeholder="请输入"
+                            :disabled="!isRedact"
+                            @input="(val)=>oninput(val,scope.row,'inStorageAmount')"
+                        />
                     </template>
                 </el-table-column>
                 <el-table-column label="入库批次" prop="inStorageBatch" width="210">

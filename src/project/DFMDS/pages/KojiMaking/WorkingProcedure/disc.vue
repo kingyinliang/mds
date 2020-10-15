@@ -130,10 +130,12 @@
 
         tabs: TabsObj[] = [
             {
-                label: '工艺控制'
+                label: '工艺控制',
+                status: '未录入'
             },
             {
-                label: '生產入庫'
+                label: '生產入庫',
+                status: '未录入'
             },
             {
                 label: '异常记录'
@@ -187,20 +189,10 @@
 
         // 查询表头
         getOrderList() {
-            // KOJI_API.KOJI_CRAFT_HEAD_INFO_QUERY_API({
-            //     id: this.$store.state.koji.orderKojiInfo.id || ''
-            // }).then(({ data }) => {
-            //     this.formHeader = data.data;
-            //     this.formHeader.textStage = 'YP';
-            //     this.formHeader.factoryName = JSON.parse(sessionStorage.getItem('factory') || '{}').deptShort;
-            //     this.$refs.craftControl.init(this.formHeader);
-            //     this.$refs.productInStorage.init(this.formHeader);
-            //     this.$refs.excRecord.init(this.formHeader, 'YP'); // 洗豆:XD;SC洗豆:SC;蒸豆:ZD;蒸面:ZM;圆盘:YP
-            //     this.$refs.textRecord.init(this.formHeader, 'YP', 'koji'); // 洗豆:XD;SC洗豆:SC;蒸豆:ZD;蒸面:ZM;圆盘:YP
-            // })
-
-                this.formHeader = JSON.parse(JSON.stringify(this.$store.state.koji.orderKojiInfo))
-
+            KOJI_API.KOJI_CRAFT_HEAD_INFO_QUERY_API({
+                id: this.$store.state.koji.orderKojiInfo.id || ''
+            }).then(({ data }) => {
+                this.formHeader = JSON.parse(JSON.stringify(data.data))
                 this.$set(this.formHeader, 'factoryName', JSON.parse(sessionStorage.getItem('factory') || '{}').deptShort)
                 this.$set(this.formHeader, 'textStage', 'YP')
                 console.log('this.formHeader')
@@ -209,6 +201,18 @@
                 this.$refs.productInStorage.init(this.formHeader);
                 this.$refs.excRecord.init(this.formHeader, 'YP'); // 洗豆:XD;SC洗豆:SC;蒸豆:ZD;蒸面:ZM;圆盘:YP
                 this.$refs.textRecord.init(this.formHeader, 'YP', 'koji'); // 洗豆:XD;SC洗豆:SC;蒸豆:ZD;蒸面:ZM;圆盘:YP
+            })
+
+                // this.formHeader = JSON.parse(JSON.stringify(this.$store.state.koji.orderKojiInfo))
+
+                // this.$set(this.formHeader, 'factoryName', JSON.parse(sessionStorage.getItem('factory') || '{}').deptShort)
+                // this.$set(this.formHeader, 'textStage', 'YP')
+                // console.log('this.formHeader')
+                // console.log(this.formHeader)
+                // this.$refs.craftControl.init(this.formHeader);
+                // this.$refs.productInStorage.init(this.formHeader);
+                // this.$refs.excRecord.init(this.formHeader, 'YP'); // 洗豆:XD;SC洗豆:SC;蒸豆:ZD;蒸面:ZM;圆盘:YP
+                // this.$refs.textRecord.init(this.formHeader, 'YP', 'koji'); // 洗豆:XD;SC洗豆:SC;蒸豆:ZD;蒸面:ZM;圆盘:YP
 
         }
 
@@ -247,7 +251,7 @@
 
                 const craftControlTemp = this.$refs.craftControl.savedData(this.formHeader);
                 const productInStorageTemp = this.$refs.productInStorage.savedData(this.formHeader);
-                const excRecordTemp = this.$refs.excRecord.getSavedOrSubmitData(this.formHeader);
+                const excRecordTemp = this.$refs.excRecord.getSavedOrSubmitData(this.formHeader, 'YP');
                 const textRecordTemp = this.$refs.textRecord.savedData(this.formHeader);
 
                 return KOJI_API.KOJI_DISC_QUERY_SAVE_API({
@@ -260,14 +264,14 @@
                     discGuardException: craftControlTemp.discGuardException, // 看曲记录异常情况
                     discTurnException: craftControlTemp.discTurnException, // 翻曲记录异常情况
                     exception: { // 异常记录
-                        insertDatas: excRecordTemp.InsertDto,
+                        insertDatas: excRecordTemp.insertDto,
                         removeIds: excRecordTemp.ids,
-                        updateDatas: excRecordTemp.UpdateDto
+                        updateDatas: excRecordTemp.updateDto
                     }, // 异常记录
                     fermentPotId: this.formHeader.fermentPotId, // 发酵罐Id
                     fermentPotNo: this.formHeader.fermentPotNo, // 发酵罐号
                     inStorage: productInStorageTemp,
-                    kojiOrderNo: this.formHeader.kojiHouseNo, // 曲房单号
+                    kojiOrderNo: this.formHeader.kojiOrderNo, // 曲房单号
                     orderNo: this.formHeader.orderNo, // 订单号
                     text: textRecordTemp
                 })
