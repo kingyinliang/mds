@@ -392,6 +392,7 @@
                 productDate: this.formHeader.inKjmDate,
                 workShop: this.formHeader.workShop
             }).then(({ data }) => {
+                this.isRedact = false
                 if (!data.data) {
                     this.$infoToast('暂无任何内容');
                     this.$refs.inStorage.init([], this.formHeader)

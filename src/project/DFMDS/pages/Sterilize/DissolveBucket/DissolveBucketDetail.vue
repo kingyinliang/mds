@@ -36,7 +36,7 @@
                                 {{ formData.potAmount ? formData.potAmount.toLocaleString() : 0 }}
                                 {{ formData.unit ? formData.unit : 'KG' }}
                             </p>
-                            <p> <em class="iconfont factory-cunchurongliang" />数量 </p>
+                            <p> <em class="iconfont factory-cunchurongliang" />配置锅数数量 </p>
                         </div>
                     </div>
                 </div>
@@ -59,7 +59,7 @@
                             {{ scope.row.prodcutMaterial }} {{ scope.row.prodcutMaterialName }}
                         </template>
                     </el-table-column>
-                    <el-table-column label="批次" :show-overflow-tooltip="true" width="100">
+                    <el-table-column label="批次" :show-overflow-tooltip="true" maxlength="10" width="100">
                         <template slot-scope="scope">
                             {{ scope.row.feedBatch }}
                         </template>
@@ -130,7 +130,7 @@
                             {{ scope.row.prodcutMaterial }} {{ scope.row.prodcutMaterialName }}
                         </template>
                     </el-table-column>
-                    <el-table-column label="批次" :show-overflow-tooltip="true" width="180">
+                    <el-table-column label="批次" :show-overflow-tooltip="true" maxlength="10" width="180">
                         <template slot-scope="scope">
                             {{ scope.row.feedBatch }}
                         </template>

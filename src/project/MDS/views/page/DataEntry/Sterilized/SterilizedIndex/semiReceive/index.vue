@@ -32,7 +32,7 @@
                         <el-table-column type="index" min-width="55" label="序号" fixed />
                         <el-table-column label="领用物料" min-width="220" :show-overflow-tooltip="true">
                             <template slot-scope="scope">
-                                {{ scope.row.materialCode + ' ' + scope.row.materialName }}
+                                {{ scope.row.materialName + ' ' + scope.row.materialCode }}
                             </template>
                         </el-table-column>
                         <el-table-column label="单位" min-width="50" prop="unit" />

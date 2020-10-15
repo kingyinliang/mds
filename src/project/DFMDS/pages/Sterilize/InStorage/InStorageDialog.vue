@@ -3,7 +3,7 @@
  * @Anthor: Telliex
  * @Date: 2020-08-03 18:13:58
  * @LastEditors: Telliex
- * @LastEditTime: 2020-09-24 16:47:41
+ * @LastEditTime: 2020-10-14 09:48:29
 -->
 <template lang="pug">
     el-dialog(:title="title" :width="width" :close-on-click-modal="false" :visible.sync="isShowCurrentDialog")
@@ -28,7 +28,7 @@
             el-form-item(label="入库数量：" prop="inStorageAmount")
                 el-input(v-model.number="dialogForm.inStorageAmount" size="small" placeholder="请输入" clearable)
             el-form-item(label="入库批次：" prop="inStorageBatch")
-                el-input(v-model.trim="dialogForm.inStorageBatch" size="small" placeholder="请输入" clearable)
+                el-input(v-model.trim="dialogForm.inStorageBatch" size="small" placeholder="请输入" maxlength="10" clearable)
             el-form-item(label="备注：")
                 el-input(v-model.trim="dialogForm.remark" placeholder="请输入" clearable)
             el-form-item(label="操作人：")

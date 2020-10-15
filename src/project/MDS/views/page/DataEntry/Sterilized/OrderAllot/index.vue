@@ -71,7 +71,7 @@
                 <el-table-column label="订单号" min-width="120" prop="orderNo" />
                 <el-table-column label="品项" :show-overflow-tooltip="true" min-width="220">
                     <template slot-scope="scope">
-                        {{ scope.row.materialCode }} {{ scope.row.materialName }}
+                        {{ scope.row.materialName }} {{ scope.row.materialCode }}
                     </template>
                 </el-table-column>
                 <el-table-column label="数量" min-width="100" prop="planOutput" />

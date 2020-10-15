@@ -170,7 +170,7 @@
                         {{ formJsb.holderName }}
                     </el-form-item>
                     <el-form-item label="物料：">
-                        {{ formJsb.materialCode }} {{ formJsb.materialName }}
+                        {{ formJsb.materialName }} {{ formJsb.materialCode }}
                     </el-form-item>
                     <el-form-item label="批次：">
                         {{ formJsb.batch }}
@@ -216,7 +216,7 @@
                         {{ formZc.holderName }}
                     </el-form-item>
                     <el-form-item label="物料：">
-                        {{ formZc.materialCode }} {{ formZc.materialName }}
+                        {{ formZc.materialName }} {{ formZc.materialCode }}
                     </el-form-item>
                     <el-form-item label="批次：">
                         {{ formZc.batch }}

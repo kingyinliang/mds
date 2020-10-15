@@ -71,9 +71,9 @@
                                         生产品项：
                                     </div>
                                     <div class="detail">
-                                        <el-tooltip class="item" effect="dark" :content="(item.selectOrder.materialCode || '') + ' ' + (item.selectOrder.materialName || '')" placement="top-start">
+                                        <el-tooltip class="item" effect="dark" :content="(item.selectOrder.materialName || '') + ' ' + (item.selectOrder.materialCode || '')" placement="top-start">
                                             <p>
-                                                {{ (item.selectOrder.materialCode || '') + ' ' + (item.selectOrder.materialName || '') }}
+                                                {{ (item.selectOrder.materialName || '') + ' ' + (item.selectOrder.materialCode || '') }}
                                             </p>
                                         </el-tooltip>
                                     </div>
