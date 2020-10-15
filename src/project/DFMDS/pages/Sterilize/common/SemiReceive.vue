@@ -25,7 +25,7 @@
                             {{ scope.row.consumeType==='1'?'是':'否' }}
                         </template>
                     </el-table-column>
-                    <el-table-column prop="fermentPotNoName" label="发酵罐号" min-width="100" :show-overflow-tooltip="true" />
+                    <el-table-column prop="fermentPotName" label="发酵罐号" min-width="100" :show-overflow-tooltip="true" />
                     <el-table-column prop="aiShelves" label="领用物料" min-width="120" :show-overflow-tooltip="true">
                         <template slot-scope="scope">
                             {{ scope.row.materialCode }}
@@ -69,7 +69,7 @@
 
         $refs: {SemiReceiveDialog: HTMLFormElement};
 
-        formHeader = {};
+        formHeader: OrderData = {};
         semiAudit = [];
         semiTable: SemiObj[] = [];
         orgSemiTable: SemiObj[] = [];
@@ -109,7 +109,12 @@
             const updateData = [];
 
             dataEntryData(formHeader, this.semiTable, this.orgSemiTable, delIds, insertData, updateData);
-
+            // eslint-disable-next-line
+            insertData.map((item: any) => {
+                item['orderNo'] = formHeader.orderNo;
+                item['potOrderNo'] = formHeader.potOrderNo;
+                item['potOrderId'] = formHeader.id;
+            })
             return {
                 orderNo: this.$store.state.sterilize.SemiReceive.orderNoMap.orderNo,
                 potOrderNo: this.$store.state.sterilize.SemiReceive.potOrderMap.potOrderNo,
@@ -124,6 +129,10 @@
                 orderNo: this.$store.state.sterilize.SemiReceive.orderNoMap.orderNo,
                 potOrderNo: this.$store.state.sterilize.SemiReceive.potOrderMap.potOrderNo
             }).then(({ data }) => {
+                data.data.forEach(element => {
+                    element.potOrderNo = this.formHeader.potOrderNo;
+                    element.potOrderId = this.formHeader.id;
+                });
                 this.semiTable = this.semiTable.concat(data.data);
             })
         }
@@ -192,6 +201,16 @@
         orderNo?: string;
         factoryName?: string;
         potNo?: string;
+        potOrder?: string;
+    }
+    interface OrderData {
+        id?: string;
+        textStage?: string;
+        potOrderString?: string;
+        factoryName?: string;
+        potNo?: string;
+        potOrderNo?: string;
+        potOrderId?: string;
         potOrder?: string;
     }
 </script>

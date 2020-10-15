@@ -158,6 +158,10 @@ const STE_API = {
      */
     STE_TIMESHEET_QUERY_API: params => httpProxy('/ste/steTimeSheet/query', 'POST', params),
     /**
+     * @property {string} STE_TIMESHEET_QUERY_API 杀菌车间-杀菌工时-生产订单下拉
+     */
+    STE_TIMESHEET_ORDERLIST_QUERY_API: params => httpProxy('/steOrderSplit/list/query', 'POST', params),
+    /**
      * @property {string} STE_TIMESHEET_SAVE_API 杀菌车间-杀菌工时-保存
      */
     STE_TIMESHEET_SAVE_API: params => httpProxy('/ste/steTimeSheet/save', 'POST', params),
@@ -168,7 +172,19 @@ const STE_API = {
     /**
      * @property {string} STE_PKGLINE_QUERY_API 杀菌车间-杀菌包装对应关系-查询对应包装产线列表
      */
-    STE_PKGLINE_QUERY_API: params => httpProxy('/ste/stePkgRelation/pkgLine/query', 'GET', params)
+    STE_PKGLINE_QUERY_API: params => httpProxy('/ste/stePkgRelation/pkgLine/query', 'GET', params),
+    /**
+     * @property {string} STE_AUDIT_YIELD_MANQUERY_API 杀菌车间-杀菌审核-产量与人力
+     */
+    STE_AUDIT_YIELD_MANQUERY_API: params => httpProxy('/ste/item/yieldAndManQuery', 'post', params),
+    /**
+     * @property {string} STE_AUDIT_EXCEPTION_QUERY_API 杀菌车间-杀菌审核-异常情况
+     */
+    STE_AUDIT_EXCEPTION_QUERY_API: params => httpProxy('/ste/item/exceptionQuery', 'post', params),
+    /**
+     * @property {string} STE_AUDIT_MATERIAL_QUERY_API 杀菌车间-杀菌审核-物料领用
+     */
+    STE_AUDIT_MATERIAL_QUERY_API: params => httpProxy('/ste/item/materialQuery', 'post', params)
 };
 
 export default STE_API;

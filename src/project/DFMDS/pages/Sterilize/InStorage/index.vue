@@ -131,13 +131,17 @@
                 prop: 'normalFlag',
                 label: '正常入库',
                 minWidth: 100,
-                content: ['normalFlag']
+                content: ['normalFlag'],
+                wrapper: {
+                    'Y': '是',
+                    'N': '否'
+                }
             },
             {
                 type: 'string',
                 prop: 'packageLine',
                 label: '包装产线',
-                minWidth: 200,
+                minWidth: 220,
                 content: ['packageLine']
             },
             {
@@ -307,8 +311,6 @@
                 productDate: this.formHeader.inKjmDate,
                 workShop: this.formHeader.workShop
             }).then(({ data }) => {
-                console.log('获取所有订单讯息')
-                console.log(data)
                 this.orderNoList = data.data
             })
         }
@@ -368,10 +370,7 @@
         getPkgWorkShopList() {
             STE_API.STE_PKGLINE_QUERY_API({
                 orderNo: this.formHeader.orderNo
-                // orderNo: '833000001283'
             }).then(({ data }) => {
-                console.log('查询包装查询结果')
-                console.log(data)
                 this.pkgWorkShopList = []
                 if (data.data) {
                     data.data.forEach(item => {
@@ -393,16 +392,13 @@
                 productDate: this.formHeader.inKjmDate,
                 workShop: this.formHeader.workShop
             }).then(({ data }) => {
-                console.log('查询结果')
-                console.log(data)
-
+                this.isRedact = false
                 if (!data.data) {
                     this.$infoToast('暂无任何内容');
                     this.$refs.inStorage.init([], this.formHeader)
                 } else {
                     this.$refs.inStorage.init(data.data, this.formHeader)
                 }
-
                 this.alreadySearch = true
                 this.getPkgWorkShopList()
                 this.$refs.excRecord.init(this.formHeader, 'INSTORAGE');

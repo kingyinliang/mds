@@ -147,7 +147,8 @@ export default class ManHour extends Vue {
 
     // 订单拉取
     getOrderList() {
-        COMMON_API.ORDER_LIST_QUERY_API({
+        this.formHeader.orderNo = '';
+        STE_API.STE_TIMESHEET_ORDERLIST_QUERY_API({
             workShop: this.formHeader.workShop,
             productDate: this.formHeader.productDate
         }).then(({ data }) => {
@@ -167,7 +168,6 @@ export default class ManHour extends Vue {
             return false;
         }
         STE_API.STE_TIMESHEET_QUERY_API(this.formHeader).then(({ data }) => {
-            if (data.code === 200) {
                 this.searchCard = true;
                 if (data.data.steTimeSheetResponseDto === null) {
                     this.formHeader.checkStatus = '';
@@ -180,7 +180,7 @@ export default class ManHour extends Vue {
                 this.formHeader.changer = data.data.changer;
                 this.$refs.readyTime.changeList(data.data.steTimeSheetResponseDto);
                 this.$refs.workHour.changeList(data.data.steUserResponseDto);
-            }
+
         })
         AUDIT_API.AUDIT_LOG_LIST_API({
             orderNo: this.formHeader.orderNo,

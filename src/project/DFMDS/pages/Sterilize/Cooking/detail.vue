@@ -116,7 +116,7 @@
                         <span class="notNull">*</span>领用数量
                     </template>
                     <template slot-scope="scope">
-                        <el-input v-model="scope.row.userAmount" placeholder="输入数量" size="small" :disabled="!isRedact" />
+                        <el-input v-model.number="scope.row.userAmount" type="number" placeholder="输入数量" size="small" :disabled="!isRedact" />
                     </template>
                 </el-table-column>
                 <el-table-column label="溶解罐库存" min-width="90" prop="remainder" />
@@ -261,7 +261,7 @@ export default class CookingDetail extends Vue {
     @Watch('formHeaders.workShop')
     changeWorkShop(newVal) {
         this.getHolderList(newVal);
-        this.getDissolutionPot(newVal);
+        this.getDissolutionPot();
     }
 
     @Watch('formHeaders.potNo')
@@ -272,6 +272,7 @@ export default class CookingDetail extends Vue {
     @Watch('formHeaders.productMaterial')
     changeProductMaterial(newVal) {
         this.getAccMaterial(newVal);
+        this.getDissolutionPot();
         // if (newVal && this.materialList.length !== 0) {
         //     const mat = this.materialList.find(item => item.materialCode === newVal)
         //     this.productMaterial = mat.materialCode + ' ' + mat.materialName;
@@ -355,8 +356,14 @@ export default class CookingDetail extends Vue {
     }
 
     // 溶解罐下拉 - 溶解罐领用
-    getDissolutionPot(deptId) {
-        STE_API.STE_DISSOLUTIONBUCKET_QUERY_API({ workShop: deptId, potStatus: ['M', 'U'], potNo: '' }).then(({ data }) => {
+    getDissolutionPot() {
+        let pM: string | undefined;
+        if (this.formHeaders.productMaterial === '') {
+            pM = '1';
+        } else {
+            pM = this.formHeaders.productMaterial;
+        }
+        STE_API.STE_DISSOLUTIONBUCKET_QUERY_API({ workShop: this.formHeaders.workShop, potStatus: ['M', 'U'], potNo: '', materialCode: pM }).then(({ data }) => {
             this.dissolutionPot = data.data;
         })
     }
@@ -591,7 +598,7 @@ export default class CookingDetail extends Vue {
                 if (this.formHeaders.productMaterial) {
                     this.getAccMaterial(this.formHeaders.productMaterial);
                 }
-                this.getDissolutionPot(this.formHeaders.workShop);
+                this.getDissolutionPot();
             }
         }
     }

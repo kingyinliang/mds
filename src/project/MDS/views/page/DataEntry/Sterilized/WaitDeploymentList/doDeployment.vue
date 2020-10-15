@@ -40,9 +40,9 @@
                             <el-date-picker v-model="formHeaders.ALLOCATE_DATE" type="date" :disabled="!isRedact" format="yyyy-MM-dd" value-format="yyyy-MM-dd" placeholder="选择日期" style="width: 145px;" />
                         </el-form-item>
                         <el-form-item label="杀菌物料：">
-                            <el-tooltip class="item" effect="dark" :content="formHeader.materialCode + `${formHeader.materialName}`" placement="top-start">
+                            <el-tooltip class="item" effect="dark" :content="formHeader.materialName + `${formHeader.materialCode}`" placement="top-start">
                                 <p class="input_bottom">
-                                    {{ formHeader.materialCode }}{{ formHeader.materialName }}
+                                    {{ formHeader.materialName }}{{ formHeader.materialCode }}
                                 </p>
                             </el-tooltip>
                         </el-form-item>
@@ -80,7 +80,7 @@
                 <el-table-column label="订单号" prop="orderNo" />
                 <el-table-column label="物料" :show-overflow-tooltip="true" width="180">
                     <template slot-scope="scope">
-                        {{ scope.row.materialCode }}{{ scope.row.materialName }}
+                        {{ scope.row.materialName }}{{ scope.row.materialCode }}
                     </template>
                 </el-table-column>
                 <el-table-column label="订单数量" prop="planOutput" width="80" />
@@ -106,8 +106,8 @@
                 <el-table-column label="订单号" prop="orderNo" width="120" />
                 <el-table-column label="物料" :show-overflow-tooltip="true" width="180">
                     <template slot-scope="scope">
-                        {{ scope.row.materialCode }}
                         {{ scope.row.materialName }}
+                        {{ scope.row.materialCode }}
                     </template>
                 </el-table-column>
                 <el-table-column label="订单数量" prop="planOutput" width="80" />

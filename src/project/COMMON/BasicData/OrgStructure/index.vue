@@ -222,6 +222,7 @@ export default class OrgStructure extends Vue {
     addDep: DetailObject = {}
     clickTreeNode: DetailObject = {}
     dictList: object[] = []
+    extendId=''
 
     mounted() {
         this.getDictList();
@@ -277,6 +278,7 @@ export default class OrgStructure extends Vue {
             this.sibling = sibling;
             this.addDep.parentName = parentName;
             this.addDep.parentId = parentId;
+            this.extendId = parentId;
         }, 100)
     }
 
@@ -306,7 +308,8 @@ export default class OrgStructure extends Vue {
                 COMMON_API.ADDORG_API(this.addDep).then(({ data }) => {
                     if (data.code === 200) {
                         this.$successToast('操作成功');
-                        this.$refs.orgView.getTree();
+                        this.$refs.orgView.getTree(false, this.extendId);
+                        // this.$refs.orgView.getTree();
                         this.addDep = {};
                         this.dialogFormVisible1 = false;
                     }

@@ -72,7 +72,7 @@
         $refs: {dataForm: HTMLFormElement};
         visible = false;
         potArr: PotObject[] = [];
-        transferTank = [];
+        transferTank: PotObject[] = [];
         materialArr: MaterialObj[] = [];
         dataRule = {
             stePotNo: [{ required: true, message: '生产锅号不能为空', trigger: 'blur' }],
@@ -153,11 +153,13 @@
                 if (valid) {
                     if (this.dataForm.consumeType === '0') {
                         this.dataForm.fermentPotNo = '';
-                        this.dataForm.fermentPotNoName = '';
+                        this.dataForm.fermentPotName = '';
                         this.dataForm.fermentStorage = '';
                     } else {
                         const filterArr1: (any) = this.potArr.filter(it => it.holderNo === this.dataForm.fermentPotNo);// eslint-disable-line
-                        this.dataForm.fermentPotNoName = filterArr1[0].holderName;
+                        const filterArr2: (any) = this.transferTank.filter(it => it.holderNo === this.dataForm.tankNo);// eslint-disable-line
+                        this.dataForm.fermentPotName = filterArr1[0].holderName;
+                        this.dataForm.tankName = filterArr2.length ? filterArr2[0].holderName : '';
                     }
                     this.visible = false;
                     this.$emit('success', this.dataForm)
@@ -176,7 +178,7 @@
     interface DataObj {
         id?: string;
         consumeType?: string;
-        fermentPotNoName?: string;
+        fermentPotName?: string;
         stePotNo?: string;
         stePotName?: string;
         potOrderId?: string;
@@ -190,6 +192,7 @@
         consumeBatch?: string;
         fermentStorage?: string;
         tankNo?: string;
+        tankName?: string;
         remark?: string;
         changer?: string;
         changed?: string;

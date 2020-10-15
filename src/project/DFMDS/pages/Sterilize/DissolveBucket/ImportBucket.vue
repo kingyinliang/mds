@@ -102,7 +102,7 @@
                                 </template>
                                 <template slot-scope="scope">
                                     <el-form-item prop="feedBatch">
-                                        <el-input v-model.trim="scope.row.feedBatch" size="small" placeholder="输入批次" />
+                                        <el-input v-model.trim="scope.row.feedBatch" size="small" maxlength="10" placeholder="输入批次" />
                                     </el-form-item>
                                 </template>
                             </el-table-column>
@@ -251,8 +251,6 @@
 
 
         changeProdcutMaterialOption(val) {
-            console.log('val')
-            console.log(val)
             if (val.prodcutMaterial !== '') {
                 val.productMaterialName = this.optionsTree.filter(item => item.productMaterialList[0].dictCode === val.prodcutMaterial)[0].productMaterialList[0].dictValue
             }
@@ -274,16 +272,13 @@
 
         // 入罐
         async init(item, workshop) {
-            console.log('item')
-            console.log(item)
-            console.log('workshop')
-            console.log(workshop)
             this.isTableDialogVisible = true
             this.currentPotId = item.potId
             this.currentPotNo = item.potNo
             this.currentPotStatus = item.potStatus
             this.currentWorkShop = workshop
             this.currentCycle = item.cycle
+            this.importBucketStatus = false
 
             // API 容器管理-分页查询-查询生产物料
             await COMMON_API.HOLDER_QUERY_API({
@@ -294,9 +289,6 @@
                 holderNo: this.currentPotNo,
                 holderType: '019' // 溶解罐参数编码
             }).then(({ data }) => {
-                console.log('查询生产物料')
-                console.log(data)
-                // this.productMaterialList = []
                 this.optionsTree = []
                 if (data.data.records[0].material) {
                     data.data.records[0].material.forEach((element, index) => {
@@ -312,9 +304,7 @@
                                 productMaterial: element.materialCode,
                                 preStage: 'DISSOLUTION'
                             }).then(({ data: target }) => {
-                                console.log('辅料前处理')
-                                console.log(target)
-                                // this.feedMateriallList = []
+                                this.optionsTree[index].feedMateriallList = []
                                 if (target.data) {
                                     target.data.forEach(items => {
                                         this.optionsTree[index].feedMateriallList.push({ dictCode: items.useMaterial, dictValue: items.useMaterial + ' ' + items.useMaterialName })
@@ -337,15 +327,12 @@
                 potNo: this.currentPotNo,
                 workShop: this.currentWorkShop
             }).then(({ data }) => {
-                console.log('查询入罐信息')
-                console.log(data)
                 this.importBucketInfo = []
                 if (data.data) {
                     this.importBucketInfo = data.data
                     this.importBucketInfo.forEach(items => {
                         this.$set(items, 'cycle', this.currentCycle)
                     })
-
                     this.orgFormDataGroup = JSON.parse(JSON.stringify(this.importBucketInfo))
                 }
             });
@@ -527,12 +514,7 @@
                         insertDtosArray.push(item)
                     }
                 })
-                console.log('delIdsArray')
-                console.log(delIdsArray)
-                console.log('insertDtosArray')
-                console.log(insertDtosArray)
-                console.log('updateDtosArray')
-                console.log(updateDtosArray)
+
                 if (!(delIdsArray.length === 0 && insertDtosArray.length === 0 && updateDtosArray.length === 0)) {
                     STE_API.STE_DISSOLUTIONBUCKET_SAVE_API({
                         delIds: delIdsArray,

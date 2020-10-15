@@ -78,7 +78,7 @@
                         <span class="notNull">*</span>用餐时间(MIN)
                     </template>
                     <template slot-scope="scope">
-                        <el-input v-model="scope.row.dinner" size="small" type="number" min="0" :disabled="!(isRedact && status !== 'C' && status !== 'D' && status !== 'P')" />
+                        <el-input v-model.number="scope.row.dinner" size="small" type="number" min="0" :disabled="!(isRedact && status !== 'C' && status !== 'D' && status !== 'P')" />
                     </template>
                 </el-table-column>
                 <el-table-column prop="verify_date" min-width="220" :show-overflow-tooltip="true">
@@ -190,6 +190,10 @@ export default class ProductPeople extends Vue {
 
     changeList(dataList) {
         this.currentFormDataGroup = JSON.parse(JSON.stringify(dataList));
+        this.currentFormDataGroup.forEach(item => {
+            this.$set(item, 'delFlag', 0)
+        })
+
         this.orgFormDataGroup = JSON.parse(JSON.stringify(dataList));
     }
 
@@ -282,7 +286,7 @@ export default class ProductPeople extends Vue {
                 userType: '',
                 userList: [],
                 startDate: currentFormDataGroupNew[currentFormDataGroupNew.length - 1].startDate,
-                dinner: 60,
+                dinner: currentFormDataGroupNew[currentFormDataGroupNew.length - 1].dinner,
                 endDate: currentFormDataGroupNew[currentFormDataGroupNew.length - 1].endDate,
                 remark: '',
                 changed: dateFormat(new Date(), 'yyyy-MM-dd hh:mm:ss'),
@@ -379,9 +383,17 @@ export default class ProductPeople extends Vue {
             return false
         }
         for (const item of currentFormDataGroupNew) {
-            if (!item.classes || !item.deptId || !item.userType || item.userList.length === 0 || !item.startDate || item.startDate === '' || !item.dinner || Number(item.dinner) === 0 || !item.endDate || item.endDate === '') {
+            if (!item.classes || !item.deptId || !item.userType || item.userList.length === 0 || !item.startDate || item.startDate === '' || item.dinner === null || !item.endDate || item.endDate === '') {
                 this.$warningToast('请录入人员统计必填项');
                 return false
+            }
+            if (typeof item.dinner !== 'undefined' && item.dinner < 0) {
+                this.$warningToast('用餐时间不可为负');
+                return false
+            }
+            if (item.duration && item.duration <= 0) {
+                this.$warningToast('结束时间不能小于或等于开始时间');
+                return false;
             }
         }
         return true
