@@ -78,7 +78,7 @@
                 <el-table-column label="操作时间" width="160" prop="changed" />
                 <el-table-column label="操作" width="60" fixed="right">
                     <template slot-scope="scope">
-                        <el-button v-if="isAuth('steCookClean')" type="text" size="small" :disabled="(scope.row.clear <= 2 ? false : true) || scope.row.potStatus === 'S'" @click="clearHolder(scope.row)">
+                        <el-button v-if="isAuth('steCookClean')" type="text" size="small" :disabled="(scope.row.clear <= 2 ? false : true) || scope.row.potStatus === 'S' || scope.row.remainder === 0" @click="clearHolder(scope.row)">
                             清罐
                         </el-button>
                     </template>
