@@ -294,6 +294,7 @@ export default class ExcRecord extends Vue {
             type: 'warning'
         }).then(() => {
             row.delFlag = 1;
+            this.$infoToast('删除成功');
         })
     }
 
