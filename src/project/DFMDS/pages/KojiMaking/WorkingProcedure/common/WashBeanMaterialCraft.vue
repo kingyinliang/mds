@@ -129,7 +129,7 @@
                         <template slot="label">
                             <span class="notNull">* </span>泡豆水洁净度：
                         </template>
-                        <el-select v-model="craftWashBeanInfo.cleanliness" class="stock-form_item_style" size="small" placeholder="请选择" clearable :disabled="!isRedact">
+                        <el-select v-model="craftWashBeanInfo.cleanliness" class="stock-form_item_style" size="small" placeholder="请选择" clearable :disabled="!isRedact" style="width: 175px;">
                             <el-option v-for="(item, index) in cleanlinessList" :key="index" :label="item.label" :value="item.value" />
                         </el-select>
                     </el-form-item>

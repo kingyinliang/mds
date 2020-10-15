@@ -153,7 +153,7 @@
         }
 
         submitRules(): Function[] {
-            return [this.$refs.flourMaterialCraft.ruleSubmit, this.$refs.excRecord.ruleSubmit]
+            return [this.$refs.flourMaterialApply.ruleSubmit, this.$refs.flourMaterialCraft.ruleSubmit, this.$refs.excRecord.ruleSubmit]
         }
 
         mounted() {

@@ -106,7 +106,6 @@
                     // 初始化下拉
                     item.defaultOptionsFn().then((res) => {
                         this.$set(item, 'optionList', res);
-
                     });
                 }
 
@@ -117,7 +116,6 @@
                             this.$set(target, 'optionList', JSON.parse(JSON.stringify(res)))
                         })
                     }
-
                 }
             });
         }

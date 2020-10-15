@@ -1,17 +1,17 @@
 <template>
     <div ref="stockTableData" class="stock-table-data-content">
         <el-table :data="tableDataList" border tooltip-effect="dark" class="newTable stock-table" size="mini">
-            <el-table-column type="index" label="序号" width="55" fixed align="center" />
-            <el-table-column label="物料" :show-overflow-tooltip="true" width="180" align="center">
+            <el-table-column type="index" label="序号" width="55" fixed />
+            <el-table-column label="物料" :show-overflow-tooltip="true" width="180">
                 <template slot-scope="scope">
                     {{ scope.row.materialName +' '+ scope.row.materialCode }}
                 </template>
             </el-table-column>
-            <el-table-column label="批次" width="120" :show-overflow-tooltip="true" prop="batch" align="center" />
-            <el-table-column label="厂家" width="120" :show-overflow-tooltip="true" prop="supplier" align="center" />
-            <el-table-column label="入库日期" width="160" :show-overflow-tooltip="true" prop="inStorageDate" align="center" :formatter="formatterProductDate" />
-            <el-table-column label="生产日期" width="160" :show-overflow-tooltip="true" prop="productDate" align="center" :formatter="formatterProductDate" />
-            <el-table-column v-if="!isHistoryPage" label="存储天数" :show-overflow-tooltip="true" prop="days" align="center" :formatter="formatterSaveDays" />
+            <el-table-column label="批次" width="120" :show-overflow-tooltip="true" prop="batch" />
+            <el-table-column label="厂家" width="120" :show-overflow-tooltip="true" prop="supplier" />
+            <el-table-column label="入库日期" width="160" :show-overflow-tooltip="true" prop="inStorageDate" :formatter="formatterProductDate" />
+            <el-table-column label="生产日期" width="160" :show-overflow-tooltip="true" prop="productDate" :formatter="formatterProductDate" />
+            <el-table-column v-if="!isHistoryPage" label="存储天数" :show-overflow-tooltip="true" prop="days" :formatter="formatterSaveDays" />
             <el-table-column label="入库数量(KG)" width="140" :show-overflow-tooltip="true" prop="inStorageAmount" align="right">
                 <template slot-scope="scope">
                     {{ scope.row.inStorageAmount ? scope.row.inStorageAmount.toLocaleString() : '' }}
@@ -22,8 +22,8 @@
                     {{ scope.row.currentAmount ? scope.row.currentAmount.toLocaleString(): '' }}
                 </template>
             </el-table-column>
-            <el-table-column v-if="stockType!=='Y158'" label="杂质率" :show-overflow-tooltip="true" prop="impurityRate" align="center" />
-            <el-table-column label="操作" width="140" align="center">
+            <el-table-column v-if="stockType!=='Y158'" label="杂质率" :show-overflow-tooltip="true" prop="impurityRate" />
+            <el-table-column label="操作" width="140">
                 <template slot-scope="scope">
                     <el-button size="mini" type="text" icon="iconfont factory-fangdajing-copy" @click="btnCheckStock(scope.row, true)">
                         查询
@@ -105,10 +105,16 @@
                 size: this.tableSize,
                 workShop: this.workShopInfo.workShop,
                 wareHouseNo: this.workShopInfo.wareHouseNo || null,
-                wareHouse: this.workShopInfo.wareHouse || null,
-                location: this.workShopInfo.location || null,
                 materialLocation: this.workShopInfo.materialLocation || null
             };
+
+            if (!queryObj.wareHouseNo) {
+                delete queryObj.wareHouseNo
+            }
+            if (!queryObj.materialLocation) {
+                delete queryObj.materialLocation
+            }
+
             if (!this.isHistoryPage) {
                 KOJI_API[`KOJI_STOCK_${this.stockType}_DETAIL_CUR_LIST_API`](queryObj).then(({ data }) => {
                     if (data.code === 200) {
