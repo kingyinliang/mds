@@ -69,7 +69,7 @@
 
         $refs: {SemiReceiveDialog: HTMLFormElement};
 
-        formHeader = {};
+        formHeader: OrderData = {};
         semiAudit = [];
         semiTable: SemiObj[] = [];
         orgSemiTable: SemiObj[] = [];
@@ -124,6 +124,10 @@
                 orderNo: this.$store.state.sterilize.SemiReceive.orderNoMap.orderNo,
                 potOrderNo: this.$store.state.sterilize.SemiReceive.potOrderMap.potOrderNo
             }).then(({ data }) => {
+                data.data.forEach(element => {
+                    element.potOrderNo = this.formHeader.potOrderNo;
+                    element.potOrderId = this.formHeader.id;
+                });
                 this.semiTable = this.semiTable.concat(data.data);
             })
         }
@@ -192,6 +196,16 @@
         orderNo?: string;
         factoryName?: string;
         potNo?: string;
+        potOrder?: string;
+    }
+    interface OrderData {
+        id?: string;
+        textStage?: string;
+        potOrderString?: string;
+        factoryName?: string;
+        potNo?: string;
+        potOrderNo?: string;
+        potOrderId?: string;
         potOrder?: string;
     }
 </script>
