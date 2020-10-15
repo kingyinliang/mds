@@ -74,6 +74,7 @@
         semiTable: SemiObj[] = [];
         orgSemiTable: SemiObj[] = [];
         visible = false;
+        tmp = false;
 
         // indexMethod(tableIndex) {
         //     const num = this.semiTable.reduce((total, currentValue: SemiObj, index) => {
@@ -125,16 +126,43 @@
         }
 
         semiCopy() {
-            STE_API.STE_SEMI_COPY_API({
-                orderNo: this.$store.state.sterilize.SemiReceive.orderNoMap.orderNo,
-                potOrderNo: this.$store.state.sterilize.SemiReceive.potOrderMap.potOrderNo
-            }).then(({ data }) => {
-                data.data.forEach(element => {
-                    element.potOrderNo = this.formHeader.potOrderNo;
-                    element.potOrderId = this.formHeader.id;
+            if (this.tmp) {
+                this.$confirm('本次获取数据会覆盖已有数据，确认获取？', '提示', {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    type: 'warning'
+                }).then(() => {
+                    STE_API.STE_SEMI_COPY_API({
+                        orderNo: this.$store.state.sterilize.SemiReceive.orderNoMap.orderNo,
+                        potOrderNo: this.$store.state.sterilize.SemiReceive.potOrderMap.potOrderNo
+                    }).then(({ data }) => {
+                        for (let i = this.semiTable.length - 1; i >= 0; i--) {
+                            if (this.semiTable[i].isCopy) {
+                                this.semiTable.splice(i, 1);
+                            }
+                        }
+                        data.data.forEach(element => {
+                            element.isCopy = true;
+                            element.potOrderNo = this.formHeader.potOrderNo;
+                            element.potOrderId = this.formHeader.id;
+                        });
+                        this.semiTable = this.semiTable.concat(data.data);
+                    })
                 });
-                this.semiTable = this.semiTable.concat(data.data);
-            })
+            } else {
+                this.tmp = true;
+                STE_API.STE_SEMI_COPY_API({
+                    orderNo: this.$store.state.sterilize.SemiReceive.orderNoMap.orderNo,
+                    potOrderNo: this.$store.state.sterilize.SemiReceive.potOrderMap.potOrderNo
+                }).then(({ data }) => {
+                    data.data.forEach(element => {
+                        element.isCopy = true;
+                        element.potOrderNo = this.formHeader.potOrderNo;
+                        element.potOrderId = this.formHeader.id;
+                    });
+                    this.semiTable = this.semiTable.concat(data.data);
+                })
+            }
         }
 
         receive() {
@@ -193,6 +221,7 @@
         }
     }
     interface SemiObj {
+        isCopy?: boolean;
         delFlag?: number;
         modifiedId?: number;
         id?: string;
