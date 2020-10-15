@@ -37,7 +37,7 @@
                         <!--<el-table-column label="添加状态" width="80" prop="addStatus" :show-overflow-tooltip="true"></el-table-column>-->
                         <el-table-column label="物料" :show-overflow-tooltip="true" min-width="220">
                             <template slot-scope="scope">
-                                {{ scope.row.materialCode + ' ' + scope.row.materialName }}
+                                {{ scope.row.materialName + ' ' + scope.row.materialCode }}
                             </template>
                         </el-table-column>
                         <el-table-column label="需求数量" width="80" prop="adjustAmount" :show-overflow-tooltip="true">
@@ -103,7 +103,7 @@
                         <!--<el-table-column label="添加状态" width="80" prop="addStatus" :show-overflow-tooltip="true"></el-table-column>-->
                         <el-table-column label="物料" :show-overflow-tooltip="true" min-width="220">
                             <template slot-scope="scope">
-                                {{ scope.row.materialCode + ' ' + scope.row.materialName }}
+                                {{ scope.row.materialName + ' ' + scope.row.materialCode }}
                             </template>
                         </el-table-column>
                         <el-table-column label="添加数量" min-width="80" prop="addAmount" :show-overflow-tooltip="true" />
@@ -166,10 +166,10 @@
         <el-dialog width="400px" title="添加确认" class="ShinHoDialog" :close-on-click-modal="false" :visible.sync="visible">
             <div style="height: 160px; overflow-y: initial;" :style="{ 'overflow-y': addSupOverData.length > 5 || SupOverData.length > 5 ? 'scroll' : 'initial' }">
                 <p v-for="(item, index) in addSupOverData" :key="index" style=" margin-bottom: 8px; line-height: 20px;">
-                    {{ item.materialCode + ' ' + item.materialName }}已经添加{{ item.receiveAmount + item.unit }},确认添加完成！
+                    {{ item.materialName + ' ' + item.materialCode }}已经添加{{ item.receiveAmount + item.unit }},确认添加完成！
                 </p>
                 <p v-for="(item, index) in SupOverData" :key="index" style=" margin-bottom: 8px; line-height: 20px;">
-                    {{ item.materialCode + ' ' + item.materialName }}已经添加{{ item.receiveAmount + item.unit }},确认添加完成！
+                    {{ item.materialName + ' ' + item.materialCode }}已经添加{{ item.receiveAmount + item.unit }},确认添加完成！
                 </p>
             </div>
             <span slot="footer" class="dialog-footer">
