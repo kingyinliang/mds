@@ -5,7 +5,7 @@
             redact-auth="steSemiEdit"
             save-auth="steSemiEdit"
             submit-auth="steSemiSubmit"
-            :order-status="formHeader.statusName"
+            :order-status="formHeader.statusName || formHeader.orderStatusName"
             :header-base="headerBase"
             :form-header="formHeader"
             :tabs="currentTabs"
