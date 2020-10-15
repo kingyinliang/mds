@@ -147,6 +147,14 @@
             this.getAuditList();
         }
 
+        ruleSubmit() {
+            if (this.materialY158TableList.length > 0 && this.materialTableList.length > 0) {
+                return true
+            }
+            this.$warningToast('物料领用记录为空,无法提交');
+            return false
+        }
+
         // 领用库位
         materialLocationOrhouseNo(row) {
             return row.wareHouseNo || row.materialLocation;

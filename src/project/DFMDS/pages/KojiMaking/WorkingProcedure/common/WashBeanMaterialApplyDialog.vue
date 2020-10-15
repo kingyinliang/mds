@@ -109,6 +109,11 @@
                     materialLocation: infoData.materialLocation
                 }).then(({ data }) => {
                     this.batchList = data.data;
+                    this.batchList.map(item => {
+                        if (item.batch === infoData.batch) {
+                            infoData.stockAmount = item.currentAmount;
+                        }
+                    });
                     Data = {
                         ...infoData
                     }

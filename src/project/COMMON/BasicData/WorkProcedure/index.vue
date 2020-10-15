@@ -600,11 +600,13 @@
 
         // from dialog
         updateItem(dataForm) {
+            console.log('dataForm')
+            console.log(dataForm)
             KOJI_API.WORKPROCEDURE_UPDATE_API({
                 id: dataForm.id,
                 jobBookingProcess: dataForm.jobBookingProcess,
-                materialCode: dataForm.materialCode,
-                materialName: dataForm.materialName,
+                materialCode: dataForm.material.split('&')[0],
+                materialName: dataForm.material.split('&')[1],
                 productProcess: dataForm.productProcess,
                 remark: dataForm.remark,
                 workShop: dataForm.workShop

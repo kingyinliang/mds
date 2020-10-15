@@ -124,7 +124,6 @@
 
         get currentTabs() {
             const { washBeanMaterailName, washBeanCraftName } = this.$store.state.koji.houseTagInfo;
-            console.log(washBeanMaterailName, washBeanCraftName, 333);
             return [
                 {
                     label: '物料领用',
@@ -161,7 +160,7 @@
                 this.getHouseTag();
                 this.formHeader.textStage = 'XD';
                 this.formHeader.factoryName = JSON.parse(sessionStorage.getItem('factory') || '{}').deptShort;
-                // this.$refs.washBeanMaterialApply.init(this.formHeader);
+                this.$refs.washBeanMaterialApply.init(this.formHeader);
                 this.$refs.washBeanMaterialCraft.init(this.formHeader);
                 this.$refs.excRecord.init(this.formHeader, 'XD');
                 this.$refs.textRecord.init(this.formHeader, 'koji');

@@ -1,19 +1,19 @@
 <template>
     <el-dialog width="748px" :title="title" :close-on-click-modal="false" :visible.sync="isShowCurrentDialog" destroy-on-close custom-class="stock-dialog-custom">
         <el-table :data="tableDataList" border tooltip-effect="dark" class="newTable stock-table" size="mini">
-            <el-table-column type="index" label="序号" width="55" fixed align="center" />
-            <el-table-column label="物料" :show-overflow-tooltip="true" width="180" prop="material" align="center">
+            <el-table-column type="index" label="序号" width="55" fixed />
+            <el-table-column label="物料" :show-overflow-tooltip="true" width="180" prop="material">
                 <template slot-scope="scope">
                     {{ scope.row.materialName + ' ' + scope.row.materialCode }}
                 </template>
             </el-table-column>
-            <el-table-column label="批次" width="100" :show-overflow-tooltip="true" prop="batch" align="center" />
-            <el-table-column label="移动类型" width="100" :show-overflow-tooltip="true" prop="moveTypeName" align="center" />
+            <el-table-column label="批次" width="100" :show-overflow-tooltip="true" prop="batch" />
+            <el-table-column label="移动类型" width="100" :show-overflow-tooltip="true" prop="moveTypeName" />
             <el-table-column label="数量(KG)" width="100" :show-overflow-tooltip="true" prop="moveAmount" align="right" />
-            <el-table-column label="领用订单" width="100" :show-overflow-tooltip="true" prop="orderNo" align="center" />
-            <el-table-column label="调整说明" width="100" :show-overflow-tooltip="true" prop="adjustInfo" align="center" />
-            <el-table-column label="操作人" width="100" :show-overflow-tooltip="true" prop="changer" align="center" />
-            <el-table-column label="操作时间" width="160" align="center">
+            <el-table-column label="领用订单" width="100" :show-overflow-tooltip="true" prop="orderNo" />
+            <el-table-column label="调整说明" width="100" :show-overflow-tooltip="true" prop="adjustInfo" />
+            <el-table-column label="操作人" width="100" :show-overflow-tooltip="true" prop="changer" />
+            <el-table-column label="操作时间" width="160">
                 <template slot-scope="scope">
                     {{ scope.row.changed }}
                 </template>

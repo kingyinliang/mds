@@ -1,0 +1,285 @@
+<template>
+    <div class="koji-process-control">
+        <mds-card title="生产入库" name="table1" icon-bg="#487BFF">
+            <el-table header-row-class-name="tableHead" class="newTable" :data="tableData" border tooltip-effect="dark" size="mini">
+                <el-table-column type="index" :index="index => getIndexMethod(index, tableData)" label="序号" width="50px" fixed />
+                <el-table-column label="大豆量" width="140">
+                    <template slot-scope="scope">
+                        <p>{{ scope.row.feBeanMount }}</p>
+                    </template>
+                </el-table-column>
+                <el-table-column width="146">
+                    <template slot="header">
+                        <span class="notNull">* </span>入库数量
+                    </template>
+                    <template slot-scope="scope">
+                        <el-input v-model="scope.row.inStorageAmount" placeholder="输入" :disabled="!isRedact" size="small" style="width: 120px;" />
+                    </template>
+                </el-table-column>
+                <el-table-column label="单位" width="80">
+                    <template slot-scope="scope">
+                        <p>{{ scope.row.unit }}</p>
+                    </template>
+                </el-table-column>
+                <el-table-column width="186">
+                    <template slot="header">
+                        <span class="notNull">* </span>入库批次
+                    </template>
+                    <template slot-scope="scope">
+                        <el-input v-model="scope.row.inStorageBatch" placeholder="输入" :disabled="!isRedact" size="small" maxlength="10" style="width: 160px;" />
+                    </template>
+                </el-table-column>
+                <el-table-column label="备注">
+                    <template slot-scope="scope">
+                        <el-input v-model.trim="scope.row.remark" size="small" placeholder="请输入" :disabled="!isRedact" />
+                    </template>
+                </el-table-column>
+                <el-table-column label="操作人" width="120">
+                    <template slot-scope="scope">
+                        {{ scope.row.changer }}
+                    </template>
+                </el-table-column>
+                <el-table-column label="操作时间" width="150">
+                    <template slot-scope="scope">
+                        {{ scope.row.changed }}
+                    </template>
+                </el-table-column>
+            </el-table>
+        </mds-card>
+        <audit-log :table-data="craftAuditList" :verify-man="'verifyMan'" :verify-date="'verifyDate'" :status="true" />
+    </div>
+</template>
+
+<script lang="ts">
+    import { Vue, Component, Prop, Watch } from 'vue-property-decorator';
+    import { KOJI_API, AUDIT_API } from 'common/api/api';
+    import { dateFormat, getUserNameNumber } from 'utils/utils';
+
+
+    @Component({
+        name: 'WashBeanMaterialCraft'
+    })
+    export default class WashBeanMaterialCraft extends Vue {
+        @Prop({ default: false }) isRedact: boolean;
+        @Prop({ default: '' }) potNoNow: number|string;
+
+        // 订单信息
+        formHeader: Craft = {};
+
+        // 蒸豆记录表格数据
+        tableData: CraftList[] = [];
+
+        // 审核记录
+        craftAuditList = [];
+
+        // 泡豆罐选择改变 触发字段变更值
+        @Watch('potNoNow', { immediate: true, deep: true })
+        onChangeValue(newVal: number| string) {
+            if (newVal && this.tableData[0]) {
+                this.tableData[0].scPotNo = String(newVal) || ''
+            }
+        }
+
+        // 提交保存时获取处理数据
+        getSavedOrSubmitData() {
+            function filterTableData(whichTable, type) {
+                if (type === 'insert') {
+                    return whichTable.filter(item => !item.id && item.delFlag !== 1);
+                }
+                if (type === 'update') {
+                    return whichTable.filter(item => item.id && item.delFlag !== 1);
+                }
+            }
+
+            return {
+                inStorage: {
+                    insertDto: filterTableData(this.tableData, 'insert'),
+                    updateDto: filterTableData(this.tableData, 'update'),
+                    deleteDto: []
+                }
+            };
+        }
+
+
+        // 初始化数据
+        init(formHeader) {
+            this.formHeader = formHeader;
+            const { kojiOrderNo, orderNo, workShop, orderType } = formHeader;
+            // 查询蒸面记录
+            this.getTableList(kojiOrderNo, orderNo, workShop, orderType);
+            // 查询审核记录
+            this.getAuditList(orderNo);
+        }
+
+        // ==== 提交处理汇总 ====== //
+        // 提交时字段校验
+        ruleSubmit() {
+            // /(?:^[1-9]([0-9])?(?:\.[0-9]{1})?$)|(?:^(?:0){1}$)|(?:^[0-9]\.[0-9]$)/
+            if (!this.tableData[0].inStorageAmount || !this.tableData[0].inStorageBatch) {
+                this.$warningToast('请填写"生产入库页签"必填项');
+                return false;
+            }
+            return true;
+        }
+
+        // === 查询 汇总 ==== //
+        // 查询入库记录
+        getTableList(kojiOrderNo, orderNo, workShop, orderType) {
+            KOJI_API.KOJI_STEAM_INSTORAGE_LIST_API({
+                kojiOrderNo,
+                orderNo
+            }).then(({ data }) => {
+                const queryInStorageData = data.data;
+                // 查询大豆领用记录计算总量
+                KOJI_API.KOJI_MATERIAL_GET_QUERY_API({
+                    kojiOrderNo,
+                    orderNo,
+                    materialType: 'BEAN'
+                }).then(({ data: res }) => {
+                    let totalNum = 0;
+                    res.data && res.data.map(item => {
+                        totalNum += Number(item.amount)
+                    });
+                    if (queryInStorageData && queryInStorageData.length > 0) {
+                        this.tableData = [{
+                            ...queryInStorageData[0],
+                            feBeanMount: totalNum,
+                            unit: 'KG',
+                            changed: dateFormat(new Date(), 'yyyy-MM-dd hh:mm:ss'),
+                            changer: getUserNameNumber(),
+                            kojiOrderNo,
+                            orderNo,
+                            workShop,
+                            orderType
+                        }];
+                    } else {
+                        this.tableData = [{
+                            feBeanMount: totalNum,
+                            inStorageAmount: '',
+                            inStorageBatch: '',
+                            unit: 'KG',
+                            scPotNo: '',
+                            remark: '',
+                            changed: dateFormat(new Date(), 'yyyy-MM-dd hh:mm:ss'),
+                            changer: getUserNameNumber(),
+                            kojiOrderNo,
+                            orderNo,
+                            workShop,
+                            orderType
+                        }];
+                    }
+                })
+            });
+        }
+
+        // 查询最新审核记录
+        getAuditList(orderNo) {
+            AUDIT_API.AUDIT_LOG_LIST_API({ orderNo, verifyType: '' }).then(({ data }) => {
+                this.craftAuditList = data.data;
+            });
+        }
+    }
+
+    interface Craft {
+        id?: string;
+        items?: CraftList[];
+        kojiOrderNo?: string;
+        orderNo?: string;
+        workShop?: string;
+        potSaveDto?: object[];
+        relStr?: string;
+        sieveStartDate?: string;
+        sieveEndDate?: string;
+        cleanliness?: string;
+        steamFlourMans?: string;
+        washStartDate?: string;
+        washEndDate?: string;
+        steamPacketPressure?: string;
+        steamFlourSpeed?: string;
+        steamBallNo?: string;
+        delFlag?: number;
+        orderId?: string;
+        factory?: string;
+        orderType?: string;
+    }
+    interface CraftList {
+        id?: string;
+        kojiOrderNo?: string;
+        orderNo?: string;
+        sieveBeanBatch?: string;
+        sieveBeanSupplier?: string;
+        sieveDeviceId?: string;
+        sieveDeviceName?: string;
+        sieveImpurityAmount?: number | string;
+        sieveImpurityType?: string;
+        sieveMans?: string;
+        remark?: string;
+        changer?: string;
+        changed?: string;
+        delFlag?: number;
+        drainEndDate?: string;
+        drainMans?: string;
+        drainStartDate?: string;
+        steepDuration?: string;
+        washBeanId?: string;
+        waterEndDate?: string;
+        waterMans?: string;
+        waterStartDate?: string;
+        batch?: string;
+        supplier?: string;
+        relStr?: string;
+        flourWindTemp?: string;
+        beanWindTempOne?: string;
+        beanWindTempTwo?: string;
+        mixtureTempOne?: string;
+        mixtureTempTwo?: string;
+        beanWindFrequency?: string;
+        mixtureStart?: string;
+        mixtrueEnd?: string;
+        addSteamStart?: string;
+        addSteamEnd?: string;
+        steamPocketPressure?: string;
+        turnCount?: string;
+        pressureDuration?: string;
+        addBeanDate?: string;
+        steamBallNo?: string;
+        feBeanMount?: number | string;
+        inStorageAmount?: number | string;
+        inStorageBatch?: string;
+        unit?: string;
+        scPotNo?: string;
+        workShop?: number | string;
+        orderType?: number | string;
+        processCode?: string;
+    }
+
+    interface SieveDeviceList {
+        sieveDeviceId?: string;
+        sieveDeviceName?: string;
+        deviceNo?: string;
+        deviceName?: string;
+    }
+</script>
+
+<style lang="scss" scoped>
+    .koji-process-control {
+        .stock-form_item_input_suffix {
+            margin-right: 6px;
+        }
+        .cleanMarginBottom {
+            margin-bottom: 10px;
+        }
+        .koji-control-form_select {
+            min-width: 200px;
+            max-width: 300px;
+            padding-left: 8px;
+            overflow: hidden;
+            color: #333;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+            background: #f5f5f5;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+    }
+</style>
