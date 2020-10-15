@@ -16,7 +16,7 @@
             <el-col v-for="item in stockInfoList" :key="item.potId" :span="12">
                 <div class="card-stock">
                     <div class="card-stock__head">
-                        <span>{{ `${item.workShopName}${item.wareHouse || item.location? '：'+(item.wareHouse || item.location) : ''}` }}</span>
+                        <span>{{ `${item.workShopName}${item.wareHouseNo || item.materialLocation? '：'+(item.wareHouseNo || item.materialLocation) : ''}` }}</span>
                         <el-button class="floatr" type="text" @click="goDetail(item)">
                             详情
                         </el-button>

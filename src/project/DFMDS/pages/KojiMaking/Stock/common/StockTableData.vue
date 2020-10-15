@@ -104,10 +104,8 @@
                 // factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
                 size: this.tableSize,
                 workShop: this.workShopInfo.workShop,
-                wareHouseNo: this.workShopInfo.wareHouseNo || null,
-                wareHouse: this.workShopInfo.wareHouse || null,
-                location: this.workShopInfo.location || null,
-                materialLocation: this.workShopInfo.materialLocation || null
+                wareHouseNo: this.workShopInfo.wareHouseNo,
+                materialLocation: this.workShopInfo.materialLocation
             };
             if (!this.isHistoryPage) {
                 KOJI_API[`KOJI_STOCK_${this.stockType}_DETAIL_CUR_LIST_API`](queryObj).then(({ data }) => {
