@@ -78,6 +78,7 @@
             if (newVal && this.tableData[0]) {
                 this.tableData[0].scPotNo = String(newVal) || ''
                 this.tableData[0].inStorageBatch = this.getNowFormatDate() + '1' + newVal
+                this.$infoToast('生产入库的入库批次自动生成')
             }
         }
 
@@ -121,9 +122,9 @@
         // 初始化数据
         init(formHeader) {
             this.formHeader = formHeader;
-            const { kojiOrderNo, orderNo, workShop, orderType } = formHeader;
+            const { kojiOrderNo, orderNo, workShop, orderType, planOutput } = formHeader;
             // 查询蒸面记录
-            this.getTableList(kojiOrderNo, orderNo, workShop, orderType);
+            this.getTableList(kojiOrderNo, orderNo, workShop, orderType, planOutput);
             // 查询审核记录
             this.getAuditList(orderNo);
         }
@@ -146,7 +147,7 @@
 
         // === 查询 汇总 ==== //
         // 查询入库记录
-        getTableList(kojiOrderNo, orderNo, workShop, orderType) {
+        getTableList(kojiOrderNo, orderNo, workShop, orderType, planOutput) {
             KOJI_API.KOJI_STEAM_INSTORAGE_LIST_API({
                 kojiOrderNo,
                 orderNo
@@ -177,7 +178,7 @@
                     } else {
                         this.tableData = [{
                             feBeanMount: totalNum,
-                            inStorageAmount: '',
+                            inStorageAmount: planOutput || '',
                             inStorageBatch: '',
                             unit: 'KG',
                             scPotNo: '',
