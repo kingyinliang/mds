@@ -82,7 +82,7 @@
                 type: 'p',
                 label: '曲房编号',
                 icon: 'factory-qiyaguanjianhua',
-                value: ['kojiHouseName', 'kojiHouseNo']
+                value: 'kojiHouseName'
             },
             {
                 type: 'tooltip',

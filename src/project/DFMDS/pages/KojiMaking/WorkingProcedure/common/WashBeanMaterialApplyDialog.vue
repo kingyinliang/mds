@@ -90,7 +90,6 @@
         dataForm: DataForm = {};
 
         async init(infoData, formHeader, type) {
-            console.log(infoData, 'infoData')
             this.type = type;
             this.visible = true;
             let Data: DataForm = {};

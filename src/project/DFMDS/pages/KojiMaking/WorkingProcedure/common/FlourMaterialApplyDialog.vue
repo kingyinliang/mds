@@ -238,7 +238,6 @@
 
         // 操作人数据回显处理
         changeUser(userIds) {
-            console.log(userIds);
             this.loanedPersonnelStatus = false;
             const arr = [...userIds];
             let relStr = '';
