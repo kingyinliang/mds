@@ -115,6 +115,11 @@
         // 提交时字段校验
         ruleSubmit() {
             // /(?:^[1-9]([0-9])?(?:\.[0-9]{1})?$)|(?:^(?:0){1}$)|(?:^[0-9]\.[0-9]$)/
+            if (!this.potNoNow) {
+                this.$warningToast('请选择 "泡豆罐"');
+                return false;
+            }
+
             if (!this.tableData[0].inStorageAmount || !this.tableData[0].inStorageBatch) {
                 this.$warningToast('请填写"生产入库页签"必填项');
                 return false;

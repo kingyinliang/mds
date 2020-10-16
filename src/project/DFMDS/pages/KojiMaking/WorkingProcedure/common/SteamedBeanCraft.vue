@@ -7,7 +7,7 @@
                         <template slot="label">
                             蒸球压力(Mpa)：
                         </template>
-                        <el-input v-model="steamBallPressure" placeholder="" :disabled="!isRedact && !craftSteamBeanTable.length>0" size="small" style="width: 175px;">
+                        <el-input v-model="steamBallPressure" placeholder="" :disabled="!isRedact" size="small" style="width: 175px;">
                             <span slot="suffix" class="stock-form_item_input_suffix">Mpa</span>
                         </el-input>
                     </el-form-item>
@@ -392,6 +392,10 @@
                 type: 'warning'
             }).then(() => {
                 row.delFlag = 1;
+                // 蒸豆记录为空 蒸球压力值为'' 解释 提交数据时 蒸球压力存在 蒸豆记录的数据里 蒸豆数据为空时无法保存
+                if (this.craftSteamBeanTable.filter(item => item.delFlag === 0).length === 0) {
+                    this.steamBallPressure = ''
+                }
             });
         }
 
