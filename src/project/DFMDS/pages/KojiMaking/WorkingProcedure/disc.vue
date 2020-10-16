@@ -80,15 +80,15 @@
             },
             {
                 type: 'p',
-                label: '曲房号',
+                label: '曲房编号',
                 icon: 'factory-qiyaguanjianhua',
-                value: ['kojiHouseNo']
+                value: ['kojiHouseName']
             },
             {
                 type: 'tooltip',
                 icon: 'factory-pinleiguanli',
                 label: '生产物料',
-                value: ['materialName', 'materialCode']
+                value: ['materialCode', 'materialName']
             },
             {
                 type: 'p',
@@ -134,7 +134,7 @@
                 status: '未录入'
             },
             {
-                label: '生產入庫',
+                label: '生产入库',
                 status: '未录入'
             },
             {
