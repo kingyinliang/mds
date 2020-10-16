@@ -139,10 +139,6 @@
         currentPotNo='' // 选取的当前罐号
         holderStatus: HolderStatus[]=[] // 罐状态对应
 
-        // totalCount = 1
-        // currPage = 1
-        // pageSize = 10
-
         targetQueryTableList: BucketDataListObj[] = []
         isTableDialogVisible=false
         isBucketDialogVisible = false;
@@ -367,7 +363,6 @@
             });
         }
 
-
         // queryTable 查询请求
         queryTableListInterface = params => {
             console.log('搜寻传值')
@@ -393,23 +388,6 @@
                 this.$infoToast('暂无任何内容');
             }
         }
-
-        // // 改变每页条数
-        // handlePageSizeChangeFromRead(val: number): void {
-        //     this.pageSize = val;
-        //     this.getMsgDataList();
-        // }
-
-        // // 跳转页数
-        // handleCurrentPageChangeFromRead(val: number): void {
-        //     this.currPage = val;
-        //     this.getMsgDataList();
-        // }
-
-        // getMsgDataList(): void {
-        //     //
-        // }
-
 
         // 去详请
         goTargetDetail(item) {
@@ -475,28 +453,22 @@
 
         // 清罐
         btnClearBucket(item) {
-            this.$confirm('是否清罐?', '提示', {
-                confirmButtonText: '确定',
-                cancelButtonText: '取消',
-                type: 'warning'
-            }).then(() => {
-                this.dialogType = 'clear'
-                this.isBucketDialogVisible = true;
-                this.currentPotId = item.potId // 选取的当前罐id
-                this.currentPotNo = item.potNo // 选取的当前罐号
-                const tempHolderStatus: HolderStatus[] = this.holderStatus.filter(element => element.dictCode === item.potStatus)
-                this.dialogForm.clear.form = {
-                        cycle: item.cycle,
-                        number: this.currentPotNo,
-                        status: item.potStatus,
-                        statusC: tempHolderStatus[0].dictValue,
-                        doit: true,
-                        remark: '',
-                        id: this.currentPotId,
-                        changer: getUserNameNumber(),
-                        changed: dateFormat(new Date(), 'yyyy-MM-dd hh:mm:ss')
-                }
-            });
+            this.dialogType = 'clear'
+            this.isBucketDialogVisible = true;
+            this.currentPotId = item.potId // 选取的当前罐id
+            this.currentPotNo = item.potNo // 选取的当前罐号
+            const tempHolderStatus: HolderStatus[] = this.holderStatus.filter(element => element.dictCode === item.potStatus)
+            this.dialogForm.clear.form = {
+                    cycle: item.cycle,
+                    number: this.currentPotNo,
+                    status: item.potStatus,
+                    statusC: tempHolderStatus[0].dictValue,
+                    doit: true,
+                    remark: '',
+                    id: this.currentPotId,
+                    changer: getUserNameNumber(),
+                    changed: dateFormat(new Date(), 'yyyy-MM-dd hh:mm:ss')
+            }
         }
     }
 
