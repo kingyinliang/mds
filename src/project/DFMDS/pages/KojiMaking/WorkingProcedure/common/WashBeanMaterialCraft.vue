@@ -30,7 +30,7 @@
                     </el-form-item>
                 </el-form>
             </div>
-            <el-table header-row-class-name="tableHead" class="newTable" :data="craftSeiveBeanTable" :row-class-name="RowDelFlag" border tooltip-effect="dark" size="small">
+            <el-table header-row-class-name="tableHead" class="newTable" :data="craftSeiveBeanTable" :row-class-name="RowDelFlag" border tooltip-effect="dark" size="small" style="min-height: 90px;">
                 <el-table-column type="index" :index="index => getIndexMethod(index, craftSeiveBeanTable)" label="序号" width="50px" fixed />
                 <el-table-column width="160">
                     <template slot="header">
@@ -168,7 +168,7 @@
                     </el-form-item>
                 </el-form>
             </template>
-            <el-table header-row-class-name="tableHead" class="newTable" :data="craftWashBeanTable" :row-class-name="RowDelFlag" border tooltip-effect="dark" size="mini">
+            <el-table header-row-class-name="tableHead" class="newTable" :data="craftWashBeanTable" :row-class-name="RowDelFlag" border tooltip-effect="dark" size="mini" style="min-height: 90px;">
                 <el-table-column type="index" :index="index => getIndexMethod(index, craftWashBeanTable)" label="序号" width="50px" fixed />
                 <el-table-column width="140" show-overflow-tooltip>
                     <template slot="header">
