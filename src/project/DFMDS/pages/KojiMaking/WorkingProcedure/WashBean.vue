@@ -182,7 +182,6 @@
             const excRequest = this.$refs.excRecord.getSavedOrSubmitData(this.formHeader, 'XD');
             const textRequest = this.$refs.textRecord.savedData(this.formHeader, 'koji');
 
-            console.log(steSemi, 'wash')
             return KOJI_API.KOJI_XD_SAVE_API({
                 ...steSemi,
                 kojiExceptionSaveDto: {
