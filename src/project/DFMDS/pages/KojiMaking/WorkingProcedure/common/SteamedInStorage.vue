@@ -77,7 +77,24 @@
         onChangeValue(newVal: number| string) {
             if (newVal && this.tableData[0]) {
                 this.tableData[0].scPotNo = String(newVal) || ''
+                this.tableData[0].inStorageBatch = this.getNowFormatDate() + '1' + newVal
             }
+        }
+
+        // 获取当前年月日 (年两位) 201010
+        getNowFormatDate() {
+            const date = new Date();
+            const year = String(date.getFullYear());
+            let month: string|number = date.getMonth() + 1;
+            let strDate: number|string = date.getDate();
+            if (Number(month) >= 1 && Number(month) <= 9) {
+                month = '0' + String(month);
+            }
+            if (strDate >= 0 && strDate <= 9) {
+                strDate = '0' + strDate;
+            }
+            const currentdate = year.substr(2, 2) + month + strDate;
+            return currentdate;
         }
 
         // 提交保存时获取处理数据
