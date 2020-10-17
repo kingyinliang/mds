@@ -421,6 +421,11 @@
         // 提交时字段校验
         ruleSubmit() {
             // /^(0|[1-9]|10)(\.\d{1,2})?$/  //0-10 两位小数
+            if (this.craftSteamBeanTable.filter(it => it.delFlag !== 1).length === 0) {
+                this.$warningToast('请填写工艺控制页签"蒸豆记录"');
+                return false;
+            }
+
             for (const item of this.craftSteamBeanTable.filter(it => it.delFlag !== 1)) {
                 if (
                     !item.steamBallNo ||
@@ -430,6 +435,11 @@
                     this.$warningToast('请填写工艺控制页签"蒸豆记录"必填项');
                     return false;
                 }
+            }
+
+            if (this.hardTable.filter(it => it.delFlag !== 1).length === 0) {
+                this.$warningToast('请填写工艺控制页签"蒸豆硬度"');
+                return false;
             }
 
             for (const [index, item] of (this.hardTable.filter(it => it.delFlag !== 1)).entries()) {

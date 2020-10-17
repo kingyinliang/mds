@@ -77,7 +77,25 @@
         onChangeValue(newVal: number| string) {
             if (newVal && this.tableData[0]) {
                 this.tableData[0].scPotNo = String(newVal) || ''
+                this.tableData[0].inStorageBatch = this.getNowFormatDate() + '1' + newVal
+                this.$infoToast('生产入库的入库批次自动生成')
             }
+        }
+
+        // 获取当前年月日 (年两位) 201010
+        getNowFormatDate() {
+            const date = new Date();
+            const year = String(date.getFullYear());
+            let month: string|number = date.getMonth() + 1;
+            let strDate: number|string = date.getDate();
+            if (Number(month) >= 1 && Number(month) <= 9) {
+                month = '0' + String(month);
+            }
+            if (strDate >= 0 && strDate <= 9) {
+                strDate = '0' + strDate;
+            }
+            const currentdate = year.substr(2, 2) + month + strDate;
+            return currentdate;
         }
 
         // 提交保存时获取处理数据
@@ -104,9 +122,9 @@
         // 初始化数据
         init(formHeader) {
             this.formHeader = formHeader;
-            const { kojiOrderNo, orderNo, workShop, orderType } = formHeader;
+            const { kojiOrderNo, orderNo, workShop, orderType, planOutput } = formHeader;
             // 查询蒸面记录
-            this.getTableList(kojiOrderNo, orderNo, workShop, orderType);
+            this.getTableList(kojiOrderNo, orderNo, workShop, orderType, planOutput);
             // 查询审核记录
             this.getAuditList(orderNo);
         }
@@ -129,7 +147,7 @@
 
         // === 查询 汇总 ==== //
         // 查询入库记录
-        getTableList(kojiOrderNo, orderNo, workShop, orderType) {
+        getTableList(kojiOrderNo, orderNo, workShop, orderType, planOutput) {
             KOJI_API.KOJI_STEAM_INSTORAGE_LIST_API({
                 kojiOrderNo,
                 orderNo
@@ -160,7 +178,7 @@
                     } else {
                         this.tableData = [{
                             feBeanMount: totalNum,
-                            inStorageAmount: '',
+                            inStorageAmount: planOutput || '',
                             inStorageBatch: '',
                             unit: 'KG',
                             scPotNo: '',

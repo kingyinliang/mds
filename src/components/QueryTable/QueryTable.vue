@@ -1,7 +1,7 @@
 <template>
     <div>
         <el-card class="searchCard" style="margin-bottom: 5px;">
-            <el-form :model="queryForm" :rules="queryFormRules" :inline="true" size="small" label-width="70px" class="sole_row clearfix" style="font-size: 0;">
+            <el-form :model="queryForm" :rules="queryFormRules" :inline="true" size="small" label-width="70px" class="multi_row clearfix" style="font-size: 0;">
                 <template v-for="item in queryFormData">
                     <template v-if="!item.hide">
                         <el-form-item v-if="item.type === 'select'" :key="item.prop" :label="`${item.label}：` || ''" :prop="item.prop" :rules="item.rule" :label-width="`${item.labelWidth ? item.labelWidth : 70}px`">
@@ -149,6 +149,7 @@
                     </template>
                 </el-table-column>
             </el-table>
+            <slot name="showTableOther" />
             <slot v-if="!showTable" name="card-main" />
             <el-row v-if="showPage === true">
                 <el-pagination :current-page="queryForm[currpageConfig]" :page-sizes="[10, 20, 50]" :page-size="queryForm[pagesizeConfig] " layout="total, sizes, prev, pager, next, jumper" :total="queryForm.totalCount" @size-change="handleSizeChange" @current-change="handleCurrentChange" />

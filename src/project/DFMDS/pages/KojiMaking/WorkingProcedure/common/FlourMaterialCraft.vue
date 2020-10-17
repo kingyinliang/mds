@@ -428,6 +428,10 @@
                 return false;
             }
 
+            if (this.craftSteamBeanTable.filter(it => it.delFlag !== 1).length === 0) {
+                this.$warningToast('请填写工艺控制页签"蒸豆记录"');
+                return false;
+            }
 
             for (const item of this.craftSteamBeanTable.filter(it => it.delFlag !== 1)) {
                 if (
