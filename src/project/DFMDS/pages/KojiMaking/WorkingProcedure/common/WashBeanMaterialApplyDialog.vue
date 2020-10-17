@@ -90,7 +90,6 @@
         dataForm: DataForm = {};
 
         async init(infoData, formHeader, type) {
-            console.log(infoData, 'infoData')
             this.type = type;
             this.visible = true;
             let Data: DataForm = {};
@@ -109,6 +108,11 @@
                     materialLocation: infoData.materialLocation
                 }).then(({ data }) => {
                     this.batchList = data.data;
+                    this.batchList.map(item => {
+                        if (item.batch === infoData.batch) {
+                            infoData.stockAmount = item.currentAmount;
+                        }
+                    });
                     Data = {
                         ...infoData
                     }

@@ -1,40 +1,16 @@
 <template>
     <div class="koji-process-control">
-        <mds-card title="蒸面记录" name="table1" icon-bg="#487BFF">
-            <div>
-                <el-form :inline="true" :model="craftSteamFlourInfo" label-width="115px">
+        <mds-card title="蒸豆记录" name="table1" icon-bg="#487BFF">
+            <template slot="titleBtn">
+                <el-form :inline="true" label-width="115px">
                     <el-form-item class="cleanMarginBottom">
                         <template slot="label">
-                            <span class="notNull">* </span>气泡压力：
+                            蒸球压力(Mpa)：
                         </template>
-                        <el-input v-model="craftSteamFlourInfo.steamPacketPressure" placeholder="输入" :disabled="!isRedact" size="small" style="width: 175px;">
+                        <el-input v-model="steamBallPressure" placeholder="" :disabled="!isRedact" size="small" style="width: 175px;">
                             <span slot="suffix" class="stock-form_item_input_suffix">Mpa</span>
                         </el-input>
                     </el-form-item>
-                    <el-form-item class="cleanMarginBottom">
-                        <template slot="label">
-                            <span class="notNull">* </span>蒸面加水流速：
-                        </template>
-                        <el-input v-model="craftSteamFlourInfo.steamFlourSpeed" placeholder="输入" :disabled="!isRedact" size="small" style="width: 175px;">
-                            <span slot="suffix" class="stock-form_item_input_suffix">L/H</span>
-                        </el-input>
-                    </el-form-item>
-                    <el-form-item class="cleanMarginBottom">
-                        <template slot="label">
-                            <span class="notNull">* </span>蒸面操作人：
-                        </template>
-                        <el-tooltip class="item" effect="dark" :content="craftSteamFlourInfo.steamFlourMans + '点击选择人员'" placement="top">
-                            <div class="koji-control-form_select" @click="selectUser(craftSteamFlourInfo, '蒸面操作人', 'steamFlourMans')">
-                                {{ craftSteamFlourInfo.steamFlourMans }} 点击选择人员
-                            </div>
-                        </el-tooltip>
-                    </el-form-item>
-                </el-form>
-            </div>
-        </mds-card>
-        <mds-card title="蒸豆记录" name="table2" icon-bg="#487BFF">
-            <template slot="titleBtn">
-                <el-form :inline="true" label-width="115px">
                     <el-form-item class="cleanMarginBottom floatr">
                         <el-button type="primary" size="small" :disabled="!isRedact" @click="addDataRow()">
                             新增
@@ -128,74 +104,133 @@
                 </el-table-column>
             </el-table>
         </mds-card>
-        <mds-card title="混合控制" name="table3" icon-bg="#487BFF">
-            <div>
-                <el-form :inline="true" :model="craftControlInfo" label-width="120px">
-                    <el-form-item class="cleanMarginBottom">
-                        <template slot="label">
-                            <span class="notNull">* </span>蒸面风冷温度：
-                        </template>
-                        <el-input v-model="craftControlInfo.flourWindTemp" placeholder="输入" :disabled="!isRedact" size="small" style="width: 175px;">
-                            <span slot="suffix" class="stock-form_item_input_suffix">°C</span>
-                        </el-input>
-                    </el-form-item>
-                    <el-form-item class="cleanMarginBottom">
-                        <template slot="label">
-                            <span class="notNull">* </span>大豆风冷温度1：
-                        </template>
-                        <el-input v-model="craftControlInfo.beanWindTempOne" placeholder="输入" :disabled="!isRedact" size="small" style="width: 175px;">
-                            <span slot="suffix" class="stock-form_item_input_suffix">°C</span>
-                        </el-input>
-                    </el-form-item>
-                    <el-form-item class="cleanMarginBottom">
-                        <template slot="label">
-                            大豆风冷温度2：
-                        </template>
-                        <el-input v-model="craftControlInfo.beanWindTempTwo" placeholder="输入" :disabled="!isRedact" size="small" style="width: 175px;">
-                            <span slot="suffix" class="stock-form_item_input_suffix">°C</span>
-                        </el-input>
-                    </el-form-item>
-                    <el-form-item class="cleanMarginBottom">
-                        <template slot="label">
-                            <span class="notNull">* </span>混合料温度1：
-                        </template>
-                        <el-input v-model="craftControlInfo.mixtureTempOne" placeholder="输入" :disabled="!isRedact" size="small" style="width: 175px;">
-                            <span slot="suffix" class="stock-form_item_input_suffix">°C</span>
-                        </el-input>
-                    </el-form-item>
-                    <el-form-item class="cleanMarginBottom">
-                        <template slot="label">
-                            混合料温度2：
-                        </template>
-                        <el-input v-model="craftControlInfo.mixtureTempTwo" placeholder="输入" :disabled="!isRedact" size="small" style="width: 175px;">
-                            <span slot="suffix" class="stock-form_item_input_suffix">°C</span>
-                        </el-input>
-                    </el-form-item>
-                    <el-form-item class="cleanMarginBottom">
-                        <template slot="label">
-                            <span class="notNull">* </span>大豆风冷变频：
-                        </template>
-                        <el-input v-model="craftControlInfo.beanWindFrequency" placeholder="输入" :disabled="!isRedact" size="small" style="width: 175px;">
-                            <span slot="suffix" class="stock-form_item_input_suffix">Hz</span>
-                        </el-input>
-                    </el-form-item>
-                    <el-form-item class="cleanMarginBottom">
-                        <template slot="label">
-                            <span class="notNull">* </span>混合开始时间：
-                        </template>
-                        <el-date-picker v-model="craftControlInfo.mixtureStart" type="datetime" value-format="yyyy-MM-dd HH:mm" format="yyyy-MM-dd HH:mm" placeholder="选择" :disabled="!isRedact" size="small" style="width: 175px;" />
-                    </el-form-item>
-                    <el-form-item class="cleanMarginBottom">
-                        <template slot="label">
-                            <span class="notNull">* </span>混合结束时间：
-                        </template>
-                        <el-date-picker v-model="craftControlInfo.mixtrueEnd" type="datetime" value-format="yyyy-MM-dd HH:mm" format="yyyy-MM-dd HH:mm" placeholder="选择" :disabled="!isRedact" size="small" style="width: 175px;" />
+        <mds-card title="蒸豆硬度" name="table2" icon-bg="#487BFF">
+            <template slot="titleBtn">
+                <el-form :inline="true" label-width="115px">
+                    <el-form-item class="cleanMarginBottom floatr">
+                        <el-button type="primary" size="small" :disabled="!isRedact" @click="addDataRow('hard')">
+                            新增
+                        </el-button>
                     </el-form-item>
                 </el-form>
-            </div>
+            </template>
+            <el-table header-row-class-name="tableHead" class="newTable" :data="hardTable" :row-class-name="RowDelFlag" border tooltip-effect="dark" size="mini" style="min-height: 90px;">
+                <el-table-column type="index" :index="index => getIndexMethod(index, hardTable)" label="序号" width="50px" fixed />
+                <el-table-column width="140" show-overflow-tooltip>
+                    <template slot="header">
+                        <span class="notNull">* </span>蒸球号
+                    </template>
+                    <template slot-scope="scope">
+                        <el-select v-model="scope.row.steamBallNo" placeholder="请选择" :disabled="!isRedact" size="small" style="width: 100%;">
+                            <el-option v-for="(subItem, index) in steamBallList" :key="index" :label="subItem.holderName" :value="subItem.holderNo" />
+                        </el-select>
+                    </template>
+                </el-table-column>
+                <el-table-column min-width="146">
+                    <template slot="header">
+                        <span class="notNull">* </span>蒸豆硬度1
+                    </template>
+                    <template slot-scope="scope">
+                        <el-input v-model="scope.row.hardnessOne" placeholder="输入" :disabled="!isRedact" size="small" style="width: 120px;" />
+                    </template>
+                </el-table-column>
+                <el-table-column min-width="146">
+                    <template slot="header">
+                        <span class="notNull">* </span>蒸豆硬度2
+                    </template>
+                    <template slot-scope="scope">
+                        <el-input v-model="scope.row.hardnessTwo" placeholder="输入" :disabled="!isRedact" size="small" style="width: 120px;" />
+                    </template>
+                </el-table-column>
+                <el-table-column min-width="146">
+                    <template slot="header">
+                        <span class="notNull">* </span>蒸豆硬度3
+                    </template>
+                    <template slot-scope="scope">
+                        <el-input v-model="scope.row.hardnessThree" placeholder="输入" :disabled="!isRedact" size="small" style="width: 120px;" />
+                    </template>
+                </el-table-column>
+                <el-table-column min-width="146">
+                    <template slot="header">
+                        <span class="notNull">* </span>蒸豆硬度4
+                    </template>
+                    <template slot-scope="scope">
+                        <el-input v-model="scope.row.hardnessFour" placeholder="输入" :disabled="!isRedact" size="small" style="width: 120px;" />
+                    </template>
+                </el-table-column>
+                <el-table-column min-width="146">
+                    <template slot="header">
+                        <span class="notNull">* </span>蒸豆硬度5
+                    </template>
+                    <template slot-scope="scope">
+                        <el-input v-model="scope.row.hardnessFive" placeholder="输入" :disabled="!isRedact" size="small" style="width: 120px;" />
+                    </template>
+                </el-table-column>
+                <el-table-column min-width="146">
+                    <template slot="header">
+                        <span class="notNull">* </span>蒸豆硬度6
+                    </template>
+                    <template slot-scope="scope">
+                        <el-input v-model="scope.row.hardnessSix" placeholder="输入" :disabled="!isRedact" size="small" style="width: 120px;" />
+                    </template>
+                </el-table-column>
+                <el-table-column min-width="146">
+                    <template slot="header">
+                        <span class="notNull">* </span>蒸豆硬度7
+                    </template>
+                    <template slot-scope="scope">
+                        <el-input v-model="scope.row.hardnessSeven" placeholder="输入" :disabled="!isRedact" size="small" style="width: 120px;" />
+                    </template>
+                </el-table-column>
+                <el-table-column min-width="146">
+                    <template slot="header">
+                        <span class="notNull">* </span>蒸豆硬度8
+                    </template>
+                    <template slot-scope="scope">
+                        <el-input v-model="scope.row.hardnessEight" placeholder="输入" :disabled="!isRedact" size="small" style="width: 120px;" />
+                    </template>
+                </el-table-column>
+                <el-table-column min-width="146">
+                    <template slot="header">
+                        <span class="notNull">* </span>蒸豆硬度9
+                    </template>
+                    <template slot-scope="scope">
+                        <el-input v-model="scope.row.hardnessNine" placeholder="输入" :disabled="!isRedact" size="small" style="width: 120px;" />
+                    </template>
+                </el-table-column>
+                <el-table-column min-width="146">
+                    <template slot="header">
+                        <span class="notNull">* </span>蒸豆硬度10
+                    </template>
+                    <template slot-scope="scope">
+                        <el-input v-model="scope.row.hardnessTen" placeholder="输入" :disabled="!isRedact" size="small" style="width: 120px;" />
+                    </template>
+                </el-table-column>
+                <el-table-column label="备注" width="170">
+                    <template slot-scope="scope">
+                        <el-input v-model.trim="scope.row.remark" size="small" placeholder="请输入" :disabled="!isRedact" />
+                    </template>
+                </el-table-column>
+                <el-table-column label="操作人" width="140">
+                    <template slot-scope="scope">
+                        {{ scope.row.changer }}
+                    </template>
+                </el-table-column>
+                <el-table-column label="操作时间" width="160">
+                    <template slot-scope="scope">
+                        {{ scope.row.changed }}
+                    </template>
+                </el-table-column>
+                <el-table-column label="操作" width="70" fixed="right">
+                    <template slot-scope="scope">
+                        <el-button class="delBtn" type="text" icon="el-icon-delete" size="mini" :disabled="!isRedact" @click="removeRow(scope.row)">
+                            删除
+                        </el-button>
+                    </template>
+                </el-table-column>
+            </el-table>
         </mds-card>
         <audit-log :table-data="craftAuditList" :verify-man="'verifyMan'" :verify-date="'verifyDate'" :status="true" />
-        <loaned-personnel v-if="loanedPersonnelStatus" ref="loanedPersonnel" @changeUser="changeUser" />
     </div>
 </template>
 
@@ -204,50 +239,27 @@
     import { COMMON_API, KOJI_API, AUDIT_API } from 'common/api/api';
     import { dateFormat, getUserNameNumber, getDateDiff, dataEntryData } from 'utils/utils';
 
-    import LoanedPersonnel from 'components/LoanedPersonnel.vue';
 
     @Component({
-        name: 'WashBeanMaterialCraft',
-        components: {
-            LoanedPersonnel
-        }
+        name: 'WashBeanMaterialCraft'
     })
     export default class WashBeanMaterialCraft extends Vue {
         @Prop({ default: false }) isRedact: boolean;
-        @Prop({ default: [] }) setMaterialTableData: CraftList[];
-
-        $refs: {
-            loanedPersonnel: HTMLFormElement;
-            scanSelectDialog: HTMLFormElement;
-        };
 
         // 订单信息
         formHeader: Craft = {};
 
-        // 蒸面记录表单数据
-        craftSteamFlourInfo: Craft = {
-            steamPacketPressure: '',
-            steamFlourSpeed: '',
-            steamFlourMans: ''
-        };
-
         // 蒸豆记录表格数据
         craftSteamBeanTable: CraftList[] = [];
+        // 蒸球压力
+        steamBallPressure = '';
 
-        // 混合控制表单数据
-        craftControlInfo: CraftList = {
-            flourWindTemp: '',
-            beanWindTempOne: '',
-            beanWindTempTwo: '',
-            mixtureTempOne: '',
-            mixtureTempTwo: '',
-            beanWindFrequency: '',
-            mixtureStart: '',
-            mixtrueEnd: ''
-        };
+        // 硬度数据
+        hardTable: CraftList[] = [];
 
         // 存储历史数据
         temCraftSteamBeanTable = [];
+        temHardTable = []
 
         // 蒸球list
         steamBallList = [];
@@ -255,16 +267,24 @@
         // 审核记录
         craftAuditList = [];
 
-        // 人员组织选择
-        loanedPersonnelStatus = false;
-
-        // 人员操作对象
-        row: Craft = {};
-        rowField = ''
-
         // 提交保存时获取处理数据
         getSavedOrSubmitData(formHeader, isSubmit) {
+            const handleCraftSteamBeanTable = () => {
+                this.craftSteamBeanTable.map(item => {
+                    item.steamBallPressure = this.steamBallPressure;
+                })
+            }
+            // 蒸球压力数据处理
+            this.steamBallPressure && handleCraftSteamBeanTable();
+
+            // 蒸豆记录
             const tableSaveDto = {
+                deleteDto: [],
+                insertDto: [],
+                updateDto: []
+            };
+            // 蒸豆硬度
+            const hardTableSaveDto = {
                 deleteDto: [],
                 insertDto: [],
                 updateDto: []
@@ -274,7 +294,10 @@
                 item.kojiOrderNo = formHeader.kojiOrderNo;
                 item.orderNo = formHeader.orderNo;
             });
-
+            dataEntryData(formHeader, this.hardTable, this.temHardTable, hardTableSaveDto.deleteDto, hardTableSaveDto.insertDto, hardTableSaveDto.updateDto, (item) => {
+                item.kojiOrderNo = formHeader.kojiOrderNo;
+                item.orderNo = formHeader.orderNo;
+            });
 
             function filterTableData(whichTable, type) {
                 if (type === 'insert') {
@@ -289,37 +312,16 @@
             }
 
             return {
-                steamFlour: {
-                    insertDto: filterTableData([{
-                        ...this.craftSteamFlourInfo,
-                        kojiOrderNo: formHeader.kojiOrderNo,
-                        orderNo: formHeader.orderNo
-                    }], 'insert'),
-                    updateDto: filterTableData([{
-                        ...this.craftSteamFlourInfo,
-                        kojiOrderNo: formHeader.kojiOrderNo,
-                        orderNo: formHeader.orderNo
-                    }], 'update'),
-                    deleteDto: []
-                },
                 steamBean: isSubmit === 'submit' ? {
                     insertDto: filterTableData(this.craftSteamBeanTable, 'insert'),
                     updateDto: filterTableData(this.craftSteamBeanTable, 'update'),
                     deleteDto: filterTableData(this.craftSteamBeanTable, 'del')
                 } : tableSaveDto,
-                steamControl: {
-                    insertDto: filterTableData([{
-                        ...this.craftControlInfo,
-                        kojiOrderNo: formHeader.kojiOrderNo,
-                        orderNo: formHeader.orderNo
-                    }], 'insert'),
-                    updateDto: filterTableData([{
-                        ...this.craftControlInfo,
-                        kojiOrderNo: formHeader.kojiOrderNo,
-                        orderNo: formHeader.orderNo
-                    }], 'update'),
-                    deleteDto: []
-                }
+                steamBeanHardness: isSubmit === 'submit' ? {
+                    insertDto: filterTableData(this.hardTable, 'insert'),
+                    updateDto: filterTableData(this.hardTable, 'update'),
+                    deleteDto: filterTableData(this.hardTable, 'del')
+                } : hardTableSaveDto
             };
         }
 
@@ -328,36 +330,57 @@
         init(formHeader) {
             this.formHeader = formHeader;
             const { kojiOrderNo, orderNo } = formHeader;
-            // 查询蒸面记录
-            this.getSteamFlourLogList(kojiOrderNo, orderNo);
             // 查询蒸豆记录
             this.getSteamBeanLogList(kojiOrderNo, orderNo);
             // 查询混合控制记录
-            this.getControlLoglist(kojiOrderNo, orderNo);
+            this.getHardTableLoglist(kojiOrderNo, orderNo);
             // 查询审核记录
             this.getAuditList(orderNo);
+            // 蒸球list
             this.getSteamBallList();
         }
 
 
         // === 数据处理 === //
-        // 新增蒸豆记录
-        addDataRow() {
-            this.craftSteamBeanTable.push({
-                steamBallNo: '',
-                kojiOrderNo: this.formHeader.kojiOrderNo,
-                orderNo: this.formHeader.orderNo,
-                addSteamStart: '',
-                addSteamEnd: '',
-                steamPocketPressure: '',
-                turnCount: '',
-                pressureDuration: '',
-                addBeanDate: '',
-                remark: '',
-                changed: dateFormat(new Date(), 'yyyy-MM-dd hh:mm:ss'),
-                changer: getUserNameNumber(),
-                delFlag: 0
-            });
+        // 新增记录
+        addDataRow(type) {
+            if (type) { //硬度
+                this.hardTable.push({
+                    kojiOrderNo: this.formHeader.kojiOrderNo,
+                    orderNo: this.formHeader.orderNo,
+                    steamBallNo: '',
+                    hardnessEight: '',
+                    hardnessFive: '',
+                    hardnessFour: '',
+                    hardnessNine: '',
+                    hardnessOne: '',
+                    hardnessSeven: '',
+                    hardnessSix: '',
+                    hardnessTen: '',
+                    hardnessThree: '',
+                    hardnessTwo: '',
+                    remark: '',
+                    changed: dateFormat(new Date(), 'yyyy-MM-dd hh:mm:ss'),
+                    changer: getUserNameNumber(),
+                    delFlag: 0
+                });
+            } else { // 蒸豆
+                this.craftSteamBeanTable.push({
+                    steamBallNo: '',
+                    kojiOrderNo: this.formHeader.kojiOrderNo,
+                    orderNo: this.formHeader.orderNo,
+                    addSteamStart: '',
+                    addSteamEnd: '',
+                    steamPocketPressure: '',
+                    turnCount: '',
+                    pressureDuration: '',
+                    addBeanDate: '',
+                    remark: '',
+                    changed: dateFormat(new Date(), 'yyyy-MM-dd hh:mm:ss'),
+                    changer: getUserNameNumber(),
+                    delFlag: 0
+                });
+            }
         }
 
         // 删除记录
@@ -369,6 +392,10 @@
                 type: 'warning'
             }).then(() => {
                 row.delFlag = 1;
+                // 蒸豆记录为空 蒸球压力值为'' 解释 提交数据时 蒸球压力存在 蒸豆记录的数据里 蒸豆数据为空时无法保存
+                if (this.craftSteamBeanTable.filter(item => item.delFlag === 0).length === 0) {
+                    this.steamBallPressure = ''
+                }
             });
         }
 
@@ -390,44 +417,10 @@
             return diff;
         }
 
-
-        // 内部借调弹窗选择
-        selectUser(row, typeName, field) {
-            if (!this.isRedact) return;
-            this.row = row;
-            this.rowField = field
-            this.loanedPersonnelStatus = true;
-            this.$nextTick(() => {
-                let selArr = [];
-                if (row[field]) {
-                    selArr = row[field].split(',');
-                }
-                this.$refs.loanedPersonnel.init(selArr, typeName);
-            });
-        }
-
-        // 操作人数据回显处理
-        changeUser(userIds) {
-            this.loanedPersonnelStatus = false;
-            const arr = [...userIds];
-            let relStr = '';
-            arr.map((item, index) => {
-                if (item) {
-                    relStr += `${index > 0 ? ',' : ''}${item}`;
-                }
-            });
-            this.row[this.rowField] = relStr;
-        }
-
         // ==== 提交处理汇总 ====== //
         // 提交时字段校验
         ruleSubmit() {
-            // /(?:^[1-9]([0-9])?(?:\.[0-9]{1})?$)|(?:^(?:0){1}$)|(?:^[0-9]\.[0-9]$)/
-            if (!this.craftSteamFlourInfo.steamPacketPressure || !this.craftSteamFlourInfo.steamFlourSpeed || !this.craftSteamFlourInfo.steamFlourMans) {
-                this.$warningToast('请填写工艺控制页签"蒸面记录"必填项');
-                return false;
-            }
-
+            // /^(0|[1-9]|10)(\.\d{1,2})?$/  //0-10 两位小数
             if (this.craftSteamBeanTable.filter(it => it.delFlag !== 1).length === 0) {
                 this.$warningToast('请填写工艺控制页签"蒸豆记录"');
                 return false;
@@ -444,34 +437,44 @@
                 }
             }
 
-            if (
-                !this.craftControlInfo.flourWindTemp ||
-                !this.craftControlInfo.beanWindTempOne ||
-                !this.craftControlInfo.mixtureTempOne ||
-                !this.craftControlInfo.beanWindFrequency ||
-                !this.craftControlInfo.mixtureStart ||
-                !this.craftControlInfo.mixtrueEnd
-            ) {
-                this.$warningToast('请填写工艺控制页签"混合控制"必填项');
+            if (this.hardTable.filter(it => it.delFlag !== 1).length === 0) {
+                this.$warningToast('请填写工艺控制页签"蒸豆硬度"');
                 return false;
+            }
+
+            for (const [index, item] of (this.hardTable.filter(it => it.delFlag !== 1)).entries()) {
+                const reg = /^(0|[1-9]|10)(\.\d{1,2})?$/;
+                if (
+                    !item.steamBallNo ||
+                    !item.hardnessOne ||
+                    !item.hardnessTwo ||
+                    !item.hardnessThree ||
+                    !item.hardnessFour ||
+                    !item.hardnessFive ||
+                    !item.hardnessSix ||
+                    !item.hardnessSeven ||
+                    !item.hardnessEight ||
+                    !item.hardnessNine ||
+                    !item.hardnessTen
+                ) {
+                    this.$warningToast('请填写工艺控制页签"蒸豆硬度"必填项');
+                    return false;
+                }
+
+                const decimalList = [item.hardnessOne, item.hardnessTwo, item.hardnessThree, item.hardnessFour, item.hardnessFive, item.hardnessSix, item.hardnessSeven, item.hardnessEight, item.hardnessNine, item.hardnessTen]
+
+                for (let y = 0, len = decimalList.length; y < len; y++) {
+                    if (!reg.test(String(decimalList[y]))) {
+                        this.$warningToast(`工艺控制页签"蒸豆硬度的第${index + 1}条数据蒸豆硬度${y + 1}"输入格式有误`);
+                        return false;
+                    }
+                }
             }
 
             return true;
         }
 
         // === 查询 汇总 ==== //
-
-        // 查询最新蒸面记录
-        getSteamFlourLogList(kojiOrderNo, orderNo) {
-            KOJI_API.KOJI_CRAFT_STEAM_FLOUR_LOG_API({
-                kojiOrderNo,
-                orderNo
-            }).then(({ data }) => {
-                if (data.data && data.data.length > 0) {
-                    this.craftSteamFlourInfo = data.data[0];
-                }
-            });
-        }
 
         // 查询最新蒸豆记录
         getSteamBeanLogList(kojiOrderNo, orderNo) {
@@ -481,17 +484,23 @@
             }).then(({ data }) => {
                 this.craftSteamBeanTable = data.data || [];
                 this.temCraftSteamBeanTable = JSON.parse(JSON.stringify(data.data || []));
+
+                // 蒸球压力回显
+                if (data.data && data.data.length) {
+                    this.steamBallPressure = data.data[0].steamBallPressure || ''
+                }
             });
         }
 
-        // 查询混合控制记录
-        getControlLoglist(kojiOrderNo, orderNo) {
-            KOJI_API.KOJI_CRAFT_STEAM_CONTROL_LOG_API({
+        // 查询硬度记录
+        getHardTableLoglist(kojiOrderNo, orderNo) {
+            KOJI_API.KOJI_STEAM_BEAN_HARD_LIST_API({
                 kojiOrderNo,
                 orderNo
             }).then(({ data }) => {
                 if (data.data && data.data.length > 0) {
-                    this.craftControlInfo = data.data[0];
+                    this.hardTable = data.data || [];
+                    this.temHardTable = JSON.parse(JSON.stringify(data.data || []));
                 }
             });
         }
@@ -580,6 +589,17 @@
         pressureDuration?: string;
         addBeanDate?: string;
         steamBallNo?: string;
+        hardnessEight?: number | string;
+        hardnessFive?: number | string;
+        hardnessFour?: number | string;
+        hardnessNine?: number | string;
+        hardnessOne?: number | string;
+        hardnessSeven?: number | string;
+        hardnessSix?: number | string;
+        hardnessTen?: number | string;
+        hardnessThree?: number | string;
+        hardnessTwo?: number | string;
+        steamBallPressure?: string;
     }
 
     interface SieveDeviceList {

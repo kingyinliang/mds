@@ -134,13 +134,16 @@
                     materialLocation: infoData.materialLocation
                 }).then(({ data }) => {
                     this.batchList = data.data;
+                    this.batchList.map(item => {
+                        if (item.batch === infoData.batch) {
+                            infoData.stockAmount = item.currentAmount;
+                            this.STOCK_AMOUNT = Number(item.currentAmount);
+                            if (infoData.amount) { this.STOCK_AMOUNT += Number(infoData.amount); }
+                        }
+                    });
                     Data = {
                         ...infoData
                     };
-                    this.STOCK_AMOUNT = Data.stockAmount || Data.currentAmount ? Number(Data.stockAmount) || Number(Data.currentAmount) : 0;
-                    if (Data.amount) {
-                        this.STOCK_AMOUNT += Number(Data.amount);
-                    }
                 });
             }
 
@@ -235,7 +238,6 @@
 
         // 操作人数据回显处理
         changeUser(userIds) {
-            console.log(userIds);
             this.loanedPersonnelStatus = false;
             const arr = [...userIds];
             let relStr = '';
@@ -267,6 +269,7 @@
         materialCode?: string;
         stockAmount?: string;
         supplier?: string;
+        currentAmount?: string|number;
     }
 
     interface DataForm {

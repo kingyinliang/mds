@@ -3,7 +3,7 @@
  * @Anthor: Telliex
  * @Date: 2020-09-30 12:08:32
  * @LastEditors: Telliex
- * @LastEditTime: 2020-10-13 15:14:20
+ * @LastEditTime: 2020-10-15 17:39:54
 -->
 <template>
     <mds-card title="文本记录" :name="'textRecord'">
@@ -24,45 +24,43 @@
 
         currentFormDataGroup: TextObj = {
             kojiText: '', // 文本
+            id: '', // 主键
             orderNo: '', // 订单号
             kojiOrderNo: '', // 曲房单号
-            textStage: '' // 工艺
+            textStage: 'YP' // 工艺
         }
 
-        isChange=false
-        isNewForm=false
-
-        init(formHeader, workShop?) {
+        init(formHeader, textStage, workShop?) {
             if (workShop === 'koji') {
                 KOJI_API.KOJI_TEXT_QUERY_API({
-                    orderNo: formHeader.orderNo,
                     kojiOrderNo: formHeader.kojiOrderNo,
-                    textStage: formHeader.textStage
+                    orderNo: formHeader.orderNo,
+                    textStage: textStage
                 }).then(({ data }) => {
-                    this.getData(data, formHeader);
+                    this.getData(data);
                 })
             }
         }
 
-        getData(data, formHeader) {
-            if (data.data && data.data.id) {
+        getData(data) {
+            if (data.data !== null) {
                 this.currentFormDataGroup = JSON.parse(JSON.stringify(data.data))
             } else {
                 this.currentFormDataGroup = {
                     kojiText: '', // 文本
-                    orderNo: formHeader.orderNo, // 订单号
-                    kojiOrderNo: formHeader.kojiOrderNo, // 制曲订单号
-                    textStage: formHeader.textStage // 工艺
+                    id: '', // 主键
+                    orderNo: '', // 订单号
+                    kojiOrderNo: '', // 曲房单号
+                    textStage: 'YP' // 工艺
                 }
             }
         }
 
-        savedData() {
-            let pkgTextInsert: TextObj = {};
-            pkgTextInsert = this.currentFormDataGroup;
-            return {
-                pkgTextInsert
-            }
+        savedData(formHeader) {
+            this.currentFormDataGroup.orderNo = formHeader.orderNo;
+            this.currentFormDataGroup.kojiOrderNo = formHeader.kojiOrderNo;
+            this.currentFormDataGroup.textStage = formHeader.textStage;
+            return this.currentFormDataGroup
         }
     }
     interface TextObj{

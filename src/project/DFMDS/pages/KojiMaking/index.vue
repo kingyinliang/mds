@@ -367,7 +367,7 @@
                         url = 'DFMDS-pages-KojiMaking-WorkingProcedure-SCWashBean';
                         break;
                     case 2:
-                        url = 'DFMDS-pages-KojiMaking-WorkingProcedure-SCSteamBean';
+                        url = 'DFMDS-pages-KojiMaking-WorkingProcedure-SteamedBean';
                         break;
                     default:
                 }

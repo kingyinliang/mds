@@ -30,7 +30,7 @@
                     </el-form-item>
                 </el-form>
             </div>
-            <el-table header-row-class-name="tableHead" class="newTable" :data="craftSeiveBeanTable" :row-class-name="RowDelFlag" border tooltip-effect="dark" size="small">
+            <el-table header-row-class-name="tableHead" class="newTable" :data="craftSeiveBeanTable" :row-class-name="RowDelFlag" border tooltip-effect="dark" size="small" style="min-height: 90px;">
                 <el-table-column type="index" :index="index => getIndexMethod(index, craftSeiveBeanTable)" label="序号" width="50px" fixed />
                 <el-table-column width="160">
                     <template slot="header">
@@ -75,7 +75,7 @@
                         <el-input v-model.trim="scope.row.sieveImpurityAmount" size="small" placeholder="请输入" :disabled="!isRedact" />
                     </template>
                 </el-table-column>
-                <el-table-column label="单位" width="60">
+                <el-table-column label="单位">
                     <template slot-scope="scope">
                         {{ scope.row.unit }}
                     </template>
@@ -93,7 +93,7 @@
                         </div>
                     </template>
                 </el-table-column>
-                <el-table-column label="备注" width="180">
+                <el-table-column label="备注" width="200">
                     <template slot-scope="scope">
                         <el-input v-model.trim="scope.row.remark" size="small" placeholder="请输入" :disabled="!isRedact" />
                     </template>
@@ -129,7 +129,7 @@
                         <template slot="label">
                             <span class="notNull">* </span>泡豆水洁净度：
                         </template>
-                        <el-select v-model="craftWashBeanInfo.cleanliness" class="stock-form_item_style" size="small" placeholder="请选择" clearable :disabled="!isRedact">
+                        <el-select v-model="craftWashBeanInfo.cleanliness" class="stock-form_item_style" size="small" placeholder="请选择" clearable :disabled="!isRedact" style="width: 175px;">
                             <el-option v-for="(item, index) in cleanlinessList" :key="index" :label="item.label" :value="item.value" />
                         </el-select>
                     </el-form-item>
@@ -168,7 +168,7 @@
                     </el-form-item>
                 </el-form>
             </template>
-            <el-table header-row-class-name="tableHead" class="newTable" :data="craftWashBeanTable" :row-class-name="RowDelFlag" border tooltip-effect="dark" size="mini">
+            <el-table header-row-class-name="tableHead" class="newTable" :data="craftWashBeanTable" :row-class-name="RowDelFlag" border tooltip-effect="dark" size="mini" style="min-height: 90px;">
                 <el-table-column type="index" :index="index => getIndexMethod(index, craftWashBeanTable)" label="序号" width="50px" fixed />
                 <el-table-column width="140" show-overflow-tooltip>
                     <template slot="header">
@@ -279,7 +279,7 @@
 <script lang="ts">
     import { Vue, Component, Prop } from 'vue-property-decorator';
     import { COMMON_API, KOJI_API, AUDIT_API } from 'common/api/api';
-    import { dateFormat, getUserNameNumber, getDateDiff } from 'utils/utils';
+    import { dateFormat, getUserNameNumber, getDateDiff, dataEntryData } from 'utils/utils';
 
     import ScanSelectDialog from '../common/ScanSelectDialog.vue';
     import LoanedPersonnel from 'components/LoanedPersonnel.vue';
@@ -314,6 +314,11 @@
         // 审核记录
         craftAuditList = [];
 
+        // 缓存数据
+        temCraftSeiveBeanTable = [];
+        temCraftWashBeanTable = [];
+
+
         // 人员组织选择
         loanedPersonnelStatus = false;
         // 泡豆罐选择显示
@@ -337,26 +342,49 @@
         }
 
         // 提交保存时获取处理数据
-        getSavedOrSubmitData() {
-            function filterTableData(whichTable: CraftList[], type) {
-                if (type === 'insert') {
-                    return whichTable.filter(item => !item.id && item.delFlag !== 1);
-                }
-                if (type === 'update') {
-                    return whichTable.filter(item => item.id && item.delFlag !== 1);
-                }
-                if (type === 'del') {
-                    return whichTable.filter(item => item.id && item.delFlag === 0);
-                }
-            }
+        getSavedOrSubmitData(formHeader) {
+            const tableSeiveSaveDto = {
+                removeIds: [],
+                insertDtos: [],
+                updateDtos: []
+            };
+
+            const tableWashSaveDto = {
+                removeIds: [],
+                insertDatas: [],
+                updateDatas: []
+            };
+
+            dataEntryData(formHeader, this.craftSeiveBeanTable, this.temCraftSeiveBeanTable, tableSeiveSaveDto.removeIds, tableSeiveSaveDto.insertDtos, tableSeiveSaveDto.updateDtos, (item) => {
+                item.kojiOrderNo = formHeader.kojiOrderNo;
+                item.orderNo = formHeader.orderNo;
+            });
+
+            dataEntryData(formHeader, this.craftWashBeanTable, this.temCraftWashBeanTable, tableWashSaveDto.removeIds, tableWashSaveDto.insertDatas, tableWashSaveDto.updateDatas, (item) => {
+                item.kojiOrderNo = formHeader.kojiOrderNo;
+                item.orderNo = formHeader.orderNo;
+            });
+
+            // function filterTableData(whichTable: CraftList[], type) {
+            //     if (type === 'insert') {
+            //         return whichTable.filter(item => !item.id && item.delFlag !== 1);
+            //     }
+            //     if (type === 'update') {
+            //         return whichTable.filter(item => item.id && item.delFlag !== 1);
+            //     }
+            //     if (type === 'del') {
+            //         return whichTable.filter(item => item.id && item.delFlag === 1);
+            //     }
+            // }
 
             return {
                 kojiBeanSieveSaveDto: {
                     ...this.craftSeiveBeanInfo,
                     items: {
-                        insertDtos: filterTableData(this.craftSeiveBeanTable, 'insert'),
-                        updateDtos: filterTableData(this.craftSeiveBeanTable, 'update'),
-                        removeIds: filterTableData(this.craftSeiveBeanTable, 'del')
+                        // insertDtos: filterTableData(this.craftSeiveBeanTable, 'insert'),
+                        // updateDtos: filterTableData(this.craftSeiveBeanTable, 'update'),
+                        // removeIds: filterTableData(this.craftSeiveBeanTable, 'del')
+                        ...tableSeiveSaveDto
                     },
                     orderNo: this.formHeader.orderNo,
                     kojiOrderNo: this.formHeader.kojiOrderNo,
@@ -365,9 +393,10 @@
                 kojiBeanWashSaveDto: {
                     ...this.craftWashBeanInfo,
                     items: {
-                        insertDatas: filterTableData(this.craftWashBeanTable, 'insert'),
-                        updateDatas: filterTableData(this.craftWashBeanTable, 'update'),
-                        removeIds: filterTableData(this.craftWashBeanTable, 'del')
+                        // insertDatas: filterTableData(this.craftWashBeanTable, 'insert'),
+                        // updateDatas: filterTableData(this.craftWashBeanTable, 'update'),
+                        // removeIds: filterTableData(this.craftWashBeanTable, 'del')
+                        ...tableWashSaveDto
                     },
                     orderNo: this.formHeader.orderNo,
                     kojiOrderNo: this.formHeader.kojiOrderNo
@@ -620,11 +649,25 @@
                 return false;
             }
 
+            // 选择的所有泡豆罐号
+            const seletedPotSaveDtos: string[] = [];
+
             for (const item of this.craftWashBeanTable.filter(it => it.delFlag !== 1)) {
+                item.potSaveDto && item.potSaveDto.map(({ beanJarNo }) => {
+                    beanJarNo && seletedPotSaveDtos.push(beanJarNo)
+                })
                 if (!item.relStr || !item.waterStartDate || !item.waterEndDate || !item.waterMans || !item.drainStartDate || !item.drainEndDate || !item.drainMans) {
                     this.$warningToast('请填写工艺控制页签"泡豆记录"相关必填项');
                     return false;
                 }
+            }
+
+            // 选择的所有泡豆罐号去重
+            const filterSeletedPotSaveDtos = Array.from(new Set(seletedPotSaveDtos))
+
+            if (filterSeletedPotSaveDtos.length !== seletedPotSaveDtos.length) {
+                this.$warningToast('工艺控制页签"泡豆记录"的泡豆罐不能重复');
+                return false
             }
 
             return true;
@@ -650,6 +693,7 @@
             }).then(({ data }) => {
                 this.craftSeiveBeanInfo = data.data;
                 this.craftSeiveBeanTable = data.data.items || [];
+                this.temCraftSeiveBeanTable = JSON.parse(JSON.stringify(data.data.items || []));
             });
         }
 
@@ -660,6 +704,7 @@
             }).then(({ data }) => {
                 this.craftWashBeanInfo = data.data;
                 this.craftWashBeanTable = data.data.items || [];
+                this.temCraftWashBeanTable = JSON.parse(JSON.stringify(data.data.items || []));
                 // 泡豆罐显示处理
                 this.setRelStrScanShow();
             });
@@ -696,7 +741,7 @@
         washEndDate?: string;
     }
     interface CraftList {
-        id?: number|string;
+        id?: string;
         kojiOrderNo?: string;
         orderNo?: string;
         sieveBeanBatch?: string;

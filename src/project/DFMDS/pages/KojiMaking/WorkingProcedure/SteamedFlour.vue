@@ -82,7 +82,7 @@
                 type: 'p',
                 label: '曲房编号',
                 icon: 'factory-qiyaguanjianhua',
-                value: ['kojiHouseName', 'kojiHouseNo']
+                value: 'kojiHouseName'
             },
             {
                 type: 'tooltip',
@@ -153,7 +153,7 @@
         }
 
         submitRules(): Function[] {
-            return [this.$refs.flourMaterialCraft.ruleSubmit, this.$refs.excRecord.ruleSubmit]
+            return [this.$refs.flourMaterialApply.ruleSubmit, this.$refs.flourMaterialCraft.ruleSubmit, this.$refs.excRecord.ruleSubmit]
         }
 
         mounted() {

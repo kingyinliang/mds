@@ -59,7 +59,7 @@
                     el-input(v-model.trim="scope.row.remark" size="small" placeholder="请输入" :disabled="!isRedact")
             el-table-column(label="操作人" width="140")
                 template(slot-scope="scope") {{ scope.row.changer }}
-            el-table-column(label="操作时间" width="180")
+            el-table-column(label="操作时间" width="200")
                 template(slot-scope="scope") {{ scope.row.changed }}
             el-table-column(label="操作" width="70" fixed="right")
                 template(slot-scope="scope")
@@ -72,11 +72,11 @@
 <script lang="ts">
 import { Vue, Component, Prop } from 'vue-property-decorator';
 import { dateFormat, getUserNameNumber, getDateDiff, accAdd } from 'utils/utils';
-import { COMMON_API, STE_API } from 'common/api/api';
+import { COMMON_API, KOJI_API } from 'common/api/api';
 import _ from 'lodash';
 
 @Component({
-    name: 'SteExcRecord'
+    name: 'KojiExcRecord'
 })
 export default class ExcRecord extends Vue {
     @Prop({ type: Boolean, default: false }) isRedact
@@ -128,6 +128,7 @@ export default class ExcRecord extends Vue {
 
     // 异常原因
     getexcReasonTwo(formHeader, resolve) {
+        // POOR_PROCESS_WAIT
         COMMON_API.DICTQUERY_API({ dictType: 'WAIT' }).then(({ data }) => {
             this.excReasonTotal.POORPROCESSWAIT = data.data
             if (resolve) {
@@ -146,13 +147,18 @@ export default class ExcRecord extends Vue {
         }
     }
 
+
+    // 查询异常记录列表
     getExcList(formHeader, tagName) {
-        STE_API.STE_DETAIL_CRAFTEXC_LIST_API({
-            orderId: formHeader.orderId,
+        KOJI_API.KOJI_EXCEPTION_QUERY_API({
+            kojiOrderNo: formHeader.kojiOrderNo,
             orderNo: formHeader.orderNo,
             exceptionStage: tagName
         }).then(({ data }) => {
+            console.log('圆盘异常记录')
+            console.log(data)
             this.excList = JSON.parse(JSON.stringify(data.data));
+
             this.excList.map(item => {
                 if (item.exceptionSituation === 'FAULT' || item.exceptionSituation === 'SHUTDOWN') {
                     item.excReasonList = this.excReasonTotal.FAULTSHUTDOWN
@@ -162,13 +168,25 @@ export default class ExcRecord extends Vue {
                     item.excReasonList = this.excReasonTotal.ENERGY
                 }
             })
-            this.excListOrg = JSON.parse(JSON.stringify(this.excList));
+            this.excListOrg = JSON.parse(JSON.stringify(data.data));
         });
     }
 
     // 班次
     getClassesList() {
-        COMMON_API.DICTQUERY_CLASSLIST_API({}).then(({ data }) => {
+        // COMMON_API.DICTQUERY_CLASSLIST_API({}).then(({ data }) => {
+        //     this.classesOptions = data.data;
+        // });
+
+        // 获取班次下拉
+        COMMON_API.DICTQUERY_API({ dictType: 'COMMON_CLASSES' }).then(({ data }) => {
+            // this.classesOptions = []
+            // data.data.forEach((item) => {
+            //     this.classesOptions.push({
+            //         targetName: item.dictValue,
+            //         targetCode: item.dictCode
+            //     })
+            // })
             this.classesOptions = data.data;
         });
     }
@@ -211,53 +229,35 @@ export default class ExcRecord extends Vue {
     }
 
     getSavedOrSubmitData(formHeader, tagName) {
+        console.log('异常formHeader')
+        console.log(formHeader)
         const ids: string[] = [];
         const insertDto: ExcList[] = [];
         const updateDto: ExcList[] = [];
-        // this.excList.map((item: ExcList) => {
-        //     item.exceptionStage = tagName;
-        //     item.orderId = formHeader.orderId;
-        //     item.orderNo = formHeader.orderNo;
-        //     item.potOrderId = formHeader.id;
-        //     item.potOrderNo = formHeader.potOrderNo;
-        // })
+        this.excList.map((item: ExcList) => {
+            item.kojiOrderNo = formHeader.kojiOrderNo;
+            item.exceptionStage = tagName;
+            item.orderId = formHeader.orderId;
+            item.orderNo = formHeader.orderNo;
+            item.potOrderId = formHeader.id;
+            item.potOrderNo = formHeader.potOrderNo;
+        })
         this.excList.forEach((item, index) => {
             if (item.delFlag === 1) {
                 if (item.id) {
-                        item.exceptionStage = tagName;
-                        item.orderId = formHeader.orderId;
-                        item.orderNo = formHeader.orderNo;
-                        item.potOrderId = formHeader.id;
-                        item.potOrderNo = formHeader.potOrderNo;
-                        delete item.excReasonList
-                        delete item.delFlag
                     ids.push(item.id)
                 }
             } else if (item.id) {
                 if (!_.isEqual(this.excListOrg[index], item)) {
-                        item.exceptionStage = tagName;
-                        item.orderId = formHeader.orderId;
-                        item.orderNo = formHeader.orderNo;
-                        item.potOrderId = formHeader.id;
-                        item.potOrderNo = formHeader.potOrderNo;
-                        delete item.excReasonList
-                        delete item.delFlag
                     updateDto.push(item)
                 }
             } else {
-                    item.exceptionStage = tagName;
-                    item.orderId = formHeader.orderId;
-                    item.orderNo = formHeader.orderNo;
-                    item.potOrderId = formHeader.id;
-                    item.potOrderNo = formHeader.potOrderNo;
-                    delete item.excReasonList
-                    delete item.delFlag
                 insertDto.push(item)
             }
         })
         // 将 data 归零
-        this.excList = []
-        this.excListOrg = []
+        // this.excList = []
+        // this.excListOrg = []
         return {
             ids,
             insertDto,
@@ -294,6 +294,7 @@ export default class ExcRecord extends Vue {
             type: 'warning'
         }).then(() => {
             row.delFlag = 1;
+            this.$infoToast('删除成功');
         })
     }
 
@@ -333,6 +334,7 @@ interface ExcList {
     potOrderId?: string;
     potOrderNo?: string;
     excReasonList?: object[];
+    kojiOrderNo?: string;
 }
 interface ExcReasonTotal {
     FAULTSHUTDOWN: object[];

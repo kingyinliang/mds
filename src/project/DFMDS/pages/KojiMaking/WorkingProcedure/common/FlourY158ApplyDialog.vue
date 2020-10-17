@@ -102,7 +102,6 @@
         // 表单对象
         dataForm: DataForm = {};
 
-
         // 车间库位查询
         private getWorkShop(type) {
             KOJI_API.KOJI_KOJISTRAIN_DETAILS_QUERY_API({
@@ -124,6 +123,15 @@
                 materialLocation: this.dataForm.materialLocation
             }).then(({ data }) => {
                 this.batchList = data.data || [];
+                if (this.type !== 'add') {
+                    this.batchList.map(item => {
+                        if (item.batch === this.dataForm.batch) {
+                            this.dataForm.stockAmount = item.currentAmount;
+                            this.STOCK_AMOUNT = Number(item.currentAmount);
+                            if (this.dataForm.amount) { this.STOCK_AMOUNT += Number(this.dataForm.amount); }
+                        }
+                    })
+                }
             });
         }
 
@@ -143,7 +151,6 @@
 
         // 操作人数据回显处理
         changeUser(userIds) {
-            console.log(userIds);
             this.loanedPersonnelStatus = false;
             const arr = [...userIds];
             let relStr = '';
@@ -164,8 +171,6 @@
 
             if (type !== 'add') {
                 Data = infoData;
-                this.STOCK_AMOUNT = (Data.stockAmount || Data.currentAmount) ? Number(Data.stockAmount) || Number(Data.currentAmount) : 0;
-                if (Data.amount) { this.STOCK_AMOUNT += Number(Data.amount); }
             }
 
             this.dataForm = {
