@@ -25,7 +25,7 @@
                         <el-form-item label="组件物料：">
                             <el-select v-model="plantList.materialCode" filterable placeholder="请选择" style="width: 160px;">
                                 <el-option label="请选择" value="" />
-                                <el-option v-for="(item, index) in materialList" :key="index" :label="item.materialCode + ' ' + item.materialName" :value="item.materialCode" />
+                                <el-option v-for="(item, index) in materialList" :key="index" :label="item.materialName+' '+ item.materialCode" :value="item.materialCode" />
                             </el-select>
                         </el-form-item>
                         <el-form-item label="订单号：">
@@ -96,7 +96,7 @@
                 <el-table-column prop="orderNo" label="生产订单号" :show-overflow-tooltip="true" width="120" />
                 <el-table-column label="生产物料" :show-overflow-tooltip="true" width="200">
                     <template slot-scope="scope">
-                        {{ `${scope.row.materialCodeH} ${scope.row.materialNameH}` }}
+                        {{ `${scope.row.materialNameH} ${scope.row.materialCodeH}` }}
                     </template>
                 </el-table-column>
                 <el-table-column prop="planOutput" label="计划生产数量" width="105" />
@@ -105,7 +105,7 @@
                 <el-table-column prop="countOutputUnitName" label="单位" width="50" />
                 <el-table-column label="组件物料" :show-overflow-tooltip="true" width="200">
                     <template slot-scope="scope">
-                        {{ `${scope.row.materialCode} ${scope.row.materialName}` }}
+                        {{ `${scope.row.materialName} ${scope.row.materialCode}` }}
                     </template>
                 </el-table-column>
                 <el-table-column prop="entryQnt" label="发料组件数量" width="105" />

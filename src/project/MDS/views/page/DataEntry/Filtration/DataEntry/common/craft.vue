@@ -56,7 +56,7 @@
                 <el-table-column label="物料" show-overflow-tooltip min-width="200">
                     <template slot-scope="scope">
                         <el-select v-model="scope.row.materialCode" :disabled="!isRedact || soleStatus" size="small">
-                            <el-option v-for="(item, index) in filterAidMaterialList" :key="index" :label="item.CODE + ' ' + item.VALUE" :value="item.CODE" />
+                            <el-option v-for="(item, index) in filterAidMaterialList" :key="index" :label="item.VALUE + ' ' + item.CODE" :value="item.CODE" />
                         </el-select>
                         <!-- {{scope.row.materialCode}} {{scope.row.materialName}} -->
                     </template>

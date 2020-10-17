@@ -8,7 +8,7 @@
             </el-form-item>
             <el-form-item label="发酵物料：" prop="materialCode">
                 <el-select v-model="dataForm.materialCode" placeholder="请选择" filterable style="width: 100%;">
-                    <el-option v-for="(sole, index) in material" :key="index" :value="sole.materialCode" :label="sole.materialCode + ' ' + sole.materialName" />
+                    <el-option v-for="(sole, index) in material" :key="index" :value="sole.materialCode" :label="sole.materialName + ' ' + sole.materialCode" />
                 </el-select>
             </el-form-item>
             <el-form-item label="半成品类别：" prop="halfType">

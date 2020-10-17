@@ -80,7 +80,7 @@
                                     </div>
                                     <div class="box_bottom_sole" />
                                     <div style="width: 100%; overflow: hidden; white-space: nowrap;">
-                                        {{ (item.materialCode || '') + ' ' + (item.materialName || '') }}
+                                        {{ (item.materialName || '') + ' ' + (item.materialCode || '') }}
                                     </div>
                                 </div>
                                 <div v-else>
@@ -111,7 +111,7 @@
                 </el-form-item>
                 <el-form-item label="物料：" prop="materialCode">
                     <p>
-                        {{ JBSdataForm.materialCode + ' ' + JBSdataForm.materialName }}
+                        {{ JBSdataForm.materialName + ' ' + JBSdataForm.materialCode }}
                     </p>
                 </el-form-item>
                 <el-form-item label="批次：" prop="batch">
@@ -160,7 +160,7 @@
                 </el-form-item>
                 <el-form-item label="物料：" prop="materialCode">
                     <p>
-                        {{ TurnSavedataForm.materialCode + ' ' + TurnSavedataForm.materialName }}
+                        {{ TurnSavedataForm.materialName + ' ' + TurnSavedataForm.materialCode }}
                     </p>
                 </el-form-item>
                 <el-form-item label="批次：" prop="batch">

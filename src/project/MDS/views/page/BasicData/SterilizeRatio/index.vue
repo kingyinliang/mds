@@ -12,7 +12,7 @@
                         <el-option value="">
                             请选择
                         </el-option>
-                        <el-option v-for="(item, index) in materialList" :key="index" :label="item.materialCode + `${item.materialName}`" :value="item.materialCode" />
+                        <el-option v-for="(item, index) in materialList" :key="index" :label="item.materialName + `${item.materialCode}`" :value="item.materialCode" />
                     </el-select>
                 </el-form-item>
                 <el-form-item class="floatr">
@@ -38,8 +38,8 @@
                 <el-table-column prop="factoryName" label="工厂" :show-overflow-tooltip="true" />
                 <el-table-column label="物料" :show-overflow-tooltip="true">
                     <template slot-scope="scope">
-                        {{ scope.row.materialCode }}
                         {{ scope.row.materialName }}
+                        {{ scope.row.materialCode }}
                     </template>
                 </el-table-column>
                 <el-table-column prop="ratio" label="比例" :show-overflow-tooltip="true" />
@@ -59,7 +59,7 @@
                         <el-option value="">
                             请选择
                         </el-option>
-                        <el-option v-for="(item, index) in materialList" :key="index" :label="item.materialCode + ` ${item.materialName}`" :value="item.materialCode" />
+                        <el-option v-for="(item, index) in materialList" :key="index" :label="item.materialName + ` ${item.materialCode}`" :value="item.materialCode" />
                     </el-select>
                 </el-form-item>
                 <el-form-item label="比例：" prop="ratio">

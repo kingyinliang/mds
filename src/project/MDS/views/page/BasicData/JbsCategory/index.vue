@@ -49,8 +49,8 @@
                 <el-table-column prop="factoryName" label="工厂" :show-overflow-tooltip="true" />
                 <el-table-column label="物料编码" :show-overflow-tooltip="true">
                     <template slot-scope="scope">
-                        {{ scope.row.materialCode }}
                         {{ scope.row.materialName }}
+                        {{ scope.row.materialCode }}
                     </template>
                 </el-table-column>
                 <el-table-column prop="type" label="大类属性" :show-overflow-tooltip="true" />

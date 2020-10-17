@@ -19,8 +19,8 @@
                 <el-table ref="table1" class="newTable" :height="mainClientHeight - 30 - 42 - 47" header-row-class-name="tableHead" :data="list" border tooltip-effect="dark" style="width: 100%;">
                     <el-table-column label="物料" :show-overflow-tooltip="true" width="170px">
                         <template slot-scope="scope">
-                            {{ scope.row.materialCode }}
                             {{ scope.row.materialName }}
+                            {{ scope.row.materialCode }}
                         </template>
                     </el-table-column>
                     <el-table-column label="物料类型" :show-overflow-tooltip="true" width="130px">
