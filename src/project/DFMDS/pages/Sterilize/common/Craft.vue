@@ -168,16 +168,19 @@ export default class Crafts extends Vue {
             this.$warningToast('请录入工艺控制页签杀菌时间及温度数据');
             return false;
         }
-
+        let isStage = 0;
         for (const item of this.craftTable.filter(it => it.delFlag !== 1)) {
-            if (!item.controlType || !item.controlStage) {
-                this.$warningToast('请填写工艺控制页签杀菌时间及温度类型、阶段');
+            if (!item.controlType || !item.controlStage || !item.recordDate) {
+                this.$warningToast('请填写工艺控制页签杀菌时间及温度类型、阶段、记录时间');
                 return false;
             }
-            if ((item.controlStage === 'START' || item.controlStage === 'END' || item.controlStage === 'DISCHARGE_START' || item.controlStage === 'DISCHARGE_END') && !item.recordDate) {
-                this.$warningToast('请填写工艺控制页签杀菌时间及温度下记录时间');
-                return false;
+            if (item.controlStage === 'HEAT_START' || item.controlStage === 'HEAT_END' || item.controlStage === 'DISCHARGE_START' || item.controlStage === 'DISCHARGE_END') {
+                isStage++;
             }
+        }
+        if (isStage < 4) {
+            this.$warningToast('请填写工艺控制页签保温开始时间、保温结束时间、出料开始时间、出料结束时间');
+            return false;
         }
         return true;
     }

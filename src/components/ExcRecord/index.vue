@@ -169,7 +169,7 @@ export default class ExcRecord extends Vue {
 
     // 异常原因
     getexcReasonTwo(formHeader, resolve) {
-        COMMON_API.DICTQUERY_API({ dictType: 'POOR_PROCESS_WAIT' }).then(({ data }) => {
+        COMMON_API.DICTQUERY_API({ dictType: 'WAIT' }).then(({ data }) => {
             this.excReasonTotal.POORPROCESSWAIT = data.data
             if (resolve) {
                 resolve('resolve');

@@ -174,6 +174,10 @@ const STE_API = {
      */
     STE_PKGLINE_QUERY_API: params => httpProxy('/ste/stePkgRelation/pkgLine/query', 'GET', params),
     /**
+     * @property {string} STE_AUDIT_HEADER_INFO_API 杀菌车间-杀菌审核-头部
+     */
+    STE_AUDIT_HEADER_INFO_API: params => httpProxy('/steOrderSplit/list/query', 'post', params),
+    /**
      * @property {string} STE_AUDIT_YIELD_MANQUERY_API 杀菌车间-杀菌审核-产量与人力
      */
     STE_AUDIT_YIELD_MANQUERY_API: params => httpProxy('/ste/item/yieldAndManQuery', 'post', params),
@@ -184,7 +188,19 @@ const STE_API = {
     /**
      * @property {string} STE_AUDIT_MATERIAL_QUERY_API 杀菌车间-杀菌审核-物料领用
      */
-    STE_AUDIT_MATERIAL_QUERY_API: params => httpProxy('/ste/item/materialQuery', 'post', params)
+    STE_AUDIT_MATERIAL_QUERY_API: params => httpProxy('/ste/item/materialQuery', 'post', params),
+    /**
+     * @property {string} STE_AUDIT_CRAFT_TEMPERATURE_API 杀菌车间-杀菌审核-工艺保温温度
+     */
+    STE_AUDIT_CRAFT_TEMPERATURE_API: params => httpProxy('/ste/item/temperatureQuery', 'post', params),
+    /**
+     * @property {string} STE_AUDIT_CRAFT_TIME_API 杀菌车间-杀菌审核-工艺保温时间
+     */
+    STE_AUDIT_CRAFT_TIME_API: params => httpProxy('/ste/item/keepWarmTimeQuery', 'post', params),
+    /**
+     * @property {string} STE_AUDIT_CRAFT_TEMPERATUREANDTIME_API 杀菌车间-杀菌审核-工艺出料时间与温度
+     */
+    STE_AUDIT_CRAFT_TEMPERATUREANDTIME_API: params => httpProxy('/ste/item/timeAndTemperatureQuery', 'post', params)
 };
 
 export default STE_API;

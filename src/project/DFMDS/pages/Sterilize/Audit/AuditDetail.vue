@@ -72,8 +72,12 @@
                 <mds-card title="异常情况" :name="'AbnormalCondition'">
                     <el-table class="newTable" :data="exceptionList" header-row-class-name="tableHead" border tooltip-effect="dark" style="margin-top: 5px;">
                         <el-table-column type="index" label="序号" fixed min-width="80" />
-                        <el-table-column prop="classes" label="生产锅号" min-width="90" />
-                        <el-table-column prop="potNo" label="锅序" min-width="80" />
+                        <el-table-column prop="potNo" label="生产锅号" min-width="90" />
+                        <el-table-column label="锅序" min-width="80">
+                            <template slot-scope="scope">
+                                第{{ scope.row.potOrder }}锅
+                            </template>
+                        </el-table-column>
                         <el-table-column prop="potOrderNo" label="锅单号" min-width="140" />
                         <el-table-column prop="exceptionStage" label="阶段" min-width="80" />
                         <el-table-column prop="className" label="班次" min-width="60" />
@@ -192,18 +196,18 @@
         chartLine: any;
         chartDiffBar: any;
         /* eslint-enable */
-        proMaterialDiffList = [];
-        prodPower = {};
-        deviceRun = {
-            exceptionInfo: []
-        };
-        // eslint-disable-next-line
-        yieldAndManData = {}; // 产量与人力
-        exceptionList: ExceptionList[] = []; // 异常情况
-        materialRecevieList = []; // 物料领用
-        classList: Dictionary[] = []; // 班次字典
-        excCondition: Dictionary[] = []; // 异常情况数据字典
-        excReasonTotal: ExcReasonTotal = { // 异常原因字典
+        // 产量与人力
+        yieldAndManData = {};
+        // 物料领用
+        materialRecevieList = [];
+        exceptionList: ExceptionList[] = [];
+        // 班次字典
+        classList: Dictionary[] = [];
+        // 异常情况数据字典
+        excCondition: Dictionary[] = [];
+        // tempTimeData
+        // 异常原因字典
+        excReasonTotal: ExcReasonTotal = {
             FAULTSHUTDOWN: [],
             POORPROCESSWAIT: [],
             ENERGY: []
@@ -212,6 +216,7 @@
         mounted() {
             this.auditDetail = this.$store.state.sterilize.auditDetail;
             console.log(this.auditDetail);
+            this.getHeaderInfo(this.auditDetail['workShop'], this.auditDetail['orderNo']);
 
             // 班次
             const net01 = new Promise(resolve => {
@@ -239,246 +244,11 @@
                 this.$errorToast(reason);
             });
 
-            this.chartLine = echarts.init(document.getElementById('J_chartLineBoxTemp'));
-            const option = {
-                tooltip: {
-                    trigger: 'axis'
-                },
-                legend: {
-                    orient: 'vertical',
-                    x: 'center',
-                    // bottom: 'bottom',
-                    bottom: 'bottom',
-                    data: ['邮件营销', '联盟广告', '视频广告', '直接访问', '搜索引擎']
-                },
-                axisLabel: {
-                    interval: 0,
-                    rotate: 40
-                },
-                grid: {
-                    top: '5%',
-                    left: '1%',
-                    right: '1%',
-                    bottom: '8%',
-                    containLabel: true
-                },
-                xAxis: {
-                    type: 'category',
-                    boundaryGap: false,
-                    data: ['1#第一锅', '1#第二锅', '1#第三锅', '1#第四锅', '1#第五锅', '1#第六锅', '1#第七锅'],
-                    axisLabel: { 'interval': 0, rotate: 30 }
-                },
-                yAxis: {
-                    type: 'value'
-                },
-                series: [
-                    {
-                        name: '邮件营销',
-                        type: 'line',
-                        stack: '总量',
-                        data: [120, 132, 101, 134, 90, 230, 210]
-                    },
-                    {
-                        name: '联盟广告',
-                        type: 'line',
-                        stack: '总量',
-                        data: [220, 182, 191, 234, 290, 330, 310]
-                    },
-                    {
-                        name: '视频广告',
-                        type: 'line',
-                        stack: '总量',
-                        data: [150, 232, 201, 154, 190, 330, 410]
-                    },
-                    {
-                        name: '直接访问',
-                        type: 'line',
-                        stack: '总量',
-                        data: [320, 332, 301, 334, 390, 330, 320]
-                    },
-                    {
-                        name: '搜索引擎',
-                        type: 'line',
-                        stack: '总量',
-                        data: [820, 932, 901, 934, 1290, 1330, 1320]
-                    }
-                ]
-            };
-            this.chartLine.setOption(option);
-            window.addEventListener('resize', () => {
-                this.chartLine.resize();
-            });
+            this.getCraftTemp(this.auditDetail['orderNo']);
 
+            this.getCraftTime(this.auditDetail['orderNo']);
 
-            this.chartLine = echarts.init(document.getElementById('J_chartLineBoxTime'));
-            const optionTime = {
-                    color: ['#3398DB'],
-                    grid: {
-                        top: '5%',
-                        left: '1%',
-                        right: '1%',
-                        bottom: '3%',
-                        containLabel: true
-                    },
-                    xAxis: [
-                        {
-                            type: 'category',
-                            data: ['1#第一锅', '1#第二锅', '1#第三锅', '1#第四锅', '1#第五锅', '1#第六锅', '1#第七锅'],
-                            axisTick: {
-                                alignWithLabel: true
-                            },
-                            axisLabel: { 'interval': 0, rotate: 30 }
-                        }
-                    ],
-                    yAxis: [
-                        {
-                            type: 'value'
-                        }
-                    ],
-                    series: [
-                        {
-                            name: '直接访问',
-                            type: 'bar',
-                            barWidth: '10%',
-                            itemStyle: {
-                                //柱形图圆角，鼠标移上去效果，如果只是一个数字则说明四个参数全部设置为那么多
-                                emphasis: {
-                                    barBorderRadius: 30
-                                },
-                                normal: {
-                                    //柱形图圆角，初始化效果
-                                    barBorderRadius: [10, 10, 10, 10],
-                                    label: {
-                                        show: true, //是否展示
-                                        textStyle: {
-                                            fontWeight: 'bolder',
-                                            fontSize: '12',
-                                            fontFamily: '微软雅黑'
-                                        }
-                                    }
-                                }
-                            },
-                            data: [10, 52, 200, 334, 390, 330, 220]
-                        }
-                    ]
-            };
-            this.chartLine.setOption(optionTime);
-            window.addEventListener('resize', () => {
-                this.chartLine.resize();
-            });
-
-
-            this.chartLine = echarts.init(document.getElementById('J_chartLineBoxTimeAndTemp'));
-            const optionTimeAndTemp = {
-                color: ['#1890FF', '#F05C4A', '#999999'],
-                tooltip: {
-                    trigger: 'axis',
-                    axisPointer: {
-                        type: 'cross'
-                    }
-                },
-                grid: {
-                    top: '8%',
-                    left: '1%',
-                    right: '0%',
-                    bottom: '8%',
-                    containLabel: true
-                },
-                legend: {
-                    orient: 'vertical',
-                    x: 'center',
-                    // bottom: 'bottom',
-                    bottom: 'bottom',
-                    data: ['出料时间', '开始温度', '结束温度']
-                },
-                xAxis: [
-                    {
-                        type: 'category',
-                        axisTick: {
-                            alignWithLabel: true
-                        },
-                        axisLabel: { 'interval': 0, rotate: 30 },
-                        data: ['1#第一锅', '1#第二锅', '1#第三锅', '1#第四锅', '1#第五锅', '1#第六锅', '1#第七锅', '1#第八锅']
-                    }
-                ],
-                yAxis: [
-                    {
-                        type: 'value',
-                        name: '时间',
-                        min: 0,
-                        max: 25,
-                        position: 'left'
-                        // axisLine: {
-                        //     lineStyle: {
-                        //         color: colors[2]
-                        //     }
-                        // },
-                        // axisLabel: {
-                        //     formatter: '{value} °C'
-                        // }
-                    },
-                    {
-                        type: 'value',
-                        name: '温度',
-                        min: 0,
-                        max: 250,
-                        position: 'right',
-                        axisLabel: {
-                            formatter: '{value} ℃'
-                        }
-                    },
-                    {
-                        type: 'value',
-                        name: '温度',
-                        min: 0,
-                        max: 250,
-                        position: 'right'
-                    }
-                ],
-                series: [
-                    {
-                        name: '出料时间',
-                        type: 'bar',
-                        barWidth: '10%',
-                        itemStyle: {
-                            //柱形图圆角，鼠标移上去效果，如果只是一个数字则说明四个参数全部设置为那么多
-                            emphasis: {
-                                barBorderRadius: 30
-                            },
-                            normal: {
-                                //柱形图圆角，初始化效果
-                                barBorderRadius: [10, 10, 10, 10],
-                                label: {
-                                    show: true, //是否展示
-                                    textStyle: {
-                                        fontWeight: 'bolder',
-                                        fontSize: '12',
-                                        fontFamily: '微软雅黑'
-                                    }
-                                }
-                            }
-                        },
-                        data: [20, 4.9, 7.0, 23.2, 25.6, 76.7, 135.6, 162.2, 32.6, 20.0, 6.4, 3.3]
-                    },
-                    {
-                        name: '开始温度',
-                        type: 'line',
-                        yAxisIndex: 1,
-                        data: [26, 5.9, 9.0, 26.4, 28.7, 70.7, 175.6, 182.2, 48.7, 18.8, 6.0, 2.3]
-                    },
-                    {
-                        name: '结束温度',
-                        type: 'line',
-                        yAxisIndex: 2,
-                        data: [2.0, 2.2, 3.3, 4.5, 6.3, 10.2, 20.3, 23.4, 23.0, 16.5, 12.0, 6.2]
-                    }
-                ]
-            };
-
-            this.chartLine.setOption(optionTimeAndTemp);
-            window.addEventListener('resize', () => {
-                this.chartLine.resize();
-            });
+            this.getCraftTimeAndTemp(this.auditDetail['orderNo']);
         }
 
         get excTimeTotal() {
@@ -487,6 +257,12 @@
                 MinNum = accAdd(MinNum, item.duration);
             });
             return (MinNum / 60).toFixed(2);
+        }
+
+        getHeaderInfo(workShop, orderNo) {
+            STE_API.STE_AUDIT_HEADER_INFO_API({ workShop: workShop, orderNo: orderNo }).then(({ data }) => {
+                console.log(data.data)
+            });
         }
 
         // 数据字典
@@ -528,6 +304,375 @@
                 orderNo: orderNo
             }).then(({ data }) => {
                 this.yieldAndManData = data.data
+            })
+        }
+
+        // 工艺保温温度
+        getCraftTemp(orderNo) {
+            STE_API.STE_AUDIT_CRAFT_TEMPERATURE_API({
+                orderNo: orderNo
+            }).then(({ data }) => {
+                const xAxisData: string[] = [];
+                const legendData = ['保温开始', '保温10min', '保温15min', '保温20min', '二次保温', '保温30min'];
+                const seriesData: object[] = [];
+                const timeData: object[] = [];
+                let num = 0
+                let normalColor = '#1691FE'
+                while (num < 6) {
+                    switch (num) {
+                        case 0: {
+                            normalColor = '#1691FE';
+                            break;
+                        }
+                        case 1: {
+                            normalColor = '#EC5B4C';
+                            break;
+                        }
+                        case 2: {
+                            normalColor = '#69666A';
+                            break;
+                        }
+                        case 3: {
+                            normalColor = '#FFBF01';
+                            break;
+                        }
+                        case 4: {
+                            normalColor = '#1133A1';
+                            break;
+                        }
+                        case 5: {
+                            normalColor = '#31C25D';
+                            break;
+                        }
+                        default: {
+                            normalColor = '#1691FE'
+                            break;
+                        }
+                    }
+                    /* eslint-disable */
+                    seriesData.push({
+                        name: legendData[num],
+                        type: 'line',
+                        data: [],
+                        markArea: {
+                            silent: false,
+                            itemStyle: {
+                                color: '#B8C4F1'
+                            },
+                            data: [
+                                [{
+                                    name: '',
+                                    yAxis: 0
+                                }, {
+                                    yAxis: 0
+                                }]
+                            ]
+                        },
+                        itemStyle: {
+                                    normal: {
+                                        color: normalColor, //折点颜色
+                                        lineStyle: {
+                                            color: normalColor //折线颜色
+                                        }
+                                    }
+                                }
+                    })
+                    /* eslint-enable */
+                    num++;
+                }
+                let i = 0;
+                data.data.map(item => {
+                    xAxisData.push(item.potName); // x轴
+                    seriesData[0]['data'].push(item.start);
+                    seriesData[1]['data'].push(item.tenMin);
+                    seriesData[2]['data'].push(item.fifteenMin);
+                    seriesData[3]['data'].push(item.twentyMin);
+                    seriesData[4]['data'].push(item.twoKeepWarm);
+                    seriesData[5]['data'].push(item.thirtyMin);
+                    seriesData[i]['markArea']['data'] = [
+                        [{
+                            name: '',
+                            yAxis: item.upLimit
+                        }, {
+                            yAxis: item.downLimit
+                        }]
+                    ]
+                    timeData.push(
+                        {
+                            0: item.startTime,
+                            1: item.tenMinTime,
+                            2: item.fifteenMinTime,
+                            3: item.twentyMinTime,
+                            4: item.twoKeepWarmTime,
+                            5: item.thirtyMinTime
+                        }
+                    );
+                    i++;
+                })
+                this.chartLine = echarts.init(document.getElementById('J_chartLineBoxTemp'));
+                const option = {
+                    tooltip: {
+                        trigger: 'axis',
+                        formatter: function(params) {
+                            let htmlStr = '';
+                            for (let io = 0; io < params.length; io++) {
+                                const param = params[io];
+                                const xName = param.name; //x轴的名称
+                                const seriesName = param.seriesName; //图例名称
+                                const value = param.value; //y轴值
+                                const color = param.color; //图例颜色
+                                if (io === 0) {
+                                    htmlStr += xName + '<br/>';//x轴的名称
+                                }
+                                htmlStr += '<div>';
+                                //为了保证和原来的效果一样，这里自己实现了一个点的效果
+                                htmlStr += '<span style="margin-right:5px;display:inline-block;width:10px;height:10px;border-radius:5px;background-color:' + color + ';"></span>';
+                                // 文本颜色设置--2020-07-23(需要设置,请解注释下面一行)
+                                //htmlStr += '<span style="color:'+color+'">';
+                                //圆点后面显示的文本
+                                htmlStr += seriesName + '：' + value + ' (' + timeData[param.dataIndex][param.componentIndex] + ')';
+                                // 文本颜色设置--2020-07-23(需要设置,请解注释下面一行)
+                                //htmlStr += '</span>';
+                                htmlStr += '</div>';
+                            }
+                            return htmlStr;
+                        }
+                    },
+                    legend: {
+                        orient: 'vertical',
+                        x: 'center',
+                        // bottom: 'bottom',
+                        bottom: 'bottom',
+                        data: legendData
+                    },
+                    axisLabel: {
+                        interval: 0,
+                        rotate: 40
+                    },
+                    grid: {
+                        top: '5%',
+                        left: '1%',
+                        right: '1%',
+                        bottom: '8%',
+                        containLabel: true
+                    },
+                    xAxis: {
+                        type: 'category',
+                        boundaryGap: false,
+                        data: xAxisData,
+                        axisLabel: { 'interval': 0, rotate: 30 }
+                    },
+                    yAxis: {
+                        type: 'value',
+                        scale: true
+                    },
+                    series: seriesData
+                };
+                this.chartLine.setOption(option);
+                window.addEventListener('resize', () => {
+                    this.chartLine.resize();
+                });
+            })
+        }
+
+        // 工艺保温时间
+        getCraftTime(orderNo) {
+            STE_API.STE_AUDIT_CRAFT_TIME_API({
+                orderNo: orderNo
+            }).then(({ data }) => {
+                // console.log(data);
+                const xAxisData: string[] = [];
+                const timeData: number[] = [];
+                data.data.map(item => {
+                    xAxisData.push(item.potName);
+                    timeData.push(item.keepWarmTime);
+                })
+                this.chartLine = echarts.init(document.getElementById('J_chartLineBoxTime'));
+                const optionTime = {
+                        color: ['#3398DB'],
+                        grid: {
+                            top: '5%',
+                            left: '1%',
+                            right: '1%',
+                            bottom: '3%',
+                            containLabel: true
+                        },
+                        xAxis: [
+                            {
+                                type: 'category',
+                                data: xAxisData,
+                                axisTick: {
+                                    alignWithLabel: true
+                                },
+                                axisLabel: { 'interval': 0, rotate: 30 }
+                            }
+                        ],
+                        yAxis: [
+                            {
+                                type: 'value'
+                            }
+                        ],
+                        series: [
+                            {
+                                name: '直接访问',
+                                type: 'bar',
+                                barWidth: '10%',
+                                itemStyle: {
+                                    //柱形图圆角，鼠标移上去效果，如果只是一个数字则说明四个参数全部设置为那么多
+                                    emphasis: {
+                                        barBorderRadius: 30
+                                    },
+                                    normal: {
+                                        //柱形图圆角，初始化效果
+                                        barBorderRadius: [10, 10, 10, 10],
+                                        label: {
+                                            show: true, //是否展示
+                                            textStyle: {
+                                                fontWeight: 'bolder',
+                                                fontSize: '12',
+                                                fontFamily: '微软雅黑'
+                                            }
+                                        }
+                                    }
+                                },
+                                data: timeData
+                            }
+                        ]
+                };
+                this.chartLine.setOption(optionTime);
+                window.addEventListener('resize', () => {
+                    this.chartLine.resize();
+                });
+            })
+        }
+
+        // 工艺出料时间与温度
+        getCraftTimeAndTemp(orderNo) {
+            STE_API.STE_AUDIT_CRAFT_TEMPERATUREANDTIME_API({
+                orderNo: orderNo
+            }).then(({ data }) => {
+                // console.log(data);
+                const xAxisData: string[] = []
+                const timeData: number[] = []
+                const tempStart: number[] = []
+                const tempEnd: number[] = []
+                data.data.map(item => {
+                    xAxisData.push(item.potName);
+                    timeData.push(item.outTime);
+                    tempStart.push(item.start);
+                    tempEnd.push(item.end);
+                })
+                this.chartLine = echarts.init(document.getElementById('J_chartLineBoxTimeAndTemp'));
+                const optionTimeAndTemp = {
+                    color: ['#1890FF', '#F05C4A', '#999999'],
+                    tooltip: {
+                        trigger: 'axis',
+                        axisPointer: {
+                            type: 'cross'
+                        }
+                    },
+                    grid: {
+                        top: '8%',
+                        left: '1%',
+                        right: '0%',
+                        bottom: '8%',
+                        containLabel: true
+                    },
+                    legend: {
+                        orient: 'vertical',
+                        x: 'center',
+                        // bottom: 'bottom',
+                        bottom: 'bottom',
+                        data: ['出料时间', '开始温度', '结束温度']
+                    },
+                    xAxis: [
+                        {
+                            type: 'category',
+                            axisTick: {
+                                alignWithLabel: true
+                            },
+                            axisLabel: { 'interval': 0, rotate: 30 },
+                            data: xAxisData
+                        }
+                    ],
+                    yAxis: [
+                        {
+                            type: 'value',
+                            name: '时间',
+                            min: 0,
+                            max: 25,
+                            position: 'left'
+                            // axisLine: {
+                            //     lineStyle: {
+                            //         color: colors[2]
+                            //     }
+                            // },
+                            // axisLabel: {
+                            //     formatter: '{value} °C'
+                            // }
+                        },
+                        {
+                            type: 'value',
+                            name: '温度',
+                            min: 0,
+                            max: 100,
+                            position: 'right',
+                            axisLabel: {
+                                formatter: '{value} ℃'
+                            }
+                        },
+                        {
+                            type: 'value',
+                            name: '温度',
+                            min: 0,
+                            max: 100,
+                            position: 'right'
+                        }
+                    ],
+                    series: [
+                        {
+                            name: '出料时间',
+                            type: 'bar',
+                            barWidth: '10%',
+                            itemStyle: {
+                                //柱形图圆角，鼠标移上去效果，如果只是一个数字则说明四个参数全部设置为那么多
+                                emphasis: {
+                                    barBorderRadius: 30
+                                },
+                                normal: {
+                                    //柱形图圆角，初始化效果
+                                    barBorderRadius: [10, 10, 10, 10],
+                                    label: {
+                                        show: true, //是否展示
+                                        textStyle: {
+                                            fontWeight: 'bolder',
+                                            fontSize: '12',
+                                            fontFamily: '微软雅黑'
+                                        }
+                                    }
+                                }
+                            },
+                            data: timeData
+                        },
+                        {
+                            name: '开始温度',
+                            type: 'line',
+                            yAxisIndex: 1,
+                            data: tempStart
+                        },
+                        {
+                            name: '结束温度',
+                            type: 'line',
+                            yAxisIndex: 2,
+                            data: tempEnd
+                        }
+                    ]
+                };
+
+                this.chartLine.setOption(optionTimeAndTemp);
+                window.addEventListener('resize', () => {
+                    this.chartLine.resize();
+                });
             })
         }
 
