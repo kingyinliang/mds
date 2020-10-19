@@ -42,7 +42,7 @@
                     </el-form-item>
                 </el-form>
             </template>
-            <el-table header-row-class-name="tableHead" class="newTable" :data="craftSteamBeanTable" :row-class-name="RowDelFlag" border tooltip-effect="dark" size="mini">
+            <el-table header-row-class-name="tableHead" class="newTable" :data="craftSteamBeanTable" :row-class-name="RowDelFlag" border tooltip-effect="dark" size="mini" style="min-height: 90px;">
                 <el-table-column type="index" :index="index => getIndexMethod(index, craftSteamBeanTable)" label="序号" width="50px" fixed />
                 <el-table-column width="140" show-overflow-tooltip>
                     <template slot="header">
@@ -428,6 +428,10 @@
                 return false;
             }
 
+            if (this.craftSteamBeanTable.filter(it => it.delFlag !== 1).length === 0) {
+                this.$warningToast('请填写工艺控制页签"蒸豆记录"');
+                return false;
+            }
 
             for (const item of this.craftSteamBeanTable.filter(it => it.delFlag !== 1)) {
                 if (

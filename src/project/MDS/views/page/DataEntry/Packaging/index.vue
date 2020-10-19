@@ -53,8 +53,8 @@
                                     </el-form-item>
                                     <el-form-item label="生产物料：">
                                         <div class="disabled-input el-input el-input--small is-disabled">
-                                            <el-tooltip class="item" effect="dark" :content="item.orderNo? `${item.materialCode} ${item.materialName}` : ''" placement="top">
-                                                <span class="el-input__inner">{{ item.materialCode + ' ' + item.materialName }}</span>
+                                            <el-tooltip class="item" effect="dark" :content="item.orderNo? `${item.materialName} ${item.materialCode}` : ''" placement="top">
+                                                <span class="el-input__inner">{{ item.materialName + ' ' + item.materialCode }}</span>
                                             </el-tooltip>
                                         </div>
                                     </el-form-item>

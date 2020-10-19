@@ -325,7 +325,7 @@
                                     // eslint-disable-next-line no-invalid-this
                                     this.$set(item, 'optLabel', `${item.materialCode} ${item.materialName}`)
                                     // eslint-disable-next-line no-invalid-this
-                                    this.$set(item, 'optValue', `${item.materialCode}&${item.materialName}`)
+                                    this.$set(item, 'optValue', `${item.materialCode} ${item.materialName}`)
                                 })
                                 resolve(optionList)
                             })
@@ -475,7 +475,7 @@
                                 // eslint-disable-next-line no-invalid-this
                                 this.$set(item, 'optLabel', `${item.materialCode} ${item.materialName}`)
                                 // eslint-disable-next-line no-invalid-this
-                                this.$set(item, 'optValue', `${item.materialCode}&${item.materialName}`)
+                                this.$set(item, 'optValue', `${item.materialCode} ${item.materialName}`)
                             })
                             resolve(optionList)
                         })
@@ -589,8 +589,8 @@
                 workShop: dataForm.workShop,
                 jobBookingProcess: dataForm.jobBookingProcess,
                 productProcess: dataForm.productProcess,
-                materialCode: dataForm.material.split('&')[0],
-                materialName: dataForm.material.split('&')[1],
+                materialCode: dataForm.material.split(' ')[0],
+                materialName: dataForm.material.split(' ')[1],
                 remark: dataForm.remark
             }).then(() => {
                 this.$successToast('新增成功')
@@ -605,8 +605,8 @@
             KOJI_API.WORKPROCEDURE_UPDATE_API({
                 id: dataForm.id,
                 jobBookingProcess: dataForm.jobBookingProcess,
-                materialCode: dataForm.material.split('&')[0],
-                materialName: dataForm.material.split('&')[1],
+                materialCode: dataForm.material.split(' ')[0],
+                materialName: dataForm.material.split(' ')[1],
                 productProcess: dataForm.productProcess,
                 remark: dataForm.remark,
                 workShop: dataForm.workShop

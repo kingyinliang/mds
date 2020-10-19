@@ -51,7 +51,7 @@ export default {
                     defaultValue: '',
                     resVal: {
                         resData: 'list',
-                        label: ['sapCode', 'itemName'],
+                        label: ['itemCode', 'sapName'],
                         value: 'sapCode'
                     }
                 },

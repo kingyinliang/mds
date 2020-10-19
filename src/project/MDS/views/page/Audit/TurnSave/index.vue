@@ -77,7 +77,7 @@
                         :show-overflow-tooltip="true"
                     >
                         <template slot-scope="scope">
-                            {{ scope.row.materialCode + ' ' + scope.row.materialName }}
+                            {{ scope.row.materialName + ' ' + scope.row.materialCode }}
                         </template>
                     </el-table-column>
                     <el-table-column prop="receiveType" label="类别" min-width="100" :show-overflow-tooltip="true" />
@@ -127,7 +127,7 @@
                         :show-overflow-tooltip="true"
                     >
                         <template slot-scope="scope">
-                            {{ scope.row.materialCode + ' ' + scope.row.materialName }}
+                            {{ scope.row.materialName + ' ' + scope.row.materialCode }}
                         </template>
                     </el-table-column>
                     <el-table-column prop="type" label="类别" min-width="100" :show-overflow-tooltip="true" />

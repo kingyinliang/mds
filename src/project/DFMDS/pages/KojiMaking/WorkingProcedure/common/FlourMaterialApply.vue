@@ -148,11 +148,17 @@
         }
 
         ruleSubmit() {
-            if (this.materialY158TableList.length > 0 && this.materialTableList.length > 0) {
-                return true
+            if (!(this.materialY158TableList.length > 0)) {
+                this.$warningToast('Y158物料领用记录为空,无法提交');
+                return false
             }
-            this.$warningToast('物料领用记录为空,无法提交');
-            return false
+
+            if (!(this.materialTableList.length > 0)) {
+                this.$warningToast('面粉物料领用记录为空,无法提交');
+                return false
+            }
+
+            return true
         }
 
         // 领用库位
@@ -196,9 +202,19 @@
 
         // 获取 所有物料领用数据汇总
         getSavedOrSubmitData() {
+            const Y158AllList = this.materialY158TableList.map(item => {
+                item.materialType = 'Y158';
+                return item;
+            })
+
+            const FlourAllList = this.materialTableList.map(item => {
+                item.materialType = 'FLOUR';
+                return item;
+            })
+
             return [
-                ...this.materialY158TableList,
-                ...this.materialTableList
+                ...Y158AllList,
+                ...FlourAllList
             ]
         }
 
@@ -341,6 +357,7 @@
         unit?: string;
         smallBeanAmount?: string;
         workShop?: string;
+        materialType?: string;
     }
 </script>
 

@@ -74,7 +74,7 @@ export default {
                     prop: 'materialCode',
                     resVal: {
                         resData: 'dicList',
-                        label: ['code', 'value'],
+                        label: ['value', 'code'],
                         value: 'code'
                     },
                     defaultValue: '',

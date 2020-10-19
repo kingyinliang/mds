@@ -16,7 +16,7 @@
                 <el-table-column :show-overflow-tooltip="true" label="物料">
                     <template slot-scope="scope">
                         <el-button style="padding: 0;" type="text" @click="showdetail(scope.row.materialId)">
-                            {{ scope.row.materialCode }} {{ scope.row.materialName }}
+                            {{ scope.row.materialName }} {{ scope.row.materialCode }}
                         </el-button>
                     </template>
                 </el-table-column>

@@ -20,7 +20,7 @@
                             </p>
                         </el-form-item>
                         <el-form-item label="生产品项：">
-                            <el-tooltip class="item" effect="dark" :content="formHeader.materialCode + ' ' + formHeader.materialName" placement="top-start">
+                            <el-tooltip class="item" effect="dark" :content="formHeader.materialName + ' ' + formHeader.materialCode" placement="top-start">
                                 <p
                                     :style="{
                                         'font-size': '12px',
@@ -28,7 +28,7 @@
                                     }"
                                     class="input_bottom"
                                 >
-                                    {{ (formHeader.materialCode || '') + ' ' + (formHeader.materialName || '') }}
+                                    {{ (formHeader.materialName || '') + ' ' + (formHeader.materialCode || '') }}
                                 </p>
                             </el-tooltip>
                         </el-form-item>

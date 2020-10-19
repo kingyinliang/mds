@@ -7,7 +7,7 @@
                         <template slot="label">
                             蒸球压力(Mpa)：
                         </template>
-                        <el-input v-model="steamBallPressure" placeholder="" :disabled="!isRedact && !craftSteamBeanTable.length>0" size="small" style="width: 175px;">
+                        <el-input v-model="steamBallPressure" placeholder="" :disabled="!isRedact" size="small" style="width: 175px;">
                             <span slot="suffix" class="stock-form_item_input_suffix">Mpa</span>
                         </el-input>
                     </el-form-item>
@@ -18,7 +18,7 @@
                     </el-form-item>
                 </el-form>
             </template>
-            <el-table header-row-class-name="tableHead" class="newTable" :data="craftSteamBeanTable" :row-class-name="RowDelFlag" border tooltip-effect="dark" size="mini">
+            <el-table header-row-class-name="tableHead" class="newTable" :data="craftSteamBeanTable" :row-class-name="RowDelFlag" border tooltip-effect="dark" size="mini" style="min-height: 90px;">
                 <el-table-column type="index" :index="index => getIndexMethod(index, craftSteamBeanTable)" label="序号" width="50px" fixed />
                 <el-table-column width="140" show-overflow-tooltip>
                     <template slot="header">
@@ -114,7 +114,7 @@
                     </el-form-item>
                 </el-form>
             </template>
-            <el-table header-row-class-name="tableHead" class="newTable" :data="hardTable" :row-class-name="RowDelFlag" border tooltip-effect="dark" size="mini">
+            <el-table header-row-class-name="tableHead" class="newTable" :data="hardTable" :row-class-name="RowDelFlag" border tooltip-effect="dark" size="mini" style="min-height: 90px;">
                 <el-table-column type="index" :index="index => getIndexMethod(index, hardTable)" label="序号" width="50px" fixed />
                 <el-table-column width="140" show-overflow-tooltip>
                     <template slot="header">
@@ -392,6 +392,10 @@
                 type: 'warning'
             }).then(() => {
                 row.delFlag = 1;
+                // 蒸豆记录为空 蒸球压力值为'' 解释 提交数据时 蒸球压力存在 蒸豆记录的数据里 蒸豆数据为空时无法保存
+                if (this.craftSteamBeanTable.filter(item => item.delFlag === 0).length === 0) {
+                    this.steamBallPressure = ''
+                }
             });
         }
 
@@ -417,6 +421,11 @@
         // 提交时字段校验
         ruleSubmit() {
             // /^(0|[1-9]|10)(\.\d{1,2})?$/  //0-10 两位小数
+            if (this.craftSteamBeanTable.filter(it => it.delFlag !== 1).length === 0) {
+                this.$warningToast('请填写工艺控制页签"蒸豆记录"');
+                return false;
+            }
+
             for (const item of this.craftSteamBeanTable.filter(it => it.delFlag !== 1)) {
                 if (
                     !item.steamBallNo ||
@@ -426,6 +435,11 @@
                     this.$warningToast('请填写工艺控制页签"蒸豆记录"必填项');
                     return false;
                 }
+            }
+
+            if (this.hardTable.filter(it => it.delFlag !== 1).length === 0) {
+                this.$warningToast('请填写工艺控制页签"蒸豆硬度"');
+                return false;
             }
 
             for (const [index, item] of (this.hardTable.filter(it => it.delFlag !== 1)).entries()) {

@@ -5,7 +5,7 @@
                 <el-table-column type="index" width="50" label="序号" />
                 <el-table-column width="240" :show-overflow-tooltip="true" label="物料">
                     <template slot-scope="scope">
-                        {{ scope.row.materialCode + ' ' + scope.row.materialName }}
+                        {{ scope.row.materialName + ' ' + scope.row.materialCode }}
                     </template>
                 </el-table-column>
                 <el-table-column prop="unit" label="单位" width="60" />
@@ -59,7 +59,7 @@
                 <el-table-column type="index" width="50" label="序号" />
                 <el-table-column width="120" label="物料（半成品）">
                     <template slot-scope="scope">
-                        {{ scope.row.materialCode + ' ' + scope.row.materialName }}
+                        {{ scope.row.materialName + ' ' + scope.row.materialCode }}
                     </template>
                 </el-table-column>
                 <el-table-column prop="unit" label="单位" width="60" />

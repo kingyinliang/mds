@@ -67,7 +67,7 @@ export default {
                     filterable: true,
                     resVal: {
                         resData: 'list',
-                        label: ['sapCode', 'itemName'],
+                        label: ['sapName', 'itemCode'],
                         value: 'sapCode'
                     },
                     defaultValue: '',

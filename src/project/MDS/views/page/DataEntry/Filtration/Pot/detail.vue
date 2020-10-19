@@ -35,9 +35,9 @@
                             </p>
                         </el-form-item>
                         <el-form-item label="当前物料：">
-                            <el-tooltip class="item" effect="dark" :content="(formData.materialCode ? formData.materialCode : '') + ' ' + (formData.materialName ? formData.materialName : '')" placement="top">
+                            <el-tooltip class="item" effect="dark" :content="(formData.materialName ? formData.materialName : '') + ' ' + (formData.materialCode ? formData.materialCode : '')" placement="top">
                                 <p class="el-input">
-                                    {{ (formData.materialCode ? formData.materialCode : '') + ' ' + (formData.materialName ? formData.materialName : '') }}
+                                    {{ (formData.materialName ? formData.materialName : '') + ' ' + (formData.materialCode ? formData.materialCode : '') }}
                                 </p>
                             </el-tooltip>
                         </el-form-item>
@@ -53,8 +53,8 @@
                     <el-table-column label="成品罐号" :show-overflow-tooltip="true" prop="holderNo" width="80" />
                     <el-table-column label="物料" :show-overflow-tooltip="true" prop="orderNo" min-width="220">
                         <template slot-scope="scope">
-                            {{ scope.row.materialCode }}
                             {{ scope.row.materialName }}
+                            {{ scope.row.materialCode }}
                         </template>
                     </el-table-column>
                     <el-table-column label="成品批次" :show-overflow-tooltip="true" prop="batch" width="110" />
@@ -76,8 +76,8 @@
                     <el-table-column label="成品罐号" :show-overflow-tooltip="true" prop="holderNo" width="80" />
                     <el-table-column label="物料" :show-overflow-tooltip="true" prop="orderNo" min-width="220">
                         <template slot-scope="scope">
-                            {{ scope.row.materialCode }}
                             {{ scope.row.materialName }}
+                            {{ scope.row.materialCode }}
                         </template>
                     </el-table-column>
                     <el-table-column label="成品批次" :show-overflow-tooltip="true" prop="batch" width="110" />
