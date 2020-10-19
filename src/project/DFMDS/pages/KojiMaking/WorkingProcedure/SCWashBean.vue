@@ -188,7 +188,7 @@
             const excRequest = this.$refs.excRecord.getSavedOrSubmitData(this.formHeader, 'SC');
             const textRequest = this.$refs.textRecord.savedData(this.formHeader, 'koji');
 
-             return KOJI_API.KOJI_XD_SUBMIT_API({
+            return KOJI_API.KOJI_XD_SUBMIT_API({
                 ...steSemi,
                 kojiExceptionSaveDto: {
                     insertDatas: excRequest.InsertDto,

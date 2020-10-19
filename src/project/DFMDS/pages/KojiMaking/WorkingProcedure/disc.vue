@@ -58,19 +58,6 @@
         fermentPotNoOptions: OptionObj[] = [];
         classesOptions: object[] = [];
 
-        // 杂质数量
-        sieveTotalNum = 0;
-        // 物料领用记录 == 批次信息
-        setMaterialTableData = [];
-
-        changeSieveTotalNum(num) {
-            this.sieveTotalNum = num;
-        }
-
-        setMaterialTable(data) {
-            this.setMaterialTableData = data
-        }
-
         headerBase: HeaderBase[] = [
             {
                 type: 'p',
@@ -151,36 +138,35 @@
         }
 
         mounted() {
-            // 获取溶解罐下拉选项
+            // [下拉]获取溶解罐选项
             this.getFermentationHolder()
-            // 班次下拉选项
+            // [下拉]获取班次选项
             this.getClassesList()
-
+            // 查询表头
             this.getOrderList()
 
         }
 
         // 获取溶解罐下拉选项
         getFermentationHolder() {
-                COMMON_API.HOLDER_QUERY_API({
-                    // deptId: params.workShop,
-                    factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
-                    holderType: '001',
-                    size: 99999,
-                    current: 1
-                }).then(({ data }) => {
-                    if (this.headerBase[5].option) {
-                        this.headerBase[5].option.list = []
-                        data.data.records.forEach(item => {
-                            if (this.headerBase[5].option) {
-                                this.headerBase[5].option.list.push({ optLabel: item.holderName, optValue: item.holderNo })
-                            }
-                        })
-                    }
-                })
+            COMMON_API.HOLDER_QUERY_API({
+                factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
+                holderType: '001',
+                size: 99999,
+                current: 1
+            }).then(({ data }) => {
+                if (this.headerBase[5].option) {
+                    this.headerBase[5].option.list = []
+                    data.data.records.forEach(item => {
+                        if (this.headerBase[5].option) {
+                            this.headerBase[5].option.list.push({ optLabel: item.holderName, optValue: item.holderNo })
+                        }
+                    })
+                }
+            })
         }
 
-        // 班次
+        // 获取班次下拉选项
         getClassesList() {
             COMMON_API.DICTQUERY_CLASSLIST_API({}).then(({ data }) => {
                 this.classesOptions = data.data;
@@ -202,18 +188,6 @@
                 this.$refs.excRecord.init(this.formHeader, 'YP'); // 洗豆:XD;SC洗豆:SC;蒸豆:ZD;蒸面:ZM;圆盘:YP
                 this.$refs.textRecord.init(this.formHeader, 'YP', 'koji'); // 洗豆:XD;SC洗豆:SC;蒸豆:ZD;蒸面:ZM;圆盘:YP
             })
-
-                // this.formHeader = JSON.parse(JSON.stringify(this.$store.state.koji.orderKojiInfo))
-
-                // this.$set(this.formHeader, 'factoryName', JSON.parse(sessionStorage.getItem('factory') || '{}').deptShort)
-                // this.$set(this.formHeader, 'textStage', 'YP')
-                // console.log('this.formHeader')
-                // console.log(this.formHeader)
-                // this.$refs.craftControl.init(this.formHeader);
-                // this.$refs.productInStorage.init(this.formHeader);
-                // this.$refs.excRecord.init(this.formHeader, 'YP'); // 洗豆:XD;SC洗豆:SC;蒸豆:ZD;蒸面:ZM;圆盘:YP
-                // this.$refs.textRecord.init(this.formHeader, 'YP', 'koji'); // 洗豆:XD;SC洗豆:SC;蒸豆:ZD;蒸面:ZM;圆盘:YP
-
         }
 
         savedDatas() {
@@ -246,9 +220,7 @@
         }
 
         submitDatas() {
-
             if (this.$refs.craftControl.ruleSubmit() && this.$refs.productInStorage.ruleSubmit() && this.$refs.excRecord.ruleSubmit()) {
-
                 const craftControlTemp = this.$refs.craftControl.savedData(this.formHeader);
                 const productInStorageTemp = this.$refs.productInStorage.savedData(this.formHeader);
                 const excRecordTemp = this.$refs.excRecord.getSavedOrSubmitData(this.formHeader, 'YP');
@@ -276,7 +248,6 @@
                     text: textRecordTemp
                 })
             }
-
         }
     }
 
