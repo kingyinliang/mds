@@ -26,7 +26,7 @@
                                 <el-table-column label="生产订单" width="120" prop="orderNo" :show-overflow-tooltip="true" />
                                 <el-table-column min-width="180" label="生产物料" :show-overflow-tooltip="true">
                                     <template slot-scope="scope">
-                                        {{ scope.row.materialName + ' ' + scope.row.materialCode }}
+                                        {{ scope.row.materialCode + ' ' + scope.row.materialName }}
                                     </template>
                                 </el-table-column>
                                 <el-table-column label="计划数量" width="120" prop="planOutput" />
@@ -67,7 +67,7 @@
                                 <el-table-column label="生产订单" width="120" prop="orderNo" :show-overflow-tooltip="true" />
                                 <el-table-column min-width="180" label="生产物料" :show-overflow-tooltip="true">
                                     <template slot-scope="scope">
-                                        {{ scope.row.materialName + ' ' + scope.row.materialCode }}
+                                        {{ scope.row.materialCode + ' ' + scope.row.materialName }}
                                     </template>
                                 </el-table-column>
                                 <el-table-column label="计划数量" width="120" prop="planOutput" :show-overflow-tooltip="true" />
