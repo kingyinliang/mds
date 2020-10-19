@@ -170,7 +170,7 @@
                     </template>
                     <template slot-scope="scope">
                         <el-select v-model="scope.row.useMaterialCode" placeholder="请选择" size="small" clearable filterable :disabled="!(isRedact && scope.row.checkStatus !== 'C' && scope.row.checkStatus !== 'D' && scope.row.checkStatus !== 'P')">
-                            <el-option v-for="(iteam, index) in ACMaterial" :key="index" :label="iteam.dictValue" :value="iteam.dictCode" />
+                            <el-option v-for="(iteam, index) in ACMaterial" :key="index" :label="iteam.dictCode + ' ' + iteam.dictValue" :value="iteam.dictCode" />
                         </el-select>
                     </template>
                 </el-table-column>

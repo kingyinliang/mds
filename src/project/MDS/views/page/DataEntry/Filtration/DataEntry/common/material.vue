@@ -15,8 +15,8 @@
                     <el-table-column type="index" width="50" label="序号" :show-overflow-tooltip="true" fixed />
                     <el-table-column label="物料" :show-overflow-tooltip="true">
                         <template slot-scope="scope">
-                            {{ scope.row.materialCode }}
                             {{ scope.row.materialName }}
+                            {{ scope.row.materialCode }}
                         </template>
                     </el-table-column>
                     <el-table-column label="半成品罐号" width="120" prop="holderName" :show-overflow-tooltip="true" />
@@ -54,8 +54,8 @@
                     </el-select>
                 </el-form-item>
                 <el-form-item label="物料：">
-                    {{ receive.materialCode }}
                     {{ receive.materialName }}
+                    {{ receive.materialCode }}
                 </el-form-item>
                 <el-form-item label="批次：">
                     {{ receive.batch }}

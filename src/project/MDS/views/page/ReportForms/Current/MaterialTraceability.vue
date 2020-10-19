@@ -75,7 +75,7 @@ export default {
                     prop: 'materialCode',
                     resVal: {
                         resData: 'materielTraceSelectInfo',
-                        label: ['MATERIAL_CODE', 'MATERIAL_NAME'],
+                        label: ['MATERIAL_NAME', 'MATERIAL_CODE'],
                         value: 'MATERIAL_CODE'
                     },
                     defaultValue: '',
@@ -95,7 +95,7 @@ export default {
                     defaultValue: '',
                     resVal: {
                         resData: 'list',
-                        label: ['materialCode', 'materialName'],
+                        label: ['materialName', 'materialCode'],
                         value: 'materialCode'
                     }
                 },
@@ -146,7 +146,7 @@ export default {
                     label: '生产物料',
                     minwidth: '120',
                     formatter: (row) => {
-                        return row.materialCode + ' ' + row.materialName;
+                        return row.materialName + ' ' + row.materialCode;
                     }
                 },
                 {

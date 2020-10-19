@@ -29,7 +29,7 @@
         </el-form-item>
         <el-form-item label="生产品项：">
             <p class="bottom-line">
-                {{ formHeader.materialCode + ' ' + formHeader.materialName }}
+                {{ formHeader.materialName + ' ' + formHeader.materialCode }}
             </p>
         </el-form-item>
         <el-form-item label="计划产量：">

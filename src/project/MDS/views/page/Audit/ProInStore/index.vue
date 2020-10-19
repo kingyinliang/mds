@@ -90,7 +90,7 @@
                 <el-table-column prop="orderNo" label="生产订单号" :show-overflow-tooltip="true" width="120" />
                 <el-table-column label="生产物料" :show-overflow-tooltip="true" width="360">
                     <template slot-scope="scope">
-                        {{ scope.row.materialCode + ' ' + scope.row.materialName }}
+                        {{ scope.row.materialName + ' ' + scope.row.materialCode }}
                     </template>
                 </el-table-column>
                 <el-table-column prop="planOutput" label="计划生产数量" width="105" />

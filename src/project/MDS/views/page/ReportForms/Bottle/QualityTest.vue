@@ -71,7 +71,7 @@ export default {
                     filterable: true,
                     resVal: {
                         resData: 'bottleQualityMaterialCode',
-                        label: ['MATERIAL_CODE', 'MATERIAL_NAME'],
+                        label: ['MATERIAL_NAME', 'MATERIAL_CODE'],
                         value: 'MATERIAL_CODE'
                     },
                     defaultValue: '',
@@ -125,7 +125,7 @@ export default {
                     label: '生产物料',
                     width: '120',
                     formatter: (row) => {
-                        return row.materialCode + ' ' + row.materialName;
+                        return row.materialName + ' ' + row.materialCode;
                     }
                 },
                 {

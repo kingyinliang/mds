@@ -40,7 +40,7 @@
                                 <el-table-column type="index" label="序号" :index="indexMethod" width="55" fixed />
                                 <el-table-column prop="workNum" :show-overflow-tooltip="true" label="物料">
                                     <template slot-scope="scope">
-                                        {{ scope.row.materialCode + ' ' + scope.row.materialName }}
+                                        {{ scope.row.materialName + ' ' + scope.row.materialCode }}
                                     </template>
                                 </el-table-column>
                                 <el-table-column prop="basicCapacity" label="标准产能" :show-overflow-tooltip="true" width="87" />

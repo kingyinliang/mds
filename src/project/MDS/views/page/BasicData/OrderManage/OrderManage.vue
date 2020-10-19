@@ -34,8 +34,8 @@
                 <el-table-column prop="startDate" label="基本开始日期" header-align="center" width="105" />
                 <el-table-column label="物料" :show-overflow-tooltip="true">
                     <template slot-scope="scope">
-                        {{ scope.row.materialCode }}
                         {{ scope.row.materialName }}
+                        {{ scope.row.materialCode }}
                     </template>
                 </el-table-column>
                 <el-table-column prop="orderNum" label="订单数量" header-align="center" align="left" width="80" />
