@@ -37,8 +37,8 @@
                         template(style="float: right; margin-left: 10px;")
                             el-button(v-if="isAuth('steTimeQuery')" type="primary" size="small" @click="getList()") 查询
         div(v-show="searchCard")
-            ready-time(ref="readyTime" :is-redact="isRedact" style="margin-top: 10px;")
-            work-hour(ref="workHour" :is-redact="isRedact")
+            ready-time(ref="readyTime" :is-redact="isRedact" :status="this.formHeader.checkStatus" style="margin-top: 10px;")
+            work-hour(ref="workHour" :is-redact="isRedact" :status="this.formHeader.checkStatus")
             audit-log(:table-data="manHourAudit" :verify-man="'verifyMan'" :verify-date="'verifyDate'" :status="true")
         redact-box(:disabled="redactBoxDisable" :is-redact.sync='isRedact' redact-auth="steTimeEdit" save-auth="steTimeSave" submit-auth="steTimeSubmit" :urgent-submit="false" :submit-rules="submitRules" :saved-rules="savedRules" :saved-datas="savedDatas" :submit-datas="submitDatas")
 </template>

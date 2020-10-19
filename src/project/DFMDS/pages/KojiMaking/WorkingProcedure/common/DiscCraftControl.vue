@@ -950,7 +950,7 @@
                             result = Math.max(result, timeTemp - time)
                         }
                     })
-                    result = result / 36000
+                    result = result / 3600000
                 }
                 target.turnDuration = result
             }
@@ -1389,8 +1389,9 @@
                 cancelButtonText: '取消',
                 type: 'warning'
             }).then(() => {
-                row.delFlag = 1;
-                this.$infoToast('删除成功');
+                this.$set(row, 'delFlag', 1)
+                this.$successToast('删除成功');
+
             });
         }
     }

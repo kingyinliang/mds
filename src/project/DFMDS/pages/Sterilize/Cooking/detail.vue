@@ -129,7 +129,7 @@
                 <el-table-column label="操作时间" min-width="160" prop="changed" />
                 <el-table-column label="操作" min-width="70">
                     <template slot-scope="scope">
-                        <el-button v-if="isAuth('steCookMxDel')" class="delBtn" type="text" icon="el-icon-delete" size="mini" :disabled="!isRedact" @click="removeDataDissRow(scope.row)">
+                        <el-button v-if="isAuth('steCookMxDel')" class="delBtn" type="text" icon="el-icon-delete" size="mini" :disabled="!isRedact" @click="removeDataRow(scope.row)">
                             删除
                         </el-button>
                     </template>
@@ -430,24 +430,14 @@ export default class CookingDetail extends Vue {
     }
 
     // 删除
-    removeDataDissRow(row) {
-        this.$confirm('是否删除?', '提示', {
-            confirmButtonText: '确定',
-            cancelButtonText: '取消',
-            type: 'warning'
-        }).then(() => {
-            row.delFlag = 1;
-        });
-    }
-
-    // 删除
     removeDataRow(row) {
         this.$confirm('是否删除?', '提示', {
             confirmButtonText: '确定',
             cancelButtonText: '取消',
             type: 'warning'
         }).then(() => {
-            row.delFlag = 1;
+            this.$set(row, 'delFlag', 1)
+            this.$successToast('删除成功');
         });
     }
 
