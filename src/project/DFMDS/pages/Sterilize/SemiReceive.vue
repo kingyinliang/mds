@@ -64,7 +64,7 @@
                 type: 'tooltip',
                 icon: 'factory-pinleiguanli',
                 label: '生产物料',
-                value: ['materialCode', 'materialName']
+                value: ['materialName', 'materialCode']
             },
             {
                 type: 'tooltip',
