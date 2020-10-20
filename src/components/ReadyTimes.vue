@@ -2,7 +2,7 @@
     <mds-card :title="'准备工时(单位：min)'" :name="'readyTimes'" class="header_main" style="padding: 0;">
         <template slot="titleBtn">
             <div style="float: right;">
-                <el-select v-model="currentFormDataGroup.classes" size="small" style="width: 100px;" :disabled="!(isRedact && status !== 'C' && status !== 'D' && status !== 'P')">
+                <el-select v-model="currentFormDataGroup.classes" size="small" style="width: 100px;" :disabled="!(isRedact && status !== 'C' && status !== 'D' && status !== 'P'&& status !=='M')">
                     <el-option v-for="(item) in classesOptions" :key="item.dictCode" :value="item.dictCode" :label="item.dictValue" />
                 </el-select>
             </div>
@@ -17,37 +17,51 @@
                         <template slot="label">
                             <span class="notNull">*</span>参与人数：
                         </template>
-                        <el-input v-model.number="currentFormDataGroup.dayUser" placeholder="请输入" size="small" :disabled="!(isRedact && status !== 'C' && status !== 'D' && status !== 'P')" clearable oninput="value=value.replace(/\D*/g,'')" />
+                        <el-input v-model.number="currentFormDataGroup.dayUser" placeholder="请输入" size="small" :disabled="!(isRedact && status !== 'C' && status !== 'D' && status !== 'P'&& status !=='M')" clearable oninput="value=value.replace(/\D*/g,'')">
+                            <span slot="suffix">人</span>
+                        </el-input>
                     </el-form-item>
                     <el-form-item prop="dayShift">
                         <template slot="label">
                             <span class="notNull">*</span>交接班：
                         </template>
-                        <el-input v-model.number="currentFormDataGroup.dayShift" placeholder="请输入" size="small" :disabled="!(isRedact && status !== 'C' && status !== 'D' && status !== 'P')" clearable oninput="value=value.replace(/\D*/g,'')" />
+                        <el-input v-model.number="currentFormDataGroup.dayShift" placeholder="请输入" size="small" :disabled="!(isRedact && status !== 'C' && status !== 'D' && status !== 'P'&& status !=='M')" clearable oninput="value=value.replace(/\D*/g,'')">
+                            <span slot="suffix">min</span>
+                        </el-input>
                     </el-form-item>
                     <el-form-item prop="dayMeeting">
                         <template slot="label">
                             <span class="notNull">*</span>班前会：
                         </template>
-                        <el-input v-model.number="currentFormDataGroup.dayMeeting" placeholder="请输入" size="small" :disabled="!(isRedact && status !== 'C' && status !== 'D' && status !== 'P')" clearable oninput="value=value.replace(/\D*/g,'')" />
+                        <el-input v-model.number="currentFormDataGroup.dayMeeting" placeholder="请输入" size="small" :disabled="!(isRedact && status !== 'C' && status !== 'D' && status !== 'P'&& status !=='M')" clearable oninput="value=value.replace(/\D*/g,'')">
+                            <span slot="suffix">min</span>
+                        </el-input>
                     </el-form-item>
                     <el-form-item prop="dayPrepaired">
                         <template slot="label">
                             <span class="notNull">*</span>生产前准备：
                         </template>
-                        <el-input v-model.number="currentFormDataGroup.dayPrepaired" placeholder="请输入" size="small" :disabled="!(isRedact && status !== 'C' && status !== 'D' && status !== 'P')" clearable oninput="value=value.replace(/\D*/g,'')" />
+                        <el-input v-model.number="currentFormDataGroup.dayPrepaired" placeholder="请输入" size="small" :disabled="!(isRedact && status !== 'C' && status !== 'D' && status !== 'P'&& status !=='M')" clearable oninput="value=value.replace(/\D*/g,'')">
+                            <span slot="suffix">min</span>
+                        </el-input>
                     </el-form-item>
                     <el-form-item prop="dayClear">
                         <template slot="label">
                             <span class="notNull">*</span>生产后清场：
                         </template>
-                        <el-input v-model.number="currentFormDataGroup.dayClear" placeholder="请输入" size="small" :disabled="!(isRedact && status !== 'C' && status !== 'D' && status !== 'P')" clearable oninput="value=value.replace(/\D*/g,'')" />
+                        <el-input v-model.number="currentFormDataGroup.dayClear" placeholder="请输入" size="small" :disabled="!(isRedact && status !== 'C' && status !== 'D' && status !== 'P'&& status !=='M')" clearable oninput="value=value.replace(/\D*/g,'')">
+                            <span slot="suffix">min</span>
+                        </el-input>
                     </el-form-item>
                     <el-form-item label="品质保证：">
-                        <el-input v-model.number="currentFormDataGroup.dayQuality" placeholder="请输入" size="small" :disabled="!(isRedact && status !== 'C' && status !== 'D' && status !== 'P')" clearable oninput="value=value.replace(/\D*/g,'')" />
+                        <el-input v-model.number="currentFormDataGroup.dayQuality" placeholder="请输入" size="small" :disabled="!(isRedact && status !== 'C' && status !== 'D' && status !== 'P'&& status !=='M')" clearable oninput="value=value.replace(/\D*/g,'')">
+                            <span slot="suffix">min</span>
+                        </el-input>
                     </el-form-item>
                     <el-form-item label="切换时间：">
-                        <el-input v-model.number="currentFormDataGroup.dayChange" placeholder="请输入" size="small" :disabled="!(isRedact && status !== 'C' && status !== 'D' && status !== 'P')" clearable oninput="value=value.replace(/\D*/g,'')" />
+                        <el-input v-model.number="currentFormDataGroup.dayChange" placeholder="请输入" size="small" :disabled="!(isRedact && status !== 'C' && status !== 'D' && status !== 'P'&& status !=='M')" clearable oninput="value=value.replace(/\D*/g,'')">
+                            <span slot="suffix">min</span>
+                        </el-input>
                     </el-form-item>
                 </el-form>
             </el-row>
@@ -62,37 +76,51 @@
                         <template slot="label">
                             <span v-if="currentFormDataGroup.classes === 'A'" class="notNull">*</span> 参与人数：
                         </template>
-                        <el-input v-model.number="currentFormDataGroup.midUser" placeholder="请输入" size="small" :disabled="!(isRedact && status !== 'C' && status !== 'D' && status !== 'P')" clearable oninput="value=value.replace(/\D*/g,'')" />
+                        <el-input v-model.number="currentFormDataGroup.midUser" placeholder="请输入" size="small" :disabled="!(isRedact && status !== 'C' && status !== 'D' && status !== 'P'&& status !=='M')" clearable oninput="value=value.replace(/\D*/g,'')">
+                            <span slot="suffix">人</span>
+                        </el-input>
                     </el-form-item>
                     <el-form-item label="">
                         <template slot="label">
                             <span v-if="currentFormDataGroup.classes === 'A'" class="notNull">*</span> 交接班：
                         </template>
-                        <el-input v-model.number="currentFormDataGroup.midShift" placeholder="请输入" size="small" :disabled="!(isRedact && status !== 'C' && status !== 'D' && status !== 'P')" clearable oninput="value=value.replace(/\D*/g,'')" />
+                        <el-input v-model.number="currentFormDataGroup.midShift" placeholder="请输入" size="small" :disabled="!(isRedact && status !== 'C' && status !== 'D' && status !== 'P'&& status !=='M')" clearable oninput="value=value.replace(/\D*/g,'')">
+                            <span slot="suffix">min</span>
+                        </el-input>
                     </el-form-item>
                     <el-form-item label="">
                         <template slot="label">
                             <span v-if="currentFormDataGroup.classes === 'A'" class="notNull">*</span> 班前会：
                         </template>
-                        <el-input v-model.number="currentFormDataGroup.midMeeting" placeholder="请输入" size="small" :disabled="!(isRedact && status !== 'C' && status !== 'D' && status !== 'P')" clearable oninput="value=value.replace(/\D*/g,'')" />
+                        <el-input v-model.number="currentFormDataGroup.midMeeting" placeholder="请输入" size="small" :disabled="!(isRedact && status !== 'C' && status !== 'D' && status !== 'P'&& status !=='M')" clearable oninput="value=value.replace(/\D*/g,'')">
+                            <span slot="suffix">min</span>
+                        </el-input>
                     </el-form-item>
                     <el-form-item label="">
                         <template slot="label">
                             <span v-if="currentFormDataGroup.classes === 'A'" class="notNull">*</span> 生产前准备：
                         </template>
-                        <el-input v-model.number="currentFormDataGroup.midPrepaired" placeholder="请输入" size="small" :disabled="!(isRedact && status !== 'C' && status !== 'D' && status !== 'P')" clearable oninput="value=value.replace(/\D*/g,'')" />
+                        <el-input v-model.number="currentFormDataGroup.midPrepaired" placeholder="请输入" size="small" :disabled="!(isRedact && status !== 'C' && status !== 'D' && status !== 'P'&& status !=='M')" clearable oninput="value=value.replace(/\D*/g,'')">
+                            <span slot="suffix">min</span>
+                        </el-input>
                     </el-form-item>
                     <el-form-item label="">
                         <template slot="label">
                             <span v-if="currentFormDataGroup.classes === 'A'" class="notNull">*</span> 生产后清场：
                         </template>
-                        <el-input v-model.number="currentFormDataGroup.midClear" placeholder="请输入" size="small" :disabled="!(isRedact && status !== 'C' && status !== 'D' && status !== 'P')" clearable oninput="value=value.replace(/\D*/g,'')" />
+                        <el-input v-model.number="currentFormDataGroup.midClear" placeholder="请输入" size="small" :disabled="!(isRedact && status !== 'C' && status !== 'D' && status !== 'P'&& status !=='M')" clearable oninput="value=value.replace(/\D*/g,'')">
+                            <span slot="suffix">min</span>
+                        </el-input>
                     </el-form-item>
                     <el-form-item label="品质保证：">
-                        <el-input v-model.number="currentFormDataGroup.midQualiry" placeholder="请输入" size="small" :disabled="!(isRedact && status !== 'C' && status !== 'D' && status !== 'P')" clearable oninput="value=value.replace(/\D*/g,'')" />
+                        <el-input v-model.number="currentFormDataGroup.midQualiry" placeholder="请输入" size="small" :disabled="!(isRedact && status !== 'C' && status !== 'D' && status !== 'P'&& status !=='M')" clearable oninput="value=value.replace(/\D*/g,'')">
+                            <span slot="suffix">min</span>
+                        </el-input>
                     </el-form-item>
                     <el-form-item label="切换时间：">
-                        <el-input v-model.number="currentFormDataGroup.midChange" placeholder="请输入" size="small" :disabled="!(isRedact && status !== 'C' && status !== 'D' && status !== 'P')" clearable oninput="value=value.replace(/\D*/g,'')" />
+                        <el-input v-model.number="currentFormDataGroup.midChange" placeholder="请输入" size="small" :disabled="!(isRedact && status !== 'C' && status !== 'D' && status !== 'P'&& status !=='M')" clearable oninput="value=value.replace(/\D*/g,'')">
+                            <span slot="suffix">min</span>
+                        </el-input>
                     </el-form-item>
                 </el-form>
             </el-row>
@@ -109,7 +137,9 @@
                         <template slot="label">
                             <span class="notNull">*</span>参与人数：
                         </template>
-                        <el-input v-model.number="currentFormDataGroup.nightUser" placeholder="请输入" size="small" :disabled="!(isRedact && status !== 'C' && status !== 'D' && status !== 'P')" clearable oninput="value=value.replace(/\D*/g,'')" />
+                        <el-input v-model.number="currentFormDataGroup.nightUser" placeholder="请输入" size="small" :disabled="!(isRedact && status !== 'C' && status !== 'D' && status !== 'P'&& status !=='M')" clearable oninput="value=value.replace(/\D*/g,'')">
+                            <span slot="suffix">人</span>
+                        </el-input>
                     </el-form-item>
                     <el-form-item
                         prop="nightUser"
@@ -117,7 +147,9 @@
                         <template slot="label">
                             <span class="notNull">*</span>交接班：
                         </template>
-                        <el-input v-model.number="currentFormDataGroup.nightShift" placeholder="请输入" size="small" :disabled="!(isRedact && status !== 'C' && status !== 'D' && status !== 'P')" clearable oninput="value=value.replace(/\D*/g,'')" />
+                        <el-input v-model.number="currentFormDataGroup.nightShift" placeholder="请输入" size="small" :disabled="!(isRedact && status !== 'C' && status !== 'D' && status !== 'P'&& status !=='M')" clearable oninput="value=value.replace(/\D*/g,'')">
+                            <span slot="suffix">min</span>
+                        </el-input>
                     </el-form-item>
                     <el-form-item
                         prop="nightMeeting"
@@ -125,7 +157,9 @@
                         <template slot="label">
                             <span class="notNull">*</span>班前会：
                         </template>
-                        <el-input v-model.number="currentFormDataGroup.nightMeeting" placeholder="请输入" size="small" :disabled="!(isRedact && status !== 'C' && status !== 'D' && status !== 'P')" clearable oninput="value=value.replace(/\D*/g,'')" />
+                        <el-input v-model.number="currentFormDataGroup.nightMeeting" placeholder="请输入" size="small" :disabled="!(isRedact && status !== 'C' && status !== 'D' && status !== 'P'&& status !=='M')" clearable oninput="value=value.replace(/\D*/g,'')">
+                            <span slot="suffix">min</span>
+                        </el-input>
                     </el-form-item>
                     <el-form-item
                         prop="nightPrepaired"
@@ -133,7 +167,9 @@
                         <template slot="label">
                             <span class="notNull">*</span>生产前准备：
                         </template>
-                        <el-input v-model.number="currentFormDataGroup.nightPrepaired" placeholder="请输入" size="small" :disabled="!(isRedact && status !== 'C' && status !== 'D' && status !== 'P')" clearable oninput="value=value.replace(/\D*/g,'')" />
+                        <el-input v-model.number="currentFormDataGroup.nightPrepaired" placeholder="请输入" size="small" :disabled="!(isRedact && status !== 'C' && status !== 'D' && status !== 'P'&& status !=='M')" clearable oninput="value=value.replace(/\D*/g,'')">
+                            <span slot="suffix">min</span>
+                        </el-input>
                     </el-form-item>
                     <el-form-item
                         prop="nightClear"
@@ -141,13 +177,19 @@
                         <template slot="label">
                             <span class="notNull">*</span>生产后清场：
                         </template>
-                        <el-input v-model.number="currentFormDataGroup.nightClear" placeholder="请输入" size="small" :disabled="!(isRedact && status !== 'C' && status !== 'D' && status !== 'P')" clearable oninput="value=value.replace(/\D*/g,'')" />
+                        <el-input v-model.number="currentFormDataGroup.nightClear" placeholder="请输入" size="small" :disabled="!(isRedact && status !== 'C' && status !== 'D' && status !== 'P'&& status !=='M')" clearable oninput="value=value.replace(/\D*/g,'')">
+                            <span slot="suffix">min</span>
+                        </el-input>
                     </el-form-item>
                     <el-form-item label="品质保证：">
-                        <el-input v-model.number="currentFormDataGroup.nightQuality" placeholder="请输入" size="small" :disabled="!(isRedact && status !== 'C' && status !== 'D' && status !== 'P')" clearable oninput="value=value.replace(/\D*/g,'')" />
+                        <el-input v-model.number="currentFormDataGroup.nightQuality" placeholder="请输入" size="small" :disabled="!(isRedact && status !== 'C' && status !== 'D' && status !== 'P'&& status !=='M')" clearable oninput="value=value.replace(/\D*/g,'')">
+                            <span slot="suffix">min</span>
+                        </el-input>
                     </el-form-item>
                     <el-form-item label="切换时间：">
-                        <el-input v-model.number="currentFormDataGroup.nightChange" placeholder="请输入" size="small" :disabled="!(isRedact && status !== 'C' && status !== 'D' && status !== 'P')" clearable oninput="value=value.replace(/\D*/g,'')" />
+                        <el-input v-model.number="currentFormDataGroup.nightChange" placeholder="请输入" size="small" :disabled="!(isRedact && status !== 'C' && status !== 'D' && status !== 'P'&& status !=='M')" clearable oninput="value=value.replace(/\D*/g,'')">
+                            <span slot="suffix">min</span>
+                        </el-input>
                     </el-form-item>
                 </el-form>
             </el-row>
@@ -297,19 +339,19 @@ export default class ReadyTimes extends Vue {
     ruleSubmit() {
         if (this.currentFormDataGroup.classes === 'M' || this.currentFormDataGroup.classes === 'D') { // 早
             if (!this.currentFormDataGroup.dayUser || !this.currentFormDataGroup.dayShift || !this.currentFormDataGroup.dayMeeting || !this.currentFormDataGroup.dayPrepaired || !this.currentFormDataGroup.dayClear) {
-                this.$warningToast('请填写准备时间必填项')
+                this.$warningToast('请填写准备时间必填项1')
                 return false
             }
         }
         if (this.currentFormDataGroup.classes === 'A') { // 中
             if (!this.currentFormDataGroup.midUser || !this.currentFormDataGroup.midShift || !this.currentFormDataGroup.midMeeting || !this.currentFormDataGroup.midPrepaired || !this.currentFormDataGroup.midClear) {
-                this.$warningToast('请填写准备时间必填项')
+                this.$warningToast('请填写准备时间必填项2')
                 return false
             }
         }
         if (this.currentFormDataGroup.classes === 'N' || this.currentFormDataGroup.classes === 'D') { // 晚
             if (!this.currentFormDataGroup.nightUser || !this.currentFormDataGroup.nightShift || !this.currentFormDataGroup.nightMeeting || !this.currentFormDataGroup.nightPrepaired || !this.currentFormDataGroup.nightClear) {
-                this.$warningToast('请填写准备时间必填项')
+                this.$warningToast('请填写准备时间必填项3')
                 return false
             }
         }

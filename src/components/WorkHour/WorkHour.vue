@@ -9,13 +9,13 @@
                 </div>
             </template>
             <el-table class="newTable" :data="currentFormDataGroup" :row-class-name="RowDelFlag" header-row-class-name="tableHead" border style="width: 100%;">
-                <el-table-column label="序号" type="index" :index="index => getIndexMethod(index, currentFormDataGroup)" width="60" fixed />
-                <el-table-column prop="status" min-width="100" :show-overflow-tooltip="true">
+                <el-table-column label="序号" type="index" :index="index => getIndexMethod(index, currentFormDataGroup)" width="60" fixed align="center" />
+                <el-table-column prop="status" min-width="120" :show-overflow-tooltip="true">
                     <template slot="header">
                         <span class="notNull">*</span>班次
                     </template>
                     <template slot-scope="scope">
-                        <el-select v-model="scope.row.classes" size="small" clearable :disabled="!(isRedact && status !== 'C' && status !== 'D' && status !== 'P')">
+                        <el-select v-model="scope.row.classes" size="small" clearable :disabled="!(isRedact && status !== 'C' && status !== 'D' && status !== 'P' && status !=='M')">
                             <el-option
                                 v-for="item in classesOptions"
                                 :key="item.dictCode"
@@ -30,7 +30,7 @@
                         <span class="notNull">*</span>班组/工序
                     </template>
                     <template slot-scope="scope">
-                        <el-select v-model="scope.row.deptId" filterable placeholder="请选择" size="small" :disabled="!(isRedact && status !== 'C' && status !== 'D' && status !== 'P')" clearable @change="selectDept(scope.row)">
+                        <el-select v-model="scope.row.deptId" filterable placeholder="请选择" size="small" :disabled="!(isRedact && status !== 'C' && status !== 'D' && status !== 'P' && status !=='M')" clearable @change="selectDept(scope.row)">
                             <el-option v-for="(iteam, index) in teamList" :key="index" :label="iteam.deptName" :value="iteam.id" />
                         </el-select>
                     </template>
@@ -40,7 +40,7 @@
                         <span class="notNull">*</span>人员属性
                     </template>
                     <template slot-scope="scope">
-                        <el-select v-model="scope.row.userType" filterable placeholder="请选择" size="small" :disabled="!(isRedact && status !== 'C' && status !== 'D' && status !== 'P')" clearable>
+                        <el-select v-model="scope.row.userType" filterable placeholder="请选择" size="small" :disabled="!(isRedact && status !== 'C' && status !== 'D' && status !== 'P' && status !=='M')" clearable>
                             <el-option v-for="(iteam, index) in userTypeList" :key="index" :label="iteam.dictValue" :value="iteam.dictCode" />
                         </el-select>
                     </template>
@@ -51,14 +51,14 @@
                     </template>
                     <template slot-scope="scope">
                         <div class="required" style="min-height: 32px; line-height: 32px;">
-                            <span v-if="!isRedact" style="cursor: pointer;">
+                            <span v-if="!isRedact" style="cursor: not-allowed;">
                                 <em v-for="(item, index) in scope.row.userList" :key="index">{{ item }}，</em>
                             </span>
-                            <span v-if="isRedact && scope.row.userType !== 'EXTERNAL' && scope.row.userType !== 'TEMP'" style="cursor: pointer;" @click="selectUser(scope.row)">
+                            <span v-if="isRedact && scope.row.userType !== 'EXTERNAL' && scope.row.userType !== 'TEMP'" style="cursor: pointer;" :disabled="!(isRedact && status !== 'C' && status !== 'D' && status !== 'P' && status !=='M')" :style="{cursor:!(isRedact && status !== 'C' && status !== 'D' && status !== 'P' && status !=='M')?'not-allowed':'pointer'}" @click="selectUser(scope.row)">
                                 <em v-for="(item, index) in scope.row.userList" :key="index">{{ item }}，</em>
                                 <em>点击选择人员</em>
                             </span>
-                            <span v-if="isRedact && (scope.row.userType === 'EXTERNAL' || scope.row.userType === 'TEMP')" style="cursor: pointer;" @click="dayLaborer(scope.row)">
+                            <span v-if="isRedact && (scope.row.userType === 'EXTERNAL' || scope.row.userType === 'TEMP')" style="cursor: pointer;" :disabled="!(isRedact && status !== 'C' && status !== 'D' && status !== 'P' && status !=='M')" :style="{cursor:!(isRedact && status !== 'C' && status !== 'D' && status !== 'P' && status !=='M')?'not-allowed':'pointer'}" @click="dayLaborer(scope.row)">
                                 <em v-for="(item, index) in scope.row.userList" :key="index">{{ item }}，</em>
                                 <em>点击输入人员</em>
                             </span>
@@ -70,15 +70,17 @@
                         <span class="notNull">*</span>开始时间
                     </template>
                     <template slot-scope="scope">
-                        <el-date-picker v-model="scope.row.startDate" type="datetime" value-format="yyyy-MM-dd HH:mm" format="yyyy-MM-dd HH:mm" placeholder="选择" size="small" :disabled="!(isRedact && status !== 'C' && status !== 'D' && status !== 'P')" style="width: 180px;" />
+                        <el-date-picker v-model="scope.row.startDate" type="datetime" value-format="yyyy-MM-dd HH:mm" format="yyyy-MM-dd HH:mm" placeholder="选择" size="small" :disabled="!(isRedact && status !== 'C' && status !== 'D' && status !== 'P' && status !=='M')" style="width: 180px;" />
                     </template>
                 </el-table-column>
                 <el-table-column prop="verify_date" width="140" :show-overflow-tooltip="true">
                     <template slot="header">
-                        <span class="notNull">*</span>用餐时间(MIN)
+                        <span class="notNull">*</span>用餐时间
                     </template>
                     <template slot-scope="scope">
-                        <el-input v-model.number="scope.row.dinner" size="small" type="number" min="0" :disabled="!(isRedact && status !== 'C' && status !== 'D' && status !== 'P')" />
+                        <el-input v-model.number="scope.row.dinner" size="small" type="number" min="0" :disabled="!(isRedact && status !== 'C' && status !== 'D' && status !== 'P' && status !=='M')">
+                            <span slot="suffix">min</span>
+                        </el-input>
                     </template>
                 </el-table-column>
                 <el-table-column prop="verify_date" min-width="220" :show-overflow-tooltip="true">
@@ -86,7 +88,7 @@
                         <span class="notNull">*</span>结束时间
                     </template>
                     <template slot-scope="scope">
-                        <el-date-picker v-model="scope.row.endDate" type="datetime" value-format="yyyy-MM-dd HH:mm" format="yyyy-MM-dd HH:mm" placeholder="选择" size="small" :disabled="!(isRedact && status !== 'C' && status !== 'D' && status !== 'P')" style="width: 180px;" />
+                        <el-date-picker v-model="scope.row.endDate" type="datetime" value-format="yyyy-MM-dd HH:mm" format="yyyy-MM-dd HH:mm" placeholder="选择" size="small" :disabled="!(isRedact && status !== 'C' && status !== 'D' && status !== 'P' && status !=='M')" style="width: 180px;" />
                     </template>
                 </el-table-column>
                 <el-table-column prop="verify_date" min-width="90" label="时长(H)" :show-overflow-tooltip="true">
@@ -96,7 +98,7 @@
                 </el-table-column>
                 <el-table-column prop="verify_date" min-width="140" label="备注" :show-overflow-tooltip="true">
                     <template slot-scope="scope">
-                        <el-input v-model="scope.row.remark" size="small" :disabled="!(isRedact && status !== 'C' && status !== 'D' && status !== 'P')" />
+                        <el-input v-model="scope.row.remark" size="small" :disabled="!(isRedact && status !== 'C' && status !== 'D' && status !== 'P' && status !=='M')" />
                     </template>
                 </el-table-column>
                 <el-table-column prop="verify_date" min-width="150" label="操作人" :show-overflow-tooltip="true">
@@ -111,7 +113,7 @@
                 </el-table-column>
                 <el-table-column fixed="right" width="90" prop="verify_date" label="操作" :show-overflow-tooltip="true">
                     <template slot-scope="scope">
-                        <el-button class="delBtn" type="text" icon="el-icon-delete" size="small" :disabled="!(isRedact && status !== 'C' && status !== 'D' && status !== 'P')" @click="removeDataRow(scope.row)">
+                        <el-button class="delBtn" type="text" icon="el-icon-delete" size="small" :disabled="!(isRedact && status !== 'C' && status !== 'D' && status !== 'P' && status !=='M')" @click="removeDataRow(scope.row)">
                             删除
                         </el-button>
                     </template>
@@ -122,7 +124,7 @@
                     实际作业人数：
                 </div>
                 <div class="input_border_bg">
-                    {{ actualNumber }}
+                    {{ actualNumber }} 人
                 </div>
             </el-row>
         </mds-card>
@@ -304,7 +306,8 @@ export default class ProductPeople extends Vue {
             cancelButtonText: '取消',
             type: 'warning'
         }).then(() => {
-            row.delFlag = 1;
+            this.$set(row, 'delFlag', 1)
+            this.$successToast('删除成功');
         })
     }
 
@@ -332,7 +335,8 @@ export default class ProductPeople extends Vue {
 
     // 选择人员 正式借调
     selectUser(row: CurrentDataTable) {
-        this.row = row;
+        if (this.isRedact && this.status !== 'C' && this.status !== 'D' && this.status !== 'P' && this.status !== 'M') {
+            this.row = row;
         if (row.userType === 'FORMAL') { // 正式
             if (row.deptId) {
                 this.officialWorkerStatus = true;
@@ -353,6 +357,9 @@ export default class ProductPeople extends Vue {
         } else {
             this.$warningToast('请选择人员属性');
         }
+
+        }
+
     }
 
     // 员工确认
@@ -365,6 +372,7 @@ export default class ProductPeople extends Vue {
 
     // 临时工
     dayLaborer(row: CurrentDataTable) {
+        if (this.isRedact && this.status !== 'C' && this.status !== 'D' && this.status !== 'P' && this.status !== 'M') {
         this.row = row;
         const userType: (UserTypeListObject | undefined) = this.userTypeList.find((item: UserTypeListObject) => item.dictCode === row.userType);
         this.temporaryWorkerStatus = true;
@@ -372,6 +380,7 @@ export default class ProductPeople extends Vue {
             this.$nextTick(() => {
                 this.$refs.temporaryWorker.init(row, userType['dictValue']);
             });
+        }
         }
     }
 
