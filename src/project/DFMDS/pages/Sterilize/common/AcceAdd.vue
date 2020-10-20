@@ -234,7 +234,7 @@
 
 <script lang="ts">
     import { Vue, Component, Prop } from 'vue-property-decorator';
-    import { COMMON_API, STE_API } from 'common/api/api';
+    import { COMMON_API, STE_API, AUDIT_API } from 'common/api/api';
     import { dateFormat, dataEntryData } from 'utils/utils';
 
     @Component
@@ -339,7 +339,7 @@
             }
         }
 
-        init(formHeader) {
+        async init(formHeader) {
             this.formHeader = formHeader;
             this.getHolderList();
             this.getMaterial();
@@ -358,6 +358,15 @@
                this.merge(this.steAccessoriesConsume, 'steAccessoriesConsume');
                this.merge(this.newSteAccessoriesConsume, 'newSteAccessoriesConsume');
             })
+            this.acceAddAudit = await this.getAudit(formHeader, 'MATERIAL');
+        }
+
+        async getAudit(formHeader, verifyType) {
+            const a = await AUDIT_API.AUDIT_LOG_LIST_API({
+                orderNo: formHeader.potOrderNo,
+                verifyType: verifyType
+            })
+            return a.data.data
         }
 
         // 煮料锅下拉触发
