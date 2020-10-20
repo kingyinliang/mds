@@ -157,7 +157,7 @@
                 //     this.$warningToast('同一订单不允许跨天生产');
                 //     return false
                 // }
-                if (dataArr[i].productDate) {
+                if (dataArr[i].productDate && dataArr[i].delFlag !== 1) {
                     productDateMap.push(dataArr[i].productDate);
                 }
             }

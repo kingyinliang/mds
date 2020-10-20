@@ -55,7 +55,7 @@
 
 <script lang="ts">
     import { Vue, Component, Prop } from 'vue-property-decorator';
-    import { STE_API } from 'common/api/api';
+    import { STE_API, AUDIT_API } from 'common/api/api';
     import SemiReceiveDialog from './SemiReceiveDialog.vue'
     import { dataEntryData } from 'utils/utils';
 
@@ -83,7 +83,7 @@
         //     return tableIndex + 1 - num
         // }
 
-        init(formHeader) {
+        async init(formHeader) {
             this.formHeader = formHeader
             STE_API.STE_SEMI_LIST_API({
                 orderNo: formHeader.orderNo,
@@ -92,6 +92,15 @@
                 this.semiTable = JSON.parse(JSON.stringify(data.data));
                 this.orgSemiTable = JSON.parse(JSON.stringify(data.data));
             })
+            this.semiAudit = await this.getAudit(formHeader, 'MATERIAL');
+        }
+
+        async getAudit(formHeader, verifyType) {
+            const a = await AUDIT_API.AUDIT_LOG_LIST_API({
+                orderNo: formHeader.potOrderNo,
+                verifyType: verifyType
+            })
+            return a.data.data
         }
 
         ruleSubmit(): boolean {
