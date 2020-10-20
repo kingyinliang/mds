@@ -3,7 +3,7 @@
  * @Anthor: Telliex
  * @Date: 2020-08-03 18:13:58
  * @LastEditors: Telliex
- * @LastEditTime: 2020-10-14 21:53:13
+ * @LastEditTime: 2020-10-19 18:17:08
  * @Describe 弹窗式新增
 -->
 <template lang="pug">
@@ -85,7 +85,7 @@ div
         }
 
         conformDataFromAdd(item) {
-            this.currentFormDataGroup.push(JSON.parse(JSON.stringify(item)))
+            this.currentFormDataGroup.push(item)
         }
 
 
@@ -161,7 +161,8 @@ div
                 cancelButtonText: '取消',
                 type: 'warning'
             }).then(() => {
-                row.delFlag = 1;
+                this.$set(row, 'delFlag', 1)
+                this.$successToast('删除成功');
             });
         }
 

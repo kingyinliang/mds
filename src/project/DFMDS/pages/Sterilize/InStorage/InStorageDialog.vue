@@ -3,7 +3,7 @@
  * @Anthor: Telliex
  * @Date: 2020-08-03 18:13:58
  * @LastEditors: Telliex
- * @LastEditTime: 2020-10-14 09:48:29
+ * @LastEditTime: 2020-10-19 15:15:22
 -->
 <template lang="pug">
     el-dialog(:title="title" :width="width" :close-on-click-modal="false" :visible.sync="isShowCurrentDialog")
@@ -116,25 +116,24 @@
             console.log(pkgWorkShopList)
             this.isShowCurrentDialog = true;
 
-                this.dialogForm = {
-                    orderNo: '',
-                    orderId: '',
-                    normalFlag: 'Y',
-                    packageLine: '',
-                    packageOrderNo: '',
-                    material: '',
-                    materialCode: '',
-                    materialName: '',
-                    materialUnit: '',
-                    inStoragePot: 0,
-                    inStorageAmount: 0,
-                    inStorageBatch: '',
-                    packageLineName: '',
-                    remark: '',
-                    changer: getUserNameNumber(),
-                    changed: dateFormat(new Date(), 'yyyy-MM-dd hh:mm:ss')
-                }
-
+            this.dialogForm = {
+                orderNo: '',
+                orderId: '',
+                normalFlag: 'Y',
+                packageLine: '',
+                packageOrderNo: '',
+                material: '',
+                materialCode: '',
+                materialName: '',
+                materialUnit: '',
+                inStoragePot: 0,
+                inStorageAmount: 0,
+                inStorageBatch: '',
+                packageLineName: '',
+                remark: '',
+                changer: getUserNameNumber(),
+                changed: dateFormat(new Date(), 'yyyy-MM-dd hh:mm:ss')
+            }
 
             this.pkgWorkShopList = pkgWorkShopList
             this.currentWorkShop = obj.workShop
@@ -165,8 +164,7 @@
         btnComfirmBucketStatus() {
             this.$refs.dialogForm.validate((valid) => {
                 if (valid) {
-                    this.$emit('conformData', this.dialogForm)
-                    this.$refs.dialogForm.resetFields();
+                    this.$emit('conformData', JSON.parse(JSON.stringify(this.dialogForm)))
                     this.isShowCurrentDialog = false
                 } else {
                     console.log('error submit!!');
