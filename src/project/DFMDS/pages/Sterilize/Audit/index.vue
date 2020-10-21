@@ -251,6 +251,7 @@ export default class AuditIndex extends Vue {
         params.current = this.$refs.queryTable.tabs[this.$refs.queryTable.activeName].pages.currPage;// eslint-disable-line
         params.size = this.$refs.queryTable.tabs[this.$refs.queryTable.activeName].pages.pageSize;// eslint-disable-line
         params.total = this.$refs.queryTable.tabs[this.$refs.queryTable.activeName].pages.totalCount;// eslint-disable-line
+        params.workShopType = 'sterilize';
         return COMMON_API.ORDER_QUERY_API(params);
     }
 
