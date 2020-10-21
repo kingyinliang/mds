@@ -3,7 +3,7 @@
  * @Anthor: Telliex
  * @Date: 2020-08-03 18:13:58
  * @LastEditors: Telliex
- * @LastEditTime: 2020-10-14 09:48:29
+ * @LastEditTime: 2020-10-20 11:02:12
 -->
 <template lang="pug">
     el-dialog(:title="title" :width="width" :close-on-click-modal="false" :visible.sync="isShowCurrentDialog")
@@ -112,29 +112,26 @@
 
 
         init(obj, pkgWorkShopList, val) {
-            console.log('pkgWorkShopList')
-            console.log(pkgWorkShopList)
             this.isShowCurrentDialog = true;
 
-                this.dialogForm = {
-                    orderNo: '',
-                    orderId: '',
-                    normalFlag: 'Y',
-                    packageLine: '',
-                    packageOrderNo: '',
-                    material: '',
-                    materialCode: '',
-                    materialName: '',
-                    materialUnit: '',
-                    inStoragePot: 0,
-                    inStorageAmount: 0,
-                    inStorageBatch: '',
-                    packageLineName: '',
-                    remark: '',
-                    changer: getUserNameNumber(),
-                    changed: dateFormat(new Date(), 'yyyy-MM-dd hh:mm:ss')
-                }
-
+            this.dialogForm = {
+                orderNo: '',
+                orderId: '',
+                normalFlag: 'Y',
+                packageLine: '',
+                packageOrderNo: '',
+                material: '',
+                materialCode: '',
+                materialName: '',
+                materialUnit: '',
+                inStoragePot: 0,
+                inStorageAmount: 0,
+                inStorageBatch: '',
+                packageLineName: '',
+                remark: '',
+                changer: getUserNameNumber(),
+                changed: dateFormat(new Date(), 'yyyy-MM-dd hh:mm:ss')
+            }
 
             this.pkgWorkShopList = pkgWorkShopList
             this.currentWorkShop = obj.workShop
@@ -165,11 +162,10 @@
         btnComfirmBucketStatus() {
             this.$refs.dialogForm.validate((valid) => {
                 if (valid) {
-                    this.$emit('conformData', this.dialogForm)
-                    this.$refs.dialogForm.resetFields();
+                    this.$emit('conformData', JSON.parse(JSON.stringify(this.dialogForm)))
                     this.isShowCurrentDialog = false
+                    // this.$refs.dialogForm.resetFields();
                 } else {
-                    console.log('error submit!!');
                     return false;
                 }
             });
@@ -177,7 +173,6 @@
 
         selectPackageLine(val) {
             if (val !== '') {
-
                 this.dialogForm.packageLineName = this.pkgWorkShopList.filter(item => item.targetCode === val)[0].targetName
                 COMMON_API.ORDER_LIST_API({
                     factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
@@ -185,8 +180,6 @@
                     productDate: this.currentProductDate
                     // workShop: this.currentWorkShop
                 }).then(({ data }) => {
-                    console.log('获取所有订单讯息')
-                    console.log(data)
                     this.packageOrderNoList = []
                     if (data.data !== null) {
                         data.data.forEach(item => {

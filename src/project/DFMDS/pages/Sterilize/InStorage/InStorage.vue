@@ -3,7 +3,7 @@
  * @Anthor: Telliex
  * @Date: 2020-08-03 18:13:58
  * @LastEditors: Telliex
- * @LastEditTime: 2020-10-14 21:53:13
+ * @LastEditTime: 2020-10-20 10:40:20
  * @Describe 弹窗式新增
 -->
 <template lang="pug">
@@ -39,7 +39,7 @@ div
                         el-button(:class="val.btn" :icon="val.icon" v-for="(val,index) in item.content" :key="index" type="text" size="mini" :disabled="!isRedact" @click="removeDataRow(scope.row)") {{val.buttonName}}
     audit-log(:table-data="semiAudit" :verify-man="'verifyMan'" :verify-date="'verifyDate'" :status="true")
     in-storage-dialog(ref="inStorageDialogForAdd" width="40%" title="新增入库" @conformData="conformDataFromAdd")
-    in-storage-dialog(ref="inStorageDialogForEdit" width="40%" title="编辑入库")
+    in-storage-dialog(ref="inStorageDialogForEdit" width="40%" title="编辑入库" @conformData="conformDataFromAdd")
 </template>
 
 <script lang="ts">
@@ -85,7 +85,16 @@ div
         }
 
         conformDataFromAdd(item) {
-            this.currentFormDataGroup.push(JSON.parse(JSON.stringify(item)))
+            if (item.id) {
+                this.currentFormDataGroup.forEach((element, index) => {
+                    if (element.id === item.id) {
+                        this.$set(this.currentFormDataGroup, index, item)
+                    }
+                })
+            } else {
+                this.currentFormDataGroup.push(item)
+            }
+
         }
 
 
@@ -161,7 +170,8 @@ div
                 cancelButtonText: '取消',
                 type: 'warning'
             }).then(() => {
-                row.delFlag = 1;
+                this.$set(row, 'delFlag', 1)
+                this.$successToast('删除成功');
             });
         }
 

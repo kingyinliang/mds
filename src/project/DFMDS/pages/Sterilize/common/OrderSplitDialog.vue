@@ -157,7 +157,7 @@
                 //     this.$warningToast('同一订单不允许跨天生产');
                 //     return false
                 // }
-                if (dataArr[i].productDate) {
+                if (dataArr[i].productDate && dataArr[i].delFlag !== 1) {
                     productDateMap.push(dataArr[i].productDate);
                 }
             }
@@ -192,7 +192,8 @@
 
         // 删除行
         removeDataRow(row) {
-            row.delFlag = 1;
+            this.$set(row, 'delFlag', 1)
+            this.$successToast('删除成功');
         }
 
         rowDelFlag({ row }) {

@@ -170,7 +170,7 @@
                     </template>
                     <template slot-scope="scope">
                         <el-select v-model="scope.row.useMaterialCode" placeholder="请选择" size="small" clearable filterable :disabled="!(isRedact && scope.row.checkStatus !== 'C' && scope.row.checkStatus !== 'D' && scope.row.checkStatus !== 'P')">
-                            <el-option v-for="(iteam, index) in ACMaterial" :key="index" :label="iteam.dictValue" :value="iteam.dictCode" />
+                            <el-option v-for="(iteam, index) in ACMaterial" :key="index" :label="iteam.dictCode + ' ' + iteam.dictValue" :value="iteam.dictCode" />
                         </el-select>
                     </template>
                 </el-table-column>
@@ -234,7 +234,7 @@
 
 <script lang="ts">
     import { Vue, Component, Prop } from 'vue-property-decorator';
-    import { COMMON_API, STE_API } from 'common/api/api';
+    import { COMMON_API, STE_API, AUDIT_API } from 'common/api/api';
     import { dateFormat, dataEntryData } from 'utils/utils';
 
     @Component
@@ -339,7 +339,7 @@
             }
         }
 
-        init(formHeader) {
+        async init(formHeader) {
             this.formHeader = formHeader;
             this.getHolderList();
             this.getMaterial();
@@ -358,6 +358,15 @@
                this.merge(this.steAccessoriesConsume, 'steAccessoriesConsume');
                this.merge(this.newSteAccessoriesConsume, 'newSteAccessoriesConsume');
             })
+            this.acceAddAudit = await this.getAudit(formHeader, 'MATERIAL');
+        }
+
+        async getAudit(formHeader, verifyType) {
+            const a = await AUDIT_API.AUDIT_LOG_LIST_API({
+                orderNo: formHeader.potOrderNo,
+                verifyType: verifyType
+            })
+            return a.data.data
         }
 
         // 煮料锅下拉触发
@@ -541,7 +550,8 @@
                 cancelButtonText: '取消',
                 type: 'warning'
             }).then(() => {
-                row.delFlag = 1;
+                this.$set(row, 'delFlag', 1)
+                this.$successToast('删除成功');
                 if (str) {
                     this.$set(this[str], index, row)
                 } else {

@@ -256,8 +256,8 @@ export default class ExcRecord extends Vue {
             }
         })
         // 将 data 归零
-        this.excList = []
-        this.excListOrg = []
+        // this.excList = []
+        // this.excListOrg = []
         return {
             ids,
             insertDto,
@@ -293,7 +293,8 @@ export default class ExcRecord extends Vue {
             cancelButtonText: '取消',
             type: 'warning'
         }).then(() => {
-            row.delFlag = 1;
+            this.$set(row, 'delFlag', 1)
+            this.$successToast('删除成功');
         })
     }
 
