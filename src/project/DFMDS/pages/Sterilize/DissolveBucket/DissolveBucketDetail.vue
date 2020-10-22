@@ -31,12 +31,13 @@
                             </p>
                             <p> <em class="iconfont factory-bianhao" />生产物料 </p>
                         </div>
+
                         <div class="dataEntry-head-leftRight-message__item">
                             <p>
                                 {{ formData.potAmount ? formData.potAmount.toLocaleString() : 0 }}
-                                {{ formData.unit ? formData.unit : 'KG' }}
+                                <em>{{ formData.unit ? formData.unit : 'KG' }}</em>
                             </p>
-                            <p> <em class="iconfont factory-cunchurongliang" />配置锅数数量 </p>
+                            <p> <em class="iconfont factory-cunchurongliang" />配置锅数 </p>
                         </div>
                     </div>
                 </div>
@@ -71,7 +72,7 @@
                     </el-table-column>
                     <el-table-column label="移动数量" :show-overflow-tooltip="true" width="100">
                         <template slot-scope="scope">
-                            <span v-if="scope.row.moveType!=='R'">-</span>{{ scope.row.moveAmount.toFixed(3) }}
+                            <span v-if="scope.row.moveType!=='I'">-</span>{{ scope.row.moveAmount.toFixed(3) }}
                         </template>
                     </el-table-column>
                     <el-table-column label="单位" :show-overflow-tooltip="true" width="80">
@@ -282,6 +283,12 @@ interface ImportData{
     }
     .dataEntry-head-leftRight-pot__tank__bg {
         background-image: radial-gradient(at center top, #91d5ff, #1890ff);
+    }
+    .dataEntry-head-leftRight-message__item p:first-child {
+        font-size: 24px;
+    }
+    .dataEntry-head-leftRight-message__item p:first-child em {
+        font-size: 16px;
     }
 }
 

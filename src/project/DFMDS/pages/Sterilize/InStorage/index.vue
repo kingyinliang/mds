@@ -36,7 +36,7 @@
                 //-         template(v-if="isRedact && searchCard" style="float: right; margin-left: 10px;")
                 //-             el-button(v-if="isAuth('steStgSubmit')" type="primary" size="small" @click="submitDatas()") 提交
                 //-             el-button(v-if="isAuth('steStgEdit')" type="primary" size="small" @click="savedDatas()") 保存
-            redact-box(:disabled="redactBoxDisable" :is-redact.sync='isRedact' redact-auth="steStgEdit" save-auth="steStgEdit" submit-auth="steStgSubmit" :urgent-submit="false" :submit-rules="submitRules" :saved-rules="savedRules" :saved-datas="savedDatas" :submit-datas="submitDatas")
+            redact-box(v-if="!(formHeader.orderStatus === 'C' || formHeader.orderStatus === 'D' || formHeader.orderStatus === 'P' || formHeader.orderStatus ==='M')" :disabled="redactBoxDisable" :is-redact.sync='isRedact' redact-auth="steStgEdit" save-auth="steStgEdit" submit-auth="steStgSubmit" :urgent-submit="false" :submit-rules="submitRules" :saved-rules="savedRules" :saved-datas="savedDatas" :submit-datas="submitDatas")
 </template>
 
 <script lang="ts">
@@ -139,10 +139,10 @@
             },
             {
                 type: 'string',
-                prop: 'packageLine',
+                prop: 'packageLineName',
                 label: '包装产线',
                 minWidth: 220,
-                content: ['packageLine']
+                content: ['packageLineName']
             },
             {
                 type: 'string',
@@ -311,12 +311,16 @@
                 productDate: this.formHeader.inKjmDate,
                 workShop: this.formHeader.workShop
             }).then(({ data }) => {
+                console.log('订单下拉')
+                console.log(data)
                 this.orderNoList = data.data
             })
         }
 
         // 订单选择触发
         selectOrder(val) {
+            console.log('5555')
+            console.log(val)
             this.globalOrderNumber = val
             if (this.formHeader.inKjmDate === '') {
                 this.$infoToast('请选择生产日期');
@@ -362,8 +366,6 @@
             this.formHeader.orderType = this.orderData.orderType
             this.formHeader.productDate = this.orderData.productDate
             this.formHeader.productLine = this.orderData.productLine
-
-
         }
 
         // 查询包装产线
@@ -371,6 +373,8 @@
             STE_API.STE_PKGLINE_QUERY_API({
                 orderNo: this.formHeader.orderNo
             }).then(({ data }) => {
+                console.log('包装产线')
+                console.log(data)
                 this.pkgWorkShopList = []
                 if (data.data) {
                     data.data.forEach(item => {
@@ -392,6 +396,8 @@
                 productDate: this.formHeader.inKjmDate,
                 workShop: this.formHeader.workShop
             }).then(({ data }) => {
+                console.log('222222')
+                console.log(data)
                 this.isRedact = false
                 if (!data.data) {
                     this.$infoToast('暂无任何内容');
@@ -427,6 +433,8 @@
                 this.$successToast('保存成功');
                 this.isRedact = false;
                 // 重整数据
+
+                this.getWorkshopList()
                 this.btnGetResult();
                 this.selectOrder(this.globalOrderNumber)
             })
@@ -452,6 +460,7 @@
                 this.$successToast('提交成功');
                 this.isRedact = false;
                 // 重整数据
+                this.getWorkshopList()
                 this.btnGetResult();
                 this.selectOrder(this.globalOrderNumber)
             })
