@@ -29,7 +29,7 @@
                     <span class="notNull">* </span>锅号
                 </template>
                 <template slot-scope="scope">
-                    <el-select v-model="scope.row.potNo" size="small" placeholder="请选择" @change="potNoChange(scope.row)">
+                    <el-select v-model="scope.row.potNo" :disabled="!scope.row.allowedUpdatePotNo" size="small" placeholder="请选择" @change="potNoChange(scope.row)">
                         <el-option v-for="(subItem, subIndex) in holder" :key="subIndex" :label="subItem.holderName" :value="subItem.holderNo" />
                     </el-select>
                 </template>
@@ -59,7 +59,7 @@
             <el-table-column label="操作时间" width="100" prop="changed" :show-overflow-tooltip="true" />
             <el-table-column label="操作" fixed="right" align="center" width="80">
                 <template slot-scope="scope">
-                    <el-button v-if="isAuth('steSplit')" type="text" icon="el-icon-delete" @click="removeDataRow(scope.row)">
+                    <el-button v-if="isAuth('steSplit')" :disabled="!scope.row.allowedDelFlag" type="text" icon="el-icon-delete" @click="removeDataRow(scope.row)">
                         删除
                     </el-button>
                 </template>
