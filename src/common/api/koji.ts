@@ -3,7 +3,7 @@
  * @Anthor: Telliex
  * @Date: 2020-08-27 14:28:27
  * @LastEditors: Telliex
- * @LastEditTime: 2020-10-15 18:44:45
+ * @LastEditTime: 2020-10-20 20:37:39
  */
 import httpProxy from 'utils/net/httpProxy';
 const KOJI_API = {
@@ -268,7 +268,19 @@ const KOJI_API = {
     /**
      * @property KOJI_STEAM_BEAN_SUBMIT_API 制曲车间-制曲首页-蒸豆订单-提交
      */
-    KOJI_STEAM_BEAN_SUBMIT_API: params => httpProxy('/kojiSteamBeanOrder/batchSubmit', 'POST', params)
+    KOJI_STEAM_BEAN_SUBMIT_API: params => httpProxy('/kojiSteamBeanOrder/batchSubmit', 'POST', params),
+    /**
+     * @property KOJI_IMPURITY_FOREIGNMATTER_API 制曲车间-杂质-异物-保存
+     */
+    KOJI_IMPURITY_FOREIGNMATTER_API: params => httpProxy('/kojiImpurityOther/queryList', 'GET', params),
+    /**
+     * @property KOJI_IMPURITY_MAGNET_API 制曲车间-杂质记录-磁铁-查询
+     */
+    KOJI_IMPURITY_MAGNET_API: params => httpProxy('/kojiImpurityMagnet/queryList', 'GET', params),
+    /**
+     * @property KOJI_IMPURITY_SAVE_API 制曲车间-杂质-保存
+     */
+    KOJI_IMPURITY_SAVE_API: params => httpProxy('/kojiImpurity/batchSave', 'POST', params)
 };
 
 export default KOJI_API;

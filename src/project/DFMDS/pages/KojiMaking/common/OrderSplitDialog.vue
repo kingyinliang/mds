@@ -33,7 +33,7 @@
             </el-table-column>
             <el-table-column label="发酵罐/池" width="160" prop="fermentPotNo" :show-overflow-tooltip="true">
                 <template slot-scope="scope">
-                    <el-select v-model="scope.row.fermentPotNo" size="small" :disabled="!['N','S','R'].includes(scope.row.status)" filterable clearable @change="setTheSameFermentPot">
+                    <el-select v-model="scope.row.fermentPotNo" size="small" :disabled="!['N','S','R'].includes(scope.row.status)" filterable clearable @change="setTheSameFermentPot(scope.row)">
                         <el-option
                             v-for="item in fermentPotNoOptions"
                             :key="item.optValue"
@@ -102,8 +102,6 @@
         orderStatusMapping: object={}
 
         init(row, orderStatusMapping) {
-            console.log('弹窗过来数据！')
-            console.log(row)
             this.getFermentationHolder() // 发酵罐下拉
             this.getKojiHolder(row) // 曲房号下拉
             this.orderObj = row;
@@ -113,8 +111,6 @@
                 size: 9999,
                 orderNo: row.orderNo
             }).then(({ data }) => {
-                console.log('拆分回传！')
-                console.log(data)
                 this.dialogFormVisible = true;
                 this.splitTable = JSON.parse(JSON.stringify(data.data.records))
                 this.splitTable.forEach(item => {
@@ -126,10 +122,14 @@
 
         }
 
-        // 同步溶解罐值
-        setTheSameFermentPot(val) {
-            this.splitTable.forEach(item => {
-                item.fermentPotNo = val
+        // 同步发酵罐值
+        setTheSameFermentPot(item) {
+            const fermentPotIdTemp = this.fermentPotNoOptions.filter(subItem => subItem.optValue === item.fermentPotNo)[0].optId
+            const fermentPotNameTemp = this.fermentPotNoOptions.filter(subItem => subItem.optValue === item.fermentPotNo)[0].optLabel
+            this.splitTable.forEach(element => {
+                element.fermentPotNo = item.fermentPotNo
+                element.fermentPotId = fermentPotIdTemp
+                element.fermentPotName = fermentPotNameTemp
             })
         }
 
@@ -138,7 +138,14 @@
             if (this.checkTheSame()) {
                 this.$warningToast('同一个订单同一个制曲日期下，不允许曲房重复')
                 item.kojiHouseNo = ''
+                item.kojiHouseId = ''
+                item.kojiHouseName = ''
+                return
             }
+            item.kojiHouseId = this.kojiHouseNoOptions.filter(element => element.optValue === item.kojiHouseNo)[0].optId
+            item.kojiHouseName = this.kojiHouseNoOptions.filter(element => element.optValue === item.kojiHouseNo)[0].optLabel
+
+
         }
 
         checkTheSame() {
@@ -157,7 +164,6 @@
         }
 
         checkKojiDateBlur(item) {
-            console.log('blur')
             KOJI_API.ORDER_SPLITE_DELETE_VALIDATEDATE_API({
                 date: item.addKojiDate,
                 workShop: this.orderObj.workShop
@@ -171,7 +177,6 @@
         }
 
         checkKojiDateFocus(item) {
-            console.log('focus')
             KOJI_API.ORDER_SPLITE_DELETE_VALIDATEDATE_API({
                 date: item.addKojiDate,
                 workShop: this.orderObj.workShop
@@ -185,9 +190,6 @@
 
         // 确认同日期下是否有同曲房
         checkKojiDate(val, item) {
-            console.log('change')
-            console.log(val)
-
             if (this.checkTheSame()) {
                 this.$warningToast('同一个订单同一个制曲日期下，不允许曲房重复')
                 item.addKojiDate = ''
@@ -199,7 +201,7 @@
 
         }
 
-        // 获取溶解罐下拉选项
+        // 获取发酵罐下拉选项
         getFermentationHolder() {
             COMMON_API.HOLDER_QUERY_API({
                 // deptId: params.workShop,
@@ -210,9 +212,8 @@
             }).then(({ data }) => {
                 this.fermentPotNoOptions = []
                 data.data.records.forEach(item => {
-                    this.fermentPotNoOptions.push({ optLabel: item.holderName, optValue: item.holderNo })
+                    this.fermentPotNoOptions.push({ optLabel: item.holderName, optValue: item.holderNo, optId: item.id })
                 })
-
             })
         }
 
@@ -227,7 +228,7 @@
             }).then(({ data }) => {
                 this.kojiHouseNoOptions = []
                 data.data.records.forEach(item => {
-                    this.kojiHouseNoOptions.push({ optLabel: item.holderName, optValue: item.holderNo })
+                    this.kojiHouseNoOptions.push({ optLabel: item.holderName, optValue: item.holderNo, optId: item.id })
                 })
             })
         }
@@ -239,11 +240,11 @@
                 delFlag: 0,
                 isChangeAddKojiDate: true, // 是否可改变入曲时间改变
                 addKojiDate: this.orderObj.orderStartDate,
-                // fermentPotId: this.orderObj.fermentPotId,
-                // fermentPotNo: this.orderObj.fermentPotNo,
+                fermentPotId: this.orderObj.fermentPotId,
+                fermentPotNo: '',
                 orderNo: this.orderObj.orderNo,
-                // kojiHouseId: this.orderObj.kojiHouseId,
-                // kojiHouseNo: this.orderObj.kojiHouseNo,
+                kojiHouseId: this.orderObj.kojiHouseId,
+                kojiHouseNo: '',
                 materialCode: this.orderObj.materialCode,
                 materialName: this.orderObj.materialName,
                 // orderId: string;
@@ -306,23 +307,19 @@
 
         // 删除 item
         removeDataRow(row) {
-            console.log(row)
             this.$confirm('确定是否删除？', '提示', {
                 confirmButtonText: '确定',
                 cancelButtonText: '取消',
                 type: 'warning'
             }).then(() => {
                 if (row.id) {
-                    console.log('确认＠')
                     KOJI_API.ORDER_SPLITE_REMOVE_VALIDATEDATE_API({
                         kojiOrderNo: row.kojiOrderNo
                     }).then(({ data }) => {
                         if (data.data === true) {
-                            console.log('可删除')
                             this.$set(row, 'delFlag', 1)
                             this.$successToast('删除成功');
                         } else {
-                            console.log('不可删除')
                             this.$warningToast(`该曲房订单下存在领料数据，请删除数据后再删除曲房订单`)
                         }
                     })
@@ -340,6 +337,7 @@
     interface OptionObj {
         optLabel?: string;
         optValue?: string;
+        optId?: string;
     }
 
     interface CheckObj {
@@ -364,9 +362,11 @@
         changer?: string;
         fermentPotId?: string;
         fermentPotNo?: string;
+        fermentPotName?: string;
         id?: string;
         kojiHouseId?: string;
         kojiHouseNo?: string;
+        kojiHouseName?: string;
         materialCode?: string;
         materialName?: string;
         orderId?: string;
@@ -417,6 +417,8 @@
         userTime: number;
         workShop: string;
         workShopName: string;
+        fermentPotId: string;
+        kojiHouseId: string;
     }
 </script>
 

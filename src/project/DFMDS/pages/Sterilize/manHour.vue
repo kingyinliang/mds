@@ -40,7 +40,7 @@
             ready-time(ref="readyTime" :is-redact="isRedact" :status="this.formHeader.checkStatus" style="margin-top: 10px;")
             work-hour(ref="workHour" :is-redact="isRedact" :status="this.formHeader.checkStatus")
             audit-log(:table-data="manHourAudit" :verify-man="'verifyMan'" :verify-date="'verifyDate'" :status="true")
-        redact-box(:disabled="redactBoxDisable" :is-redact.sync='isRedact' redact-auth="steTimeEdit" save-auth="steTimeSave" submit-auth="steTimeSubmit" :urgent-submit="false" :submit-rules="submitRules" :saved-rules="savedRules" :saved-datas="savedDatas" :submit-datas="submitDatas")
+        redact-box(v-if="!(formHeader.checkStatus === 'C' || formHeader.checkStatus === 'D' || formHeader.checkStatus === 'P' || formHeader.checkStatus ==='M')" :disabled="redactBoxDisable" :is-redact.sync='isRedact' redact-auth="steTimeEdit" save-auth="steTimeSave" submit-auth="steTimeSubmit" :urgent-submit="false" :submit-rules="submitRules" :saved-rules="savedRules" :saved-datas="savedDatas" :submit-datas="submitDatas")
 </template>
 
 <script lang="ts">
@@ -87,7 +87,7 @@ export default class ManHour extends Vue {
     isRedact = false;
     workshopList = [];
     orderNoList: OrderList[] = [];
-    searchCard = false;
+    searchCard = true;
     classesOptions: object[] = [];
     manHourAudit = [];
     timeSheetResponseDto = '';
@@ -117,7 +117,7 @@ export default class ManHour extends Vue {
             this.formHeader.orderId = orderNoSole.id;
             this.formHeader.materialCode = orderNoSole.materialCode;
             this.formHeader.materialName = orderNoSole.materialName;
-            this.searchCard = false;
+            // this.searchCard = false;
             this.isRedact = false;
         }
     }
@@ -168,7 +168,7 @@ export default class ManHour extends Vue {
             return false;
         }
         STE_API.STE_TIMESHEET_QUERY_API(this.formHeader).then(({ data }) => {
-                this.searchCard = true;
+                // this.searchCard = true;
                 if (data.data.steTimeSheetResponseDto === null) {
                     this.formHeader.checkStatus = '';
                     this.formHeader.checkStatusName = '';
