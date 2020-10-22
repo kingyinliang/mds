@@ -103,8 +103,7 @@
         pageSize = 10;
         totalCount = 0;
         dialogFormVisible = false;
-        fermentPotNoOptions: OptionObj[] = [];
-        kojiHouseNoOptions: OptionObj[] = [];
+
 
         splitForm = {
             current: 1,
@@ -195,8 +194,6 @@
 
         // 查询请求
         listInterface(params) {
-            console.log('params')
-            console.log(params)
             if ((params.orderStartDate === '' || !params.orderStartDate) && params.orderNo === '') {
                 this.$warningToast('日期或订单请选填一项');// eslint-disable-line
                 return new Promise((resolve, reject) => {
@@ -225,8 +222,6 @@
 
         // 查询回传 data
         setData(data) {
-            console.log('订单回传')
-            console.log(data)
             if (data.data.records.length) {
                 this.queryResultList = data.data.records;
                 this.currPage = data.data.current;
@@ -239,43 +234,9 @@
             this.splitTable = [];
         }
 
-       // 获取溶解罐下拉选项
-        getFermentationHolder() {
-            COMMON_API.HOLDER_QUERY_API({
-                // deptId: params.workShop,
-                factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
-                holderType: '001',
-                size: 99999,
-                current: 1
-            }).then(({ data }) => {
-                this.fermentPotNoOptions = []
-                data.data.records.forEach(item => {
-                    this.fermentPotNoOptions.push({ optLabel: item.holderName, optValue: item.holderNo })
-                })
-
-            })
-        }
-
-        // 获取曲房下拉选项
-        getKojiHolder(params) {
-            COMMON_API.HOLDER_QUERY_API({
-                factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
-                deptId: params.workShop,
-                holderType: '005',
-                size: 99999,
-                current: 1
-            }).then(({ data }) => {
-                this.kojiHouseNoOptions = []
-                data.data.records.forEach(item => {
-                    this.kojiHouseNoOptions.push({ optLabel: item.holderName, optValue: item.holderNo })
-                })
-            })
-        }
 
         // 表格双击
         showSplitTable(row) {
-            console.log('双击后传值')
-            console.log(row)
             if (!(row.orderStatus === 'D' || row.orderStatus === 'P')) {
                 this.splitForm.orderNo = row.orderNo
                 this.nowRow = row
@@ -294,8 +255,6 @@
                 if (!data.data.records.length) {
                     this.$infoToast('暂无任何拆分内容');
                 }
-                console.log('拆分')
-                console.log(data)
                 this.splitTable = data.data.records
 
                 this.splitTable.forEach(item => {
@@ -321,7 +280,6 @@
 
         // 删除订单
         delSplitRow(row) {
-            console.log(row)
             this.$confirm('删除后数据将丢失，是否删除？', '提示', {
                 confirmButtonText: '确定',
                 cancelButtonText: '取消',
@@ -365,6 +323,7 @@
     interface OptionObj {
         optLabel?: string;
         optValue?: string;
+        optId?: string;
     }
     interface OrderObj{
         changed?: Date;

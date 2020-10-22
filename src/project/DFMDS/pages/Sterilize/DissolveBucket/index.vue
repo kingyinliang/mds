@@ -804,10 +804,14 @@ interface CurrentDataTable{
     text-align: right;
 }
 
-.el-button.is-active,
-.el-button.is-plain:active {
+.el-button.is-plain:hover {
     color: #fff;
     background-color: #3a8ee6;
+}
+.el-button.is-plain.is-disabled:hover {
+    color: #c0c4cc;
+    background-color: #fff;
+    border-color: #ebeef5;
 }
 
 </style>
