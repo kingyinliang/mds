@@ -4,7 +4,7 @@
             <el-col :span="4">
                 <div class="card-left" style="background: #fff;">
                     <p class="dataEntry-head-leftRight__title" style="color: #333;">
-                        罐号：{{ formData.potNo }}
+                        罐号：{{ formData.potName }}
                     </p>
                     <div class="dataEntry-head-leftRight-pot">
                         <!-- <div class="dataEntry-head-leftRight-pot__tank">
@@ -119,7 +119,7 @@
                 <span slot="label" class="spanview">
                     历史库存
                 </span>
-                <el-table header-row-class-name="" :data="historyInventoryDataGroup" border tooltip-effect="dark" class="newTable">
+                <el-table header-row-class-name="" :data="historyInventoryDataGroup" border tooltip-effect="dark" class="newTable" size="mini">
                     <el-table-column type="index" label="序号" width="55" fixed />
                     <el-table-column label="罐号" :show-overflow-tooltip="true">
                         <template slot-scope="scope">
@@ -229,6 +229,7 @@ export default class DissolveBucketDetail extends Vue {
                 console.log('详细数据')
                 console.log(data)
                 this.formData = {
+                    potName: this.importData.potName,
                     potNo: this.importData.potNo,
                     factoryName: JSON.parse(sessionStorage.getItem('factory') || '{}').deptShort,
                     potAmount: data.data.number,
@@ -251,6 +252,7 @@ export default class DissolveBucketDetail extends Vue {
     }
 }
 interface ImportData{
+    potName?: string;
     cycle?: string;
     feedDate?: string;
     id?: string;
