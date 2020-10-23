@@ -52,7 +52,7 @@
                     <el-table-column type="index" label="序号" width="55" fixed align="center" />
                     <el-table-column label="罐号" :show-overflow-tooltip="true">
                         <template slot-scope="scope">
-                            {{ scope.row.potNo }}
+                            {{ scope.row.potName }}
                         </template>
                     </el-table-column>
                     <el-table-column label="物料" :show-overflow-tooltip="true" width="180">
@@ -123,7 +123,7 @@
                     <el-table-column type="index" label="序号" width="55" fixed />
                     <el-table-column label="罐号" :show-overflow-tooltip="true">
                         <template slot-scope="scope">
-                            {{ scope.row.potNo }}
+                            {{ scope.row.potName }}
                         </template>
                     </el-table-column>
                     <el-table-column label="物料" :show-overflow-tooltip="true" width="180">
@@ -238,6 +238,13 @@ export default class DissolveBucketDetail extends Vue {
                     workShop: data.data.workShop
                 };
                 this.currentInventoryDataGroup = data.data.item
+                this.currentInventoryDataGroup.forEach(item => {
+                    this.$set(item, 'potName', this.importData.potName)
+                })
+                this.historyInventoryDataGroup = data.data.historyItem
+                this.historyInventoryDataGroup.forEach(item => {
+                    this.$set(item, 'potName', this.importData.potName)
+                })
         });
 
     }
