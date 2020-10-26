@@ -204,7 +204,11 @@ const STE_API = {
     /**
      * @property {string} STE_AUDIT_CRAFT_TEMPERATUREANDTIME_API 杀菌车间-入库数据-车间主管退回
      */
-    STE_INSTORAGE_POT_COUNT_API: params => httpProxy('/steInStorage/instoragePotCount', 'GET', params)
+    STE_INSTORAGE_POT_COUNT_API: params => httpProxy('/steInStorage/instoragePotCount', 'GET', params),
+    /**
+     * @property {string} STE_AUDIT_CRAFT_TEMPERATUREANDTIME_API 杀菌车间-页签状态-查询定单页签状态
+     */
+    STE_INSTORAGE_QUERY_TABS_STATUS_API: params => httpProxy('/steTag/queryByOrderNo', 'POST', params)
 };
 
 export default STE_API;
