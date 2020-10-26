@@ -6,30 +6,34 @@
                 <div class="inner-area__title">
                     <h3><em class="title-icon" style="background: rgb(72, 123, 255);" />溶解罐列表 </h3>
 
-                    <!-- <el-form :inline="true" :model="formInline" class="demo-form-inline">
-                        <el-form-item label="溶解罐">
-                            <el-input v-model="formInline.user" placeholder="请输入" />
+                    <el-form :inline="true" :model="headerInfo" class="demo-form-inline">
+                        <el-form-item label="溶解罐：" size="mini">
+                            <el-input v-model="currentPotName" placeholder="请输入" disabled style="width: 100px;" />
                         </el-form-item>
-                        <el-form-item label="生产物料">
-                            <el-select v-model="formInline.region" placeholder="请选择">
-                                <el-option label="区域一" value="shanghai" />
-                                <el-option label="区域二" value="beijing" />
+
+                        <el-form-item label="生产物料：" size="mini">
+                            <el-select v-model="headerInfo.headerProdcutMaterial" placeholder="请选择" @change="changeProdcutMaterialOption">
+                                <el-option
+                                    v-for="item in optionsTree"
+                                    :key="item.productMaterialList[0].dictCode"
+                                    :label="item.productMaterialList[0].dictValue"
+                                    :value="item.productMaterialList[0].dictCode"
+                                />
                             </el-select>
                         </el-form-item>
-                        <el-form-item label="配置锅数">
-                            <el-input v-model="" placeholder="请输入" />
+                        <el-form-item label="配置锅数：" size="mini">
+                            <el-input v-model="headerInfo.headerPotCount" placeholder="请输入" clearable style="width: 80px;" />
                         </el-form-item>
-                    </el-form> -->
-
-                    <el-button type="primary" size="small" @click="addNewDataRow()">
-                        新增
-                    </el-button>
+                        <el-button type="primary" size="small" @click="addNewDataRow()">
+                            新增
+                        </el-button>
+                    </el-form>
                 </div>
                 <div class="inner-area__body">
                     <el-form ref="importBucketForm" :model="importBucketForm" size="size">
                         <el-table class="table-style-light" :data="importBucketInfo" :row-class-name="rowDelFlag" header-row-class-name="tableHead" size="mini" border style="width: 100%;" max-height="300">
                             <el-table-column label="序号" type="index" width="55" fixed="left" align="center" />
-                            <el-table-column min-width="200" :show-overflow-tooltip="true">
+                            <!-- <el-table-column min-width="200" :show-overflow-tooltip="true">
                                 <template slot="header">
                                     溶解罐
                                 </template>
@@ -38,8 +42,8 @@
                                         {{ scope.row.potName }}
                                     </el-form-item>
                                 </template>
-                            </el-table-column>
-                            <el-table-column min-width="160" :show-overflow-tooltip="true">
+                            </el-table-column> -->
+                            <!-- <el-table-column min-width="160" :show-overflow-tooltip="true">
                                 <template slot="header">
                                     <span class="notNull">*</span>生产物料
                                 </template>
@@ -55,8 +59,8 @@
                                         </el-select>
                                     </el-form-item>
                                 </template>
-                            </el-table-column>
-                            <el-table-column min-width="140" :show-overflow-tooltip="true">
+                            </el-table-column> -->
+                            <!-- <el-table-column min-width="140" :show-overflow-tooltip="true">
                                 <template slot="header">
                                     <span class="notNull">*</span>配置锅数
                                 </template>
@@ -65,7 +69,7 @@
                                         <el-input v-model.trim="scope.row.potCount" size="small" placeholder="输入锅数" clearable />
                                     </el-form-item>
                                 </template>
-                            </el-table-column>
+                            </el-table-column> -->
                             <el-table-column min-width="200" :show-overflow-tooltip="true">
                                 <template slot="header">
                                     <span class="notNull">*</span>投料物料
@@ -217,9 +221,12 @@
 
 
         currentWorkShop=''
-        // currentPotName=''
-        // currentProdcutMaterial=''
-        // currentPotCount=0
+        headerInfo: HeaderInfo={
+            headerPotName: '',
+            headerProdcutMaterial: '',
+            headerProductMaterialName: '',
+            headerPotCount: 0
+        }
 
         // 点击赋予 item info
         currentPotNo=''
@@ -269,11 +276,21 @@
         }
 
 
+        // changeProdcutMaterialOption(val) {
+        //     if (val.prodcutMaterial !== '') {
+        //         val.productMaterialName = this.optionsTree.filter(item => item.productMaterialList[0].dictCode === val.prodcutMaterial)[0].productMaterialList[0].dictValue
+        //     }
+        //     val.feedMaterial = ''
+        // }
+
         changeProdcutMaterialOption(val) {
-            if (val.prodcutMaterial !== '') {
-                val.productMaterialName = this.optionsTree.filter(item => item.productMaterialList[0].dictCode === val.prodcutMaterial)[0].productMaterialList[0].dictValue
+            console.log(val)
+            if (val !== '') {
+                this.headerInfo.headerProductMaterialName = this.optionsTree.filter(item => item.productMaterialList[0].dictCode === val)[0].productMaterialList[0].dictValue
             }
-            val.feedMaterial = ''
+            console.log('this.headerInfo.headerProductMaterialName')
+            console.log(this.headerInfo.headerProductMaterialName)
+            // val.feedMaterial = ''
         }
 
         changeFeedMaterialOption(val) {
@@ -353,6 +370,11 @@
                     this.importBucketInfo.forEach(items => {
                         this.$set(items, 'cycle', this.currentCycle)
                     })
+                    this.headerInfo = {
+                        headerPotName: this.importBucketInfo[0].potName,
+                        headerProdcutMaterial: this.importBucketInfo[0].prodcutMaterial,
+                        headerPotCount: this.importBucketInfo[0].potCount
+                    }
                     this.orgFormDataGroup = JSON.parse(JSON.stringify(this.importBucketInfo))
                 }
 
@@ -427,14 +449,16 @@
             let sole: CurrentDataTable = {}
             const itemSize = this.importBucketInfo.length
             if (itemSize !== 0) {
-                const tempProductMaterial = this.productMaterialList.filter(item => item.dictCode === this.importBucketInfo[itemSize - 1].prodcutMaterial) as ProductMaterial
+                // const tempProductMaterial = this.productMaterialList.filter(item => item.dictCode === this.importBucketInfo[itemSize - 1].prodcutMaterial) as ProductMaterial
                 sole = {
                     cycle: this.currentCycle,
                     delFlag: 0,
                     potNo: this.currentPotNo, // 溶解罐号
                     potName: this.currentPotName, // 溶解罐名
-                    prodcutMaterial: this.importBucketInfo[itemSize - 1].prodcutMaterial, // 生产物料
-                    potCount: this.importBucketInfo[itemSize - 1].potCount, // 配置锅数
+                    // prodcutMaterial: this.importBucketInfo[itemSize - 1].prodcutMaterial, // 生产物料
+                    prodcutMaterial: this.headerInfo.headerProdcutMaterial, // 生产物料
+                    // potCount: this.importBucketInfo[itemSize - 1].potCount, // 配置锅数
+                    potCount: this.headerInfo.headerPotCount, // 配置锅数
                     feedMaterial: this.importBucketInfo[itemSize - 1].feedMaterial, // 投料物料
                     feedUnit: 'KG', // 投料物料单位
                     feedAmount: 0, // 投料数量
@@ -447,7 +471,7 @@
                     feedMaterialName: this.importBucketInfo[itemSize - 1].feedMaterialName,
                     potStatus: this.currentPotStatus,
                     potId: this.currentPotId,
-                    productMaterialName: tempProductMaterial.dictValue
+                    productMaterialName: ''
                 }
             } else {
                 sole = {
@@ -455,8 +479,10 @@
                     delFlag: 0,
                     potNo: this.currentPotNo, // 溶解罐号
                     potName: this.currentPotName, // 溶解罐名
-                    prodcutMaterial: '', // 生产物料
-                    potCount: 0, // 配置锅数
+                    // prodcutMaterial: '', // 生产物料
+                    prodcutMaterial: this.headerInfo.headerProdcutMaterial, // 生产物料
+                    // potCount: 0, // 配置锅数
+                    potCount: this.headerInfo.headerPotCount, // 配置锅数
                     feedMaterial: '', // 投料物料
                     feedUnit: 'KG', // 投料物料单位
                     feedAmount: 0, // 投料数量
@@ -500,6 +526,12 @@
 
         // 入罐确认
         comfirmImportBucket() {
+            this.importBucketInfo.forEach(item => {
+                item.prodcutMaterial = this.headerInfo.headerProdcutMaterial
+                item.potCount = this.headerInfo.headerPotCount
+                item.productMaterialName = this.headerInfo.headerProductMaterialName
+            })
+
             if (this.ruleSubmit()) {
 
                 const obj = {}
@@ -512,6 +544,16 @@
                 const delIdsArray: string[] = []
                 const insertDtosArray: CurrentDataTable[] = []
                 const updateDtosArray: CurrentDataTable[] = []
+                const steDissolutionPotOneDtoObject = {
+                    potCount: this.headerInfo.headerPotCount,
+                    potId: this.currentPotId,
+                    potNo: this.currentPotNo,
+                    potStatus: this.currentPotStatus,
+                    prodcutMaterial: this.headerInfo.headerProdcutMaterial,
+                    productMaterialName: this.headerInfo.headerProductMaterialName,
+                    workShop: this.currentWorkShop
+                }
+
 
                 this.importBucketInfo.forEach((item: CurrentDataTable, index) => {
 
@@ -536,7 +578,8 @@
                     STE_API.STE_DISSOLUTIONBUCKET_SAVE_API({
                         delIds: delIdsArray,
                         insertDtos: insertDtosArray,
-                        updateDtos: updateDtosArray
+                        updateDtos: updateDtosArray,
+                        steDissolutionPotOneDto: steDissolutionPotOneDtoObject
                     }).then(({ data }) => {
                         console.log(data)
                         this.$emit('importBucketFinish', obj);
@@ -640,7 +683,12 @@ interface FinalDataTable{
     delFlag?: number;
 }
 
-
+interface HeaderInfo {
+    headerProductMaterialName?: string;
+    headerPotName?: string;
+    headerProdcutMaterial?: string;
+    headerPotCount?: number;
+}
 </script>
 <style scoped>
 .el-pagination >>> .el-pager li.active {
