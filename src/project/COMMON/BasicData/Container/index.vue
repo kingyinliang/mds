@@ -51,7 +51,7 @@
                 <el-table-column prop="holderBatch" label="批数/锅数" :show-overflow-tooltip="true" width="100" />
                 <el-table-column label="状态" width="120">
                     <template slot-scope="scope">
-                        {{ holderStatusObject[scope.row.holderStatus] }}
+                        {{ holderStatusObject.filter(item => item.dictCode === scope.row.holderStatus)[0]?holderStatusObject.filter(item => item.dictCode === scope.row.holderStatus)[0].dictValue : '' }}
                     </template>
                 </el-table-column>
                 <el-table-column prop="holderArea" label="物理区域" :show-overflow-tooltip="true" width="120">
@@ -112,7 +112,7 @@
                 containerTypeList: [],
                 containerTypeObject: {},
                 targetInfoList: [],
-                holderStatusObject: { E: '空罐', R: '投料', F: '发酵', U: '领用', C: '清洗' }
+                holderStatusObject: []
             };
         },
         computed: {
@@ -125,6 +125,7 @@
             this.getWorkshopList();
             // 获取容器状态
             this.getContainerTypeList();
+            this.getContainerStatusList();
             // 获取容器清单
             this.getItemsList();
              // 获取物料列表
@@ -197,6 +198,13 @@
                     this.workshopList.forEach(item => {
                         this.workshopaObject[item.id] = item.deptName;
                     })
+                });
+            },
+            getContainerStatusList() {
+                COMMON_API.DICTQUERY_API({
+                    dictType: 'COMMON_HOLDER_STATUS'
+                }).then(({ data }) => {
+                    this.holderStatusObject = data.data;
                 });
             },
             // 容器类型下拉

@@ -3,7 +3,7 @@
  * @Anthor: Telliex
  * @Date: 2020-09-16 12:08:51
  * @LastEditors: Telliex
- * @LastEditTime: 2020-09-18 15:39:10
+ * @LastEditTime: 2020-10-20 20:42:18
 -->
 <template lang="pug">
     div
@@ -30,8 +30,8 @@
                     div(v-if="type === 'entry'" class="redact_btn")
                         el-button(v-if="orderStatus !== 'submit' && orderStatus !== 'checked' && orderStatus !== '已审核' && orderStatus !== '待审核' && orderStatus !== '已过账' && isAuth(redactAuth)" type="primary" size="small" @click="setRedact" :disabled="disabled") {{ isRedact ? '取消' : '编辑' }}
                         template(v-if="isRedact || onlySubmit")
-                            el-button(v-if="orderStatus !== 'submit' && orderStatus !== 'checked' && orderStatus !== '已审核' && orderStatus !== '待审核' && orderStatus !== '已过账' && isAuth(saveAuth)" type="primary" size="small" @click="savedData('saved')" :disabled="disabled") 保存
-                        el-button(v-if="orderStatus !== 'submit' && orderStatus !== 'checked' && orderStatus !== '已审核' && orderStatus !== '待审核' && orderStatus !== '已过账' && ifSubmit() && isAuth(submitAuth)" type="primary" size="small" @click="submitData" :disabled="disabled") 提交
+                            el-button(v-if="isShowSaveBtn && orderStatus !== 'submit' && orderStatus !== 'checked' && orderStatus !== '已审核' && orderStatus !== '待审核' && orderStatus !== '已过账' && isAuth(saveAuth)" type="primary" size="small" @click="savedData('saved')" :disabled="disabled") 保存
+                        el-button(v-if="isShowSubmitBtn && orderStatus !== 'submit' && orderStatus !== 'checked' && orderStatus !== '已审核' && orderStatus !== '待审核' && orderStatus !== '已过账' && ifSubmit() && isAuth(submitAuth)" type="primary" size="small" @click="submitData" :disabled="disabled") 提交
                     div(v-else class="redact_btn")
                         slot(name="custom_btn")
                 div(v-else class="redact clearfix")
@@ -71,6 +71,8 @@
         @Prop({ default: true }) redactBoxStatus: boolean;
         @Prop({ default: false }) onlySubmit: boolean;
         @Prop({ default: false }) isRedact: boolean;
+        @Prop({ default: true }) isShowSubmitBtn: boolean;
+        @Prop({ default: true }) isShowSaveBtn: boolean;
         @Prop({ type: Array, default: () => { return ['submit', 'checked'] } }) notPermitSubmitStatus;
 
         @Prop({ default: 'entry' }) type: string;

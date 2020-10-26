@@ -29,7 +29,7 @@
                     <span class="notNull">* </span>锅号
                 </template>
                 <template slot-scope="scope">
-                    <el-select v-model="scope.row.potNo" size="small" placeholder="请选择" @change="potNoChange(scope.row)">
+                    <el-select v-model="scope.row.potNo" :disabled="!scope.row.allowedUpdatePotNo" size="small" placeholder="请选择" @change="potNoChange(scope.row)">
                         <el-option v-for="(subItem, subIndex) in holder" :key="subIndex" :label="subItem.holderName" :value="subItem.holderNo" />
                     </el-select>
                 </template>
@@ -122,6 +122,7 @@
             this.splitTable.push({
                 id: '',
                 delFlag: 0,
+                allowedUpdatePotNo: true,
                 potUnit: this.orderObj.outputUnit,
                 workShop: this.orderObj.workShop,
                 productLine: this.orderObj.productLine,
@@ -214,6 +215,7 @@
     interface SplitObj {
         id?: string;
         delFlag?: number;
+        allowedUpdatePotNo?: boolean;
         countOutputUnit?: string;
         potUnit?: string;
         workShop?: string;

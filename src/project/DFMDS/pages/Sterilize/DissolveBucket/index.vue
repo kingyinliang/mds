@@ -16,7 +16,7 @@
                         <el-col v-for="item in targetQueryTableList" :key="item.potId" :span="4" style="min-width: 203px;">
                             <div class="card-bucket">
                                 <div class="card-bucket__head">
-                                    <span>{{ item.potNo }} - {{ holderStatus.filter( element => element.dictCode===item.potStatus)[0].dictValue }}</span>
+                                    <span>{{ item.potName }} - {{ holderStatus.filter( element => element.dictCode===item.potStatus)[0].dictValue }}</span>
                                     <el-button type="text" @click="goTargetDetail(item)">
                                         详情
                                     </el-button>
@@ -305,7 +305,6 @@
 
         // [BTN]满罐
         btnFillBucket(item) {
-            console.log(item)
             this.dialogType = 'filled'
             this.isBucketDialogVisible = true;
             this.currentPotId = item.potId // 选取的当前罐id
@@ -355,9 +354,7 @@
                         potId: this.currentPotId,
                         fullFlag: '0',
                         remark: ''
-                    }).then(({ data }) => {
-                        console.log('取消满罐')
-                        console.log(data)
+                    }).then(() => {
                         this.$refs.queryTable.getDataList(true)
                     });
             });
@@ -804,10 +801,14 @@ interface CurrentDataTable{
     text-align: right;
 }
 
-.el-button.is-active,
-.el-button.is-plain:active {
+.el-button.is-plain:hover {
     color: #fff;
     background-color: #3a8ee6;
+}
+.el-button.is-plain.is-disabled:hover {
+    color: #c0c4cc;
+    background-color: #fff;
+    border-color: #ebeef5;
 }
 
 </style>

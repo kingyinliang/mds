@@ -4,7 +4,7 @@
             <el-col :span="4">
                 <div class="card-left" style="background: #fff;">
                     <p class="dataEntry-head-leftRight__title" style="color: #333;">
-                        罐号：{{ formData.potNo }}
+                        罐号：{{ formData.potName }}
                     </p>
                     <div class="dataEntry-head-leftRight-pot">
                         <!-- <div class="dataEntry-head-leftRight-pot__tank">
@@ -31,12 +31,13 @@
                             </p>
                             <p> <em class="iconfont factory-bianhao" />生产物料 </p>
                         </div>
+
                         <div class="dataEntry-head-leftRight-message__item">
                             <p>
                                 {{ formData.potAmount ? formData.potAmount.toLocaleString() : 0 }}
-                                {{ formData.unit ? formData.unit : 'KG' }}
+                                <em>{{ formData.unit ? formData.unit : 'KG' }}</em>
                             </p>
-                            <p> <em class="iconfont factory-cunchurongliang" />配置锅数数量 </p>
+                            <p> <em class="iconfont factory-cunchurongliang" />配置锅数 </p>
                         </div>
                     </div>
                 </div>
@@ -51,7 +52,7 @@
                     <el-table-column type="index" label="序号" width="55" fixed align="center" />
                     <el-table-column label="罐号" :show-overflow-tooltip="true">
                         <template slot-scope="scope">
-                            {{ scope.row.potNo }}
+                            {{ scope.row.potName }}
                         </template>
                     </el-table-column>
                     <el-table-column label="物料" :show-overflow-tooltip="true" width="180">
@@ -71,7 +72,7 @@
                     </el-table-column>
                     <el-table-column label="移动数量" :show-overflow-tooltip="true" width="100">
                         <template slot-scope="scope">
-                            <span v-if="scope.row.moveType!=='R'">-</span>{{ scope.row.moveAmount.toFixed(3) }}
+                            <span v-if="scope.row.moveType!=='I'">-</span>{{ scope.row.moveAmount.toFixed(3) }}
                         </template>
                     </el-table-column>
                     <el-table-column label="单位" :show-overflow-tooltip="true" width="80">
@@ -118,11 +119,11 @@
                 <span slot="label" class="spanview">
                     历史库存
                 </span>
-                <el-table header-row-class-name="" :data="historyInventoryDataGroup" border tooltip-effect="dark" class="newTable">
+                <el-table header-row-class-name="" :data="historyInventoryDataGroup" border tooltip-effect="dark" class="newTable" size="mini">
                     <el-table-column type="index" label="序号" width="55" fixed />
                     <el-table-column label="罐号" :show-overflow-tooltip="true">
                         <template slot-scope="scope">
-                            {{ scope.row.potNo }}
+                            {{ scope.row.potName }}
                         </template>
                     </el-table-column>
                     <el-table-column label="物料" :show-overflow-tooltip="true" width="180">
@@ -228,6 +229,7 @@ export default class DissolveBucketDetail extends Vue {
                 console.log('详细数据')
                 console.log(data)
                 this.formData = {
+                    potName: this.importData.potName,
                     potNo: this.importData.potNo,
                     factoryName: JSON.parse(sessionStorage.getItem('factory') || '{}').deptShort,
                     potAmount: data.data.number,
@@ -236,6 +238,13 @@ export default class DissolveBucketDetail extends Vue {
                     workShop: data.data.workShop
                 };
                 this.currentInventoryDataGroup = data.data.item
+                this.currentInventoryDataGroup.forEach(item => {
+                    this.$set(item, 'potName', this.importData.potName)
+                })
+                this.historyInventoryDataGroup = data.data.historyItem
+                this.historyInventoryDataGroup.forEach(item => {
+                    this.$set(item, 'potName', this.importData.potName)
+                })
         });
 
     }
@@ -250,6 +259,7 @@ export default class DissolveBucketDetail extends Vue {
     }
 }
 interface ImportData{
+    potName?: string;
     cycle?: string;
     feedDate?: string;
     id?: string;
@@ -282,6 +292,12 @@ interface ImportData{
     }
     .dataEntry-head-leftRight-pot__tank__bg {
         background-image: radial-gradient(at center top, #91d5ff, #1890ff);
+    }
+    .dataEntry-head-leftRight-message__item p:first-child {
+        font-size: 24px;
+    }
+    .dataEntry-head-leftRight-message__item p:first-child em {
+        font-size: 16px;
     }
 }
 

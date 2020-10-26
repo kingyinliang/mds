@@ -18,12 +18,12 @@
                         el-form-item
                             template(slot="label")
                                 span(class="notNull") *
-                                span 生产订单：
-                            el-select(v-model="formHeader.orderNo" placeholder="请选择" style="width: 180px;")
-                                el-option(v-for="(item, index) in orderNoList" :key="index" :label="item.orderNo" :value="item.orderNo")
-                        el-form-item(label="生产物料：")
-                            el-tooltip(class="item" effect="dark" :content="formHeader.materialName + ' ' + formHeader.materialCode " placement="top-start")
-                                p(class="input_border_bg" style="width: 220px;")  {{ formHeader.materialName }} {{ formHeader.materialCode }}
+                                span 生产工序：
+                            el-select(v-model="formHeader.productProcess" placeholder="请选择" style="width: 180px;")
+                                el-option(v-for="(item, index) in productProcessList" :key="index" :label="item.productProcess" :value="item.productProcess")
+                        //- el-form-item(label="生产物料：")
+                        //-     el-tooltip(class="item" effect="dark" :content="formHeader.materialName + ' ' + formHeader.materialCode " placement="top-start")
+                        //-         p(class="input_border_bg" style="width: 220px;")  {{ formHeader.materialName }} {{ formHeader.materialCode }}
                         el-form-item(label="提交人员：")
                             p(class="input_border_bg" style="width: 180px;") {{ formHeader.changer }}
                         el-form-item(label="提交时间：")
@@ -45,7 +45,7 @@
 
 <script lang="ts">
 import { Vue, Component, Watch } from 'vue-property-decorator';
-import { COMMON_API, STE_API, AUDIT_API } from 'common/api/api';
+import { COMMON_API, AUDIT_API, KOJI_API } from 'common/api/api';
 import { dateFormat } from 'utils/utils';
 import ReadyTime from 'components/ReadyTimes.vue';
 import OfficialWorker from 'components/OfficialWorker.vue';
@@ -53,7 +53,7 @@ import LoanedPersonnel from 'components/LoanedPersonnel.vue';
 import TemporaryWorker from 'components/TemporaryWorker.vue';
 import RedactBox from 'components/RedactBox.vue' // 下方状态 bar
 @Component({
-    name: 'manHour',
+    name: 'KojiManHour',
     components: {
         ReadyTime,
         OfficialWorker,
@@ -62,7 +62,7 @@ import RedactBox from 'components/RedactBox.vue' // 下方状态 bar
         RedactBox
     }
 })
-export default class ManHour extends Vue {
+export default class KojiManHour extends Vue {
     $refs: {
         readyTime: HTMLFormElement;
         workHour: HTMLFormElement;
@@ -71,7 +71,7 @@ export default class ManHour extends Vue {
     formHeader = {
         workShop: '',
         productDate: dateFormat(new Date(), 'yyyy-MM-dd'),
-        orderNo: '',
+        productProcess: '',
         checkStatus: '',
         checkStatusName: '',
         orderId: '',
@@ -86,7 +86,7 @@ export default class ManHour extends Vue {
 
     isRedact = false;
     workshopList = [];
-    orderNoList: OrderList[] = [];
+    productProcessList: OrderList[] = [];
     searchCard = true;
     classesOptions: object[] = [];
     manHourAudit = [];
@@ -101,7 +101,8 @@ export default class ManHour extends Vue {
 
     @Watch('formHeader.workShop')
     watchWorkShop() {
-        this.getOrderList();
+        //this.getOrderList();
+        this.getProductProcess()
     }
 
     @Watch('formHeader.productDate')
@@ -109,14 +110,14 @@ export default class ManHour extends Vue {
         this.getOrderList();
     }
 
-    @Watch('formHeader.orderNo')
+    @Watch('formHeader.productProcess')
     watchOrderNo() {
-        const orderNoSole = this.orderNoList.find((item: OrderList) => item.orderNo === this.formHeader.orderNo)
-        if (orderNoSole) {
-            // this.formHeader['orderId'] = this.orderNoList.find((item: OrderList) => item.orderNo === this.formHeader.orderNo)['id'];
-            this.formHeader.orderId = orderNoSole.id;
-            this.formHeader.materialCode = orderNoSole.materialCode;
-            this.formHeader.materialName = orderNoSole.materialName;
+        const productProcessSole = this.productProcessList.find((item: OrderList) => item.productProcess === this.formHeader.productProcess)
+        if (productProcessSole) {
+            // this.formHeader['orderId'] = this.productProcessList.find((item: OrderList) => item.productProcess === this.formHeader.productProcess)['id'];
+            this.formHeader.orderId = productProcessSole.id;
+            this.formHeader.materialCode = productProcessSole.materialCode;
+            this.formHeader.materialName = productProcessSole.materialName;
             // this.searchCard = false;
             this.isRedact = false;
         }
@@ -134,28 +135,43 @@ export default class ManHour extends Vue {
         COMMON_API.ORG_QUERY_WORKSHOP_API({
             factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
             deptType: ['WORK_SHOP'],
-            deptName: '杀菌'
+            deptName: '制曲'
         }).then(({ data }) => {
-            if (data.code === 200) {
-                this.workshopList = data.data;
-                if (data.data.length !== 0) {
-                    this.formHeader.workShop = data.data[0]['id'];
-                }
+            this.workshopList = data.data;
+            if (data.data.length !== 0) {
+                this.formHeader.workShop = data.data[0]['id'];
             }
         })
     }
 
+    // 获取工序
+    getProductProcess() {
+        KOJI_API.WORKPROCEDURE_QUERY_API({
+            workShop: this.formHeader.workShop,
+            current: 1,
+            size: 999999
+        }).then(({ data }) => {
+            if (data.data.records.length === 0) {
+                this.$infoToast('暂无任何内容');
+            }
+            console.log('工序')
+            console.log(data)
+
+        });
+    }
+
+
     // 订单拉取
     getOrderList() {
-        this.formHeader.orderNo = '';
-        STE_API.STE_TIMESHEET_ORDERLIST_QUERY_API({
+        this.formHeader.productProcess = '';
+        KOJI_API.KOJI_TIMESHEET_QUERY_API({
             workShop: this.formHeader.workShop,
             productDate: this.formHeader.productDate
         }).then(({ data }) => {
             if (data.code === 200) {
-                this.orderNoList = data.data;
-                if (this.orderNoList.length !== 0) {
-                    this.formHeader.orderNo = this.orderNoList[0]['orderNo'];
+                this.productProcessList = data.data;
+                if (this.productProcessList.length !== 0) {
+                    this.formHeader.productProcess = this.productProcessList[0]['productProcess'];
                 }
             }
         })
@@ -163,11 +179,11 @@ export default class ManHour extends Vue {
 
     // 查询
     getList() {
-        if (this.formHeader.workShop === '' || this.formHeader.productDate === '' || this.formHeader.orderNo === '') {
+        if (this.formHeader.workShop === '' || this.formHeader.productDate === '' || this.formHeader.productProcess === '') {
             this.$infoToast('请选择查询必填项');
             return false;
         }
-        STE_API.STE_TIMESHEET_QUERY_API(this.formHeader).then(({ data }) => {
+        KOJI_API.KOJI_TIMESHEET_QUERY_API(this.formHeader).then(({ data }) => {
                 // this.searchCard = true;
                 if (data.data.steTimeSheetResponseDto === null) {
                     this.formHeader.checkStatus = '';
@@ -183,7 +199,7 @@ export default class ManHour extends Vue {
 
         })
         AUDIT_API.AUDIT_LOG_LIST_API({
-            orderNo: this.formHeader.orderNo,
+            productProcess: this.formHeader.productProcess,
             verifyType: 'TIMESHEET'
         }).then(({ data }) => {
             this.manHourAudit = data.data;
@@ -195,8 +211,8 @@ export default class ManHour extends Vue {
     savedDatas() {
         const timeSheetRequest = this.$refs.readyTime.savedData(this.formHeader);
         const userRequest = this.$refs.workHour.savedData(this.formHeader);
-        STE_API.STE_TIMESHEET_SAVE_API({
-            orderNo: this.formHeader.orderNo,
+        KOJI_API.KOJI_TIMESHEET_SAVE_API({
+            productProcess: this.formHeader.productProcess,
             steTimeSheetInsertDto: timeSheetRequest,
             steUserInsertDto: userRequest.userInsertDto,
             steUserUpdateDto: userRequest.userUpdateDto,
@@ -223,8 +239,8 @@ export default class ManHour extends Vue {
                     return false;
                 }
             const userRequest = this.$refs.workHour.savedData(this.formHeader);
-            STE_API.STE_TIMESHEET_SUBMIT_API({
-                orderNo: this.formHeader.orderNo,
+            KOJI_API.KOJI_TIMESHEET_SUBMIT_API({
+                productProcess: this.formHeader.productProcess,
                 steTimeSheetInsertDto: timeSheetRequest,
                 steUserInsertDto: userRequest.userInsertDto,
                 steUserUpdateDto: userRequest.userUpdateDto,
@@ -249,7 +265,7 @@ export default class ManHour extends Vue {
 }
 interface OrderList{
     id: string;
-    orderNo: string;
+    productProcess: string;
     materialCode: string;
     materialName: string;
 }
