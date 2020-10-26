@@ -21,12 +21,12 @@
                 .searchCard__control
                     div
                         el-button(type="primary" size="small" @click="btnGetResult") 查询
-                    div(v-show="formHeader.status!==''")
-                        span.dot(:style="{background: formHeader.status === 'noPass' ? 'red' : formHeader.status === 'saved' ? '#1890f' : formHeader.status === 'submit' ? '#1890ff' : formHeader.status === '已同步' ? '#f5f7fa' : 'rgb(103, 194, 58)',}")
-                        span {{'订单状态：'}}
-                        span(:style="{color: formHeader.status === 'noPass' ? 'red' : '',}") {{ formHeader.status === 'noPass' ? '审核不通过' : formHeader.status === 'saved' ? '已保存' : formHeader.status === 'submit' ? '已提交' : formHeader.status === 'checked' ? '通过' : formHeader.status === '已同步' ? '未录入' : formHeader.status }}
-            div(v-show="searchCard")
-                tie-tabs(:tab-titles="tabTitles")
+                    div(v-show="formHeader.inStorageStatus!==''")
+                        //- span.dot(:style="{background: formHeader.status === 'noPass' ? 'red' : formHeader.status === 'saved' ? '#1890f' : formHeader.status === 'submit' ? '#1890ff' : formHeader.status === '已同步' ? '#f5f7fa' : 'rgb(103, 194, 58)',}")
+                        span {{`入库状态：${checkStatusOption[formHeader.inStorageStatus]}`}}
+                        //- span(:style="{color: formHeader.status === 'noPass' ? 'red' : '',}") {{ formHeader.status === 'noPass' ? '审核不通过' : formHeader.status === 'saved' ? '已保存' : formHeader.status === 'submit' ? '已提交' : formHeader.status === 'checked' ? '通过' : formHeader.status === '已同步' ? '未录入' : formHeader.status }}
+            div(v-if="searchCard")
+                tie-tabs(:tab-titles="tabTitles" ref="tabTitles")
                     template(slot="1"): in-storage(ref="inStorage" :is-redact="isRedact" card-title="入库列表" :table-data="tableData" :order-info="orderData" :pkg-work-shop-list="pkgWorkShopList")
                     template(slot="2"): exc-record(ref="excRecord" :is-redact="isRedact" :form-header="formHeader")
                     template(slot="3"): text-record(ref="textRecord" :is-redact="isRedact")
@@ -65,6 +65,7 @@
     })
     export default class Instorage extends Vue {
         $refs: {
+            tabTitles: HTMLFormElement;
             inStorage: HTMLFormElement;
             excRecord: HTMLFormElement;
             textRecord: HTMLFormElement;
@@ -88,7 +89,8 @@
             orderStatus: '',
             orderType: '',
             productDate: '',
-            productLine: ''
+            productLine: '',
+            inStorageStatus: ''
         }
 
         orderData: OptionsInList={}
@@ -96,6 +98,12 @@
         workshopList: OptionsInList[] = [];
         pkgWorkShopList: OptionsInList[]=[]
         orderNoList: OptionsInList[] = [];
+
+        // 入库状态 option
+        inStorageStatus: InStorageStatusOptions[]=[]
+        // 通用 check status option
+        checkStatusOption={}
+
         searchCard=true
 
         isRedact = false;
@@ -108,7 +116,7 @@
         tabTitles = [
             {
                 label: '杀菌入库',
-                status: '未录入'
+                status: 'N'
             },
             {
                 label: '异常记录'
@@ -212,25 +220,13 @@
                         }
                         ]
             }
-
-            // {
-            //     type: 'button',
-            //     prop: 'normalFlag',
-            //     label: '正常入库',
-            //     width: 100,
-            //     minWidth: 100,
-            //     content: []
-            // }
         ]
 
         mounted() {
-            // if (!this.isAuth('steStgQuery')) {
-            //     this.$warningToast('无权限');
-            //     return false
-            // }
-
             // 获取车间
             this.getWorkshopList();
+            // 通用审核状态抓取
+            this.getCheckStatus();
         }
 
 
@@ -254,7 +250,6 @@
             })
         }
 
-
         // 车间选择触发
         selectWorkshop(val) {
             this.formHeader.orderNo = ''
@@ -273,6 +268,7 @@
             this.formHeader.orderType = ''
             this.formHeader.productDate = ''
             this.formHeader.productLine = ''
+            this.formHeader.inStorageStatus = ''
             if (val !== '') {
                 this.formHeader.workShop = val;
                 this.formHeader.workShopName = this.workshopList.filter(item => item.targetCode === val)[0].targetName
@@ -299,6 +295,7 @@
                 this.formHeader.orderType = ''
                 this.formHeader.productDate = ''
                 this.formHeader.productLine = ''
+                this.formHeader.inStorageStatus = ''
                 this.formHeader.inKjmDate = val;
                 this.getOrderList()
             }
@@ -306,6 +303,7 @@
 
         // 订单下拉抓取
         getOrderList() {
+            const orderTemp: string[] = []
             COMMON_API.ORDER_LIST_API({
                 factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
                 productDate: this.formHeader.inKjmDate,
@@ -314,13 +312,35 @@
                 console.log('订单下拉')
                 console.log(data)
                 this.orderNoList = data.data
+
+                this.orderNoList.forEach(item => {
+                    orderTemp.push(item.orderNo as string)
+                })
+
+                // 获取入库状态状态
+                STE_API.STE_INSTORAGE_QUERY_TABS_STATUS_API(orderTemp
+                ).then(({ data: element }) => {
+                    this.inStorageStatus = element.data
+
+                })
+            })
+        }
+
+        // 通用审核状态抓取
+        getCheckStatus() {
+            COMMON_API.DICTQUERY_API({
+                dictType: 'COMMON_CHECK_STATUS'
+            }).then(({ data }) => {
+                if (data.data.length !== 0) {
+                    data.data.forEach(item => {
+                        this.$set(this.checkStatusOption, item.dictCode, item.dictValue)
+                    })
+                }
             })
         }
 
         // 订单选择触发
         selectOrder(val) {
-            console.log('5555')
-            console.log(val)
             this.globalOrderNumber = val
             if (this.formHeader.inKjmDate === '') {
                 this.$infoToast('请选择生产日期');
@@ -348,11 +368,12 @@
                 this.formHeader.orderType = ''
                 this.formHeader.productDate = ''
                 this.formHeader.productLine = ''
+                this.formHeader.inStorageStatus = ''
                 return false
             }
             this.orderData = this.orderNoList.filter(item => item.orderNo === val)[0]
             this.formHeader.material = this.orderData.materialCode + ' ' + this.orderData.materialName
-            this.formHeader.status = this.orderData.orderStatusName
+            // this.formHeader.status = this.orderData.orderStatusName
             this.formHeader.changer = this.orderData.changer
             this.formHeader.changed = this.orderData.changed
             this.formHeader.materialCode = this.orderData.materialCode
@@ -366,6 +387,8 @@
             this.formHeader.orderType = this.orderData.orderType
             this.formHeader.productDate = this.orderData.productDate
             this.formHeader.productLine = this.orderData.productLine
+            this.formHeader.inStorageStatus = this.inStorageStatus.filter(item => item.orderNo === this.formHeader.orderNo)[0].instorageStatus
+            this.tabTitles[0]['status'] = this.formHeader.inStorageStatus
         }
 
         // 查询包装产线
@@ -390,15 +413,15 @@
                 this.$infoToast('尚有必填栏位');
                 return false
             }
-
+            this.searchCard = false
             STE_API.STE_INSTORAGE_QUERY_API({
                 orderNo: this.formHeader.orderNo,
                 productDate: this.formHeader.inKjmDate,
                 workShop: this.formHeader.workShop
             }).then(({ data }) => {
-                console.log('222222')
-                console.log(data)
+                // 多馀的 this.searchCard 是对页签的状态强制更新
                 this.isRedact = false
+                this.searchCard = true
                 if (!data.data) {
                     this.$infoToast('暂无任何内容');
                     this.$refs.inStorage.init([], this.formHeader)
@@ -480,27 +503,29 @@
 
 
     interface FormHeader{
-            workShop?: string;
-            workShopName?: string;
-            inKjmDate?: string;
-            orderNo?: string;
-            changer?: string;
-            changed?: string;
-            status?: string;
-            material?: string;
-            materialCode?: string;
-            materialName?: string;
-            outputUnit?: string;
-            outputUnitName?: string;
-            factory?: string;
-            orderId?: string;
-            orderStatus?: string;
-            orderType?: string;
-            productDate?: string;
-            productLine?: string;
+        inStorageStatus?: string;
+        workShop?: string;
+        workShopName?: string;
+        inKjmDate?: string;
+        orderNo?: string;
+        changer?: string;
+        changed?: string;
+        status?: string;
+        material?: string;
+        materialCode?: string;
+        materialName?: string;
+        outputUnit?: string;
+        outputUnitName?: string;
+        factory?: string;
+        orderId?: string;
+        orderStatus?: string;
+        orderType?: string;
+        productDate?: string;
+        productLine?: string;
     }
 
     interface OptionsInList{
+        inStorageStatus?: string;
         changed?: string;
         changer?: string;
         // countMan: null;
@@ -540,6 +565,15 @@
     interface OptionsInList{
         targetCode?: string;
         targetName?: string;
+    }
+    interface InStorageStatusOptions{
+        accessoriesStatus: string;
+        controlStatus: string;
+        id: string;
+        instorageStatus: string;
+        materialStatus: string;
+        orderNo: string;
+        timesheetStatus: string;
     }
 </script>
 

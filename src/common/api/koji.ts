@@ -3,7 +3,7 @@
  * @Anthor: Telliex
  * @Date: 2020-08-27 14:28:27
  * @LastEditors: Telliex
- * @LastEditTime: 2020-10-20 20:37:39
+ * @LastEditTime: 2020-10-26 10:37:38
  */
 import httpProxy from 'utils/net/httpProxy';
 const KOJI_API = {
@@ -280,7 +280,19 @@ const KOJI_API = {
     /**
      * @property KOJI_IMPURITY_SAVE_API 制曲车间-杂质-保存
      */
-    KOJI_IMPURITY_SAVE_API: params => httpProxy('/kojiImpurity/batchSave', 'POST', params)
+    KOJI_IMPURITY_SAVE_API: params => httpProxy('/kojiImpurity/batchSave', 'POST', params),
+    /**
+     * @property KOJI_IMPURITY_SAVE_API 制曲车间-查询准备工时
+     */
+    KOJI_TIMESHEET_QUERY_API: params => httpProxy('/koji/kojiTimeSheet/query', 'POST', params),
+    /**
+     * @property KOJI_IMPURITY_SAVE_API 制曲车间-保存准备工时
+     */
+    KOJI_TIMESHEET_SAVE_API: params => httpProxy('/koji/kojiTimeSheet/save', 'POST', params),
+    /**
+     * @property KOJI_IMPURITY_SAVE_API 制曲车间-提交准备工时
+     */
+    KOJI_TIMESHEET_SUBMIT_API: params => httpProxy('/koji/kojiTimeSheet/submit', 'POST', params)
 };
 
 export default KOJI_API;

@@ -5,6 +5,22 @@
             <div class="inner-area">
                 <div class="inner-area__title">
                     <h3><em class="title-icon" style="background: rgb(72, 123, 255);" />溶解罐列表 </h3>
+
+                    <!-- <el-form :inline="true" :model="formInline" class="demo-form-inline">
+                        <el-form-item label="溶解罐">
+                            <el-input v-model="formInline.user" placeholder="请输入" />
+                        </el-form-item>
+                        <el-form-item label="生产物料">
+                            <el-select v-model="formInline.region" placeholder="请选择">
+                                <el-option label="区域一" value="shanghai" />
+                                <el-option label="区域二" value="beijing" />
+                            </el-select>
+                        </el-form-item>
+                        <el-form-item label="配置锅数">
+                            <el-input v-model="" placeholder="请输入" />
+                        </el-form-item>
+                    </el-form> -->
+
                     <el-button type="primary" size="small" @click="addNewDataRow()">
                         新增
                     </el-button>
@@ -15,11 +31,11 @@
                             <el-table-column label="序号" type="index" width="55" fixed="left" align="center" />
                             <el-table-column min-width="200" :show-overflow-tooltip="true">
                                 <template slot="header">
-                                    溶解罐号
+                                    溶解罐
                                 </template>
                                 <template slot-scope="scope">
-                                    <el-form-item prop="potNo">
-                                        {{ scope.row.potNo }}
+                                    <el-form-item prop="potName">
+                                        {{ scope.row.potName }}
                                     </el-form-item>
                                 </template>
                             </el-table-column>
@@ -201,11 +217,14 @@
 
 
         currentWorkShop=''
-
+        // currentPotName=''
+        // currentProdcutMaterial=''
+        // currentPotCount=0
 
         // 点击赋予 item info
         currentPotNo=''
         currentPotId=''
+        currentPotName=''
         currentPotStatus='E' // 罐状态
         currentCycle=''
 
@@ -275,6 +294,7 @@
             this.isTableDialogVisible = true
             this.currentPotId = item.potId
             this.currentPotNo = item.potNo
+            this.currentPotName = item.potName
             this.currentPotStatus = item.potStatus
             this.currentWorkShop = workshop
             this.currentCycle = item.cycle
@@ -293,9 +313,9 @@
                 if (data.data.records[0].material) {
                     data.data.records[0].material.forEach((element, index) => {
                         this.optionsTree.push({
-                                                productMaterialList: [{ dictCode: element.materialCode, dictValue: element.materialName }],
-                                                feedMateriallList: []
-                                            })
+                            productMaterialList: [{ dictCode: element.materialCode, dictValue: element.materialName }],
+                            feedMateriallList: []
+                        })
                         //this.productMaterialList.push({ dictCode: element.materialCode, dictValue: element.materialName, id: element.id })
 
                             // API 辅料前处理-查询不带分页 (查询生产物料)
@@ -335,6 +355,9 @@
                     })
                     this.orgFormDataGroup = JSON.parse(JSON.stringify(this.importBucketInfo))
                 }
+
+                console.log('入罐消息')
+                console.log(this.importBucketInfo)
             });
 
             // // API 辅料前处理-查询不带分页 (查询生产物料)
@@ -409,6 +432,7 @@
                     cycle: this.currentCycle,
                     delFlag: 0,
                     potNo: this.currentPotNo, // 溶解罐号
+                    potName: this.currentPotName, // 溶解罐名
                     prodcutMaterial: this.importBucketInfo[itemSize - 1].prodcutMaterial, // 生产物料
                     potCount: this.importBucketInfo[itemSize - 1].potCount, // 配置锅数
                     feedMaterial: this.importBucketInfo[itemSize - 1].feedMaterial, // 投料物料
@@ -430,6 +454,7 @@
                     cycle: this.currentCycle,
                     delFlag: 0,
                     potNo: this.currentPotNo, // 溶解罐号
+                    potName: this.currentPotName, // 溶解罐名
                     prodcutMaterial: '', // 生产物料
                     potCount: 0, // 配置锅数
                     feedMaterial: '', // 投料物料
@@ -589,6 +614,7 @@ interface CurrentDataTable{
     potCount?: number;
     potStatus?: string;
     potNo?: string;
+    potName?: string;
     prodcutMaterial?: string;
     productMaterialName?: string;
     remark?: string;
@@ -604,7 +630,7 @@ interface FinalDataTable{
     feedMan?: string;
     feedMaterial?: string;
     feedMaterialName?: string;
-    feedUnit?: string[]; // <-----------
+    feedUnit?: string[];
     id?: string;
     potCount?: number;
     potNo?: string;
