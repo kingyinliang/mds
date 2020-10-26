@@ -19,7 +19,9 @@ export default {
         // 首頁泡豆罐讯息
         orderScInfo: {},
         // 页签状态
-        houseTagInfo: {}
+        houseTagInfo: {},
+        // 审核详情
+        auditDetail: {}
     },
     mutations: {
         updateStockSoybeanInfo(state, infoObj) {
@@ -39,6 +41,9 @@ export default {
         },
         updateHouseTag(state, data) {
             state.houseTagInfo = data;
+        },
+        updateAuditDetail(state, auditDetail) {
+            state.auditDetail = auditDetail;
         }
     }
 };

@@ -34,37 +34,31 @@
                     <template slot="titleBtn">
                         <el-form :inline="true" size="small" class="dataEntry-head-base__form" style="float: right; margin-top: 0;">
                             <el-form-item label="异常数：">
-                                <p>134</p>
+                                <p> {{ TempTotal }}</p>
                             </el-form-item>
                         </el-form>
                     </template>
                     <div class="mod-demo-echarts">
-                        <el-card>
-                            <div id="J_chartLineBoxTemp" style="height: 400px;" />
-                        </el-card>
+                        <div id="J_chartLineBoxTemp" style="height: 400px;" />
                     </div>
                 </mds-card>
                 <mds-card title="工艺-保温时间" :name="'CraftTime'">
                     <template slot="titleBtn">
                         <el-form :inline="true" size="small" class="dataEntry-head-base__form" style="float: right; margin-top: 0;">
                             <el-form-item label="异常数：">
-                                <p>134</p>
+                                <p>{{ TimeTotal }}</p>
                             </el-form-item>
                         </el-form>
                     </template>
                     <div class="mod-demo-echarts">
-                        <el-card>
-                            <div id="J_chartLineBoxTime" style="height: 400px;" />
-                        </el-card>
+                        <div id="J_chartLineBoxTime" style="height: 400px;" />
                     </div>
                 </mds-card>
                 <mds-card title="工艺-出料时间与温度" :name="'CraftTimeAndTemp'">
                     <el-row :gutter="10">
                         <el-col>
                             <div class="mod-demo-echarts">
-                                <el-card>
-                                    <div id="J_chartLineBoxTimeAndTemp" style="height: 400px;" />
-                                </el-card>
+                                <div id="J_chartLineBoxTimeAndTemp" style="height: 400px;" />
                             </div>
                         </el-col>
                     </el-row>
@@ -168,10 +162,10 @@
                 value: 'orderStartDate'
             },
             {
-                type: 'date-picker',
+                type: 'p',
                 icon: 'factory-bianhao',
                 label: '生产锅数',
-                value: 'productDate'
+                value: 'planPotCount'
             },
             {
                 type: 'p',
@@ -190,11 +184,8 @@
         auditDetail: {};
         formHeader: OrderData = {};
         orderStatus = '已同步';
-        dataList = [];
-        currentAudit = [];
         /* eslint-disable */
         chartLine: any;
-        chartDiffBar: any;
         /* eslint-enable */
         // 产量与人力
         yieldAndManData = {};
@@ -213,10 +204,12 @@
             ENERGY: []
         };
 
+        tempList = [];
+        timeList = [];
+
         mounted() {
             this.auditDetail = this.$store.state.sterilize.auditDetail;
-            console.log(this.auditDetail);
-            this.getHeaderInfo(this.auditDetail['workShop'], this.auditDetail['orderNo']);
+            this.getHeaderInfo(this.auditDetail['orderNo']);
 
             // 班次
             const net01 = new Promise(resolve => {
@@ -259,10 +252,26 @@
             return (MinNum / 60).toFixed(2);
         }
 
-        getHeaderInfo(workShop, orderNo) {
-            STE_API.STE_AUDIT_HEADER_INFO_API({ workShop: workShop, orderNo: orderNo }).then(({ data }) => {
-                console.log(data.data)
+        get TempTotal() {
+            let MinNum = 0;
+            this.tempList.map((item) => {
+                MinNum = accAdd(MinNum, item['exceptionNumber']);
             });
+            return MinNum;
+        }
+
+        get TimeTotal() {
+            let MinNum = 0;
+            this.timeList.map((item) => {
+                MinNum = accAdd(MinNum, item['exceptionNumber']);
+            });
+            return MinNum;
+        }
+
+        getHeaderInfo(orderNo) {
+            COMMON_API.OREDER_QUERY_BY_NO_API({ orderNo: orderNo, workShopType: 'sterilize' }).then(({ data }) => {
+                this.formHeader = data.data;
+            })
         }
 
         // 数据字典
@@ -312,6 +321,7 @@
             STE_API.STE_AUDIT_CRAFT_TEMPERATURE_API({
                 orderNo: orderNo
             }).then(({ data }) => {
+                this.tempList = data.data;
                 const xAxisData: string[] = [];
                 const legendData = ['保温开始', '保温10min', '保温15min', '保温20min', '二次保温', '保温30min'];
                 const seriesData: object[] = [];
@@ -451,7 +461,7 @@
                     },
                     grid: {
                         top: '5%',
-                        left: '1%',
+                        left: '0%',
                         right: '1%',
                         bottom: '8%',
                         containLabel: true
@@ -464,7 +474,10 @@
                     },
                     yAxis: {
                         type: 'value',
-                        scale: true
+                        scale: true,
+                        axisLabel: {
+                            formatter: '{value} Min'
+                        }
                     },
                     series: seriesData
                 };
@@ -480,7 +493,7 @@
             STE_API.STE_AUDIT_CRAFT_TIME_API({
                 orderNo: orderNo
             }).then(({ data }) => {
-                // console.log(data);
+                this.timeList = data.data;
                 const xAxisData: string[] = [];
                 const timeData: number[] = [];
                 data.data.map(item => {
@@ -492,7 +505,7 @@
                         color: ['#3398DB'],
                         grid: {
                             top: '5%',
-                            left: '1%',
+                            left: '0%',
                             right: '1%',
                             bottom: '3%',
                             containLabel: true
@@ -509,7 +522,10 @@
                         ],
                         yAxis: [
                             {
-                                type: 'value'
+                                type: 'value',
+                                axisLabel: {
+                                    formatter: '{value} Min'
+                                }
                             }
                         ],
                         series: [
@@ -573,7 +589,7 @@
                     },
                     grid: {
                         top: '8%',
-                        left: '1%',
+                        left: '0%',
                         right: '0%',
                         bottom: '8%',
                         containLabel: true
@@ -601,15 +617,15 @@
                             name: '时间',
                             min: 0,
                             max: 25,
-                            position: 'left'
+                            position: 'left',
                             // axisLine: {
                             //     lineStyle: {
                             //         color: colors[2]
                             //     }
                             // },
-                            // axisLabel: {
-                            //     formatter: '{value} °C'
-                            // }
+                            axisLabel: {
+                                formatter: '{value} Min'
+                            }
                         },
                         {
                             type: 'value',

@@ -268,7 +268,51 @@ const KOJI_API = {
     /**
      * @property KOJI_STEAM_BEAN_SUBMIT_API 制曲车间-制曲首页-蒸豆订单-提交
      */
-    KOJI_STEAM_BEAN_SUBMIT_API: params => httpProxy('/kojiSteamBeanOrder/batchSubmit', 'POST', params)
+    KOJI_STEAM_BEAN_SUBMIT_API: params => httpProxy('/kojiSteamBeanOrder/batchSubmit', 'POST', params),
+    /**
+     * @property KOJI_AUDIT_BEANSTEEP_API 制曲车间-制曲审核-泡豆时长
+     */
+    KOJI_AUDIT_BEANSTEEP_API: params => httpProxy('/kojiVerify/queryBeanSteepChart', 'GET', params),
+    /**
+     * @property KOJI_AUDIT_BEANIMPURITY_API 制曲车间-制曲审核-大豆杂质情况
+     */
+    KOJI_AUDIT_BEANIMPURITY_API: params => httpProxy('/kojiVerify/queryBeanImpurityChart', 'GET', params),
+    /**
+     * @property KOJI_AUDIT_MIXEDINTOMATERIAL_API 制曲车间-制曲审核-混合入料工艺
+     */
+    KOJI_AUDIT_MIXEDINTOMATERIAL_API: params => httpProxy('/kojiVerify/querySteamControlChart', 'GET', params),
+    /**
+     * @property KOJI_AUDIT_MIXEDINTOMATERIAL_TABLE_API 制曲车间-制曲审核-混合入料工艺表格
+     */
+    KOJI_AUDIT_MIXEDINTOMATERIAL_TABLE_API: params => httpProxy('/kojiVerify/querySteamControlSheet', 'GET', params),
+    /**
+     * @property KOJI_AUDIT_LOOKCRAFTONE_API 制曲车间-制曲审核-看曲工艺
+     */
+    KOJI_AUDIT_LOOKCRAFTONE_API: params => httpProxy('/kojiVerify/queryDiscGuardChartList', 'GET', params),
+    /**
+     * @property KOJI_AUDIT_INOUTCRAFT_API 制曲车间-制曲审核-入曲及出曲工艺
+     */
+    KOJI_AUDIT_INOUTCRAFT_API: params => httpProxy('/kojiVerify/queryDiscInOutSheet', 'GET', params),
+    /**
+     * @property KOJI_AUDIT_TURN_API 制曲车间-制曲审核-翻曲情况
+     */
+    KOJI_AUDIT_TURN_API: params => httpProxy('/kojiVerify/queryDiscTurnSheet', 'GET', params),
+    /**
+     * @property KOJI_AUDIT_EXCEPTION_API 制曲车间-制曲审核-异常情况
+     */
+    KOJI_AUDIT_EXCEPTION_API: params => httpProxy('/kojiVerify/queryKojiExceptionSheet', 'GET', params),
+    /**
+     * @property KOJI_AUDIT_BEANUSAGE_API 制曲车间-制曲审核-原豆量情况
+     */
+    KOJI_AUDIT_BEANUSAGE_API: params => httpProxy('/kojiVerify/queryBeanUsage', 'GET', params),
+    /**
+     * @property KOJI_AUDIT_MATERIAL_API 制曲车间-制曲审核-物料领用
+     */
+    KOJI_AUDIT_MATERIAL_API: params => httpProxy('/kojiVerify/queryMaterialDetail', 'GET', params),
+    /**
+     * @property {string} STE_AUDIT_CRAFT_TEMPERATUREANDTIME_API 制曲车间-制曲审核-泡豆&物料
+     */
+    KOJI_AUDIT_BEANANDMATERIAL_API: params => httpProxy('/kojiVerify/queryBeanSteepAndMaterialSheet', 'GET', params)
 };
 
 export default KOJI_API;

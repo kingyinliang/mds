@@ -302,7 +302,7 @@ export function ShowHiddenNameBox($) {
             const $shiftBox = $('.' + $(this).attr('name') + 'Box');
             if (
                 $(this)
-                    .find('i')
+                    .find('em')
                     .hasClass('el-icon-caret-top')
             ) {
                 $(this).html('展开<em class="el-icon-caret-bottom"></em>');
