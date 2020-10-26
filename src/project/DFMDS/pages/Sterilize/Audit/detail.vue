@@ -82,19 +82,19 @@
                         订单产量：
                     </div>
                     <div class="input_bottom">
-                        {{ computedSoy }}&nbsp;
+                        0{{ computedSoy }}
                     </div>
                     <div>
                         实际产量：
                     </div>
                     <div class="input_bottom">
-                        {{ computedSoy }}&nbsp;
+                        0{{ computedSoy }}
                     </div>
                     <div>
                         生产锅数：
                     </div>
                     <div class="input_bottom">
-                        {{ computedSoy }}&nbsp;
+                        0{{ computedSoy }}
                     </div>
                 </el-row>
                 <el-table ref="inStorage" class="newTable" :data="inStorageList" header-row-class-name="tableHead" border tooltip-effect="dark">

@@ -458,7 +458,11 @@ const COMMON_API = {
     /**
      * @property {string} CHECKWORK_REJECT_API 考勤管理- reject
      */
-    CHECKWORK_REJECT_API: params => httpProxy('/v1/checkWork/withdraw', 'POST', params)
+    CHECKWORK_REJECT_API: params => httpProxy('/v1/checkWork/withdraw', 'POST', params),
+    /**
+     * @property {string} INLIST_API 订单号查询审核日志  orderNo
+     */
+    COMMON_LOG_LIST_API: params => httpProxy('/verifyRecord/queryByNo', 'GET', params)
 };
 
 export default COMMON_API;
