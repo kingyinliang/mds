@@ -3,7 +3,7 @@
  * @Anthor: Telliex
  * @Date: 2020-08-27 14:28:27
  * @LastEditors: Telliex
- * @LastEditTime: 2020-10-26 10:37:38
+ * @LastEditTime: 2020-10-27 09:45:30
  */
 import httpProxy from 'utils/net/httpProxy';
 const KOJI_API = {
@@ -336,7 +336,27 @@ const KOJI_API = {
     /**
      * @property KOJI_IMPURITY_SAVE_API 制曲车间-提交准备工时
      */
-    KOJI_TIMESHEET_SUBMIT_API: params => httpProxy('/koji/kojiTimeSheet/submit', 'POST', params)
+    KOJI_TIMESHEET_SUBMIT_API: params => httpProxy('/koji/kojiTimeSheet/submit', 'POST', params),
+    /**
+     * @property KOJI_AUDIT_QUERY_CRAFT_API 审核(SC)详情-查询工艺列表
+     */
+    KOJI_AUDIT_QUERY_CRAFT_API: params => httpProxy('/kojiVerify/detail/queryCraft', 'GET', params),
+    /**
+     * @property KOJI__AUDIT_QUERY_INSTORAGE_API 审核(SC)详情-查询生产入库
+     */
+    KOJI__AUDIT_QUERY_INSTORAGE_API: params => httpProxy('/kojiVerify/detail/queryInStorage', 'GET', params),
+    /**
+     * @property KOJI_ADDIT_QUERY_MACHINEHOUR_API 审核(SC)详情-查询机器工时
+     */
+    KOJI_ADDIT_QUERY_MACHINEHOUR_API: params => httpProxy('/kojiVerify/detail/queryMachineHour', 'GET', params),
+    /**
+     * @property KOJI_ADDIT_QUERY_MANHOUR_API 审核(SC)详情-查询人工工时
+     */
+    KOJI_ADDIT_QUERY_MANHOUR_API: params => httpProxy('/kojiVerify/detail/queryManHour', 'GET', params),
+    /**
+     * @property KOJI_AUDIT_QUERY_MARTERIAL_API 审核(SC)详情-查询物料领用
+     */
+    KOJI_AUDIT_QUERY_MARTERIAL_API: params => httpProxy('/kojiVerify/detail/queryMaterial', 'GET', params)
 };
 
 export default KOJI_API;
