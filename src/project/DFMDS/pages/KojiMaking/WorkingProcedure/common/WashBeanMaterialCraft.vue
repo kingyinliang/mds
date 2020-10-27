@@ -424,14 +424,14 @@
 
         // 初始化数据
         init(formHeader) {
-            const { orderNo, workShop, kojiOrderNo } = formHeader;
+            const { orderNo, workShop } = formHeader;
             this.formHeader = formHeader;
             // 查询设备list
             this.getSieveDeviceList(workShop);
             // 查询筛豆记录
-            this.getSeiveBeanLogList(kojiOrderNo);
+            this.getSeiveBeanLogList(formHeader);
             // 查询洗豆记录
-            this.getWashBeanLogList(kojiOrderNo);
+            this.getWashBeanLogList(formHeader);
             // 查询审核记录
             this.getAuditList(orderNo);
         }
@@ -688,9 +688,10 @@
         // === 查询 汇总 ==== //
 
         // 查询最新筛豆记录
-        getSeiveBeanLogList(kojiOrderNo) {
+        getSeiveBeanLogList(formHeader) {
             KOJI_API.KOJI_SBEAN_SIEVE_QUERY_API({
-                kojiOrderNo
+                kojiOrderNo: formHeader.kojiOrderNo,
+                orderNo: formHeader.orderNo
             }).then(({ data }) => {
                 this.craftSeiveBeanInfo = data.data;
                 this.craftSeiveBeanTable = data.data.items || [];
@@ -699,9 +700,10 @@
         }
 
         // 查询最新洗豆记录
-        getWashBeanLogList(kojiOrderNo) {
+        getWashBeanLogList(formHeader) {
             KOJI_API.KOJI_SBEAN_WASH_QUERY_API({
-                kojiOrderNo
+                kojiOrderNo: formHeader.kojiOrderNo,
+                orderNo: formHeader.orderNo
             }).then(({ data }) => {
                 this.craftWashBeanInfo = data.data;
                 this.craftWashBeanTable = data.data.items || [];

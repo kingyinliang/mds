@@ -49,7 +49,7 @@
         }
     })
     export default class StockY158Index extends Vue {
-         $refs: {
+        $refs: {
             queryTable: HTMLFormElement;
         };
 
@@ -96,16 +96,7 @@
         }
 
         // 查询车间下的信息
-        private getDataList(params) {
-            const queryParams = {
-                workShopId: params.workShop
-            }
-            // 未选择车间查所有
-            if (queryParams.workShopId) {
-                return KOJI_API.KOJI_STOCK_Y158_INDEX_LIST_API({
-                    ...queryParams
-                })
-            }
+        private getDataList() {
             return KOJI_API.KOJI_STOCK_Y158_INDEX_LIST_ALL_API({}).then(({ data }) => {
                 this.FnCallBackHandle(data);
             });

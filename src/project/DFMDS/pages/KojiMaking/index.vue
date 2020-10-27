@@ -41,7 +41,7 @@
                                     <li class="lines">
                                         <span>生产订单：</span>
                                         <el-select v-model="item.houseSplitList[item.nowIndex].orderNoTemp" filterable size="mini" style="flex: 1;" @change="val=>changeFirstOrder(val,item)">
-                                            <el-option v-for="(subItems) in item.houseSplitList" :key="subItems.id" :value="subItems.orderNo" :label="subItems.orderNo" />
+                                            <el-option v-for="(subItems) in item.houseSplitList" :key="subItems.id" :value="subItems.id" :label="subItems.orderNo" />
                                         </el-select>
                                     </li>
                                     <li class="lines">
@@ -121,7 +121,7 @@
                                         <li class="lines">
                                             <span>生产订单：</span>
                                             <el-select v-model="querySecondResultList[secondObjIndex].orderNoTemp" filterable size="mini" style="flex: 1;" @change="val=>changeSecondOrder(val)">
-                                                <el-option v-for="(subItems) in querySecondResultList" :key="subItems.id" :value="subItems.orderNo" :label="subItems.orderNo" />
+                                                <el-option v-for="(subItems) in querySecondResultList" :key="subItems.id" :value="subItems.id" :label="subItems.orderNo" />
                                             </el-select>
                                         </li>
                                         <li class="lines">
@@ -274,12 +274,9 @@
             KOJI_API.KOJI_INDEX_QUERY_SC_ORDER_API(
                     paramsTemp
                 ).then(({ data }) => {
-                    console.log('蒸豆')
-                    console.log(data)
+
                 if (data.data.length !== 0) {
                     this.querySecondResultList = data.data;
-                    console.log('this.querySecondResultList')
-                    console.log(this.querySecondResultList)
                     this.querySecondResultList.forEach(item => {
                         this.$set(item, 'orderNoTemp', item.orderNo)
                     })
@@ -294,7 +291,7 @@
 
         changeFirstOrder(val, item) {
             item.houseSplitList.forEach((sunItem, subIndex) => {
-                if (sunItem.orderNo === val) {
+                if (sunItem.id === val) {
                     item.nowIndex = subIndex
                     sunItem.orderNoTemp = val
                 }
@@ -303,7 +300,7 @@
 
         changeSecondOrder(val) {
             this.querySecondResultList.forEach((sunItem, subIndex) => {
-                if (sunItem.orderNo === val) {
+                if (sunItem.id === val) {
                     this.secondObjIndex = subIndex
                     sunItem.orderNoTemp = val
                 }
