@@ -421,17 +421,18 @@
                 this.isRedact = false
                 this.searchCard = true
                 this.redactBoxDisable = false
-                if (!data.data) {
-                    this.$infoToast('暂无任何内容');
-                    this.$refs.inStorage.init([], this.formHeader)
-                } else {
-                    this.$refs.inStorage.init(data.data, this.formHeader)
-                }
-
                 this.getPkgWorkShopList()
-                this.$refs.excRecord.init(this.formHeader, 'INSTORAGE');
-                this.$refs.textRecord.init(this.formHeader.orderNo, 'sterilize');
-
+                // $nextTick 避免页面者不到 inStorage.init
+                this.$nextTick(() => {
+                    if (!data.data) {
+                        this.$infoToast('暂无任何内容');
+                        this.$refs.inStorage.init([], this.formHeader)
+                    } else {
+                        this.$refs.inStorage.init(data.data, this.formHeader)
+                    }
+                    this.$refs.excRecord.init(this.formHeader, 'INSTORAGE');
+                    this.$refs.textRecord.init(this.formHeader.orderNo, 'sterilize');
+                })
             })
         }
 
