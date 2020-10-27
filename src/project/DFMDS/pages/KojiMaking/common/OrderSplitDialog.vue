@@ -33,7 +33,7 @@
             </el-table-column>
             <el-table-column label="发酵罐/池" width="160" prop="fermentPotNo" :show-overflow-tooltip="true">
                 <template slot-scope="scope">
-                    <el-select v-model="scope.row.fermentPotNo" size="small" :disabled="!['N','S','R'].includes(scope.row.status)" filterable clearable @change="setTheSameFermentPot(scope.row)">
+                    <el-select v-model="scope.row.fermentPotNo" size="small" :disabled="!['N','S','R'].includes(scope.row.status)" filterable clearable @change="val=>setTheSameFermentPot(val,scope.row)">
                         <el-option
                             v-for="item in fermentPotNoOptions"
                             :key="item.optValue"
@@ -123,18 +123,29 @@
         }
 
         // 同步发酵罐值
-        setTheSameFermentPot(item) {
-            const fermentPotIdTemp = this.fermentPotNoOptions.filter(subItem => subItem.optValue === item.fermentPotNo)[0].optId
-            const fermentPotNameTemp = this.fermentPotNoOptions.filter(subItem => subItem.optValue === item.fermentPotNo)[0].optLabel
-            this.splitTable.forEach(element => {
-                element.fermentPotNo = item.fermentPotNo
-                element.fermentPotId = fermentPotIdTemp
-                element.fermentPotName = fermentPotNameTemp
-            })
+        setTheSameFermentPot(val, item) {
+            console.log(item)
+            if (val !== '') {
+                const fermentPotIdTemp = this.fermentPotNoOptions.filter(subItem => subItem.optValue === item.fermentPotNo)[0].optId
+                const fermentPotNameTemp = this.fermentPotNoOptions.filter(subItem => subItem.optValue === item.fermentPotNo)[0].optLabel
+                this.splitTable.forEach(element => {
+                    element.fermentPotNo = item.fermentPotNo
+                    element.fermentPotId = fermentPotIdTemp
+                    element.fermentPotName = fermentPotNameTemp
+                })
+            } else {
+                this.splitTable.forEach(element => {
+                    element.fermentPotNo = ''
+                    element.fermentPotId = ''
+                    element.fermentPotName = ''
+                })
+            }
+
         }
 
         // 确认同曲房下是否有同日期
         changeKojiHouseNoControl(item) {
+
             if (this.checkTheSame()) {
                 this.$warningToast('同一个订单同一个制曲日期下，不允许曲房重复')
                 item.kojiHouseNo = ''
