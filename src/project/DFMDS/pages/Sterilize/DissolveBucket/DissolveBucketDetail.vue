@@ -55,9 +55,9 @@
                             {{ scope.row.potName }}
                         </template>
                     </el-table-column>
-                    <el-table-column label="物料" :show-overflow-tooltip="true" width="180">
+                    <el-table-column label="物料" :show-overflow-tooltip="true" width="280">
                         <template slot-scope="scope">
-                            {{ scope.row.prodcutMaterial }} {{ scope.row.prodcutMaterialName }}
+                            {{ scope.row.feedMaterialName }} {{ scope.row.prodcutMaterialName }}
                         </template>
                     </el-table-column>
                     <el-table-column label="批次" :show-overflow-tooltip="true" maxlength="10" width="100">
@@ -90,7 +90,7 @@
                             {{ scope.row.usePortOrderNo }}
                         </template>
                     </el-table-column>
-                    <el-table-column label="投料人" width="160">
+                    <el-table-column label="投料人" width="160" :show-overflow-tooltip="true">
                         <template slot-scope="scope">
                             {{ scope.row.feedMan }}
                         </template>
@@ -126,9 +126,9 @@
                             {{ scope.row.potName }}
                         </template>
                     </el-table-column>
-                    <el-table-column label="物料" :show-overflow-tooltip="true" width="180">
+                    <el-table-column label="物料" :show-overflow-tooltip="true" width="280">
                         <template slot-scope="scope">
-                            {{ scope.row.prodcutMaterial }} {{ scope.row.prodcutMaterialName }}
+                            {{ scope.row.feedMaterialName }} {{ scope.row.prodcutMaterialName }}
                         </template>
                     </el-table-column>
                     <el-table-column label="批次" :show-overflow-tooltip="true" maxlength="10" width="180">
@@ -146,7 +146,7 @@
                             <span v-if="scope.row.moveType!=='R'">-</span>{{ scope.row.moveAmount.toFixed(3) }}
                         </template>
                     </el-table-column>
-                    <el-table-column label="单位" :show-overflow-tooltip="true" width="170">
+                    <el-table-column label="单位" :show-overflow-tooltip="true" width="80">
                         <template slot-scope="scope">
                             {{ scope.row.moveUnit }}
                         </template>
@@ -161,7 +161,7 @@
                             {{ scope.row.usePortOrderNo }}
                         </template>
                     </el-table-column>
-                    <el-table-column label="投料人" width="160">
+                    <el-table-column label="投料人" width="160" :show-overflow-tooltip="true">
                         <template slot-scope="scope">
                             {{ scope.row.feedMan }}
                         </template>
