@@ -321,14 +321,12 @@
                             size: 99999,
                             current: 1
                         }).then(({ data }) => {
-                            console.log('data')
-                            console.log(data)
                             const optionList = data.data.records;
                             optionList.forEach(item => {
                                 // eslint-disable-next-line no-invalid-this
                                 this.$set(item, 'optLabel', item.holderName)
                                 // eslint-disable-next-line no-invalid-this
-                                this.$set(item, 'optValue', item.holderNo)
+                                this.$set(item, 'optValue', item.id)
                             })
                             resolve(optionList)
                         })
@@ -459,7 +457,6 @@
                     { required: true, message: '请选择曲房', trigger: 'change' }
                 ],
                 emitChange: (val) => {
-                    console.log('222222')
                     // eslint-disable-next-line no-invalid-this
                     return new Promise((resolve) => {
                         COMMON_API.HOLDER_QUERY_API({
@@ -469,14 +466,12 @@
                             size: 99999,
                             current: 1
                         }).then(({ data }) => {
-                            console.log('data')
-                            console.log(data)
                             const optionList = data.data.records;
                             optionList.forEach(item => {
                                 // eslint-disable-next-line no-invalid-this
                                 this.$set(item, 'optLabel', item.holderName)
                                 // eslint-disable-next-line no-invalid-this
-                                this.$set(item, 'optValue', item.holderNo)
+                                this.$set(item, 'optValue', item.id)
                             })
                             resolve(optionList)
                         })
