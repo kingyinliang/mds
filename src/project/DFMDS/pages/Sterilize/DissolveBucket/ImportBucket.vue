@@ -10,7 +10,7 @@
                             <el-input v-model="currentPotName" placeholder="" disabled style="width: 100px;" />
                         </el-form-item>
                         <el-form-item class="star" label="生产物料：" size="mini">
-                            <el-select v-model="headerInfo.headerProdcutMaterial" placeholder="请选择" clearable @change="changeProdcutMaterialOption">
+                            <el-select v-model="headerInfo.headerProdcutMaterial" placeholder="请选择" clearable style="width: 220px;" @change="changeProdcutMaterialOption">
                                 <el-option
                                     v-for="item in optionsTree"
                                     :key="item.productMaterialList[0].dictCode"
@@ -276,7 +276,7 @@
                 if (data.data.records[0].material) {
                     data.data.records[0].material.forEach((element, index) => {
                         this.optionsTree.push({
-                            productMaterialList: [{ dictCode: element.materialCode, dictValue: element.materialName }],
+                            productMaterialList: [{ dictCode: element.materialCode, dictValue: `${element.materialName} ${element.materialCode}` }],
                             feedMateriallList: []
                         })
                         //this.productMaterialList.push({ dictCode: element.materialCode, dictValue: element.materialName, id: element.id })
@@ -290,7 +290,7 @@
                                 this.optionsTree[index].feedMateriallList = []
                                 if (target.data) {
                                     target.data.forEach(items => {
-                                        this.optionsTree[index].feedMateriallList.push({ dictCode: items.useMaterial, dictValue: items.useMaterial + ' ' + items.useMaterialName })
+                                        this.optionsTree[index].feedMateriallList.push({ dictCode: items.useMaterial, dictValue: items.useMaterialName + ' ' + items.useMaterial })
                                     })
                                 }
                             });
