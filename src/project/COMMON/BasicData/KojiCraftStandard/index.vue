@@ -105,6 +105,14 @@
                 },
                 {
                     type: 'single', // 表格元件
+                    prop: 'kojiHouseName',
+                    label: '曲房号', // 表单元件名称
+                    minWidth: 0,
+                    width: 160,
+                    content: ['kojiHouseName']
+                },
+                {
+                    type: 'single', // 表格元件
                     prop: 'standardAmount',
                     label: '曲房原豆标准量', // 表单元件名称
                     minWidth: 0,
@@ -266,7 +274,8 @@
                                 resolve(optionList)
                             })
                         })
-                    }
+                    },
+                    linkageProp: ['kojiHouseId']
                 },
                 {
                     type: 'select',
@@ -295,6 +304,37 @@
                         })
                     }
                 },
+                {
+                type: 'select',
+                prop: 'kojiHouseId',
+                label: '曲房号',
+                placeholder: '请选择',
+                rules: [
+                    { required: true, message: '请选择曲房', trigger: 'change' }
+                ],
+                emitChange: (val) => {
+                    return new Promise((resolve) => {
+                        COMMON_API.HOLDER_QUERY_API({
+                            factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
+                            deptId: val,
+                            holderType: '005',
+                            size: 99999,
+                            current: 1
+                        }).then(({ data }) => {
+                            console.log('data')
+                            console.log(data)
+                            const optionList = data.data.records;
+                            optionList.forEach(item => {
+                                // eslint-disable-next-line no-invalid-this
+                                this.$set(item, 'optLabel', item.holderName)
+                                // eslint-disable-next-line no-invalid-this
+                                this.$set(item, 'optValue', item.holderNo)
+                            })
+                            resolve(optionList)
+                        })
+                    })
+                }
+            },
                 {
                     type: 'input',
                     prop: 'standardAmount',
@@ -339,6 +379,8 @@
             material: '',
             materialCode: '',
             materialName: '',
+            kojiHouseId: '',
+            kojiHouseName: '',
             standardAmount: 0,
             standardDuration: 0,
             remark: '',
@@ -379,7 +421,8 @@
                             resolve(optionList)
                         })
                     })
-                }
+                },
+                linkageProp: ['kojiHouseId']
             },
             {
                 type: 'select',
@@ -403,6 +446,39 @@
                                     this.$set(item, 'optValue', `${item.materialCode} ${item.materialName}`)
                                 })
                                 resolve(optionList)
+                        })
+                    })
+                }
+            },
+            {
+                type: 'select',
+                prop: 'kojiHouseId',
+                label: '曲房号',
+                placeholder: '请选择',
+                rules: [
+                    { required: true, message: '请选择曲房', trigger: 'change' }
+                ],
+                emitChange: (val) => {
+                    console.log('222222')
+                    // eslint-disable-next-line no-invalid-this
+                    return new Promise((resolve) => {
+                        COMMON_API.HOLDER_QUERY_API({
+                            factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
+                            deptId: val,
+                            holderType: '005',
+                            size: 99999,
+                            current: 1
+                        }).then(({ data }) => {
+                            console.log('data')
+                            console.log(data)
+                            const optionList = data.data.records;
+                            optionList.forEach(item => {
+                                // eslint-disable-next-line no-invalid-this
+                                this.$set(item, 'optLabel', item.holderName)
+                                // eslint-disable-next-line no-invalid-this
+                                this.$set(item, 'optValue', item.holderNo)
+                            })
+                            resolve(optionList)
                         })
                     })
                 }
@@ -474,6 +550,7 @@
             dataForm.materialCode = dataForm.material.split(' ')[0]
             dataForm.materialName = dataForm.material.split(' ')[1]
             KOJI_API.CRAFTSTANDARD_INSERT_API({
+                kojiHouseId: dataForm.kojiHouseId,
                 workShop: dataForm.workShop,
                 standardAmount: dataForm.standardAmount,
                 standardDuration: dataForm.standardDuration,
@@ -492,6 +569,7 @@
             dataForm.materialName = dataForm.material.split(' ')[1]
             KOJI_API.CRAFTSTANDARD_UPDATE_API({
                 id: dataForm.id,
+                kojiHouseId: dataForm.kojiHouseId,
                 materialCode: dataForm.materialCode,
                 materialName: dataForm.materialName,
                 standardAmount: dataForm.standardAmount,
@@ -546,6 +624,8 @@
                 material: '',
                 materialCode: '',
                 materialName: '',
+                kojiHouseId: '',
+                kojiHouseName: '',
                 standardAmount: 0,
                 standardDuration: 0,
                 remark: '',
@@ -641,6 +721,8 @@ interface CurrentDataTable {
     standardAmount: number;
     standardDuration: number;
     workShop: string;
+    kojiHouseId: string;
+    kojiHouseName: string;
 }
 
 interface Options {
