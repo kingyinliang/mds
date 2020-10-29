@@ -57,6 +57,7 @@
         }
 
         formHeader: OrderData = {};
+        jumpFromAudit=false // is from audit ?
 
         // 杂质数量
         sieveTotalNum = 0;
@@ -147,13 +148,18 @@
         }
 
         mounted() {
+            if (typeof this.$route.params.order !== 'undefined') {
+                console.log(this.$route.params.order)
+                this.jumpFromAudit = true
+            }
             this.getOrderList();
         }
 
         // 查询表头
         getOrderList() {
             KOJI_API.KOJI_CRAFT_HEAD_INFO_QUERY_API({
-                id: this.$store.state.koji.orderKojiInfo.id || ''
+                // id: this.$store.state.koji.orderKojiInfo.id || ''
+                id: this.jumpFromAudit ? this.$route.params.order : this.$store.state.koji.orderKojiInfo.id || ''
             }).then(({ data }) => {
                 this.formHeader = data.data;
                 // 获取页签状态

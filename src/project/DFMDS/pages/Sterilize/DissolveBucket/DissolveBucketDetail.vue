@@ -31,13 +31,18 @@
                             </p>
                             <p> <em class="iconfont factory-bianhao" />生产物料 </p>
                         </div>
-
                         <div class="dataEntry-head-leftRight-message__item">
                             <p>
                                 {{ formData.potAmount ? formData.potAmount.toLocaleString() : 0 }}
                                 <em>{{ formData.unit ? formData.unit : 'KG' }}</em>
                             </p>
                             <p> <em class="iconfont factory-cunchurongliang" />配置锅数 </p>
+                        </div>
+                        <div class="dataEntry-head-leftRight-message__item">
+                            <p>
+                                {{ formData.amount ? formData.amount.toLocaleString() : 0 }}
+                            </p>
+                            <p> <em class="iconfont factory-cunchurongliang" />数量 </p>
                         </div>
                     </div>
                 </div>
@@ -230,9 +235,10 @@ export default class DissolveBucketDetail extends Vue {
                 console.log(data)
                 this.formData = {
                     potName: this.importData.potName,
+                    potAmount: this.importData.potAmount,
                     potNo: this.importData.potNo,
                     factoryName: JSON.parse(sessionStorage.getItem('factory') || '{}').deptShort,
-                    potAmount: data.data.number,
+                    amount: data.data.number,
                     unit: data.data.unit,
                     prodcutMaterial: data.data.materialName,
                     workShop: data.data.workShop

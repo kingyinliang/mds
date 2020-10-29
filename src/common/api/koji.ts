@@ -3,7 +3,7 @@
  * @Anthor: Telliex
  * @Date: 2020-08-27 14:28:27
  * @LastEditors: Telliex
- * @LastEditTime: 2020-10-27 09:45:30
+ * @LastEditTime: 2020-10-28 18:46:37
  */
 import httpProxy from 'utils/net/httpProxy';
 const KOJI_API = {
@@ -356,7 +356,23 @@ const KOJI_API = {
     /**
      * @property KOJI_AUDIT_QUERY_MARTERIAL_API 审核(SC)详情-查询物料领用
      */
-    KOJI_AUDIT_QUERY_MARTERIAL_API: params => httpProxy('/kojiVerify/detail/queryMaterial', 'GET', params)
+    KOJI_AUDIT_QUERY_MARTERIAL_API: params => httpProxy('/kojiVerify/detail/queryMaterial', 'GET', params),
+    /**
+     * @property KOJI_REFUSE_READY_API 制曲车间-制曲审核-准备工时退回
+     */
+    KOJI_REFUSE_READY_API: params => httpProxy('/kojiVerify/ready/refuse', 'POST', params),
+    /**
+     * @property KOJI_REFUSE_DEVICE_API 制曲车间-制曲审核-机器工时退回
+     */
+    KOJI_REFUSE_DEVICE_API: params => httpProxy('/kojiVerify/device/refuse', 'POST', params),
+    /**
+     * @property KOJI_REFUSE_INSTORAGE_API 制曲车间-制曲审核-入库退回
+     */
+    KOJI_REFUSE_INSTORAGE_API: params => httpProxy('/kojiVerify/inStorage/refuse', 'POST', params),
+    /**
+     * @property KOJI_REFUSE_MATERIAL_API 制曲车间-制曲审核-物料领用退回
+     */
+    KOJI_REFUSE_MATERIAL_API: params => httpProxy('/kojiVerify/material/refuse', 'POST', params)
 };
 
 export default KOJI_API;
