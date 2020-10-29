@@ -3,7 +3,7 @@
  * @Anthor: Telliex
  * @Date: 2020-08-27 14:28:27
  * @LastEditors: Telliex
- * @LastEditTime: 2020-10-28 18:46:37
+ * @LastEditTime: 2020-10-29 15:35:31
  */
 import httpProxy from 'utils/net/httpProxy';
 const KOJI_API = {
@@ -372,7 +372,11 @@ const KOJI_API = {
     /**
      * @property KOJI_REFUSE_MATERIAL_API 制曲车间-制曲审核-物料领用退回
      */
-    KOJI_REFUSE_MATERIAL_API: params => httpProxy('/kojiVerify/material/refuse', 'POST', params)
+    KOJI_REFUSE_MATERIAL_API: params => httpProxy('/kojiVerify/material/refuse', 'POST', params),
+    /**
+     * @property KOJI_VERIFY_TAB_STATUS_API 制曲车间-制曲审核-审核详情页签查询
+     */
+    KOJI_VERIFY_TAB_STATUS_API: params => httpProxy('/koji/houseTag/queryVerifyDetail', 'GET', params)
 };
 
 export default KOJI_API;

@@ -31,7 +31,7 @@
                     </el-table-column>
                     <el-table-column label="操作" prop="" width="120" fixed="right">
                         <template slot-scope="scope">
-                            <el-button type="text" size="small" :disable="scope.row.enableBack!==1" @click="reject('1',scope.row)">
+                            <el-button type="text" size="small" :disabled="scope.row.enableBack!==1" @click="reject('1',scope.row)">
                                 退回
                             </el-button>
                             <el-button type="text" size="small" @click="auditLog(scope.row)">
@@ -56,7 +56,7 @@
                     </el-table-column>
                     <el-table-column label="操作" prop="" width="120" fixed="right">
                         <template slot-scope="scope">
-                            <el-button type="text" size="small" :disable="scope.row.enableBack!==1" @click="reject('2',scope.row)">
+                            <el-button type="text" size="small" :disabled="scope.row.enableBack!==1" @click="reject('2',scope.row)">
                                 退回
                             </el-button>
                             <el-button type="text" size="small" @click="auditLog(scope.row)">
@@ -81,7 +81,7 @@
                     <el-table-column label="操作时间" prop="changed" width="180" />
                     <el-table-column label="操作" prop="" width="120" fixed="right">
                         <template slot-scope="scope">
-                            <el-button type="text" size="small" :disable="scope.row.enableBack!==1" @click="reject('3',scope.row)">
+                            <el-button type="text" size="small" :disabled="scope.row.enableBack!==1" @click="reject('3',scope.row)">
                                 退回
                             </el-button>
                             <el-button type="text" size="small" @click="auditLog(scope.row)">
@@ -112,7 +112,7 @@
                     <el-table-column label="操作时间" prop="changed" width="180" />
                     <el-table-column label="操作" prop="" width="120" fixed="right">
                         <template slot-scope="scope">
-                            <el-button type="text" size="small" :disable="scope.row.enableBack!==1" @click="reject('4',scope.row)">
+                            <el-button type="text" size="small" :disabled="scope.row.enableBack!==1" @click="reject('4',scope.row)">
                                 退回
                             </el-button>
                             <el-button type="text" size="small" @click="auditLog(scope.row)">
@@ -238,22 +238,22 @@
         tabs = [
             {
                 label: '准备人工',
-                status: '未录入',
+                status: '未录入1',
                 isRedact: false
             },
             {
                 label: '机器工时',
-                status: '未录入',
+                status: '未录入1',
                 isRedact: false
             },
             {
                 label: '生产入库',
-                status: '未录入',
+                status: '未录入1',
                 isRedact: false
             },
             {
                 label: '物料领用',
-                status: '未录入',
+                status: '未录入1',
                 isRedact: false
             },
             {
@@ -452,20 +452,19 @@
 
 
             // 页签状态
-            await KOJI_API.KOJI_PAGE_TAG_STATUS_QUERY_API({
+            await KOJI_API.KOJI_VERIFY_TAB_STATUS_API({
                 orderNo: this.formHeader.orderNo
             }).then(({ data }) => {
                 console.log('页签data')
                 console.log(data)
                 if (data.data !== null) {
                     // this.rejectBtn = data.data.readyTagStatus;
-                    // this.tabs[0].status = data.data.readyTagStatus;
-                    // this.tabs[1].status = data.data.userTagStatus;
-                    // this.tabs[2].status = data.data.deviceTagStatus;
-                    // this.tabs[3].status = data.data.storageTagStatus;
-                    // this.tabs[4].status = data.data.materialTagStatus;
-                    // this.tabs[4].status = data.data.materialTagStatus;
-                    // this.$refs.dataEntry.updateTabs();
+                    this.tabs[0].status = data.data.manHour;
+                    this.tabs[1].status = data.data.machineHour;
+                    this.tabs[2].status = data.data.inStorage;
+                    this.tabs[3].status = data.data.material;
+
+                    this.$refs.dataEntry.updateTabs();
                 }
             });
         }
