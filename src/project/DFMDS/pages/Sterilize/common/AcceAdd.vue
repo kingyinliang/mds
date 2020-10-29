@@ -169,8 +169,8 @@
                         <span class="notNull">* </span>领用物料
                     </template>
                     <template slot-scope="scope">
-                        <el-select v-model="scope.row.useMaterialCode" placeholder="请选择" size="small" clearable filterable :disabled="!(isRedact && scope.row.checkStatus !== 'C' && scope.row.checkStatus !== 'D' && scope.row.checkStatus !== 'P')">
-                            <el-option v-for="(iteam, index) in ACMaterial" :key="index" :label="iteam.dictCode + ' ' + iteam.dictValue" :value="iteam.dictCode" />
+                        <el-select v-model="scope.row.useMaterialCode" placeholder="请选择" size="small" clearable filterable :disabled="!(isRedact && scope.row.checkStatus !== 'C' && scope.row.checkStatus !== 'D' && scope.row.checkStatus !== 'P')" @change="setZengbuliao(scope.row)">
+                            <el-option v-for="(iteam, index) in ACMaterial" :key="index" :label="iteam.useMaterial + ' ' + iteam.useMaterialName" :value="iteam.useMaterial" />
                         </el-select>
                     </template>
                 </el-table-column>
@@ -248,7 +248,7 @@
         holderList = [];
         transferTank = [];
         useBoxNo = [];
-        ACMaterial = [];
+        ACMaterial: ACM[] = [];
         materialList = [];
         Unit = [];
         formHeader: OrderData = {};
@@ -333,6 +333,7 @@
             });
             return {
                 potOrderNo: formHeader.potOrderNo,
+                orderNo: formHeader.orderNo,
                 steCookingConsumeSaveDto,
                 steAccessoriesConsumeSaveDto,
                 newSteAccessoriesConsumeSaveDto
@@ -389,6 +390,12 @@
             })
         }
 
+        setZengbuliao(row) {
+            const arr = this.ACMaterial.filter(item => item.useMaterial === row.useMaterialCode);
+            row.useMaterialType = arr[0]['useMaterialType'];
+            row.useMaterialName = arr[0]['useMaterialName'];
+        }
+
         // 锅序下拉触发
         cookingNumChange(row, index) {
             const cookingNumObj = row.cookingNumArr.filter(it => it.potOrder === row.cookingNum)[0];
@@ -440,7 +447,7 @@
         }
 
         getMaterial() {
-            COMMON_API.DICTQUERY_API({ dictType: 'STE_SUP_MATERIAL' }).then(({ data }) => {
+            STE_API.STE_ACCE_MATERIAL_LIST_API({ supplyFlag: 'Y' }).then(({ data }) => {
                 this.ACMaterial = data.data
             });
         }
@@ -480,6 +487,7 @@
                 potOrderId: this.formHeader.potOrderId,
                 useMaterialCode: row.useMaterialCode,
                 useMaterialName: row.useMaterialName,
+                useMaterialType: row.useMaterialType,
                 useBatch: '',
                 useAmount: '',
                 useUnit: row.useUnit,
@@ -561,6 +569,9 @@
                 this.merge(this[str], str)
             });
         }
+    }
+    interface ACM {
+        useMaterial?: string;
     }
     interface OrderData {
         materialCode?: string;
