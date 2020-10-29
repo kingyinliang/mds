@@ -62,7 +62,7 @@
                     </el-table-column>
                     <el-table-column label="物料" :show-overflow-tooltip="true" width="280">
                         <template slot-scope="scope">
-                            {{ scope.row.feedMaterialName }} {{ scope.row.prodcutMaterialName }}
+                            {{ scope.row.prodcutMaterialName }} {{ scope.row.feedMaterialName }}
                         </template>
                     </el-table-column>
                     <el-table-column label="批次" :show-overflow-tooltip="true" maxlength="10" width="100">
