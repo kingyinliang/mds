@@ -63,7 +63,7 @@
             </el-tab-pane>
         </el-tabs>
         <!--编辑-->
-        <div class="redactBox">
+        <div v-if="redactBoxShow" class="redactBox">
             <div class="redactBox" :style="{ 'padding-left': sidebarFold ? '64px' : '170px' }">
                 <div v-if="redactBoxStatus" class="redact clearfix">
                     <div v-if="type === 'entry'" class="redact_tips">
@@ -227,6 +227,11 @@
                 default: () => {
                     //
                 }
+            },
+            // 下方 bar 显示与否
+            redactBoxShow: {
+                type: Boolean,
+                default: true
             },
             //检测数据订单状态不显示
             orderStatusShow: {

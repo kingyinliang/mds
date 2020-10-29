@@ -7,14 +7,16 @@
             :form-header="formHeader"
             :order-status="formHeader.orderStatusName"
             :tabs="tabs"
+            :redact-box-show="false"
             @tab-click="tabClick"
         >
             <template slot="1">
                 <el-table ref="manHourList" class="newTable" :data="manHourList" header-row-class-name="tableHead" border tooltip-effect="dark">
                     <el-table-column type="index" label="序号" width="50" align="center" fixed />
                     <el-table-column label="工序" prop="process" min-width="120" />
-                    <el-table-column label="曲房" prop="kojiHouseName" min-width="120" />
-                    <el-table-column label="入曲时间" prop="addKojiDate" width="180" />
+                    <el-table-column v-if="isNormalPage" label="曲房" prop="kojiHouseName" min-width="120" />
+                    <el-table-column v-if="isNormalPage" label="入曲时间" prop="addKojiDate" width="180" />
+                    <el-table-column v-if="isSCPage" label="生产时间" prop="addKojiDate" width="180" />
                     <el-table-column label="准备工时" prop="prepairedHour" width="180" />
                     <el-table-column label="单位" prop="" width="120">
                         <template>
@@ -29,7 +31,7 @@
                     </el-table-column>
                     <el-table-column label="操作" prop="" width="120" fixed="right">
                         <template slot-scope="scope">
-                            <el-button type="text" size="small" :disable="scope.row.enableBack!==1" @click="reject">
+                            <el-button type="text" size="small" :disable="scope.row.enableBack!==1" @click="reject('1',scope.row)">
                                 退回
                             </el-button>
                             <el-button type="text" size="small" @click="auditLog(scope.row)">
@@ -43,8 +45,9 @@
                 <el-table ref="machineHourList" class="newTable" :data="machineHourList" header-row-class-name="tableHead" border tooltip-effect="dark">
                     <el-table-column type="index" label="序号" width="50" align="center" fixed />
                     <el-table-column label="工序" prop="process" min-width="120" />
-                    <el-table-column label="曲房" prop="kojiHouseName" min-width="120" />
-                    <el-table-column label="入曲日期" prop="addKojiDate" width="180" />
+                    <el-table-column v-if="isNormalPage" label="曲房" prop="kojiHouseName" min-width="120" />
+                    <el-table-column v-if="isNormalPage" label="入曲日期" prop="addKojiDate" width="180" />
+                    <el-table-column v-if="isSCPage" label="生产日期" prop="addKojiDate" width="180" />
                     <el-table-column label="机器工时" prop="machineHour" width="120" />
                     <el-table-column label="单位" prop="" width="120">
                         <template>
@@ -53,7 +56,7 @@
                     </el-table-column>
                     <el-table-column label="操作" prop="" width="120" fixed="right">
                         <template slot-scope="scope">
-                            <el-button type="text" size="small" :disable="scope.row.enableBack!==1" @click="reject">
+                            <el-button type="text" size="small" :disable="scope.row.enableBack!==1" @click="reject('2',scope.row)">
                                 退回
                             </el-button>
                             <el-button type="text" size="small" @click="auditLog(scope.row)">
@@ -66,19 +69,19 @@
             <template slot="3">
                 <el-table ref="inStorageList" class="newTable" :data="inStorageList" header-row-class-name="tableHead" border tooltip-effect="dark">
                     <el-table-column type="index" label="序号" width="50" align="center" fixed />
-                    <el-table-column label="曲房号" prop="kojiHouseName" min-width="120" />
-                    <el-table-column label="入曲日期" prop="addKojiDate" width="180" />
+                    <el-table-column v-if="isNormalPage" label="曲房号" prop="kojiHouseName" min-width="120" />
+                    <el-table-column v-if="isNormalPage" label="入曲日期" prop="addKojiDate" width="180" />
                     <el-table-column label="大豆量(KG)" prop="beanAmount" width="120" />
-                    <el-table-column label="麦粉量(KG)" prop="wheatAmount" width="120" />
-                    <el-table-column label="菌种量" prop="strainAmount" width="120" />
+                    <el-table-column v-if="isNormalPage" label="麦粉量(KG)" prop="wheatAmount" width="120" />
+                    <el-table-column v-if="isNormalPage" label="菌种量" prop="strainAmount" width="120" />
                     <el-table-column label="入库量" prop="inStorageAmount" width="120" />
                     <el-table-column label="入库批次" prop="inStorageBatch" min-width="120" />
                     <el-table-column label="单位" prop="unit" width="120" />
-                    <el-table-column label="操作人" prop="changer" min-width="120" />
+                    <el-table-column label="操作人" prop="changer" width="180" />
                     <el-table-column label="操作时间" prop="changed" width="180" />
-                    <el-table-column label="操作" prop="" width="120">
+                    <el-table-column label="操作" prop="" width="120" fixed="right">
                         <template slot-scope="scope">
-                            <el-button type="text" size="small" :disable="scope.row.enableBack!==1" @click="reject">
+                            <el-button type="text" size="small" :disable="scope.row.enableBack!==1" @click="reject('3',scope.row)">
                                 退回
                             </el-button>
                             <el-button type="text" size="small" @click="auditLog(scope.row)">
@@ -99,8 +102,8 @@
             <template slot="4">
                 <el-table ref="meterialList" class="newTable" :data="meterialList" header-row-class-name="tableHead" border tooltip-effect="dark">
                     <el-table-column type="index" label="序号" width="50" align="center" fixed />
-                    <el-table-column label="曲房" prop="kojiHouseName" width="120" />
-                    <el-table-column label="入曲日期" prop="addKojiDate" width="180" />
+                    <el-table-column v-if="isNormalPage" label="曲房" prop="kojiHouseName" width="120" />
+                    <el-table-column v-if="isNormalPage" label="入曲日期" prop="addKojiDate" width="180" />
                     <el-table-column label="物料" prop="material" min-width="120" />
                     <el-table-column label="批次" prop="batch" min-width="120" />
                     <el-table-column label="数量" prop="amount" width="120" />
@@ -109,7 +112,7 @@
                     <el-table-column label="操作时间" prop="changed" width="180" />
                     <el-table-column label="操作" prop="" width="120" fixed="right">
                         <template slot-scope="scope">
-                            <el-button type="text" size="small" :disable="scope.row.enableBack!==1" @click="reject">
+                            <el-button type="text" size="small" :disable="scope.row.enableBack!==1" @click="reject('4',scope.row)">
                                 退回
                             </el-button>
                             <el-button type="text" size="small" @click="auditLog(scope.row)">
@@ -122,12 +125,12 @@
             <template slot="5">
                 <el-table ref="craftList" class="newTable" :data="craftList" header-row-class-name="tableHead" border tooltip-effect="dark">
                     <el-table-column type="index" label="序号" width="50" align="center" fixed />
-                    <el-table-column label="曲房" prop="kojiHouseName" min-width="120" />
-                    <el-table-column label="入曲日期" prop="addKojiDate" min-width="120" />
+                    <el-table-column v-if="isNormalPage" label="曲房" prop="kojiHouseName" min-width="120" />
+                    <el-table-column v-if="isNormalPage" label="入曲日期" prop="addKojiDate" min-width="120" />
                     <el-table-column label="工序" prop="process" min-width="120" />
                     <el-table-column label="详情" prop="arg" min-width="120">
                         <template slot-scope="scope">
-                            <span @click="goProcessDetail">{{ `${scope.row.process}详情` }}</span>
+                            <span style="color: #409eff; cursor: pointer;" @click="goProcessDetail(scope.row)">{{ `${scope.row.process}详情` }}</span>
                         </template>
                     </el-table-column>
                     <el-table-column label="提交人" prop="changer" min-width="120" />
@@ -145,7 +148,7 @@
             <div slot="footer" class="dialog-footer" />
         </el-dialog>
         <el-dialog title="退回原因" :close-on-click-modal="false" :visible.sync="visibleRefuse">
-            <el-input v-model="ReText" type="textarea" :rows="7" class="textarea" style="width: 100%;" />
+            <el-input v-model="rejectText" type="textarea" :rows="7" class="textarea" style="width: 100%;" />
             <div slot="footer" class="dialog-footer">
                 <el-button @click="visibleRefuse = false">
                     取消
@@ -160,7 +163,7 @@
 
 <script lang="ts">
     import { Vue, Component } from 'vue-property-decorator';
-    import { COMMON_API, PKG_API, KOJI_API, AUDIT_API } from 'common/api/api';
+    import { COMMON_API, KOJI_API, AUDIT_API } from 'common/api/api';
 
     @Component({
         name: 'KojiAuditDetail'
@@ -176,6 +179,9 @@
         };
 
         currentOrderNo=''
+        isNormalPage=true // show normal
+        isSCPage=false // show SC
+
 
         headerBase = [
             {
@@ -262,39 +268,88 @@
         // classesOptions: object[] = [];
         visibleRefuse = false; // 退回弹窗
         visibleAuditLog= false; // 审核日志弹窗
-        ReText = '';
 
+        rejectText = '';
+        rejectProcess='';
+        rejectKojiHouseId='';
+
+        kojiHouseNoOptions: OptionObj[]=[]; // 曲房下拉
         manHourList: ManHourList[] = [];
         machineHourList: MachineHourList[] = [];
         inStorageList: InStorageList[] = [];
         meterialList: MeterialList[]= [];
         craftList: CraftList[] = [];
 
+        processMapping={} // 工序 mapping
+
         async mounted() {
             this.currentOrderNo = '851000002087'
 
             await this.initData(this.currentOrderNo)
+            await this.getKojiHolder()
+            await this.getProcessMapping()
 
+            // 5个 tab 加载
             this.getManHourList()
             this.getMachineHourList()
             this.getInStorageList()
             this.getMeterialList()
             this.getCraftList()
-            // COMMON_API.DICTQUERY_API({ dictType: 'COMMON_CLASSES' }).then(({ data }) => {
-            //     this.classesOptions = []
-            //     data.data.forEach((item) => {
-            //         this.classesOptions.push({
-            //             dictValue: item.dictValue,
-            //             dictCode: item.dictCode
-            //         })
-            //     })
-            // });
         }
 
 
         // 工艺列表 tab 工序详情
-        goProcessDetail() {
-            //
+        goProcessDetail(item) {
+            this.goDetail(this.processMapping[item.process], item.arg)
+        }
+
+        // 跳转工序页面
+        goDetail(who, arg) {
+            let url = '';
+            // 曲房工序跳转
+            if (this.isNormalPage) {
+                // this.$store.commit('koji/updateOrderKojiInfo', item);
+
+                switch (who) {
+                    case 'XD':
+                        url = 'DFMDS-pages-KojiMaking-WorkingProcedure-WashBean';
+                        break;
+                    case 'ZM':
+                        url = 'DFMDS-pages-KojiMaking-WorkingProcedure-SteamedFlour';
+                        break;
+                    case 'YP':
+                        url = 'DFMDS-pages-KojiMaking-WorkingProcedure-disc';
+                        break;
+                    default:
+                }
+
+            }
+            // 蒸豆工序跳转
+            if (this.isSCPage) {
+                // this.$store.commit('koji/updateOrderScInfo', item);
+                switch (who) {
+                    case 'SC':
+                        url = 'DFMDS-pages-KojiMaking-WorkingProcedure-SCWashBean';
+                        break;
+                    case 'ZD':
+                        url = 'DFMDS-pages-KojiMaking-WorkingProcedure-SteamedBean';
+                        break;
+                    default:
+                }
+
+            }
+
+            this.$store.commit(
+                    'common/updateMainTabs',
+                    this.$store.state.common.mainTabs.filter(subItem => subItem.name !== url)
+            );
+
+            setTimeout(() => {
+                this.$router.push({
+                    name: url, params: { order: arg }
+                });
+            }, 100);
+
         }
 
         get inStorageComputed() {
@@ -304,13 +359,11 @@
                     result += item.inStorageAmount
                 })
             }
-            //
             return result
         }
 
         getManHourList() {
             KOJI_API.KOJI_ADDIT_QUERY_MANHOUR_API({
-                // kojiOrderNo: '',
                 orderNo: this.formHeader.orderNo
             }).then(({ data }) => {
                 console.log('准备工时data')
@@ -400,7 +453,6 @@
 
             // 页签状态
             await KOJI_API.KOJI_PAGE_TAG_STATUS_QUERY_API({
-                kojiOrderNo: '',
                 orderNo: this.formHeader.orderNo
             }).then(({ data }) => {
                 console.log('页签data')
@@ -412,25 +464,40 @@
                     // this.tabs[2].status = data.data.deviceTagStatus;
                     // this.tabs[3].status = data.data.storageTagStatus;
                     // this.tabs[4].status = data.data.materialTagStatus;
+                    // this.tabs[4].status = data.data.materialTagStatus;
                     // this.$refs.dataEntry.updateTabs();
                 }
             });
         }
 
-        reject() {
+        reject(who, item) {
             // if (this.$refs.dataEntry.activeName === '6' || this.$refs.dataEntry.activeName === '7') {
             //     return false
             // }
             // if (this.tabs[Number(this.$refs.dataEntry.activeName) - 1].status !== 'D') {
             //     return false
             // }
-            this.ReText = '';
             this.visibleRefuse = true;
-
+            this.rejectText = '';
+            switch (who) {
+                case '1':
+                    this.rejectProcess = this.processMapping[item.process]
+                break;
+                case '2':
+                    this.rejectProcess = this.processMapping[item.process]
+                    this.rejectKojiHouseId = this.kojiHouseNoOptions.filter(element => element.optValue === item.kojiHouseNo)[0].optId
+                break;
+                case '3':
+                    this.rejectKojiHouseId = this.kojiHouseNoOptions.filter(element => element.optValue === item.kojiHouseNo)[0].optId
+                break;
+                case '4':
+                    this.rejectKojiHouseId = this.kojiHouseNoOptions.filter(element => element.optValue === item.kojiHouseNo)[0].optId
+                break;
+                default:
+            }
         }
 
         auditLog(row) {
-
             AUDIT_API.AUDIT_DIALOG_LOG_LIST_API({
                 verifyId: row.id,
                 verifyType: 'TIMESHEET'
@@ -440,45 +507,94 @@
             })
         }
 
+        // 获取曲房下拉选项
+        getKojiHolder() {
+            COMMON_API.HOLDER_QUERY_API({
+                factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
+                deptId: this.formHeader.workShop,
+                holderType: '005',
+                size: 99999,
+                current: 1
+            }).then(({ data }) => {
+                this.kojiHouseNoOptions = []
+                data.data.records.forEach(item => {
+                    this.kojiHouseNoOptions.push({ optLabel: item.holderName, optValue: item.holderNo, optId: item.id })
+                })
+            })
+        }
+
+        // 获取工序 mapping
+        getProcessMapping() {
+            COMMON_API.DICTQUERY_API({ dictType: 'COMMON_PROCESS' }).then(({ data }) => {
+                this.processMapping = {}
+                data.data.forEach(item => {
+                    this.$set(this.processMapping, item.dictValue, item.dictCode)
+                })
+
+            });
+        }
+
         refuse() {
-            let refuseType;
-            switch (this.$refs.dataEntry.activeName) {
-                case '1':
-                    refuseType = 'READY';
-                    break;
-                case '2':
-                    refuseType = 'USER';
-                    break;
-                case '3':
-                    refuseType = 'DEVICE';
-                    break;
-                case '4':
-                    refuseType = 'STORAGE';
-                    break;
-                case '5':
-                    refuseType = 'MATERIAL';
-                    break;
-                default: refuseType = ''
-            }
-            if (!refuseType) {
-                return false
-            }
-            if (!this.ReText) {
+            if (!this.rejectText) {
                 this.$warningToast('请填写原因');
                 return false
             }
-            PKG_API.PKG_AUDIT_DETAIL_REFUSE_API({
-                factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
-                id: this.formHeader.id,
-                orderId: this.formHeader.orderId,
-                orderNo: this.formHeader.orderNo,
-                memo: this.ReText,
-                refuseType: refuseType
-            }).then(() => {
-                this.visibleRefuse = false;
-                this.$successToast('操作成功');
-                this.initData(this.currentOrderNo)
-            })
+
+            switch (this.$refs.dataEntry.activeName) {
+                case '1':
+                    KOJI_API.KOJI_REFUSE_READY_API({
+                        orderNo: this.formHeader.orderNo,
+                        process: this.rejectProcess,
+                        productDate: this.formHeader.productDate,
+                        refuseSeason: this.rejectText,
+                        workShop: this.formHeader.workShop
+                    }).then(() => {
+                        this.visibleRefuse = false;
+                        this.$successToast('操作成功');
+                        this.initData(this.currentOrderNo)
+                    })
+
+                    break;
+                case '2':
+                    KOJI_API.KOJI_REFUSE_DEVICE_API({
+                        kojiHouseId: this.rejectKojiHouseId,
+                        orderNo: this.formHeader.orderNo,
+                        process: this.rejectProcess,
+                        productDate: this.formHeader.productDate,
+                        refuseSeason: this.rejectText
+                    }).then(() => {
+                        this.visibleRefuse = false;
+                        this.$successToast('操作成功');
+                        this.initData(this.currentOrderNo)
+                    })
+
+                    break;
+                case '3':
+                    KOJI_API.KOJI_REFUSE_INSTORAGE_API({
+                        kojiHouseId: this.rejectKojiHouseId,
+                        orderNo: this.formHeader.orderNo,
+                        productDate: this.formHeader.productDate,
+                        refuseSeason: this.rejectText
+                    }).then(() => {
+                        this.visibleRefuse = false;
+                        this.$successToast('操作成功');
+                        this.initData(this.currentOrderNo)
+                    })
+                    break;
+                case '4':
+                    KOJI_API.KOJI_REFUSE_MATERIAL_API({
+                        kojiHouseId: this.rejectKojiHouseId,
+                        orderNo: this.formHeader.orderNo,
+                        productDate: this.formHeader.productDate,
+                        refuseSeason: this.rejectText
+                    }).then(() => {
+                        this.visibleRefuse = false;
+                        this.$successToast('操作成功');
+                        this.initData(this.currentOrderNo)
+                    })
+                    break;
+                default:
+            }
         }
     }
 
@@ -574,6 +690,12 @@
         kojiHouseName: string;
         process: string;
     }
+    interface OptionObj {
+        optLabel: string;
+        optValue: string;
+        optId: string;
+    }
+
 </script>
 
 <style scoped>
