@@ -1,5 +1,12 @@
+<!--
+ * @Description:
+ * @Anthor: Telliex
+ * @Date: 2020-08-19 09:16:48
+ * @LastEditors: Telliex
+ * @LastEditTime: 2020-10-29 19:36:50
+-->
 <template>
-    <mds-card :title="'审核日志'" :name="name" :icon-bg="'#f05c4a'" :pack-up="packUp">
+    <mds-card :title="showTitle?'审核日志':''" :name="name" :icon-bg="'#f05c4a'" :pack-up="packUp">
         <el-table class="newTable" :data="tableData" header-row-class-name="tableHead" border style="width: 100%;">
             <el-table-column label="序号" type="index" width="60" fixed />
             <el-table-column prop="status" label="审核动作" width="100" :show-overflow-tooltip="true">
@@ -37,6 +44,7 @@
     })
     export default class AuditLog extends Vue {
         @Prop({ default: [] }) tableData: AuditData[];
+        @Prop({ default: true }) showTitle: boolean;
         @Prop({ default: true }) packUp: boolean;
         @Prop({ default: false }) status: boolean;
         @Prop({ default: 'audit' }) name: string;
