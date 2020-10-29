@@ -202,6 +202,50 @@ const STE_API = {
      */
     STE_AUDIT_CRAFT_TEMPERATUREANDTIME_API: params => httpProxy('/ste/item/timeAndTemperatureQuery', 'POST', params),
     /**
+     * @property {string} STE_AUDIT_CHECKED_API 杀菌车间-杀菌审核-审核通过
+     */
+    STE_AUDIT_CHECKED_API: params => httpProxy('/ste/sterilize/checkd', 'POST', params),
+    /**
+     * @property {string}  STE_AUDIT_DETAIL_DETAUL_SEMI_API 杀菌车间-杀菌审核-审核详情-半成品领用
+     */
+    STE_AUDIT_DETAIL_DETAUL_SEMI_API: params => httpProxy('/ste/steSemiMaterial/check/query', 'GET', params),
+    /**
+     * @property {string}  STE_AUDIT_DETAIL_DETAUL_SEMI_API 杀菌车间-杀菌审核-审核详情-辅料添加
+     */
+    STE_AUDIT_DETAIL_DETAUL_ACCESS_API: params => httpProxy('/ste/steCookingPot/accessoriesCheck/query', 'GET', params),
+    /**
+     * @property {string}  STE_AUDIT_DETAIL_DETAUL_INSTORAGE_API 杀菌车间-杀菌审核-审核详情-杀菌入库
+     */
+    STE_AUDIT_DETAIL_DETAUL_INSTORAGE_API: params => httpProxy('/steInStorage/check/query', 'GET', params),
+    /**
+     * @property {string}  STE_AUDIT_DETAIL_DETAUL_CRAFT_API 杀菌车间-杀菌审核-审核详情-工艺控制
+     */
+    STE_AUDIT_DETAIL_DETAUL_CRAFT_API: params => httpProxy('/ste/item/controlItemQuery', 'POST', params),
+    /**
+     * @property {string}  STE_AUDIT_DETAIL_DETAUL_EXCEPTION_API 杀菌车间-杀菌审核-审核详情-异常记录
+     */
+    STE_AUDIT_DETAIL_DETAUL_EXCEPTION_API: params => httpProxy('/ste/item/exceptionItemQuery', 'POST', params),
+    /**
+     * @property {string}  STE_AUDIT_DETAIL_DETAUL_TIME_API 杀菌车间-杀菌审核-审核详情-杀菌工时
+     */
+    STE_AUDIT_DETAIL_DETAUL_TIME_API: params => httpProxy('/ste/item/timeItemQuery', 'POST', params),
+    /**
+     * @property {string}  STE_AUDIT_DETAIL_DETAUL_TIME_API 杀菌车间-杀菌审核-审核详情-半成品退回
+     */
+    STE_AUDIT_DETAIL_DETAUL_REFISE_SEMI_API: params => httpProxy('/ste/steSemiMaterial/refuse', 'POST', params),
+    /**
+     * @property {string}  STE_AUDIT_DETAIL_DETAUL_REFISE_ACCESS_API 杀菌车间-杀菌审核-审核详情-辅料退回
+     */
+    STE_AUDIT_DETAIL_DETAUL_REFISE_ACCESS_API: params => httpProxy('/ste/accessiruesConsume/refuse', 'POST', params),
+    /**
+     * @property {string}  STE_AUDIT_DETAIL_DETAUL_REFISE_ACCESS_API 杀菌车间-杀菌审核-审核详情-工艺退回
+     */
+    STE_AUDIT_DETAIL_DETAUL_REFISE_TIMESHEET_API: params => httpProxy('/ste/steTimeSheet/refuse', 'POST', params),
+    /**
+     * @property {string}  STE_AUDIT_DETAIL_DETAUL_REFISE_INSTORAGE_API 杀菌车间-杀菌审核-审核详情-入库退回
+     */
+    STE_AUDIT_DETAIL_DETAUL_REFISE_INSTORAGE_API: params => httpProxy('/steInStorage/refuse', 'POST', params),
+    /**
      * @property {string} STE_AUDIT_CRAFT_TEMPERATUREANDTIME_API 杀菌车间-入库数据-车间主管退回
      */
     STE_INSTORAGE_POT_COUNT_API: params => httpProxy('/steInStorage/instoragePotCount', 'GET', params),
