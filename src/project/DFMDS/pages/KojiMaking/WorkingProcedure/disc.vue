@@ -58,6 +58,8 @@
         fermentPotNoOptions: OptionObj[] = [];
         classesOptions: object[] = [];
 
+        jumpFromAudit=false // is from audit ?
+
         headerBase: HeaderBase[] = [
             {
                 type: 'p',
@@ -138,6 +140,11 @@
         }
 
         mounted() {
+            if (typeof this.$route.params.order !== 'undefined') {
+                console.log(this.$route.params.order)
+                this.jumpFromAudit = true
+            }
+
             // [下拉]获取溶解罐选项
             this.getFermentationHolder()
             // [下拉]获取班次选项
@@ -175,8 +182,11 @@
 
         // 查询表头
         getOrderList() {
+            console.log('this.jumpFromAudit')
+            console.log(this.jumpFromAudit)
             KOJI_API.KOJI_CRAFT_HEAD_INFO_QUERY_API({
-                id: this.$store.state.koji.orderKojiInfo.id || ''
+                // id: this.$store.state.koji.orderKojiInfo.id || ''
+                id: this.jumpFromAudit ? this.$route.params.order : this.$store.state.koji.orderKojiInfo.id || ''
             }).then(({ data }) => {
                 this.formHeader = JSON.parse(JSON.stringify(data.data))
                 this.$set(this.formHeader, 'factoryName', JSON.parse(sessionStorage.getItem('factory') || '{}').deptShort)

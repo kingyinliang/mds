@@ -3,7 +3,7 @@
  * @Anthor: Telliex
  * @Date: 2020-08-03 18:13:58
  * @LastEditors: Telliex
- * @LastEditTime: 2020-10-20 11:02:12
+ * @LastEditTime: 2020-10-23 13:28:29
 -->
 <template lang="pug">
     el-dialog(:title="title" :width="width" :close-on-click-modal="false" :visible.sync="isShowCurrentDialog")
@@ -17,7 +17,7 @@
                 el-select(v-model="dialogForm.packageLine" placeholder="请选择" clearable @change="selectPackageLine")
                     el-option(v-for="(item, index) in pkgWorkShopList" :key="index" :label="item.targetName" :value="item.targetCode" )
             el-form-item(label="包装订单：" prop="packageOrderNo")
-                el-select(v-model="dialogForm.packageOrderNo" placeholder="请选择" clearable)
+                el-select(v-model="dialogForm.packageOrderNo" placeholder="请选择" clearable )
                     el-option(v-for="(item, index) in packageOrderNoList" :key="index" :label="item.targetName" :value="item.targetCode")
             el-form-item(label="入库物料：")
                 span(class="default") {{ dialogForm.material }}
@@ -44,7 +44,7 @@
     import { Vue, Component, Prop } from 'vue-property-decorator';
     import { dateFormat, getUserNameNumber } from 'utils/utils';
     // import { dateFormat, getUserNameNumber } from 'utils/utils';
-    import { COMMON_API } from 'common/api/api';
+    import { COMMON_API, STE_API } from 'common/api/api';
     // import { dateFormat } from 'utils/utils';
 
     @Component({
@@ -61,6 +61,9 @@
         $refs: {
             dialogForm: HTMLFormElement;
         }
+
+        packageOrderNo=''
+        packageOrderNoLine=''
 
         // 下拉选单选项
         pkgWorkShopList: OptionsInList[]=[]
@@ -172,6 +175,7 @@
         }
 
         selectPackageLine(val) {
+            this.packageOrderNoLine = val
             if (val !== '') {
                 this.dialogForm.packageLineName = this.pkgWorkShopList.filter(item => item.targetCode === val)[0].targetName
                 COMMON_API.ORDER_LIST_API({
@@ -180,6 +184,8 @@
                     productDate: this.currentProductDate
                     // workShop: this.currentWorkShop
                 }).then(({ data }) => {
+                    console.log('包装订单')
+                    console.log(data)
                     this.packageOrderNoList = []
                     if (data.data !== null) {
                         data.data.forEach(item => {
@@ -187,9 +193,19 @@
                         })
                     }
                 })
-            }
 
+                STE_API.STE_INSTORAGE_POT_COUNT_API({
+                    steOrderNo: this.dialogForm.orderNo,
+                    packageLineId: this.packageOrderNoLine
+                }).then(({ data }) => {
+                    console.log('数量')
+                    console.log(data)
+                    this.dialogForm.inStoragePot = data.data
+                })
+            }
         }
+
+
     }
     interface OptionsInList{
         targetCode?: string;

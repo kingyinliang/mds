@@ -3,7 +3,7 @@
  * @Anthor: Telliex
  * @Date: 2020-08-27 14:28:27
  * @LastEditors: Telliex
- * @LastEditTime: 2020-10-20 20:37:39
+ * @LastEditTime: 2020-10-28 18:46:37
  */
 import httpProxy from 'utils/net/httpProxy';
 const KOJI_API = {
@@ -270,6 +270,50 @@ const KOJI_API = {
      */
     KOJI_STEAM_BEAN_SUBMIT_API: params => httpProxy('/kojiSteamBeanOrder/batchSubmit', 'POST', params),
     /**
+     * @property KOJI_AUDIT_BEANSTEEP_API 制曲车间-制曲审核-泡豆时长
+     */
+    KOJI_AUDIT_BEANSTEEP_API: params => httpProxy('/kojiVerify/queryBeanSteepChart', 'GET', params),
+    /**
+     * @property KOJI_AUDIT_BEANIMPURITY_API 制曲车间-制曲审核-大豆杂质情况
+     */
+    KOJI_AUDIT_BEANIMPURITY_API: params => httpProxy('/kojiVerify/queryBeanImpurityChart', 'GET', params),
+    /**
+     * @property KOJI_AUDIT_MIXEDINTOMATERIAL_API 制曲车间-制曲审核-混合入料工艺
+     */
+    KOJI_AUDIT_MIXEDINTOMATERIAL_API: params => httpProxy('/kojiVerify/querySteamControlChart', 'GET', params),
+    /**
+     * @property KOJI_AUDIT_MIXEDINTOMATERIAL_TABLE_API 制曲车间-制曲审核-混合入料工艺表格
+     */
+    KOJI_AUDIT_MIXEDINTOMATERIAL_TABLE_API: params => httpProxy('/kojiVerify/querySteamControlSheet', 'GET', params),
+    /**
+     * @property KOJI_AUDIT_LOOKCRAFTONE_API 制曲车间-制曲审核-看曲工艺
+     */
+    KOJI_AUDIT_LOOKCRAFTONE_API: params => httpProxy('/kojiVerify/queryDiscGuardChartList', 'GET', params),
+    /**
+     * @property KOJI_AUDIT_INOUTCRAFT_API 制曲车间-制曲审核-入曲及出曲工艺
+     */
+    KOJI_AUDIT_INOUTCRAFT_API: params => httpProxy('/kojiVerify/queryDiscInOutSheet', 'GET', params),
+    /**
+     * @property KOJI_AUDIT_TURN_API 制曲车间-制曲审核-翻曲情况
+     */
+    KOJI_AUDIT_TURN_API: params => httpProxy('/kojiVerify/queryDiscTurnSheet', 'GET', params),
+    /**
+     * @property KOJI_AUDIT_EXCEPTION_API 制曲车间-制曲审核-异常情况
+     */
+    KOJI_AUDIT_EXCEPTION_API: params => httpProxy('/kojiVerify/queryKojiExceptionSheet', 'GET', params),
+    /**
+     * @property KOJI_AUDIT_BEANUSAGE_API 制曲车间-制曲审核-原豆量情况
+     */
+    KOJI_AUDIT_BEANUSAGE_API: params => httpProxy('/kojiVerify/queryBeanUsage', 'GET', params),
+    /**
+     * @property KOJI_AUDIT_MATERIAL_API 制曲车间-制曲审核-物料领用
+     */
+    KOJI_AUDIT_MATERIAL_API: params => httpProxy('/kojiVerify/queryMaterialDetail', 'GET', params),
+    /**
+     * @property {string} STE_AUDIT_CRAFT_TEMPERATUREANDTIME_API 制曲车间-制曲审核-泡豆&物料
+     */
+    KOJI_AUDIT_BEANANDMATERIAL_API: params => httpProxy('/kojiVerify/queryBeanSteepAndMaterialSheet', 'GET', params),
+    /**
      * @property KOJI_IMPURITY_FOREIGNMATTER_API 制曲车间-杂质-异物-保存
      */
     KOJI_IMPURITY_FOREIGNMATTER_API: params => httpProxy('/kojiImpurityOther/queryList', 'GET', params),
@@ -280,7 +324,55 @@ const KOJI_API = {
     /**
      * @property KOJI_IMPURITY_SAVE_API 制曲车间-杂质-保存
      */
-    KOJI_IMPURITY_SAVE_API: params => httpProxy('/kojiImpurity/batchSave', 'POST', params)
+    KOJI_IMPURITY_SAVE_API: params => httpProxy('/kojiImpurity/batchSave', 'POST', params),
+    /**
+     * @property KOJI_IMPURITY_SAVE_API 制曲车间-查询准备工时
+     */
+    KOJI_TIMESHEET_QUERY_API: params => httpProxy('/koji/kojiTimeSheet/query', 'POST', params),
+    /**
+     * @property KOJI_IMPURITY_SAVE_API 制曲车间-保存准备工时
+     */
+    KOJI_TIMESHEET_SAVE_API: params => httpProxy('/koji/kojiTimeSheet/save', 'POST', params),
+    /**
+     * @property KOJI_IMPURITY_SAVE_API 制曲车间-提交准备工时
+     */
+    KOJI_TIMESHEET_SUBMIT_API: params => httpProxy('/koji/kojiTimeSheet/submit', 'POST', params),
+    /**
+     * @property KOJI_AUDIT_QUERY_CRAFT_API 审核(SC)详情-查询工艺列表
+     */
+    KOJI_AUDIT_QUERY_CRAFT_API: params => httpProxy('/kojiVerify/detail/queryCraft', 'GET', params),
+    /**
+     * @property KOJI__AUDIT_QUERY_INSTORAGE_API 审核(SC)详情-查询生产入库
+     */
+    KOJI__AUDIT_QUERY_INSTORAGE_API: params => httpProxy('/kojiVerify/detail/queryInStorage', 'GET', params),
+    /**
+     * @property KOJI_ADDIT_QUERY_MACHINEHOUR_API 审核(SC)详情-查询机器工时
+     */
+    KOJI_ADDIT_QUERY_MACHINEHOUR_API: params => httpProxy('/kojiVerify/detail/queryMachineHour', 'GET', params),
+    /**
+     * @property KOJI_ADDIT_QUERY_MANHOUR_API 审核(SC)详情-查询人工工时
+     */
+    KOJI_ADDIT_QUERY_MANHOUR_API: params => httpProxy('/kojiVerify/detail/queryManHour', 'GET', params),
+    /**
+     * @property KOJI_AUDIT_QUERY_MARTERIAL_API 审核(SC)详情-查询物料领用
+     */
+    KOJI_AUDIT_QUERY_MARTERIAL_API: params => httpProxy('/kojiVerify/detail/queryMaterial', 'GET', params),
+    /**
+     * @property KOJI_REFUSE_READY_API 制曲车间-制曲审核-准备工时退回
+     */
+    KOJI_REFUSE_READY_API: params => httpProxy('/kojiVerify/ready/refuse', 'POST', params),
+    /**
+     * @property KOJI_REFUSE_DEVICE_API 制曲车间-制曲审核-机器工时退回
+     */
+    KOJI_REFUSE_DEVICE_API: params => httpProxy('/kojiVerify/device/refuse', 'POST', params),
+    /**
+     * @property KOJI_REFUSE_INSTORAGE_API 制曲车间-制曲审核-入库退回
+     */
+    KOJI_REFUSE_INSTORAGE_API: params => httpProxy('/kojiVerify/inStorage/refuse', 'POST', params),
+    /**
+     * @property KOJI_REFUSE_MATERIAL_API 制曲车间-制曲审核-物料领用退回
+     */
+    KOJI_REFUSE_MATERIAL_API: params => httpProxy('/kojiVerify/material/refuse', 'POST', params)
 };
 
 export default KOJI_API;
