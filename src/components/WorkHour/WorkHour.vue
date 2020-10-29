@@ -277,7 +277,7 @@ export default class ProductPeople extends Vue {
                 dinner: 60,
                 endDate: '',
                 remark: '',
-                changed: dateFormat(new Date(), 'yyyy-MM-dd hh:mm:ss'),
+                changed: dateFormat(new Date(), 'yyyy-MM-dd hh:mm'),
                 changer: getUserNameNumber(),
                 delFlag: 0
             }
@@ -291,7 +291,7 @@ export default class ProductPeople extends Vue {
                 dinner: currentFormDataGroupNew[currentFormDataGroupNew.length - 1].dinner,
                 endDate: currentFormDataGroupNew[currentFormDataGroupNew.length - 1].endDate,
                 remark: '',
-                changed: dateFormat(new Date(), 'yyyy-MM-dd hh:mm:ss'),
+                changed: dateFormat(new Date(), 'yyyy-MM-dd hh:mm'),
                 changer: getUserNameNumber(),
                 delFlag: 0
             };

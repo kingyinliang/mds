@@ -144,7 +144,7 @@
             </template>
         </data-entry>
         <el-dialog title="审核日志" width="900px" :close-on-click-modal="false" :visible.sync="visibleAuditLog">
-            <audit-log :table-data="auditLogData" :verify-man="'verifyMan'" :verify-date="'verifyDate'" :pack-up="false" :status="true" />
+            <audit-log :table-data="auditLogData" :verify-man="'verifyMan'" :verify-date="'verifyDate'" :pack-up="false" :status="true" :show-title="false" />
             <div slot="footer" class="dialog-footer" />
         </el-dialog>
         <el-dialog title="退回原因" :close-on-click-modal="false" :visible.sync="visibleRefuse">
@@ -283,8 +283,14 @@
         processMapping={} // 工序 mapping
 
         async mounted() {
-            this.currentOrderNo = '851000002087'
 
+            console.log('this.$store.state.koji.auditDetail')
+            console.log(this.$store.state.koji.auditDetail)
+            this.currentOrderNo = this.$store.state.koji.auditDetail.orderNo
+            if (this.$store.state.koji.auditDetail.productLineName !== '') {
+                this.isNormalPage = false // show normal
+                this.isSCPage = true // show SC
+            }
             await this.initData(this.currentOrderNo)
             await this.getKojiHolder()
             await this.getProcessMapping()
@@ -300,14 +306,18 @@
 
         // 工艺列表 tab 工序详情
         goProcessDetail(item) {
+            console.log('点击后 item')
+            console.log(item)
             this.goDetail(this.processMapping[item.process], item.arg)
         }
 
         // 跳转工序页面
         goDetail(who, arg) {
+            console.log(who)
+            console.log(arg)
             let url = '';
             // 曲房工序跳转
-            if (this.isNormalPage) {
+            // if (this.isNormalPage) {
                 // this.$store.commit('koji/updateOrderKojiInfo', item);
 
                 switch (who) {
@@ -320,14 +330,12 @@
                     case 'YP':
                         url = 'DFMDS-pages-KojiMaking-WorkingProcedure-disc';
                         break;
-                    default:
-                }
+                    // default:
+                // }
 
-            }
-            // 蒸豆工序跳转
-            if (this.isSCPage) {
+            // } else { // 蒸豆工序跳转
                 // this.$store.commit('koji/updateOrderScInfo', item);
-                switch (who) {
+                // switch (who) {
                     case 'SC':
                         url = 'DFMDS-pages-KojiMaking-WorkingProcedure-SCWashBean';
                         break;
@@ -337,7 +345,9 @@
                     default:
                 }
 
-            }
+            // }
+
+            console.log(`url:${url}`)
 
             this.$store.commit(
                     'common/updateMainTabs',
@@ -496,14 +506,19 @@
             }
         }
 
-        auditLog(row) {
-            AUDIT_API.AUDIT_DIALOG_LOG_LIST_API({
-                verifyId: row.id,
-                verifyType: 'TIMESHEET'
-            }).then(({ data }) => {
-                this.auditLogData = data.data
-                this.visibleAuditLog = true
+        auditLog() {
+
+            AUDIT_API.AUDIT_LOG_LIST_API({ orderNo: this.currentOrderNo, verifyType: '' }).then(({ data }) => {
+                    this.auditLogData = data.data
+                    this.visibleAuditLog = true
             })
+            // AUDIT_API.AUDIT_DIALOG_LOG_LIST_API({
+            //     verifyId: row.id,
+            //     verifyType: 'TIMESHEET'
+            // }).then(({ data }) => {
+            //     this.auditLogData = data.data
+            //     this.visibleAuditLog = true
+            // })
         }
 
         // 获取曲房下拉选项
