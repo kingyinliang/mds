@@ -3,7 +3,7 @@
  * @Anthor: Telliex
  * @Date: 2020-09-02 10:21:15
  * @LastEditors: Telliex
- * @LastEditTime: 2020-09-21 16:15:12
+ * @LastEditTime: 2020-10-28 09:52:20
 -->
 <template lang="pug">
     el-dialog(:title="formElementSetting.props.title" :close-on-click-modal="false" :visible.sync="isCurrentDailogShow")
@@ -124,6 +124,7 @@
         emitChange(val, element, index) {
             // TODO 目前只接受一个连动，后续在添加
             if (element.linkageProp) {
+                this.clearVal(element);
                 // 連動對象
                 const target = this.formElementSetting.data.filter(item => item.prop === element.linkageProp[0])[0]
                 target.emitChange(val, element).then((res) => {

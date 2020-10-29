@@ -31,13 +31,18 @@
                             </p>
                             <p> <em class="iconfont factory-bianhao" />生产物料 </p>
                         </div>
-
                         <div class="dataEntry-head-leftRight-message__item">
                             <p>
                                 {{ formData.potAmount ? formData.potAmount.toLocaleString() : 0 }}
                                 <em>{{ formData.unit ? formData.unit : 'KG' }}</em>
                             </p>
                             <p> <em class="iconfont factory-cunchurongliang" />配置锅数 </p>
+                        </div>
+                        <div class="dataEntry-head-leftRight-message__item">
+                            <p>
+                                {{ formData.amount ? formData.amount.toLocaleString() : 0 }}
+                            </p>
+                            <p> <em class="iconfont factory-cunchurongliang" />数量 </p>
                         </div>
                     </div>
                 </div>
@@ -55,9 +60,9 @@
                             {{ scope.row.potName }}
                         </template>
                     </el-table-column>
-                    <el-table-column label="物料" :show-overflow-tooltip="true" width="180">
+                    <el-table-column label="物料" :show-overflow-tooltip="true" width="280">
                         <template slot-scope="scope">
-                            {{ scope.row.prodcutMaterial }} {{ scope.row.prodcutMaterialName }}
+                            {{ scope.row.feedMaterialName }} {{ scope.row.prodcutMaterialName }}
                         </template>
                     </el-table-column>
                     <el-table-column label="批次" :show-overflow-tooltip="true" maxlength="10" width="100">
@@ -90,7 +95,7 @@
                             {{ scope.row.usePortOrderNo }}
                         </template>
                     </el-table-column>
-                    <el-table-column label="投料人" width="160">
+                    <el-table-column label="投料人" width="160" :show-overflow-tooltip="true">
                         <template slot-scope="scope">
                             {{ scope.row.feedMan }}
                         </template>
@@ -126,9 +131,9 @@
                             {{ scope.row.potName }}
                         </template>
                     </el-table-column>
-                    <el-table-column label="物料" :show-overflow-tooltip="true" width="180">
+                    <el-table-column label="物料" :show-overflow-tooltip="true" width="280">
                         <template slot-scope="scope">
-                            {{ scope.row.prodcutMaterial }} {{ scope.row.prodcutMaterialName }}
+                            {{ scope.row.feedMaterialName }} {{ scope.row.prodcutMaterialName }}
                         </template>
                     </el-table-column>
                     <el-table-column label="批次" :show-overflow-tooltip="true" maxlength="10" width="180">
@@ -146,7 +151,7 @@
                             <span v-if="scope.row.moveType!=='R'">-</span>{{ scope.row.moveAmount.toFixed(3) }}
                         </template>
                     </el-table-column>
-                    <el-table-column label="单位" :show-overflow-tooltip="true" width="170">
+                    <el-table-column label="单位" :show-overflow-tooltip="true" width="80">
                         <template slot-scope="scope">
                             {{ scope.row.moveUnit }}
                         </template>
@@ -161,7 +166,7 @@
                             {{ scope.row.usePortOrderNo }}
                         </template>
                     </el-table-column>
-                    <el-table-column label="投料人" width="160">
+                    <el-table-column label="投料人" width="160" :show-overflow-tooltip="true">
                         <template slot-scope="scope">
                             {{ scope.row.feedMan }}
                         </template>
@@ -230,9 +235,10 @@ export default class DissolveBucketDetail extends Vue {
                 console.log(data)
                 this.formData = {
                     potName: this.importData.potName,
+                    potAmount: this.importData.potAmount,
                     potNo: this.importData.potNo,
                     factoryName: JSON.parse(sessionStorage.getItem('factory') || '{}').deptShort,
-                    potAmount: data.data.number,
+                    amount: data.data.number,
                     unit: data.data.unit,
                     prodcutMaterial: data.data.materialName,
                     workShop: data.data.workShop

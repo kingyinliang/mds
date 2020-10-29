@@ -57,6 +57,7 @@
         }
 
         formHeader: OrderData = {};
+        jumpFromAudit=false // is from audit ?
         // 泡豆罐list
         scanList: object[] = []
 
@@ -158,13 +159,18 @@
         }
 
         mounted() {
+            if (typeof this.$route.params.order !== 'undefined') {
+                console.log(this.$route.params.order)
+                this.jumpFromAudit = true
+            }
             this.getOrderList()
         }
 
         // 查询表头
         getOrderList() {
             COMMON_API.OREDER_QUERY_BY_NO_API({
-                orderNo: this.$store.state.koji.orderScInfo.orderNo || ''
+                // orderNo: this.$store.state.koji.orderScInfo.orderNo || ''
+                orderNo: this.jumpFromAudit ? this.$route.params.order : this.$store.state.koji.orderScInfo.orderNo || ''
             }).then(({ data }) => {
                 KOJI_API.KOJI_STEAM_INSTORAGE_LIST_API({
                     kojiOrderNo: data.data.formHeader,
@@ -265,4 +271,3 @@
         value?: string;
     }
 </script>
-

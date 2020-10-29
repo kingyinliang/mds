@@ -30,6 +30,10 @@ const STE_API = {
      */
     STE_ACCE_LIST_API: params => httpProxy('/ste/accessiruesConsume/query', 'POST', params),
     /**
+     * @property {string} STE_SEMI_LIST_API 杀菌车间-辅料添加-增补料查询
+     */
+    STE_ACCE_MATERIAL_LIST_API: params => httpProxy('/ste/steSpeAccessories/listByType', 'POST', params),
+    /**
      * @property {string} STE_SEMI_LIST_API 杀菌车间-辅料添加-保存
      */
     STE_ACCE_SAVE_API: params => httpProxy('/ste/accessiruesConsume/save', 'POST', params),
