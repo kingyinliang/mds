@@ -36,7 +36,7 @@
                 //-         template(v-if="isRedact && searchCard" style="float: right; margin-left: 10px;")
                 //-             el-button(v-if="isAuth('steStgSubmit')" type="primary" size="small" @click="submitDatas()") 提交
                 //-             el-button(v-if="isAuth('steStgEdit')" type="primary" size="small" @click="savedDatas()") 保存
-            redact-box(v-if="!(formHeader.orderStatus === 'C' || formHeader.orderStatus === 'D' || formHeader.orderStatus === 'P' || formHeader.orderStatus ==='M')" :disabled="redactBoxDisable" :is-redact.sync='isRedact' redact-auth="steStgEdit" save-auth="steStgEdit" submit-auth="steStgSubmit" :urgent-submit="false" :submit-rules="submitRules" :saved-rules="savedRules" :saved-datas="savedDatas" :submit-datas="submitDatas")
+            redact-box(v-if="!(formHeader.inStorageStatus === 'C' || formHeader.inStorageStatus === 'D' || formHeader.inStorageStatus === 'P' || formHeader.inStorageStatus ==='M')" :disabled="redactBoxDisable" :is-redact.sync='isRedact' redact-auth="steStgEdit" save-auth="steStgEdit" submit-auth="steStgSubmit" :urgent-submit="false" :submit-rules="submitRules" :saved-rules="savedRules" :saved-datas="savedDatas" :submit-datas="submitDatas")
 </template>
 
 <script lang="ts">
