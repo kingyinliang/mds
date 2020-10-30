@@ -806,20 +806,22 @@
                 orderNo: orderNo
             }).then(({ data }) => {
                 this.beanUsageList = data.data;
-                const datasetSource = [
-                    ['product', '原豆数量', '标准数量']
-                ]
+                const xAxisData: string[] = [];
+                const seriesDataOrg: number[] = [];
+                const seriesDataStand: number[] = [];
                 data.data.map(item => {
-                    let itemSole: string[] = [];
-                    itemSole = [item.kojiHouseName, item.beanAmount, item.standardAmount];
-                    datasetSource.push(itemSole);
+                    xAxisData.push(item.kojiHouseName);
+                    seriesDataOrg.push(item.beanAmount);
+                    seriesDataStand.push(item.standardAmount);
                 })
                 this.chartLine = echarts.init(document.getElementById('J_chartLineBoxOriginalBeans'));
                 const optionOriginalBeans = {
                     tooltip: {
                         trigger: 'axis'
                     },
-                    legend: {},
+                    legend: {
+                        data: ['原豆数量', '标准数量']
+                    },
                     grid: {
                         top: '10%',
                         left: '1%',
@@ -827,17 +829,14 @@
                         bottom: '10%',
                         containLabel: true
                     },
-                    dataset: {
-                        source: datasetSource
-                    },
                     xAxis: {
-                        type: 'category'
+                        type: 'category',
+                        data: xAxisData
                     },
                     yAxis: {},
-                    // Declare several bar series, each will be mapped
-                    // to a column of dataset.source by default.
                     series: [
                         {
+                            name: '原豆数量',
                             type: 'bar',
                             barWidth: 30,
                             itemStyle: {
@@ -853,9 +852,11 @@
                                         }
                                     }
                                 }
-                            }
+                            },
+                            data: seriesDataOrg
                         },
                         {
+                            name: '标准数量',
                             type: 'bar',
                             barWidth: 30,
                             itemStyle: {
@@ -871,7 +872,8 @@
                                         }
                                     }
                                 }
-                            }
+                            },
+                            data: seriesDataStand
                         }
                     ]
                 };
