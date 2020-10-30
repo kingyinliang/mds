@@ -70,7 +70,7 @@
                         <em class="el-icon-info" />
                         <span v-if="orderStatus === 'toBeAudited'">请仔细核对数据后再进行提交</span>
                         <span v-else-if="orderStatus === '已过账'">订单已过账</span>
-                        <span v-else-if="orderStatus === '待审核'">已提交至主管审核，请等待</span>
+                        <span v-else-if="orderStatus === '待审核' || orderStatus === 'D'">已提交至主管审核，请等待</span>
                         <span v-else-if="orderStatus === '已审核'">已提交至生管审核，请等待</span>
                         <span v-else-if="orderStatus === '已保存'">
                             <span v-if="isRedact">{{ formHeader.changer }}于{{ dateChange }}分钟前已保存</span>
@@ -88,15 +88,15 @@
                         </span>
                     </div>
                     <div v-if="type === 'entry'" class="redact_btn">
-                        <el-button v-if="orderStatus !== 'submit' && orderStatus !== 'checked' && orderStatus !== '已审核' && orderStatus !== '待审核' && orderStatus !== '已过账' && isAuth(redactAuth)" type="primary" size="small" @click="setRedact">
+                        <el-button v-if="orderStatus !== 'submit' && orderStatus !== 'checked' && orderStatus !== 'D' && orderStatus !== '已审核' && orderStatus !== '待审核' && orderStatus !== '已过账' && isAuth(redactAuth)" type="primary" size="small" @click="setRedact">
                             {{ isRedact ? '取消' : '编辑' }}
                         </el-button>
                         <template v-if="isRedact || onlySubmit">
-                            <el-button v-if="orderStatus !== 'submit' && orderStatus !== 'checked' && orderStatus !== '已审核' && orderStatus !== '待审核' && orderStatus !== '已过账' && isAuth(saveAuth)" type="primary" size="small" @click="savedData('saved')">
+                            <el-button v-if="orderStatus !== 'submit' && orderStatus !== 'checked' && orderStatus !== 'D' && orderStatus !== '已审核' && orderStatus !== '待审核' && orderStatus !== '已过账' && isAuth(saveAuth)" type="primary" size="small" @click="savedData('saved')">
                                 保存
                             </el-button>
                         </template>
-                        <el-button v-if="orderStatus !== 'submit' && orderStatus !== 'checked' && orderStatus !== '已审核' && orderStatus !== '待审核' && orderStatus !== '已过账' && ifSubmit() && isAuth(submitAuth)" type="primary" size="small" @click="submitData">
+                        <el-button v-if="orderStatus !== 'submit' && orderStatus !== 'checked' && orderStatus !== 'D' && orderStatus !== '已审核' && orderStatus !== '待审核' && orderStatus !== '已过账' && ifSubmit() && isAuth(submitAuth)" type="primary" size="small" @click="submitData">
                             提交
                         </el-button>
                     </div>
