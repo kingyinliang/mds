@@ -33,7 +33,7 @@
                         </div>
                         <div class="dataEntry-head-leftRight-message__item">
                             <p>
-                                {{ formData.potAmount ? formData.potAmount.toLocaleString() : 0 }}
+                                {{ formData.potCount ? formData.potCount.toLocaleString() : 0 }}
                                 <em>{{ formData.unit ? formData.unit : 'KG' }}</em>
                             </p>
                             <p> <em class="iconfont factory-cunchurongliang" />配置锅数 </p>
@@ -236,6 +236,7 @@ export default class DissolveBucketDetail extends Vue {
                 this.formData = {
                     potName: this.importData.potName,
                     potAmount: this.importData.potAmount,
+                    potCount: this.importData.potCount,
                     potNo: this.importData.potNo,
                     factoryName: JSON.parse(sessionStorage.getItem('factory') || '{}').deptShort,
                     amount: data.data.number,
@@ -277,6 +278,7 @@ interface ImportData{
     prodcutMaterialName?: string;
     ratio?: number;
     workShop?: string;
+    potCount?: number;
 }
 
 </script>

@@ -173,6 +173,8 @@
         headerInfo: HeaderInfo={
             headerProdcutMaterial: '',
             headerProductMaterialName: '',
+            headerFeedMaterial: '',
+            headerFeedMaterialName: '',
             headerPotCount: 0
         }
 
@@ -227,7 +229,7 @@
 
         changeProdcutMaterialOption(val) {
             if (val !== '') {
-                this.headerInfo.headerProductMaterialName = this.optionsTree.filter(item => item.productMaterialList[0].dictCode === val)[0].productMaterialList[0].dictValue
+                this.headerInfo.headerProductMaterialName = this.optionsTree.filter(item => item.productMaterialList[0].dictCode === val)[0].productMaterialList[0].dictValue as string
             }
 
             this.importBucketInfo.forEach(item => {
@@ -237,6 +239,7 @@
 
         changeFeedMaterialOption(val) {
             if (val.feedMaterial !== '') {
+                this.headerInfo.headerFeedMaterialName = this.findIndex(val.prodcutMaterial).filter(item => item.dictCode === val.feedMaterial)[0].dictValue as string
                 val.feedMaterialName = this.findIndex(val.prodcutMaterial).filter(item => item.dictCode === val.feedMaterial)[0].dictValue
             }
         }
@@ -310,17 +313,22 @@
                 potNo: this.currentPotNo,
                 workShop: this.currentWorkShop
             }).then(({ data }) => {
+                console.log('222222')
+                console.log(data)
                 this.importBucketInfo = []
-                if (data.data) {
+                if (data.data.length !== 0) {
                     this.importBucketInfo = data.data
                     this.importBucketInfo.forEach(items => {
                         this.$set(items, 'cycle', this.currentCycle)
+                        this.$set(items, 'feedUnit', 'KG')
                     })
                     // 表头栏位
                     this.headerInfo = {
                         headerProdcutMaterial: this.currentProdcutMaterial,
                         headerProductMaterialName: this.currentProdcutMaterialName,
-                        headerPotCount: this.importBucketInfo[0].potCount
+                        headerPotCount: this.importBucketInfo[0].potCount,
+                        headerFeedMaterial: '',
+                        headerFeedMaterialName: ''
                     }
                     this.orgFormDataGroup = JSON.parse(JSON.stringify(this.importBucketInfo))
                 }
@@ -432,7 +440,8 @@
             this.importBucketInfo.forEach(item => {
                 item.prodcutMaterial = this.headerInfo.headerProdcutMaterial
                 item.potCount = this.headerInfo.headerPotCount
-                item.productMaterialName = this.headerInfo.headerProductMaterialName
+                item.productMaterialName = this.headerInfo.headerProductMaterialName.split(' ')[0] as string
+                item.feedMaterialName = this.headerInfo.headerFeedMaterialName.split(' ')[0] as string
             })
 
             if (this.ruleSubmit()) {
@@ -452,7 +461,7 @@
                     potNo: this.currentPotNo,
                     potStatus: this.currentPotStatus,
                     prodcutMaterial: this.headerInfo.headerProdcutMaterial,
-                    productMaterialName: this.headerInfo.headerProductMaterialName,
+                    productMaterialName: this.headerInfo.headerProductMaterialName.split(' ')[0] as string,
                     workShop: this.currentWorkShop
                 }
 
@@ -476,7 +485,11 @@
                     }
                 })
 
-                // if (!(delIdsArray.length === 0 && insertDtosArray.length === 0 && updateDtosArray.length === 0)) {
+                console.log('insertDtosArray')
+                console.log(insertDtosArray)
+                console.log('updateDtosArray')
+                console.log(updateDtosArray)
+
                     STE_API.STE_DISSOLUTIONBUCKET_SAVE_API({
                         delIds: delIdsArray,
                         insertDtos: insertDtosArray,
@@ -487,9 +500,7 @@
                         this.$emit('importBucketFinish', obj);
                         this.isTableDialogVisible = false
                     });
-                // } else {
-                //     this.isTableDialogVisible = false
-                // }
+
             }
         }
 
@@ -499,7 +510,7 @@
 
         // 提交时跑校验
         ruleSubmit() {
-            if (this.importBucketInfo.filter(it => it.delFlag !== 1).length === 0) {
+            if (this.importBucketInfo.length === 0 && this.importBucketInfo.filter(it => it.delFlag !== 1).length === 0) {
                 this.$warningToast('请录入入罐');
                 return false
             }
@@ -561,9 +572,11 @@ interface CurrentDataTable{
 }
 
 interface HeaderInfo {
-    headerProductMaterialName?: string;
+    headerProductMaterialName: string;
     headerProdcutMaterial?: string;
     headerPotCount?: number;
+    headerFeedMaterial?: string;
+    headerFeedMaterialName: string;
 }
 </script>
 <style scoped>
