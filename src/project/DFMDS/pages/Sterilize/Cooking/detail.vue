@@ -23,13 +23,13 @@
                         <template slot="label">
                             <span class="notNull">*</span>生产物料：
                         </template>
-                        <el-tooltip v-if="formHeaders.cookingNo !== ''" class="item" effect="dark" :content="formHeaders.productMaterial + ' '+ formHeaders.productMaterialName" placement="top-start">
+                        <el-tooltip v-if="formHeaders.cookingNo !== ''" class="item" effect="dark" :content="formHeaders.productMaterialName + ' '+ formHeaders.productMaterial" placement="top-start">
                             <el-select v-model="formHeaders.productMaterial" style="width: 180px;" placeholder="请选择" :disabled="formHeaders.cookingNo !== '' || !isRedact">
-                                <el-option v-for="(item, optIndex) in materialList" :key="optIndex" :label="item.materialCode + ' ' + item.materialName" :value="item.materialCode" />
+                                <el-option v-for="(item, optIndex) in materialList" :key="optIndex" :label="item.materialName + ' ' + item.materialCode" :value="item.materialCode" />
                             </el-select>
                         </el-tooltip>
                         <el-select v-else v-model="formHeaders.productMaterial" style="width: 180px;" placeholder="请选择" :disabled="formHeaders.cookingNo !== '' || !isRedact">
-                            <el-option v-for="(item, optIndex) in materialList" :key="optIndex" :label="item.materialCode + ' ' + item.materialName" :value="item.materialCode" />
+                            <el-option v-for="(item, optIndex) in materialList" :key="optIndex" :label="item.materialName + ' ' + item.materialCode" :value="item.materialCode" />
                         </el-select>
                     </el-form-item>
                     <el-form-item label="配置开始时间：">
@@ -106,7 +106,7 @@
                 </el-table-column>
                 <el-table-column label="溶解罐生产物料" min-width="180">
                     <template slot-scope="scope">
-                        {{ scope.row.productMaterial }} {{ scope.row.productMaterialName }}
+                        {{ scope.row.productMaterialName }} {{ scope.row.productMaterial }}
                     </template>
                 </el-table-column>
                 <el-table-column label="投料时间" min-width="140" prop="feedDate" />
@@ -141,7 +141,7 @@
                 <el-table-column type="index" :index="index => getIndexMethod(index, accessoriesResponseDtos)" label="序号" fixed="left" width="55" />
                 <el-table-column label="领用物料" min-width="180">
                     <template slot-scope="scope">
-                        {{ scope.row.useMaterial }} {{ scope.row.useMaterialName }}
+                        {{ scope.row.useMaterialName }} {{ scope.row.useMaterial }}
                     </template>
                 </el-table-column>
                 <el-table-column label="单位" min-width="55" prop="useUnit" />
