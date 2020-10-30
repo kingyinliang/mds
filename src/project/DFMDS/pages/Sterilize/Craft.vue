@@ -5,7 +5,7 @@
             redact-auth="steCtrEdit"
             save-auth="steCtrEdit"
             submit-auth="steCtrSubmit"
-            :order-status="formHeader.statusName"
+            :order-status="tabs[0].status"
             :header-base="headerBase"
             :form-header="formHeader"
             :tabs="tabs"
@@ -130,8 +130,6 @@
                 potOrderNo: this.$store.state.sterilize.Craft.potOrderMap.potOrderNo
             }).then(({ data }) => {
                 this.formHeader = data.data;
-                console.log(this.formHeader);
-                // this.formHeader.potNoString = '第' + data.data.potNo + '锅';
                 this.formHeader.potOrderString = '第' + data.data.potOrder + '锅';
                 this.formHeader.textStage = 'CRAFT';
                 this.$refs.craft.init(this.formHeader);
