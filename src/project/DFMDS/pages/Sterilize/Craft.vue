@@ -130,6 +130,7 @@
                 potOrderNo: this.$store.state.sterilize.Craft.potOrderMap.potOrderNo
             }).then(({ data }) => {
                 this.formHeader = data.data;
+                console.log(this.formHeader);
                 // this.formHeader.potNoString = '第' + data.data.potNo + '锅';
                 this.formHeader.potOrderString = '第' + data.data.potOrder + '锅';
                 this.formHeader.textStage = 'CRAFT';
@@ -157,7 +158,8 @@
                 steExceptionUpdateDtos: excRequest.UpdateDto,
                 steExceptionRemoveDto: excRequest.ids,
                 steTextInsertDto: textRequest.pkgTextInsert,
-                steTextUpdateDto: textRequest.pkgTextUpdate
+                steTextUpdateDto: textRequest.pkgTextUpdate,
+                orderNo: this.formHeader.orderNo
             })
         }
 
@@ -183,7 +185,8 @@
                 steExceptionUpdateDtos: excRequest.UpdateDto,
                 steExceptionRemoveDto: excRequest.ids,
                 steTextInsertDto: textRequest.pkgTextInsert,
-                steTextUpdateDto: textRequest.pkgTextUpdate
+                steTextUpdateDto: textRequest.pkgTextUpdate,
+                orderNo: this.formHeader.orderNo
             })
         }
 
