@@ -31,7 +31,7 @@
                     </el-table-column>
                     <el-table-column label="操作" prop="" width="120" fixed="right">
                         <template slot-scope="scope">
-                            <el-button type="text" size="small" :disable="scope.row.enableBack!==1" @click="reject('1',scope.row)">
+                            <el-button type="text" size="small" :disabled="scope.row.enableBack!==1" @click="reject('1',scope.row)">
                                 退回
                             </el-button>
                             <el-button type="text" size="small" @click="auditLog(scope.row)">
@@ -56,7 +56,7 @@
                     </el-table-column>
                     <el-table-column label="操作" prop="" width="120" fixed="right">
                         <template slot-scope="scope">
-                            <el-button type="text" size="small" :disable="scope.row.enableBack!==1" @click="reject('2',scope.row)">
+                            <el-button type="text" size="small" :disabled="scope.row.enableBack!==1" @click="reject('2',scope.row)">
                                 退回
                             </el-button>
                             <el-button type="text" size="small" @click="auditLog(scope.row)">
@@ -81,7 +81,7 @@
                     <el-table-column label="操作时间" prop="changed" width="180" />
                     <el-table-column label="操作" prop="" width="120" fixed="right">
                         <template slot-scope="scope">
-                            <el-button type="text" size="small" :disable="scope.row.enableBack!==1" @click="reject('3',scope.row)">
+                            <el-button type="text" size="small" :disabled="scope.row.enableBack!==1" @click="reject('3',scope.row)">
                                 退回
                             </el-button>
                             <el-button type="text" size="small" @click="auditLog(scope.row)">
@@ -112,7 +112,7 @@
                     <el-table-column label="操作时间" prop="changed" width="180" />
                     <el-table-column label="操作" prop="" width="120" fixed="right">
                         <template slot-scope="scope">
-                            <el-button type="text" size="small" :disable="scope.row.enableBack!==1" @click="reject('4',scope.row)">
+                            <el-button type="text" size="small" :disabled="scope.row.enableBack!==1" @click="reject('4',scope.row)">
                                 退回
                             </el-button>
                             <el-button type="text" size="small" @click="auditLog(scope.row)">
@@ -144,7 +144,7 @@
             </template>
         </data-entry>
         <el-dialog title="审核日志" width="900px" :close-on-click-modal="false" :visible.sync="visibleAuditLog">
-            <audit-log :table-data="auditLogData" :verify-man="'verifyMan'" :verify-date="'verifyDate'" :pack-up="false" :status="true" />
+            <audit-log :table-data="auditLogData" :verify-man="'verifyMan'" :verify-date="'verifyDate'" :pack-up="false" :status="true" :show-title="false" />
             <div slot="footer" class="dialog-footer" />
         </el-dialog>
         <el-dialog title="退回原因" :close-on-click-modal="false" :visible.sync="visibleRefuse">
@@ -238,22 +238,22 @@
         tabs = [
             {
                 label: '准备人工',
-                status: '未录入',
+                status: '未录入1',
                 isRedact: false
             },
             {
                 label: '机器工时',
-                status: '未录入',
+                status: '未录入1',
                 isRedact: false
             },
             {
                 label: '生产入库',
-                status: '未录入',
+                status: '未录入1',
                 isRedact: false
             },
             {
                 label: '物料领用',
-                status: '未录入',
+                status: '未录入1',
                 isRedact: false
             },
             {
@@ -283,8 +283,14 @@
         processMapping={} // 工序 mapping
 
         async mounted() {
-            this.currentOrderNo = '851000002087'
 
+            console.log('this.$store.state.koji.auditDetail')
+            console.log(this.$store.state.koji.auditDetail)
+            this.currentOrderNo = this.$store.state.koji.auditDetail.orderNo
+            if (this.$store.state.koji.auditDetail.productLineName !== '') {
+                this.isNormalPage = false // show normal
+                this.isSCPage = true // show SC
+            }
             await this.initData(this.currentOrderNo)
             await this.getKojiHolder()
             await this.getProcessMapping()
@@ -300,14 +306,18 @@
 
         // 工艺列表 tab 工序详情
         goProcessDetail(item) {
+            console.log('点击后 item')
+            console.log(item)
             this.goDetail(this.processMapping[item.process], item.arg)
         }
 
         // 跳转工序页面
         goDetail(who, arg) {
+            console.log(who)
+            console.log(arg)
             let url = '';
             // 曲房工序跳转
-            if (this.isNormalPage) {
+            // if (this.isNormalPage) {
                 // this.$store.commit('koji/updateOrderKojiInfo', item);
 
                 switch (who) {
@@ -320,14 +330,12 @@
                     case 'YP':
                         url = 'DFMDS-pages-KojiMaking-WorkingProcedure-disc';
                         break;
-                    default:
-                }
+                    // default:
+                // }
 
-            }
-            // 蒸豆工序跳转
-            if (this.isSCPage) {
+            // } else { // 蒸豆工序跳转
                 // this.$store.commit('koji/updateOrderScInfo', item);
-                switch (who) {
+                // switch (who) {
                     case 'SC':
                         url = 'DFMDS-pages-KojiMaking-WorkingProcedure-SCWashBean';
                         break;
@@ -337,7 +345,9 @@
                     default:
                 }
 
-            }
+            // }
+
+            console.log(`url:${url}`)
 
             this.$store.commit(
                     'common/updateMainTabs',
@@ -452,20 +462,19 @@
 
 
             // 页签状态
-            await KOJI_API.KOJI_PAGE_TAG_STATUS_QUERY_API({
+            await KOJI_API.KOJI_VERIFY_TAB_STATUS_API({
                 orderNo: this.formHeader.orderNo
             }).then(({ data }) => {
                 console.log('页签data')
                 console.log(data)
                 if (data.data !== null) {
                     // this.rejectBtn = data.data.readyTagStatus;
-                    // this.tabs[0].status = data.data.readyTagStatus;
-                    // this.tabs[1].status = data.data.userTagStatus;
-                    // this.tabs[2].status = data.data.deviceTagStatus;
-                    // this.tabs[3].status = data.data.storageTagStatus;
-                    // this.tabs[4].status = data.data.materialTagStatus;
-                    // this.tabs[4].status = data.data.materialTagStatus;
-                    // this.$refs.dataEntry.updateTabs();
+                    this.tabs[0].status = data.data.manHour;
+                    this.tabs[1].status = data.data.machineHour;
+                    this.tabs[2].status = data.data.inStorage;
+                    this.tabs[3].status = data.data.material;
+
+                    this.$refs.dataEntry.updateTabs();
                 }
             });
         }
@@ -497,14 +506,19 @@
             }
         }
 
-        auditLog(row) {
-            AUDIT_API.AUDIT_DIALOG_LOG_LIST_API({
-                verifyId: row.id,
-                verifyType: 'TIMESHEET'
-            }).then(({ data }) => {
-                this.auditLogData = data.data
-                this.visibleAuditLog = true
+        auditLog() {
+
+            AUDIT_API.AUDIT_LOG_LIST_API({ orderNo: this.currentOrderNo, verifyType: '' }).then(({ data }) => {
+                    this.auditLogData = data.data
+                    this.visibleAuditLog = true
             })
+            // AUDIT_API.AUDIT_DIALOG_LOG_LIST_API({
+            //     verifyId: row.id,
+            //     verifyType: 'TIMESHEET'
+            // }).then(({ data }) => {
+            //     this.auditLogData = data.data
+            //     this.visibleAuditLog = true
+            // })
         }
 
         // 获取曲房下拉选项
