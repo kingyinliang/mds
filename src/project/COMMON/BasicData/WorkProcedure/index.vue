@@ -374,12 +374,14 @@
                                 parentId: val || '',
                                 deptType: 'PROCESS'
                             }).then(({ data }) => {
+                                    console.log('222222')
+                                    console.log(data)
                                     const optionList = data.data;
                                     optionList.forEach(item => {
                                         // eslint-disable-next-line no-invalid-this
                                         this.$set(item, 'optLabel', `${item.deptName}`)
                                         // eslint-disable-next-line no-invalid-this
-                                        this.$set(item, 'optValue', `${item.deptCode}`)
+                                        this.$set(item, 'optValue', `${item.id}`)
                                     })
                                     resolve(optionList)
                             })
@@ -528,7 +530,7 @@
                                         // eslint-disable-next-line no-invalid-this
                                         this.$set(item, 'optLabel', `${item.deptName}`)
                                         // eslint-disable-next-line no-invalid-this
-                                        this.$set(item, 'optValue', `${item.deptCode}`)
+                                        this.$set(item, 'optValue', `${item.id}`)
                                     })
                                     resolve(optionList)
                             })

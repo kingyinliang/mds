@@ -201,6 +201,8 @@ export default class KojiManHour extends Vue {
                     this.formHeader.checkStatusName = '';
                     this.formHeader.changed = '';
                     this.formHeader.changer = '';
+                    this.$refs.readyTime.changeList({});
+                    this.$refs.workHour.changeList([]);
                 } else {
                     this.formHeader.checkStatus = data.data.kojiTimeSheetResponseDto.status;
                     this.formHeader.checkStatusName = this.checkStatus.filter(item => item.dictCode === this.formHeader.checkStatus)[0].dictValue
