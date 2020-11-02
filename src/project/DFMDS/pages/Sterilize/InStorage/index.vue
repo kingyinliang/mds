@@ -221,8 +221,8 @@
 
 
         // 车间下拉抓取
-        getWorkshopList() {
-            COMMON_API.ORG_QUERY_WORKSHOP_API({
+        async getWorkshopList() {
+            await COMMON_API.ORG_QUERY_WORKSHOP_API({
                 factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
                 deptType: ['WORK_SHOP'],
                 deptName: '杀菌'
@@ -235,9 +235,9 @@
                         // 根据回传预先取第一笔
                         this.formHeader.workShop = data.data[0]['id'];
                         this.formHeader.workShopName = data.data[0]['deptName'];
-                        this.getOrderList()
                     }
             })
+            await this.getOrderList()
         }
 
         // 车间选择触发
@@ -292,27 +292,24 @@
         }
 
         // 订单下拉抓取
-        getOrderList() {
+        async getOrderList() {
             const orderTemp: string[] = []
-            COMMON_API.ORDER_LIST_API({
+            await COMMON_API.ORDER_LIST_API({
                 factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
                 productDate: this.formHeader.inKjmDate,
                 workShop: this.formHeader.workShop
-            }).then(({ data }) => {
-                console.log('订单下拉')
-                console.log(data)
-                this.orderNoList = data.data
-
-                this.orderNoList.forEach(item => {
-                    orderTemp.push(item.orderNo as string)
-                })
-
-                // 获取入库状态状态
-                STE_API.STE_INSTORAGE_QUERY_TABS_STATUS_API(orderTemp
-                ).then(({ data: element }) => {
-                    this.inStorageStatus = element.data
-
-                })
+            }).then(async({ data }) => {
+                if (data.data) {
+                    this.orderNoList = data.data
+                    this.orderNoList.forEach(item => {
+                        orderTemp.push(item.orderNo as string)
+                    })
+                    // 获取入库状态状态
+                    await STE_API.STE_INSTORAGE_QUERY_TABS_STATUS_API(orderTemp
+                    ).then(({ data: element }) => {
+                        this.inStorageStatus = element.data
+                    })
+                }
             })
         }
 
@@ -429,40 +426,41 @@
         }
 
         // {redact-box} 保存
-        savedDatas() {
+        async savedDatas() {
             const inStorageRequest = this.$refs.inStorage.getSavedOrSubmitData();
             const excRequest = this.$refs.excRecord.getSavedOrSubmitData(this.formHeader, 'INSTORAGE');
             const textRequest = this.$refs.textRecord.savedData(this.formHeader, 'sterilize');
 
-            STE_API.STE_INSTORAGE_SAVE_API({
-                exceptionDelete: excRequest.ids,
-                exceptionInsert: excRequest.insertDto,
-                exceptionUpdate: excRequest.updateDto,
-                instorageDelete: inStorageRequest.ids,
-                instorageInsert: inStorageRequest.steControlInsertDto,
-                instorageUpdate: inStorageRequest.steControlUpdateDto,
-                steOrderUpdateDto: this.formHeader,
-                textInsert: textRequest.pkgTextInsert,
-                textUpdate: textRequest.pkgTextUpdate
-            }).then(() => {
-                this.$successToast('保存成功');
-                this.isRedact = false;
-                // 重整数据
+            await STE_API.STE_INSTORAGE_SAVE_API({
+                    exceptionDelete: excRequest.ids,
+                    exceptionInsert: excRequest.insertDto,
+                    exceptionUpdate: excRequest.updateDto,
+                    instorageDelete: inStorageRequest.ids,
+                    instorageInsert: inStorageRequest.steControlInsertDto,
+                    instorageUpdate: inStorageRequest.steControlUpdateDto,
+                    steOrderUpdateDto: this.formHeader,
+                    textInsert: textRequest.pkgTextInsert,
+                    textUpdate: textRequest.pkgTextUpdate
+                }).then(() => {
+                    this.$successToast('保存成功');
+                    this.isRedact = false;
+                    // 重整数据
 
-                this.getWorkshopList()
-                this.btnGetResult();
-                this.selectOrder(this.globalOrderNumber)
-                this.getOrderList()
-            })
+                })
+
+            await this.getWorkshopList()
+                // 获取订单下拉
+            await this.selectOrder(this.globalOrderNumber)
+            await this.btnGetResult();
         }
 
         // {redact-box} 提交
-        submitDatas() {
+        async submitDatas() {
             const inStorageRequest = this.$refs.inStorage.getSavedOrSubmitData();
             const excRequest = this.$refs.excRecord.getSavedOrSubmitData(this.formHeader, 'INSTORAGE');
             const textRequest = this.$refs.textRecord.savedData(this.formHeader, 'sterilize');
 
-            STE_API.STE_INSTORAGE_SUBMIT_API({
+            await STE_API.STE_INSTORAGE_SUBMIT_API({
                 exceptionDelete: excRequest.ids,
                 exceptionInsert: excRequest.insertDto,
                 exceptionUpdate: excRequest.updateDto,
@@ -475,11 +473,11 @@
             }).then(() => {
                 this.$successToast('提交成功');
                 this.isRedact = false;
-                // 重整数据
-                this.getWorkshopList()
-                this.btnGetResult();
-                this.selectOrder(this.globalOrderNumber)
             })
+            await this.getWorkshopList()
+            // 获取订单下拉
+            await this.selectOrder(this.globalOrderNumber)
+            await this.btnGetResult();
         }
 
         // {redact-box} 提交需跑的验证 function
