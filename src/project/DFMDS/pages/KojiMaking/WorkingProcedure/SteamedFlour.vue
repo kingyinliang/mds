@@ -176,10 +176,11 @@
                 this.getHouseTag();
                 this.formHeader.textStage = 'ZM';
                 this.formHeader.factoryName = JSON.parse(sessionStorage.getItem('factory') || '{}').deptShort;
+
                 this.$refs.flourMaterialApply.init(this.formHeader);
                 this.$refs.flourMaterialCraft.init(this.formHeader);
-                this.$refs.excRecord.init(this.formHeader, 'ZM');
-                this.$refs.textRecord.init(this.formHeader, 'koji');
+                this.$refs.excRecord.init(this.formHeader, 'ZM'); // 洗豆:XD;SC洗豆:SC;蒸豆:ZD;蒸面:ZM;圆盘:YP
+                this.$refs.textRecord.init(this.formHeader, 'koji'); // 洗豆:XD;SC洗豆:SC;蒸豆:ZD;蒸面:ZM;圆盘:YP
             })
         }
 
