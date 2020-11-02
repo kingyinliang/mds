@@ -449,7 +449,7 @@
 
         async initData(order) {
             // 表头讯息
-            await COMMON_API.COMMON_QUERY_BY_ORDERNO_API({ // 基础数据-订单管理-根据订单号查询
+            await COMMON_API.OREDER_QUERY_BY_NO_API({ // 基础数据-订单管理-根据订单号查询
                 factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
                 orderNo: order
             }).then(({ data }) => {

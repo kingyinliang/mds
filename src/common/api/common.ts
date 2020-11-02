@@ -462,11 +462,7 @@ const COMMON_API = {
     /**
      * @property {string} INLIST_API 订单号查询审核日志  orderNo
      */
-    COMMON_LOG_LIST_API: params => httpProxy('/verifyRecord/queryByNo', 'GET', params),
-    /**
-     * @property {string} PKG_HOME_QUERY_BY_NO_API 基础数据-订单管理-根据订单号查询
-     */
-    COMMON_QUERY_BY_ORDERNO_API: params => httpProxy('/order/queryByNo', 'GET', params)
+    COMMON_LOG_LIST_API: params => httpProxy('/verifyRecord/queryByNo', 'GET', params)
 };
 
 export default COMMON_API;
