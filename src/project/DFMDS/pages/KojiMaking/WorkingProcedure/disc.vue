@@ -7,7 +7,7 @@
         :order-status="formHeader.statusName"
         :header-base="headerBase"
         :form-header="formHeader"
-        :tabs="tabs"
+        :tabs="currentTabs"
         :submit-rules="submitRules"
         :saved-datas="savedDatas"
         :submit-datas="submitDatas"
@@ -117,14 +117,17 @@
             }
         ];
 
-        tabs: TabsObj[] = [
+        get currentTabs() {
+            const { discCraftName, discInStorageName } = this.$store.state.koji.houseTagInfo;
+
+            return [
             {
                 label: '工艺控制',
-                status: '未录入'
+                status: discCraftName || ''
             },
             {
                 label: '生产入库',
-                status: '未录入'
+                status: discInStorageName || ''
             },
             {
                 label: '异常记录'
@@ -132,7 +135,20 @@
             {
                 label: '文本记录'
             }
-        ];
+            ]
+        }
+
+        // 获取页签状态
+        getHouseTag() {
+            KOJI_API.KOJI_PAGE_TAG_STATUS_QUERY_API({
+                orderNo: this.formHeader.orderNo,
+                kojiOrderNo: this.formHeader.kojiOrderNo
+            }).then(({ data }) => {
+                console.log('0000000000')
+                console.log(data)
+                this.$store.commit('koji/updateHouseTag', data.data);
+            })
+        }
 
 
         submitRules(): Function[] {
@@ -188,11 +204,12 @@
                 // id: this.$store.state.koji.orderKojiInfo.id || ''
                 id: this.jumpFromAudit ? this.$route.params.order : this.$store.state.koji.orderKojiInfo.id || ''
             }).then(({ data }) => {
-                this.formHeader = JSON.parse(JSON.stringify(data.data))
+                this.formHeader = data.data
+                this.getHouseTag();
+
                 this.$set(this.formHeader, 'factoryName', JSON.parse(sessionStorage.getItem('factory') || '{}').deptShort)
                 this.$set(this.formHeader, 'textStage', 'YP')
-                console.log('this.formHeader')
-                console.log(this.formHeader)
+
                 this.$refs.craftControl.init(this.formHeader);
                 this.$refs.productInStorage.init(this.formHeader);
                 this.$refs.excRecord.init(this.formHeader, 'YP'); // 洗豆:XD;SC洗豆:SC;蒸豆:ZD;蒸面:ZM;圆盘:YP
