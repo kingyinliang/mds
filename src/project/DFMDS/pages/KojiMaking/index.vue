@@ -576,14 +576,16 @@
         display: flex;
         flex-direction: row;
         align-items: center;
-        justify-content: space-between;
+        justify-content: flex-end;
         width: 100%;
         .bottom-item {
-            flex: 1;
             padding: 9px 15px;
+            padding-right: 20px;
+            padding-left: 20px;
             font-size: 14px;
             text-align: center;
             border-radius: 0;
+            border-radius: 4px;
         }
     }
 }

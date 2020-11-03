@@ -63,7 +63,11 @@
             }
         }
 
-        init(orderNo, workShop?) {
+        init(orderNo, workShop?, clear?) {
+            if (clear) {
+                this.currentFormDataGroup.text = ''
+                return
+            }
 
             // 车间陆续增加
             if (workShop === 'sterilize') {
