@@ -168,7 +168,6 @@
             loanedPersonnel: HTMLFormElement;
         }
 
-
         currentWorkShop=''
         headerInfo: HeaderInfo={
             headerProdcutMaterial: '',
@@ -255,6 +254,14 @@
         async init(item, workshop) {
             console.log('入罐item')
             console.log(item)
+
+            this.headerInfo = {
+                headerProdcutMaterial: '',
+                headerProductMaterialName: '',
+                headerFeedMaterial: '',
+                headerFeedMaterialName: '',
+                headerPotCount: 0
+            }
             this.isTableDialogVisible = true
             this.currentPotId = item.potId
             this.currentPotNo = item.potNo
@@ -313,8 +320,6 @@
                 potNo: this.currentPotNo,
                 workShop: this.currentWorkShop
             }).then(({ data }) => {
-                console.log('222222')
-                console.log(data)
                 this.importBucketInfo = []
                 if (data.data.length !== 0) {
                     this.importBucketInfo = data.data

@@ -376,6 +376,14 @@
             this.formHeader.productLine = this.orderData.productLine
             this.formHeader.inStorageStatus = this.inStorageStatus.filter(item => item.orderNo === this.formHeader.orderNo)[0].instorageStatus
             this.tabTitles[0]['status'] = this.formHeader.inStorageStatus
+
+            // 表单数据清空
+            this.isRedact = false
+            this.redactBoxDisable = true
+            this.$refs.inStorage.init([], this.formHeader)
+            this.$refs.excRecord.init(this.formHeader, 'INSTORAGE', true);
+            this.$refs.textRecord.init(this.formHeader.orderNo, 'sterilize', true);
+
         }
 
         // 查询包装产线

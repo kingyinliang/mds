@@ -144,8 +144,6 @@
                 orderNo: this.formHeader.orderNo,
                 kojiOrderNo: this.formHeader.kojiOrderNo
             }).then(({ data }) => {
-                console.log('0000000000')
-                console.log(data)
                 this.$store.commit('koji/updateHouseTag', data.data);
             })
         }
