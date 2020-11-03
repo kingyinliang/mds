@@ -15,19 +15,23 @@
                     <!-- <el-table-column label="发酵罐/池号" prop="fermentPotName" min-width="120" /> -->
                     <table-tree-column label="发酵罐/池号" prop="fermentPotName" min-width="120" tree-key="id" show-overflow-tooltip />
                     <el-table-column label="生产锅号" prop="stePotNo" min-width="80" />
-                    <el-table-column label="锅序" prop="potOrder" min-width="65" />
+                    <el-table-column label="锅序" prop="potOrder" min-width="65">
+                        <template slot-scope="scope">
+                            <em v-if="scope.row.potOrder">第{{ scope.row.potOrder }}锅</em>
+                        </template>
+                    </el-table-column>
                     <el-table-column label="锅单号" prop="potOrderNo" min-width="180" />
                     <el-table-column label="领用物料" min-width="220">
                         <template slot-scope="scope">
                             {{ scope.row.materialName }} {{ scope.row.materialCode }}
                         </template>
                     </el-table-column>
-                    <el-table-column label="单位" prop="consumeUnit" min-width="55" />
                     <el-table-column label="领用数量" prop="consumeAmount" min-width="100" />
-                    <el-table-column label="领用批次" prop="consumeBatch" min-width="120" />
+                    <el-table-column label="单位" prop="consumeUnit" min-width="55" />
+                    <el-table-column label="领用批次" prop="consumeBatch" min-width="110" />
                     <el-table-column label="操作人" prop="changer" min-width="140" />
                     <el-table-column label="操作时间" prop="changed" min-width="165" />
-                    <el-table-column label="操作" prop="" min-width="65" fixed="right">
+                    <el-table-column label="操作" prop="" min-width="55" fixed="right">
                         <template slot-scope="scope">
                             <el-button v-if="!scope.row.children" type="text" size="small" :disabled="scope.row.allowReturnFlag === false" @click="pass(scope.row)">
                                 退回
@@ -39,18 +43,27 @@
             <template slot="2">
                 <el-table ref="acceAdd" class="newTable" :data="acceAddList" header-row-class-name="tableHead" border tooltip-effect="dark">
                     <el-table-column type="index" label="序号" width="50" align="center" fixed />
-                    <!-- <el-table-column label="领用物料" prop="" min-width="120" /> -->
-                    <table-tree-column label="领用物料" prop="material" min-width="220" tree-key="id" show-overflow-tooltip />
+                    <el-table-column label="领用物料" min-width="150" show-overflow-tooltip>
+                        <template slot-scope="scope">
+                            {{ scope.row.materialName }} {{ scope.row.materialCode }}
+                        </template>
+                    </el-table-column>
+                    <!-- <table-tree-column label="领用物料" prop="material" min-width="220" tree-key="id" show-overflow-tooltip /> -->
                     <el-table-column label="前处理阶段" prop="preStage" min-width="90" />
                     <el-table-column label="需求用量" prop="needAmount" min-width="80" />
-                    <el-table-column label="单位" prop="unit" min-width="55" />
-                    <el-table-column label="生产锅号" prop="potNo" min-width="80" />
-                    <el-table-column label="锅序" prop="potOrder" min-width="65" />
-                    <el-table-column label="锅单号" prop="potOrderNo" min-width="180" />
+                    <!-- <el-table-column label="生产锅号" prop="potNo" min-width="80" /> -->
+                    <table-tree-column label="生产锅号" prop="potNo" min-width="95" tree-key="id" show-overflow-tooltip />
+                    <el-table-column label="锅序" prop="potOrder" min-width="65">
+                        <template slot-scope="scope">
+                            <em v-if="scope.row.potOrder">第{{ scope.row.potOrder }}锅</em>
+                        </template>
+                    </el-table-column>
+                    <el-table-column label="锅单号" prop="potOrderNo" min-width="175" />
                     <el-table-column label="领用数量" prop="useAmount" min-width="90" />
-                    <el-table-column label="领用批次" prop="useBatch" min-width="115" />
+                    <el-table-column label="单位" prop="unit" min-width="55" />
+                    <el-table-column label="领用批次" prop="useBatch" min-width="110" />
                     <el-table-column label="添加时间" prop="addTime" min-width="165" />
-                    <el-table-column label="操作" prop="" min-width="65" fixed="right">
+                    <el-table-column label="操作" prop="" min-width="55" fixed="right">
                         <template slot-scope="scope">
                             <el-button v-if="!scope.row.children" type="text" size="small" :disabled="scope.row.allowReturnFlag === false" @click="pass(scope.row)">
                                 退回
@@ -63,9 +76,13 @@
                 <el-table ref="craft" class="newTable" :data="craftList" header-row-class-name="tableHead" border tooltip-effect="dark">
                     <el-table-column type="index" label="序号" width="50" align="center" fixed />
                     <el-table-column label="生产锅号" prop="potNo" min-width="90" />
-                    <el-table-column label="锅序" prop="potOrder" min-width="80" />
+                    <el-table-column label="锅序" prop="potOrder" min-width="65">
+                        <template slot-scope="scope">
+                            <em v-if="scope.row.potOrder">第{{ scope.row.potOrder }}锅</em>
+                        </template>
+                    </el-table-column>
                     <el-table-column label="锅单号" prop="potOrderNo" min-width="180" />
-                    <el-table-column label="入料时间" prop="" min-width="180">
+                    <el-table-column label="入料时间" prop="" min-width="160">
                         <template slot-scope="scope">
                             {{ scope.row.feedStartDate }} - {{ scope.row.feedEndDate }}
                         </template>
@@ -75,13 +92,13 @@
                             {{ scope.row.riseStartDate }} - {{ scope.row.riseEndDate }}
                         </template>
                     </el-table-column>
-                    <el-table-column label="保温阶段-ZK" prop="keepZkFlag" min-width="85" />
-                    <el-table-column label="降温阶段-ZK" prop="coolZkFlag" min-width="85" />
+                    <el-table-column label="保温阶段-ZK" prop="keepZkFlag" min-width="65" />
+                    <el-table-column label="降温阶段-ZK" prop="coolZkFlag" min-width="65" />
                     <el-table-column label="类型" prop="controlType" min-width="120" />
                     <el-table-column label="阶段" prop="controlStage" min-width="120" />
                     <el-table-column label="记录时间" prop="recordDate" min-width="165" />
                     <el-table-column label="温度" prop="temp" min-width="60" />
-                    <el-table-column label="操作" min-width="65" fixed="right">
+                    <el-table-column label="操作" min-width="55" fixed="right">
                         <template slot-scope="scope">
                             <el-button type="text" size="small" :disabled="scope.row.allowReturnFlag === false" @click="pass(scope.row)">
                                 退回
@@ -96,13 +113,13 @@
                         订单产量：
                     </div>
                     <div class="input_bottom">
-                        {{ inStorage.planOutPut }}
+                        {{ inStorage.planOutPut }}{{ inStorage.planOutPutUnit }}
                     </div>
                     <div>
                         实际产量：
                     </div>
                     <div class="input_bottom">
-                        {{ inStorage.realOutPut }}
+                        {{ inStorage.realOutPut }}{{ inStorage.realOutPutUnit }}
                     </div>
                     <div>
                         生产锅数：
@@ -121,13 +138,13 @@
                             {{ scope.row.materialName }} {{ scope.row.materialCode }}
                         </template>
                     </el-table-column>
-                    <el-table-column label="单位" prop="materialUnit" min-width="65" />
                     <el-table-column label="入库数量" prop="inStorageAmount" min-width="90" />
+                    <el-table-column label="单位" prop="materialUnit" min-width="65" />
                     <el-table-column label="入库批次" prop="inStorageBatch" min-width="110" />
                     <el-table-column label="备注" prop="remark" min-width="90" show-overflow-tooltip />
                     <el-table-column label="操作人" prop="changer" min-width="140" />
                     <el-table-column label="操作时间" prop="changed" min-width="165" />
-                    <el-table-column label="操作" min-width="65" fixed="right">
+                    <el-table-column label="操作" min-width="55" fixed="right">
                         <template slot-scope="scope">
                             <el-button type="text" size="small" :disabled="scope.row.allowReturnFlag === false" @click="pass(scope.row)">
                                 退回
@@ -140,7 +157,11 @@
                 <el-table ref="excRecord" class="newTable" :data="excRecordList" header-row-class-name="tableHead" border tooltip-effect="dark">
                     <el-table-column type="index" label="序号" width="50" align="center" fixed />
                     <el-table-column label="生产锅号" prop="potNo" min-width="90" />
-                    <el-table-column label="锅序" prop="potOrder" min-width="80" />
+                    <el-table-column label="锅序" prop="potOrder" min-width="80">
+                        <template slot-scope="scope">
+                            <em v-if="scope.row.potOrder">第{{ scope.row.potOrder }}锅</em>
+                        </template>
+                    </el-table-column>
                     <el-table-column label="锅单号" prop="potOrderNo" min-width="120" />
                     <el-table-column label="班次" prop="className" min-width="70" />
                     <el-table-column label="异常情况" prop="exceptionSituationName" min-width="120" show-overflow-tooltip />
@@ -159,18 +180,20 @@
                 <el-table ref="working" class="newTable" :data="workingList" header-row-class-name="tableHead" border tooltip-effect="dark">
                     <el-table-column type="index" label="序号" width="50" align="center" fixed />
                     <el-table-column label="准备工时" prop="readyTime" min-width="80" />
-                    <el-table-column label="单位" prop="readyUnit" min-width="60" />
+                    <el-table-column label="单位" prop="readyUnit" min-width="50" />
                     <el-table-column label="人员工时" prop="manTime" min-width="80" />
-                    <el-table-column label="单位" prop="manUnit" min-width="60" />
+                    <el-table-column label="单位" prop="manUnit" min-width="50" />
                     <el-table-column label="机器工时" prop="machineTime" min-width="80" />
-                    <el-table-column label="单位" prop="machineUnit" min-width="60" />
-                    <!-- <el-table-column label="锅序" prop="" min-width="120" /> -->
-                    <table-tree-column label="锅序" prop="potOrder" min-width="90" tree-key="id" show-overflow-tooltip />
+                    <el-table-column label="单位" prop="machineUnit" min-width="50" />
+                    <!-- <el-table-column label="生产锅号" prop="potName" min-width="120" /> -->
+                    <!-- <table-tree-column label="锅序" prop="potOrder" min-width="90" tree-key="id" show-overflow-tooltip /> -->
+                    <table-tree-column label="生产锅号" prop="potName" min-width="120" tree-key="id" show-overflow-tooltip />
+                    <el-table-column label="锅序" prop="potOrder" min-width="65" />
                     <el-table-column label="锅单号" prop="potOrderNo" min-width="180" show-overflow-tooltip />
                     <el-table-column label="备注" prop="remark" min-width="90" show-overflow-tooltip />
                     <el-table-column label="操作人" prop="changer" min-width="140" />
                     <el-table-column label="操作时间" prop="changed" min-width="165" />
-                    <el-table-column label="操作" min-width="65" fixed="right">
+                    <el-table-column label="操作" min-width="55" fixed="right">
                         <template slot-scope="scope">
                             <el-button type="text" size="small" :disabled="scope.row.allowReturnFlag === false" @click="pass(scope.row)">
                                 退回
@@ -249,7 +272,7 @@
                 value: 'orderStartDate'
             },
             {
-                type: 'date-picker',
+                type: 'p',
                 icon: 'factory-bianhao',
                 label: '生产锅数',
                 value: 'planPotCount'
@@ -508,6 +531,8 @@
                 return false
             }
             this.ReRow['orderNo'] = this.auditDetail['orderNo'];
+            this.ReRow['memo'] = this.ReText;
+            console.log(this.$refs.dataEntry.activeName);
             switch (this.$refs.dataEntry.activeName) {
                 case '1':
                     STE_API.STE_AUDIT_DETAIL_DETAUL_REFISE_SEMI_API(this.ReRow).then(() => {
@@ -517,6 +542,7 @@
                     })
                     break;
                 case '2':
+                    this.ReRow['consumeBatch'] = this.ReRow['useBatch'];
                     STE_API.STE_AUDIT_DETAIL_DETAUL_REFISE_ACCESS_API(this.ReRow).then(() => {
                         this.visibleRefuse = false;
                         this.$successToast('操作成功');
