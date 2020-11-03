@@ -19,7 +19,7 @@
                             </el-button>
                         </div>
                     </template>
-                    <el-table class="newTable markStyle" :data="targetQueryTableListOfForiegnMatter" :row-class-name="rowDelFlag" height="300" header-row-class-name="tableHead" border style="width: 100%; min-height: 90px;">
+                    <el-table class="newTable markStyle" :data="targetQueryTableListOfForiegnMatter" :row-class-name="rowDelFlag" header-row-class-name="tableHead" border style="width: 100%; min-height: 90px;">
                         <el-table-column label="序号" type="index" width="50" fixed="left" align="center" />
                         <el-table-column width="150" :show-overflow-tooltip="true" class="star">
                             <template slot="header">
@@ -96,7 +96,7 @@
                             </el-button>
                         </div>
                     </template>
-                    <el-table class="newTable markStyle" :data="targetQueryTableListOfMagnet" :row-class-name="rowDelFlag" height="300" header-row-class-name="tableHead" border style="width: 100%; min-height: 90px;">
+                    <el-table class="newTable markStyle" :data="targetQueryTableListOfMagnet" :row-class-name="rowDelFlag" header-row-class-name="tableHead" border style="width: 100%; min-height: 90px;">
                         <el-table-column label="序号" type="index" width="50" fixed="left" align="center" />
                         <el-table-column width="150" :show-overflow-tooltip="true">
                             <template slot="header">
