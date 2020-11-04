@@ -22,25 +22,29 @@
                     </p>
                     <div class="dataEntry-head-leftRight-message">
                         <div class="dataEntry-head-leftRight-message__item">
-                            <p>{{ formData.workShop ? formData.workShop : '' }}</p>
+                            <el-tooltip class="item" effect="dark" :content="formData.workShop ? formData.workShop : ''" placement="top">
+                                <p>{{ formData.workShop ? formData.workShop : '' }}</p>
+                            </el-tooltip>
                             <p><em class="iconfont factory-37_zhusu" /> 杀菌车间</p>
                         </div>
                         <div class="dataEntry-head-leftRight-message__item">
-                            <p>
-                                {{ formData.prodcutMaterial ? formData.prodcutMaterial : '' }}
-                            </p>
+                            <el-tooltip class="item" effect="dark" :content="formData.prodcutMaterial ? formData.prodcutMaterial : ''" placement="top">
+                                <p>
+                                    {{ formData.prodcutMaterial ? formData.prodcutMaterial : '' }}
+                                </p>
+                            </el-tooltip>
                             <p> <em class="iconfont factory-bianhao" />生产物料 </p>
                         </div>
                         <div class="dataEntry-head-leftRight-message__item">
                             <p>
                                 {{ formData.potCount ? formData.potCount.toLocaleString() : 0 }}
-                                <em>{{ formData.unit ? formData.unit : 'KG' }}</em>
                             </p>
                             <p> <em class="iconfont factory-cunchurongliang" />配置锅数 </p>
                         </div>
                         <div class="dataEntry-head-leftRight-message__item">
                             <p>
                                 {{ formData.amount ? formData.amount.toLocaleString() : 0 }}
+                                <em>{{ formData.unit ? formData.unit : 'KG' }}</em>
                             </p>
                             <p> <em class="iconfont factory-cunchurongliang" />数量 </p>
                         </div>

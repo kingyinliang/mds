@@ -187,7 +187,8 @@
             this.batchList.map(item => {
                 if (item.batch === this.dataForm.batch) {
                     this.dataForm.materialLink = String(item.materialName) + String(item.materialCode);
-                    this.dataForm.stockAmount = item.stockAmount;
+                    // this.dataForm.stockAmount = item.stockAmount;
+                    this.dataForm.stockAmount = item.currentAmount
                     this.dataForm.supplier = item.supplier;
                 }
             });
