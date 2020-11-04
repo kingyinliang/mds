@@ -2,6 +2,7 @@
     <div class="header_main">
         <query-table
             ref="queryTable"
+            :is-query-form-show="false"
             query-auth="steSplitQuery"
             :type="'home'"
             :query-form-data="queryFormData"
