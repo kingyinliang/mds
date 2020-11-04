@@ -15,7 +15,7 @@
                     <el-table-column type="index" label="序号" width="50" align="center" fixed />
                     <el-table-column label="工序" prop="process" min-width="120" />
                     <el-table-column v-if="isNormalPage" label="曲房" prop="kojiHouseName" min-width="120" />
-                    <el-table-column v-if="isNormalPage" label="入曲时间" prop="addKojiDate" width="180" />
+                    <el-table-column v-if="isNormalPage" label="入曲日期" prop="addKojiDate" width="180" />
                     <el-table-column v-if="isSCPage" label="生产时间" prop="addKojiDate" width="180" />
                     <el-table-column label="准备工时" prop="prepairedHour" width="180" />
                     <el-table-column label="单位" prop="" width="120">
@@ -469,8 +469,8 @@
                 console.log(data)
                 if (data.data !== null) {
                     // this.rejectBtn = data.data.readyTagStatus;
-                    this.tabs[0].status = data.data.manHour;
-                    this.tabs[1].status = data.data.machineHour;
+                    this.tabs[0].status = data.data.ready;
+                    this.tabs[1].status = data.data.device;
                     this.tabs[2].status = data.data.inStorage;
                     this.tabs[3].status = data.data.material;
 
