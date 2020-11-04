@@ -91,12 +91,12 @@
                 <el-form ref="formatData" :model="formatData" :rules="rules" size="small" label-width="110px" @keyup.enter.native="dataFormSubmit()" @submit.native.prevent>
                     <el-form-item label="生产物料：" prop="productMaterialString">
                         <el-select v-model="formatData.productMaterialString" filterable :disabled="formatData.id ? true: false">
-                            <el-option v-for="(item, index) in prodMaterialList" :key="index" :label="item.materialName + ' ' + item.materialCode" :value="item.materialCode + ' ' + item.materialName" />
+                            <el-option v-for="(item, index) in prodMaterialList" :key="index" :label="item.materialName + ' ' + item.materialCode" :value="item.materialName + ' ' + item.materialCode" />
                         </el-select>
                     </el-form-item>
                     <el-form-item label="领用物料：" prop="useMaterialString">
                         <el-select v-model="formatData.useMaterialString" filterable>
-                            <el-option v-for="(item, index) in useMaterialList" :key="index" :label="item.materialName + ' ' + item.materialCode" :value="item.materialCode + ' ' + item.materialName" />
+                            <el-option v-for="(item, index) in useMaterialList" :key="index" :label="item.materialName + ' ' + item.materialCode" :value="item.materialName + ' ' + item.materialCode" />
                         </el-select>
                     </el-form-item>
                     <el-form-item label="是否增补料：" prop="supplyFlag">
@@ -323,6 +323,11 @@ export default class SpecialMaterialAttr extends Vue {
                     this.formatData.useMaterial = useMaterialString[1];
                     this.formatData.useMaterialName = useMaterialString[0];
                 }
+                console.log(this.useMaterialList);
+                const useMaterialSole = this.useMaterialList.find(it => it.materialCode === this.formatData.useMaterial);
+                if (useMaterialSole) {
+                    this.formatData.useMaterialType = useMaterialSole['materialTypeCode'];
+                }
                 if (this.formatData.id) {
                     COMMON_API.SPECIAL_MATERIAL_UPDATE_API(this.formatData).then(({ data }) => {
                         if (data.code === 200) {
@@ -380,6 +385,7 @@ interface FormData {
     remark?: string;
     changed?: string;
     changer?: string;
+    useMaterialType?: string;
 }
 interface ListType {
     id?: number;
