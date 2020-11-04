@@ -165,12 +165,12 @@ export default class AuditIndex extends Vue {
                 {
                     prop: 'workShopName',
                     label: '生产车间',
-                    minwidth: '50'
+                    minwidth: '60'
                 },
                 {
                     prop: 'productLineName',
                     label: '生产产线',
-                    minwidth: '90'
+                    minwidth: '100'
                 },
                 {
                     prop: 'orderNo',
@@ -185,12 +185,12 @@ export default class AuditIndex extends Vue {
                 {
                     prop: 'planOutput',
                     label: '订单数量',
-                    minwidth: '55'
+                    minwidth: '45'
                 },
                 {
                     prop: 'outputUnitName',
                     label: '订单单位',
-                    minwidth: '50'
+                    minwidth: '45'
                 },
                 {
                     prop: 'productDate',
@@ -200,12 +200,12 @@ export default class AuditIndex extends Vue {
                 {
                     prop: 'changer',
                     label: '提交人',
-                    minwidth: '85'
+                    minwidth: '80'
                 },
                 {
                     prop: 'changed',
                     label: '提交时间',
-                    minwidth: '100'
+                    minwidth: '95'
                 }
             ]
         },
