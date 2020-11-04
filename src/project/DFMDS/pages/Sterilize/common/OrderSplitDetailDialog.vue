@@ -17,7 +17,7 @@
             </el-table-column>
             <el-table-column min-width="180" label="生产物料" :show-overflow-tooltip="true">
                 <template slot-scope="scope">
-                    {{ scope.row.materialCode + ' ' + scope.row.materialName }}
+                    {{ scope.row.materialName + ' ' + scope.row.materialCode }}
                 </template>
             </el-table-column>
             <el-table-column label="每锅数量" width="100" prop="potAmount" :show-overflow-tooltip="true">

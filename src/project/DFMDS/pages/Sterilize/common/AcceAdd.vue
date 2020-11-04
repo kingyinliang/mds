@@ -39,8 +39,8 @@
                 <el-table-column prop="cookingOrderNo" label="煮料锅单" min-width="100px" :show-overflow-tooltip="true" />
                 <el-table-column prop="cookingMaterialCode" label="煮料锅生产物料" min-width="140px" :show-overflow-tooltip="true">
                     <template slot-scope="scope">
-                        {{ scope.row.cookingMaterialCode }}
                         {{ scope.row.cookingMaterialName }}
+                        {{ scope.row.cookingMaterialCode }}
                     </template>
                 </el-table-column>
                 <el-table-column prop="remainderPot" label="剩余锅数" min-width="100px" :show-overflow-tooltip="true" />
@@ -170,7 +170,7 @@
                     </template>
                     <template slot-scope="scope">
                         <el-select v-model="scope.row.useMaterialCode" placeholder="请选择" size="small" clearable filterable :disabled="!(isRedact && scope.row.checkStatus !== 'C' && scope.row.checkStatus !== 'D' && scope.row.checkStatus !== 'P')" @change="setZengbuliao(scope.row)">
-                            <el-option v-for="(iteam, index) in ACMaterial" :key="index" :label="iteam.useMaterial + ' ' + iteam.useMaterialName" :value="iteam.useMaterial" />
+                            <el-option v-for="(iteam, index) in ACMaterial" :key="index" :label="iteam.useMaterialName + ' ' + iteam.useMaterial" :value="iteam.useMaterial" />
                         </el-select>
                     </template>
                 </el-table-column>
