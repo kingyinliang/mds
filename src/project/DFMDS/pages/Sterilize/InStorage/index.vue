@@ -11,7 +11,7 @@
                         el-select(v-model="formHeader.orderNo" placeholder="请选择" style="width: 180px;" clearable="" @change="selectOrder"): el-option(v-for="(item) in orderNoList" :key="item.id" :label="item.orderNo" :value="item.orderNo")
                     el-form-item(label="生产物料：")
                         el-tooltip(class="item" effect="dark" :content="formHeader.material" placement="top-start" :disabled="formHeader.material===''")
-                            p.input_border_bg(style="width: 200px;") {{ formHeader.material }}
+                            p.input_border_bg(style="width: 180px;") {{ formHeader.material }}
                     el-form-item(label="提交人员：")
                         el-tooltip(class="item" effect="dark" :content="formHeader.changer" placement="top-start" :disabled="formHeader.changer===''")
                             p.input_border_bg(style="width: 180px;") {{ formHeader.changer }}
