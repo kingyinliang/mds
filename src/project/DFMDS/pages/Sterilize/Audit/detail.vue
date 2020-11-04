@@ -14,7 +14,7 @@
                     <el-table-column type="index" label="序号" width="50" align="center" fixed />
                     <!-- <el-table-column label="发酵罐/池号" prop="fermentPotName" min-width="120" /> -->
                     <table-tree-column label="发酵罐/池号" prop="fermentPotName" min-width="120" tree-key="id" show-overflow-tooltip />
-                    <el-table-column label="生产锅号" prop="stePotNo" min-width="80" />
+                    <el-table-column label="生产锅号" prop="stePotName" min-width="85" />
                     <el-table-column label="锅序" prop="potOrder" min-width="65">
                         <template slot-scope="scope">
                             <em v-if="scope.row.potOrder">第{{ scope.row.potOrder }}锅</em>
@@ -26,9 +26,9 @@
                             {{ scope.row.materialName }} {{ scope.row.materialCode }}
                         </template>
                     </el-table-column>
-                    <el-table-column label="领用数量" prop="consumeAmount" min-width="100" />
+                    <el-table-column label="领用数量" prop="consumeAmount" min-width="90" />
                     <el-table-column label="单位" prop="consumeUnit" min-width="55" />
-                    <el-table-column label="领用批次" prop="consumeBatch" min-width="110" />
+                    <el-table-column label="领用批次" prop="consumeBatch" min-width="110" show-overflow-tooltip />
                     <el-table-column label="操作人" prop="changer" min-width="140" />
                     <el-table-column label="操作时间" prop="changed" min-width="165" />
                     <el-table-column label="操作" prop="" min-width="55" fixed="right">
@@ -52,7 +52,7 @@
                     <el-table-column label="前处理阶段" prop="preStage" min-width="90" />
                     <el-table-column label="需求用量" prop="needAmount" min-width="80" />
                     <!-- <el-table-column label="生产锅号" prop="potNo" min-width="80" /> -->
-                    <table-tree-column label="生产锅号" prop="potNo" min-width="95" tree-key="id" show-overflow-tooltip />
+                    <table-tree-column label="生产锅号" prop="potName" min-width="110" tree-key="id" show-overflow-tooltip />
                     <el-table-column label="锅序" prop="potOrder" min-width="65">
                         <template slot-scope="scope">
                             <em v-if="scope.row.potOrder">第{{ scope.row.potOrder }}锅</em>
@@ -61,8 +61,8 @@
                     <el-table-column label="锅单号" prop="potOrderNo" min-width="175" />
                     <el-table-column label="领用数量" prop="useAmount" min-width="90" />
                     <el-table-column label="单位" prop="unit" min-width="55" />
-                    <el-table-column label="领用批次" prop="useBatch" min-width="110" />
-                    <el-table-column label="添加时间" prop="addTime" min-width="165" />
+                    <el-table-column label="领用批次" prop="useBatch" min-width="110" show-overflow-tooltip />
+                    <el-table-column label="添加时间" prop="addTime" min-width="160" />
                     <el-table-column label="操作" prop="" min-width="55" fixed="right">
                         <template slot-scope="scope">
                             <el-button v-if="!scope.row.children" type="text" size="small" :disabled="scope.row.allowReturnFlag === false" @click="pass(scope.row)">
@@ -157,12 +157,12 @@
                 <el-table ref="excRecord" class="newTable" :data="excRecordList" header-row-class-name="tableHead" border tooltip-effect="dark">
                     <el-table-column type="index" label="序号" width="50" align="center" fixed />
                     <el-table-column label="生产锅号" prop="potNo" min-width="90" />
-                    <el-table-column label="锅序" prop="potOrder" min-width="80">
+                    <el-table-column label="锅序" prop="potOrder" min-width="75">
                         <template slot-scope="scope">
                             <em v-if="scope.row.potOrder">第{{ scope.row.potOrder }}锅</em>
                         </template>
                     </el-table-column>
-                    <el-table-column label="锅单号" prop="potOrderNo" min-width="120" />
+                    <el-table-column label="锅单号" prop="potOrderNo" min-width="180" />
                     <el-table-column label="班次" prop="className" min-width="70" />
                     <el-table-column label="异常情况" prop="exceptionSituationName" min-width="120" show-overflow-tooltip />
                     <el-table-column label="开始时间" prop="startDate" min-width="145" />
@@ -194,7 +194,7 @@
                     <el-table-column label="操作人" prop="changer" min-width="140" />
                     <el-table-column label="操作时间" prop="changed" min-width="165" />
                     <el-table-column label="操作" min-width="55" fixed="right">
-                        <template slot-scope="scope">
+                        <template v-if="scope.row._level !== 2" slot-scope="scope">
                             <el-button type="text" size="small" :disabled="scope.row.allowReturnFlag === false" @click="pass(scope.row)">
                                 退回
                             </el-button>
@@ -532,7 +532,6 @@
             }
             this.ReRow['orderNo'] = this.auditDetail['orderNo'];
             this.ReRow['memo'] = this.ReText;
-            console.log(this.$refs.dataEntry.activeName);
             switch (this.$refs.dataEntry.activeName) {
                 case '1':
                     STE_API.STE_AUDIT_DETAIL_DETAUL_REFISE_SEMI_API(this.ReRow).then(() => {
@@ -543,6 +542,7 @@
                     break;
                 case '2':
                     this.ReRow['consumeBatch'] = this.ReRow['useBatch'];
+                    this.ReRow['materialCode'] = this.ReRow['useMaterialCode'];
                     STE_API.STE_AUDIT_DETAIL_DETAUL_REFISE_ACCESS_API(this.ReRow).then(() => {
                         this.visibleRefuse = false;
                         this.$successToast('操作成功');
