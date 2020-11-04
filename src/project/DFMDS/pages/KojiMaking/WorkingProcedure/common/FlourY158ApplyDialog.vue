@@ -4,7 +4,7 @@
             <el-form ref="dataForm" :model="dataForm" status-icon :rules="dataRule" label-width="125px" size="small" @keyup.enter.native="dataFormSubmit()">
                 <el-form-item label="领用库位：">
                     <el-select v-model="dataForm.materialLocation" :disabled="type !== 'add'" placeholder="请选择" style="width: 100%;" @change="workShopChange">
-                        <el-option v-for="(item, index) in workShopList" :key="index" :label="item.materialLocation" :value="item.materialLocation" />
+                        <el-option v-for="(item, index) in workShopList" :key="index" :label="item.materialCode" :value="item.materialLocation" />
                     </el-select>
                 </el-form-item>
                 <el-form-item label="领用批次：" prop="batch">
@@ -107,6 +107,8 @@
             KOJI_API.KOJI_KOJISTRAIN_DETAILS_QUERY_API({
                 workShop: this.$store.state.koji.orderKojiInfo.workShop
             }).then(({ data }) => {
+                console.log('领用库位')
+                console.log(data)
                 this.workShopList = data.data;
                 if (data.data.length !== 0 && type === 'add') {
                     this.dataForm.materialLocation = data.data[0]['materialLocation'];
@@ -119,7 +121,8 @@
         // 库位详细信息查询--批次
         checkShopDetail() {
             KOJI_API.KOJI_KOJISTRAIN_DETAILS_QUERY_API({
-                workShop: this.$store.state.koji.orderKojiInfo.workShop,
+                // Y158 没有 workshop 概念，故可以不传。此处注解掉
+                // workShop: this.$store.state.koji.orderKojiInfo.workShop,
                 materialLocation: this.dataForm.materialLocation
             }).then(({ data }) => {
                 this.batchList = data.data || [];
@@ -308,5 +311,3 @@
     cursor: pointer;
 }
 </style>
-
-
