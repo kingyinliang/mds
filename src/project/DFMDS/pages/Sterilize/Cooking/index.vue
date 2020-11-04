@@ -162,6 +162,10 @@ export default class CookingIndex extends Vue {
         {
             name: '已提交',
             value: 'M'
+        },
+        {
+            name: '已撤回',
+            value: 'W'
         }
     ];
 

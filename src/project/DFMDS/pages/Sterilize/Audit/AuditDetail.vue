@@ -153,7 +153,7 @@
                 type: 'p',
                 icon: 'factory--meirijihuachanliangpeizhi',
                 label: '订单产量',
-                value: ['planOutput', 'outputUnit']
+                value: ['planOutput', 'outputUnitName']
             },
             {
                 type: 'p',
@@ -738,7 +738,7 @@
 
         goDetail() {
             this.$store.commit('sterilize/updateAuditDetailDetail', this.$store.state.sterilize.auditDetail);
-            this.$store.commit('common/updateMainTabs', this.$store.state.common.mainTabs.filter(subItem => subItem.name !== 'DFMDS-pages-Sterilize-Audit-'))
+            this.$store.commit('common/updateMainTabs', this.$store.state.common.mainTabs.filter(subItem => subItem.name !== 'DFMDS-pages-Sterilize-Audit-detail'))
             setTimeout(() => {
                 this.$router.push({
                     name: `DFMDS-pages-Sterilize-Audit-detail`

@@ -112,19 +112,19 @@
                     <div>
                         订单产量：
                     </div>
-                    <div class="input_bottom">
+                    <div class="input_bottom" style="height: 33px;">
                         {{ inStorage.planOutPut }}{{ inStorage.planOutPutUnit }}
                     </div>
                     <div>
                         实际产量：
                     </div>
-                    <div class="input_bottom">
+                    <div class="input_bottom" style="height: 33px;">
                         {{ inStorage.realOutPut }}{{ inStorage.realOutPutUnit }}
                     </div>
                     <div>
                         生产锅数：
                     </div>
-                    <div class="input_bottom">
+                    <div class="input_bottom" style="height: 33px;">
                         {{ inStorage.realPotCount }}
                     </div>
                 </el-row>
@@ -263,7 +263,7 @@
                 type: 'p',
                 icon: 'factory--meirijihuachanliangpeizhi',
                 label: '订单产量',
-                value: ['planOutput', 'outputUnit']
+                value: ['planOutput', 'outputUnitName']
             },
             {
                 type: 'p',
