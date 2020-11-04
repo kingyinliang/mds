@@ -22,25 +22,29 @@
                     </p>
                     <div class="dataEntry-head-leftRight-message">
                         <div class="dataEntry-head-leftRight-message__item">
-                            <p>{{ formData.workShop ? formData.workShop : '' }}</p>
+                            <el-tooltip class="item" effect="dark" :content="formData.workShop ? formData.workShop : ''" placement="top">
+                                <p>{{ formData.workShop ? formData.workShop : '' }}</p>
+                            </el-tooltip>
                             <p><em class="iconfont factory-37_zhusu" /> 杀菌车间</p>
                         </div>
                         <div class="dataEntry-head-leftRight-message__item">
-                            <p>
-                                {{ formData.prodcutMaterial ? formData.prodcutMaterial : '' }}
-                            </p>
+                            <el-tooltip class="item" effect="dark" :content="formData.prodcutMaterial ? formData.prodcutMaterial : ''" placement="top">
+                                <p>
+                                    {{ formData.prodcutMaterial ? formData.prodcutMaterial : '' }}
+                                </p>
+                            </el-tooltip>
                             <p> <em class="iconfont factory-bianhao" />生产物料 </p>
                         </div>
                         <div class="dataEntry-head-leftRight-message__item">
                             <p>
-                                {{ formData.potAmount ? formData.potAmount.toLocaleString() : 0 }}
-                                <em>{{ formData.unit ? formData.unit : 'KG' }}</em>
+                                {{ formData.potCount ? formData.potCount.toLocaleString() : 0 }}
                             </p>
                             <p> <em class="iconfont factory-cunchurongliang" />配置锅数 </p>
                         </div>
                         <div class="dataEntry-head-leftRight-message__item">
                             <p>
                                 {{ formData.amount ? formData.amount.toLocaleString() : 0 }}
+                                <em>{{ formData.unit ? formData.unit : 'KG' }}</em>
                             </p>
                             <p> <em class="iconfont factory-cunchurongliang" />数量 </p>
                         </div>
@@ -62,7 +66,7 @@
                     </el-table-column>
                     <el-table-column label="物料" :show-overflow-tooltip="true" width="280">
                         <template slot-scope="scope">
-                            {{ scope.row.feedMaterialName }} {{ scope.row.prodcutMaterialName }}
+                            {{ scope.row.feedMaterialName }} {{ scope.row.feedMaterial }}
                         </template>
                     </el-table-column>
                     <el-table-column label="批次" :show-overflow-tooltip="true" maxlength="10" width="100">
@@ -133,7 +137,7 @@
                     </el-table-column>
                     <el-table-column label="物料" :show-overflow-tooltip="true" width="280">
                         <template slot-scope="scope">
-                            {{ scope.row.feedMaterialName }} {{ scope.row.prodcutMaterialName }}
+                            {{ scope.row.feedMaterialName }} {{ scope.row.feedMaterial }}
                         </template>
                     </el-table-column>
                     <el-table-column label="批次" :show-overflow-tooltip="true" maxlength="10" width="180">
@@ -236,6 +240,7 @@ export default class DissolveBucketDetail extends Vue {
                 this.formData = {
                     potName: this.importData.potName,
                     potAmount: this.importData.potAmount,
+                    potCount: this.importData.potCount,
                     potNo: this.importData.potNo,
                     factoryName: JSON.parse(sessionStorage.getItem('factory') || '{}').deptShort,
                     amount: data.data.number,
@@ -277,6 +282,7 @@ interface ImportData{
     prodcutMaterialName?: string;
     ratio?: number;
     workShop?: string;
+    potCount?: number;
 }
 
 </script>

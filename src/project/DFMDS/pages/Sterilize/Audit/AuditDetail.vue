@@ -11,13 +11,13 @@
                 <mds-card title="产量与人力" :name="'outputworker'">
                     <el-form :inline="true" :model="formHeader" label-width="75px" size="small" class="dataEntry-head-base__form">
                         <el-form-item label="订单产量：">
-                            <p>{{ yieldAndManData.planOutput }} {{ yieldAndManData.unitName }}</p>
+                            <p>{{ yieldAndManData.planOutput }} {{ yieldAndManData.planOutputUnitName }}</p>
                         </el-form-item>
                         <el-form-item label="实际产量：">
-                            <p>{{ yieldAndManData.actualOutput }} {{ yieldAndManData.unitName }}</p>
+                            <p>{{ yieldAndManData.actualOutput }} {{ yieldAndManData.actualOutputUnitName }}</p>
                         </el-form-item>
                         <el-form-item label="差异数量：">
-                            <p>{{ yieldAndManData.diffNumber }} {{ yieldAndManData.unitName }}</p>
+                            <p>{{ yieldAndManData.diffNumber }} {{ yieldAndManData.actualOutputUnitName }}</p>
                         </el-form-item>
                         <el-form-item label="作业人力：">
                             <p>{{ yieldAndManData.manNumber }}</p>
@@ -76,7 +76,7 @@
                         <el-table-column prop="exceptionStage" label="阶段" min-width="80" />
                         <el-table-column prop="className" label="班次" min-width="60" />
                         <el-table-column prop="exceptionSituationName" label="异常情况" min-width="80" />
-                        <el-table-column prop="exceptionReasonName" label="异常原因" min-width="120" />
+                        <el-table-column prop="exceptionReason" label="异常原因" min-width="120" />
                         <el-table-column prop="exceptionInfo" label="异常描述" min-width="120" />
                         <el-table-column prop="duration" label="时长" min-width="60" />
                         <el-table-column prop="durationUnit" label="单位" min-width="60" />
@@ -94,7 +94,7 @@
                     <el-table class="newTable" :data="materialRecevieList" header-row-class-name="tableHead" border tooltip-effect="dark" style="margin-top: 5px;">
                         <el-table-column label="领用物料" show-overflow-tooltip min-width="170">
                             <template slot-scope="scope">
-                                {{ scope.row.materialCode }} {{ scope.row.materialName }}
+                                {{ scope.row.materialName }} {{ scope.row.materialCode }}
                             </template>
                         </el-table-column>
                         <el-table-column prop="unit" label="单位" min-width="35" />
@@ -108,7 +108,7 @@
                 <el-button v-if="isAuth('steCkRefuse')" type="primary" size="small" @click="goDetail">
                     详情
                 </el-button>
-                <el-button type="primary" size="small" @click="pass()">
+                <el-button v-if="formHeader.orderStatusName === '待审核'" type="primary" size="small" @click="pass()">
                     审核通过
                 </el-button>
             </template>
@@ -141,7 +141,7 @@
                 type: 'tooltip',
                 icon: 'factory-pinleiguanli',
                 label: '生产物料',
-                value: ['materialCode', 'materialName']
+                value: ['materialName', 'materialCode']
             },
             {
                 type: 'p',
@@ -153,7 +153,7 @@
                 type: 'p',
                 icon: 'factory--meirijihuachanliangpeizhi',
                 label: '订单产量',
-                value: ['planOutput', 'outputUnit']
+                value: ['planOutput', 'outputUnitName']
             },
             {
                 type: 'p',
@@ -209,6 +209,7 @@
 
         mounted() {
             this.auditDetail = this.$store.state.sterilize.auditDetail;
+            console.log(this.auditDetail);
             this.getHeaderInfo(this.auditDetail['orderNo']);
 
             // 班次
@@ -232,7 +233,7 @@
             this.getYieldAndMan(this.auditDetail['orderNo']);
             this.getMaterialList(this.auditDetail['orderNo']);
             Promise.all([net01, net02, net03, net04, net05]).then(() => {
-                this.getException(this.auditDetail['orderNo']);
+                this.getException(this.auditDetail['orderNo'], this.auditDetail['workShop']);
             }).catch((reason) => {
                 this.$errorToast(reason);
             });
@@ -693,9 +694,10 @@
         }
 
         // 异常情况
-        getException(orderNo) {
+        getException(orderNo, workShop) {
             STE_API.STE_AUDIT_EXCEPTION_QUERY_API({
-                orderNo: orderNo
+                orderNo: orderNo,
+                workShop: workShop
             }).then(({ data }) => {
                 this.exceptionList = data.data
                 this.exceptionList.map((item) => {
@@ -736,7 +738,7 @@
 
         goDetail() {
             this.$store.commit('sterilize/updateAuditDetailDetail', this.$store.state.sterilize.auditDetail);
-            this.$store.commit('common/updateMainTabs', this.$store.state.common.mainTabs.filter(subItem => subItem.name !== 'DFMDS-pages-Sterilize-Audit-'))
+            this.$store.commit('common/updateMainTabs', this.$store.state.common.mainTabs.filter(subItem => subItem.name !== 'DFMDS-pages-Sterilize-Audit-detail'))
             setTimeout(() => {
                 this.$router.push({
                     name: `DFMDS-pages-Sterilize-Audit-detail`
@@ -750,19 +752,13 @@
                 cancelButtonText: '取消',
                 type: 'warning'
             }).then(() => {
-                // PKG_API.PKG_AUDIT_DETAIL_PASS_API({
-                //     factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
-                //     materialCode: this.formHeader.materialCode,
-                //     orderId: this.formHeader.id,
-                //     orderNo: this.formHeader.orderNo,
-                //     orderType: this.formHeader.orderType,
-                //     productDate: this.formHeader.productDate,
-                //     productLine: this.formHeader.productLine,
-                //     workShop: this.formHeader.workShop
-                // }).then(() => {
-                //     this.$successToast('操作成功');
-                //     // this.getOrderList();
-                // })
+                STE_API.STE_AUDIT_CHECKED_API({
+                    orderNo: this.auditDetail['orderNo'],
+                    workShop: this.auditDetail['workShop']
+                }).then(() => {
+                    this.$successToast('操作成功');
+                    this.getHeaderInfo(this.auditDetail['orderNo']);
+                })
             })
         }
 

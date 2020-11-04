@@ -2,7 +2,7 @@
     <div class="header_main">
         <query-table
             ref="queryTable"
-            query-auth="pkgCkQuery"
+            query-auth="steCkQuery"
             :factory-type="1"
             :query-form-data="queryFormData"
             :tabs="tabs"
@@ -13,29 +13,7 @@
             :operation-column-width="90"
             @get-data-success="setData"
             @line-click="getLineClick"
-        >
-            <template slot="operation_column" slot-scope="{ scope }">
-                <el-button class="ra_btn" type="text" round size="mini" style="margin-left: 0;" @click="getLogList(scope.row)">
-                    审核日志
-                </el-button>
-            </template>
-        </query-table>
-        <el-dialog title="审核日志" width="800px" :close-on-click-modal="false" :visible.sync="visibleDetailLog">
-            <div>
-                <el-table header-row-class-name="" :data="logList" border tooltip-effect="dark" class="newTable">
-                    <el-table-column type="index" label="序号" width="55" align="center" fixed />
-                    <el-table-column label="审核动作" prop="status" show-overflow-tooltip width="160" />
-                    <el-table-column label="审核意见" prop="memo" />
-                    <el-table-column label="审核人" prop="verifyMan" show-overflow-tooltip width="140" />
-                    <el-table-column label="审核时间" prop="verifyDate" width="180" />
-                </el-table>
-            </div>
-            <div slot="footer" class="dialog-footer">
-                <el-button type="primary" size="small" style=" color: #fff; background-color: #1890ff; border-color: #1890ff;" @click="visibleDetailLog = false">
-                    确定
-                </el-button>
-            </div>
-        </el-dialog>
+        />
     </div>
 </template>
 
@@ -62,32 +40,14 @@ export default class AuditIndex extends Vue {
                 return COMMON_API.ORG_QUERY_WORKSHOP_API({
                     factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
                     deptType: ['WORK_SHOP'],
-                    deptName: '包装'
+                    deptName: '制曲'
                 })
             },
             resVal: {
                 resData: 'data',
                 label: ['deptName'],
                 value: 'id'
-            },
-            linkageProp: ['productLine']
-        },
-        {
-            type: 'select',
-            label: '生产产线',
-            prop: 'productLine',
-            optionsFn: val => {
-                return COMMON_API.ORG_QUERY_CHILDREN_API({
-                    parentId: val || '',
-                    deptType: 'PRODUCT_LINE'
-                })
-            },
-            resVal: {
-                resData: 'data',
-                label: ['deptName'],
-                value: 'id'
-            },
-            defaultValue: ''
+            }
         },
         {
             type: 'input',
@@ -112,38 +72,46 @@ export default class AuditIndex extends Vue {
         {
             prop: 'workShopName',
             label: '生产车间',
-            minwidth: '50'
+            minwidth: '75'
         },
         {
-            prop: 'productLineName',
-            label: '生产产线',
-            minwidth: '90'
+            prop: 'workShopName',
+            label: '曲房',
+            minwidth: '75'
         },
         {
             prop: 'orderNo',
             label: '生产订单',
-            minwidth: '70',
+            minwidth: '95',
             onclick: true
         },
         {
             prop: 'materialName',
             label: '生产物料',
-            minwidth: '150'
+            minwidth: '210',
+            formatter: (row) => {
+                return row.materialName + ' ' + row.materialCode;
+            }
         },
         {
             prop: 'planOutput',
             label: '订单数量',
-            minwidth: '55'
+            minwidth: '60'
         },
         {
-            prop: 'outputUnitName',
+            prop: 'outputUnit',
             label: '订单单位',
-            minwidth: '50'
+            minwidth: '60'
         },
         {
             prop: 'productDate',
             label: '生产日期',
-            minwidth: '60'
+            minwidth: '80'
+        },
+        {
+            prop: 'productDate',
+            label: '审核日志',
+            minwidth: '80'
         }
     ]
 
@@ -165,42 +133,46 @@ export default class AuditIndex extends Vue {
                 {
                     prop: 'workShopName',
                     label: '生产车间',
-                    minwidth: '60'
+                    minwidth: '75'
                 },
                 {
-                    prop: 'productLineName',
-                    label: '生产产线',
-                    minwidth: '100'
+                    prop: 'workShopName',
+                    label: '曲房',
+                    minwidth: '75'
                 },
                 {
                     prop: 'orderNo',
                     label: '生产订单',
-                    minwidth: '70',
+                    minwidth: '95',
                     onclick: true
                 },
                 {
                     prop: 'materialName',
-                    label: '生产物料'
+                    label: '生产物料',
+                    minwidth: '210',
+                    formatter: (row) => {
+                        return row.materialName + ' ' + row.materialCode;
+                    }
                 },
                 {
                     prop: 'planOutput',
                     label: '订单数量',
-                    minwidth: '45'
+                    minwidth: '60'
                 },
                 {
-                    prop: 'outputUnitName',
+                    prop: 'outputUnit',
                     label: '订单单位',
-                    minwidth: '45'
+                    minwidth: '60'
                 },
                 {
                     prop: 'productDate',
                     label: '生产日期',
-                    minwidth: '60'
+                    minwidth: '80'
                 },
                 {
                     prop: 'changer',
                     label: '提交人',
-                    minwidth: '80'
+                    minwidth: '85'
                 },
                 {
                     prop: 'changed',
@@ -217,7 +189,6 @@ export default class AuditIndex extends Vue {
                 pageSize: 10,
                 totalCount: 0
             },
-            showOperationColumn: true,
             column: this.Column // eslint-disable-line
         },
         {
@@ -228,7 +199,6 @@ export default class AuditIndex extends Vue {
                 pageSize: 10,
                 totalCount: 0
             },
-            showOperationColumn: true,
             column: this.Column // eslint-disable-line
         }
     ];
@@ -242,49 +212,6 @@ export default class AuditIndex extends Vue {
 
     logList = [];
     visibleDetailLog = false;
-    mounted() {
-        // 消息管理跳转 url 传参判断
-        if (window.location.href.indexOf('?') !== -1) {
-            const url = window.location.href.split('?')[1].split('&');
-            const urlData = {};
-            for (let i = 0; i < url.length; i++) {
-                urlData[url[i].split('=')[0]] = unescape(url[i].split('=')[1]);
-            }
-
-            // 切换页签
-            if (urlData['orderStatus'] === 'D') {
-                this.$refs.queryTable.activeName = '0'
-            } else if (urlData['orderStatus'] === 'C' || urlData['orderStatus'] === 'P') {
-                this.$refs.queryTable.activeName = '1'
-            } else {
-                this.$refs.queryTable.activeName = '2'
-            }
-
-            const paramsTemp = {
-                factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
-                orderNo: urlData['orderNo'],
-                // orderStatus: [urlData['orderStatus']],
-                current: 1,
-                size: 10,
-                total: 0
-            }
-            COMMON_API.ORDER_QUERY_API(paramsTemp).then(({ data }) => {
-                console.log('data')
-                console.log(data)
-                // 显示内容
-                this.setData(data, true)
-                setTimeout(() => {
-                    // 修正表单上呈现
-                    this.queryFormData.forEach(item => {
-                        this.$refs.queryTable.queryForm[item.prop] = ''
-                    })
-                    this.$refs.queryTable.queryForm.workShop = urlData['workShop']
-                    this.$refs.queryTable.queryForm.orderNo = urlData['orderNo']
-                }, 1000);
-
-            });
-        }
-    }
 
     // 查询请求
     listInterface(params) {
@@ -351,14 +278,6 @@ export default class AuditIndex extends Vue {
         }
     }
 
-    sleep(millisecond) {
-        return new Promise(resolve => {
-            setTimeout(() => {
-                resolve()
-            }, millisecond)
-        })
-    }
-
     // 审核日志
     getLogList(row: object) {
         AUDIT_API.AUDIT_LOG_LIST_API({ orderNo: row['orderNo'], verifyType: '' }).then(({ data }) => {
@@ -368,14 +287,13 @@ export default class AuditIndex extends Vue {
     }
 
     getLineClick(row: object) {
-        this.$store.commit('packaging/updateAuditDetail', row);
-        this.$store.commit('common/updateMainTabs', this.$store.state.common.mainTabs.filter(subItem => subItem.name !== 'DFMDS-pages-Packaging-Audit-AuditDetail'))
+        this.$store.commit('koji/updateAuditDetail', row);
+        this.$store.commit('common/updateMainTabs', this.$store.state.common.mainTabs.filter(subItem => subItem.name !== 'DFMDS-pages-KojiMaking-Audit-AuditDetail'))
         setTimeout(() => {
             this.$router.push({
-                name: `DFMDS-pages-Packaging-Audit-AuditDetail`
+                name: `DFMDS-pages-KojiMaking-Audit-AuditDetail`
             });
         }, 100);
-
     }
 }
 </script>

@@ -82,10 +82,10 @@ export default class ExcRecord extends Vue {
     @Prop({ type: Boolean, default: false }) isRedact
     @Prop({ type: Object, default: {} }) formHeader
 
-    classesOptions: object[] = [];
-    abnormalList: object[] = [];
+    classesOptions: object[] = []; // 班次下拉
+    abnormalList: object[] = []; // 异常下拉
     excReasonList = [];
-    excList: ExcList[] = [];
+    excList: ExcList[] = []; // 表格 data
     excListOrg: ExcList[] = [];
     excReasonTotal: ExcReasonTotal = {
         FAULTSHUTDOWN: [],
@@ -104,7 +104,11 @@ export default class ExcRecord extends Vue {
         return MinNum;
     }
 
-    init(formHeader, tagName) {
+    init(formHeader, tagName, clear?) {
+        if (clear) {
+            this.excList = []
+            return
+        }
         const net1 = new Promise((resolve) => {
             this.getexcReasonTwo(formHeader, resolve);
         });

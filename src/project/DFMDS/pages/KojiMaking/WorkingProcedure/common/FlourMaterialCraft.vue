@@ -80,7 +80,7 @@
                 <el-table-column label="转动圈数" width="144">
                     <template slot-scope="scope">
                         <el-input v-model="scope.row.turnCount" placeholder="输入" :disabled="!isRedact" size="small" style="width: 120px;">
-                            <span slot="suffix" class="stock-form_item_input_suffix">Mpa</span>
+                            <!-- <span slot="suffix" class="stock-form_item_input_suffix">Mpa</span> -->
                         </el-input>
                     </template>
                 </el-table-column>

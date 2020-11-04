@@ -19,7 +19,7 @@
                             </el-button>
                         </div>
                     </template>
-                    <el-table class="newTable markStyle" :data="targetQueryTableListOfForiegnMatter" :row-class-name="rowDelFlag" height="300" header-row-class-name="tableHead" border style="width: 100%; min-height: 90px;">
+                    <el-table class="newTable markStyle" :data="targetQueryTableListOfForiegnMatter" :row-class-name="rowDelFlag" header-row-class-name="tableHead" border style="width: 100%; min-height: 90px;">
                         <el-table-column label="序号" type="index" width="50" fixed="left" align="center" />
                         <el-table-column width="150" :show-overflow-tooltip="true" class="star">
                             <template slot="header">
@@ -96,7 +96,7 @@
                             </el-button>
                         </div>
                     </template>
-                    <el-table class="newTable markStyle" :data="targetQueryTableListOfMagnet" :row-class-name="rowDelFlag" height="300" header-row-class-name="tableHead" border style="width: 100%; min-height: 90px;">
+                    <el-table class="newTable markStyle" :data="targetQueryTableListOfMagnet" :row-class-name="rowDelFlag" header-row-class-name="tableHead" border style="width: 100%; min-height: 90px;">
                         <el-table-column label="序号" type="index" width="50" fixed="left" align="center" />
                         <el-table-column width="150" :show-overflow-tooltip="true">
                             <template slot="header">
@@ -118,7 +118,7 @@
                                 <span class="notNull">异物种类</span>
                             </template>
                             <template slot-scope="scope">
-                                <el-select v-model="scope.row.impurityType" size="small" clearable style="width: 100%;" :disabled="!isRedact">
+                                <el-select v-model="scope.row.impurityType" size="small" clearable style="width: 100%;" :disabled="!isRedact" @change="clearImpurityInfo(scope.row)">
                                     <el-option
                                         v-for="item in magnetImpurityTypeOptions"
                                         :key="item.optValue"
@@ -134,7 +134,7 @@
                                 <span>异物描述</span>
                             </template>
                             <template slot-scope="scope">
-                                <el-input v-model.trim="scope.row.impurityInfo" size="small" placeholder="请输入" :disabled="!isRedact" />
+                                <el-input v-model.trim="scope.row.impurityInfo" :disabled="!(scope.row.impurityType==='OTHER'&&isRedact)" size="small" placeholder="请输入" />
                             </template>
                         </el-table-column>
                         <el-table-column :show-overflow-tooltip="true" min-width="200">
@@ -254,6 +254,11 @@
         ruleForiegnMatterForm={}
         ruleMagnetForm={}
 
+        clearImpurityInfo(row) {
+            console.log(row)
+            row.impurityInfo = ''
+
+        }
 
         // 表格内下拉选项
         optionInit(workShop) {

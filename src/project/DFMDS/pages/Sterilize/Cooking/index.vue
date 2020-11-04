@@ -66,7 +66,7 @@
                 <el-table-column label="煮料锅/混合罐" min-width="125" show-overflow-tooltip prop="potNoName" />
                 <el-table-column label="生产物料" min-width="220" show-overflow-tooltip>
                     <template slot-scope="scope">
-                        {{ scope.row.productMaterial }} {{ scope.row.productMaterialName }}
+                        {{ scope.row.productMaterialName }} {{ scope.row.productMaterial }}
                     </template>
                 </el-table-column>
                 <el-table-column label="配置日期" min-width="140" prop="configStartDate" />
@@ -162,6 +162,10 @@ export default class CookingIndex extends Vue {
         {
             name: '已提交',
             value: 'M'
+        },
+        {
+            name: '已撤回',
+            value: 'W'
         }
     ];
 

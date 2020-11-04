@@ -256,7 +256,7 @@
 
 
         // 查询请求
-        listInterface(params) {
+        async listInterface(params) {
 
             const paramsTemp = {
                 factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
@@ -274,18 +274,15 @@
             params.factory = JSON.parse(sessionStorage.getItem('factory') || '{}').id;
 
             // 呼叫蒸豆
-            KOJI_API.KOJI_INDEX_QUERY_SC_ORDER_API(
+            await KOJI_API.KOJI_INDEX_QUERY_SC_ORDER_API(
                     paramsTemp
                 ).then(({ data }) => {
-
+                this.querySecondResultList = [];
                 if (data.data.length !== 0) {
                     this.querySecondResultList = data.data;
                     this.querySecondResultList.forEach(item => {
                         this.$set(item, 'orderNoTemp', item.orderNo)
                     })
-                } else {
-                    this.querySecondResultList = [];
-                    // this.$infoToast('蒸豆暂无任何内容');
                 }
 
             })
@@ -319,6 +316,7 @@
         }
 
         setData(data) {
+            this.queryFirstResultList = [];
             if (data.data.length !== 0) {
                 this.queryFirstResultList = data.data;
                 this.queryFirstResultList.forEach(item => {
@@ -328,10 +326,9 @@
                         this.$set(subItem, 'orderNoTemp', subItem.orderNo)
                     })
                 })
-            } else {
-                this.queryFirstResultList = [];
-                this.$infoToast('暂无任何内容');
-            }
+            } else if (this.querySecondResultList.length === 0) {
+                    this.$infoToast('暂无任何内容');
+                }
         }
 
         goDetail(who, num, item) {
@@ -576,14 +573,16 @@
         display: flex;
         flex-direction: row;
         align-items: center;
-        justify-content: space-between;
+        justify-content: flex-end;
         width: 100%;
         .bottom-item {
-            flex: 1;
             padding: 9px 15px;
+            padding-right: 20px;
+            padding-left: 20px;
             font-size: 14px;
             text-align: center;
             border-radius: 0;
+            border-radius: 4px;
         }
     }
 }
