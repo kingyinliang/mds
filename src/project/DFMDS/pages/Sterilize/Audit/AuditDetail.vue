@@ -428,8 +428,12 @@
                                 const param = params[io];
                                 const xName = param.name; //x轴的名称
                                 const seriesName = param.seriesName; //图例名称
-                                const value = param.value; //y轴值
+                                let value = param.value; //y轴值
                                 const color = param.color; //图例颜色
+                                // eslint-disable-next-line
+                                if (value === undefined) {
+                                    value = '';
+                                }
                                 if (io === 0) {
                                     htmlStr += xName + '<br/>';//x轴的名称
                                 }
@@ -476,8 +480,8 @@
                         axisLabel: {
                             formatter: '{value} ℃'
                         },
-                        min: '0',
-                        max: '150'
+                        min: '60',
+                        max: '110'
                     },
                     series: seriesData
                 };
