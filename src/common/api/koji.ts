@@ -3,69 +3,57 @@
  * @Anthor: Telliex
  * @Date: 2020-08-27 14:28:27
  * @LastEditors: Telliex
- * @LastEditTime: 2020-10-29 15:35:31
+ * @LastEditTime: 2020-11-06 11:28:34
  */
 import httpProxy from 'utils/net/httpProxy';
 const KOJI_API = {
     /**
-     * @property {string} KOJI_STOCK_FLOUR_INDEX_LIST_ALL_API 麦粉库存-明细列表-所有
+     * @property {string} KOJI_STORAGE_WHEAT_CURRENT_PARTICULARS_API 麦粉库存-明细列表-所有 !!/koji/storage/reduceCurrentOfWheat
      */
-    KOJI_STOCK_FLOUR_INDEX_LIST_ALL_API: params => httpProxy('/koji/kojiWheatStorage/queryAllDetailList', 'GET', params),
+    KOJI_STORAGE_WHEAT_CURRENT_PARTICULARS_API: params => httpProxy('/koji/storage/reduceCurrentOfWheat', 'GET', params),
     /**
-     * @property {string} KOJI_STOCK_FLOUR_INDEX_LIST_API 麦粉库存-明细列表
+     * @property {string} KOJI_STOCK_FLOUR_DETAIL_CUR_LIST_API 麦粉库存-当前详情-分页 !!/koji/storage/currentPageOfWheat
      */
-    KOJI_STOCK_FLOUR_INDEX_LIST_API: params => httpProxy('/koji/kojiWheatStorage/queryDetailList', 'GET', params),
+    KOJI_STOCK_FLOUR_DETAIL_CUR_LIST_API: params => httpProxy('/koji/storage/currentPageOfWheat', 'POST', params),
     /**
-     * @property {string} KOJI_STOCK_FLOUR_DETAIL_CUR_LIST_API 麦粉库存-当前详情-分页
+     * @property {string} KOJI_STOCK_FLOUR_DETAIL_HISTORY_LIST_API 麦粉库存-历史详情-分页 !!/koji/storage/historyPageOfWheat
      */
-    KOJI_STOCK_FLOUR_DETAIL_CUR_LIST_API: params => httpProxy('/koji/kojiWheatStorage/queryPage/currentDetails', 'POST', params),
-    /**
-     * @property {string} KOJI_STOCK_FLOUR_DETAIL_HISTORY_LIST_API 麦粉库存-历史详情-分页
-     */
-    KOJI_STOCK_FLOUR_DETAIL_HISTORY_LIST_API: params => httpProxy('/koji/kojiWheatStorage/queryPage/historyDetails', 'POST', params),
+    KOJI_STOCK_FLOUR_DETAIL_HISTORY_LIST_API: params => httpProxy('/koji/storage/historyPageOfWheat', 'POST', params),
 
     /**
-     * @property {string} KOJI_STOCK_BEAN_INDEX_LIST_ALL_API 大豆库存-明细列表-所有
+     * @property {string} KOJI_STORAGE_BEAN_CURRENT_PARTICULARS_API 大豆库存-明细列表-所有 !!/koji/storage/reduceCurrentOfBean
      */
-    KOJI_STOCK_BEAN_INDEX_LIST_ALL_API: params => httpProxy('/koji/kojiBeanStorage/queryAllDetailList', 'GET', params),
+    KOJI_STORAGE_BEAN_CURRENT_PARTICULARS_API: params => httpProxy('/koji/storage/reduceCurrentOfBean', 'GET', params),
     /**
-     * @property {string} KOJI_STOCK_BEAN_INDEX_LIST_API 大豆库存-明细列表
+     * @property {string} KOJI_STOCK_BEAN_DETAIL_CUR_LIST_API 大豆库存-当前详情-分页 !!koji/storage/currentPageOfBean
      */
-    KOJI_STOCK_BEAN_INDEX_LIST_API: params => httpProxy('/koji/kojiBeanStorage/queryDetailList', 'GET', params),
+    KOJI_STOCK_BEAN_DETAIL_CUR_LIST_API: params => httpProxy('/koji/storage/currentPageOfBean', 'POST', params),
     /**
-     * @property {string} KOJI_STOCK_BEAN_DETAIL_CUR_LIST_API 大豆库存-当前详情-分页
+     * @property {string} KOJI_STOCK_BEAN_DETAIL_HISTORY_LIST_API 大豆库存-历史详情-分页  !!/koji/storage/historyPageOfBean
      */
-    KOJI_STOCK_BEAN_DETAIL_CUR_LIST_API: params => httpProxy('/koji/kojiBeanStorage/queryPage/currentDetails', 'POST', params),
-    /**
-     * @property {string} KOJI_STOCK_BEAN_DETAIL_HISTORY_LIST_API 大豆库存-历史详情-分页
-     */
-    KOJI_STOCK_BEAN_DETAIL_HISTORY_LIST_API: params => httpProxy('/koji/kojiBeanStorage/queryPage/historyDetails', 'POST', params),
+    KOJI_STOCK_BEAN_DETAIL_HISTORY_LIST_API: params => httpProxy('/koji/storage/historyPageOfBean', 'POST', params),
 
     /**
-     * @property {string} KOJI_STOCK_Y158_INDEX_LIST_ALL_API Y158菌库存-明细列表-所有
+     * @property {string} KOJI_STORAGE_Y158_STRAIN_CURRENT_PARTICULARS_API Y158菌库存-明细列表-所有 !!/koji/storage/reduceCurrentOfStrain
      */
-    KOJI_STOCK_Y158_INDEX_LIST_ALL_API: params => httpProxy('/koji/kojiStrainStorage/queryAllDetailList', 'GET', params),
+    KOJI_STORAGE_Y158_STRAIN_CURRENT_PARTICULARS_API: params => httpProxy('/koji/storage/reduceCurrentOfStrain', 'GET', params),
     /**
-     * @property {string} KOJI_STOCK_Y158_INDEX_LIST_API Y158菌库存-明细列表
+     * @property {string} KOJI_STOCK_Y158_DETAIL_CUR_LIST_API Y158菌库存-当前详情-分页 !!/koji/storage/currentPageOfStrain
      */
-    KOJI_STOCK_Y158_INDEX_LIST_API: params => httpProxy('/koji/kojiStrainStorage/queryDetailList', 'GET', params),
+    KOJI_STOCK_Y158_DETAIL_CUR_LIST_API: params => httpProxy('/koji/storage/currentPageOfStrain', 'POST', params),
     /**
-     * @property {string} KOJI_STOCK_Y158_DETAIL_CUR_LIST_API Y158菌库存-当前详情-分页
+     * @property {string} KOJI_STOCK_Y158_DETAIL_HISTORY_LIST_API Y158菌库存-历史详情-分页 !! /koji/storage/historyPageOfStrain
      */
-    KOJI_STOCK_Y158_DETAIL_CUR_LIST_API: params => httpProxy('/koji/kojiStrainStorage/queryPage/currentDetails', 'POST', params),
-    /**
-     * @property {string} KOJI_STOCK_Y158_DETAIL_HISTORY_LIST_API Y158菌库存-历史详情-分页
-     */
-    KOJI_STOCK_Y158_DETAIL_HISTORY_LIST_API: params => httpProxy('/koji/kojiStrainStorage/queryPage/historyDetails', 'POST', params),
+    KOJI_STOCK_Y158_DETAIL_HISTORY_LIST_API: params => httpProxy('/koji/storage/historyPageOfStrain', 'POST', params),
 
     /**
-     * @property {string} KOJI_STOCK_Y158_DETAIL_ADJUST_API 执行调整
+     * @property {string} KOJI_STOCK_Y158_DETAIL_ADJUST_API 执行调整 !!/koji/storage/saveAdjust
      */
-    KOJI_STOCK_Y158_DETAIL_ADJUST_API: params => httpProxy('/koji/kojiStorageAdjust/adjust', 'POST', params),
+    KOJI_STOCK_Y158_DETAIL_ADJUST_API: params => httpProxy('/koji/storage/saveAdjust', 'POST', params),
     /**
-     * @property {string} KOJI_STOCK_Y158_DETAIL_ADJUST_LIST_API 库存调整-分页查询
+     * @property {string} KOJI_STOCK_Y158_DETAIL_ADJUST_LIST_API 库存调整-分页查询 !!/koji/storage/pageOfAdjust
      */
-    KOJI_STOCK_Y158_DETAIL_ADJUST_LIST_API: params => httpProxy('/koji/kojiStorageAdjust/queryPage', 'POST', params),
+    KOJI_STOCK_Y158_DETAIL_ADJUST_LIST_API: params => httpProxy('/koji/storage/pageOfAdjust', 'POST', params),
 
     /**
      * @property CRAFTSTANDARD_INSERT_API 制曲车间-制曲工艺-新增
@@ -218,17 +206,17 @@ const KOJI_API = {
      */
     KOJI_DISC_QUERY_SUBMIT_API: params => httpProxy('/kojiDisc/submitKojiDisc', 'POST', params),
     /**
-     * @property KOJI_KOJISTRAIN_DETAILS_QUERY_API 制曲车间-蒸面工序-物料领用-Y158领用下拉（库位+批次联动）
+     * @property KOJI_STORAGE_STRAIN_DROPDOWN_API 制曲车间-蒸面工序-物料领用-Y158领用下拉（库位+批次联动）!!/koji/storage/dropDownOfStrain
      */
-    KOJI_KOJISTRAIN_DETAILS_QUERY_API: params => httpProxy('/koji/kojiStrainStorage/queryCurrentDetailsList', 'GET', params),
+    KOJI_STORAGE_STRAIN_DROPDOWN_API: params => httpProxy('/koji/storage/dropDownOfStrain', 'GET', params),
     /**
-     * @property KOJI_KOJIBEAN_DETAILS_QUERY_API 制曲车间-洗豆工序-物料领用-大豆领用批次下拉（库位+批次联动）
+     * @property KOJI_STORAGE_BEAN_DROPDOWN_API 制曲车间-洗豆工序-物料领用-大豆领用批次下拉（库位+批次联动） !!/koji/storage/dropDownOfBean
      */
-    KOJI_KOJIBEAN_DETAILS_QUERY_API: params => httpProxy('/koji/kojiBeanStorage/queryCurrentDetailsList', 'GET', params),
+    KOJI_STORAGE_BEAN_DROPDOWN_API: params => httpProxy('/koji/storage/dropDownOfBean', 'GET', params),
     /**
-     * @property KOJI_KOJIFLOUR_DETAILS_QUERY_API 制曲车间-蒸面工序-物料领用-面粉领用下拉（库位+批次联动）
+     * @property KOJI_STORAGE_WHEAT_DROPDOWN_API 制曲车间-蒸面工序-物料领用-面粉领用下拉（库位+批次联动）!!/koji/storage/dropDownOfWheat
      */
-    KOJI_KOJIFLOUR_DETAILS_QUERY_API: params => httpProxy('/koji/kojiWheatStorage/queryCurrentDetailsList', 'GET', params),
+    KOJI_STORAGE_WHEAT_DROPDOWN_API: params => httpProxy('/koji/storage/dropDownOfWheat', 'GET', params),
     /**
      * @property KOJI_PAGE_TAG_STATUS_QUERY_API 制曲车间-页签查询
      */

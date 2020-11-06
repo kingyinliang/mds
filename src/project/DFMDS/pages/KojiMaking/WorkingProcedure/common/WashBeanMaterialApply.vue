@@ -102,7 +102,7 @@
 
         // 查询领用仓库list
         warehouseQuery() {
-            KOJI_API.KOJI_STOCK_BEAN_INDEX_LIST_ALL_API({}).then(({ data }) => {
+            KOJI_API.KOJI_STORAGE_BEAN_CURRENT_PARTICULARS_API({}).then(({ data }) => {
                 this.stockInfoList = data.data || [];
             });
         }
