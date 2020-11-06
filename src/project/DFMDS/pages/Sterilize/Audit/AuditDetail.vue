@@ -97,7 +97,7 @@
                                 {{ scope.row.materialName }} {{ scope.row.materialCode }}
                             </template>
                         </el-table-column>
-                        <el-table-column prop="unit" label="单位" min-width="35" />
+                        <el-table-column prop="unitName" label="单位" min-width="35" />
                         <el-table-column prop="useAmount" label="领用数量" min-width="50" />
                         <el-table-column prop="batch" label="领用批次" min-width="50" />
                         <el-table-column prop="holderName" label="发酵罐/池" min-width="40" />
@@ -373,9 +373,9 @@
                             data: [
                                 [{
                                     name: '',
-                                    yAxis: 0
+                                    yAxis: data.data[0]['upLimit']
                                 }, {
-                                    yAxis: 0
+                                    yAxis: data.data[0]['downLimit']
                                 }]
                             ]
                         },
@@ -391,7 +391,6 @@
                     /* eslint-enable */
                     num++;
                 }
-                let i = 0;
                 data.data.map(item => {
                     xAxisData.push(item.potName); // x轴
                     seriesData[0]['data'].push(item.start);
@@ -400,14 +399,14 @@
                     seriesData[3]['data'].push(item.twentyMin);
                     seriesData[4]['data'].push(item.twoKeepWarm);
                     seriesData[5]['data'].push(item.thirtyMin);
-                    seriesData[i]['markArea']['data'] = [
-                        [{
-                            name: '',
-                            yAxis: item.upLimit
-                        }, {
-                            yAxis: item.downLimit
-                        }]
-                    ]
+                    // seriesData[i]['markArea']['data'] = [
+                    //     [{
+                    //         name: '',
+                    //         yAxis: item.upLimit
+                    //     }, {
+                    //         yAxis: item.downLimit
+                    //     }]
+                    // ]
                     timeData.push(
                         {
                             0: item.startTime,
@@ -418,7 +417,6 @@
                             5: item.thirtyMinTime
                         }
                     );
-                    i++;
                 })
                 this.chartLine = echarts.init(document.getElementById('J_chartLineBoxTemp'));
                 const option = {
@@ -452,7 +450,6 @@
                     legend: {
                         orient: 'vertical',
                         x: 'center',
-                        // bottom: 'bottom',
                         bottom: 'bottom',
                         data: legendData
                     },
@@ -477,8 +474,10 @@
                         type: 'value',
                         scale: true,
                         axisLabel: {
-                            formatter: '{value} Min'
-                        }
+                            formatter: '{value} ℃'
+                        },
+                        min: '0',
+                        max: '150'
                     },
                     series: seriesData
                 };
@@ -617,7 +616,7 @@
                             type: 'value',
                             name: '时间',
                             min: 0,
-                            max: 25,
+                            // max: 25,
                             position: 'left',
                             // axisLine: {
                             //     lineStyle: {
@@ -747,7 +746,12 @@
         }
 
         pass() {
-            this.$confirm('确认通过该订单, 是否继续?', '审核通过', {
+            let msg = '确认通过该订单, 是否继续?';
+            console.log(this.yieldAndManData);
+            if (this.yieldAndManData['potNumber'] !== this.yieldAndManData['productionPotNumber']) {
+                msg = '当前订单的生产锅数与计划锅数不一致，是否继续审核通过？';
+            }
+            this.$confirm(msg, '审核通过', {
                 confirmButtonText: '确定',
                 cancelButtonText: '取消',
                 type: 'warning'
