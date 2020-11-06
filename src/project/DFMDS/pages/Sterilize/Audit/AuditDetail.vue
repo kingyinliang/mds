@@ -418,7 +418,6 @@
                         }
                     );
                 })
-                console.log(seriesData);
                 this.chartLine = echarts.init(document.getElementById('J_chartLineBoxTemp'));
                 const option = {
                     tooltip: {
@@ -482,7 +481,6 @@
                     },
                     series: seriesData
                 };
-                console.log(option);
                 this.chartLine.setOption(option);
                 window.addEventListener('resize', () => {
                     this.chartLine.resize();
