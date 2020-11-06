@@ -128,7 +128,7 @@
                 this.STOCK_AMOUNT = Data.stockAmount || Data.currentAmount ? Number(Data.stockAmount) || Number(Data.currentAmount) : 0;
             } else {
                 // 查询
-                await KOJI_API.KOJI_KOJIFLOUR_DETAILS_QUERY_API({
+                await KOJI_API.KOJI_STORAGE_WHEAT_DROPDOWN_API({
                     workShop: formHeader.workShop,
                     wareHouseNo: infoData.wareHouseNo,
                     materialLocation: infoData.materialLocation

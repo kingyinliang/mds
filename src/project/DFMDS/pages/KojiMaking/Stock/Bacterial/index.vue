@@ -98,7 +98,7 @@
 
         // 查询车间下的信息
         private getDataList() {
-            return KOJI_API.KOJI_STOCK_Y158_INDEX_LIST_ALL_API({}).then(({ data }) => {
+            return KOJI_API.KOJI_STORAGE_Y158_STRAIN_CURRENT_PARTICULARS_API({}).then(({ data }) => {
                 this.FnCallBackHandle(data);
             });
         }
