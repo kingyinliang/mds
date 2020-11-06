@@ -104,11 +104,11 @@
             }
             // 未选择车间查所有
             if (queryParams.workShopId) {
-                return KOJI_API.KOJI_STOCK_BEAN_INDEX_LIST_API({
+                return KOJI_API.KOJI_STORAGE_BEAN_CURRENT_PARTICULARS_API({
                     ...queryParams
                 })
             }
-            return KOJI_API.KOJI_STOCK_BEAN_INDEX_LIST_ALL_API({}).then(({ data }) => {
+            return KOJI_API.KOJI_STORAGE_BEAN_CURRENT_PARTICULARS_API({}).then(({ data }) => {
                 this.FnCallBackHandle(data);
             });
         }

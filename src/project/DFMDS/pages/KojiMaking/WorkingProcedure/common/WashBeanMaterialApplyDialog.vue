@@ -102,7 +102,7 @@
                 }
             } else {
                 // 查询
-                await KOJI_API.KOJI_KOJIBEAN_DETAILS_QUERY_API({
+                await KOJI_API.KOJI_STORAGE_BEAN_DROPDOWN_API({
                     workShop: formHeader.workShop,
                     wareHouseNo: infoData.wareHouseNo,
                     materialLocation: infoData.materialLocation

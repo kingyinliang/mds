@@ -99,7 +99,7 @@
             return 'KG'
         }
 
-         get stockMaterial() {
+        get stockMaterial() {
             if (this.stockInfoObj.detailsList && this.stockInfoObj.detailsList.length) {
                 return this.stockInfoObj.detailsList[0].materialName + ' ' + this.stockInfoObj.detailsList[0].materialCode
             }
@@ -179,4 +179,3 @@
     margin-bottom: 18px;
 }
 </style>
-

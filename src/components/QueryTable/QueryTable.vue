@@ -1,6 +1,6 @@
 <template>
     <div>
-        <el-card class="searchCard" style="margin-bottom: 5px;">
+        <el-card v-if="isQueryFormShow" class="searchCard" style="margin-bottom: 5px;">
             <el-form :model="queryForm" :rules="queryFormRules" :inline="true" size="small" label-width="70px" class="multi_row clearfix" style="font-size: 0;">
                 <template v-for="item in queryFormData">
                     <template v-if="!item.hide">
@@ -165,6 +165,10 @@
         name: 'QueryTable',
         components: {},
         props: {
+            isQueryFormShow: { // 标头搜寻区块是否显示
+                type: Boolean,
+                default: true
+            },
             tableClass: {
                 type: String,
                 default: 'newTable'
