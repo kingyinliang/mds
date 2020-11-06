@@ -104,7 +104,7 @@
 
         // 车间库位查询
         private getWorkShop(type) {
-            KOJI_API.KOJI_KOJISTRAIN_DETAILS_QUERY_API({
+            KOJI_API.KOJI_STORAGE_STRAIN_DROPDOWN_API({
                 workShop: this.$store.state.koji.orderKojiInfo.workShop
             }).then(({ data }) => {
                 console.log('领用库位')
@@ -120,7 +120,7 @@
 
         // 库位详细信息查询--批次
         checkShopDetail() {
-            KOJI_API.KOJI_KOJISTRAIN_DETAILS_QUERY_API({
+            KOJI_API.KOJI_STORAGE_STRAIN_DROPDOWN_API({
                 // Y158 没有 workshop 概念，故可以不传。此处注解掉
                 // workShop: this.$store.state.koji.orderKojiInfo.workShop,
                 materialLocation: this.dataForm.materialLocation
