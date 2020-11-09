@@ -251,7 +251,7 @@
                 const excRecordTemp = this.$refs.excRecord.getSavedOrSubmitData(this.formHeader, 'YP');
                 const textRecordTemp = this.$refs.textRecord.savedData(this.formHeader);
 
-                return KOJI_API.KOJI_DISC_QUERY_SAVE_API({
+                return KOJI_API.KOJI_DISC_QUERY_SUBMIT_API({
                     discEvaluate: craftControlTemp.discEvaluate,
                     discGuard: craftControlTemp.discGuard,
                     discIn: craftControlTemp.discIn,
