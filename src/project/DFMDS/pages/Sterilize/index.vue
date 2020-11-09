@@ -190,11 +190,15 @@
         orderchange(item) {
             const filterArr: (any) = item.splitOrders.filter(it => it.id === item.orderNo);// eslint-disable-line
             item.orderNoMap = filterArr[0];
+            item.potOrder = '';
+            item.potOrderMap = '';
         }
 
         potOrderChange(item) {
             const filterArr: (any) = item.orderNoMap.potOrders.filter(it => it.id === item.potOrder);// eslint-disable-line
             item.potOrderMap = filterArr[0];
+            this.queryResultList.splice(this.queryResultList.length, 0, {});
+            this.queryResultList.splice(this.queryResultList.length - 1, 1);
         }
 
         goEntry(item, index) {
