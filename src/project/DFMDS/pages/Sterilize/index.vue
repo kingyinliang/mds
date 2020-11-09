@@ -20,7 +20,7 @@
                                     <p class="home_card__main__item__title__left">
                                         锅号：<span class="home_card__main__item__title__left__proLine">{{ item.potNo }}</span>锅
                                     </p>
-                                    <p v-if="item.activeOrderNo!==''" class="home_card__main__item__title__right">
+                                    <p v-if="item.activeOrderNo!==''" :class="item.potOrderMap? item.potOrderMap.statusName === '已退回' ? 'noPass' : '' : ''" class="home_card__main__item__title__right">
                                         <span>状态：{{ item.potOrderMap? item.potOrderMap.statusName : '' }}</span>
                                     </p>
                                 </div>
@@ -181,6 +181,12 @@
         setData(data) {
             if (data.data) {
                 this.queryResultList = data.data
+                this.queryResultList.forEach(item => {
+                    if (item.splitOrders.length === 1) {
+                        item.orderNo = item.splitOrders[0].id;
+                        this.orderchange(item);
+                    }
+                })
             } else {
                 this.queryResultList = []
                 this.$infoToast('暂无任何内容');
@@ -190,14 +196,19 @@
         orderchange(item) {
             const filterArr: (any) = item.splitOrders.filter(it => it.id === item.orderNo);// eslint-disable-line
             item.orderNoMap = filterArr[0];
-            item.potOrder = '';
-            item.potOrderMap = '';
+            if (item.orderNoMap['potOrders'].length === 1) {
+                item.potOrder = item.orderNoMap['potOrders'][0].id;
+                item.potOrderMap = item.orderNoMap['potOrders'][0];
+            } else {
+                item.potOrder = '';
+                item.potOrderMap = '';
+            }
         }
 
         potOrderChange(item) {
             const filterArr: (any) = item.orderNoMap.potOrders.filter(it => it.id === item.potOrder);// eslint-disable-line
             item.potOrderMap = filterArr[0];
-            this.queryResultList.splice(this.queryResultList.length, 0, {});
+            this.queryResultList.splice(this.queryResultList.length, 0, { splitOrders: [] });
             this.queryResultList.splice(this.queryResultList.length - 1, 1);
         }
 
@@ -232,6 +243,11 @@
         }
     }
     interface SteObj{
+        id?: string;
+        orderNo?: string;
+        splitOrders: SplitOrders[];
+    }
+    interface SplitOrders{
         id?: string;
     }
 

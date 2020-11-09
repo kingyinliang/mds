@@ -1344,7 +1344,7 @@
     .noPass {
         color: #f00;
         &::before {
-            background: #f00;
+            background: #f00 !important;
         }
     }
     .saved {
