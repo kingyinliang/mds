@@ -19,18 +19,20 @@
                     prop="addKojiMans"
                     class="star"
                 >
-                    <span :style="{cursor:isRedact? 'pointer':'default',color:isRedact? '#333':'#aaa'}" @click="selectUser(kojiInformData,'addKojiMans','内部调借')">
-                        <el-tooltip v-if="kojiInformData.addKojiMans&&kojiInformData.addKojiMans!==''" class="item" effect="dark" :content="kojiInformData.addKojiMans" placement="top">
-                            <el-input
-                                v-if="kojiInformData.addKojiMans&&kojiInformData.addKojiMans!==''"
-                                v-model="kojiInformData.addKojiMans"
-                                placeholder="请输入入曲人"
-                                style="width: 200px;"
-                                :disabled="!isRedact"
-                            />
-                        </el-tooltip>
-                        <em v-if="!kojiInformData.addKojiMans">点击选择人员</em>
-                    </span>
+                    <div style="width: 180px;">
+                        <span :style="{cursor:isRedact? 'pointer':'default',color:isRedact? '#333':'#aaa'}" @click="selectUser(kojiInformData,'addKojiMans','内部调借')">
+                            <el-tooltip v-if="kojiInformData.addKojiMans&&kojiInformData.addKojiMans!==''" class="item" effect="dark" :content="kojiInformData.addKojiMans" placement="top">
+                                <el-input
+                                    v-if="kojiInformData.addKojiMans&&kojiInformData.addKojiMans!==''"
+                                    v-model="kojiInformData.addKojiMans"
+                                    placeholder="请输入入曲人"
+
+                                    :disabled="!isRedact"
+                                />
+                            </el-tooltip>
+                            <em v-if="!kojiInformData.addKojiMans">点击选择人员</em>
+                        </span>
+                    </div>
                 </el-form-item>
                 <el-form-item
                     label="入曲温度："
@@ -41,7 +43,7 @@
                         v-model="kojiInformData.addKojiTemp"
                         placeholder=""
                         clearable
-                        style="width: 80px;"
+                        style="width: 180px;"
                         :disabled="!isRedact"
                         @input="(val)=>oninput(val,kojiInformData,'addKojiTemp')"
                     >
@@ -53,7 +55,7 @@
                         v-model="kojiInformData.kojiDurationStandard"
                         readonly
                         :disabled="true"
-                        style="width: 100px;"
+                        style="width: 180px;"
                     >
                         <span slot="suffix">H</span>
                     </el-input>
@@ -499,7 +501,7 @@
                 </el-table-column>
                 <el-table-column label="制曲时长：H" prop="turnDuration" width="120">
                     <template slot-scope="scope">
-                        {{ scope.row.turnDuration }}
+                        {{ scope.row.turnDuration | itemValue }}
                     </template>
                 </el-table-column>
                 <el-table-column label="翻曲加水量" prop="turnAddWaterAmount" width="100">
@@ -695,25 +697,27 @@
                     prop="outKojiDuration"
                     class="star"
                 >
-                    {{ addOutCraftDuration(kojiOutCraftformData.outKojiStart,kojiOutCraftformData.outKojiEnd) }} H
+                    <span style="width: 180px;">{{ addOutCraftDuration(kojiOutCraftformData.outKojiStart,kojiOutCraftformData.outKojiEnd) }} H</span>
                 </el-form-item>
                 <el-form-item
                     label="出曲操作人："
                     prop="outKojiMans"
                     class="star"
                 >
-                    <span :style="{cursor:isRedact? 'pointer':'default',color:isRedact? '#333':'#aaa'}" @click="selectUser(kojiOutCraftformData,'outKojiMans','内部调借')">
-                        <el-tooltip v-if="kojiOutCraftformData.outKojiMans&&kojiOutCraftformData.outKojiMans!==''" class="item" effect="dark" :content="kojiOutCraftformData.outKojiMans" placement="top">
-                            <el-input
-                                v-if="kojiOutCraftformData.outKojiMans&&kojiOutCraftformData.outKojiMans!==''"
-                                v-model="kojiOutCraftformData.outKojiMans"
-                                placeholder="请输入出曲操作人"
-                                style="width: 200px;"
-                                :disabled="!isRedact"
-                            />
-                        </el-tooltip>
-                        <em v-if="!kojiOutCraftformData.outKojiMans">点击选择人员</em>
-                    </span>
+                    <div style="width: 180px;">
+                        <span :style="{cursor:isRedact? 'pointer':'default',color:isRedact? '#333':'#aaa'}" @click="selectUser(kojiOutCraftformData,'outKojiMans','内部调借')">
+                            <el-tooltip v-if="kojiOutCraftformData.outKojiMans&&kojiOutCraftformData.outKojiMans!==''" class="item" effect="dark" :content="kojiOutCraftformData.outKojiMans" placement="top">
+                                <el-input
+                                    v-if="kojiOutCraftformData.outKojiMans&&kojiOutCraftformData.outKojiMans!==''"
+                                    v-model="kojiOutCraftformData.outKojiMans"
+                                    placeholder="请输入出曲操作人"
+                                    style="width: 200px;"
+                                    :disabled="!isRedact"
+                                />
+                            </el-tooltip>
+                            <em v-if="!kojiOutCraftformData.outKojiMans">点击选择人员</em>
+                        </span>
+                    </div>
                 </el-form-item>
                 <el-form-item
                     label="出曲温度："
@@ -724,7 +728,7 @@
                         v-model="kojiOutCraftformData.outKojiTemp"
                         placeholder=""
                         clearable
-                        style="width: 80px;"
+                        style="width: 180px;"
                         :disabled="!isRedact"
                         @input="(val)=>oninput(val,kojiOutCraftformData,'outKojiTemp')"
                     >
@@ -749,6 +753,11 @@
         name: 'DiscCraftControl',
         components: {
             LoanedPersonnel
+        },
+        filters: {
+            itemValue(value: string) {
+                return Number(value).toFixed(2)
+            }
         }
     })
     export default class DiscCraftControl extends Vue {
@@ -857,13 +866,6 @@
 
         // 员工确认
         changeUser(userId) {
-            // const arr = [...userIds];
-            // let relStr = '';
-            // arr.map((item, index) => {
-            //     if (item) {
-            //         relStr += `${index > 0 ? ',' : ''}${item}`;
-            //     }
-            // });
             this.targetUserList[this.targetUserProp] = userId.toString();
             this.isLoanedPersonnelStatusDialogShow = false;
 
@@ -1083,7 +1085,6 @@
                 delFlag: 0
             }
             this.kojiEvaluateData.push(sole);
-            // this.setValidate(this.firstFormDataGroup, this.ruleFirstForm)
         }
 
         // [新增]看曲记录
@@ -1204,148 +1205,6 @@
             const discOut = this.kojiOutCraftformData
             const discGuardException = this.kojiDiscExceptionInfo.discGuardExceptionInfo
             const discTurnException = this.kojiDiscExceptionInfo.discTurnExceptionInfo
-        //     const pkgSemiMaterial: PkgMaterialSObj = {
-        //         materialCount: this.materialCount,
-        //         pkgSemiMaterialDelete: [],
-        //         pkgSemiMaterialItemDelete: [],
-        //         pkgSemiMaterialInsert: [],
-        //         pkgSemiMaterialUpdate: []
-        //     };
-        //     this.currentDataTable.forEach(item => {
-        //         const filterArr1: (any) = pkgPackingMaterial.packingMaterialUpdate.filter(it => it.id === item.mainId);// eslint-disable-line
-        //         const filterArr2: (any) = pkgPackingMaterial.packingMaterialInsert.filter(it => it.merge === item.merge);// eslint-disable-line
-        //         if (item.materialStatus === '3') {
-        //             if (pkgPackingMaterial.packingMaterialDelete.indexOf(item.mainId) === -1) {
-        //                 pkgPackingMaterial.packingMaterialDelete.push(item.mainId);
-        //             }
-        //             if (item.id) {
-        //                 pkgPackingMaterial.packingMaterialItemDelete.push(item.id)
-        //             }
-        //         } else if (item.delFlag === 1) {
-        //             if (item.id) {
-        //                 pkgPackingMaterial.packingMaterialItemDelete.push(item.id)
-        //             }
-        //         } else if (item.id) {
-        //             const orgObj = this.orgDataTable.filter(it => it.id === item.id)[0];
-        //             if (!_.isEqual(orgObj, item)) {
-        //                 item.factory = JSON.parse(sessionStorage.getItem('factory') || '{}').id;
-        //                 item.realLoss = (item.realLoss === '' || item.realLoss === null ? 0 : item.realLoss);
-        //                 if (filterArr1 && filterArr1[0]) {
-        //                     item.factory = JSON.parse(sessionStorage.getItem('factory') || '{}').id;
-        //                     item.realLoss = (item.realLoss === '' || item.realLoss === null ? 0 : item.realLoss);
-        //                     filterArr1[0].item.push(item)
-        //                 } else {
-        //                     pkgPackingMaterial.packingMaterialUpdate.push({
-        //                         factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
-        //                         merge: item.merge,
-        //                         mainId: item.mainId,
-        //                         id: item.mainId,
-        //                         checkStatus: item.checkStatus,
-        //                         delFlag: item.delFlag,
-        //                         endStocks: item.endStocks,
-        //                         materialType: item.materialType,
-        //                         materialCode: item.materialCode,
-        //                         materialName: item.materialName,
-        //                         materialStatus: item.materialStatus,
-        //                         materialUnit: item.materialUnit,
-        //                         needNum: item.needNum,
-        //                         orderId: item.orderId,
-        //                         orderNo: item.orderNo,
-        //                         posnr: item.posnr,
-        //                         receiveMaterial: item.receiveMaterial,
-        //                         startStocks: item.startStocks,
-        //                         item: [item]
-        //                     })
-        //                 }
-        //             }
-        //         } else if (filterArr2 && filterArr2[0]) {
-        //             item.factory = JSON.parse(sessionStorage.getItem('factory') || '{}').id;
-        //             item.realLoss = (item.realLoss === '' || item.realLoss === null ? 0 : item.realLoss);
-        //             filterArr2[0].item.push(item)
-        //         } else {
-        //             item.factory = JSON.parse(sessionStorage.getItem('factory') || '{}').id;
-        //             item.realLoss = (item.realLoss === '' || item.realLoss === null ? 0 : item.realLoss);
-        //             pkgPackingMaterial.packingMaterialInsert.push({
-        //                 factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
-        //                 merge: item.merge,
-        //                 mainId: item.mainId,
-        //                 id: item.mainId,
-        //                 checkStatus: item.checkStatus,
-        //                 delFlag: item.delFlag,
-        //                 endStocks: item.endStocks,
-        //                 materialType: item.materialType,
-        //                 materialCode: item.materialCode,
-        //                 materialName: item.materialName,
-        //                 materialStatus: item.materialStatus,
-        //                 materialUnit: item.materialUnit,
-        //                 needNum: item.needNum,
-        //                 orderId: item.orderId,
-        //                 orderNo: item.orderNo,
-        //                 posnr: item.posnr,
-        //                 receiveMaterial: item.receiveMaterial,
-        //                 startStocks: item.startStocks,
-        //                 item: [item]
-        //             })
-        //         }
-        //     });
-        //     this.materialS.forEach(item => {
-        //         const filterArr1: (any) = pkgSemiMaterial.pkgSemiMaterialUpdate.filter(it => it.id === item.mainId);// eslint-disable-line
-        //         const filterArr2: (any) = pkgSemiMaterial.pkgSemiMaterialInsert.filter(it => it.merge === item.merge);// eslint-disable-line
-        //         if (item.materialStatus === '3') {
-        //             pkgSemiMaterial.pkgSemiMaterialDelete.push(item.mainId);
-        //         } else if (item.delFlag === 1) {
-        //             if (item.id) {
-        //                 pkgSemiMaterial.pkgSemiMaterialItemDelete.push(item.id)
-        //             }
-        //         } else if (item.id) {
-        //             const orgObj = this.orgMaterialS.filter(it => it.id === item.id)[0];
-        //             if (!_.isEqual(orgObj, item)) {
-        //                 item.factory = JSON.parse(sessionStorage.getItem('factory') || '{}').id;
-        //                 if (filterArr1 && filterArr1[0]) {
-        //                     filterArr1[0].item.push(item)
-        //                 } else {
-        //                     pkgSemiMaterial.pkgSemiMaterialUpdate.push({
-        //                         factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
-        //                         merge: item.merge,
-        //                         mainId: item.mainId,
-        //                         id: item.mainId,
-        //                         checkStatus: item.checkStatus,
-        //                         materialType: item.materialType,
-        //                         materialCode: item.materialCode,
-        //                         materialName: item.materialName,
-        //                         materialUnit: item.materialUnit,
-        //                         needNum: item.needNum,
-        //                         orderId: item.orderId,
-        //                         orderNo: item.orderNo,
-        //                         posnr: item.posnr,
-        //                         item: [item]
-        //                     })
-        //                 }
-        //             }
-        //         } else if (filterArr2 && filterArr2[0]) {
-        //             item.factory = JSON.parse(sessionStorage.getItem('factory') || '{}').id;
-        //             filterArr2[0].item.push(item)
-        //         } else {
-        //             item.factory = JSON.parse(sessionStorage.getItem('factory') || '{}').id;
-        //             pkgSemiMaterial.pkgSemiMaterialInsert.push({
-        //                 factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
-        //                 merge: item.merge,
-        //                 mainId: item.mainId,
-        //                 id: item.mainId,
-        //                 checkStatus: item.checkStatus,
-        //                 delFlag: item.delFlag,
-        //                 materialType: item.materialType,
-        //                 materialCode: item.materialCode,
-        //                 materialName: item.materialName,
-        //                 materialUnit: item.materialUnit,
-        //                 needNum: item.needNum,
-        //                 orderId: item.orderId,
-        //                 orderNo: item.orderNo,
-        //                 posnr: item.posnr,
-        //                 item: [item]
-        //             })
-        //         }
-        //     });
             return {
                 discEvaluate,
                 discGuard,

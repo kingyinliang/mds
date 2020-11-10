@@ -15,11 +15,11 @@
                         '': orderStatus === '已同步',
                     }"
                 >
-                    订单状态：{{ getTagStatus(orderStatus) }}
+                    {{ statusTitle }}：{{ getTagStatus(orderStatus) }}
                 </em>
             </div>
             <div v-if="headShow" class="dataEntry-head-base">
-                <el-form :inline="true" :model="formHeader" size="small" class="dataEntry-head-base__form">
+                <el-form :inline="true" :model="formHeader" size="small" class="dataEntry-head-base__form" label-width="110px">
                     <el-form-item v-for="(item, index) in headerBase" :key="index">
                         <template slot="label">
                             <em class="iconfont" :class="item.icon" style="margin-right: 5px; margin-left: 2px;" />
@@ -145,6 +145,10 @@
             type: {
                 type: String,
                 default: 'entry'
+            },
+            statusTitle: { // 页面右上角显示状态的名目
+                type: String,
+                default: '订单状态'
             },
             orderStatus: {
                 type: String,

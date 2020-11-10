@@ -5,7 +5,7 @@
             redact-auth="steSemiEdit"
             save-auth="steSemiEdit"
             submit-auth="steSemiSubmit"
-            :order-status="formHeader.statusName || formHeader.orderStatusName"
+            :order-status="formHeader.statusName"
             :header-base="headerBase"
             :form-header="formHeader"
             :tabs="currentTabs"
@@ -55,6 +55,8 @@
             excRecord: HTMLFormElement;
             textRecord: HTMLFormElement;
         }
+
+        orderIndex=['已同步', '已保存', '待审核', '已审核', '已过账', '已退回', '未录入']
 
         formHeader: OrderData = {};
         jumpFromAudit=false // is from audit ?
@@ -126,6 +128,8 @@
 
         get currentTabs() {
             const { steamBeanCraftName, steamBeanInStorageName } = this.$store.state.koji.houseTagInfo;
+            this.$set(this.formHeader, 'statusName', this.orderIndex[Math.min(this.orderIndex.indexOf(steamBeanCraftName), this.orderIndex.indexOf(steamBeanInStorageName))])
+
             return [
                 {
                     label: '工艺控制',
@@ -160,7 +164,6 @@
 
         mounted() {
             if (typeof this.$route.params.order !== 'undefined') {
-                console.log(this.$route.params.order)
                 this.jumpFromAudit = true
             }
             this.getOrderList()
