@@ -94,8 +94,8 @@
                     </el-table-column>
                     <el-table-column label="保温阶段-ZK" prop="keepZkFlag" min-width="65" />
                     <el-table-column label="降温阶段-ZK" prop="coolZkFlag" min-width="65" />
-                    <el-table-column label="类型" prop="controlType" min-width="120" />
-                    <el-table-column label="阶段" prop="controlStage" min-width="120" />
+                    <el-table-column label="类型" prop="controlTypeName" min-width="90" />
+                    <el-table-column label="阶段" prop="controlStageName" min-width="120" />
                     <el-table-column label="记录时间" prop="recordDate" min-width="165" />
                     <el-table-column label="温度" prop="temp" min-width="60" />
                     <el-table-column label="操作" min-width="55" fixed="right">
@@ -334,7 +334,7 @@
         ReText = '';
 
         semiReceiveList = [];
-        acceAddList = [];
+        acceAddList: CraftList[] = [];
         craftList = [];
         inStorageList = [];
         excRecordList = [];
@@ -347,12 +347,21 @@
             ENERGY: []
         };
 
+        controlTypeList = [];
+        controlStageList = [];
+
 
         mounted() {
             this.auditDetail = this.$store.state.sterilize.auditDetailDetail;
-            console.log(this.auditDetail);
-
             this.initData();
+            this.getControlTypeList();
+        }
+
+        // 类型拉取
+        getControlTypeList() {
+            COMMON_API.DICTQUERY_API({ dictType: 'CRAFT_PHASE' }).then(({ data }) => {
+                this.controlTypeList = data.data
+            });
         }
 
         // 页签状态
@@ -435,6 +444,20 @@
         getCraftList(orderNo) {
             STE_API.STE_AUDIT_DETAIL_DETAUL_CRAFT_API({ orderNo: orderNo }).then(({ data }) => {
                 this.craftList = data.data;
+                this.craftList.map((item: CraftList) => {
+                    const controlTypeList = this.controlTypeList.find((it: Reason) => item.controlType === it.dictCode)
+                    if (controlTypeList) {
+                        item['controlTypeName'] = controlTypeList['dictValue']
+                    }
+                    // eslint-disable-next-line
+                    COMMON_API.DICTQUERY_API({ dictType: item.controlType }).then(({ data }) => {
+                        this.controlStageList = data.data
+                        const controlStageList = this.controlStageList.find((it: Reason) => item.controlStage === it.dictCode)
+                        if (controlStageList) {
+                            item['controlStageName'] = controlStageList['dictValue']
+                        }
+                    });
+                })
             })
         }
 
@@ -624,6 +647,31 @@
         FAULTSHUTDOWN: object[];
         POORPROCESSWAIT: object[];
         ENERGY: object[];
+    }
+    interface Reason {
+        dictCode?: string;
+        dictId?: string;
+        dictValue?: string;
+        factoryName?: string;
+        id?: string;
+    }
+    interface CraftList {
+        controlStage?: string;
+        controlType?: string;
+        controlStageName?: string;
+        controlTypeName?: string;
+        coolZkFlag?: string;
+        feedEndDate?: string;
+        feedStartDate?: string;
+        keepZkFlag?: string;
+        potNo?: string;
+        potOrder?: string;
+        potOrderNo?: string;
+        recordDate?: string;
+        remark?: string;
+        riseEndDate?: string;
+        riseStartDate?: string;
+        temp?: number;
     }
 </script>
 
