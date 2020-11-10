@@ -5,6 +5,7 @@
             redact-auth="steSemiEdit"
             save-auth="steSemiEdit"
             submit-auth="steSemiSubmit"
+            :status-title="'工序状态'"
             :order-status="formHeader.statusName"
             :header-base="headerBase"
             :form-header="formHeader"
@@ -55,6 +56,8 @@
             excRecord: HTMLFormElement;
             textRecord: HTMLFormElement;
         }
+
+        orderIndex=['已同步', '已保存', '待审核', '已审核', '已过账', '已退回', '未录入']
 
         formHeader: OrderData = {};
         jumpFromAudit=false // is from audit ?
@@ -125,6 +128,7 @@
 
         get currentTabs() {
             const { washBeanMaterailName, washBeanCraftName } = this.$store.state.koji.houseTagInfo;
+            this.$set(this.formHeader, 'statusName', this.orderIndex[Math.min(this.orderIndex.indexOf(washBeanMaterailName), this.orderIndex.indexOf(washBeanCraftName))])
             return [
                 {
                     label: '物料领用',
@@ -149,7 +153,6 @@
 
         mounted() {
             if (typeof this.$route.params.order !== 'undefined') {
-                console.log(this.$route.params.order)
                 this.jumpFromAudit = true
             }
             this.getOrderList();

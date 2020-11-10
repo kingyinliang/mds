@@ -151,7 +151,7 @@
             },
             {
                 type: 'date-picker',
-                label: '生产日期',
+                label: '订单日期',
                 labelWidth: 90,
                 prop: 'orderStartDate',
                 valueFormat: 'yyyy-MM-dd',
