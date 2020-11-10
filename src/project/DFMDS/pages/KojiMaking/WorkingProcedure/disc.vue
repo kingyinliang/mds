@@ -54,6 +54,7 @@
             textRecord: HTMLFormElement; // 文本记录
         }
 
+        orderIndex=['已同步', '已保存', '待审核', '已审核', '已过账', '已退回', '未录入']
         formHeader: OrderData = {};
         fermentPotNoOptions: OptionObj[] = [];
         classesOptions: object[] = [];
@@ -119,6 +120,7 @@
 
         get currentTabs() {
             const { discCraftName, discInStorageName } = this.$store.state.koji.houseTagInfo;
+            this.$set(this.formHeader, 'statusName', this.orderIndex[Math.min(this.orderIndex.indexOf(discCraftName), this.orderIndex.indexOf(discInStorageName))])
 
             return [
             {
@@ -155,7 +157,6 @@
 
         mounted() {
             if (typeof this.$route.params.order !== 'undefined') {
-                console.log(this.$route.params.order)
                 this.jumpFromAudit = true
             }
 
@@ -196,8 +197,6 @@
 
         // 查询表头
         getOrderList() {
-            console.log('this.jumpFromAudit')
-            console.log(this.jumpFromAudit)
             KOJI_API.KOJI_CRAFT_HEAD_INFO_QUERY_API({
                 // id: this.$store.state.koji.orderKojiInfo.id || ''
                 id: this.jumpFromAudit ? this.$route.params.order : this.$store.state.koji.orderKojiInfo.id || ''
@@ -251,7 +250,7 @@
                 const excRecordTemp = this.$refs.excRecord.getSavedOrSubmitData(this.formHeader, 'YP');
                 const textRecordTemp = this.$refs.textRecord.savedData(this.formHeader);
 
-                return KOJI_API.KOJI_DISC_QUERY_SAVE_API({
+                return KOJI_API.KOJI_DISC_QUERY_SUBMIT_API({
                     discEvaluate: craftControlTemp.discEvaluate,
                     discGuard: craftControlTemp.discGuard,
                     discIn: craftControlTemp.discIn,

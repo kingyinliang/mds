@@ -56,6 +56,8 @@
         currentRowData: CurrentData = {};
 
         init(rowData) {
+            console.log('rowData')
+            console.log(rowData)
             // 弹窗打开
             this.isShowCurrentDialog = true;
             // 存储当前操作行数据
@@ -69,6 +71,7 @@
         // 查询记录
         private queryAdjustList() {
             KOJI_API.KOJI_STOCK_Y158_DETAIL_ADJUST_LIST_API({
+                batch: this.currentRowData.batch,
                 current: this.tablePage,
                 size: this.tableSize,
                 stockType: this.stockType,
@@ -109,6 +112,7 @@
         }
     }
     interface CurrentData {
+        batch?: string;
         materialCode?: number|string;
     }
 </script>
