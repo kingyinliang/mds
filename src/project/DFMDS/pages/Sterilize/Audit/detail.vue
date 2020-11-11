@@ -449,14 +449,16 @@
                     if (controlTypeList) {
                         item['controlTypeName'] = controlTypeList['dictValue']
                     }
-                    // eslint-disable-next-line
-                    COMMON_API.DICTQUERY_API({ dictType: item.controlType }).then(({ data }) => {
-                        this.controlStageList = data.data
-                        const controlStageList = this.controlStageList.find((it: Reason) => item.controlStage === it.dictCode)
-                        if (controlStageList) {
-                            item['controlStageName'] = controlStageList['dictValue']
-                        }
-                    });
+                    if (item.controlType !== '') {
+                        // eslint-disable-next-line
+                        COMMON_API.DICTQUERY_API({ dictType: item.controlType }).then(({ data }) => {
+                            this.controlStageList = data.data
+                            const controlStageList = this.controlStageList.find((it: Reason) => item.controlStage === it.dictCode)
+                            if (controlStageList) {
+                                item['controlStageName'] = controlStageList['dictValue']
+                            }
+                        });
+                    }
                 })
             })
         }
@@ -587,7 +589,14 @@
                     })
                     break;
                 case '6':
-                    STE_API.STE_AUDIT_DETAIL_DETAUL_REFISE_TIMESHEET_API(this.ReRow).then(() => {
+                    // eslint-disable-next-line
+                    let Re: object = {};
+                    Re = {
+                        'orderNo': this.auditDetail['orderNo'],
+                        'potOrderNo': this.ReRow['potOrderNo'],
+                        'memo': this.ReText
+                    };
+                    STE_API.STE_AUDIT_DETAIL_DETAUL_REFISE_TIMESHEET_API(Re).then(() => {
                         this.visibleRefuse = false;
                         this.$successToast('操作成功');
                         this.initData()
