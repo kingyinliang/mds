@@ -751,7 +751,6 @@
 
         pass() {
             let msg = '确认通过该订单, 是否继续?';
-            console.log(this.yieldAndManData);
             if (this.yieldAndManData['potNumber'] !== this.yieldAndManData['productionPotNumber']) {
                 msg = '当前订单的生产锅数与计划锅数不一致，是否继续审核通过？';
             }
@@ -762,7 +761,8 @@
             }).then(() => {
                 STE_API.STE_AUDIT_CHECKED_API({
                     orderNo: this.auditDetail['orderNo'],
-                    workShop: this.auditDetail['workShop']
+                    workShop: this.auditDetail['workShop'],
+                    materialCode: this.auditDetail['materialCode']
                 }).then(() => {
                     this.$successToast('操作成功');
                     this.getHeaderInfo(this.auditDetail['orderNo']);
