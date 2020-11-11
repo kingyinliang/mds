@@ -145,7 +145,7 @@ export default class Crafts extends Vue {
         STE_API.STE_DETAIL_CRAFT_INFO_API({
             potOrderNo: formHeader.potOrderNo
         }).then(({ data }) => {
-            if (data.data === null) {
+            if (data.data['id'] === '') {
                 this.doAction = 'insert';
             } else {
                 this.doAction = 'update';
