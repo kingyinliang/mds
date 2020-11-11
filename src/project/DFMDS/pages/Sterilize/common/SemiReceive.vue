@@ -163,6 +163,8 @@
             } else {
                 this.tmp = true;
                 STE_API.STE_SEMI_COPY_API({
+                    stePotNo: this.formHeader.potNo,
+                    stePotName: this.formHeader.potName,
                     orderNo: this.$store.state.sterilize.SemiReceive.orderNoMap.orderNo,
                     potOrderNo: this.$store.state.sterilize.SemiReceive.potOrderMap.potOrderNo
                 }).then(({ data }) => {
