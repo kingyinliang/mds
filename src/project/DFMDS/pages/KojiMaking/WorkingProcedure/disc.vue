@@ -4,6 +4,7 @@
         redact-auth="steSemiEdit"
         save-auth="steSemiEdit"
         submit-auth="steSemiSubmit"
+        :status-title="'工序状态'"
         :order-status="formHeader.statusName"
         :header-base="headerBase"
         :form-header="formHeader"
@@ -14,10 +15,10 @@
         @success="getOrderList"
     >
         <template slot="1" slot-scope="data">
-            <craft-control ref="craftControl" :is-redact="data.isRedact" :target-obj="formHeader" />
+            <craft-control ref="craftControl" :is-redact="data.isRedact" :form-header="formHeader" />
         </template>
         <template slot="2" slot-scope="data">
-            <product-in-storage ref="productInStorage" :is-redact="data.isRedact" :target-obj="formHeader" />
+            <product-in-storage ref="productInStorage" :pot-no-now="potNoNow" :pot-no-list="potNoList" :is-redact="data.isRedact" :form-header="formHeader" />
         </template>
         <template slot="3" slot-scope="data">
             <koji-exc-record ref="excRecord" :is-redact="data.isRedact" :form-header="formHeader" />
@@ -29,7 +30,7 @@
 </template>
 
 <script lang="ts">
-    import { Vue, Component } from 'vue-property-decorator';
+    import { Vue, Component, Watch } from 'vue-property-decorator';
     import { COMMON_API, KOJI_API } from 'common/api/api';
 
     import CraftControl from './common/DiscCraftControl.vue'; // import tab 工艺控制
@@ -118,6 +119,17 @@
             }
         ];
 
+        // 当前发酵罐号
+        potNoNow: string|number = '';
+        potNoList: OptionPotNoList[]=[]
+
+        @Watch('formHeader.fermentPotNo', { immediate: true, deep: true })
+        onChangeValue(newVal: number| string) {
+            if (newVal) {
+                this.potNoNow = newVal
+            }
+        }
+
         get currentTabs() {
             const { discCraftName, discInStorageName } = this.$store.state.koji.houseTagInfo;
             this.$set(this.formHeader, 'statusName', this.orderIndex[Math.min(this.orderIndex.indexOf(discCraftName), this.orderIndex.indexOf(discInStorageName))])
@@ -177,13 +189,17 @@
                 size: 99999,
                 current: 1
             }).then(({ data }) => {
+                console.log('溶解罐')
+                console.log(data)
                 if (this.headerBase[5].option) {
                     this.headerBase[5].option.list = []
                     data.data.records.forEach(item => {
                         if (this.headerBase[5].option) {
                             this.headerBase[5].option.list.push({ optLabel: item.holderName, optValue: item.holderNo })
                         }
+                        this.potNoList.push({ optValue: item.holderNo, optId: item.id })
                     })
+
                 }
             })
         }
@@ -279,6 +295,11 @@
     interface OptionObj {
         optLabel?: string;
         optValue?: string;
+        optId?: string;
+    }
+    interface OptionPotNoList {
+        optValue?: string;
+        optId?: string;
     }
 
     interface HeaderBaseOption{

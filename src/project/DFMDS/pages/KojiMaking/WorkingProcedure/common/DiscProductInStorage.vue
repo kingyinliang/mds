@@ -80,9 +80,9 @@
 </template>
 
 <script lang="ts">
-    import { Vue, Component, Prop } from 'vue-property-decorator';
+    import { Vue, Component, Prop, Watch } from 'vue-property-decorator';
     import { KOJI_API, AUDIT_API } from 'common/api/api';
-    // import { dateFormat, getUserNameNumber, dataEntryData } from 'utils/utils';
+    // import { dateFormat, getUserNameNumber } from 'utils/utils';
     // import _ from 'lodash';
 
     @Component({
@@ -95,9 +95,12 @@
             ruleForm: HTMLFormElement;
         }
 
-        @Prop({ type: Object, default: () => { return {} } }) formHeader: object;
+        @Prop({ type: Object, default: () => { return {} } }) formHeader: OrderData;
+        @Prop({ type: Array, default: () => { return [] } }) potNoList: OptionPotNoList[];
+
         @Prop({ type: Boolean, default: false }) isRedact;
         @Prop({ type: String, default: '' }) status;
+        @Prop({ default: '' }) potNoNow: number|string; // 发酵罐号
 
         targetOrderObj: OrderObject={}
         currentAudit = [];
@@ -105,6 +108,40 @@
         // 常有变数
         currentFormDataGroup: CurrentDataTable[] = [] // 主 data
         // orgFormDataGroup: CurrentDataTable[] = [] // 主 data 复制
+
+
+        // 发酵罐选择改变 触发字段变更值
+        @Watch('potNoNow', { immediate: true, deep: true })
+        onChangeValue(newVal: number| string) {
+            if (newVal && this.currentFormDataGroup[0]) {
+                // this.currentFormDataGroup[0].scPotNo = String(newVal) || ''
+                this.currentFormDataGroup[0].inStorageBatch = this.getNowFormatDate() + '1' + newVal
+                this.$infoToast('生产入库的入库批次自动生成')
+                KOJI_API.KOJI_DISC_QUERY_INSTORAGE_AMOUNT_API({
+                    orderNo: this.formHeader.orderNo,
+                    fermentPotId: this.potNoList.filter(item => item.optValue === newVal)[0].optId
+                }).then(({ data }) => {
+                    console.log('罐量')
+                    this.currentFormDataGroup[0].inStorageAmount = data.data
+                })
+            }
+        }
+
+        // 获取当前年月日 (年两位) 201010
+        getNowFormatDate() {
+            const date = new Date();
+            const year = String(date.getFullYear());
+            let month: string|number = date.getMonth() + 1;
+            let strDate: number|string = date.getDate();
+            if (Number(month) >= 1 && Number(month) <= 9) {
+                month = '0' + String(month);
+            }
+            if (strDate >= 0 && strDate <= 9) {
+                strDate = '0' + strDate;
+            }
+            const currentdate = year.substr(2, 2) + month + strDate;
+            return currentdate;
+        }
 
         init(formHeader) {
             this.targetOrderObj = formHeader
@@ -137,10 +174,6 @@
 
         // 提交时跑校验
         ruleSubmit() {
-            // if (this.currentFormDataGroup.filter(it => it.delFlag !== 1).length === 0) {
-            //     this.$warningToast('请录入生产入库');
-            //     return false
-            // }
             for (const item of this.currentFormDataGroup) {
                 if (!item.inStorageAmount || !item.inStorageBatch) {
                     this.$warningToast('请填写生产入库必填项');
@@ -155,10 +188,7 @@
             // const instorageDelete = [];
             // const instorageInsert = [];
             // const instorageUpdate = [];
-
             // dataEntryData(formHeader, this.currentFormDataGroup, this.orgFormDataGroup, instorageDelete, instorageInsert, instorageUpdate);
-
-
             return this.currentFormDataGroup[0]
         }
 
@@ -217,6 +247,27 @@ interface OrderObject{
     workShop?: string;
     workShopName?: string;
 }
+    interface StatusObj {
+        semiMaterialStatus?: string;
+    }
+
+    interface OrderData {
+        orderNo?: string;
+        kojiHouseNo?: string;
+        textStage?: string;
+        factoryName?: string;
+        potNo?: string;
+        potOrder?: string;
+        steTagPot?: StatusObj;
+        fermentPotNo?: string;
+        fermentPotId?: string;
+        kojiOrderNo?: string;
+    }
+    interface OptionPotNoList {
+        optValue?: string;
+        optId?: string;
+    }
+
 </script>
 <style scoped>
 
