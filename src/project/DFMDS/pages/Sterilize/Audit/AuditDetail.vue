@@ -97,8 +97,8 @@
                                 {{ scope.row.materialName }} {{ scope.row.materialCode }}
                             </template>
                         </el-table-column>
-                        <el-table-column prop="unitName" label="单位" min-width="35" />
                         <el-table-column prop="useAmount" label="领用数量" min-width="50" />
+                        <el-table-column prop="unitName" label="单位" min-width="35" />
                         <el-table-column prop="batch" label="领用批次" min-width="50" />
                         <el-table-column prop="holderName" label="发酵罐/池" min-width="40" />
                     </el-table>
@@ -209,7 +209,6 @@
 
         mounted() {
             this.auditDetail = this.$store.state.sterilize.auditDetail;
-            console.log(this.auditDetail);
             this.getHeaderInfo(this.auditDetail['orderNo']);
 
             // 班次
@@ -457,6 +456,21 @@
                         bottom: 'bottom',
                         data: legendData
                     },
+                    // dataZoom: [
+                    //     {
+                    //         type: 'slider', //滑动条
+                    //         show: true,
+                    //         yAxisIndex: [0],
+                    //         left: '93%',
+                    //         start: 0,
+                    //         end: 100
+                    //     },
+                    //     {
+                    //         type: 'inside', //内置滑动，随鼠标滚轮展示
+                    //         yAxisIndex: [0],
+                    //         start: 1
+                    //     }
+                    // ],
                     axisLabel: {
                         interval: 0,
                         rotate: 40
@@ -500,13 +514,23 @@
                 this.timeList = data.data;
                 const xAxisData: string[] = [];
                 const timeData: number[] = [];
+                const tempStart: number[] = []
+                const tempEnd: number[] = []
                 data.data.map(item => {
                     xAxisData.push(item.potName);
                     timeData.push(item.keepWarmTime);
+                    tempStart.push(item.upLimit);
+                    tempEnd.push(item.downLimit);
                 })
                 this.chartLine = echarts.init(document.getElementById('J_chartLineBoxTime'));
                 const optionTime = {
-                        color: ['#3398DB'],
+                        color: ['#3398DB', '#3398DB', '#3398DB'],
+                        tooltip: {
+                            trigger: 'axis',
+                            axisPointer: {
+                                type: 'cross'
+                            }
+                        },
                         grid: {
                             top: '5%',
                             left: '0%',
@@ -534,7 +558,7 @@
                         ],
                         series: [
                             {
-                                name: '直接访问',
+                                name: '保温时间',
                                 type: 'bar',
                                 barWidth: '10%',
                                 itemStyle: {
@@ -556,6 +580,18 @@
                                     }
                                 },
                                 data: timeData
+                            },
+                            {
+                                name: '保温上限',
+                                type: 'line',
+                                smooth: true,
+                                data: tempStart
+                            },
+                            {
+                                name: '保温下限',
+                                type: 'line',
+                                smooth: true,
+                                data: tempEnd
                             }
                         ]
                 };
