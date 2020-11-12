@@ -44,6 +44,11 @@
         </mds-card>
         <el-dialog width="500px" title="高级查询" :close-on-click-modal="false" :visible.sync="visibleHightLevelQuery">
             <el-form :inline="true" size="small" :model="queryForm" label-width="100px">
+                <el-form-item label="杀菌锅：">
+                    <el-select v-model="queryForm.stePotId" size="small" filterable placeholder="杀菌锅" style="width: 180px; margin-right: 10px;" clearable>
+                        <el-option v-for="(item, index) in holderList" :key="index" :label="item.holderName" :value="item.id" />
+                    </el-select>
+                </el-form-item>
                 <el-form-item label="杀菌车间：">
                     <el-select v-model="queryForm.steWorkShop" placeholder="请选择" style="width: 180px;" clearable>
                         <el-option v-for="(item, index) in steWorkShop" :key="index" :label="item.deptName" :value="item.id" />
@@ -175,6 +180,7 @@
                 }
             } else if (this.queryType === 2) {
                 params = {
+                    stePotId: this.queryForm.stePotId,
                     steWorkShop: this.queryForm.steWorkShop,
                     pkgWorkShop: this.queryForm.pkgWorkShop,
                     pkgLine: this.queryForm.pkgLine,

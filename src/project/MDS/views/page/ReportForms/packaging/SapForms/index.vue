@@ -68,7 +68,7 @@ export default {
                     filterable: true,
                     resVal: {
                         resData: 'list',
-                        label: ['sapCode', 'itemName'],
+                        label: ['sapName', 'itemCode'],
                         value: 'sapCode'
                     },
                     defaultValue: '',
@@ -141,7 +141,7 @@ export default {
                     label: '生产物料',
                     width: '180',
                     formatter: (row) => {
-                        return row.materialCodeH + ' ' + row.materialNameH;
+                        return row.materialNameH + ' ' + row.materialCodeH;
                     }
                 },
                 {
@@ -154,7 +154,7 @@ export default {
                     label: '组件物料',
                     width: '180',
                     formatter: (row) => {
-                        return row.materialCode + ' ' + row.materialName;
+                        return row.materialName + ' ' + row.materialCode;
                     }
                 },
                 {

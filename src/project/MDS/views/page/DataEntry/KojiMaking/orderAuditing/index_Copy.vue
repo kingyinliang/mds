@@ -22,7 +22,7 @@
                             </el-form-item>
                             <el-form-item label="品项：">
                                 <p class="input_bommom">
-                                    {{ formHeader.materialCode + ' ' + formHeader.materialName }}
+                                    {{ formHeader.materialName + ' ' + formHeader.materialCode }}
                                 </p>
                             </el-form-item>
                             <el-form-item label="计划产量：">
@@ -202,7 +202,7 @@
                                 </el-table-column>
                                 <el-table-column width="180" label="入库物料">
                                     <template slot-scope="scope">
-                                        {{ scope.row.materialCode + ' ' + scope.row.materialName }}
+                                        {{ scope.row.materialName + ' ' + scope.row.materialCode }}
                                     </template>
                                 </el-table-column>
                                 <el-table-column label="入库量" width="90">
@@ -279,7 +279,7 @@
                                 </el-table-column>
                                 <el-table-column label="物料" show-overflow-tooltip width="150">
                                     <template slot-scope="scope">
-                                        {{ scope.row.materialCode + ' ' + scope.row.materialName }}
+                                        {{ scope.row.materialName + ' ' + scope.row.materialCode }}
                                     </template>
                                 </el-table-column>
                                 <el-table-column

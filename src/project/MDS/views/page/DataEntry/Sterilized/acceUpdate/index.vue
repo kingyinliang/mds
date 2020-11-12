@@ -31,7 +31,7 @@
                         <el-form-item label="生产物料：">
                             <el-select v-model="formHeader.materialCode" filterable placeholder="请选择" style="width: 180px;">
                                 <el-option label="请选择" value="" />
-                                <el-option v-for="(item, index) in Matertail" :key="index" :label="item.materialCode+' '+ item.materialName" :value="item.materialCode" />
+                                <el-option v-for="(item, index) in Matertail" :key="index" :label="item.materialName+' '+ item.materialCode" :value="item.materialCode" />
                             </el-select>
                         </el-form-item>
                         <el-form-item class="floatr">
@@ -73,7 +73,7 @@
                 <el-table-column label="杀菌锅" min-width="100" prop="panName" :show-overflow-tooltip="true" />
                 <el-table-column label="物料" :show-overflow-tooltip="true">
                     <template slot-scope="scope">
-                        {{ scope.row.materialCode + ' ' + scope.row.materialName }}
+                        {{ scope.row.materialName + ' ' + scope.row.materialCode }}
                     </template>
                 </el-table-column>
                 <el-table-column label="订单量" min-width="80" prop="planOutPut" :show-overflow-tooltip="true" />
@@ -116,7 +116,7 @@
                 <el-table-column label="添加状态" width="80" prop="addStatus" :show-overflow-tooltip="true" />
                 <el-table-column label="物料" :show-overflow-tooltip="true">
                     <template slot-scope="scope">
-                        {{ scope.row.materialCode + ' ' + scope.row.materialName }}
+                        {{ scope.row.materialName + ' ' + scope.row.materialCode }}
                     </template>
                 </el-table-column>
                 <el-table-column label="需求数量" width="80" prop="planAmount" :show-overflow-tooltip="true" />
@@ -154,7 +154,7 @@
                     <template slot-scope="scope">
                         <el-select v-model="scope.row.materialCode" filterable placeholder="请选择" size="mini" style="width: 180px;" :disabled="!isRedact || scope.row.supStatus === '已确认' || scope.row.addStatus === '已添加'" @change="selectMaterial(scope.row)">
                             <el-option label="请选择" value="" />
-                            <el-option v-for="(item, index) in Materails" :key="index" :label="item.materialCode + ' ' + item.materialName" :value="item.materialCode" />
+                            <el-option v-for="(item, index) in Materails" :key="index" :label="item.materialName + ' ' + item.materialCode" :value="item.materialCode" />
                         </el-select>
                     </template>
                 </el-table-column>

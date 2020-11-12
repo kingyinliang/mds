@@ -60,14 +60,14 @@
                 <el-table-column prop="orderNo" label="生产订单" :show-overflow-tooltip="true" width="130" />
                 <el-table-column prop="confActiUnit3" label="生产物料" :show-overflow-tooltip="true" width="190">
                     <template slot-scope="scope">
-                        {{ scope.row.materialCodeH + ' ' + scope.row.materialNameH }}
+                        {{ scope.row.materialNameH + ' ' + scope.row.materialCodeH }}
                     </template>
                 </el-table-column>
                 <el-table-column prop="planOutput" label="计划生产数量" :show-overflow-tooltip="true" width="110" />
                 <el-table-column prop="outputUnitName" label="单位" :show-overflow-tooltip="true" width="50" />
                 <el-table-column prop="confActiUnit3" label="组件物料" :show-overflow-tooltip="true" width="180">
                     <template slot-scope="scope">
-                        {{ scope.row.materialCode + ' ' + scope.row.materialName }}
+                        {{ scope.row.materialName + ' ' + scope.row.materialCode }}
                     </template>
                 </el-table-column>
                 <el-table-column prop="entryQnt" label="发料组件数量" :show-overflow-tooltip="true" width="110" />

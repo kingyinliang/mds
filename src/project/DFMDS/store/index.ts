@@ -5,6 +5,7 @@ import common from './modules/common';
 import user from './modules/user';
 import packaging from './modules/packaging';
 import sterilize from './modules/sterilize';
+import koji from './modules/koji';
 
 Vue.use(Vuex);
 const vuexLocal = new VuexPersistence({
@@ -15,7 +16,8 @@ export default new Vuex.Store({
         common,
         user,
         packaging,
-        sterilize
+        sterilize,
+        koji
     },
     plugins: [vuexLocal.plugin]
 });

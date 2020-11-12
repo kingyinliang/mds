@@ -10,7 +10,7 @@
             <el-table-column label="生产订单" width="120" prop="orderNo" :show-overflow-tooltip="true" />
             <el-table-column min-width="180" label="生产物料" :show-overflow-tooltip="true">
                 <template slot-scope="scope">
-                    {{ scope.row.materialCode + ' ' + scope.row.materialName }}
+                    {{ scope.row.materialName + ' ' + scope.row.materialCode }}
                 </template>
             </el-table-column>
             <el-table-column label="订单日期" width="100" prop="orderDate" :show-overflow-tooltip="true" />
@@ -29,7 +29,7 @@
                     <span class="notNull">* </span>锅号
                 </template>
                 <template slot-scope="scope">
-                    <el-select v-model="scope.row.potNo" size="small" placeholder="请选择" @change="potNoChange(scope.row)">
+                    <el-select v-model="scope.row.potNo" :disabled="!scope.row.allowedUpdatePotNo" size="small" placeholder="请选择" @change="potNoChange(scope.row)">
                         <el-option v-for="(subItem, subIndex) in holder" :key="subIndex" :label="subItem.holderName" :value="subItem.holderNo" />
                     </el-select>
                 </template>
@@ -113,6 +113,7 @@
 
         potNoChange(row) {
             const holderObj: (any) = this.holder.filter(it => it.holderNo === row.potNo);// eslint-disable-line
+            row.potName = holderObj[0].holderName;
             row.potCount = holderObj[0].holderBatch;
             row.potAmount = holderObj[0].holderVolume;
         }
@@ -121,6 +122,7 @@
             this.splitTable.push({
                 id: '',
                 delFlag: 0,
+                allowedUpdatePotNo: true,
                 potUnit: this.orderObj.outputUnit,
                 workShop: this.orderObj.workShop,
                 productLine: this.orderObj.productLine,
@@ -156,7 +158,7 @@
                 //     this.$warningToast('同一订单不允许跨天生产');
                 //     return false
                 // }
-                if (dataArr[i].productDate) {
+                if (dataArr[i].productDate && dataArr[i].delFlag !== 1) {
                     productDateMap.push(dataArr[i].productDate);
                 }
             }
@@ -191,7 +193,8 @@
 
         // 删除行
         removeDataRow(row) {
-            row.delFlag = 1;
+            this.$set(row, 'delFlag', 1)
+            this.$successToast('删除成功');
         }
 
         rowDelFlag({ row }) {
@@ -212,6 +215,7 @@
     interface SplitObj {
         id?: string;
         delFlag?: number;
+        allowedUpdatePotNo?: boolean;
         countOutputUnit?: string;
         potUnit?: string;
         workShop?: string;

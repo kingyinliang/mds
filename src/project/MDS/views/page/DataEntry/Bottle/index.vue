@@ -60,9 +60,9 @@
                                     <span>
                                         生产品项：
                                     </span>
-                                    <el-tooltip class="item" effect="dark" :content="item.materialCode + item.materialName" placement="bottom-start">
+                                    <el-tooltip class="item" effect="dark" :content="item.materialName + item.materialCode" placement="bottom-start">
                                         <span>
-                                            {{ item.materialCode }}{{ item.materialName }}
+                                            {{ item.materialName }}{{ item.materialCode }}
                                         </span>
                                     </el-tooltip>
                                 </li>

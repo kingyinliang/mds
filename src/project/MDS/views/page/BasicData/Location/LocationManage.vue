@@ -31,7 +31,7 @@
                     </el-table-column>
                     <el-table-column :show-overflow-tooltip="true" label="物料编码">
                         <template slot-scope="scope">
-                            {{ scope.row.materialCode + ' ' + scope.row.materialName }}
+                            {{ scope.row.materialName + ' ' + scope.row.materialCode }}
                         </template>
                     </el-table-column>
                     <el-table-column width="80" prop="storageLocation" label="库位" />

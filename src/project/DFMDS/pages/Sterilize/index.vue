@@ -20,7 +20,7 @@
                                     <p class="home_card__main__item__title__left">
                                         锅号：<span class="home_card__main__item__title__left__proLine">{{ item.potNo }}</span>锅
                                     </p>
-                                    <p v-if="item.activeOrderNo!==''" class="home_card__main__item__title__right">
+                                    <p v-if="item.activeOrderNo!==''" :class="item.potOrderMap? item.potOrderMap.statusName === '已退回' ? 'noPass' : '' : ''" class="home_card__main__item__title__right">
                                         <span>状态：{{ item.potOrderMap? item.potOrderMap.statusName : '' }}</span>
                                     </p>
                                 </div>
@@ -48,7 +48,7 @@
                                         <el-form-item label="生产锅序：">
                                             <el-select v-model="item.potOrder" placeholder="请选择" style="width: 100%;" @change="potOrderChange(item)">
                                                 <span v-if="item.orderNoMap">
-                                                    <el-option v-for="(subItem, subIndex) in item.orderNoMap['potOrders']" :key="subIndex" :label="subItem.potOrder" :value="subItem.id" />
+                                                    <el-option v-for="(subItem, subIndex) in item.orderNoMap['potOrders']" :key="subIndex" :label="'第' + subItem.potOrder + '锅'" :value="subItem.id" />
                                                 </span>
                                             </el-select>
                                         </el-form-item>
@@ -67,17 +67,17 @@
                                 <div class="home_card__main__item__footer clearfix">
                                     <div style="float: right;">
                                         <el-tooltip class="item" effect="dark" :content="item.potOrderMap && item.potOrderMap.steTagPot? item.potOrderMap.steTagPot.semiMaterialStatusName : ''" placement="top-start">
-                                            <el-button v-if="isAuth('steMaterial')" :disabled="!item.potOrderMap" :style="{ color: item.potOrderMap && item.potOrderMap.steTagPot&& item.potOrderMap.steTagPot.semiMaterialStatusName === '退回' ? 'red' : ''}" size="small" @click="goEntry(item, 1)">
+                                            <el-button v-if="isAuth('steMaterial')" type="primary" :disabled="!item.potOrderMap" :style="{ color: item.potOrderMap && item.potOrderMap.steTagPot&& item.potOrderMap.steTagPot.semiMaterialStatusName === '退回' ? 'red' : ''}" size="small" @click="goEntry(item, 1)">
                                                 半成品领用
                                             </el-button>
                                         </el-tooltip>
                                         <el-tooltip class="item" effect="dark" :content="item.potOrderMap && item.potOrderMap.steTagPot? item.potOrderMap.steTagPot.accessoriesStatusName : ''" placement="top-start">
-                                            <el-button v-if="isAuth('steAcc')" :disabled="!item.potOrderMap" :style="{ color: item.potOrderMap && item.potOrderMap.steTagPot && item.potOrderMap.steTagPot.accessoriesStatusName === '退回' ? 'red' : ''}" size="small" @click="goEntry(item, 2)">
+                                            <el-button v-if="isAuth('steAcc')" type="primary" :disabled="!item.potOrderMap" :style="{ color: item.potOrderMap && item.potOrderMap.steTagPot && item.potOrderMap.steTagPot.accessoriesStatusName === '退回' ? 'red' : ''}" size="small" @click="goEntry(item, 2)">
                                                 辅料添加
                                             </el-button>
                                         </el-tooltip>
                                         <el-tooltip class="item" effect="dark" :content="item.potOrderMap && item.potOrderMap.steTagPot? item.potOrderMap.steTagPot.controlStatusName : ''" placement="top-start">
-                                            <el-button v-if="isAuth('steControl')" :disabled="!item.potOrderMap" :style="{ color: item.potOrderMap && item.potOrderMap.steTagPot && item.potOrderMap.steTagPot.controlStatusName === '退回' ? 'red' : ''}" size="small" @click="goEntry(item, 3)">
+                                            <el-button v-if="isAuth('steControl')" type="primary" :disabled="!item.potOrderMap" :style="{ color: item.potOrderMap && item.potOrderMap.steTagPot && item.potOrderMap.steTagPot.controlStatusName === '退回' ? 'red' : ''}" size="small" @click="goEntry(item, 3)">
                                                 工艺控制
                                             </el-button>
                                         </el-tooltip>
@@ -117,6 +117,10 @@
                 type: 'select',
                 label: '生产车间',
                 prop: 'workShop',
+                labelWidth: 90,
+                rule: [
+                    { required: true, message: ' ', trigger: 'change' }
+                ],
                 defaultOptionsFn: () => {
                     return COMMON_API.ORG_QUERY_WORKSHOP_API({
                         factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
@@ -134,17 +138,20 @@
                 type: 'date-picker',
                 label: '生产日期',
                 prop: 'productDate',
+                labelWidth: 90,
                 valueFormat: 'yyyy-MM-dd hh:mm:ss',
                 defaultValue: dateFormat(new Date(), 'yyyy-MM-dd hh:mm:ss')
             },
             {
                 type: 'input',
                 label: '生产订单',
+                labelWidth: 90,
                 prop: 'orderNo'
             },
             {
                 type: 'input',
                 label: '生产锅号',
+                labelWidth: 90,
                 prop: 'potNo'
             }
         ];
@@ -174,6 +181,12 @@
         setData(data) {
             if (data.data) {
                 this.queryResultList = data.data
+                this.queryResultList.forEach(item => {
+                    if (item.splitOrders.length === 1) {
+                        item.orderNo = item.splitOrders[0].id;
+                        this.orderchange(item);
+                    }
+                })
             } else {
                 this.queryResultList = []
                 this.$infoToast('暂无任何内容');
@@ -183,11 +196,20 @@
         orderchange(item) {
             const filterArr: (any) = item.splitOrders.filter(it => it.id === item.orderNo);// eslint-disable-line
             item.orderNoMap = filterArr[0];
+            if (item.orderNoMap['potOrders'].length === 1) {
+                item.potOrder = item.orderNoMap['potOrders'][0].id;
+                item.potOrderMap = item.orderNoMap['potOrders'][0];
+            } else {
+                item.potOrder = '';
+                item.potOrderMap = '';
+            }
         }
 
         potOrderChange(item) {
             const filterArr: (any) = item.orderNoMap.potOrders.filter(it => it.id === item.potOrder);// eslint-disable-line
             item.potOrderMap = filterArr[0];
+            this.queryResultList.splice(this.queryResultList.length, 0, { splitOrders: [] });
+            this.queryResultList.splice(this.queryResultList.length - 1, 1);
         }
 
         goEntry(item, index) {
@@ -221,6 +243,11 @@
         }
     }
     interface SteObj{
+        id?: string;
+        orderNo?: string;
+        splitOrders: SplitOrders[];
+    }
+    interface SplitOrders{
         id?: string;
     }
 

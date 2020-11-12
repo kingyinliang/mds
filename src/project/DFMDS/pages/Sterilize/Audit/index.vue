@@ -13,29 +13,7 @@
             :operation-column-width="90"
             @get-data-success="setData"
             @line-click="getLineClick"
-        >
-            <template slot="operation_column" slot-scope="{ scope }">
-                <el-button class="ra_btn" type="text" round size="mini" style="margin-left: 0;" @click="getLogList(scope.row)">
-                    审核日志
-                </el-button>
-            </template>
-        </query-table>
-        <el-dialog title="审核日志" width="800px" :close-on-click-modal="false" :visible.sync="visibleDetailLog">
-            <div>
-                <el-table header-row-class-name="" :data="logList" border tooltip-effect="dark" class="newTable">
-                    <el-table-column type="index" label="序号" width="55" align="center" fixed />
-                    <el-table-column label="审核动作" prop="status" show-overflow-tooltip width="160" />
-                    <el-table-column label="审核意见" prop="memo" />
-                    <el-table-column label="审核人" prop="verifyMan" show-overflow-tooltip width="140" />
-                    <el-table-column label="审核时间" prop="verifyDate" width="180" />
-                </el-table>
-            </div>
-            <div slot="footer" class="dialog-footer">
-                <el-button type="primary" size="small" style=" color: #fff; background-color: #1890ff; border-color: #1890ff;" @click="visibleDetailLog = false">
-                    确定
-                </el-button>
-            </div>
-        </el-dialog>
+        />
     </div>
 </template>
 
@@ -69,30 +47,30 @@ export default class AuditIndex extends Vue {
                 resData: 'data',
                 label: ['deptName'],
                 value: 'id'
-            },
-            linkageProp: ['productLine']
-        },
-        {
-            type: 'select',
-            label: '生产产线',
-            prop: 'productLine',
-            optionsFn: val => {
-                return COMMON_API.ORG_QUERY_CHILDREN_API({
-                    parentId: val || '',
-                    deptType: 'PRODUCT_LINE'
-                })
-            },
-            resVal: {
-                resData: 'data',
-                label: ['deptName'],
-                value: 'id'
-            },
-            defaultValue: ''
+            }
         },
         {
             type: 'input',
             label: '生产订单',
             prop: 'orderNo'
+        },
+        {
+            type: 'select',
+            label: '生产物料',
+            filterable: true,
+            prop: 'material',
+            defaultOptionsFn: () => {
+                return COMMON_API.SEARCH_MATERIAL_API({
+                    factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
+                    materialType: 'ZHAL'
+                })
+            },
+            resVal: {
+                resData: 'data',
+                label: ['materialName', 'materialCode'],
+                value: 'materialCode'
+            },
+            defaultValue: ''
         },
         {
             type: 'date-interval',
@@ -112,38 +90,46 @@ export default class AuditIndex extends Vue {
         {
             prop: 'workShopName',
             label: '生产车间',
-            minwidth: '50'
-        },
-        {
-            prop: 'productLineName',
-            label: '生产产线',
-            minwidth: '90'
+            minwidth: '75'
         },
         {
             prop: 'orderNo',
             label: '生产订单',
-            minwidth: '70',
+            minwidth: '95',
             onclick: true
         },
         {
             prop: 'materialName',
             label: '生产物料',
-            minwidth: '150'
+            minwidth: '210',
+            formatter: (row) => {
+                return row.materialName + ' ' + row.materialCode;
+            }
         },
         {
             prop: 'planOutput',
             label: '订单数量',
-            minwidth: '55'
+            minwidth: '60'
         },
         {
             prop: 'outputUnit',
             label: '订单单位',
-            minwidth: '50'
+            minwidth: '60'
+        },
+        {
+            prop: 'planPotCount',
+            label: '计划锅数',
+            minwidth: '90'
+        },
+        {
+            prop: 'realPotCount',
+            label: '生产锅数',
+            minwidth: '90'
         },
         {
             prop: 'productDate',
             label: '生产日期',
-            minwidth: '60'
+            minwidth: '80'
         }
     ]
 
@@ -165,37 +151,46 @@ export default class AuditIndex extends Vue {
                 {
                     prop: 'workShopName',
                     label: '生产车间',
-                    minwidth: '50'
-                },
-                {
-                    prop: 'productLineName',
-                    label: '生产产线',
-                    minwidth: '90'
+                    minwidth: '75'
                 },
                 {
                     prop: 'orderNo',
                     label: '生产订单',
-                    minwidth: '70',
+                    minwidth: '95',
                     onclick: true
                 },
                 {
                     prop: 'materialName',
-                    label: '生产物料'
+                    label: '生产物料',
+                    minwidth: '210',
+                    formatter: (row) => {
+                        return row.materialName + ' ' + row.materialCode;
+                    }
                 },
                 {
                     prop: 'planOutput',
                     label: '订单数量',
-                    minwidth: '55'
+                    minwidth: '60'
                 },
                 {
                     prop: 'outputUnit',
                     label: '订单单位',
-                    minwidth: '50'
+                    minwidth: '60'
+                },
+                {
+                    prop: 'planPotCount',
+                    label: '订单锅数',
+                    minwidth: '60'
+                },
+                {
+                    prop: 'realPotCount',
+                    label: '生产锅数',
+                    minwidth: '60'
                 },
                 {
                     prop: 'productDate',
                     label: '生产日期',
-                    minwidth: '60'
+                    minwidth: '80'
                 },
                 {
                     prop: 'changer',
@@ -205,7 +200,7 @@ export default class AuditIndex extends Vue {
                 {
                     prop: 'changed',
                     label: '提交时间',
-                    minwidth: '100'
+                    minwidth: '95'
                 }
             ]
         },
@@ -217,7 +212,6 @@ export default class AuditIndex extends Vue {
                 pageSize: 10,
                 totalCount: 0
             },
-            showOperationColumn: true,
             column: this.Column // eslint-disable-line
         },
         {
@@ -228,7 +222,6 @@ export default class AuditIndex extends Vue {
                 pageSize: 10,
                 totalCount: 0
             },
-            showOperationColumn: true,
             column: this.Column // eslint-disable-line
         }
     ];
@@ -258,6 +251,7 @@ export default class AuditIndex extends Vue {
         params.current = this.$refs.queryTable.tabs[this.$refs.queryTable.activeName].pages.currPage;// eslint-disable-line
         params.size = this.$refs.queryTable.tabs[this.$refs.queryTable.activeName].pages.pageSize;// eslint-disable-line
         params.total = this.$refs.queryTable.tabs[this.$refs.queryTable.activeName].pages.totalCount;// eslint-disable-line
+        params.workShopType = 'sterilize';
         return COMMON_API.ORDER_QUERY_API(params);
     }
 
@@ -325,14 +319,13 @@ export default class AuditIndex extends Vue {
     }
 
     getLineClick(row: object) {
-        this.$store.commit('Sterilize/updateAuditDetail', row);
+        this.$store.commit('sterilize/updateAuditDetail', row);
         this.$store.commit('common/updateMainTabs', this.$store.state.common.mainTabs.filter(subItem => subItem.name !== 'DFMDS-pages-Sterilize-Audit-AuditDetail'))
         setTimeout(() => {
             this.$router.push({
                 name: `DFMDS-pages-Sterilize-Audit-AuditDetail`
             });
         }, 100);
-
     }
 }
 </script>

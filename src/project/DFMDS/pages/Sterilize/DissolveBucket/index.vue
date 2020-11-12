@@ -16,7 +16,7 @@
                         <el-col v-for="item in targetQueryTableList" :key="item.potId" :span="4" style="min-width: 203px;">
                             <div class="card-bucket">
                                 <div class="card-bucket__head">
-                                    <span>{{ item.potNo }} - {{ holderStatus.filter( element => element.dictCode===item.potStatus)[0].dictValue }}</span>
+                                    <span>{{ item.potName }} - {{ holderStatus.filter( element => element.dictCode===item.potStatus)[0].dictValue }}</span>
                                     <el-button type="text" @click="goTargetDetail(item)">
                                         详情
                                     </el-button>
@@ -44,7 +44,7 @@
                                         <el-button v-else-if="isAuth('steDisFull')" size="small" plain @click="btnCannelFillBucket(item)">
                                             取消<br>满罐
                                         </el-button>
-                                        <el-button v-if="isAuth('steDisClear')" size="small" plain :disabled="!(item.potStatus==='C')" @click="btnClearBucket(item)">
+                                        <el-button v-if="isAuth('steDisClear')" size="small" plain :disabled="!(item.potStatus==='U')" @click="btnClearBucket(item)">
                                             <!-- <el-button size="small" plain @click="btnClearBucket(item)"> -->
                                             清罐
                                         </el-button>
@@ -52,7 +52,10 @@
                                 </div>
                                 <div class="card-bucket__fotter">
                                     <div v-if="!(item.potStatus==='E'||item.potStatus==='C')">
-                                        <span style="overflow: hidden; white-space: nowrap; text-overflow: ellipsis;">{{ item.prodcutMaterialName || '未有生产物料' }}</span><span>{{ item.potAmount || '0' }} </span>KG
+                                        <el-tooltip class="item" effect="dark" :content="item.prodcutMaterialName" placement="top">
+                                            <span style="overflow: hidden; white-space: nowrap; text-overflow: ellipsis;">{{ item.prodcutMaterialName || '未有生产物料' }}</span>
+                                        </el-tooltip>
+                                        <span>{{ item.potAmount || '0' }} </span>KG
                                     </div>
                                     <!-- <div><span>溶解辅料</span><span>10/100</span></div> -->
                                 </div>
@@ -136,10 +139,6 @@
         currentPotNo='' // 选取的当前罐号
         holderStatus: HolderStatus[]=[] // 罐状态对应
 
-        // totalCount = 1
-        // currPage = 1
-        // pageSize = 10
-
         targetQueryTableList: BucketDataListObj[] = []
         isTableDialogVisible=false
         isBucketDialogVisible = false;
@@ -182,6 +181,8 @@
                 type: 'select',
                 label: '生产车间',
                 prop: 'workShop',
+                rule: [{ required: true, message: ' ', trigger: 'change' }],
+                labelWidth: 90,
                 defaultOptionsFn: () => {
                     return new Promise((resolve) => {
                         COMMON_API.ORG_QUERY_WORKSHOP_API({
@@ -204,6 +205,8 @@
                 type: 'select',
                 label: '溶解罐号',
                 prop: 'potId',
+                labelWidth: 80,
+                defaultValue: '',
                 optionsFn: val => {
                     return new Promise((resolve) => {
                         COMMON_API.HOLDER_QUERY_API({ // /sysHolder/query
@@ -229,6 +232,8 @@
                 type: 'select',
                 label: '状态',
                 prop: 'potStatus',
+                labelWidth: 50,
+                defaultValue: '',
                 defaultOptionsFn: () => {
                     return new Promise((resolve) => {
                         COMMON_API.DICTQUERY_API({ dictType: 'COMMON_HOLDER_STATUS' }).then((res) => {
@@ -294,15 +299,12 @@
 
         // [BTN]入罐
         btnImportBucket(item) {
-            console.log('入罐item')
-            console.log(item)
             this.isTableDialogVisible = true;
             this.$refs.importBucket.init(item, this.currentWorkShop)
         }
 
         // [BTN]满罐
         btnFillBucket(item) {
-            console.log(item)
             this.dialogType = 'filled'
             this.isBucketDialogVisible = true;
             this.currentPotId = item.potId // 选取的当前罐id
@@ -313,7 +315,7 @@
                     number: this.currentPotNo,
                     status: item.potStatus,
                     statusC: tempHolderStatus[0].dictValue,
-                    doit: false,
+                    doit: true,
                     id: this.currentPotId,
                     remark: '',
                     changer: getUserNameNumber(),
@@ -324,38 +326,39 @@
 
         // [BTN]取消满罐
         btnCannelFillBucket(item) {
-            console.log(item)
-            this.dialogType = 'filled'
-            // this.isBucketDialogVisible = true;
-            this.currentPotId = item.potId // 选取的当前罐id
-            this.currentPotNo = item.potNo // 选取的当前罐号
-            const tempHolderStatus: HolderStatus[] = this.holderStatus.filter(element => element.dictCode === 'R')
-            this.dialogForm.filled.form = {
-                    cycle: item.cycle,
-                    number: this.currentPotNo,
-                    status: 'R',
-                    statusC: tempHolderStatus[0].dictValue,
-                    doit: false,
-                    remark: '',
-                    id: this.currentPotId,
-                    changer: getUserNameNumber(),
-                    changed: dateFormat(new Date(), 'yyyy-MM-dd hh:mm:ss')
-            }
-            this.dialogForm.filled.form.status = 'R'
-                STE_API.STE_DISSOLUTIONBUCKET_FULL_API({
-                    cycle: item.cycle,
-                    factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
-                    potId: this.currentPotId,
-                    fullFlag: '0',
-                    remark: ''
-                }).then(({ data }) => {
-                    console.log('取消满罐')
-                    console.log(data)
-                    this.$refs.queryTable.getDataList(true)
-                });
-
+            this.$confirm('取消满罐后状态变为入料中，确认取消？', '提示', {
+                confirmButtonText: '确定',
+                cancelButtonText: '取消',
+                type: 'warning'
+            }).then(() => {
+                this.dialogType = 'filled'
+                // this.isBucketDialogVisible = true;
+                this.currentPotId = item.potId // 选取的当前罐id
+                this.currentPotNo = item.potNo // 选取的当前罐号
+                const tempHolderStatus: HolderStatus[] = this.holderStatus.filter(element => element.dictCode === 'R')
+                this.dialogForm.filled.form = {
+                        cycle: item.cycle,
+                        number: this.currentPotNo,
+                        status: 'R',
+                        statusC: tempHolderStatus[0].dictValue,
+                        doit: false,
+                        remark: '',
+                        id: this.currentPotId,
+                        changer: getUserNameNumber(),
+                        changed: dateFormat(new Date(), 'yyyy-MM-dd hh:mm:ss')
+                }
+                this.dialogForm.filled.form.status = 'R'
+                    STE_API.STE_DISSOLUTIONBUCKET_FULL_API({
+                        cycle: item.cycle,
+                        factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
+                        potId: this.currentPotId,
+                        fullFlag: '0',
+                        remark: ''
+                    }).then(() => {
+                        this.$refs.queryTable.getDataList(true)
+                    });
+            });
         }
-
 
         // queryTable 查询请求
         queryTableListInterface = params => {
@@ -383,25 +386,9 @@
             }
         }
 
-        // // 改变每页条数
-        // handlePageSizeChangeFromRead(val: number): void {
-        //     this.pageSize = val;
-        //     this.getMsgDataList();
-        // }
-
-        // // 跳转页数
-        // handleCurrentPageChangeFromRead(val: number): void {
-        //     this.currPage = val;
-        //     this.getMsgDataList();
-        // }
-
-        // getMsgDataList(): void {
-        //     //
-        // }
-
-
         // 去详请
         goTargetDetail(item) {
+            item.workShop = this.currentWorkShop
             this.$store.commit('sterilize/updateDissolveBucket', item);
             this.$store.commit('common/updateMainTabs', this.$store.state.common.mainTabs.filter(subItem => subItem.name !== 'DFMDS-pages-Sterilize-DissolveBucket-DissolveBucketDetail'))
             setTimeout(() => {
@@ -436,6 +423,7 @@
                     console.log('满罐')
                     console.log(data)
                     this.$refs.queryTable.getDataList(true)
+                    this.isBucketDialogVisible = false
                 });
             } else {
                 if (this.dialogForm.clear.form.doit === true) {
@@ -455,35 +443,29 @@
                     console.log('清罐')
                     console.log(data)
                     this.$refs.queryTable.getDataList(true)
+                    this.isBucketDialogVisible = false
                 });
             }
         }
 
         // 清罐
         btnClearBucket(item) {
-            console.log(item)
-            this.$confirm('是否清罐?', '提示', {
-                confirmButtonText: '确定',
-                cancelButtonText: '取消',
-                type: 'warning'
-            }).then(() => {
-                this.dialogType = 'clear'
-                this.isBucketDialogVisible = true;
-                this.currentPotId = item.potId // 选取的当前罐id
-                this.currentPotNo = item.potNo // 选取的当前罐号
-                const tempHolderStatus: HolderStatus[] = this.holderStatus.filter(element => element.dictCode === item.potStatus)
-                this.dialogForm.clear.form = {
-                        cycle: item.cycle,
-                        number: this.currentPotNo,
-                        status: item.potStatus,
-                        statusC: tempHolderStatus[0].dictValue,
-                        doit: false,
-                        remark: '',
-                        id: this.currentPotId,
-                        changer: getUserNameNumber(),
-                        changed: dateFormat(new Date(), 'yyyy-MM-dd hh:mm:ss')
-                }
-            });
+            this.dialogType = 'clear'
+            this.isBucketDialogVisible = true;
+            this.currentPotId = item.potId // 选取的当前罐id
+            this.currentPotNo = item.potNo // 选取的当前罐号
+            const tempHolderStatus: HolderStatus[] = this.holderStatus.filter(element => element.dictCode === item.potStatus)
+            this.dialogForm.clear.form = {
+                    cycle: item.cycle,
+                    number: this.currentPotNo,
+                    status: item.potStatus,
+                    statusC: tempHolderStatus[0].dictValue,
+                    doit: true,
+                    remark: '',
+                    id: this.currentPotId,
+                    changer: getUserNameNumber(),
+                    changed: dateFormat(new Date(), 'yyyy-MM-dd hh:mm:ss')
+            }
         }
     }
 
@@ -582,6 +564,13 @@ interface CurrentDataTable{
 
 .orderMangedialog >>> .el-checkbox__input.is-checked .el-checkbox__inner::after {
     transform: rotate(0deg) scaleY(1);
+}
+
+.header_main >>> .searchCard .el-form-item.is-error .el-input__inner,
+.header_main >>> .searchCard .el-form-item.is-success .el-input__inner,
+.header_main >>> .searchCard .el-form-item.is-error .el-input__inner:focus,
+.header_main >>> .searchCard .el-form-item.is-success .el-input__inner:focus {
+    border-color: #dcdfe6;
 }
 
 </style>
@@ -812,5 +801,14 @@ interface CurrentDataTable{
     text-align: right;
 }
 
+.el-button.is-plain:hover {
+    color: #fff;
+    background-color: #3a8ee6;
+}
+.el-button.is-plain.is-disabled:hover {
+    color: #c0c4cc;
+    background-color: #fff;
+    border-color: #ebeef5;
+}
 
 </style>

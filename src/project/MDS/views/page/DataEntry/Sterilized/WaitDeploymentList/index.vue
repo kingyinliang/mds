@@ -25,7 +25,7 @@
                                 <el-option value="">
                                     请选择
                                 </el-option>
-                                <el-option v-for="(item, index) in materialList" :key="index" :value="item.materialCode" :label="item.materialCode + ' ' + item.materialName" />
+                                <el-option v-for="(item, index) in materialList" :key="index" :value="item.materialCode" :label="item.materialName + ' ' + item.materialCode" />
                             </el-select>
                         </el-form-item>
                         <el-form-item label="生产日期：">
@@ -64,7 +64,7 @@
                         <el-table-column label="订单号" prop="orderNo" min-width="120" />
                         <el-table-column label="物料" :show-overflow-tooltip="true" min-width="220">
                             <template slot-scope="scope">
-                                {{ scope.row.materialCode }} {{ scope.row.materialName }}
+                                {{ scope.row.materialName }} {{ scope.row.materialCode }}
                             </template>
                         </el-table-column>
                         <el-table-column label="订单数量" prop="planOutput" min-width="80" />
@@ -101,7 +101,7 @@
                         <el-table-column label="订单号" prop="orderNo" min-width="120" />
                         <el-table-column label="物料" :show-overflow-tooltip="true" min-width="220">
                             <template slot-scope="scope">
-                                {{ scope.row.materialCode }} {{ scope.row.materialName }}
+                                {{ scope.row.materialName }} {{ scope.row.materialCode }}
                             </template>
                         </el-table-column>
                         <el-table-column label="订单数量" prop="planOutput" min-width="80" />

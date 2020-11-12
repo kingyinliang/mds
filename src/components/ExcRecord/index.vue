@@ -99,12 +99,20 @@
                 </template>
             </el-table-column>
         </el-table>
+        <el-row class="solerow">
+            <div>
+                总异常时间：
+            </div>
+            <div class="input_bottom">
+                {{ totalMin }} MIN
+            </div>
+        </el-row>
     </mds-card>
 </template>
 
 <script lang="ts">
 import { Vue, Component, Prop } from 'vue-property-decorator';
-import { dateFormat, getUserNameNumber, getDateDiff } from 'utils/utils';
+import { dateFormat, getUserNameNumber, getDateDiff, accAdd } from 'utils/utils';
 import { COMMON_API, STE_API } from 'common/api/api';
 import _ from 'lodash';
 
@@ -125,6 +133,17 @@ export default class ExcRecord extends Vue {
         POORPROCESSWAIT: [],
         ENERGY: []
     };
+
+    // 获取总异常时间
+    get totalMin() {
+        let MinNum = 0;
+        this.excList.map((item: ExcList) => {
+            if (item.delFlag !== 1) {
+                MinNum = accAdd(MinNum, item.duration);
+            }
+        });
+        return MinNum;
+    }
 
     init(formHeader, tagName) {
         const net1 = new Promise((resolve) => {
@@ -150,7 +169,7 @@ export default class ExcRecord extends Vue {
 
     // 异常原因
     getexcReasonTwo(formHeader, resolve) {
-        COMMON_API.DICTQUERY_API({ dictType: 'POOR_PROCESS_WAIT' }).then(({ data }) => {
+        COMMON_API.DICTQUERY_API({ dictType: 'WAIT' }).then(({ data }) => {
             this.excReasonTotal.POORPROCESSWAIT = data.data
             if (resolve) {
                 resolve('resolve');
@@ -174,8 +193,7 @@ export default class ExcRecord extends Vue {
             orderNo: formHeader.orderNo,
             exceptionStage: tagName
         }).then(({ data }) => {
-            this.excList = data.data;
-            this.excListOrg = JSON.parse(JSON.stringify(data.data));
+            this.excList = JSON.parse(JSON.stringify(data.data));
             this.excList.map(item => {
                 if (item.exceptionSituation === 'FAULT' || item.exceptionSituation === 'SHUTDOWN') {
                     item.excReasonList = this.excReasonTotal.FAULTSHUTDOWN
@@ -185,6 +203,7 @@ export default class ExcRecord extends Vue {
                     item.excReasonList = this.excReasonTotal.ENERGY
                 }
             })
+            this.excListOrg = JSON.parse(JSON.stringify(this.excList));
         });
     }
 
@@ -286,7 +305,8 @@ export default class ExcRecord extends Vue {
             cancelButtonText: '取消',
             type: 'warning'
         }).then(() => {
-            row.delFlag = 1;
+            this.$set(row, 'delFlag', 1)
+            this.$successToast('删除成功');
         })
     }
 

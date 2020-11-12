@@ -15,11 +15,11 @@
                         '': orderStatus === '已同步',
                     }"
                 >
-                    订单状态：{{ getTagStatus(orderStatus) }}
+                    {{ statusTitle }}：{{ getTagStatus(orderStatus) }}
                 </em>
             </div>
             <div v-if="headShow" class="dataEntry-head-base">
-                <el-form :inline="true" :model="formHeader" size="small" class="dataEntry-head-base__form">
+                <el-form :inline="true" :model="formHeader" size="small" class="dataEntry-head-base__form" label-width="110px">
                     <el-form-item v-for="(item, index) in headerBase" :key="index">
                         <template slot="label">
                             <em class="iconfont" :class="item.icon" style="margin-right: 5px; margin-left: 2px;" />
@@ -42,7 +42,10 @@
             </div>
         </div>
         <!--tabs-->
-        <el-tabs id="DaatTtabs" ref="tabs" v-model="activeName" class="NewDaatTtabs tabsPages" type="border-card" :before-leave="beforeLeave" @tab-click="tabClick">
+        <div v-if="tabs.length === 0" class="box-card" style=" margin-top: 10px; padding: 10px !important; background: white;">
+            <slot name="contentBox" />
+        </div>
+        <el-tabs v-else id="DaatTtabs" ref="tabs" v-model="activeName" class="NewDaatTtabs tabsPages" type="border-card" :before-leave="beforeLeave" @tab-click="tabClick">
             <el-tab-pane v-for="(item, index) in tabs" :key="index" :name="setKey(index)">
                 <span v-if="item.status !== undefined" slot="label" class="spanview">
                     <el-tooltip class="item" effect="dark" :content="getTagStatus(item.status)" placement="top-start">
@@ -60,14 +63,14 @@
             </el-tab-pane>
         </el-tabs>
         <!--编辑-->
-        <div class="redactBox">
+        <div v-if="redactBoxShow" class="redactBox">
             <div class="redactBox" :style="{ 'padding-left': sidebarFold ? '64px' : '170px' }">
                 <div v-if="redactBoxStatus" class="redact clearfix">
                     <div v-if="type === 'entry'" class="redact_tips">
                         <em class="el-icon-info" />
                         <span v-if="orderStatus === 'toBeAudited'">请仔细核对数据后再进行提交</span>
                         <span v-else-if="orderStatus === '已过账'">订单已过账</span>
-                        <span v-else-if="orderStatus === '待审核'">已提交至主管审核，请等待</span>
+                        <span v-else-if="orderStatus === '待审核' || orderStatus === 'D'">已提交至主管审核，请等待</span>
                         <span v-else-if="orderStatus === '已审核'">已提交至生管审核，请等待</span>
                         <span v-else-if="orderStatus === '已保存'">
                             <span v-if="isRedact">{{ formHeader.changer }}于{{ dateChange }}分钟前已保存</span>
@@ -85,15 +88,15 @@
                         </span>
                     </div>
                     <div v-if="type === 'entry'" class="redact_btn">
-                        <el-button v-if="orderStatus !== 'submit' && orderStatus !== 'checked' && orderStatus !== '已审核' && orderStatus !== '待审核' && orderStatus !== '已过账' && isAuth(redactAuth)" type="primary" size="small" @click="setRedact">
+                        <el-button v-if="orderStatus !== 'submit' && orderStatus !== 'checked' && orderStatus !== 'D' && orderStatus !== '已审核' && orderStatus !== '待审核' && orderStatus !== '已过账' && isAuth(redactAuth)" type="primary" size="small" @click="setRedact">
                             {{ isRedact ? '取消' : '编辑' }}
                         </el-button>
                         <template v-if="isRedact || onlySubmit">
-                            <el-button v-if="orderStatus !== 'submit' && orderStatus !== 'checked' && orderStatus !== '已审核' && orderStatus !== '待审核' && orderStatus !== '已过账' && isAuth(saveAuth)" type="primary" size="small" @click="savedData('saved')">
+                            <el-button v-if="orderStatus !== 'submit' && orderStatus !== 'checked' && orderStatus !== 'D' && orderStatus !== '已审核' && orderStatus !== '待审核' && orderStatus !== '已过账' && isAuth(saveAuth)" type="primary" size="small" @click="savedData('saved')">
                                 保存
                             </el-button>
                         </template>
-                        <el-button v-if="orderStatus !== 'submit' && orderStatus !== 'checked' && orderStatus !== '已审核' && orderStatus !== '待审核' && orderStatus !== '已过账' && ifSubmit() && isAuth(submitAuth)" type="primary" size="small" @click="submitData">
+                        <el-button v-if="orderStatus !== 'submit' && orderStatus !== 'checked' && orderStatus !== 'D' && orderStatus !== '已审核' && orderStatus !== '待审核' && orderStatus !== '已过账' && ifSubmit() && isAuth(submitAuth)" type="primary" size="small" @click="submitData">
                             提交
                         </el-button>
                     </div>
@@ -142,6 +145,10 @@
             type: {
                 type: String,
                 default: 'entry'
+            },
+            statusTitle: { // 页面右上角显示状态的名目
+                type: String,
+                default: '订单状态'
             },
             orderStatus: {
                 type: String,
@@ -224,6 +231,11 @@
                 default: () => {
                     //
                 }
+            },
+            // 下方 bar 显示与否
+            redactBoxShow: {
+                type: Boolean,
+                default: true
             },
             //检测数据订单状态不显示
             orderStatusShow: {

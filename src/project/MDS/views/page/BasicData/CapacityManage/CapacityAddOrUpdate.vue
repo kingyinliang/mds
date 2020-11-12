@@ -138,7 +138,7 @@ export default {
             if (data) {
                 this.CapacityId = data.id;
                 this.dataForm = JSON.parse(JSON.stringify(data));
-                this.dataForm.material = data.materialCode + ' ' + data.materialName;
+                this.dataForm.material = data.materialName + ' ' + data.materialCode;
             } else {
                 this.CapacityId = '';
                 this.dataForm = {
@@ -151,8 +151,8 @@ export default {
         dataFormSubmit() {
             this.$refs.dataForm.validate(valid => {
                 if (valid) {
-                    this.dataForm.materialCode = this.dataForm.material.substring(0, this.dataForm.material.indexOf(' '));
-                    this.dataForm.materialName = this.dataForm.material.substring(this.dataForm.material.indexOf(' ') + 1);
+                    this.dataForm.materialCode = this.dataForm.material.substring(this.dataForm.material.indexOf(' ') + 1);
+                    this.dataForm.materialName = this.dataForm.material.substring(0, this.dataForm.material.indexOf(' '));
                     this.$http(`${BASICDATA_API.CAPAADDORUPDATE_API}`, 'POST', this.dataForm).then(({ data }) => {
                         if (data.code === 0) {
                             this.$successToast('操作成功');

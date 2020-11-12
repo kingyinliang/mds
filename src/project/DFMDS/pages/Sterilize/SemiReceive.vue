@@ -5,7 +5,7 @@
             redact-auth="steSemiEdit"
             save-auth="steSemiEdit"
             submit-auth="steSemiSubmit"
-            :order-status="formHeader.statusName"
+            :order-status="formHeader.steTagPot?formHeader.steTagPot.semiMaterialStatusName:'未录入'"
             :header-base="headerBase"
             :form-header="formHeader"
             :tabs="tabs"
@@ -43,6 +43,7 @@
             semiReceive: HTMLFormElement;
             excRecord: HTMLFormElement;
             textRecord: HTMLFormElement;
+            dataEntry: HTMLFormElement;
         }
 
         formHeader: OrderData = {};
@@ -57,7 +58,7 @@
                 type: 'p',
                 label: '生产锅号',
                 icon: 'factory-qiyaguanjianhua',
-                value: 'potNo'
+                value: 'potName'
             },
             {
                 type: 'tooltip',
@@ -66,10 +67,10 @@
                 value: ['materialCode', 'materialName']
             },
             {
-                type: 'p',
+                type: 'tooltip',
                 label: '生产锅序',
                 icon: 'factory-bianhao',
-                value: 'potOrder'
+                value: ['potOrderString', 'potOrderNo']
             },
             {
                 type: 'p',
@@ -128,8 +129,10 @@
                 potOrderNo: this.$store.state.sterilize.SemiReceive.potOrderMap.potOrderNo
             }).then(({ data }) => {
                 this.formHeader = data.data;
+                this.formHeader.potOrderString = '第' + data.data.potOrder + '锅';
                 this.formHeader.textStage = 'semiReceive';
                 this.tabs[0].status = (data.data.steTagPot ? data.data.steTagPot.semiMaterialStatus : '未录入');
+                this.$refs.dataEntry.updateTabs();
                 this.$refs.semiReceive.init(this.formHeader);
                 this.$refs.excRecord.init(this.formHeader, 'semiReceive');
                 this.$refs.textRecord.init(this.formHeader, 'sterilize');
@@ -175,6 +178,7 @@
     }
     interface OrderData {
         textStage?: string;
+        potOrderString?: string;
         factoryName?: string;
         potNo?: string;
         potOrder?: string;

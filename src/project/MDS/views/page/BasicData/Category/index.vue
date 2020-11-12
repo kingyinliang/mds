@@ -10,7 +10,7 @@
                 <el-form-item label="发酵物料：">
                     <el-select v-model="formHeader.materialCode" placeholder="请选择" filterable style="width: 160px;">
                         <el-option label="请选择" value="" />
-                        <el-option v-for="(sole, index) in material" :key="index" :value="sole.materialCode" :label="sole.materialCode + ' ' + sole.materialName" />
+                        <el-option v-for="(sole, index) in material" :key="index" :value="sole.materialCode" :label="sole.materialName + ' ' + sole.materialCode" />
                     </el-select>
                 </el-form-item>
                 <div style="float: right;">
@@ -36,7 +36,7 @@
                 <el-table-column label="工厂" prop="factoryName" width="140" :show-overflow-tooltip="true" />
                 <el-table-column label="发酵物料" :show-overflow-tooltip="true">
                     <template slot-scope="scope">
-                        {{ scope.row.materialCode + ' ' + scope.row.materialName }}
+                        {{ scope.row.materialName + ' ' + scope.row.materialCode }}
                     </template>
                 </el-table-column>
                 <el-table-column label="半成品类别" prop="halfType" width="115" />

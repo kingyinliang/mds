@@ -56,7 +56,7 @@
                 <el-table-column label="物料" show-overflow-tooltip min-width="200">
                     <template slot-scope="scope">
                         <el-select v-model="scope.row.materialCode" :disabled="!isRedact || soleStatus" size="small">
-                            <el-option v-for="(item, index) in filterAidMaterialList" :key="index" :label="item.CODE + ' ' + item.VALUE" :value="item.CODE" />
+                            <el-option v-for="(item, index) in filterAidMaterialList" :key="index" :label="item.VALUE + ' ' + item.CODE" :value="item.CODE" />
                         </el-select>
                         <!-- {{scope.row.materialCode}} {{scope.row.materialName}} -->
                     </template>
@@ -454,9 +454,9 @@ export default {
                 cancelButtonText: '取消',
                 type: 'warning'
             }).then(() => {
-                row.delFlag = 1;
+                this.$set(row, 'delFlag', 1)
+                this.$successToast('删除成功');
                 this.SupMaterDel(row);
-                this.$infoToast('删除成功');
             }).catch(() => {
                 // this.$infoToast('已取消删除');
             });

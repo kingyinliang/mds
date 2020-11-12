@@ -4,7 +4,7 @@
             <el-col :span="4">
                 <div class="card-left" style="background: #fff;">
                     <p class="dataEntry-head-leftRight__title" style="color: #333;">
-                        罐号：{{ formData.potNo }}
+                        罐号：{{ formData.potName }}
                     </p>
                     <div class="dataEntry-head-leftRight-pot">
                         <!-- <div class="dataEntry-head-leftRight-pot__tank">
@@ -22,19 +22,29 @@
                     </p>
                     <div class="dataEntry-head-leftRight-message">
                         <div class="dataEntry-head-leftRight-message__item">
-                            <p>{{ formData.workShop ? formData.workShop : '' }}</p>
+                            <el-tooltip class="item" effect="dark" :content="formData.workShop ? formData.workShop : ''" placement="top">
+                                <p>{{ formData.workShop ? formData.workShop : '' }}</p>
+                            </el-tooltip>
                             <p><em class="iconfont factory-37_zhusu" /> 杀菌车间</p>
                         </div>
                         <div class="dataEntry-head-leftRight-message__item">
-                            <p>
-                                {{ formData.prodcutMaterial ? formData.prodcutMaterial : '' }}
-                            </p>
+                            <el-tooltip class="item" effect="dark" :content="formData.prodcutMaterial ? formData.prodcutMaterial : ''" placement="top">
+                                <p>
+                                    {{ formData.prodcutMaterial ? formData.prodcutMaterial : '' }}
+                                </p>
+                            </el-tooltip>
                             <p> <em class="iconfont factory-bianhao" />生产物料 </p>
                         </div>
                         <div class="dataEntry-head-leftRight-message__item">
                             <p>
-                                {{ formData.potAmount ? formData.potAmount.toLocaleString() : 0 }}
-                                {{ formData.unit ? formData.unit : 'KG' }}
+                                {{ formData.potCount ? formData.potCount.toLocaleString() : 0 }}
+                            </p>
+                            <p> <em class="iconfont factory-cunchurongliang" />配置锅数 </p>
+                        </div>
+                        <div class="dataEntry-head-leftRight-message__item">
+                            <p>
+                                {{ formData.amount ? formData.amount.toLocaleString() : 0 }}
+                                <em>{{ formData.unit ? formData.unit : 'KG' }}</em>
                             </p>
                             <p> <em class="iconfont factory-cunchurongliang" />数量 </p>
                         </div>
@@ -51,15 +61,15 @@
                     <el-table-column type="index" label="序号" width="55" fixed align="center" />
                     <el-table-column label="罐号" :show-overflow-tooltip="true">
                         <template slot-scope="scope">
-                            {{ scope.row.potNo }}
+                            {{ scope.row.potName }}
                         </template>
                     </el-table-column>
-                    <el-table-column label="物料" :show-overflow-tooltip="true" width="180">
+                    <el-table-column label="物料" :show-overflow-tooltip="true" width="280">
                         <template slot-scope="scope">
-                            {{ scope.row.prodcutMaterial }} {{ scope.row.prodcutMaterialName }}
+                            {{ scope.row.feedMaterialName }} {{ scope.row.feedMaterial }}
                         </template>
                     </el-table-column>
-                    <el-table-column label="批次" :show-overflow-tooltip="true" width="100">
+                    <el-table-column label="批次" :show-overflow-tooltip="true" maxlength="10" width="100">
                         <template slot-scope="scope">
                             {{ scope.row.feedBatch }}
                         </template>
@@ -71,7 +81,7 @@
                     </el-table-column>
                     <el-table-column label="移动数量" :show-overflow-tooltip="true" width="100">
                         <template slot-scope="scope">
-                            <span v-if="scope.row.moveType!=='R'">-</span>{{ scope.row.moveAmount.toFixed(3) }}
+                            <span v-if="scope.row.moveType!=='I'">-</span>{{ scope.row.moveAmount.toFixed(3) }}
                         </template>
                     </el-table-column>
                     <el-table-column label="单位" :show-overflow-tooltip="true" width="80">
@@ -89,7 +99,7 @@
                             {{ scope.row.usePortOrderNo }}
                         </template>
                     </el-table-column>
-                    <el-table-column label="投料人" width="160">
+                    <el-table-column label="投料人" width="160" :show-overflow-tooltip="true">
                         <template slot-scope="scope">
                             {{ scope.row.feedMan }}
                         </template>
@@ -118,19 +128,19 @@
                 <span slot="label" class="spanview">
                     历史库存
                 </span>
-                <el-table header-row-class-name="" :data="historyInventoryDataGroup" border tooltip-effect="dark" class="newTable">
+                <el-table header-row-class-name="" :data="historyInventoryDataGroup" border tooltip-effect="dark" class="newTable" size="mini">
                     <el-table-column type="index" label="序号" width="55" fixed />
                     <el-table-column label="罐号" :show-overflow-tooltip="true">
                         <template slot-scope="scope">
-                            {{ scope.row.potNo }}
+                            {{ scope.row.potName }}
                         </template>
                     </el-table-column>
-                    <el-table-column label="物料" :show-overflow-tooltip="true" width="180">
+                    <el-table-column label="物料" :show-overflow-tooltip="true" width="280">
                         <template slot-scope="scope">
-                            {{ scope.row.prodcutMaterial }} {{ scope.row.prodcutMaterialName }}
+                            {{ scope.row.feedMaterialName }} {{ scope.row.feedMaterial }}
                         </template>
                     </el-table-column>
-                    <el-table-column label="批次" :show-overflow-tooltip="true" width="180">
+                    <el-table-column label="批次" :show-overflow-tooltip="true" maxlength="10" width="180">
                         <template slot-scope="scope">
                             {{ scope.row.feedBatch }}
                         </template>
@@ -145,7 +155,7 @@
                             <span v-if="scope.row.moveType!=='R'">-</span>{{ scope.row.moveAmount.toFixed(3) }}
                         </template>
                     </el-table-column>
-                    <el-table-column label="单位" :show-overflow-tooltip="true" width="170">
+                    <el-table-column label="单位" :show-overflow-tooltip="true" width="80">
                         <template slot-scope="scope">
                             {{ scope.row.moveUnit }}
                         </template>
@@ -160,7 +170,7 @@
                             {{ scope.row.usePortOrderNo }}
                         </template>
                     </el-table-column>
-                    <el-table-column label="投料人" width="160">
+                    <el-table-column label="投料人" width="160" :show-overflow-tooltip="true">
                         <template slot-scope="scope">
                             {{ scope.row.feedMan }}
                         </template>
@@ -222,31 +232,45 @@ export default class DissolveBucketDetail extends Vue {
             factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
             potId: this.importData.potId,
             potNo: this.importData.potNo,
-            potStatus: this.importData.potStatus
+            // potStatus: this.importData.potStatus
+            workShop: this.importData.workShop
             }).then(({ data }) => {
                 console.log('详细数据')
                 console.log(data)
                 this.formData = {
+                    potName: this.importData.potName,
+                    potAmount: this.importData.potAmount,
+                    potCount: this.importData.potCount,
                     potNo: this.importData.potNo,
                     factoryName: JSON.parse(sessionStorage.getItem('factory') || '{}').deptShort,
-                    potAmount: data.data.number,
+                    amount: data.data.number,
                     unit: data.data.unit,
                     prodcutMaterial: data.data.materialName,
                     workShop: data.data.workShop
                 };
                 this.currentInventoryDataGroup = data.data.item
+                this.currentInventoryDataGroup.forEach(item => {
+                    this.$set(item, 'potName', this.importData.potName)
+                })
+                this.historyInventoryDataGroup = data.data.historyItem
+                this.historyInventoryDataGroup.forEach(item => {
+                    this.$set(item, 'potName', this.importData.potName)
+                })
         });
 
     }
 
     chechMoveType(typeString) {
-        if (typeString === 'R') {
+        if (typeString === 'I') {
             return '投料'
+        } else if (typeString === 'F') {
+            return '领用'
         }
-        return '领用'
+        return ''
     }
 }
 interface ImportData{
+    potName?: string;
     cycle?: string;
     feedDate?: string;
     id?: string;
@@ -257,6 +281,8 @@ interface ImportData{
     prodcutMaterial?: string;
     prodcutMaterialName?: string;
     ratio?: number;
+    workShop?: string;
+    potCount?: number;
 }
 
 </script>
@@ -278,6 +304,12 @@ interface ImportData{
     }
     .dataEntry-head-leftRight-pot__tank__bg {
         background-image: radial-gradient(at center top, #91d5ff, #1890ff);
+    }
+    .dataEntry-head-leftRight-message__item p:first-child {
+        font-size: 24px;
+    }
+    .dataEntry-head-leftRight-message__item p:first-child em {
+        font-size: 16px;
     }
 }
 

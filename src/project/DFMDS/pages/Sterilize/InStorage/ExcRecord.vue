@@ -64,33 +64,51 @@
             el-table-column(label="操作" width="70" fixed="right")
                 template(slot-scope="scope")
                     el-button(class="delBtn" type="text" icon="el-icon-delete" size="mini" :disabled="!isRedact" @click="removeRow(scope.row)") 删除
+        el-row.solerow
+            div 总异常时间：
+            div.input_bottom {{ totalMin }} MIN
 </template>
 
 <script lang="ts">
 import { Vue, Component, Prop } from 'vue-property-decorator';
-import { dateFormat, getUserNameNumber, getDateDiff } from 'utils/utils';
+import { dateFormat, getUserNameNumber, getDateDiff, accAdd } from 'utils/utils';
 import { COMMON_API, STE_API } from 'common/api/api';
 import _ from 'lodash';
 
 @Component({
-    name: 'ExcRecord'
+    name: 'SteExcRecord'
 })
 export default class ExcRecord extends Vue {
     @Prop({ type: Boolean, default: false }) isRedact
     @Prop({ type: Object, default: {} }) formHeader
 
-    classesOptions: object[] = [];
-    abnormalList: object[] = [];
+    classesOptions: object[] = []; // 班次下拉
+    abnormalList: object[] = []; // 异常下拉
     excReasonList = [];
-    excList: ExcList[] = [];
-    orgExcList: ExcList[] = [];
+    excList: ExcList[] = []; // 表格 data
+    excListOrg: ExcList[] = [];
     excReasonTotal: ExcReasonTotal = {
         FAULTSHUTDOWN: [],
         POORPROCESSWAIT: [],
         ENERGY: []
     };
 
-    init(formHeader, tagName) {
+    // 获取总异常时间
+    get totalMin() {
+        let MinNum = 0;
+        this.excList.map((item: ExcList) => {
+            if (item.delFlag !== 1) {
+                MinNum = accAdd(MinNum, item.duration);
+            }
+        });
+        return MinNum;
+    }
+
+    init(formHeader, tagName, clear?) {
+        if (clear) {
+            this.excList = []
+            return
+        }
         const net1 = new Promise((resolve) => {
             this.getexcReasonTwo(formHeader, resolve);
         });
@@ -114,7 +132,7 @@ export default class ExcRecord extends Vue {
 
     // 异常原因
     getexcReasonTwo(formHeader, resolve) {
-        COMMON_API.DICTQUERY_API({ dictType: 'POOR_PROCESS_WAIT' }).then(({ data }) => {
+        COMMON_API.DICTQUERY_API({ dictType: 'WAIT' }).then(({ data }) => {
             this.excReasonTotal.POORPROCESSWAIT = data.data
             if (resolve) {
                 resolve('resolve');
@@ -148,7 +166,7 @@ export default class ExcRecord extends Vue {
                     item.excReasonList = this.excReasonTotal.ENERGY
                 }
             })
-            this.orgExcList = JSON.parse(JSON.stringify(this.excList));
+            this.excListOrg = JSON.parse(JSON.stringify(this.excList));
         });
     }
 
@@ -172,7 +190,7 @@ export default class ExcRecord extends Vue {
             exceptionSituation: '',
             startDate: '',
             endDate: '',
-            duration: '',
+            duration: 0,
             durationUnit: 'MIN',
             exceptionReason: '',
             exceptionInfo: '',
@@ -220,12 +238,7 @@ export default class ExcRecord extends Vue {
                     ids.push(item.id)
                 }
             } else if (item.id) {
-                if (!_.isEqual(this.orgExcList[index], item)) {
-                    console.log('this.orgExcList item')
-                    console.log(this.orgExcList[index])
-                    console.log('this.excList item')
-                    console.log(item)
-
+                if (!_.isEqual(this.excListOrg[index], item)) {
                         item.exceptionStage = tagName;
                         item.orderId = formHeader.orderId;
                         item.orderNo = formHeader.orderNo;
@@ -233,11 +246,9 @@ export default class ExcRecord extends Vue {
                         item.potOrderNo = formHeader.potOrderNo;
                         delete item.excReasonList
                         delete item.delFlag
-
                     updateDto.push(item)
                 }
             } else {
-
                     item.exceptionStage = tagName;
                     item.orderId = formHeader.orderId;
                     item.orderNo = formHeader.orderNo;
@@ -245,13 +256,12 @@ export default class ExcRecord extends Vue {
                     item.potOrderNo = formHeader.potOrderNo;
                     delete item.excReasonList
                     delete item.delFlag
-
                 insertDto.push(item)
             }
         })
         // 将 data 归零
-        this.excList = []
-        this.orgExcList = []
+        // this.excList = []
+        // this.excListOrg = []
         return {
             ids,
             insertDto,
@@ -260,10 +270,10 @@ export default class ExcRecord extends Vue {
     }
 
     ruleSubmit() {
-        if (this.excList.filter(it => it.delFlag !== 1).length === 0) {
-            this.$warningToast('请录入异常记录页签数据');
-            return false;
-        }
+        // if (this.excList.filter(it => it.delFlag !== 1).length === 0) {
+        //     this.$warningToast('请录入异常记录页签数据');
+        //     return false;
+        // }
         for (const item of this.excList.filter(it => it.delFlag !== 1)) {
             if (!item.classes || !item.exceptionSituation || !item.startDate || !item.endDate) {
                 this.$warningToast('请填写异常记录页签必填项');
@@ -271,6 +281,10 @@ export default class ExcRecord extends Vue {
             }
             if (item.exceptionSituation !== 'AB_OTHERS' && !item.exceptionReason) {
                 this.$warningToast('请填写异常记录页签必填项');
+                return false;
+            }
+            if (item.duration && item.duration <= 0) {
+                this.$warningToast('结束时间不能小于或等于开始时间');
                 return false;
             }
         }
@@ -283,7 +297,8 @@ export default class ExcRecord extends Vue {
             cancelButtonText: '取消',
             type: 'warning'
         }).then(() => {
-            row.delFlag = 1;
+            this.$set(row, 'delFlag', 1)
+            this.$successToast('删除成功');
         })
     }
 
@@ -309,7 +324,7 @@ interface ExcList {
     exceptionSituation?: string;
     startDate?: string;
     endDate?: string;
-    duration?: string;
+    duration?: number;
     durationUnit?: string;
     exceptionReason?: string;
     exceptionInfo?: string;

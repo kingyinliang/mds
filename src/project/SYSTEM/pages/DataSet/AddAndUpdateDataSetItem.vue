@@ -230,19 +230,6 @@
 
                 }
                 this.isDialogShow = true;
-                // // 呼叫属性选项
-                // RDM_API.PERMISSION_LIST_PERMISSIONCODE_API({
-                // }).then(({ data }) => {
-                //     console.log('333333')
-                //     console.log(data)
-                //     this.projectArray = data.data.project
-                //     this.taskArray = data.data.task
-                //     this.standardArray = data.data.productsAndStrands
-                //     this.formulaArray = data.data.recipe
-                //     this.blueprintArray = data.data.blueprint
-                // })
-
-
             },
             initForm() {
                 this.isProjectIndeterminate = false
@@ -272,9 +259,7 @@
                 this.$refs.dataForm.validate(valid => {
                     if (valid) {
                         if (this.dialogTitle === '新增数据集') {
-                            console.log('提交新增')
                             const tempOwner = this.dataForm.dataSetOwner.split(' ')
-
                             // 新增
                             RDM_API.PERMISSION_DATASET_SAVE_API({
                                 permissionItemList: {
@@ -295,7 +280,6 @@
                                 //
                             });
                         } else if (this.dialogTitle === '编辑数据集') {
-                            console.log('提交修改')
                             const tempOwner = this.dataForm.dataSetOwner.split(' ')
                             // 修改
                             RDM_API.PERMISSION_DATASET_SAVE_API({
@@ -319,7 +303,6 @@
                                 //
                             });
                         } else {
-                            console.log('提交复制')
                             const tempOwner = this.dataForm.dataSetOwner.split(' ')
                             // 复制
                             RDM_API.PERMISSION_DATASET_SAVE_API({
@@ -352,7 +335,6 @@
                 this.isDialogShow = false
             },
             handleCheckAllProjectChange(val) {
-                console.log(val)
                 this.dataForm.project = val ? this.permissionItemList.projectArray : [];
                 this.isProjectIndeterminate = false;
             },
@@ -362,7 +344,6 @@
                 this.isProjectIndeterminate = checkedCount > 0 && checkedCount < this.permissionItemList.projectArray.length;
             },
             handleCheckAllTaskChange(val) {
-                console.log(val)
                 this.dataForm.task = val ? this.permissionItemList.taskArray : [];
                 this.isTaskIndeterminate = false;
             },
@@ -372,7 +353,6 @@
                 this.isTaskIndeterminate = checkedCount > 0 && checkedCount < this.permissionItemList.taskArray.length;
             },
             handleCheckAllStandardChange(val) {
-                console.log(val)
                 this.dataForm.standard = val ? this.permissionItemList.standardArray : [];
                 this.isStandardIndeterminate = false;
             },
@@ -382,7 +362,6 @@
                 this.isStandardIndeterminate = checkedCount > 0 && checkedCount < this.permissionItemList.standardArray.length;
             },
             handleCheckAllFormulaChange(val) {
-                console.log(val)
                 this.dataForm.formula = val ? this.permissionItemList.formulaArray : [];
                 this.isFormulaIndeterminate = false;
             },
@@ -392,8 +371,7 @@
                 this.isFormulaIndeterminate = checkedCount > 0 && checkedCount < this.permissionItemList.formulaArray.length;
             },
             handleCheckAllBlueprintChange(val) {
-                console.log(val)
-                this.dataForm.blueprint = val ? this.permissionItemList.blueprintArray : [];
+                this.dataForm.bluePrint = val ? this.permissionItemList.blueprintArray : [];
                 this.isBlueprintIndeterminate = false;
             },
             handleCheckedBlueprintChange(value) {

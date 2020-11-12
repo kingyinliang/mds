@@ -15,9 +15,17 @@
                 </div>
                 <el-table header-row-class-name="tableHead" class="newTable semi__pot_table" :data="semiTable" :row-class-name="rowDelFlag" :height="semiTable.length>4? '' : '196'" border tooltip-effect="dark" @row-dblclick="EditRow">
                     <el-table-column :index="index => getIndexMethod(index, semiTable)" type="index" label="序号" width="50px" fixed />
-                    <el-table-column prop="stePotNo" label="生产锅号" min-width="100" :show-overflow-tooltip="true" />
-                    <el-table-column prop="aiShelves" label="发酵罐领用" min-width="100" :show-overflow-tooltip="true" />
-                    <el-table-column prop="fermentPotNo" label="发酵罐号" min-width="100" :show-overflow-tooltip="true" />
+                    <el-table-column prop="stePotNo" label="生产锅号" min-width="100" :show-overflow-tooltip="true">
+                        <template slot-scope="scope">
+                            {{ `${scope.row.stePotName}` }}
+                        </template>
+                    </el-table-column>
+                    <el-table-column prop="consumeType" label="发酵罐领用" min-width="100" :show-overflow-tooltip="true">
+                        <template slot-scope="scope">
+                            {{ scope.row.consumeType==='1'?'是':'否' }}
+                        </template>
+                    </el-table-column>
+                    <el-table-column prop="fermentPotName" label="发酵罐号" min-width="100" :show-overflow-tooltip="true" />
                     <el-table-column prop="aiShelves" label="领用物料" min-width="120" :show-overflow-tooltip="true">
                         <template slot-scope="scope">
                             {{ scope.row.materialCode }}
@@ -47,7 +55,7 @@
 
 <script lang="ts">
     import { Vue, Component, Prop } from 'vue-property-decorator';
-    import { STE_API } from 'common/api/api';
+    import { STE_API, AUDIT_API } from 'common/api/api';
     import SemiReceiveDialog from './SemiReceiveDialog.vue'
     import { dataEntryData } from 'utils/utils';
 
@@ -61,11 +69,12 @@
 
         $refs: {SemiReceiveDialog: HTMLFormElement};
 
-        formHeader = {};
+        formHeader: OrderData = {};
         semiAudit = [];
         semiTable: SemiObj[] = [];
         orgSemiTable: SemiObj[] = [];
         visible = false;
+        tmp = false;
 
         // indexMethod(tableIndex) {
         //     const num = this.semiTable.reduce((total, currentValue: SemiObj, index) => {
@@ -74,7 +83,7 @@
         //     return tableIndex + 1 - num
         // }
 
-        init(formHeader) {
+        async init(formHeader) {
             this.formHeader = formHeader
             STE_API.STE_SEMI_LIST_API({
                 orderNo: formHeader.orderNo,
@@ -83,6 +92,15 @@
                 this.semiTable = JSON.parse(JSON.stringify(data.data));
                 this.orgSemiTable = JSON.parse(JSON.stringify(data.data));
             })
+            this.semiAudit = await this.getAudit(formHeader, 'MATERIAL');
+        }
+
+        async getAudit(formHeader, verifyType) {
+            const a = await AUDIT_API.AUDIT_LOG_LIST_API({
+                orderNo: formHeader.potOrderNo,
+                verifyType: verifyType
+            })
+            return a.data.data
         }
 
         ruleSubmit(): boolean {
@@ -101,7 +119,12 @@
             const updateData = [];
 
             dataEntryData(formHeader, this.semiTable, this.orgSemiTable, delIds, insertData, updateData);
-
+            // eslint-disable-next-line
+            insertData.map((item: any) => {
+                item['orderNo'] = formHeader.orderNo;
+                item['potOrderNo'] = formHeader.potOrderNo;
+                item['potOrderId'] = formHeader.id;
+            })
             return {
                 orderNo: this.$store.state.sterilize.SemiReceive.orderNoMap.orderNo,
                 potOrderNo: this.$store.state.sterilize.SemiReceive.potOrderMap.potOrderNo,
@@ -112,18 +135,53 @@
         }
 
         semiCopy() {
-            STE_API.STE_SEMI_COPY_API({
-                orderNo: this.$store.state.sterilize.SemiReceive.orderNoMap.orderNo,
-                potOrderNo: this.$store.state.sterilize.SemiReceive.potOrderMap.potOrderNo
-            }).then(({ data }) => {
-                this.semiTable = this.semiTable.concat(data.data);
-            })
+            if (this.tmp) {
+                this.$confirm('本次获取数据会覆盖已有数据，确认获取？', '提示', {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    type: 'warning'
+                }).then(() => {
+                    STE_API.STE_SEMI_COPY_API({
+                        stePotNo: this.formHeader.potNo,
+                        stePotName: this.formHeader.potName,
+                        orderNo: this.$store.state.sterilize.SemiReceive.orderNoMap.orderNo,
+                        potOrderNo: this.$store.state.sterilize.SemiReceive.potOrderMap.potOrderNo
+                    }).then(({ data }) => {
+                        for (let i = this.semiTable.length - 1; i >= 0; i--) {
+                            if (this.semiTable[i].isCopy) {
+                                this.semiTable.splice(i, 1);
+                            }
+                        }
+                        data.data.forEach(element => {
+                            element.isCopy = true;
+                            element.potOrderNo = this.formHeader.potOrderNo;
+                            element.potOrderId = this.formHeader.id;
+                        });
+                        this.semiTable = this.semiTable.concat(data.data);
+                    })
+                });
+            } else {
+                this.tmp = true;
+                STE_API.STE_SEMI_COPY_API({
+                    stePotNo: this.formHeader.potNo,
+                    stePotName: this.formHeader.potName,
+                    orderNo: this.$store.state.sterilize.SemiReceive.orderNoMap.orderNo,
+                    potOrderNo: this.$store.state.sterilize.SemiReceive.potOrderMap.potOrderNo
+                }).then(({ data }) => {
+                    data.data.forEach(element => {
+                        element.isCopy = true;
+                        element.potOrderNo = this.formHeader.potOrderNo;
+                        element.potOrderId = this.formHeader.id;
+                    });
+                    this.semiTable = this.semiTable.concat(data.data);
+                })
+            }
         }
 
         receive() {
             this.visible = true;
             this.$nextTick(() => {
-                this.$refs.SemiReceiveDialog.init()
+                this.$refs.SemiReceiveDialog.init(null, this.formHeader)
             });
         }
 
@@ -163,7 +221,8 @@
                 cancelButtonText: '取消',
                 type: 'warning'
             }).then(() => {
-                row.delFlag = 1;
+                this.$set(row, 'delFlag', 1)
+                this.$successToast('删除成功');
                 this.$set(this.semiTable, index, row)
             });
         }
@@ -176,6 +235,7 @@
         }
     }
     interface SemiObj {
+        isCopy?: boolean;
         delFlag?: number;
         modifiedId?: number;
         id?: string;
@@ -184,6 +244,17 @@
         orderNo?: string;
         factoryName?: string;
         potNo?: string;
+        potOrder?: string;
+    }
+    interface OrderData {
+        id?: string;
+        textStage?: string;
+        potOrderString?: string;
+        factoryName?: string;
+        potNo?: string;
+        potName?: string;
+        potOrderNo?: string;
+        potOrderId?: string;
         potOrder?: string;
     }
 </script>

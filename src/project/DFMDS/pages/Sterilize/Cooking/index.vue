@@ -1,13 +1,18 @@
 <template>
     <div class="header_main">
         <el-card class="searchCard" style="margin-bottom: 5px;">
-            <el-form :model="formHeader" :inline="true" size="small" label-width="70px" class="multi_row clearfix" style="font-size: 0;">
+            <el-form :model="formHeader" :inline="true" size="small" label-width="76px" class="multi_row clearfix" style="font-size: 0;">
                 <el-form-item label="生产车间：">
                     <el-select v-model="formHeader.workShop" style="width: 170px;" placeholder="请选择">
                         <el-option v-for="(item, optIndex) in workShop" :key="optIndex" :label="item.deptName" :value="item.deptCode" />
                     </el-select>
                 </el-form-item>
-                <el-form-item label="煮料锅/混合罐：" label-width="110px">
+                <el-form-item>
+                    <span slot="label">
+                        容器号<el-tooltip class="item" effect="light" content="注：煮料锅/混合罐" placement="top-end">
+                            <i class="el-icon-question" style="font-size: 10px;" />
+                        </el-tooltip>：
+                    </span>
                     <el-select v-model="formHeader.potNo" style="width: 170px;" placeholder="请选择" clearable filterable>
                         <el-option v-for="(item, optIndex) in holderList" :key="optIndex" :label="item.holderName" :value="item.holderNo" />
                     </el-select>
@@ -47,16 +52,21 @@
             <el-table ref="table" class="newTable" :data="dataList" border tooltip-effect="dark" header-row-class-name="tableHead" style="width: 100%; margin-bottom: 20px;">
                 <el-table-column type="index" label="序号" fixed="left" width="55" />
                 <el-table-column label="状态" min-width="70" show-overflow-tooltip prop="potStatusName" />
+                <el-table-column label="煮料锅序/混合罐序" min-width="150" show-overflow-tooltip>
+                    <template slot-scope="scope">
+                        {{ scope.row.potOrder ? `第`+scope.row.potOrder+`锅` : '' }}
+                    </template>
+                </el-table-column>
                 <el-table-column label="煮料单号" min-width="145">
                     <template slot-scope="scope">
                         <a @click="goDetail(scope.row)">{{ scope.row.cookingNo }}</a>
                     </template>
                 </el-table-column>
                 <el-table-column label="生产车间" min-width="110" prop="workShopName" />
-                <el-table-column label="煮料锅/混合罐" min-width="165" show-overflow-tooltip prop="potNoName" />
+                <el-table-column label="煮料锅/混合罐" min-width="125" show-overflow-tooltip prop="potNoName" />
                 <el-table-column label="生产物料" min-width="220" show-overflow-tooltip>
                     <template slot-scope="scope">
-                        {{ scope.row.productMaterial }} {{ scope.row.productMaterialName }}
+                        {{ scope.row.productMaterialName }} {{ scope.row.productMaterial }}
                     </template>
                 </el-table-column>
                 <el-table-column label="配置日期" min-width="140" prop="configStartDate" />
@@ -68,7 +78,7 @@
                 <el-table-column label="操作时间" width="160" prop="changed" />
                 <el-table-column label="操作" width="60" fixed="right">
                     <template slot-scope="scope">
-                        <el-button v-if="isAuth('steCookClean')" type="text" size="small" :disabled="(scope.row.clear <= 2 ? false : true) || scope.row.potStatus === 'S'" @click="clearHolder(scope.row)">
+                        <el-button v-if="isAuth('steCookClean')" type="text" size="small" :disabled="(scope.row.clear <= 2 ? false : true) || scope.row.potStatus === 'S' || scope.row.remainder === 0" @click="clearHolder(scope.row)">
                             清罐
                         </el-button>
                     </template>
@@ -152,6 +162,10 @@ export default class CookingIndex extends Vue {
         {
             name: '已提交',
             value: 'M'
+        },
+        {
+            name: '已撤回',
+            value: 'W'
         }
     ];
 

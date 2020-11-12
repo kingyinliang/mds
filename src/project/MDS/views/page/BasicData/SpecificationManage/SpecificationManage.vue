@@ -24,7 +24,7 @@
                 <el-table-column width="230" label="工厂" :show-overflow-tooltip="true" prop="factoryName" />
                 <el-table-column label="物料" :show-overflow-tooltip="true">
                     <template slot-scope="scope">
-                        {{ scope.row.materialCode }} {{ scope.row.materialName }}
+                        {{ scope.row.materialName }} {{ scope.row.materialCode }}
                     </template>
                 </el-table-column>
                 <el-table-column prop="brand" label="品牌" width="80" :show-overflow-tooltip="true" />

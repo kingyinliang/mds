@@ -1,45 +1,32 @@
-<template>
-    <div class="header_main">
-        <mds-card title="报工中间表" :name="'spe'" :pack-up="false" style="margin-bottom: 0; background: #fff;">
-            <template slot="titleBtn">
-                <el-row style="float: right;">
-                    <el-form :inline="true" :model="controllableForm" size="small" label-width="68px" class="topforms2" @submit.native.prevent>
-                        <el-form-item>
-                            <el-input v-model="controllableForm.materialCode" placeholder="物料" suffix-icon="el-icon-search" clearable @clear="getItemsList" @blur="controllableForm.materialCode===''?getItemsList():false" @change="dataOfSearch.productMaterial=controllableForm.materialCode" />
-                        </el-form-item>
-                        <el-form-item style="height: 32px;">
-                            <el-button type="primary" size="small" :disabled="controllableForm.materialCode.trim()===''" @click="getItemsList(true,'normal')" @clear="controllableForm.materialCode=''">
-                                查询
-                            </el-button>
-                            <el-button type="primary" size="small" @click="btnAdvanceSearch">
-                                高级查询
-                            </el-button>
-                            <el-button type="primary" size="small" @click="btnAddItem">
-                                新增
-                            </el-button>
-                            <el-button type="danger" size="small" @click="btnRemoveItems">
-                                批量删除
-                            </el-button>
-                        </el-form-item>
-                    </el-form>
-                </el-row>
-            </template>
-            <!-- show table -->
-            <table-show ref="showTable" :table-element-setting="tableItemSetting" :target-table.sync="tableData" />
-            <el-pagination v-if="tableData.length!==0" :current-page="currPage" :page-sizes="[10, 20, 50]" :page-size="pageSize" layout="total, sizes, prev, pager, next, jumper" :total="totalCount" @size-change="handleSizeChange" @current-change="handleCurrentChange" />
-        </mds-card>
-        <!-- 新增工序 -->
-        <dialog-form ref="addWorkProcedure" :form-element-setting="dialogAddItemSetting" :data-form.sync="dataOfAddItem" @send-dialog-form-data="addItem" />
-        <!-- 编辑工序 -->
-        <dialog-form ref="updateWorkProcedure" :form-element-setting="dialogEditItemSetting" :data-form.sync="dataOfEditItem" @send-dialog-form-data="updateItem" />
-        <!-- 高级查询 -->
-        <dialog-form ref="advanceSearch" :form-element-setting="dialogSearchSetting" :data-form.sync="dataOfSearch" @send-dialog-form-data="getItemsListFromDialog" />
-    </div>
+<template lang="pug">
+    div.header_main
+        mds-card(title="报工中间表" :name="'spe'" :pack-up="false" style="margin-bottom: 0; background: #fff;")
+            template(slot="titleBtn")
+                el-row(style="float: right;")
+                    el-form(:inline="true" :model="controllableForm" size="small" label-width="68px" class="topforms2" @submit.native.prevent)
+                        el-form-item
+                            //- el-input(v-model="controllableForm.workShop" placeholder="生产车间" suffix-icon="el-icon-search" clearable @clear="getItemsList" @blur="controllableForm.workShop===''?getItemsList():false" @change="dataOfSearch.productMaterial=controllableForm.workShop")
+                            el-select(v-model="controllableForm.workShop" placeholder="生产车间" clearable @clear="clearSearchKeyWords")
+                                el-option(v-for="(opt, optIndex) in workShopList" :key="opt+optIndex" :label="opt.optLabel" :value="opt.optValue" )
+                        el-form-item(style="height: 32px;")
+                            el-button(type="primary" size="small" @click="getItemsList(true,'normal')") 查询
+                            el-button(type="primary" size="small" @click="btnAdvanceSearch") 高级查询
+                            el-button(type="primary" size="small" @click="btnAddItem") 新增
+                            el-button(type="danger" size="small" @click="btnRemoveItems" v-if="tableData.length!==0" :disabled="chechDeleteList===0") 批量删除
+            //- show table
+            table-show(ref="showTable" :table-element-setting="tableItemSetting" :target-table.sync="tableData" :check-delete.sync="chechDeleteList" @updateItem="btnUpdateItem" @removeItem="")
+            el-pagination(v-if="tableData.length!==0" :current-page="currPage" :page-sizes="[10, 20, 50]" :page-size="pageSize" layout="total, sizes, prev, pager, next, jumper" :total="totalCount" @size-change="handleSizeChange" @current-change="handleCurrentChange")
+        //- 新增工序
+        dialog-form(ref="addWorkProcedure" :form-element-setting="dialogAddItemSetting" :data-form.sync="dataOfAddItem" @send-dialog-form-data="addItem")
+        //- 编辑工序
+        dialog-form(ref="updateWorkProcedure" :form-element-setting="dialogEditItemSetting" :data-form.sync="dataOfEditItem" @send-dialog-form-data="updateItem")
+        //- 高级查询
+        dialog-form(ref="advanceSearch" :form-element-setting="dialogSearchSetting" :data-form.sync="controllableForm" @send-dialog-form-data="getItemsListFromDialog")
 </template>
 
 <script lang="ts">
     import { Vue, Component } from 'vue-property-decorator';
-    import { COMMON_API } from 'common/api/api';
+    import { COMMON_API, KOJI_API } from 'common/api/api';
     import { dateFormat, getUserNameNumber } from 'utils/utils';
     import DialogForm from 'components/DialogForm.vue';
     import TableShow from 'components/TableShow.vue';
@@ -60,19 +47,22 @@
             showTable: HTMLFormElement;
         }
 
-        serchSpecListObject= {}
-
         currPage= 1
         pageSize= 10
         totalCount= 1
 
-        isAdvanceSearchDailogShow= false
+        nowSearchModle='normal'
+        chechDeleteList=0 // 删除都选统计
+
         controllableForm= {
-            brand: '',
-            materialCode: '',
-            boxSpec: '',
-            productSpec: ''
+            jobBookingProcess: '',
+            material: '',
+            productProcess: '',
+            workShop: ''
         }
+
+        workShopList: Options[]= [] // 车间缓存
+        workShopListObject = {}
 
         tableItemSetting={
             props: {
@@ -82,71 +72,89 @@
             },
             data: [
                 {
-                    type: 'multiple', // 表格元件
+                    type: 'single', // 表格元件
                     prop: 'workShop',
+                    headerAlign: 'center',
+                    align: 'left',
                     label: '生产车间', // 表单元件名称
-                    minWidth: '400px',
-                    width: '', // width 会覆盖 minWidth
-                    content: ['workShop']
+                    minWidth: 0,
+                    width: 160, // width 会覆盖 minWidth
+                    content: ['workShop'],
+                    transList: {}
+                    // transFn: () => {
+                    //     return new Promise((resolve) => {
+                    //         COMMON_API.ORG_QUERY_WORKSHOP_API({
+                    //             factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
+                    //             deptType: ['WORK_SHOP'],
+                    //             deptName: '制曲'
+                    //         }).then(({ data }) => {
+                    //             const wrapperObject = {};
+                    //             data.data.forEach(item => {
+                    //                 wrapperObject[item.deptCode] = item.deptName
+                    //             })
+                    //             resolve(wrapperObject)
+                    //         })
+                    //     })
+                    // }
                 },
                 {
-                    type: 'single', // 表格元件
-                    prop: 'productMaterial',
+                    type: 'multiple', // 表格元件
+                    prop: 'material',
                     label: '物料', // 表单元件名称
-                    minWidth: '',
-                    width: '160px',
-                    content: ['productMaterial']
+                    minWidth: 260,
+                    width: 0,
+                    content: ['materialCode', 'materialName']
                 },
                 {
                     type: 'single', // 表格元件
                     prop: 'jobBookingProcess',
                     label: '报工工序', // 表单元件名称
-                    minWidth: '',
-                    width: '160px',
+                    minWidth: 0,
+                    width: 160,
                     content: ['jobBookingProcess']
                 },
                 {
                     type: 'single', // 表格元件
-                    prop: 'productProcess',
+                    prop: 'productProcessName',
                     label: '生产工序', // 表单元件名称
-                    minWidth: '',
-                    width: '160px',
-                    content: ['productProcess']
+                    minWidth: 0,
+                    width: 180,
+                    content: ['productProcessName']
                 },
                 {
                     type: 'single', // 表格元件
                     prop: 'remark',
                     label: '备注', // 表单元件名称
-                    minWidth: '',
-                    width: '160px',
+                    minWidth: 0,
+                    width: 260,
                     content: ['remark']
                 },
                 {
                     type: 'single', // 表格元件
                     prop: 'changer',
                     label: '操作人', // 表单元件名称
-                    minWidth: '',
-                    width: '160px',
+                    minWidth: 0,
+                    width: 160,
                     content: ['changer']
                 },
                 {
                     type: 'single', // 表格元件
                     prop: 'changed',
                     label: '操作时间', // 表单元件名称
-                    minWidth: '',
-                    width: '160px',
+                    minWidth: 0,
+                    width: 170,
                     content: ['changed']
                 },
                 {
                     type: 'button', // 表格元件
                     prop: 'control',
                     label: '操作', // 表单元件名称
-                    minWidth: '',
-                    width: '160px',
-                    content: [{
+                    minWidth: 0,
+                    width: 100,
+                    control: [{
                             buttonName: '编辑',
                             btn: 'editBtn',
-                            icon: 'el-icon-edit',
+                            icon: '',
                             isAuth: 'specEdit'
                         }]
                 }
@@ -158,7 +166,7 @@
         // [dialog][setting] 高级查询
         dialogSearchSetting={
             props: {
-                labelWidth: '100px',
+                labelWidth: 120,
                 title: '高级查询'
             },
             data: [
@@ -166,21 +174,24 @@
                     type: 'select', // 表单元件类型下拉選單
                     prop: 'workShop',
                     label: '生产车间', // 表单元件名称
+                    labelWidth: 120,
                     placeholder: '请选择',
                     rules: [],
-                    resVal: {
-                        resData: 'data', // API 回传参数名
-                        label: ['deptName'], // 下拉選單 list option 组装 label view
-                        value: 'id' // 下拉選單 list option value
-                    },
                     defaultOptionsFn: () => {
                         return new Promise((resolve) => {
                             COMMON_API.ORG_QUERY_WORKSHOP_API({
-                            factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
-                            deptType: ['WORK_SHOP'],
-                            deptName: '制曲'
-                            }).then((data) => {
-                                resolve(data)
+                                factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
+                                deptType: ['WORK_SHOP'],
+                                deptName: '制曲'
+                            }).then(({ data }) => {
+                                const optionList = data.data;
+                                optionList.forEach(item => {
+                                    // eslint-disable-next-line no-invalid-this
+                                    this.$set(item, 'optLabel', item.deptName)
+                                    // eslint-disable-next-line no-invalid-this
+                                    this.$set(item, 'optValue', item.deptCode)
+                                })
+                                resolve(optionList)
                             })
                         })
                     },
@@ -188,8 +199,9 @@
                 },
                 {
                     type: 'input',
-                    prop: 'productMaterial',
+                    prop: 'material',
                     label: '生产物料',
+                    labelWidth: 120,
                     placeholder: '请输入物料编码或者物料描述',
                     rules: []
                 },
@@ -197,17 +209,23 @@
                     type: 'select',
                     prop: 'jobBookingProcess',
                     label: '报工工序',
+                    labelWidth: 120,
                     placeholder: '请选择',
                     rules: [],
-                    resVal: {
-                        resData: 'data', // API 回传参数名
-                        label: ['dictValue'], // 下拉選單 list option 组装 label view
-                        value: 'dictCode' // 下拉選單 list option value
-                    },
                     defaultOptionsFn: () => {
                         return new Promise((resolve) => {
-                            COMMON_API.DICTQUERY_API({ dictType: 'COMMON_PROCEDURE' }).then((data) => {
-                                resolve(data)
+                            COMMON_API.DICTQUERY_API({
+                                factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
+                                dictType: 'COMMON_PROCEDURE'
+                                }).then(({ data }) => {
+                                const optionList = data.data;
+                                optionList.forEach(item => {
+                                    // eslint-disable-next-line no-invalid-this
+                                    this.$set(item, 'optLabel', `${item.dictValue}`)
+                                    // eslint-disable-next-line no-invalid-this
+                                    this.$set(item, 'optValue', `${item.dictCode}`)
+                                })
+                                resolve(optionList)
                             })
                         })
                     }
@@ -216,12 +234,25 @@
                     type: 'select',
                     prop: 'productProcess',
                     label: '生产工序',
+                    labelWidth: 120,
                     placeholder: '请选择',
                     rules: [],
-                    optionsFn: val => {
-                        return COMMON_API.ORG_QUERY_CHILDREN_API({
-                            parentId: val || '',
-                            deptType: 'PRODUCT_LINE'
+                    emitChange: (val) => {
+                        return new Promise((resolve) => {
+                            COMMON_API.ORG_QUERY_CHILDREN_API({
+                                factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
+                                parentId: val || '',
+                                deptType: 'PROCESS'
+                            }).then(({ data }) => {
+                                    const optionList = data.data;
+                                    optionList.forEach(item => {
+                                        // eslint-disable-next-line no-invalid-this
+                                        this.$set(item, 'optLabel', `${item.deptName}`)
+                                        // eslint-disable-next-line no-invalid-this
+                                        this.$set(item, 'optValue', `${item.deptCode}`)
+                                    })
+                                    resolve(optionList)
+                            })
                         })
                     }
                 }
@@ -230,18 +261,18 @@
 
 
          // [dialog][data] 高级查询
-        dataOfSearch={
-            workShop: '',
-            productMaterial: '',
-            jobBookingProcess: '',
-            productProcess: ''
-        }
+        // dataOfSearch={
+        //     workShop: '',
+        //     material: '',
+        //     jobBookingProcess: '',
+        //     productProcess: ''
+        // }
 
 
         // [dialog][setting] 新增工序
-        dialogAddItemSetting={
+            dialogAddItemSetting={
             props: {
-                labelWidth: '100px',
+                labelWidth: 120,
                 title: '新增报工'
             },
             data: [
@@ -250,82 +281,112 @@
                     prop: 'workShop',
                     label: '生产车间',
                     placeholder: '请选择',
+                    disabled: false,
                     rules: [
                         { required: true, message: '请选择车间', trigger: 'change' }
                     ],
-                    resVal: {
-                        resData: 'data', // API 回传参数名
-                        label: ['deptName'], // 下拉選單 list option 组装 label view
-                        value: 'id' // 下拉選單 list option value
-                    },
                     defaultOptionsFn: () => {
                         return new Promise((resolve) => {
                             COMMON_API.ORG_QUERY_WORKSHOP_API({
-                            factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
-                            deptType: ['WORK_SHOP'],
-                            deptName: '制曲'
-                            }).then((data) => {
-                                resolve(data)
+                                factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
+                                deptType: ['WORK_SHOP'],
+                                deptName: '制曲'
+                            }).then(({ data }) => {
+                                const optionList = data.data;
+                                optionList.forEach(item => {
+                                    // eslint-disable-next-line no-invalid-this
+                                    this.$set(item, 'optLabel', item.deptName)
+                                    // eslint-disable-next-line no-invalid-this
+                                    this.$set(item, 'optValue', item.deptCode)
+                                })
+                                resolve(optionList)
+                            })
+                        })
+                    },
+                    linkageProp: ['productProcess']
+                },
+                {
+                    type: 'select',
+                    prop: 'material',
+                    label: '生产物料',
+                    placeholder: '请选择',
+                    disabled: false,
+                    rules: [
+                        { required: true, message: '请选择生产物料', trigger: 'change' }
+                    ],
+                    defaultOptionsFn: () => {
+                        return new Promise((resolve) => {
+                            COMMON_API.SEARCH_MATERIAL_API({
+                                factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
+                                materialType: 'ZHAL'
+                            }).then(({ data }) => {
+                                const optionList = data.data;
+                                optionList.forEach(item => {
+                                    // eslint-disable-next-line no-invalid-this
+                                    this.$set(item, 'optLabel', `${item.materialCode} ${item.materialName}`)
+                                    // eslint-disable-next-line no-invalid-this
+                                    this.$set(item, 'optValue', `${item.materialCode} ${item.materialName}`)
+                                })
+                                resolve(optionList)
                             })
                         })
                     }
                 },
                 {
                     type: 'select',
-                    prop: 'productMaterial',
-                    label: '生产物料',
-                    placeholder: '请选择',
-                    rules: [
-                        { required: true, message: '请选择生产物料', trigger: 'change' }
-                    ],
-                    resVal: {
-                        resData: 'data', // API 回传参数名
-                        label: ['deptName'], // 下拉選單 list option 组装 label view
-                        value: 'id' // 下拉選單 list option value
-                    }
-                    // defaultOptionsFn: () => {
-                    //     return new Promise((resolve) => {
-                    //         resolve()
-                    //     })
-                    // }
-                },
-                {
-                    type: 'select',
                     prop: 'jobBookingProcess',
                     label: '报工工序',
-                    placeholder: '请选择',
+                    placeholder: '请選擇报工工序',
+                    disabled: false,
                     rules: [
-                        { required: true, message: '请选择报工工序', trigger: 'change' }
+                        { required: true, message: '请選擇报工工序', trigger: 'change' }
                     ],
-                    resVal: {
-                        resData: 'data', // API 回传参数名
-                        label: ['deptName'], // 下拉選單 list option 组装 label view
-                        value: 'id' // 下拉選單 list option value
+                    defaultOptionsFn: () => {
+                        return new Promise((resolve) => {
+                            COMMON_API.DICTQUERY_API({
+                                factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
+                                dictType: 'COMMON_PROCEDURE'
+                            }).then(({ data }) => {
+                                const optionList = data.data;
+                                optionList.forEach(item => {
+                                    // eslint-disable-next-line no-invalid-this
+                                    this.$set(item, 'optLabel', `${item.dictValue}`)
+                                    // eslint-disable-next-line no-invalid-this
+                                    this.$set(item, 'optValue', `${item.dictCode}`)
+                                })
+                                resolve(optionList)
+                            })
+                        })
                     }
-                    // defaultOptionsFn: () => {
-                    //     return new Promise((resolve) => {
-                    //         resolve()
-                    //     })
-                    // }
                 },
                 {
                     type: 'select',
                     prop: 'productProcess',
                     label: '生产工序',
-                    placeholder: '请选择',
+                    placeholder: '请選擇生产工序',
                     rules: [
-                        { required: true, message: '请选择生产工序', trigger: 'change' }
+                        { required: true, message: '请選擇生产工序', trigger: 'change' }
                     ],
-                    resVal: {
-                        resData: 'data', // API 回传参数名
-                        label: ['deptName'], // 下拉選單 list option 组装 label view
-                        value: 'id' // 下拉選單 list option value
+                    emitChange: (val) => {
+                        return new Promise((resolve) => {
+                            COMMON_API.ORG_QUERY_CHILDREN_API({
+                                factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
+                                parentId: val || '',
+                                deptType: 'PROCESS'
+                            }).then(({ data }) => {
+                                    console.log('222222')
+                                    console.log(data)
+                                    const optionList = data.data;
+                                    optionList.forEach(item => {
+                                        // eslint-disable-next-line no-invalid-this
+                                        this.$set(item, 'optLabel', `${item.deptName}`)
+                                        // eslint-disable-next-line no-invalid-this
+                                        this.$set(item, 'optValue', `${item.id}`)
+                                    })
+                                    resolve(optionList)
+                            })
+                        })
                     }
-                    // defaultOptionsFn: () => {
-                    //     return new Promise((resolve) => {
-                    //         resolve()
-                    //     })
-                    // }
                 },
                 {
                     type: 'input',
@@ -336,14 +397,12 @@
                 {
                     type: 'text',
                     prop: 'changer',
-                    label: '操作人',
-                    placeholder: ''
+                    label: '操作人'
                 },
                 {
                     type: 'text',
                     prop: 'changed',
-                    label: '操作时间',
-                    placeholder: ''
+                    label: '操作时间'
                 }
             ]
         }
@@ -354,6 +413,9 @@
             productMaterial: '',
             jobBookingProcess: '',
             productProcess: '',
+            material: '',
+            materialCode: '',
+            materialName: '',
             remark: '',
             changer: getUserNameNumber(),
             changed: dateFormat(new Date(), 'yyyy-MM-dd hh:mm:ss')
@@ -363,7 +425,7 @@
         // [dialog][setting] 编辑工序
         dialogEditItemSetting={
             props: {
-                labelWidth: '100px',
+                labelWidth: 100,
                 title: '编辑报工'
             },
             data: [
@@ -375,39 +437,50 @@
                 rules: [
                     { required: true, message: '请选择车间', trigger: 'change' }
                 ],
-                resVal: {
-                    resData: 'data', // API 回传参数名
-                    label: ['deptName'], // 下拉選單 list option 组装 label view
-                    value: 'id' // 下拉選單 list option value
-                },
                 defaultOptionsFn: () => {
                     return new Promise((resolve) => {
                         COMMON_API.ORG_QUERY_WORKSHOP_API({
-                        factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
-                        deptType: ['WORK_SHOP'],
-                        deptName: '制曲'
-                        }).then((data) => {
-                            resolve(data)
+                            factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
+                            deptType: ['WORK_SHOP'],
+                            deptName: '制曲'
+                        }).then(({ data }) => {
+                            const optionList = data.data;
+                            optionList.forEach(item => {
+                                // eslint-disable-next-line no-invalid-this
+                                this.$set(item, 'optLabel', `${item.deptName}`)
+                                // eslint-disable-next-line no-invalid-this
+                                this.$set(item, 'optValue', `${item.deptCode}`)
+
+                            })
+                            resolve(optionList)
                         })
                     })
-                }
+                },
+                linkageProp: ['productProcess']
             },
             {
                 type: 'select',
-                prop: 'productMaterial',
+                prop: 'material',
                 label: '生产物料',
                 placeholder: '请选择',
                 rules: [
                     { required: true, message: '请选择生产物料', trigger: 'change' }
                 ],
-                resVal: {
-                    resData: 'data', // API 回传参数名
-                    label: ['deptName'], // 下拉選單 list option 组装 label view
-                    value: 'id' // 下拉選單 list option value
-                },
                 defaultOptionsFn: () => {
                     return new Promise((resolve) => {
-                        resolve()
+                        COMMON_API.SEARCH_MATERIAL_API({
+                            factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
+                            materialType: 'ZHAL'
+                        }).then(({ data }) => {
+                            const optionList = data.data;
+                            optionList.forEach(item => {
+                                // eslint-disable-next-line no-invalid-this
+                                this.$set(item, 'optLabel', `${item.materialCode} ${item.materialName}`)
+                                // eslint-disable-next-line no-invalid-this
+                                this.$set(item, 'optValue', `${item.materialCode} ${item.materialName}`)
+                            })
+                            resolve(optionList)
+                        })
                     })
                 }
             },
@@ -419,14 +492,21 @@
                 rules: [
                     { required: true, message: '请选择报工工序', trigger: 'change' }
                 ],
-                resVal: {
-                    resData: 'data', // API 回传参数名
-                    label: ['deptName'], // 下拉選單 list option 组装 label view
-                    value: 'id' // 下拉選單 list option value
-                },
                 defaultOptionsFn: () => {
                     return new Promise((resolve) => {
-                        resolve()
+                        COMMON_API.DICTQUERY_API({
+                            factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
+                            dictType: 'COMMON_PROCEDURE'
+                        }).then(({ data }) => {
+                            const optionList = data.data;
+                            optionList.forEach(item => {
+                                // eslint-disable-next-line no-invalid-this
+                                this.$set(item, 'optLabel', `${item.dictValue}`)
+                                // eslint-disable-next-line no-invalid-this
+                                this.$set(item, 'optValue', `${item.dictCode}`)
+                            })
+                            resolve(optionList)
+                        })
                     })
                 }
             },
@@ -438,16 +518,24 @@
                 rules: [
                     { required: true, message: '请选择生产工序', trigger: 'change' }
                 ],
-                resVal: {
-                    resData: 'data', // API 回传参数名
-                    label: ['deptName'], // 下拉選單 list option 组装 label view
-                    value: 'id' // 下拉選單 list option value
-                },
-                defaultOptionsFn: () => {
-                    return new Promise((resolve) => {
-                        resolve()
-                    })
-                }
+                emitChange: (val) => {
+                        return new Promise((resolve) => {
+                            COMMON_API.ORG_QUERY_CHILDREN_API({
+                                factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
+                                parentId: val || '',
+                                deptType: 'PROCESS'
+                            }).then(({ data }) => {
+                                    const optionList = data.data;
+                                    optionList.forEach(item => {
+                                        // eslint-disable-next-line no-invalid-this
+                                        this.$set(item, 'optLabel', `${item.deptName}`)
+                                        // eslint-disable-next-line no-invalid-this
+                                        this.$set(item, 'optValue', `${item.id}`)
+                                    })
+                                    resolve(optionList)
+                            })
+                        })
+                    }
             },
             {
                 type: 'input',
@@ -473,26 +561,61 @@
         }
 
         // [dialog][data] 编辑工序
-        dataOfEditItem={
-        }
+        dataOfEditItem={}
 
+        async mounted() {
+            await this.getWorkShop()
+            this.tableItemSetting.data[0].transList = this.workShopListObject
+            this.$refs.showTable.init();
+            this.getItemsList();
+        }
 
         get mainClientHeight() {
             return this.$store.state.common.mainClientHeight;
         }
 
-        mounted() {
-            this.getItemsList();
+        clearSearchKeyWords() {
+            this.controllableForm = {
+                jobBookingProcess: '',
+                material: '',
+                productProcess: '',
+                workShop: ''
+            }
+            this.getItemsList()
+        }
+
+         // from dialog
+        addItem(dataForm) {
+
+            KOJI_API.WORKPROCEDURE_INSERT_API({
+                workShop: dataForm.workShop,
+                jobBookingProcess: dataForm.jobBookingProcess,
+                productProcess: dataForm.productProcess,
+                materialCode: dataForm.material.split(' ')[0],
+                materialName: dataForm.material.split(' ')[1],
+                remark: dataForm.remark
+            }).then(() => {
+                this.$successToast('新增成功')
+                this.getItemsList(true, 'normal');
+            });
         }
 
         // from dialog
-        addItem(data) {
-            console.log(data)
-        }
-
-        // from dialog
-        updateItem(data) {
-            console.log(data)
+        updateItem(dataForm) {
+            console.log('dataForm')
+            console.log(dataForm)
+            KOJI_API.WORKPROCEDURE_UPDATE_API({
+                id: dataForm.id,
+                jobBookingProcess: dataForm.jobBookingProcess,
+                materialCode: dataForm.material.split(' ')[0],
+                materialName: dataForm.material.split(' ')[1],
+                productProcess: dataForm.productProcess,
+                remark: dataForm.remark,
+                workShop: dataForm.workShop
+            }).then(() => {
+                this.$successToast('编辑成功')
+                this.getItemsList(true, 'normal');
+            });
         }
 
         getItemsList(haveParas = false, type = 'normal') {
@@ -501,45 +624,58 @@
                 this.currPage = 1;
             }
             if (type === 'normal') {
-                //
+                this.nowSearchModle = 'normal'
+                this.controllableForm.jobBookingProcess = ''
+                this.controllableForm.productProcess = ''
+                this.controllableForm.material = ''
             }
-
-            // COMMON_API.SPECS_QUERY_API({
-            //     factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
-            //     boxSpec: this.controllableForm.boxSpec.trim(),
-            //     bottleSpec: this.controllableForm.productSpec.trim(),
-            //     brand: this.controllableForm.brand.trim(),
-            //     material: this.controllableForm.materialCode.trim(),
-            //     current: JSON.stringify(this.currPage),
-            //     size: JSON.stringify(this.pageSize)
-            // }).then(({ data }) => {
-            //     if (haveParas && data.data.records.length === 0) {
-            //             this.$infoToast('暂无任何内容');
-            //     }
-            //     this.targetInfoList = data.data.records;
-            //     this.currPage = data.data.current;
-            //     this.pageSize = data.data.size;
-            //     this.totalCount = data.data.total;
-
-            //     this.isAdvanceSearchDailogShow = false;
-            // });
+            KOJI_API.WORKPROCEDURE_QUERY_API({
+                workShop: this.controllableForm.workShop,
+                material: this.controllableForm.material,
+                jobBookingProcess: this.controllableForm.jobBookingProcess,
+                productProcess: this.controllableForm.productProcess,
+                current: this.currPage,
+                size: this.pageSize
+            }).then(({ data }) => {
+                if (haveParas && data.data.records.length === 0) {
+                    this.$infoToast('暂无任何内容');
+                }
+                this.tableData = data.data.records;
+                this.currPage = data.data.current;
+                this.pageSize = data.data.size;
+                this.totalCount = data.data.total;
+            });
         }
 
-        getItemsListFromDialog(data) {
-            this.controllableForm.materialCode = data.productMaterial
+        getItemsListFromDialog() {
+            this.nowSearchModle = 'advance'
             this.getItemsList(true, 'advance')
         }
 
-        // [btn] 新增
+        // [BTN] 新增
         btnAddItem() {
+            this.dataOfAddItem = {
+                workShop: '',
+                productMaterial: '',
+                jobBookingProcess: '',
+                productProcess: '',
+                material: '',
+                materialCode: '',
+                materialName: '',
+                remark: '',
+                changer: getUserNameNumber(),
+                changed: dateFormat(new Date(), 'yyyy-MM-dd hh:mm:ss')
+            }
             this.$nextTick(() => {
                 this.$refs.addWorkProcedure.init();
             });
         }
 
-        // [btn] 修改
+        // [BTN] 修改
         btnUpdateItem(data) {
             this.dataOfEditItem = data
+            this.$set(this.dataOfEditItem, 'material', `${data.materialCode} ${data.materialName}`)
+
             this.$nextTick(() => {
                 this.$refs.updateWorkProcedure.init();
             });
@@ -547,8 +683,7 @@
 
         // [btn] 批量删除
         btnRemoveItems() {
-            const tempMultipleSelection = this.$refs.showTable.getMultipleSelection
-
+            const tempMultipleSelection = this.$refs.showTable.getMultipleSelection()
             if (tempMultipleSelection.length === 0) {
                 this.$warningToast('请选择要删除的条目');
             } else {
@@ -558,22 +693,40 @@
                     type: 'warning'
                 })
                     .then(() => {
-                        // COMMON_API.SPECS_REMOVE_API({
-                        //     factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
-                        //     ids: this.multipleSelection
-                        // }).then(() => {
-                        //     this.multipleSelection = [];
-                        //     this.$nextTick(() => {
-                        //         this.getItemsList();
-                        //     });
-                        // });
+                        KOJI_API.WORKPROCEDURE_DELETE_API(tempMultipleSelection).then(() => {
+                            this.$successToast('刪除成功')
+                            this.$nextTick(() => {
+                                this.getItemsList();
+                            });
+                        });
                     })
                     .catch();
             }
         }
 
+        // 车间下拉
+        getWorkShop() {
+            return new Promise(resolve => {
+                COMMON_API.ORG_QUERY_WORKSHOP_API({
+                    factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
+                    deptType: ['WORK_SHOP'],
+                    deptName: '制曲'
+                }).then(({ data }) => {
+                const optionList = data.data;
+                        this.workShopListObject = {}
+                        optionList.forEach(item => {
+                            this.$set(item, 'optLabel', `${item.deptName}`)
+                            this.$set(item, 'optValue', `${item.deptCode}`)
+                            this.workShopListObject[item.deptCode] = item.deptName
+                        })
+                        this.workShopList = optionList
+                        resolve()
+                    })
+            })
+        }
 
-        // [btn] 高级查询
+
+        // [BTN] 高级查询
         btnAdvanceSearch() {
             this.$nextTick(() => {
                 this.$refs.advanceSearch.init();
@@ -583,29 +736,27 @@
         // 改变每页条数
         handleSizeChange(val) {
             this.pageSize = val;
-            this.getItemsList();
+            this.getItemsList(false, this.nowSearchModle);
         }
 
         // 跳转页数
         handleCurrentChange(val) {
             this.currPage = val;
-            this.getItemsList();
+            this.getItemsList(false, this.nowSearchModle);
         }
     }
 
 interface CurrentDataTable {
-    bottleSpec?: number;
-    bottleSpecUnit?: string;
-    boxSpec?: number;
-    boxSpecUnit?: string;
-    brand?: string;
-    changer?: string;
-    factory?: string;
-    id?: string;
-    largeClass?: string;
-    materialCode?: string;
-    materialName?: string;
-    version?: number;
+    changed: Date;
+    changer: string;
+    factory: string;
+    id: string;
+    jobBookingProcess: string;
+    materialCode: string;
+    materialName: string;
+    productProcess: string;
+    remark: string;
+    workShop: string;
 }
 
 interface Options {
@@ -618,4 +769,4 @@ interface Options {
 
 </script>
 
-<style scoped></style>
+<style lang="sass" scoped></style>

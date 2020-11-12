@@ -123,6 +123,7 @@
 import { Vue, Component, Prop } from 'vue-property-decorator';
 import { COMMON_API, STE_API } from 'common/api/api';
 import { dateFormat, getUserNameNumber } from 'utils/utils';
+import _ from 'lodash';
 
 @Component
 export default class Crafts extends Vue {
@@ -131,6 +132,7 @@ export default class Crafts extends Vue {
     controlTypeList = [];
     craftAudit = [];
     craftTable: CraftList[] = [];
+    craftTableOrg: CraftList[] = [];
     craftInfo: Craft = {
         keepZkFlag: 'N',
         coolZkFlag: 'N'
@@ -143,12 +145,13 @@ export default class Crafts extends Vue {
         STE_API.STE_DETAIL_CRAFT_INFO_API({
             potOrderNo: formHeader.potOrderNo
         }).then(({ data }) => {
-            if (data.data === null) {
+            if (data.data['id'] === '') {
                 this.doAction = 'insert';
             } else {
                 this.doAction = 'update';
                 this.craftInfo = data.data
                 this.craftTable = data.data.item
+                this.craftTableOrg = JSON.parse(JSON.stringify(data.data.item))
                 this.craftTable.map(item => {
                     this.controlTypeChange(item.controlType, item, 'init');
                 })
@@ -165,16 +168,19 @@ export default class Crafts extends Vue {
             this.$warningToast('请录入工艺控制页签杀菌时间及温度数据');
             return false;
         }
-
+        let isStage = 0;
         for (const item of this.craftTable.filter(it => it.delFlag !== 1)) {
-            if (!item.controlType || !item.controlStage) {
-                this.$warningToast('请填写工艺控制页签杀菌时间及温度类型、阶段');
+            if (!item.controlType || !item.controlStage || !item.recordDate) {
+                this.$warningToast('请填写工艺控制页签杀菌时间及温度类型、阶段、记录时间');
                 return false;
             }
-            if ((item.controlStage === 'START' || item.controlStage === 'END' || item.controlStage === 'DISCHARGE_START' || item.controlStage === 'DISCHARGE_END') && !item.recordDate) {
-                this.$warningToast('请填写工艺控制页签杀菌时间及温度下记录时间');
-                return false;
+            if (item.controlStage === 'HEAT_START' || item.controlStage === 'HEAT_END' || item.controlStage === 'DISCHARGE_START' || item.controlStage === 'DISCHARGE_END') {
+                isStage++;
             }
+        }
+        if (isStage < 4) {
+            this.$warningToast('请填写工艺控制页签保温开始时间、保温结束时间、出料开始时间、出料结束时间');
+            return false;
         }
         return true;
     }
@@ -215,28 +221,43 @@ export default class Crafts extends Vue {
     }
 
     getSavedOrSubmitData(formHeader) {
-        this.craftInfo['steItem'] = this.craftTable;
+        this.craftTable.map((item) => {
+            item.potOrderNo = formHeader.potOrderNo
+        })
+        // this.craftInfo['steItem'] = this.craftTable;
         this.craftInfo['potOrderId'] = formHeader.id;
         this.craftInfo['potOrderNo'] = formHeader.potOrderNo;
         const ids: string[] = [];
         let steControlInsertDto = {};
         let steControlUpdateDto = {};
-        this.craftTable.forEach(item => {
+        let insertItem: CraftList[] = [];
+        let updateItem: CraftList[] = [];
+        this.craftTable.forEach((item, index) => {
             if (item.delFlag === 1) {
                 if (item.id) {
                     ids.push(item.id)
                 }
+            } else if (item.id) {
+                if (!_.isEqual(this.craftTableOrg[index], item)) {
+                    updateItem.push(item)
+                }
+            } else {
+                insertItem.push(item)
             }
         })
         if (this.doAction === 'insert') {
             steControlInsertDto = this.craftInfo;
+            insertItem = this.craftTable;
         } else {
             steControlUpdateDto = this.craftInfo;
+            updateItem = this.craftTable;
         }
         return {
             steControlInsertDto,
             steControlUpdateDto,
-            ids
+            ids,
+            insertItem,
+            updateItem
         }
     }
 
@@ -246,7 +267,8 @@ export default class Crafts extends Vue {
             cancelButtonText: '取消',
             type: 'warning'
         }).then(() => {
-            row.delFlag = 1;
+            this.$set(row, 'delFlag', 1)
+            this.$successToast('删除成功');
         })
     }
 

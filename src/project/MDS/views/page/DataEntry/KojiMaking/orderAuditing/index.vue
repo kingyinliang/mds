@@ -126,7 +126,7 @@
                             </el-table-column>
                             <el-table-column min-width="180" label="入库物料">
                                 <template slot-scope="scope">
-                                    {{ scope.row.materialCode + ' ' + scope.row.materialName }}
+                                    {{ scope.row.materialName + ' ' + scope.row.materialCode }}
                                 </template>
                             </el-table-column>
                             <el-table-column label="入库量" min-width="90">
@@ -190,7 +190,7 @@
                             </el-table-column>
                             <el-table-column label="物料" show-overflow-tooltip min-width="150">
                                 <template slot-scope="scope">
-                                    {{ scope.row.materialCode + ' ' + scope.row.materialName }}
+                                    {{ scope.row.materialName + ' ' + scope.row.materialCode }}
                                 </template>
                             </el-table-column>
                             <el-table-column
@@ -297,7 +297,7 @@ export default class OrderAuditing extends Vue {
             type: 'tooltip',
             icon: 'factory-pinleiguanli',
             label: '品项',
-            value: ['materialCode', 'materialName']
+            value: ['materialName', 'materialCode']
         },
         {
             type: 'p',

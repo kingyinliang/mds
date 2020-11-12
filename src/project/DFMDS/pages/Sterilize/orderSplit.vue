@@ -26,7 +26,7 @@
                                 <el-table-column label="生产订单" width="120" prop="orderNo" :show-overflow-tooltip="true" />
                                 <el-table-column min-width="180" label="生产物料" :show-overflow-tooltip="true">
                                     <template slot-scope="scope">
-                                        {{ scope.row.materialCode + ' ' + scope.row.materialName }}
+                                        {{ scope.row.materialName + ' ' + scope.row.materialCode }}
                                     </template>
                                 </el-table-column>
                                 <el-table-column label="计划数量" width="120" prop="planOutput" />
@@ -67,7 +67,7 @@
                                 <el-table-column label="生产订单" width="120" prop="orderNo" :show-overflow-tooltip="true" />
                                 <el-table-column min-width="180" label="生产物料" :show-overflow-tooltip="true">
                                     <template slot-scope="scope">
-                                        {{ scope.row.materialCode + ' ' + scope.row.materialName }}
+                                        {{ scope.row.materialName + ' ' + scope.row.materialCode }}
                                     </template>
                                 </el-table-column>
                                 <el-table-column label="计划数量" width="120" prop="planOutput" :show-overflow-tooltip="true" />
@@ -159,6 +159,10 @@
                 type: 'select',
                 label: '生产车间',
                 prop: 'workShop',
+                labelWidth: 90,
+                rule: [
+                    { required: true, message: ' ', trigger: 'change' }
+                ],
                 defaultOptionsFn: () => {
                     return COMMON_API.ORG_QUERY_WORKSHOP_API({
                         factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
@@ -175,18 +179,21 @@
             {
                 type: 'date-picker',
                 label: '订单日期',
-                prop: 'productDate',
+                prop: 'orderStartDateBegin',
+                labelWidth: 90,
                 valueFormat: 'yyyy-MM-dd hh:mm:ss',
                 defaultValue: dateFormat(new Date(), 'yyyy-MM-dd hh:mm:ss')
             },
             {
                 type: 'input',
                 label: '生产订单',
+                labelWidth: 90,
                 prop: 'orderNo'
             },
             {
                 type: 'select',
                 label: '状态',
+                labelWidth: 60,
                 prop: 'OrgOrderStatus',
                 defaultOptionsFn: () => {
                     return COMMON_API.DICTQUERY_API({
@@ -231,18 +238,19 @@
                 this.pageSize = data.data.size;
                 this.totalCount = data.data.total;
             } else {
+                this.queryResultList = [];
                 this.$infoToast('暂无任何内容');
             }
+            this.splitTable = [];
         }
 
         getHolder(params) {
-            COMMON_API.HOLDER_QUERY_API({
+            COMMON_API.HOLDER_DROPDOWN_API({
+                factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
                 deptId: params.workShop,
-                holderType: '014',
-                size: 99999,
-                current: 1
+                holderType: '014'
             }).then(({ data }) => {
-                this.holder = data.data.records
+                this.holder = data.data || [];
             })
         }
 

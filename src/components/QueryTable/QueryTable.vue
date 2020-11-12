@@ -1,28 +1,28 @@
 <template>
     <div>
-        <el-card class="searchCard" style="margin-bottom: 5px;">
+        <el-card v-if="isQueryFormShow" class="searchCard" style="margin-bottom: 5px;">
             <el-form :model="queryForm" :rules="queryFormRules" :inline="true" size="small" label-width="70px" class="multi_row clearfix" style="font-size: 0;">
                 <template v-for="item in queryFormData">
                     <template v-if="!item.hide">
-                        <el-form-item v-if="item.type === 'select'" :key="item.prop" :label="`${item.label}：` || ''" :prop="item.prop">
+                        <el-form-item v-if="item.type === 'select'" :key="item.prop" :label="`${item.label}：` || ''" :prop="item.prop" :rules="item.rule" :label-width="`${item.labelWidth ? item.labelWidth : 70}px`">
                             <el-select v-if="item.defaultOptionsList" :ref="item.prop" v-model="queryForm[item.prop]" :style="`width: ${item.width ? item.width : 170}px;`" :filterable="item.filterable" :clearable="!item.clearable" :disabled="item.disabled" :placeholder="'请选择' + item.label">
-                                <el-option label="请选择" value="" />
+                                <!-- <el-option label="请选择" value="" /> -->
                                 <el-option v-for="(opt, optIndex) in item.defaultOptionsList" :key="optIndex" :label="opt.label" :value="opt.value" />
                             </el-select>
                             <el-select v-else :ref="item.prop" v-model="queryForm[item.prop]" :style="`width: ${item.width ? item.width : 170}px;`" :filterable="item.filterable" :clearable="!item.clearable" :disabled="item.disabled" :placeholder="'请选择' + item.label">
-                                <el-option label="请选择" value="" />
+                                <!-- <el-option label="请选择" value="" /> -->
                                 <el-option v-for="(opt, optIndex) in optionLists[item.prop]" :key="optIndex" :label="setLabel(opt, item)" :value="opt[item.resVal.value]" />
                             </el-select>
                         </el-form-item>
-                        <el-form-item v-if="item.type === 'input'" :key="item.prop" :label="`${item.label}：` || ''" :prop="item.prop">
+                        <el-form-item v-if="item.type === 'input'" :key="item.prop" :label="`${item.label}：` || ''" :prop="item.prop" :rules="item.rule" :label-width="`${item.labelWidth ? item.labelWidth : 70}px`">
                             <el-input :ref="item.prop" v-model="queryForm[item.prop]" style="width: 170px;" />
                         </el-form-item>
-                        <el-form-item v-if="item.type === 'radio'" :key="item.prop" :label="item.label?`${item.label}：` : ''" :prop="item.prop">
+                        <el-form-item v-if="item.type === 'radio'" :key="item.prop" :label="item.label?`${item.label}：` : ''" :prop="item.prop" :rules="item.rule" :label-width="`${item.labelWidth ? item.labelWidth : 70}px`">
                             <el-radio v-for="(it, num) in item.radioArr" :key="num" v-model="queryForm[item.prop]" :label="it.val">
                                 {{ it.label }}
                             </el-radio>
                         </el-form-item>
-                        <el-form-item v-if="item.type === 'date-interval'" :key="item.prop" class="dateinput" :label="`${item.label}：` || ''" :prop="item.prop">
+                        <el-form-item v-if="item.type === 'date-interval'" :key="item.prop" class="dateinput" :label="`${item.label}：` || ''" :prop="item.prop" :rules="item.rule" :label-width="`${item.labelWidth ? item.labelWidth : 70}px`">
                             <el-row>
                                 <el-col :span="12">
                                     <el-date-picker :ref="item.prop" v-model="queryForm[item.prop]" :type="item.dataType ? item.dataType : 'date'" placeholder="选择日期" :value-format="item.valueFormat ? item.valueFormat : 'yyyy-MM-dd'" style="width: 140px;" />
@@ -33,7 +33,7 @@
                                 </el-col>
                             </el-row>
                         </el-form-item>
-                        <el-form-item v-if="item.type === 'date-picker'" :key="item.prop" :label="`${item.label}：` || ''" :prop="item.prop">
+                        <el-form-item v-if="item.type === 'date-picker'" :key="item.prop" :label="`${item.label}：` || ''" :prop="item.prop" :rules="item.rule" :label-width="`${item.labelWidth ? item.labelWidth : 70}px`">
                             <el-date-picker :ref="item.prop" v-model="queryForm[item.prop]" :type="item.dataType" placeholder="请选择" :value-format="item.valueFormat" style="width: 170px;" />
                         </el-form-item>
                     </template>
@@ -149,6 +149,7 @@
                     </template>
                 </el-table-column>
             </el-table>
+            <slot name="showTableOther" />
             <slot v-if="!showTable" name="card-main" />
             <el-row v-if="showPage === true">
                 <el-pagination :current-page="queryForm[currpageConfig]" :page-sizes="[10, 20, 50]" :page-size="queryForm[pagesizeConfig] " layout="total, sizes, prev, pager, next, jumper" :total="queryForm.totalCount" @size-change="handleSizeChange" @current-change="handleCurrentChange" />
@@ -164,6 +165,10 @@
         name: 'QueryTable',
         components: {},
         props: {
+            isQueryFormShow: { // 标头搜寻区块是否显示
+                type: Boolean,
+                default: true
+            },
             tableClass: {
                 type: String,
                 default: 'newTable'
@@ -604,5 +609,17 @@
         }
     };
 </script>
+<style scoped>
+.searchCard >>> .el-form-item.is-error .el-input__inner,
+.searchCard >>> .el-form-item.is-success .el-input__inner,
+.searchCard >>> .el-form-item.is-error .el-input__inner:focus,
+.searchCard >>> .el-form-item.is-success .el-input__inner:focus {
+    border-color: #dcdfe6;
+}
+.searchCard >>> .el-form-item__error {
+    display: none;
+}
+
+</style>
 
 <style scoped></style>

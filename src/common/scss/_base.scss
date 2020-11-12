@@ -44,6 +44,12 @@
 }
 
 //bass scss
+.searchCard{
+    border-radius: 6px;
+    padding: 5px;
+    border: 1px solid rgba(171, 171, 171, 0.5);
+    box-shadow: 3px 3px 4px 0 rgba(0, 0, 0, 0.1);
+}
 .searchCard,
 .tableCard {
     position: relative;
@@ -974,7 +980,6 @@
                     flex: 1;
                     border-right: 1px solid white;
                     p {
-                        height: 23px;
                         max-width: 164px;
                         margin: auto;
                         width: 100%;
@@ -988,8 +993,8 @@
                         }
                     }
                     p:first-child {
-                        font-size: 20px;
-                        margin-bottom: 15px;
+                        font-size: 24px;
+                        margin-bottom: 10px;
                     }
                     p:last-child {
                         font-size: 14px;
@@ -1339,7 +1344,7 @@
     .noPass {
         color: #f00;
         &::before {
-            background: #f00;
+            background: #f00 !important;
         }
     }
     .saved {

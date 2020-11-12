@@ -4,12 +4,20 @@
             <el-table-column type="index" width="55" label="序号" fixed />
             <el-table-column label="状态" width="100" prop="statusName" :show-overflow-tooltip="true" />
             <el-table-column label="锅单号" width="100" prop="potOrderNo" :show-overflow-tooltip="true" />
-            <el-table-column label="生产锅序" width="100" prop="potOrder" :show-overflow-tooltip="true" />
+            <el-table-column label="生产锅序" width="100" prop="potOrder" :show-overflow-tooltip="true">
+                <template slot-scope="scope">
+                    {{ `第${scope.row.potOrder}锅` }}
+                </template>
+            </el-table-column>
             <el-table-column label="生产日期" width="100" prop="productDate" :show-overflow-tooltip="true" />
-            <el-table-column label="锅号" width="100" prop="potNo" :show-overflow-tooltip="true" />
+            <el-table-column label="锅号" width="100" prop="potNoName" :show-overflow-tooltip="true">
+                <template slot-scope="scope">
+                    {{ `${scope.row.potName}` }}
+                </template>
+            </el-table-column>
             <el-table-column min-width="180" label="生产物料" :show-overflow-tooltip="true">
                 <template slot-scope="scope">
-                    {{ scope.row.materialCode + ' ' + scope.row.materialName }}
+                    {{ scope.row.materialName + ' ' + scope.row.materialCode }}
                 </template>
             </el-table-column>
             <el-table-column label="每锅数量" width="100" prop="potAmount" :show-overflow-tooltip="true">
@@ -30,7 +38,7 @@
             <el-table-column label="操作时间" width="100" prop="changed" :show-overflow-tooltip="true" />
             <el-table-column label="操作" fixed="right" align="center" width="80">
                 <template slot-scope="scope">
-                    <el-button type="text" icon="el-icon-delete" @click="removeDataRow(scope.row)">
+                    <el-button type="text" :disabled="!scope.row.allowedDelFlag" icon="el-icon-delete" @click="removeDataRow(scope.row)">
                         删除
                     </el-button>
                 </template>
@@ -113,7 +121,8 @@
                 cancelButtonText: '取消',
                 type: 'warning'
             }).then(() => {
-                row.delFlag = 1;
+                this.$set(row, 'delFlag', 1)
+                this.$successToast('删除成功');
             })
         }
 

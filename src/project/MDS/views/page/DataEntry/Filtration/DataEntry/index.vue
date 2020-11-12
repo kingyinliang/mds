@@ -80,9 +80,9 @@
                                     </div>
                                 </el-form-item>
                                 <el-form-item label="品项：" class="width50b">
-                                    <el-tooltip class="item" effect="dark" :content="(item.materialCode || '') + ' ' + (item.materialName || '')" placement="top">
+                                    <el-tooltip class="item" effect="dark" :content="(item.materialName || '') + ' ' + (item.materialCode || '')" placement="top">
                                         <div class="hiddenP">
-                                            &nbsp;{{ (item.materialCode || '') + ' ' + (item.materialName || '') }}
+                                            &nbsp;{{ (item.materialName || '') + ' ' + (item.materialCode || '') }}
                                         </div>
                                     </el-tooltip>
                                 </el-form-item>

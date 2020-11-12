@@ -39,8 +39,8 @@
                 <el-table-column prop="cookingOrderNo" label="煮料锅单" min-width="100px" :show-overflow-tooltip="true" />
                 <el-table-column prop="cookingMaterialCode" label="煮料锅生产物料" min-width="140px" :show-overflow-tooltip="true">
                     <template slot-scope="scope">
-                        {{ scope.row.cookingMaterialCode }}
                         {{ scope.row.cookingMaterialName }}
+                        {{ scope.row.cookingMaterialCode }}
                     </template>
                 </el-table-column>
                 <el-table-column prop="remainderPot" label="剩余锅数" min-width="100px" :show-overflow-tooltip="true" />
@@ -114,7 +114,7 @@
                         <span class="notNull">* </span>领用批次
                     </template>
                     <template slot-scope="scope">
-                        <el-input v-model.trim="scope.row.useBatch" size="small" placeholder="请输入" :disabled="!(isRedact && scope.row.checkStatus !== 'C' && scope.row.checkStatus !== 'D' && scope.row.checkStatus !== 'P')" />
+                        <el-input v-model.trim="scope.row.useBatch" maxlength="10" size="small" placeholder="请输入" :disabled="!(isRedact && scope.row.checkStatus !== 'C' && scope.row.checkStatus !== 'D' && scope.row.checkStatus !== 'P')" />
                     </template>
                 </el-table-column>
                 <el-table-column width="200">
@@ -169,15 +169,21 @@
                         <span class="notNull">* </span>领用物料
                     </template>
                     <template slot-scope="scope">
-                        <el-select v-model="scope.row.useMaterialCode" placeholder="请选择" size="small" clearable filterable :disabled="!(isRedact && scope.row.checkStatus !== 'C' && scope.row.checkStatus !== 'D' && scope.row.checkStatus !== 'P')">
-                            <el-option v-for="(iteam, index) in ACMaterial" :key="index" :label="iteam.dictValue" :value="iteam.dictCode" />
+                        <el-select v-model="scope.row.useMaterialCode" placeholder="请选择" size="small" clearable filterable :disabled="!(isRedact && scope.row.checkStatus !== 'C' && scope.row.checkStatus !== 'D' && scope.row.checkStatus !== 'P')" @change="setZengbuliao(scope.row)">
+                            <el-option v-for="(iteam, index) in ACMaterial" :key="index" :label="iteam.useMaterialName + ' ' + iteam.useMaterial" :value="iteam.useMaterial" />
                         </el-select>
                     </template>
                 </el-table-column>
-                <el-table-column prop="useUnit" label="单位" :show-overflow-tooltip="true" />
+                <el-table-column prop="useUnit" label="单位" :show-overflow-tooltip="true">
+                    <template slot-scope="scope">
+                        <el-select v-model="scope.row.useUnit" placeholder="请选择" size="small" clearable filterable :disabled="!(isRedact && scope.row.checkStatus !== 'C' && scope.row.checkStatus !== 'D' && scope.row.checkStatus !== 'P')">
+                            <el-option v-for="(iteam, index) in Unit" :key="index" :label="iteam.dictValue" :value="iteam.dictCode" />
+                        </el-select>
+                    </template>
+                </el-table-column>
                 <el-table-column>
                     <template slot-scope="scope">
-                        <el-button type="text" :disabled="!(isRedact)" @click="SplitDate('steAccessoriesConsume', scope.row, scope.$index)">
+                        <el-button type="text" :disabled="!(isRedact)" @click="SplitDate('newSteAccessoriesConsume', scope.row, scope.$index)">
                             <em class="icons iconfont factory-chaifen" />拆分
                         </el-button>
                     </template>
@@ -195,7 +201,7 @@
                         <span class="notNull">* </span>领用批次
                     </template>
                     <template slot-scope="scope">
-                        <el-input v-model.trim="scope.row.useBatch" size="small" placeholder="请输入" :disabled="!(isRedact && scope.row.checkStatus !== 'C' && scope.row.checkStatus !== 'D' && scope.row.checkStatus !== 'P')" />
+                        <el-input v-model.trim="scope.row.useBatch" size="small" maxlength="10" placeholder="请输入" :disabled="!(isRedact && scope.row.checkStatus !== 'C' && scope.row.checkStatus !== 'D' && scope.row.checkStatus !== 'P')" />
                     </template>
                 </el-table-column>
                 <el-table-column>
@@ -228,7 +234,7 @@
 
 <script lang="ts">
     import { Vue, Component, Prop } from 'vue-property-decorator';
-    import { COMMON_API, STE_API } from 'common/api/api';
+    import { COMMON_API, STE_API, AUDIT_API } from 'common/api/api';
     import { dateFormat, dataEntryData } from 'utils/utils';
 
     @Component
@@ -242,8 +248,9 @@
         holderList = [];
         transferTank = [];
         useBoxNo = [];
-        ACMaterial = [];
+        ACMaterial: ACM[] = [];
         materialList = [];
+        Unit = [];
         formHeader: OrderData = {};
         steCookingConsume: CCObj[] = [];
         OrgSteCookingConsume: CCObj[] = [];
@@ -271,6 +278,10 @@
                     this.$warningToast('请填写辅料领用必填项');
                     return false
                 }
+                if (item.useBatch.length !== 10) {
+                    this.$warningToast('请填写辅料领用10位批次');
+                    return false
+                }
             }
             for (const item of newSteAccessoriesConsume) {
                 if (!item.useAmount || item.useAmount === '0') {
@@ -279,6 +290,10 @@
                 }
                 if (!item.useMaterialCode || !item.addDate || !item.useBatch) {
                     this.$warningToast('请填写增补料必填项');
+                    return false
+                }
+                if (item.useBatch.length !== 10) {
+                    this.$warningToast('请填写增补料10位批次');
                     return false
                 }
             }
@@ -318,13 +333,14 @@
             });
             return {
                 potOrderNo: formHeader.potOrderNo,
+                orderNo: formHeader.orderNo,
                 steCookingConsumeSaveDto,
                 steAccessoriesConsumeSaveDto,
                 newSteAccessoriesConsumeSaveDto
             }
         }
 
-        init(formHeader) {
+        async init(formHeader) {
             this.formHeader = formHeader;
             this.getHolderList();
             this.getMaterial();
@@ -343,6 +359,15 @@
                this.merge(this.steAccessoriesConsume, 'steAccessoriesConsume');
                this.merge(this.newSteAccessoriesConsume, 'newSteAccessoriesConsume');
             })
+            this.acceAddAudit = await this.getAudit(formHeader, 'MATERIAL');
+        }
+
+        async getAudit(formHeader, verifyType) {
+            const a = await AUDIT_API.AUDIT_LOG_LIST_API({
+                orderNo: formHeader.potOrderNo,
+                verifyType: verifyType
+            })
+            return a.data.data
         }
 
         // 煮料锅下拉触发
@@ -363,6 +388,12 @@
                 row.unit = '';
                 this.$set(this.steCookingConsume, index, row)
             })
+        }
+
+        setZengbuliao(row) {
+            const arr = this.ACMaterial.filter(item => item.useMaterial === row.useMaterialCode);
+            row.useMaterialType = arr[0]['useMaterialType'];
+            row.useMaterialName = arr[0]['useMaterialName'];
         }
 
         // 锅序下拉触发
@@ -392,6 +423,11 @@
             }).then(({ data }) => {
                 this.holderList = data.data
             })
+            COMMON_API.DICTQUERY_API({
+                dictType: 'COMMON_UNIT'
+            }).then(({ data }) => {
+                this.Unit = data.data;
+            });
             COMMON_API.HOLDER_QUERY_API({
                 deptId: this.formHeader.workShop,
                 holderType: '022',
@@ -411,7 +447,7 @@
         }
 
         getMaterial() {
-            COMMON_API.DICTQUERY_API({ dictType: 'STE_SUP_MATERIAL' }).then(({ data }) => {
+            STE_API.STE_ACCE_MATERIAL_LIST_API({ supplyFlag: 'Y', productMaterial: this.formHeader.materialCode }).then(({ data }) => {
                 this.ACMaterial = data.data
             });
         }
@@ -451,6 +487,7 @@
                 potOrderId: this.formHeader.potOrderId,
                 useMaterialCode: row.useMaterialCode,
                 useMaterialName: row.useMaterialName,
+                useMaterialType: row.useMaterialType,
                 useBatch: '',
                 useAmount: '',
                 useUnit: row.useUnit,
@@ -521,7 +558,8 @@
                 cancelButtonText: '取消',
                 type: 'warning'
             }).then(() => {
-                row.delFlag = 1;
+                this.$set(row, 'delFlag', 1)
+                this.$successToast('删除成功');
                 if (str) {
                     this.$set(this[str], index, row)
                 } else {
@@ -531,6 +569,9 @@
                 this.merge(this[str], str)
             });
         }
+    }
+    interface ACM {
+        useMaterial?: string;
     }
     interface OrderData {
         materialCode?: string;

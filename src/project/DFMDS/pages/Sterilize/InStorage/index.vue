@@ -10,29 +10,25 @@
                     el-form-item.must-fill(label="生产订单：")
                         el-select(v-model="formHeader.orderNo" placeholder="请选择" style="width: 180px;" clearable="" @change="selectOrder"): el-option(v-for="(item) in orderNoList" :key="item.id" :label="item.orderNo" :value="item.orderNo")
                     el-form-item(label="生产物料：")
-                        p.input_border_bg(style="width: 180px;") {{ formHeader.material }}
+                        el-tooltip(class="item" effect="dark" :content="formHeader.material" placement="top-start" :disabled="formHeader.material===''")
+                            p.input_border_bg(style="width: 180px;") {{ formHeader.material }}
                     el-form-item(label="提交人员：")
-                        p.input_border_bg(style="width: 180px;") {{ formHeader.changer }}
+                        el-tooltip(class="item" effect="dark" :content="formHeader.changer" placement="top-start" :disabled="formHeader.changer===''")
+                            p.input_border_bg(style="width: 180px;") {{ formHeader.changer }}
                     el-form-item(label="提交时间：")
-                        p.input_border_bg(style="width: 180px;") {{ formHeader.changed }}
+                        el-tooltip(class="item" effect="dark" :content="formHeader.changed" placement="top-start" :disabled="formHeader.changed===''")
+                            p.input_border_bg(style="width: 180px;") {{ formHeader.changed }}
                 .searchCard__control
                     div
                         el-button(type="primary" size="small" @click="btnGetResult") 查询
-                    div(v-show="formHeader.status!==''")
-                        span.dot(:style="{background: formHeader.status === 'noPass' ? 'red' : formHeader.status === 'saved' ? '#1890f' : formHeader.status === 'submit' ? '#1890ff' : formHeader.status === '已同步' ? '#f5f7fa' : 'rgb(103, 194, 58)',}")
-                        span {{'订单状态：'}}
-                        span(:style="{color: formHeader.status === 'noPass' ? 'red' : '',}") {{ formHeader.status === 'noPass' ? '审核不通过' : formHeader.status === 'saved' ? '已保存' : formHeader.status === 'submit' ? '已提交' : formHeader.status === 'checked' ? '通过' : formHeader.status === '已同步' ? '未录入' : formHeader.status }}
-            div(v-show="searchCard")
-                tie-tabs(:tab-titles="tabTitles")
+                    div(v-show="formHeader.inStorageStatus!==''")
+                        span {{`入库状态：${checkStatusOption[formHeader.inStorageStatus]}`}}
+            div(v-if="searchCard")
+                tie-tabs(:tab-titles="tabTitles" ref="tabTitles")
                     template(slot="1"): in-storage(ref="inStorage" :is-redact="isRedact" card-title="入库列表" :table-data="tableData" :order-info="orderData" :pkg-work-shop-list="pkgWorkShopList")
                     template(slot="2"): exc-record(ref="excRecord" :is-redact="isRedact" :form-header="formHeader")
                     template(slot="3"): text-record(ref="textRecord" :is-redact="isRedact")
-                redact-box
-                    template(slot="button")
-                        el-button.button(v-if="isAuth('steStgEdit') && searchCard" type="primary" size="small" @click="isRedact = !isRedact" :disabled="!alreadySearch") {{ isRedact ? '取消' : '编辑' }}
-                        template(v-if="isRedact && searchCard" style="float: right; margin-left: 10px;")
-                            el-button(v-if="isAuth('steStgEdit')" type="primary" size="small" @click="savedDatas()") 保存
-                            el-button(v-if="isAuth('steStgSubmit')" type="primary" size="small" @click="submitDatas()") 提交
+            redact-box(v-if="!(formHeader.inStorageStatus === 'C' || formHeader.inStorageStatus === 'D' || formHeader.inStorageStatus === 'P' || formHeader.inStorageStatus ==='M')" :disabled="redactBoxDisable" :is-redact.sync='isRedact' redact-auth="steStgEdit" save-auth="steStgEdit" submit-auth="steStgSubmit" :urgent-submit="false" :submit-rules="submitRules" :saved-rules="savedRules" :saved-datas="savedDatas" :submit-datas="submitDatas")
 </template>
 
 <script lang="ts">
@@ -47,7 +43,7 @@
     import InStorage from './InStorage.vue'
     import ExcRecord from './ExcRecord.vue' // tab3 文本记录
     import TextRecord from './TextRecord.vue' // tab3 文本记录
-
+    import RedactBox from 'components/RedactBox.vue' // 下方状态 bar
 
     @Component({
         name: 'Instorage',
@@ -55,11 +51,13 @@
             TieTabs,
             InStorage,
             ExcRecord,
-            TextRecord
+            TextRecord,
+            RedactBox
         }
     })
     export default class Instorage extends Vue {
         $refs: {
+            tabTitles: HTMLFormElement;
             inStorage: HTMLFormElement;
             excRecord: HTMLFormElement;
             textRecord: HTMLFormElement;
@@ -69,6 +67,7 @@
             workShop: '',
             inKjmDate: dateFormat(new Date(), 'yyyy-MM-dd'),
             orderNo: '',
+            material: '',
             materialCode: '',
             materialName: '',
             changer: '',
@@ -82,22 +81,32 @@
             orderStatus: '',
             orderType: '',
             productDate: '',
-            productLine: ''
+            productLine: '',
+            inStorageStatus: ''
         }
 
         orderData: OptionsInList={}
-        isRedact = false;
+
         workshopList: OptionsInList[] = [];
         pkgWorkShopList: OptionsInList[]=[]
         orderNoList: OptionsInList[] = [];
-        searchCard = true;
 
-        alreadySearch=false;
+        // 入库状态 option
+        inStorageStatus: InStorageStatusOptions[]=[]
+        // 通用 check status option
+        checkStatusOption={}
+
+        searchCard=true
+
+        isRedact = false;
+
+        globalOrderNumber=''
+        redactBoxDisable=true
 
         tabTitles = [
             {
                 label: '杀菌入库',
-                status: '未录入'
+                status: 'N'
             },
             {
                 label: '异常记录'
@@ -120,14 +129,18 @@
                 prop: 'normalFlag',
                 label: '正常入库',
                 minWidth: 100,
-                content: ['normalFlag']
+                content: ['normalFlag'],
+                wrapper: {
+                    'Y': '是',
+                    'N': '否'
+                }
             },
             {
                 type: 'string',
-                prop: 'packageLine',
+                prop: 'packageLineName',
                 label: '包装产线',
-                minWidth: 200,
-                content: ['packageLine']
+                minWidth: 220,
+                content: ['packageLineName']
             },
             {
                 type: 'string',
@@ -197,31 +210,19 @@
                         }
                         ]
             }
-
-            // {
-            //     type: 'button',
-            //     prop: 'normalFlag',
-            //     label: '正常入库',
-            //     width: 100,
-            //     minWidth: 100,
-            //     content: []
-            // }
         ]
 
         mounted() {
-            // if (!this.isAuth('steStgQuery')) {
-            //     this.$warningToast('无权限');
-            //     return false
-            // }
-
             // 获取车间
             this.getWorkshopList();
+            // 通用审核状态抓取
+            this.getCheckStatus();
         }
 
 
         // 车间下拉抓取
-        getWorkshopList() {
-            COMMON_API.ORG_QUERY_WORKSHOP_API({
+        async getWorkshopList() {
+            await COMMON_API.ORG_QUERY_WORKSHOP_API({
                 factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
                 deptType: ['WORK_SHOP'],
                 deptName: '杀菌'
@@ -234,13 +235,30 @@
                         // 根据回传预先取第一笔
                         this.formHeader.workShop = data.data[0]['id'];
                         this.formHeader.workShopName = data.data[0]['deptName'];
-                        this.getOrderList()
                     }
             })
+            await this.getOrderList()
         }
 
         // 车间选择触发
         selectWorkshop(val) {
+            this.formHeader.orderNo = ''
+            this.formHeader.material = ''
+            this.formHeader.status = ''
+            this.formHeader.changer = ''
+            this.formHeader.changed = ''
+            this.formHeader.material = ''
+            this.formHeader.materialCode = ''
+            this.formHeader.materialName = ''
+            this.formHeader.outputUnit = ''
+            this.formHeader.outputUnitName = ''
+            this.formHeader.factory = ''
+            this.formHeader.orderId = ''
+            this.formHeader.orderStatus = ''
+            this.formHeader.orderType = ''
+            this.formHeader.productDate = ''
+            this.formHeader.productLine = ''
+            this.formHeader.inStorageStatus = ''
             if (val !== '') {
                 this.formHeader.workShop = val;
                 this.formHeader.workShopName = this.workshopList.filter(item => item.targetCode === val)[0].targetName
@@ -251,26 +269,66 @@
         // 时间选择触发
         selectTime(val) {
             if (val !== '') {
+                this.formHeader.orderNo = ''
+                this.formHeader.material = ''
+                this.formHeader.status = ''
+                this.formHeader.changer = ''
+                this.formHeader.changed = ''
+                this.formHeader.material = ''
+                this.formHeader.materialCode = ''
+                this.formHeader.materialName = ''
+                this.formHeader.outputUnit = ''
+                this.formHeader.outputUnitName = ''
+                this.formHeader.factory = ''
+                this.formHeader.orderId = ''
+                this.formHeader.orderStatus = ''
+                this.formHeader.orderType = ''
+                this.formHeader.productDate = ''
+                this.formHeader.productLine = ''
+                this.formHeader.inStorageStatus = ''
                 this.formHeader.inKjmDate = val;
                 this.getOrderList()
             }
         }
 
         // 订单下拉抓取
-        getOrderList() {
-            COMMON_API.ORDER_LIST_API({
+        async getOrderList() {
+            const orderTemp: string[] = []
+            await COMMON_API.ORDER_LIST_API({
                 factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
                 productDate: this.formHeader.inKjmDate,
                 workShop: this.formHeader.workShop
+            }).then(async({ data }) => {
+                if (data.data) {
+                    this.orderNoList = data.data
+                    this.orderNoList.forEach(item => {
+                        orderTemp.push(item.orderNo as string)
+                    })
+                    // 获取入库状态状态
+                    await STE_API.STE_INSTORAGE_QUERY_TABS_STATUS_API(orderTemp
+                    ).then(({ data: element }) => {
+                        this.inStorageStatus = element.data
+                    })
+                }
+            })
+        }
+
+        // 通用审核状态抓取
+        getCheckStatus() {
+            COMMON_API.DICTQUERY_API({
+                dictType: 'COMMON_CHECK_STATUS'
             }).then(({ data }) => {
-                console.log('获取所有订单讯息')
-                console.log(data)
-                this.orderNoList = data.data
+                if (data.data.length !== 0) {
+                    data.data.forEach(item => {
+                        this.$set(this.checkStatusOption, item.dictCode, item.dictValue)
+                    })
+                }
             })
         }
 
         // 订单选择触发
         selectOrder(val) {
+            this.globalOrderNumber = val
             if (this.formHeader.inKjmDate === '') {
                 this.$infoToast('请选择生产日期');
                 return false
@@ -297,11 +355,12 @@
                 this.formHeader.orderType = ''
                 this.formHeader.productDate = ''
                 this.formHeader.productLine = ''
+                this.formHeader.inStorageStatus = ''
                 return false
             }
             this.orderData = this.orderNoList.filter(item => item.orderNo === val)[0]
             this.formHeader.material = this.orderData.materialCode + ' ' + this.orderData.materialName
-            this.formHeader.status = this.orderData.orderStatusName
+            // this.formHeader.status = this.orderData.orderStatusName
             this.formHeader.changer = this.orderData.changer
             this.formHeader.changed = this.orderData.changed
             this.formHeader.materialCode = this.orderData.materialCode
@@ -315,7 +374,15 @@
             this.formHeader.orderType = this.orderData.orderType
             this.formHeader.productDate = this.orderData.productDate
             this.formHeader.productLine = this.orderData.productLine
+            this.formHeader.inStorageStatus = this.inStorageStatus.filter(item => item.orderNo === this.formHeader.orderNo)[0].instorageStatus
+            this.tabTitles[0]['status'] = this.formHeader.inStorageStatus
 
+            // 表单数据清空
+            this.isRedact = false
+            this.redactBoxDisable = true
+            this.$refs.inStorage.init([], this.formHeader)
+            this.$refs.excRecord.init(this.formHeader, 'INSTORAGE', true);
+            this.$refs.textRecord.init(this.formHeader.orderNo, 'sterilize', true);
 
         }
 
@@ -323,9 +390,8 @@
         getPkgWorkShopList() {
             STE_API.STE_PKGLINE_QUERY_API({
                 orderNo: this.formHeader.orderNo
-                // orderNo: '833000001283'
             }).then(({ data }) => {
-                console.log('查询包装查询结果')
+                console.log('包装产线')
                 console.log(data)
                 this.pkgWorkShopList = []
                 if (data.data) {
@@ -342,58 +408,67 @@
                 this.$infoToast('尚有必填栏位');
                 return false
             }
-
+            this.searchCard = false
             STE_API.STE_INSTORAGE_QUERY_API({
                 orderNo: this.formHeader.orderNo,
                 productDate: this.formHeader.inKjmDate,
                 workShop: this.formHeader.workShop
             }).then(({ data }) => {
-                console.log('查询结果')
-                console.log(data)
-
-                if (!data.data) {
-                    this.$infoToast('暂无任何内容');
-                    this.$refs.inStorage.init([], this.formHeader)
-                } else {
-                    this.$refs.inStorage.init(data.data, this.formHeader)
-                }
-
-                this.alreadySearch = true
+                // 多馀的 this.searchCard 是对页签的状态强制更新
+                this.isRedact = false
+                this.searchCard = true
+                this.redactBoxDisable = false
                 this.getPkgWorkShopList()
-                this.$refs.excRecord.init(this.formHeader, 'INSTORAGE');
-                this.$refs.textRecord.init(this.formHeader.orderNo, 'sterilize');
+                // $nextTick 避免页面者不到 inStorage.init
+                this.$nextTick(() => {
+                    if (!data.data) {
+                        this.$infoToast('暂无任何内容');
+                        this.$refs.inStorage.init([], this.formHeader)
+                    } else {
+                        this.$refs.inStorage.init(data.data, this.formHeader)
+                    }
+                    this.$refs.excRecord.init(this.formHeader, 'INSTORAGE');
+                    this.$refs.textRecord.init(this.formHeader.orderNo, 'sterilize');
+                })
             })
         }
 
-        savedDatas() {
+        // {redact-box} 保存
+        async savedDatas() {
             const inStorageRequest = this.$refs.inStorage.getSavedOrSubmitData();
             const excRequest = this.$refs.excRecord.getSavedOrSubmitData(this.formHeader, 'INSTORAGE');
             const textRequest = this.$refs.textRecord.savedData(this.formHeader, 'sterilize');
 
-            STE_API.STE_INSTORAGE_SAVE_API({
-                exceptionDelete: excRequest.ids,
-                exceptionInsert: excRequest.insertDto,
-                exceptionUpdate: excRequest.updateDto,
-                instorageDelete: inStorageRequest.ids,
-                instorageInsert: inStorageRequest.steControlInsertDto,
-                instorageUpdate: inStorageRequest.steControlUpdateDto,
-                steOrderUpdateDto: this.formHeader,
-                textInsert: textRequest.pkgTextInsert,
-                textUpdate: textRequest.pkgTextUpdate
-            }).then(() => {
-                this.$successToast('保存成功');
-                this.isRedact = false;
-                // 重整数据
-                this.btnGetResult();
-            })
+            await STE_API.STE_INSTORAGE_SAVE_API({
+                    exceptionDelete: excRequest.ids,
+                    exceptionInsert: excRequest.insertDto,
+                    exceptionUpdate: excRequest.updateDto,
+                    instorageDelete: inStorageRequest.ids,
+                    instorageInsert: inStorageRequest.steControlInsertDto,
+                    instorageUpdate: inStorageRequest.steControlUpdateDto,
+                    steOrderUpdateDto: this.formHeader,
+                    textInsert: textRequest.pkgTextInsert,
+                    textUpdate: textRequest.pkgTextUpdate
+                }).then(() => {
+                    this.$successToast('保存成功');
+                    this.isRedact = false;
+                    // 重整数据
+
+                })
+
+            await this.getWorkshopList()
+                // 获取订单下拉
+            await this.selectOrder(this.globalOrderNumber)
+            await this.btnGetResult();
         }
 
-        submitDatas() {
+        // {redact-box} 提交
+        async submitDatas() {
             const inStorageRequest = this.$refs.inStorage.getSavedOrSubmitData();
             const excRequest = this.$refs.excRecord.getSavedOrSubmitData(this.formHeader, 'INSTORAGE');
             const textRequest = this.$refs.textRecord.savedData(this.formHeader, 'sterilize');
 
-            STE_API.STE_INSTORAGE_SUBMIT_API({
+            await STE_API.STE_INSTORAGE_SUBMIT_API({
                 exceptionDelete: excRequest.ids,
                 exceptionInsert: excRequest.insertDto,
                 exceptionUpdate: excRequest.updateDto,
@@ -406,34 +481,50 @@
             }).then(() => {
                 this.$successToast('提交成功');
                 this.isRedact = false;
-                // 重整数据
-                this.btnGetResult();
             })
+            await this.getWorkshopList()
+            // 获取订单下拉
+            await this.selectOrder(this.globalOrderNumber)
+            await this.btnGetResult();
         }
+
+        // {redact-box} 提交需跑的验证 function
+        submitRules(): Function[] {
+            return [this.$refs.inStorage.ruleSubmit, this.$refs.excRecord.ruleSubmit, this.$refs.textRecord.ruleSubmit]
+        }
+
+        // {redact-box} 保存需跑的验证 function
+        savedRules(): Function[] {
+            return []
+        }
+
     }
 
+
     interface FormHeader{
-            workShop?: string;
-            workShopName?: string;
-            inKjmDate?: string;
-            orderNo?: string;
-            changer?: string;
-            changed?: string;
-            status?: string;
-            material?: string;
-            materialCode?: string;
-            materialName?: string;
-            outputUnit?: string;
-            outputUnitName?: string;
-            factory?: string;
-            orderId?: string;
-            orderStatus?: string;
-            orderType?: string;
-            productDate?: string;
-            productLine?: string;
+        inStorageStatus?: string;
+        workShop?: string;
+        workShopName?: string;
+        inKjmDate?: string;
+        orderNo?: string;
+        changer?: string;
+        changed?: string;
+        status?: string;
+        material?: string;
+        materialCode?: string;
+        materialName?: string;
+        outputUnit?: string;
+        outputUnitName?: string;
+        factory?: string;
+        orderId?: string;
+        orderStatus?: string;
+        orderType?: string;
+        productDate?: string;
+        productLine?: string;
     }
 
     interface OptionsInList{
+        inStorageStatus?: string;
         changed?: string;
         changer?: string;
         // countMan: null;
@@ -473,6 +564,15 @@
     interface OptionsInList{
         targetCode?: string;
         targetName?: string;
+    }
+    interface InStorageStatusOptions{
+        accessoriesStatus: string;
+        controlStatus: string;
+        id: string;
+        instorageStatus: string;
+        materialStatus: string;
+        orderNo: string;
+        timesheetStatus: string;
     }
 </script>
 

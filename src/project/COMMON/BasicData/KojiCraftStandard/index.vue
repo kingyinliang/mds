@@ -1,51 +1,36 @@
-<template>
-    <div class="header_main">
-        <mds-card title="制曲工艺标准" :name="'spe'" :pack-up="false" style="margin-bottom: 0; background: #fff;">
-            <template slot="titleBtn">
-                <el-row style="float: right;">
-                    <el-form :inline="true" :model="controllableForm" size="small" label-width="68px" class="topforms2" @submit.native.prevent>
-                        <el-form-item>
-                            <el-input v-model="controllableForm.materialCode" placeholder="物料" suffix-icon="el-icon-search" clearable @clear="getItemsList" @blur="controllableForm.materialCode===''?getItemsList():false" @change="dataOfSearch.productMaterial=controllableForm.materialCode" />
-                        </el-form-item>
-                        <el-form-item style="height: 32px;">
-                            <el-button type="primary" size="small" :disabled="controllableForm.materialCode.trim()===''" @click="getItemsList(true,'normal')" @clear="controllableForm.materialCode=''">
-                                查询
-                            </el-button>
-                            <el-button type="primary" size="small" @click="btnAdvanceSearch">
-                                高级查询
-                            </el-button>
-                            <el-button type="primary" size="small" @click="btnAddItem">
-                                新增
-                            </el-button>
-                            <el-button type="danger" size="small" @click="btnRemoveItems">
-                                批量删除
-                            </el-button>
-                        </el-form-item>
-                    </el-form>
-                </el-row>
-            </template>
-            <!-- show table -->
-            <table-show ref="showTable" :table-element-setting="tableItemSetting" :target-table.sync="tableData" />
-            <el-pagination v-if="tableData.length!==0" :current-page="currPage" :page-sizes="[10, 20, 50]" :page-size="pageSize" layout="total, sizes, prev, pager, next, jumper" :total="totalCount" @size-change="handleSizeChange" @current-change="handleCurrentChange" />
-        </mds-card>
-        <!-- 新增工序 -->
-        <dialog-form ref="addWorkProcedure" :form-element-setting="dialogAddItemSetting" :data-form.sync="dataOfAddItem" @send-dialog-form-data="addItem" />
-        <!-- 编辑工序 -->
-        <dialog-form ref="updateWorkProcedure" :form-element-setting="dialogEditItemSetting" :data-form.sync="dataOfEditItem" @send-dialog-form-data="updateItem" />
-        <!-- 高级查询 -->
-        <dialog-form ref="advanceSearch" :form-element-setting="dialogSearchSetting" :data-form.sync="dataOfSearch" @send-dialog-form-data="getItemsListFromDialog" />
-    </div>
+<template lang="pug">
+    div.header_main
+        mds-card(title="制曲工艺标准" :name="'spe'" :pack-up="false" style="margin-bottom: 0; background: #fff;")
+            template(slot="titleBtn")
+                el-row(style="float: right;")
+                    el-form(:inline="true" :model="controllableForm" size="small" label-width="68px" class="topforms2" @submit.native.prevent)
+                        el-form-item
+                            el-input(v-model="controllableForm.material" placeholder="物料" suffix-icon="el-icon-search" clearable @clear="getItemsList")
+                        el-form-item(style="height: 32px;")
+                            el-button(type="primary" size="small" @click="getItemsList(true,'normal')") 查询
+                            el-button(type="primary" size="small" @click="btnAdvanceSearch") 高级查询
+                            el-button(type="primary" size="small" @click="btnAddItem") 新增
+                            el-button(type="danger" size="small" @click="btnRemoveItems" v-if="tableData.length!==0" :disabled="chechDeleteList===0") 批量删除
+            //- show table
+            table-show(ref="showTable" :table-element-setting.sync="tableItemSetting" :target-table.sync="tableData" :check-delete.sync="chechDeleteList" @updateItem="btnUpdateItem" @removeItem="")
+            el-pagination(v-if="tableData.length!==0" :current-page="currPage" :page-sizes="[10, 20, 50]" :page-size="pageSize" layout="total, sizes, prev, pager, next, jumper" :total="totalCount" @size-change="handleSizeChange" @current-change="handleCurrentChange")
+        //- 新增工序
+        dialog-form(ref="addKojiCraftStandard" :form-element-setting="dialogAddItemSetting" :data-form.sync="dataOfAddItem" @send-dialog-form-data="addItem")
+        //- 编辑工序
+        dialog-form(ref="updateKojiCraftStandard" :form-element-setting="dialogEditItemSetting" :data-form.sync="dataOfEditItem" @send-dialog-form-data="updateItem")
+        //- 高级查询
+        dialog-form(ref="advanceSearch" :form-element-setting="dialogSearchSetting" :data-form.sync="controllableForm" @send-dialog-form-data="getItemsListFromDialog")
 </template>
 
 <script lang="ts">
     import { Vue, Component } from 'vue-property-decorator';
-    import { COMMON_API } from 'common/api/api';
+    import { COMMON_API, KOJI_API } from 'common/api/api';
     import { dateFormat, getUserNameNumber } from 'utils/utils';
     import DialogForm from 'components/DialogForm.vue';
     import TableShow from 'components/TableShow.vue';
 
     @Component({
-        name: 'WorkProcedureManage',
+        name: 'kojiCraftStandard',
         components: {
             DialogForm,
             TableShow
@@ -54,24 +39,29 @@
     export default class WorkProcedureManage extends Vue {
 
         $refs: {
-            addWorkProcedure: HTMLFormElement;
-            updateWorkProcedure: HTMLFormElement;
+            addKojiCraftStandard: HTMLFormElement;
+            updateKojiCraftStandard: HTMLFormElement;
             advanceSearch: HTMLFormElement;
             showTable: HTMLFormElement;
         }
 
-        serchSpecListObject= {}
+        testShow=false
 
         currPage= 1
         pageSize= 10
         totalCount= 1
 
-        isAdvanceSearchDailogShow= false
+        nowSearchModle='normal'
+        chechDeleteList=0
+
+        workShopList: Options[]= [] // 车间缓存
+        workShopListObject= {}
+
         controllableForm= {
-            brand: '',
-            materialCode: '',
-            boxSpec: '',
-            productSpec: ''
+            workShop: '',
+            material: '',
+            standardAmount: null,
+            standardDuration: null
         }
 
         tableItemSetting={
@@ -82,71 +72,95 @@
             },
             data: [
                 {
-                    type: 'multiple', // 表格元件
+                    type: 'single', // 表格元件
                     prop: 'workShop',
                     label: '生产车间', // 表单元件名称
-                    minWidth: '400px',
-                    width: '', // width 会覆盖 minWidth
-                    content: ['workShop']
+                    minWidth: 100,
+                    width: 0, // width 会覆盖 minWidth
+                    content: ['workShop'],
+                    transList: {}
+                    // transFn: () => {
+                    //     return new Promise((resolve) => {
+                    //         COMMON_API.ORG_QUERY_WORKSHOP_API({
+                    //             factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
+                    //             deptType: ['WORK_SHOP'],
+                    //             deptName: '制曲'
+                    //         }).then(({ data }) => {
+                    //             const wrapperObject = {};
+                    //             data.data.forEach(item => {
+                    //                 wrapperObject[item.deptCode] = item.deptName
+                    //             })
+                    //             resolve(wrapperObject)
+                    //         })
+                    //     })
+                    // }
+                },
+                {
+                    type: 'multiple', // 表格元件
+                    prop: 'material',
+                    label: '生产物料', // 表单元件名称
+                    minWidth: 250,
+                    width: 0,
+                    content: ['materialCode', 'materialName']
                 },
                 {
                     type: 'single', // 表格元件
-                    prop: 'productMaterial',
-                    label: '生产物料', // 表单元件名称
-                    minWidth: '',
-                    width: '160px',
-                    content: ['productMaterial']
+                    prop: 'kojiHouseName',
+                    label: '曲房号', // 表单元件名称
+                    minWidth: 0,
+                    width: 160,
+                    content: ['kojiHouseName']
                 },
                 {
                     type: 'single', // 表格元件
                     prop: 'standardAmount',
                     label: '曲房原豆标准量', // 表单元件名称
-                    minWidth: '',
-                    width: '160px',
+                    minWidth: 0,
+                    width: 160,
                     content: ['standardAmount']
                 },
                 {
                     type: 'single', // 表格元件
                     prop: 'standardDuration',
                     label: '入曲标准时长', // 表单元件名称
-                    minWidth: '',
-                    width: '160px',
+                    minWidth: 0,
+                    width: 160,
                     content: ['standardDuration']
                 },
                 {
                     type: 'single', // 表格元件
                     prop: 'remark',
                     label: '备注', // 表单元件名称
-                    minWidth: '',
-                    width: '160px',
+                    minWidth: 0,
+                    width: 170,
                     content: ['remark']
                 },
                 {
                     type: 'single', // 表格元件
                     prop: 'changer',
                     label: '操作人', // 表单元件名称
-                    minWidth: '',
-                    width: '160px',
+                    minWidth: 0,
+                    width: 160,
                     content: ['changer']
                 },
                 {
                     type: 'single', // 表格元件
                     prop: 'changed',
                     label: '操作时间', // 表单元件名称
-                    minWidth: '',
-                    width: '160px',
+                    minWidth: 0,
+                    width: 170,
                     content: ['changed']
                 },
                 {
                     type: 'button', // 表格元件
                     prop: 'control',
                     label: '操作', // 表单元件名称
-                    minWidth: '',
-                    width: '160px',
-                    content: [{
+                    minWidth: 0,
+                    width: 100,
+                    control: [{
                             buttonName: '编辑',
                             btn: 'editBtn',
-                            icon: 'el-icon-edit',
+                            icon: '',
                             isAuth: 'specEdit'
                         }]
                 }
@@ -158,7 +172,7 @@
         // [dialog][setting] 高级查询
         dialogSearchSetting={
             props: {
-                labelWidth: '100px',
+                labelWidth: 120,
                 title: '高级查询'
             },
             data: [
@@ -168,81 +182,70 @@
                     label: '生产车间', // 表单元件名称
                     placeholder: '请选择',
                     rules: [],
-                    resVal: {
-                        resData: 'data', // API 回传参数名
-                        label: ['deptName'], // 下拉選單 list option 组装 label view
-                        value: 'id' // 下拉選單 list option value
-                    },
+                    labelWidth: 130,
                     defaultOptionsFn: () => {
                         return new Promise((resolve) => {
                             COMMON_API.ORG_QUERY_WORKSHOP_API({
-                            factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
-                            deptType: ['WORK_SHOP'],
-                            deptName: '制曲'
-                            }).then((data) => {
-                                resolve(data)
+                                factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
+                                deptType: ['WORK_SHOP'],
+                                deptName: '制曲'
+                            }).then(({ data }) => {
+                                const optionList = data.data;
+                                optionList.forEach(item => {
+                                    // eslint-disable-next-line no-invalid-this
+                                    this.$set(item, 'optLabel', item.deptName)
+                                    // eslint-disable-next-line no-invalid-this
+                                    this.$set(item, 'optValue', item.deptCode)
+                                })
+                                resolve(optionList)
                             })
                         })
-                    },
-                    linkageProp: ['standardDuration']
+                    }
                 },
                 {
                     type: 'input',
-                    prop: 'productMaterial',
+                    prop: 'material',
                     label: '生产物料',
+                    labelWidth: 130,
                     placeholder: '请输入物料编码或者物料描述',
                     rules: []
                 },
                 {
-                    type: 'select',
+                    type: 'input',
                     prop: 'standardAmount',
-                    label: '报工工序',
-                    placeholder: '请选择',
-                    rules: [],
-                    resVal: {
-                        resData: 'data', // API 回传参数名
-                        label: ['dictValue'], // 下拉選單 list option 组装 label view
-                        value: 'dictCode' // 下拉選單 list option value
-                    },
-                    defaultOptionsFn: () => {
-                        return new Promise((resolve) => {
-                            COMMON_API.DICTQUERY_API({ dictType: 'COMMON_PROCEDURE' }).then((data) => {
-                                resolve(data)
-                            })
-                        })
-                    }
+                    label: '曲房原豆标准量',
+                    labelWidth: 130,
+                    placeholder: '请输入',
+                    typeof: 'number',
+                    rules: []
                 },
                 {
-                    type: 'select',
+                    type: 'input',
                     prop: 'standardDuration',
-                    label: '生产工序',
-                    placeholder: '请选择',
-                    rules: [],
-                    optionsFn: val => {
-                        return COMMON_API.ORG_QUERY_CHILDREN_API({
-                            parentId: val || '',
-                            deptType: 'PRODUCT_LINE'
-                        })
-                    }
+                    label: '入曲标准时长',
+                    labelWidth: 130,
+                    typeof: 'number',
+                    placeholder: '请输入',
+                    rules: []
                 }
             ]
         }
 
 
          // [dialog][data] 高级查询
-        dataOfSearch={
-            workShop: '',
-            productMaterial: '',
-            standardAmount: '',
-            standardDuration: ''
-        }
+        // dataOfSearch={
+        //     workShop: '',
+        //     material: '',
+        //     standardAmount: '',
+        //     standardDuration: ''
+        // }
 
 
-        // [dialog][setting] 新增工序
+        // [dialog][setting] 新增制曲工艺
         dialogAddItemSetting={
             props: {
-                labelWidth: '100px',
-                title: '新增报工'
+                labelWidth: 180,
+                title: '新增制曲工艺'
             },
             data: [
                 {
@@ -250,82 +253,104 @@
                     prop: 'workShop',
                     label: '生产车间',
                     placeholder: '请选择',
+                    disabled: false,
                     rules: [
                         { required: true, message: '请选择车间', trigger: 'change' }
                     ],
-                    resVal: {
-                        resData: 'data', // API 回传参数名
-                        label: ['deptName'], // 下拉選單 list option 组装 label view
-                        value: 'id' // 下拉選單 list option value
-                    },
                     defaultOptionsFn: () => {
                         return new Promise((resolve) => {
                             COMMON_API.ORG_QUERY_WORKSHOP_API({
-                            factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
-                            deptType: ['WORK_SHOP'],
-                            deptName: '制曲'
-                            }).then((data) => {
-                                resolve(data)
+                                factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
+                                deptType: ['WORK_SHOP'],
+                                deptName: '制曲'
+                            }).then(({ data }) => {
+                                const optionList = data.data;
+                                optionList.forEach(item => {
+                                    // eslint-disable-next-line no-invalid-this
+                                    this.$set(item, 'optLabel', item.deptName)
+                                    // eslint-disable-next-line no-invalid-this
+                                    this.$set(item, 'optValue', item.deptCode)
+                                })
+                                resolve(optionList)
+                            })
+                        })
+                    },
+                    linkageProp: ['kojiHouseId']
+                },
+                {
+                    type: 'select',
+                    prop: 'material',
+                    label: '生产物料',
+                    placeholder: '请选择',
+                    disabled: false,
+                    rules: [
+                        { required: true, message: '请选择生产物料', trigger: 'change' }
+                    ],
+                    defaultOptionsFn: () => {
+                        return new Promise((resolve) => {
+                            COMMON_API.SEARCH_MATERIAL_API({
+                                factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
+                                materialType: 'ZHAL'
+                            }).then(({ data }) => {
+                                    const optionList = data.data;
+                                    optionList.forEach(item => {
+                                        // eslint-disable-next-line no-invalid-this
+                                        this.$set(item, 'optLabel', `${item.materialCode} ${item.materialName}`)
+                                        // eslint-disable-next-line no-invalid-this
+                                        this.$set(item, 'optValue', `${item.materialCode} ${item.materialName}`)
+                                    })
+                                    resolve(optionList)
                             })
                         })
                     }
                 },
                 {
-                    type: 'select',
-                    prop: 'productMaterial',
-                    label: '生产物料',
-                    placeholder: '请选择',
-                    rules: [
-                        { required: true, message: '请选择生产物料', trigger: 'change' }
-                    ],
-                    resVal: {
-                        resData: 'data', // API 回传参数名
-                        label: ['deptName'], // 下拉選單 list option 组装 label view
-                        value: 'id' // 下拉選單 list option value
-                    }
-                    // defaultOptionsFn: () => {
-                    //     return new Promise((resolve) => {
-                    //         resolve()
-                    //     })
-                    // }
-                },
+                type: 'select',
+                prop: 'kojiHouseId',
+                label: '曲房号',
+                placeholder: '请选择',
+                rules: [
+                    { required: true, message: '请选择曲房', trigger: 'change' }
+                ],
+                emitChange: (val) => {
+                    return new Promise((resolve) => {
+                        COMMON_API.HOLDER_QUERY_API({
+                            factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
+                            deptId: val,
+                            holderType: '005',
+                            size: 99999,
+                            current: 1
+                        }).then(({ data }) => {
+                            const optionList = data.data.records;
+                            optionList.forEach(item => {
+                                // eslint-disable-next-line no-invalid-this
+                                this.$set(item, 'optLabel', item.holderName)
+                                // eslint-disable-next-line no-invalid-this
+                                this.$set(item, 'optValue', item.id)
+                            })
+                            resolve(optionList)
+                        })
+                    })
+                }
+            },
                 {
-                    type: 'select',
+                    type: 'input',
                     prop: 'standardAmount',
-                    label: '报工工序',
-                    placeholder: '请选择',
+                    label: '曲房原豆标准',
+                    placeholder: '请输入数量',
+                    disabled: false,
                     rules: [
-                        { required: true, message: '请选择报工工序', trigger: 'change' }
-                    ],
-                    resVal: {
-                        resData: 'data', // API 回传参数名
-                        label: ['deptName'], // 下拉選單 list option 组装 label view
-                        value: 'id' // 下拉選單 list option value
-                    }
-                    // defaultOptionsFn: () => {
-                    //     return new Promise((resolve) => {
-                    //         resolve()
-                    //     })
-                    // }
+                        { required: true, message: '请输入数量', trigger: 'blur' }
+                    ]
                 },
                 {
-                    type: 'select',
+                    type: 'input',
                     prop: 'standardDuration',
-                    label: '生产工序',
-                    placeholder: '请选择',
+                    label: '入曲标准时长',
+                    placeholder: '请输入时长 H',
                     rules: [
-                        { required: true, message: '请选择生产工序', trigger: 'change' }
-                    ],
-                    resVal: {
-                        resData: 'data', // API 回传参数名
-                        label: ['deptName'], // 下拉選單 list option 组装 label view
-                        value: 'id' // 下拉選單 list option value
-                    }
-                    // defaultOptionsFn: () => {
-                    //     return new Promise((resolve) => {
-                    //         resolve()
-                    //     })
-                    // }
+                        { required: true, message: '请输入时长 H', trigger: 'blur' }
+                    ]
                 },
                 {
                     type: 'input',
@@ -336,35 +361,37 @@
                 {
                     type: 'text',
                     prop: 'changer',
-                    label: '操作人',
-                    placeholder: ''
+                    label: '操作人'
                 },
                 {
                     type: 'text',
                     prop: 'changed',
-                    label: '操作时间',
-                    placeholder: ''
+                    label: '操作时间'
                 }
             ]
         }
 
-        // [dialog][data] 新增工序
+        // [dialog][data] 新增制曲工艺
         dataOfAddItem={
             workShop: '',
-            productMaterial: '',
-            standardAmount: '',
-            standardDuration: '',
+            material: '',
+            materialCode: '',
+            materialName: '',
+            kojiHouseId: '',
+            kojiHouseName: '',
+            standardAmount: 0,
+            standardDuration: 0,
             remark: '',
             changer: getUserNameNumber(),
             changed: dateFormat(new Date(), 'yyyy-MM-dd hh:mm:ss')
         }
 
 
-        // [dialog][setting] 编辑工序
+        // [dialog][setting] 编辑制曲工艺
         dialogEditItemSetting={
             props: {
-                labelWidth: '100px',
-                title: '编辑报工'
+                labelWidth: 180,
+                title: '编辑制曲工艺'
             },
             data: [
             {
@@ -375,79 +402,100 @@
                 rules: [
                     { required: true, message: '请选择车间', trigger: 'change' }
                 ],
-                resVal: {
-                    resData: 'data', // API 回传参数名
-                    label: ['deptName'], // 下拉選單 list option 组装 label view
-                    value: 'id' // 下拉選單 list option value
-                },
                 defaultOptionsFn: () => {
                     return new Promise((resolve) => {
                         COMMON_API.ORG_QUERY_WORKSHOP_API({
-                        factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
-                        deptType: ['WORK_SHOP'],
-                        deptName: '制曲'
-                        }).then((data) => {
-                            resolve(data)
+                            factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
+                            deptType: ['WORK_SHOP'],
+                            deptName: '制曲'
+                        }).then(({ data }) => {
+                            const optionList = data.data;
+                            optionList.forEach(item => {
+                                // eslint-disable-next-line no-invalid-this
+                                this.$set(item, 'optLabel', item.deptName)
+                                // eslint-disable-next-line no-invalid-this
+                                this.$set(item, 'optValue', item.deptCode)
+                            })
+                            resolve(optionList)
+                        })
+                    })
+                },
+                linkageProp: ['kojiHouseId']
+            },
+            {
+                type: 'select',
+                prop: 'material',
+                label: '生产物料',
+                placeholder: '请选择',
+                rules: [
+                    { required: true, message: '请选择生产物料', trigger: 'change' }
+                ],
+                defaultOptionsFn: () => {
+                    return new Promise((resolve) => {
+                        COMMON_API.SEARCH_MATERIAL_API({
+                            factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
+                            materialType: 'ZHAL'
+                        }).then(({ data }) => {
+                                const optionList = data.data;
+                                optionList.forEach(item => {
+                                    // eslint-disable-next-line no-invalid-this
+                                    this.$set(item, 'optLabel', `${item.materialCode} ${item.materialName}`)
+                                    // eslint-disable-next-line no-invalid-this
+                                    this.$set(item, 'optValue', `${item.materialCode} ${item.materialName}`)
+                                })
+                                resolve(optionList)
                         })
                     })
                 }
             },
             {
                 type: 'select',
-                prop: 'productMaterial',
-                label: '生产物料',
+                prop: 'kojiHouseId',
+                label: '曲房号',
                 placeholder: '请选择',
                 rules: [
-                    { required: true, message: '请选择生产物料', trigger: 'change' }
+                    { required: true, message: '请选择曲房', trigger: 'change' }
                 ],
-                resVal: {
-                    resData: 'data', // API 回传参数名
-                    label: ['deptName'], // 下拉選單 list option 组装 label view
-                    value: 'id' // 下拉選單 list option value
-                },
-                defaultOptionsFn: () => {
+                emitChange: (val) => {
+                    // eslint-disable-next-line no-invalid-this
                     return new Promise((resolve) => {
-                        resolve()
+                        COMMON_API.HOLDER_QUERY_API({
+                            factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
+                            deptId: val,
+                            holderType: '005',
+                            size: 99999,
+                            current: 1
+                        }).then(({ data }) => {
+                            const optionList = data.data.records;
+                            optionList.forEach(item => {
+                                // eslint-disable-next-line no-invalid-this
+                                this.$set(item, 'optLabel', item.holderName)
+                                // eslint-disable-next-line no-invalid-this
+                                this.$set(item, 'optValue', item.id)
+                            })
+                            resolve(optionList)
+                        })
                     })
                 }
             },
             {
-                type: 'select',
+                type: 'input',
                 prop: 'standardAmount',
-                label: '报工工序',
-                placeholder: '请选择',
+                label: '曲房原豆标准',
+                placeholder: '请输入数量',
+                disabled: false,
                 rules: [
-                    { required: true, message: '请选择报工工序', trigger: 'change' }
-                ],
-                resVal: {
-                    resData: 'data', // API 回传参数名
-                    label: ['deptName'], // 下拉選單 list option 组装 label view
-                    value: 'id' // 下拉選單 list option value
-                },
-                defaultOptionsFn: () => {
-                    return new Promise((resolve) => {
-                        resolve()
-                    })
-                }
+                    { required: true, message: '请输入数量', trigger: 'blur' }
+                ]
             },
             {
-                type: 'select',
+                type: 'input',
                 prop: 'standardDuration',
-                label: '生产工序',
-                placeholder: '请选择',
+                label: '入曲标准时长',
+                placeholder: '请输入时长 H',
                 rules: [
-                    { required: true, message: '请选择生产工序', trigger: 'change' }
-                ],
-                resVal: {
-                    resData: 'data', // API 回传参数名
-                    label: ['deptName'], // 下拉選單 list option 组装 label view
-                    value: 'id' // 下拉選單 list option value
-                },
-                defaultOptionsFn: () => {
-                    return new Promise((resolve) => {
-                        resolve()
-                    })
-                }
+                    { required: true, message: '请输入时长 H', trigger: 'blur' }
+                ]
             },
             {
                 type: 'input',
@@ -481,18 +529,52 @@
             return this.$store.state.common.mainClientHeight;
         }
 
-        mounted() {
+        created() {
+            //
+        }
+
+        async mounted() {
+            await this.getWorkShop()
+            this.tableItemSetting.data[0].transList = this.workShopListObject
+            this.$refs.showTable.init();
             this.getItemsList();
         }
 
         // from dialog
-        addItem(data) {
-            console.log(data)
+        addItem(dataForm) {
+            dataForm.materialCode = dataForm.material.split(' ')[0]
+            dataForm.materialName = dataForm.material.split(' ')[1]
+            KOJI_API.CRAFTSTANDARD_INSERT_API({
+                kojiHouseId: dataForm.kojiHouseId,
+                workShop: dataForm.workShop,
+                standardAmount: dataForm.standardAmount,
+                standardDuration: dataForm.standardDuration,
+                materialCode: dataForm.materialCode,
+                materialName: dataForm.materialName,
+                remark: dataForm.remark
+            }).then(() => {
+                this.$successToast('新增成功')
+                this.getItemsList(true, 'normal');
+            });
         }
 
         // from dialog
-        updateItem(data) {
-            console.log(data)
+        updateItem(dataForm) {
+            dataForm.materialCode = dataForm.material.split(' ')[0]
+            dataForm.materialName = dataForm.material.split(' ')[1]
+            KOJI_API.CRAFTSTANDARD_UPDATE_API({
+                id: dataForm.id,
+                kojiHouseId: dataForm.kojiHouseId,
+                materialCode: dataForm.materialCode,
+                materialName: dataForm.materialName,
+                standardAmount: dataForm.standardAmount,
+                standardDuration: dataForm.standardDuration,
+                remark: dataForm.remark,
+                workShop: dataForm.workShop
+            }).then(() => {
+                this.$successToast('编辑成功')
+                this.getItemsList(true, 'normal');
+            });
         }
 
         getItemsList(haveParas = false, type = 'normal') {
@@ -501,54 +583,68 @@
                 this.currPage = 1;
             }
             if (type === 'normal') {
-                //
+                this.nowSearchModle = 'normal'
+                this.controllableForm.workShop = ''
+                this.controllableForm.standardAmount = null
+                this.controllableForm.standardDuration = null
             }
 
-            // COMMON_API.SPECS_QUERY_API({
-            //     factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
-            //     boxSpec: this.controllableForm.boxSpec.trim(),
-            //     bottleSpec: this.controllableForm.productSpec.trim(),
-            //     brand: this.controllableForm.brand.trim(),
-            //     material: this.controllableForm.materialCode.trim(),
-            //     current: JSON.stringify(this.currPage),
-            //     size: JSON.stringify(this.pageSize)
-            // }).then(({ data }) => {
-            //     if (haveParas && data.data.records.length === 0) {
-            //             this.$infoToast('暂无任何内容');
-            //     }
-            //     this.targetInfoList = data.data.records;
-            //     this.currPage = data.data.current;
-            //     this.pageSize = data.data.size;
-            //     this.totalCount = data.data.total;
-
-            //     this.isAdvanceSearchDailogShow = false;
-            // });
+            KOJI_API.CRAFTSTANDARD_QUERY_API({
+                workShop: this.controllableForm.workShop,
+                material: this.controllableForm.material,
+                standardAmount: this.controllableForm.standardAmount,
+                standardDuration: this.controllableForm.standardDuration,
+                current: this.currPage,
+                size: this.pageSize
+            }).then(({ data }) => {
+                if (haveParas && data.data.records.length === 0) {
+                        this.$infoToast('暂无任何内容');
+                }
+                this.tableData = data.data.records;
+                this.currPage = data.data.current;
+                this.pageSize = data.data.size;
+                this.totalCount = data.data.total;
+            });
         }
 
-        getItemsListFromDialog(data) {
-            this.controllableForm.materialCode = data.productMaterial
+        getItemsListFromDialog() {
+            this.nowSearchModle = 'advance'
             this.getItemsList(true, 'advance')
         }
 
         // [btn] 新增
         btnAddItem() {
+            this.dataOfAddItem = {
+                workShop: '',
+                material: '',
+                materialCode: '',
+                materialName: '',
+                kojiHouseId: '',
+                kojiHouseName: '',
+                standardAmount: 0,
+                standardDuration: 0,
+                remark: '',
+                changer: getUserNameNumber(),
+                changed: dateFormat(new Date(), 'yyyy-MM-dd hh:mm:ss')
+            }
+
             this.$nextTick(() => {
-                this.$refs.addWorkProcedure.init();
+                this.$refs.addKojiCraftStandard.init();
             });
         }
 
         // [btn] 修改
         btnUpdateItem(data) {
             this.dataOfEditItem = data
+            this.$set(this.dataOfEditItem, 'material', `${data.materialCode} ${data.materialName}`)
             this.$nextTick(() => {
-                this.$refs.updateWorkProcedure.init();
+                this.$refs.updateKojiCraftStandard.init();
             });
         }
 
         // [btn] 批量删除
         btnRemoveItems() {
-            const tempMultipleSelection = this.$refs.showTable.getMultipleSelection
-
+            const tempMultipleSelection = this.$refs.showTable.getMultipleSelection()
             if (tempMultipleSelection.length === 0) {
                 this.$warningToast('请选择要删除的条目');
             } else {
@@ -558,20 +654,37 @@
                     type: 'warning'
                 })
                     .then(() => {
-                        // COMMON_API.SPECS_REMOVE_API({
-                        //     factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
-                        //     ids: this.multipleSelection
-                        // }).then(() => {
-                        //     this.multipleSelection = [];
-                        //     this.$nextTick(() => {
-                        //         this.getItemsList();
-                        //     });
-                        // });
+                        KOJI_API.CRAFTSTANDARD_DELETE_API(tempMultipleSelection).then(() => {
+                            this.$successToast('刪除成功')
+                            this.$nextTick(() => {
+                                this.getItemsList();
+                            });
+                        });
                     })
                     .catch();
             }
         }
 
+            // 车间下拉
+        getWorkShop() {
+            return new Promise(resolve => {
+                COMMON_API.ORG_QUERY_WORKSHOP_API({
+                    factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
+                    deptType: ['WORK_SHOP'],
+                    deptName: '制曲'
+                }).then(({ data }) => {
+                    const optionList = data.data;
+                    this.workShopListObject = {}
+                    optionList.forEach(item => {
+                        this.$set(item, 'optLabel', `${item.deptName}`)
+                        this.$set(item, 'optValue', `${item.deptCode}`)
+                        this.workShopListObject[item.deptCode] = item.deptName
+                    })
+                    this.workShopList = optionList
+                    resolve()
+                })
+            })
+        }
 
         // [btn] 高级查询
         btnAdvanceSearch() {
@@ -583,29 +696,28 @@
         // 改变每页条数
         handleSizeChange(val) {
             this.pageSize = val;
-            this.getItemsList();
+            this.getItemsList(false, this.nowSearchModle);
         }
 
         // 跳转页数
         handleCurrentChange(val) {
             this.currPage = val;
-            this.getItemsList();
+            this.getItemsList(false, this.nowSearchModle);
         }
     }
 
 interface CurrentDataTable {
-    bottleSpec?: number;
-    bottleSpecUnit?: string;
-    boxSpec?: number;
-    boxSpecUnit?: string;
-    brand?: string;
-    changer?: string;
-    factory?: string;
-    id?: string;
-    largeClass?: string;
-    materialCode?: string;
-    materialName?: string;
-    version?: number;
+    changed: Date;
+    changer: string;
+    id: string;
+    materialCode: string;
+    materialName: string;
+    remark: string;
+    standardAmount: number;
+    standardDuration: number;
+    workShop: string;
+    kojiHouseId: string;
+    kojiHouseName: string;
 }
 
 interface Options {
@@ -618,4 +730,4 @@ interface Options {
 
 </script>
 
-<style scoped></style>
+<style lang="sass" scoped></style>

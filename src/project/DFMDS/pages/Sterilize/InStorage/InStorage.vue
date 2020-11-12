@@ -1,3 +1,11 @@
+<!--
+ * @Description:
+ * @Anthor: Telliex
+ * @Date: 2020-08-03 18:13:58
+ * @LastEditors: Telliex
+ * @LastEditTime: 2020-11-03 10:42:14
+ * @Describe 弹窗式新增
+-->
 <template lang="pug">
 div
     mds-card(:title="cardTitle")
@@ -21,8 +29,7 @@ div
                     :show-overflow-tooltip="true"
                     )
                     template(slot-scope="scope")
-                        template(v-for="(val,indexs) in item.content" ) {{ scope.row[val] }}
-
+                        template(v-for="(val,indexs) in item.content" ) {{ scope.row[val] | itemValue(item.wrapper) }}
                 el-table-column(
                     v-if="item.type==='control'"
                     :width="item.width"
@@ -32,19 +39,26 @@ div
                         el-button(:class="val.btn" :icon="val.icon" v-for="(val,index) in item.content" :key="index" type="text" size="mini" :disabled="!isRedact" @click="removeDataRow(scope.row)") {{val.buttonName}}
     audit-log(:table-data="semiAudit" :verify-man="'verifyMan'" :verify-date="'verifyDate'" :status="true")
     in-storage-dialog(ref="inStorageDialogForAdd" width="40%" title="新增入库" @conformData="conformDataFromAdd")
-    in-storage-dialog(ref="inStorageDialogForEdit" width="40%" title="编辑入库")
+    in-storage-dialog(ref="inStorageDialogForEdit" width="40%" title="编辑入库" @conformData="conformDataFromAdd")
 </template>
 
 <script lang="ts">
     import { Vue, Component, Prop } from 'vue-property-decorator';
-    // import { STE_API } from 'common/api/api';
-    // import { dataEntryData } from 'utils/utils';
     import InStorageDialog from './InStorageDialog.vue';
     import _ from 'lodash';
 
     @Component({
         components: {
             InStorageDialog
+        },
+        filters: {
+            itemValue(value: string, target: object) {
+                if (target) {
+                    return target[value]
+                }
+                return value
+
+            }
         }
     })
     export default class SemiReceive extends Vue {
@@ -71,48 +85,32 @@ div
         }
 
         conformDataFromAdd(item) {
-            console.log('item')
-            console.log(item)
-            this.currentFormDataGroup.push(JSON.parse(JSON.stringify(item)))
+            if (item.id) {
+                this.currentFormDataGroup.forEach((element, index) => {
+                    if (element.id === item.id) {
+                        this.$set(this.currentFormDataGroup, index, item)
+                    }
+                })
+            } else {
+                this.currentFormDataGroup.push(item)
+            }
+
         }
 
 
-        // ruleSubmit() {
-        //     if (!this.craftInfo.feedStartDate || !this.craftInfo.feeEndDate || !this.craftInfo.riseStartDate || !this.craftInfo.riseEndDate) {
-        //         this.$warningToast('请填写工艺控制页签时间必填项');
-        //         return false;
-        //     }
-        //     if (this.craftTable.filter(it => it.delFlag !== 1).length === 0) {
-        //         this.$warningToast('请录入工艺控制页签杀菌时间及温度数据');
-        //         return false;
-        //     }
-
-        //     for (const item of this.craftTable.filter(it => it.delFlag !== 1)) {
-        //         if (!item.controlType || !item.controlStage) {
-        //             this.$warningToast('请填写工艺控制页签杀菌时间及温度类型、阶段');
-        //             return false;
-        //         }
-        //         if ((item.controlStage === 'START' || item.controlStage === 'END' || item.controlStage === 'DISCHARGE_START' || item.controlStage === 'DISCHARGE_END') && !item.recordDate) {
-        //             this.$warningToast('请填写工艺控制页签杀菌时间及温度下记录时间');
-        //             return false;
-        //         }
-        //     }
-        //     return true;
-        // }
+        ruleSubmit() {
+            // 无必填,不需验证
+            return true;
+        }
 
         btnAddOrEditDataRow(val) {
-
-            console.log(val)
             if (this.isRedact === true) {
                 if (val) {
                     this.$refs.inStorageDialogForEdit.init(this.orderData, this.pkgWorkShopList, val);
                     return false
                 }
-
                 this.$refs.inStorageDialogForAdd.init(this.orderData, this.pkgWorkShopList);
             }
-
-
         }
 
         getSavedOrSubmitData() {
@@ -151,7 +149,8 @@ div
                 cancelButtonText: '取消',
                 type: 'warning'
             }).then(() => {
-                row.delFlag = 1;
+                this.$set(row, 'delFlag', 1)
+                this.$successToast('删除成功');
             });
         }
 
@@ -189,36 +188,11 @@ div
     interface OptionsInList{
         changed?: string;
         changer?: string;
-        // countMan: null;
-        // countOutput: null;
-        // countOutputUnit: '';
-        // deviceTime: null;
-        // dispatchMan: 'S01';
-        // exceptionDateCount: null;
-        // factory: '4F8122C62C6D6C6999';
-        // factoryName: '(8300)济南欣昌';
-        // germs: null;
-        // id: '494837770712338449';
         materialCode?: string;
         materialName?: string;
-        // operator: '';
-        // operatorDate: null;
-        // orderEndDate: '2020-08-03';
         orderNo?: string;
-        // orderStartDate: '2020-08-03';
         orderStatus?: string;
         orderStatusName?: string;
-        // orderType: '8330';
-        // outputUnit: 'KG';
-        // outputUnitName: '千克';
-        // planOutput: 10000;
-        // productDate: '2020-08-03';
-        // productLine: '474262750789451776';
-        // productLineName: '杀菌一线';
-        // readyTime: null;
-        // realInAmount: null;
-        // realOutput: null;
-        // userTime: null;
         workShop?: string;
         workShopName?: string;
     }

@@ -23,13 +23,13 @@
                         <template slot="label">
                             <span class="notNull">*</span>生产物料：
                         </template>
-                        <el-tooltip v-if="formHeaders.cookingNo !== ''" class="item" effect="dark" :content="formHeaders.productMaterial + ' '+ formHeaders.productMaterialName" placement="top-start">
+                        <el-tooltip v-if="formHeaders.cookingNo !== ''" class="item" effect="dark" :content="formHeaders.productMaterialName + ' '+ formHeaders.productMaterial" placement="top-start">
                             <el-select v-model="formHeaders.productMaterial" style="width: 180px;" placeholder="请选择" :disabled="formHeaders.cookingNo !== '' || !isRedact">
-                                <el-option v-for="(item, optIndex) in materialList" :key="optIndex" :label="item.materialCode + ' ' + item.materialName" :value="item.materialCode" />
+                                <el-option v-for="(item, optIndex) in materialList" :key="optIndex" :label="item.materialName + ' ' + item.materialCode" :value="item.materialCode" />
                             </el-select>
                         </el-tooltip>
                         <el-select v-else v-model="formHeaders.productMaterial" style="width: 180px;" placeholder="请选择" :disabled="formHeaders.cookingNo !== '' || !isRedact">
-                            <el-option v-for="(item, optIndex) in materialList" :key="optIndex" :label="item.materialCode + ' ' + item.materialName" :value="item.materialCode" />
+                            <el-option v-for="(item, optIndex) in materialList" :key="optIndex" :label="item.materialName + ' ' + item.materialCode" :value="item.materialCode" />
                         </el-select>
                     </el-form-item>
                     <el-form-item label="配置开始时间：">
@@ -106,7 +106,7 @@
                 </el-table-column>
                 <el-table-column label="溶解罐生产物料" min-width="180">
                     <template slot-scope="scope">
-                        {{ scope.row.productMaterial }} {{ scope.row.productMaterialName }}
+                        {{ scope.row.productMaterialName }} {{ scope.row.productMaterial }}
                     </template>
                 </el-table-column>
                 <el-table-column label="投料时间" min-width="140" prop="feedDate" />
@@ -116,7 +116,7 @@
                         <span class="notNull">*</span>领用数量
                     </template>
                     <template slot-scope="scope">
-                        <el-input v-model="scope.row.userAmount" placeholder="输入数量" size="small" :disabled="!isRedact" />
+                        <el-input v-model.number="scope.row.userAmount" type="number" placeholder="输入数量" size="small" :disabled="!isRedact" />
                     </template>
                 </el-table-column>
                 <el-table-column label="溶解罐库存" min-width="90" prop="remainder" />
@@ -129,7 +129,7 @@
                 <el-table-column label="操作时间" min-width="160" prop="changed" />
                 <el-table-column label="操作" min-width="70">
                     <template slot-scope="scope">
-                        <el-button v-if="isAuth('steCookMxDel')" class="delBtn" type="text" icon="el-icon-delete" size="mini" :disabled="!isRedact" @click="removeDataDissRow(scope.row)">
+                        <el-button v-if="isAuth('steCookMxDel')" class="delBtn" type="text" icon="el-icon-delete" size="mini" :disabled="!isRedact" @click="removeDataRow(scope.row)">
                             删除
                         </el-button>
                     </template>
@@ -141,7 +141,7 @@
                 <el-table-column type="index" :index="index => getIndexMethod(index, accessoriesResponseDtos)" label="序号" fixed="left" width="55" />
                 <el-table-column label="领用物料" min-width="180">
                     <template slot-scope="scope">
-                        {{ scope.row.useMaterial }} {{ scope.row.useMaterialName }}
+                        {{ scope.row.useMaterialName }} {{ scope.row.useMaterial }}
                     </template>
                 </el-table-column>
                 <el-table-column label="单位" min-width="55" prop="useUnit" />
@@ -261,7 +261,7 @@ export default class CookingDetail extends Vue {
     @Watch('formHeaders.workShop')
     changeWorkShop(newVal) {
         this.getHolderList(newVal);
-        this.getDissolutionPot(newVal);
+        this.getDissolutionPot();
     }
 
     @Watch('formHeaders.potNo')
@@ -272,6 +272,7 @@ export default class CookingDetail extends Vue {
     @Watch('formHeaders.productMaterial')
     changeProductMaterial(newVal) {
         this.getAccMaterial(newVal);
+        this.getDissolutionPot();
         // if (newVal && this.materialList.length !== 0) {
         //     const mat = this.materialList.find(item => item.materialCode === newVal)
         //     this.productMaterial = mat.materialCode + ' ' + mat.materialName;
@@ -355,8 +356,14 @@ export default class CookingDetail extends Vue {
     }
 
     // 溶解罐下拉 - 溶解罐领用
-    getDissolutionPot(deptId) {
-        STE_API.STE_DISSOLUTIONBUCKET_QUERY_API({ workShop: deptId, potStatus: ['M', 'U'], potNo: '' }).then(({ data }) => {
+    getDissolutionPot() {
+        let pM: string | undefined;
+        if (this.formHeaders.productMaterial === '') {
+            pM = '1';
+        } else {
+            pM = this.formHeaders.productMaterial;
+        }
+        STE_API.STE_DISSOLUTIONBUCKET_QUERY_API({ workShop: this.formHeaders.workShop, potStatus: ['M', 'U'], potNo: '', materialCode: pM }).then(({ data }) => {
             this.dissolutionPot = data.data;
         })
     }
@@ -423,24 +430,14 @@ export default class CookingDetail extends Vue {
     }
 
     // 删除
-    removeDataDissRow(row) {
-        this.$confirm('是否删除?', '提示', {
-            confirmButtonText: '确定',
-            cancelButtonText: '取消',
-            type: 'warning'
-        }).then(() => {
-            row.delFlag = 1;
-        });
-    }
-
-    // 删除
     removeDataRow(row) {
         this.$confirm('是否删除?', '提示', {
             confirmButtonText: '确定',
             cancelButtonText: '取消',
             type: 'warning'
         }).then(() => {
-            row.delFlag = 1;
+            this.$set(row, 'delFlag', 1)
+            this.$successToast('删除成功');
         });
     }
 
@@ -591,7 +588,7 @@ export default class CookingDetail extends Vue {
                 if (this.formHeaders.productMaterial) {
                     this.getAccMaterial(this.formHeaders.productMaterial);
                 }
-                this.getDissolutionPot(this.formHeaders.workShop);
+                this.getDissolutionPot();
             }
         }
     }

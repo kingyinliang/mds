@@ -63,7 +63,11 @@
             }
         }
 
-        init(orderNo, workShop?) {
+        init(orderNo, workShop?, clear?) {
+            if (clear) {
+                this.currentFormDataGroup.text = ''
+                return
+            }
 
             // 车间陆续增加
             if (workShop === 'sterilize') {
@@ -125,6 +129,29 @@
                 pkgTextInsert,
                 pkgTextUpdate
             }
+        }
+
+        ruleSubmit() {
+            // if (!this.craftInfo.feedStartDate || !this.craftInfo.feeEndDate || !this.craftInfo.riseStartDate || !this.craftInfo.riseEndDate) {
+            //     this.$warningToast('请填写工艺控制页签时间必填项');
+            //     return false;
+            // }
+            // if (this.craftTable.filter(it => it.delFlag !== 1).length === 0) {
+            //     this.$warningToast('请录入工艺控制页签杀菌时间及温度数据');
+            //     return false;
+            // }
+
+            // for (const item of this.craftTable.filter(it => it.delFlag !== 1)) {
+            //     if (!item.controlType || !item.controlStage) {
+            //         this.$warningToast('请填写工艺控制页签杀菌时间及温度类型、阶段');
+            //         return false;
+            //     }
+            //     if ((item.controlStage === 'START' || item.controlStage === 'END' || item.controlStage === 'DISCHARGE_START' || item.controlStage === 'DISCHARGE_END') && !item.recordDate) {
+            //         this.$warningToast('请填写工艺控制页签杀菌时间及温度下记录时间');
+            //         return false;
+            //     }
+            // }
+            return true;
         }
     }
     interface TextObj{

@@ -20,7 +20,7 @@
                 <el-table-column label="工序" width="120" prop="processIdName" />
                 <el-table-column label="生产品项" prop="ssssss" :show-overflow-tooltip="true">
                     <template slot-scope="scope">
-                        {{ scope.row.materialCode + ' ' + scope.row.materialName }}
+                        {{ scope.row.materialName + ' ' + scope.row.materialCode }}
                     </template>
                 </el-table-column>
                 <el-table-column label="入库量" width="120" prop="inPotAmount" />
