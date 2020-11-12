@@ -3,7 +3,7 @@
  * @Anthor: Telliex
  * @Date: 2020-08-27 14:28:27
  * @LastEditors: Telliex
- * @LastEditTime: 2020-11-06 11:28:34
+ * @LastEditTime: 2020-11-12 18:06:18
  */
 import httpProxy from 'utils/net/httpProxy';
 const KOJI_API = {
@@ -205,6 +205,10 @@ const KOJI_API = {
      * @KOJI_DISC_QUERY_SUBMIT_API 制曲车间-圆盘-提交圆盘记录
      */
     KOJI_DISC_QUERY_SUBMIT_API: params => httpProxy('/kojiDisc/submitKojiDisc', 'POST', params),
+    /**
+     * @KOJI_DISC_QUERY_SUBMIT_API 制曲车间-圆盘-溶解罐统计
+     */
+    KOJI_DISC_QUERY_INSTORAGE_AMOUNT_API: params => httpProxy('/kojiDisc/calcInStorageAmount', 'GET', params),
     /**
      * @property KOJI_STORAGE_STRAIN_DROPDOWN_API 制曲车间-蒸面工序-物料领用-Y158领用下拉（库位+批次联动）!!/koji/storage/dropDownOfStrain
      */
