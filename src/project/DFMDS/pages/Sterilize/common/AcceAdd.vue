@@ -447,7 +447,7 @@
         }
 
         getMaterial() {
-            STE_API.STE_ACCE_MATERIAL_LIST_API({ supplyFlag: 'Y' }).then(({ data }) => {
+            STE_API.STE_ACCE_MATERIAL_LIST_API({ supplyFlag: 'Y', productMaterial: this.formHeader.materialCode }).then(({ data }) => {
                 this.ACMaterial = data.data
             });
         }

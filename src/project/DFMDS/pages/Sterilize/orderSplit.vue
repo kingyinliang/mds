@@ -245,13 +245,12 @@
         }
 
         getHolder(params) {
-            COMMON_API.HOLDER_QUERY_API({
+            COMMON_API.HOLDER_DROPDOWN_API({
+                factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
                 deptId: params.workShop,
-                holderType: '014',
-                size: 99999,
-                current: 1
+                holderType: '014'
             }).then(({ data }) => {
-                this.holder = data.data.records
+                this.holder = data.data || [];
             })
         }
 
