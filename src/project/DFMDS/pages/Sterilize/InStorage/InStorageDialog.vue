@@ -3,7 +3,7 @@
  * @Anthor: Telliex
  * @Date: 2020-08-03 18:13:58
  * @LastEditors: Telliex
- * @LastEditTime: 2020-10-23 13:28:29
+ * @LastEditTime: 2020-11-13 13:59:49
 -->
 <template lang="pug">
     el-dialog(:title="title" :width="width" :close-on-click-modal="false" :visible.sync="isShowCurrentDialog")
@@ -142,6 +142,7 @@
             if (val) {
                 // 编辑
                 this.dialogForm = val
+                this.dialogForm.material = `${val.materialCode} ${val.materialName}`
                 this.selectPackageLine(val.packageLine)
             } else {
                 //新增
