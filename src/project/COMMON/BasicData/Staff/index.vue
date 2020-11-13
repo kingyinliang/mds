@@ -10,8 +10,8 @@
         >
             <template slot="view" style="padding-top: 16px;">
                 <div class="view-btn">
-                    <el-input v-model="controllableForm.param" placeholder="工号/姓名" size="small" suffix-icon="el-icon-search" clearable style="width: 180px; margin-right: 16px;" @clear="getItemsList()" />
-                    <el-button v-if="isAuth('userQuery')" type="primary" size="small" :disabled="controllableForm.param.trim()===''" @click="getItemsList(true)">
+                    <el-input v-model="controllableForm.param" placeholder="工号/姓名" size="small" suffix-icon="el-icon-search" clearable style="width: 180px; margin-right: 16px;" />
+                    <el-button v-if="isAuth('userQuery')" type="primary" size="small" @click="getItemsList(true)">
                         查询
                     </el-button>
                     <el-button v-if="isAuth('userDel')" type="danger" size="small" :disabled="targetInfoList.length===0" @click="removeItems()">

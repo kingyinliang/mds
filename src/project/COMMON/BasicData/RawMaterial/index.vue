@@ -5,10 +5,10 @@
                 <el-row style="float: right;">
                     <el-form :inline="true" :model="controllableForm" size="small" label-width="68px" class="topforms2" @keyup.enter.native="GetLocationList(true,'normal')" @submit.native.prevent>
                         <el-form-item>
-                            <el-input v-model="controllableForm.batch" placeholder="批次" suffix-icon="el-icon-search" clearable @clear="getItemsList" @blur="controllableForm.batch===''?getItemsList():false" />
+                            <el-input v-model="controllableForm.batch" placeholder="批次" suffix-icon="el-icon-search" clearable />
                         </el-form-item>
                         <el-form-item style="height: 32px;">
-                            <el-button v-if="isAuth('rawQuery')" :disabled="controllableForm.batch.trim()===''" type="primary" size="small" @click="getItemsList(true,'normal')">
+                            <el-button v-if="isAuth('rawQuery')" type="primary" size="small" @click="getItemsList(true,'normal')">
                                 查询
                             </el-button>
                             <el-button v-if="isAuth('rawQuery')" type="primary" size="small" @click="isAdvanceSearchDailogShow = true">
