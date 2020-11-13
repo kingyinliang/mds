@@ -84,7 +84,11 @@ const AUDIT_API = {
     /**
      * @property {string} HOURS_WRITEOFFS_API 报工审核反审
      */
-    HOURS_WRITEOFFS_API: params => httpProxy('/verifyTimeSheet/reset', 'POST', params)
+    HOURS_WRITEOFFS_API: params => httpProxy('/verifyTimeSheet/reset', 'POST', params),
+    /**
+     * @property {string} HOURS_WRITEOFFS_API 辅料调整
+     */
+    ACCESSORIES_LIST_API: params => httpProxy('/verifyAccessoriesAdjust/query', 'POST', params)
 };
 
 export default AUDIT_API;

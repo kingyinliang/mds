@@ -165,7 +165,7 @@
                 type: 'p',
                 icon: 'factory-bianhao',
                 label: '生产锅数',
-                value: 'planPotCount'
+                value: 'realPotCount'
             },
             {
                 type: 'p',
@@ -271,6 +271,7 @@
         getHeaderInfo(orderNo) {
             COMMON_API.OREDER_QUERY_BY_NO_API({ orderNo: orderNo, workShopType: 'sterilize' }).then(({ data }) => {
                 this.formHeader = data.data;
+                 this.formHeader['realPotCount'] = '第' + this.formHeader['realPotCount'] + '锅';
             })
         }
 
