@@ -14,8 +14,8 @@ export default {
     components: {},
     props: {
         deptId: {
-            type: Object,
-            default: function() { return {} }
+            type: String,
+            default: ''
         },
         page: {
             type: Object,

@@ -19,7 +19,7 @@
                 </em>
             </div>
             <div v-if="headShow" class="dataEntry-head-base">
-                <el-form :inline="true" :model="formHeader" size="small" class="dataEntry-head-base__form" label-width="110px">
+                <el-form :inline="true" :model="formHeader" size="small" class="dataEntry-head-base__form" label-width="120px">
                     <el-form-item v-for="(item, index) in headerBase" :key="index">
                         <template slot="label">
                             <em class="iconfont" :class="item.icon" style="margin-right: 5px; margin-left: 2px;" />

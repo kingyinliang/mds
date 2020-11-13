@@ -18,6 +18,12 @@ const globalRoutes = [
     //     name: 'login',
     //     meta: { title: '登录' }
     // },
+    // {
+    //     path: '/realTime',
+    //     component: importTarget('page/DataEcharts/RealTime/index'),
+    //     name: 'realTime',
+    //     meta: { title: 'realTime' }
+    // },
     {
         path: '/echarts',
         component: importTarget('common/demo-echarts'),
@@ -73,7 +79,14 @@ const mainRoutes = {
 const DataEchartsRoutes = {
     path: '/DataEcharts',
     component: importTarget('page/DataEcharts/Layout/index'),
-    children: [],
+    children: [
+        {
+            path: '/DataEcharts/RealTime-index',
+            component: importTarget('page/DataEcharts/RealTime/index'),
+            name: 'realTime',
+            meta: { title: 'realTime' }
+        }
+    ],
     beforeEnter(to, from, next) {
         const token = Vue.cookie.get('token');
         if (!token || !/\S/.test(token)) {
