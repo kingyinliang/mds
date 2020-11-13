@@ -20,7 +20,6 @@
                             <em v-if="scope.row.potOrder">第{{ scope.row.potOrder }}锅</em>
                         </template>
                     </el-table-column>
-                    <el-table-column label="锅单号" prop="potOrderNo" min-width="180" />
                     <el-table-column label="领用物料" min-width="220">
                         <template slot-scope="scope">
                             {{ scope.row.materialName }} {{ scope.row.materialCode }}
@@ -58,7 +57,6 @@
                             <em v-if="scope.row.potOrder">第{{ scope.row.potOrder }}锅</em>
                         </template>
                     </el-table-column>
-                    <el-table-column label="锅单号" prop="potOrderNo" min-width="175" />
                     <el-table-column label="领用数量" prop="useAmount" min-width="90" />
                     <el-table-column label="单位" prop="unit" min-width="55" />
                     <el-table-column label="领用批次" prop="useBatch" min-width="110" show-overflow-tooltip />
@@ -81,7 +79,6 @@
                             <em v-if="scope.row.potOrder">第{{ scope.row.potOrder }}锅</em>
                         </template>
                     </el-table-column>
-                    <el-table-column label="锅单号" prop="potOrderNo" min-width="180" />
                     <el-table-column label="入料时间" prop="" min-width="160">
                         <template slot-scope="scope">
                             {{ scope.row.feedStartDate }} - {{ scope.row.feedEndDate }}
@@ -275,7 +272,7 @@
                 type: 'p',
                 icon: 'factory-bianhao',
                 label: '生产锅数',
-                value: 'planPotCount'
+                value: 'realPotCount'
             },
             {
                 type: 'p',
@@ -415,6 +412,7 @@
         getHeaderInfo(orderNo) {
             COMMON_API.OREDER_QUERY_BY_NO_API({ orderNo: orderNo, workShopType: 'sterilize' }).then(({ data }) => {
                 this.formHeader = data.data;
+                this.formHeader['realPotCount'] = '第' + this.formHeader['realPotCount'] + '锅';
             })
         }
 
@@ -428,7 +426,9 @@
         // 辅料添加
         getAccessList(orderNo) {
             STE_API.STE_AUDIT_DETAIL_DETAUL_ACCESS_API({ orderNo: orderNo }).then(({ data }) => {
-                this.acceAddList = this.RegroupData(data.data, 1, -1);
+                if (data.data !== null) {
+                    this.acceAddList = this.RegroupData(data.data, 1, -1);
+                }
             })
         }
 

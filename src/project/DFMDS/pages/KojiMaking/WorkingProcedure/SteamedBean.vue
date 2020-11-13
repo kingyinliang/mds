@@ -5,6 +5,7 @@
             redact-auth="steSemiEdit"
             save-auth="steSemiEdit"
             submit-auth="steSemiSubmit"
+            :status-title="'工序状态'"
             :order-status="formHeader.statusName"
             :header-base="headerBase"
             :form-header="formHeader"
