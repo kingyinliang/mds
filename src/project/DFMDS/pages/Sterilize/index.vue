@@ -41,7 +41,7 @@
                                         <el-form-item label="生产物料：">
                                             <div class="disabled-input el-input el-input--small is-disabled">
                                                 <el-tooltip class="item" effect="dark" :content=" item.orderNoMap? `${item.orderNoMap.materialCode} ${item.orderNoMap.materialName}` : ''" placement="top">
-                                                    <span class="el-input__inner">{{ item.orderNoMap? `${item.orderNoMap.materialCode} ${item.orderNoMap.materialName}` : '' }}</span>
+                                                    <span class="el-input__inner">{{ item.orderNoMap? `${item.orderNoMap.materialName} ${item.orderNoMap.materialCode}` : '' }}</span>
                                                 </el-tooltip>
                                             </div>
                                         </el-form-item>
