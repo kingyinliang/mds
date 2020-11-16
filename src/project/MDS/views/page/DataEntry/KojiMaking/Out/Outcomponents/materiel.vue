@@ -233,8 +233,8 @@
                 this.MaterielDate.forEach(item => {
                     item.orderHouseId = this.formHeader.id;
                     if (item.material) {
-                        item.materialCode = item.material.substring(item.material.indexOf(' ') + 1);
-                        item.materialName = item.material.substring(0, item.material.indexOf(' '));
+                        item.materialCode = item.material.substring(0, item.material.indexOf(' '));
+                        item.materialName = item.material.substring(item.material.indexOf(' ') + 1);
                     }
                     if (item.status) {
                         if (item.status === 'saved') {
