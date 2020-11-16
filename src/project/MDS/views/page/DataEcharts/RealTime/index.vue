@@ -66,7 +66,6 @@ export default {
         this.websocketToLogin(true);
     },
     destroyed() {
-        // socketApi.closeWebSocket();
         this.SocketClientForPot && this.SocketClientForPot.closeWebSocket();
         this.SocketClientForList && this.SocketClientForList.closeWebSocket();
         this.disposeEcharts();
@@ -102,23 +101,16 @@ export default {
             this.dialogVisible = false;
             this.disposeEcharts();
             window.removeEventListener('resize', this.resizeEcharts);
-            // socketApi.closeWebSocket();
             this.SocketClientForPot && this.SocketClientForPot.closeWebSocket();
         },
         async getList() {
             this.$http(`${ECHARTS_API.OYSTER_SAUCE_LIST}`, 'POST', { factory: this.factoryId }, false, false, true).then(({ data }) => {
                 if (data.code === 200) {
-                    // this.list = data.data;
                     const list = data.data;
                     this.top = new Array(list.length).fill(0);
-                    list.map((item, index) => {
+                    list.map((item) => {
                         const arr = [...item.previousSterilizePotTemperatureList];
-                        // item.sterilizePotTemperature = item.sterilizePotTemperature;
-                        // item.previousSterilizePotTemperatureList = item.previousSterilizePotTemperatureList;
-                        // arr.splice(1, 0, item.sterilizePotTemperature);
-                        arr.push(item.sterilizePotTemperature)
-                        // item.top = 0;
-                        // this.top[index] = 0;
+                        arr.push(item.sterilizePotTemperature);
                         item.temps = arr;
                     });
                     this.list = list;
@@ -254,24 +246,19 @@ export default {
             let url = `${wsObject[key].url}?appid=${wsObject[key].appid}&channel=${wsObject[key].channel}`;
             if (forList) {
                 this.SocketClientForList = new SocketClient(url, res => {
-                    // console.log(res, 'list==---=--=-=')
-                    // this.list = JSON.parse(res.data || '[]');
                     const list = JSON.parse(res.data || '[]');
                     this.list.map((item, index) => {
                         item.sterilizePotTemperature = list[index].sterilizePotTemperature;
                         item.previousSterilizePotTemperatureList = list[index].previousSterilizePotTemperatureList;
-                        if (item.temps.length > 20) {
-                            item.temps.splice(0, 17);
+                        if (item.temps.length >= 30) {
+                            item.temps.splice(0, 27);
                         }
-                        // console.log(item, '====');
-                        if (item.temps[item.temps.length - 1] !== item.sterilizePotTemperature) {
-                            item.temps.push(item.sterilizePotTemperature);
-                            // item.top = -25 * (item.temps.length - 3);
-                            this.top[index] = -25 * (item.temps.length - 3);
-                        }
-                        // item.temps.push(item.sterilizePotTemperature);
-                        // this.top = -25 * (item.temps.length - 3);
-                        // this.$forceUpdate()
+                        // if (item.temps[item.temps.length - 1] !== item.sterilizePotTemperature) {
+                        //     item.temps.push(item.sterilizePotTemperature);
+                        //     this.top[index] = -25 * (item.temps.length - 3);
+                        // }
+                        item.temps.push(...list[index].previousSterilizePotTemperatureList, item.sterilizePotTemperature);
+                        this.top[index] = -25 * (item.temps.length - 3);
                     });
                 });
             } else {
@@ -288,11 +275,7 @@ export default {
 
 <style lang="scss" scoped>
 .realTime {
-    // background-color: #001033;
     float: right;
-    // display: flex;
-    // flex-wrap: wrap;
-    // align-items: center;
     width: calc(100% - 120px);
     height: 100%;
     .Container_box_title {
@@ -309,7 +292,6 @@ export default {
         flex-wrap: wrap;
         width: calc(100% - 20px);
         height: calc(100% - 100px);
-        // min-height: calc(100% - 150px);
         margin: 0 10px;
         padding: 15px;
         overflow-y: hidden;
@@ -323,7 +305,6 @@ export default {
             width: 100%;
             height: 100%;
             padding: 30px 0;
-            // margin: 20px 0;
             overflow-y: auto;
             background-image: url("../../../../assets/img/ozoneItemBg.png");
             background-repeat: no-repeat;
@@ -376,18 +357,6 @@ export default {
                         }
                     }
                 }
-                // span {
-                //     position: absolute;
-                //     top: 50%;
-                //     left: 50%;
-                //     z-index: 10;
-                //     // color: #0b0154;
-                //     color: #fff;
-                //     font-weight: 400;
-                //     font-size: 16px;
-                //     line-height: 30px;
-                //     transform: translate(-50%, -50%);
-                // }
             }
         }
     }
