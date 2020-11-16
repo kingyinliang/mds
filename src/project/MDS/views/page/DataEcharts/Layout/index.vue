@@ -17,7 +17,7 @@
                     menuActiveName = 'realTime';
                     $router.push({ path: '/DataEcharts/RealTime-index' });"
             >
-                <span slot="title">蚝油看板</span>
+                <span slot="title">蚝油杀菌</span>
             </el-menu-item>
         </el-menu>
         <div class="DataEchartsContent">

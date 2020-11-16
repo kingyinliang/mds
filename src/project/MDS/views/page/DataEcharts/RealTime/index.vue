@@ -9,12 +9,22 @@
                     <div class="item" @click="showDetail(item)">
                         <h3>{{ item.sterilizePotName }}</h3>
                         <img src="@/assets/img/pot_1@2x.png" alt="" style="width: 100%;">
-                        <span>{{ item.sterilizePotTemperature + '℃' }}</span>
+                        <!-- <span>{{ item.sterilizePotTemperature + '℃' }}</span> -->
+                        <div class="temps-box">
+                            <div class="temps" :style="{ top: top + 'px' }">
+                                <span v-for="(row, i) in item.temps" :key="i" class="temp-item">{{ row + '°C' }}</span>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
         <el-dialog :title="title" :visible.sync="dialogVisible" width="80%" :before-close="handleClose">
+            <span class="dialog-date">{{ dataDate }}</span>
+            <div v-show="showTip" class="tip-box">
+                <span class="sp">温度：{{ tipRow.temp }}</span>
+                <span class="sp">时间：{{ tipRow.time }}</span>
+            </div>
             <div id="tem_echarts_box" class="chart-box" />
         </el-dialog>
     </div>
@@ -43,7 +53,12 @@ export default {
             dataTime: [],
             timePoint: [],
             SocketClientForList: null,
-            SocketClientForPot: null
+            SocketClientForPot: null,
+            dataDate: '',
+            tipRow: {},
+            showTip: false,
+            timer: null,
+            top: 0
         };
     },
     async mounted() {
@@ -93,7 +108,16 @@ export default {
         async getList() {
             this.$http(`${ECHARTS_API.OYSTER_SAUCE_LIST}`, 'POST', { factory: this.factoryId }, false, false, true).then(({ data }) => {
                 if (data.code === 200) {
-                    this.list = data.data;
+                    // this.list = data.data;
+                    const list = data.data;
+                    list.map((item) => {
+                        const arr = [...item.previousSterilizePotTemperatureList];
+                        // item.sterilizePotTemperature = item.sterilizePotTemperature;
+                        // item.previousSterilizePotTemperatureList = item.previousSterilizePotTemperatureList;
+                        arr.splice(1, 0, item.sterilizePotTemperature);
+                        item.temps = arr;
+                    });
+                    this.list = list;
                 } else {
                     this.$errorToast(data.msg);
                 }
@@ -125,23 +149,40 @@ export default {
                     });
                 }
             });
-            arr.sort((a, b) => Date.parse(a.time) - Date.parse(b.time));
+            // arr.sort((a, b) => Date.parse(a.time) - Date.parse(b.time));
+            arr.sort((a, b) => {
+                if (a.time > b.time) {
+                    return 1;
+                }
+                    return -1;
+
+            });
 
             arr.map(item => {
                 const i = data.sterilizePotDateList.findIndex(record => record === item.time);
                 if (i === -1) {
-                    const index = [...data.sterilizePotDateList, item.time].sort((a, b) => Date.parse(a) - Date.parse(b)).findIndex(row => row === item.time);
+                    // const index = [...data.sterilizePotDateList, item.time].sort((a, b) => Date.parse(a) - Date.parse(b)).findIndex(row => row === item.time);
+                    const index = [...data.sterilizePotDateList, item.time]
+                        .sort((a, b) => {
+                            if (a > b) {
+                                return 1;
+                            }
+                                return -1;
+
+                        })
+                        .findIndex(row => row === item.time);
                     const temps = [...data.sterilizePotTemperatureList];
                     const temp = ((temps[index >= temps.length ? index - 1 : index] + temps[index > 0 ? index - 1 : index]) / 2).toFixed(1);
                     data.sterilizePotDateList.splice(index, 0, item.time);
                     data.sterilizePotTemperatureList.splice(index, 0, temp);
                 }
             });
+            this.dataDate = data.dataDate;
 
             return {
                 sterilizePotTemperatureList: data.sterilizePotTemperatureList, // 温度
-                sterilizePotDateList: data.sterilizePotDateList, // 时间
-                timePoint: arr // 几个时间段
+                sterilizePotDateList: data.sterilizePotDateList.map(item => item.split(' ')[1]), // 时间
+                timePoint: arr.map(item => ({ label: item.label, time: item.time.split(' ')[1] })) // 几个时间段
             };
         },
         async getDetail(row) {
@@ -169,6 +210,15 @@ export default {
                 // console.log(data);
                 const result = this.dataHandler(data);
                 this.initEcharts(result);
+                this.tipRow = {
+                    temp: result.sterilizePotTemperatureList[result.sterilizePotTemperatureList.length - 1],
+                    time: result.sterilizePotDateList[result.sterilizePotDateList.length - 1]
+                };
+                this.showTip = true;
+                this.timer && clearTimeout(this.timer);
+                this.timer = setTimeout(() => {
+                    this.showTip = false;
+                }, 5000);
             }
         },
         websocketToLogin(forList = false) {
@@ -203,7 +253,19 @@ export default {
             if (forList) {
                 this.SocketClientForList = new SocketClient(url, res => {
                     // console.log(res, 'list==---=--=-=')
-                    this.list = JSON.parse(res.data || '[]');
+                    // this.list = JSON.parse(res.data || '[]');
+                    const list = JSON.parse(res.data || '[]');
+                    this.list.map((item, index) => {
+                        item.sterilizePotTemperature = list[index].sterilizePotTemperature;
+                        item.previousSterilizePotTemperatureList = list[index].previousSterilizePotTemperatureList;
+                        if (item.temps.length > 20) {
+                            item.temps.splice(0, 17);
+                        }
+                        // console.log(item, '====');
+                        item.temps.push(item.sterilizePotTemperature);
+                        this.top = -25 * (item.temps.length - 3);
+                        // this.$forceUpdate()
+                    });
                 });
             } else {
                 url += `-${this.factoryId}-${this.title}`;
@@ -283,23 +345,67 @@ export default {
                     line-height: 30px;
                     text-align: center;
                 }
-                span {
+                .temps-box {
                     position: absolute;
                     top: 50%;
                     left: 50%;
-                    z-index: 10;
-                    // color: #0b0154;
-                    color: #fff;
-                    font-weight: 400;
-                    font-size: 16px;
-                    line-height: 30px;
+                    width: 60px;
+                    height: 70px;
+                    overflow: hidden;
                     transform: translate(-50%, -50%);
+                    .temps {
+                        position: absolute;
+                        width: 100%;
+                        height: auto;
+                        transition: all ease 250ms;
+                        span {
+                            display: block;
+                            color: rgba($color: #fff, $alpha: 0.5);
+                            font-size: 18px;
+                            line-height: 25px;
+                        }
+                        .temp-item:last-child {
+                            color: #fff;
+                        }
+                    }
                 }
+                // span {
+                //     position: absolute;
+                //     top: 50%;
+                //     left: 50%;
+                //     z-index: 10;
+                //     // color: #0b0154;
+                //     color: #fff;
+                //     font-weight: 400;
+                //     font-size: 16px;
+                //     line-height: 30px;
+                //     transform: translate(-50%, -50%);
+                // }
             }
         }
     }
     .chart-box {
         min-height: 400px;
+    }
+    .dialog-date {
+        position: relative;
+        top: -15px;
+        font-size: 18px;
+    }
+    .tip-box {
+        position: absolute;
+        top: 15px;
+        right: 50px;
+        z-index: 3014;
+        display: flex;
+        flex-direction: column;
+        width: 180px;
+        height: 50px;
+        background: #1055ff;
+        .sp {
+            padding: 3px 10px;
+            color: #fff;
+        }
     }
 }
 </style>
