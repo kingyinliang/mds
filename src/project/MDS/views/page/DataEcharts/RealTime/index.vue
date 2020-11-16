@@ -11,7 +11,7 @@
                         <img src="@/assets/img/pot_1@2x.png" alt="" style="width: 100%;">
                         <!-- <span>{{ item.sterilizePotTemperature + '℃' }}</span> -->
                         <div class="temps-box">
-                            <div class="temps" :style="{ top: top + 'px' }">
+                            <div class="temps" :style="{ top: top[index] + 'px' }">
                                 <span v-for="(row, i) in item.temps" :key="i" class="temp-item">{{ row + '°C' }}</span>
                             </div>
                         </div>
@@ -58,7 +58,7 @@ export default {
             tipRow: {},
             showTip: false,
             timer: null,
-            top: 0
+            top: []
         };
     },
     async mounted() {
@@ -110,11 +110,15 @@ export default {
                 if (data.code === 200) {
                     // this.list = data.data;
                     const list = data.data;
-                    list.map((item) => {
+                    this.top = new Array(list.length).fill(0);
+                    list.map((item, index) => {
                         const arr = [...item.previousSterilizePotTemperatureList];
                         // item.sterilizePotTemperature = item.sterilizePotTemperature;
                         // item.previousSterilizePotTemperatureList = item.previousSterilizePotTemperatureList;
-                        arr.splice(1, 0, item.sterilizePotTemperature);
+                        // arr.splice(1, 0, item.sterilizePotTemperature);
+                        arr.push(item.sterilizePotTemperature)
+                        // item.top = 0;
+                        // this.top[index] = 0;
                         item.temps = arr;
                     });
                     this.list = list;
@@ -154,8 +158,7 @@ export default {
                 if (a.time > b.time) {
                     return 1;
                 }
-                    return -1;
-
+                return -1;
             });
 
             arr.map(item => {
@@ -167,8 +170,7 @@ export default {
                             if (a > b) {
                                 return 1;
                             }
-                                return -1;
-
+                            return -1;
                         })
                         .findIndex(row => row === item.time);
                     const temps = [...data.sterilizePotTemperatureList];
@@ -262,8 +264,13 @@ export default {
                             item.temps.splice(0, 17);
                         }
                         // console.log(item, '====');
-                        item.temps.push(item.sterilizePotTemperature);
-                        this.top = -25 * (item.temps.length - 3);
+                        if (item.temps[item.temps.length - 1] !== item.sterilizePotTemperature) {
+                            item.temps.push(item.sterilizePotTemperature);
+                            // item.top = -25 * (item.temps.length - 3);
+                            this.top[index] = -25 * (item.temps.length - 3);
+                        }
+                        // item.temps.push(item.sterilizePotTemperature);
+                        // this.top = -25 * (item.temps.length - 3);
                         // this.$forceUpdate()
                     });
                 });
