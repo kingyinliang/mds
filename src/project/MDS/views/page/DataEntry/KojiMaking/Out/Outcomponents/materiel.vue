@@ -15,7 +15,7 @@
                     </template>
                     <template slot-scope="scope">
                         <el-select v-model="scope.row.material" placeholder="请选择" :disabled="!(isRedact && scope.row.status !== 'submit' && scope.row.status !== 'checked' && scope.row.delFlag !== '1')" size="small">
-                            <el-option v-for="(item, index) in brine" :key="index" :label="item.value" :value="item.code + ' ' + item.value" />
+                            <el-option v-for="(item, index) in brine" :key="index" :label="item.value" :value="item.value + ' ' + item.code" />
                         </el-select>
                     </template>
                 </el-table-column>
@@ -233,8 +233,8 @@
                 this.MaterielDate.forEach(item => {
                     item.orderHouseId = this.formHeader.id;
                     if (item.material) {
-                        item.materialCode = item.material.substring(0, item.material.indexOf(' '));
-                        item.materialName = item.material.substring(item.material.indexOf(' ') + 1);
+                        item.materialCode = item.material.substring(item.material.indexOf(' ') + 1);
+                        item.materialName = item.material.substring(0, item.material.indexOf(' '));
                     }
                     if (item.status) {
                         if (item.status === 'saved') {
