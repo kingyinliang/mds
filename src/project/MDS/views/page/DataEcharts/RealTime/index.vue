@@ -1,7 +1,7 @@
 <template>
     <div class="realTime">
         <echarts-head>欣和企业开发区分工厂</echarts-head>
-        <img src="@/assets/img/ozoneTitle.png" alt="" class="Container_box_title">
+        <img src="@/assets/img/ozoneTitle_2.png" alt="" class="Container_box_title">
         <div class="Container">
             <!-- <img src="@/assets/img/ozoneBg.png" alt="" class="Container_bg" /> -->
             <div class="Container_box">
@@ -258,7 +258,7 @@ export default {
                         //     this.top[index] = -25 * (item.temps.length - 3);
                         // }
                         item.temps.push(...list[index].previousSterilizePotTemperatureList, item.sterilizePotTemperature);
-                        this.top[index] = -25 * (item.temps.length - 3);
+                        this.top[index] = -20 * (item.temps.length - 3);
                     });
                 });
             } else {
@@ -275,22 +275,22 @@ export default {
 
 <style lang="scss" scoped>
 .realTime {
-    float: right;
-    width: calc(100% - 120px);
+    width: 100%;
     height: 100%;
     .Container_box_title {
         position: relative;
+        left: calc(50% - 85px);
         z-index: 88;
         display: block;
-        width: 250px;
-        margin: auto;
+        width: 290px;
     }
     .Container {
         position: relative;
         top: -48px;
         display: flex;
         flex-wrap: wrap;
-        width: calc(100% - 20px);
+        float: right;
+        width: calc(100% - 140px);
         height: calc(100% - 100px);
         margin: 0 10px;
         padding: 15px;
@@ -321,7 +321,7 @@ export default {
             margin: 16px 0;
             .item {
                 position: relative;
-                width: 80%;
+                width: 90%;
                 text-align: center;
                 cursor: pointer;
                 user-select: none;
@@ -335,12 +335,16 @@ export default {
                 }
                 .temps-box {
                     position: absolute;
-                    top: 50%;
-                    left: 50%;
-                    width: 60px;
-                    height: 70px;
+                    top: 0;
+                    right: 0;
+                    bottom: 0;
+                    left: 0;
+                    width: auto;
+                    height: 60px;
+                    margin: auto;
                     overflow: hidden;
-                    transform: translate(-50%, -50%);
+                    transform: perspective(50px) rotateX(15deg) rotateY(0deg);
+                    transform-style: preserve-3d;
                     .temps {
                         position: absolute;
                         width: 100%;
@@ -350,7 +354,7 @@ export default {
                             display: block;
                             color: rgba($color: #fff, $alpha: 0.5);
                             font-size: 18px;
-                            line-height: 25px;
+                            line-height: 20px;
                         }
                         .temp-item:last-child {
                             color: #fff;
