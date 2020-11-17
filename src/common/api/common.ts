@@ -274,7 +274,7 @@ const COMMON_API = {
     /**
      * @property {string} 根据编码查物料
      */
-    SEARCH_MATERIAL_API: params => httpProxy('/sysMaterial/queryListByType', 'POST', params, 'MDS', false),
+    SEARCH_MATERIAL_API: params => httpProxy('/sysMaterial/queryListByType', 'POST', params, 'MDS'),
     /**
      * @property {string} SPECS_DROPDOWN_API 基础数据--规格管理-下拉列表
      */
