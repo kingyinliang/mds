@@ -182,7 +182,6 @@
                 label: '溶解罐号',
                 prop: 'potId',
                 labelWidth: 90,
-                rule: [{ required: true, message: ' ', trigger: 'change' }],
                 defaultValue: '',
                 defaultOptionsFn: () => {
                     return new Promise((resolve) => {
@@ -192,8 +191,6 @@
                             size: 9999,
                             holderType: '019' // 溶解罐参数编码
                         }).then((res) => {
-                            // eslint-disable-next-line no-invalid-this
-                            // this.setEnvVal(val)
                             resolve(res)
                         })
                     })
@@ -237,10 +234,6 @@
         ]
 
         queryTableFormRules = [
-            {
-                prop: 'potId',
-                text: '请选择溶解罐号'
-            }
         ]
 
 
