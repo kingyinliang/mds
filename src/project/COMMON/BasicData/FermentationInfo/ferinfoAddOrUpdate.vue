@@ -68,10 +68,6 @@
             dataForm: HTMLFormElement;
         };
 
-        processList = [];
-        prdList = [];
-        receiveList = [];
-        hoursList = [];
         visible = false;
         dataForm = {
             id: '',

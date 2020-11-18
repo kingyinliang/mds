@@ -85,8 +85,8 @@
                 </el-table-column>
             </el-table>
         </mds-card>
-        <mds-card :title="'半成品领用'" :name="'materialS'">
-            <el-table ref="materialS" header-row-class-name="tableHead" class="newTable" max-height="267" :data="materialS" :row-class-name="rowDelFlag" :span-method="spanTwoMethod" border tooltip-effect="dark">
+        <mds-card v-for="line in bottleLineNum" :key="line" :title="'灌装线' + line" :name="'materialS' + line">
+            <el-table ref="materialS" header-row-class-name="tableHead" class="newTable" max-height="267" :data="materialSArr[line - 1]" :row-class-name="rowDelFlag" :span-method="spanTwoMethod" border tooltip-effect="dark">
                 <el-table-column type="index" label="序号" width="50px" />
                 <el-table-column label="领用物料" prop="material" width="150" :show-overflow-tooltip="true">
                     <template slot-scope="scope">
@@ -171,7 +171,7 @@
 <script lang="ts">
     import { Vue, Component, Prop } from 'vue-property-decorator';
     import { dateFormat, getUserNameNumber, accAdd } from 'utils/utils';
-    import { PKG_API, AUDIT_API } from 'common/api/api';
+    import { PKG_API, AUDIT_API, COMMON_API } from 'common/api/api';
     import _ from 'lodash';
 
     @Component({
@@ -188,6 +188,10 @@
         }
 
         MaterialAudit = [];
+
+        bottleLineNum = 0;
+
+        materialSArr: MaterialMap[][] = []
 
         currentDataTable: MaterialMap[] = [];
         orgDataTable: MaterialMap[] = [];
@@ -388,17 +392,47 @@
                 console.log(this.currentDataTable);
                 this.orgDataTable = JSON.parse(JSON.stringify(this.currentDataTable));
             });
+            if (formHeader.orderStatus === 'T') {
+                COMMON_API.ORGDETAIL_API({
+                    id: formHeader.productLine
+                }).then(({ data }) => {
+                    this.bottleLineNum = Number(data.data.bottleLineNum)
+                    this.getmaterialS(formHeader, true);
+
+                })
+            } else {
+                PKG_API.PKG_MATERIAL_S_QUERY_API({
+                    factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
+                    orderNo: formHeader.orderNo,
+                    orderStatus: formHeader.orderStatus,
+                    productLine: formHeader.productLine
+                }).then(({ data }) => {
+                    this.processData(data.data, 'materialS');
+                    this.merge(this.materialS, 'materialS');
+                    this.orgMaterialS = JSON.parse(JSON.stringify(this.materialS));
+                })
+            }
+            this.MaterialAudit = await this.getAudit(formHeader, 'MATERIAL');
+        }
+
+        getmaterialS(formHeader, tmp) {
             PKG_API.PKG_MATERIAL_S_QUERY_API({
                 factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
                 orderNo: formHeader.orderNo,
                 orderStatus: formHeader.orderStatus,
                 productLine: formHeader.productLine
             }).then(({ data }) => {
+                if (tmp) {
+                    for (let i = 0; i < this.bottleLineNum; i++) {
+
+                        const materialarr: MaterialMap[] = []
+                        this.materialSArr.push(materialarr)
+                    }
+                }
                 this.processData(data.data, 'materialS');
                 this.merge(this.materialS, 'materialS');
                 this.orgMaterialS = JSON.parse(JSON.stringify(this.materialS));
             })
-            this.MaterialAudit = await this.getAudit(formHeader, 'MATERIAL');
         }
 
         async getAudit(formHeader, verifyType) {
