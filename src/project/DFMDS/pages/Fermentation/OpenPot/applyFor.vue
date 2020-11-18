@@ -6,7 +6,9 @@
             :column="column"
             :show-table="true"
             :show-operation-column="true"
-            :operation-column-width="80"
+            :operation-column-width="65"
+            :list-interface="listInterface"
+            get-list-field="data"
         >
             <template slot="mds-button">
                 <el-button type="primary" size="small" style="margin-left: 10px;" @click="AddDate()">
@@ -14,8 +16,11 @@
                 </el-button>
             </template>
             <template slot="operation_column" slot-scope="{ scope }">
-                <el-button class="ra_btn" type="text" round size="mini" style="margin-left: 0;" @click="del(scope.row, true)">
+                <el-button v-if="scope.$index === 0" class="ra_btn" type="text" round size="mini" style="margin-left: 0;" @click="del(scope.row, true)">
                     删除
+                </el-button>
+                <el-button v-if="scope.$index === 1" class="ra_btn" type="text" round size="mini" style="margin-left: 0;" @click="withdraw(scope.row, true)">
+                    撤回
                 </el-button>
             </template>
         </query-table>
@@ -23,12 +28,16 @@
 </template>
 
 <script lang="ts">
-    import { Vue, Component } from 'vue-property-decorator';
+    import { Component, Vue } from 'vue-property-decorator';
     import { COMMON_API } from 'common/api/api';
     import { dateFormat } from 'utils/utils';
 
     @Component
     export default class ApplyFor extends Vue {
+        $refs: {
+            queryTable: HTMLFormElement;
+        };
+
         queryFormData = [
             {
                 type: 'select',
@@ -39,7 +48,7 @@
                         factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
                         deptType: ['WORK_SHOP'],
                         deptName: '包装'
-                    })
+                    });
                 },
                 resVal: {
                     resData: 'data',
@@ -62,7 +71,7 @@
                     return COMMON_API.DICTQUERY_API({
                         factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
                         dictType: 'ORDER_TYPE'
-                    })
+                    });
                 },
                 defaultValue: '',
                 resVal: {
@@ -79,7 +88,7 @@
                     return COMMON_API.DICTQUERY_API({
                         factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
                         dictType: 'ORDER_TYPE'
-                    })
+                    });
                 },
                 defaultValue: '',
                 resVal: {
@@ -88,7 +97,7 @@
                     value: 'dictCode'
                 }
             }
-        ]
+        ];
 
         column = [
             {
@@ -104,6 +113,20 @@
             {
                 label: '开罐单号',
                 prop: 'productLineName',
+                formatter: (row) => {
+                    const h = this.$createElement; // eslint-disable-line
+                    return h('div', {
+                        style: {
+                            color: '#45c2b5',
+                            cursor: 'pointer'
+                        },
+                        on: {
+                            click: () => {
+                                this.goDetail(row); // eslint-disable-line
+                            }
+                        }
+                    }, row.dictValue);
+                },
                 minwidth: '160'
             },
             {
@@ -141,10 +164,39 @@
                 prop: 'productLineName',
                 minwidth: '160'
             }
-        ]
+        ];
 
-        del() {
-        //
+        // 查询
+        listInterface(params) {
+            params['factory'] = JSON.parse(sessionStorage.getItem('factory') || '{}').id;
+            return COMMON_API.DICTQUERY_API({
+                factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
+                dictType: 'ORDER_TYPE'
+            });
+        }
+
+        goDetail(row: object) {
+            console.log(row);
+            this.$store.commit('common/updateMainTabs', this.$store.state.common.mainTabs.filter(subItem => subItem.name !== 'DFMDS-pages-Fermentation-OpenPot-applyDetail'))
+            setTimeout(() => {
+                this.$router.push({
+                    name: `DFMDS-pages-Fermentation-OpenPot-applyDetail`
+                });
+            }, 100);
+        }
+
+        del(row) {
+            this.$confirm('确认删除, 是否继续?', '删除', {
+                confirmButtonText: '确定',
+                cancelButtonText: '取消',
+                type: 'warning'
+            }).then(() => {
+                console.log(row);
+            })
+        }
+
+        withdraw() {
+            //
         }
     }
 </script>

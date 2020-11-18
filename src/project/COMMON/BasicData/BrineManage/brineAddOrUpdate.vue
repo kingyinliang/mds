@@ -91,7 +91,7 @@
             endDate: [{ required: true, message: '有效结束日期', trigger: 'blur' }]
         };
 
-        tableData = []
+        tableData: Brine[] = []
 
 
         init(data) {
@@ -137,6 +137,9 @@
                 }
             })
         }
+    }
+    interface Brine {
+        id?: string;
     }
 </script>
 
