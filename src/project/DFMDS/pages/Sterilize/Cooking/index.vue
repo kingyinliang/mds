@@ -322,7 +322,7 @@ export default class CookingIndex extends Vue {
             potNoName: row.potNoName,
             remainder: row.remainder,
             productMaterial: row.productMaterial,
-            productMaterialName: row.productMaterial,
+            productMaterialName: row.productMaterialName,
             potStatusName: row.potStatusName,
             moveAmount: row.remainder,
             moveUnit: 'KG',
