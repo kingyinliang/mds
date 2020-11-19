@@ -361,7 +361,7 @@
                 productLine: this.currentProductLine,
                 workShop: this.currentWorkshop,
                 size: this.pageSize,
-                current: this.totalCount,
+                current: this.currPage,
                 checkWorkDate: this.currentEvaluationStartDate,
                 checkWorkEndDate: this.currentEvaluationEndDate
                 }).then(({ data }) => {
@@ -378,8 +378,6 @@
                         item.isRedact = false
                     })
                     this.totalCount = data.data.total
-                    this.currPage = data.data.current
-                    this.pageSize = data.data.size
                 }
             })
         }
@@ -410,8 +408,6 @@
                         item.isRedact = false
                     })
                     this.totalCount = data.data.total
-                    this.currPage = data.data.current
-                    this.pageSize = data.data.size
 
                     // 存全局变量
                     this.currentWorkshop = obj.workshop
@@ -628,7 +624,7 @@
         }
 
         handleCurrentChange(val) {
-            this.pageSize = val;
+            this.currPage = val;
             this.getDataList();
         }
 
