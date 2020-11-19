@@ -359,12 +359,13 @@
                this.merge(this.steAccessoriesConsume, 'steAccessoriesConsume');
                this.merge(this.newSteAccessoriesConsume, 'newSteAccessoriesConsume');
             })
-            this.acceAddAudit = await this.getAudit(formHeader, 'MATERIAL');
+            this.acceAddAudit = await this.getAudit(formHeader, ['ACCESSORIES', 'MATERIAL']);
         }
 
         async getAudit(formHeader, verifyType) {
-            const a = await AUDIT_API.AUDIT_LOG_LIST_API({
-                orderNo: formHeader.potOrderNo,
+            const a = await AUDIT_API.STE_AUDIT_LOG_API({
+                orderNo: formHeader.orderNo,
+                splitOrderNo: formHeader.potOrderNo,
                 verifyType: verifyType
             })
             return a.data.data
