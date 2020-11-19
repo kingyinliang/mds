@@ -134,7 +134,7 @@
         }
 
         // 共用变数
-        currentWorkShop='' // 当前车间
+        currentWorkShop=null // 当前车间  溶解罐取消车间维度
         currentPotId='' // 选取的当前罐id
         currentPotNo='' // 选取的当前罐号
         holderStatus: HolderStatus[]=[] // 罐状态对应
@@ -179,45 +179,18 @@
         queryTableFormData = [
             {
                 type: 'select',
-                label: '生产车间',
-                prop: 'workShop',
-                rule: [{ required: true, message: ' ', trigger: 'change' }],
-                labelWidth: 90,
-                defaultOptionsFn: () => {
-                    return new Promise((resolve) => {
-                        COMMON_API.ORG_QUERY_WORKSHOP_API({
-                            factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
-                            deptType: ['WORK_SHOP'],
-                            deptName: '杀菌'
-                        }).then((res) => {
-                            resolve(res)
-                        })
-                    })
-                },
-                resVal: {
-                    resData: 'data',
-                    label: ['deptName'],
-                    value: 'id'
-                },
-                linkageProp: ['potId']
-            },
-            {
-                type: 'select',
                 label: '溶解罐号',
                 prop: 'potId',
-                labelWidth: 80,
+                labelWidth: 90,
                 defaultValue: '',
-                optionsFn: val => {
+                defaultOptionsFn: () => {
                     return new Promise((resolve) => {
                         COMMON_API.HOLDER_QUERY_API({ // /sysHolder/query
                             factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
-                            deptId: val,
                             current: 1,
                             size: 9999,
                             holderType: '019' // 溶解罐参数编码
                         }).then((res) => {
-                            // eslint-disable-next-line no-invalid-this
-                            this.setEnvVal(val)
                             resolve(res)
                         })
                     })
@@ -261,10 +234,6 @@
         ]
 
         queryTableFormRules = [
-            {
-                prop: 'workShop',
-                text: '请选择生产车间'
-            }
         ]
 
 
@@ -286,10 +255,6 @@
                 })
             });
 
-        }
-
-        setEnvVal(val) {
-            this.currentWorkShop = val
         }
 
         // 入罐完成

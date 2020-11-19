@@ -2,10 +2,10 @@
     <el-dialog title="大豆领用" width="458px" :close-on-click-modal="false" :visible.sync="visible">
         <el-form ref="dataForm" :model="dataForm" status-icon :rules="dataRule" label-width="125px" size="small" @keyup.enter.native="dataFormSubmit()">
             <el-form-item label="领用库位：">
-                <el-input v-model="dataForm.materialHL" placeholder="手动输入" disabled />
+                <el-input v-model="dataForm.materialHL" placeholder="NA" disabled />
             </el-form-item>
             <el-form-item label="BOM物料：">
-                <el-input v-model="dataForm.material" placeholder="手动输入" disabled />
+                <el-input v-model="dataForm.material" placeholder="NA" disabled />
             </el-form-item>
             <el-form-item label="领用批次：" prop="batch">
                 <el-select v-model="dataForm.batch" :disabled="type !== 'add'" placeholder="请选择" style="width: 100%;" @change="batchChange">
@@ -13,10 +13,10 @@
                 </el-select>
             </el-form-item>
             <el-form-item label="领用物料：">
-                <el-input v-model="dataForm.materialLink" placeholder="手动输入" disabled />
+                <el-input v-model="dataForm.materialLink" placeholder="NA" disabled />
             </el-form-item>
             <el-form-item label="库存量：">
-                <el-input v-model="dataForm.stockAmount" placeholder="手动输入" disabled />
+                <el-input v-model="dataForm.stockAmount" placeholder="NA" disabled />
             </el-form-item>
             <el-form-item label="领用数量：" prop="amount">
                 <el-input v-model.number="dataForm.amount" placeholder="手动输入" @blur="calcStockAmount" />
@@ -25,19 +25,19 @@
                 <el-input v-model.number="dataForm.smallBeanAmount" placeholder="手动输入" />
             </el-form-item>
             <el-form-item label="单位：">
-                <el-input v-model="dataForm.unit" placeholder="手动输入" disabled />
+                <el-input v-model="dataForm.unit" placeholder="NA" disabled />
             </el-form-item>
             <el-form-item label="大豆厂家：">
-                <el-input v-model="dataForm.supplier" placeholder="手动输入" disabled />
+                <el-input v-model="dataForm.supplier" placeholder="NA" disabled />
             </el-form-item>
             <el-form-item label="备注：" prop="remark">
                 <el-input v-model="dataForm.remark" placeholder="手动输入" />
             </el-form-item>
             <el-form-item label="操作人：">
-                <el-input v-model="dataForm.changer" placeholder="手动输入" disabled />
+                <el-input v-model="dataForm.changer" placeholder="NA" disabled />
             </el-form-item>
             <el-form-item label="操作时间：">
-                <el-input v-model="dataForm.changed" placeholder="手动输入" disabled />
+                <el-input v-model="dataForm.changed" placeholder="NA" disabled />
             </el-form-item>
         </el-form>
         <div slot="footer" class="dialog-footer">
@@ -128,7 +128,7 @@
                 materialLocation: Data.materialLocation,
                 batch: Data.batch,
                 wareHouseNo: Data.wareHouseNo,
-                material: String(Data.materialName) + String(Data.materialCode),
+                material: `${String(Data.materialName)} ${String(Data.materialCode)}`,
                 materialCode: Data.materialCode,
                 materialName: Data.materialName,
                 materialLink: Data.materialCode ? Data.materialName + Data.materialCode : '',

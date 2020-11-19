@@ -1324,7 +1324,7 @@
                             }
                             let materstrchai = [];
                             materstrchai = this.chusoy.soyMaterialstr.split(' ');
-                            const materstrName = typeof materstrchai[1] === 'undefined' ? '' : materstrchai[1];
+                            const materstrName = typeof materstrchai[0] === 'undefined' ? '' : materstrchai[0];
                             if (currentRecord && currentRecord.length > 0) {
                                 Object.assign(currentRecord[0], {
                                     batch: this.chusoy.batch,
@@ -1335,7 +1335,7 @@
                                     unit: 'KG',
                                     pulpHolderId: this.chusoy.pulpHolderId,
                                     pulpHolderName: this.chusoy.pulpHolderName,
-                                    materialCode: materstrchai[0],
+                                    materialCode: materstrchai[1],
                                     materialName: materstrName
                                 });
                             } else {
@@ -1359,7 +1359,7 @@
                                     delFlag: '0',
                                     changed: dateFormat(new Date(), 'yyyy-MM-dd hh:mm:ss'),
                                     changer: this.$store.state.user.realName + `(${this.$store.state.user.name})`,
-                                    materialCode: materstrchai[0],
+                                    materialCode: materstrchai[1],
                                     materialName: materstrName
                                 });
                                 this.$nextTick(() => {

@@ -15,7 +15,7 @@
                     </template>
                     <template slot-scope="scope">
                         <el-select v-model="scope.row.material" placeholder="请选择" :disabled="!(isRedact && scope.row.status !== 'submit' && scope.row.status !== 'checked' && scope.row.delFlag !== '1')" size="small">
-                            <el-option v-for="(item, index) in brine" :key="index" :label="item.value" :value="item.code + ' ' + item.value" />
+                            <el-option v-for="(item, index) in brine" :key="index" :label="item.value" :value="item.value + ' ' + item.code" />
                         </el-select>
                     </template>
                 </el-table-column>

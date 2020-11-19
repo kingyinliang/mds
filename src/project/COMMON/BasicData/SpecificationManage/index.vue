@@ -5,9 +5,9 @@
                 el-row(style="float: right;")
                     el-form(:inline="true" :model="dataOfSearch" size="small" label-width="68px" class="topforms2" @submit.native.prevent)
                         el-form-item
-                            el-input(v-model="dataOfSearch.materialCode" placeholder="物料" suffix-icon="el-icon-search" clearable @clear="getItemsList" @blur="dataOfSearch.materialCode===''?getItemsList():false")
+                            el-input(v-model="dataOfSearch.materialCode" placeholder="物料" suffix-icon="el-icon-search" clearable)
                         el-form-item(style="height: 32px;")
-                            el-button(v-if="isAuth('specQuery')" type="primary" size="small" :disabled="dataOfSearch.materialCode.trim()===''" @click="getItemsList(true,'normal')") 查询
+                            el-button(v-if="isAuth('specQuery')" type="primary" size="small" @click="getItemsList(true,'normal')") 查询
                             el-button(v-if="isAuth('specQuery')" type="primary" size="small" @click="btnAdvanceSearch") 高级查询
                             el-button(v-if="isAuth('specInsert')" type="primary" size="small" @click="btnAddItem") 新增
                             el-button(v-if="isAuth('specDel')&&targetInfoList.length!==0" type="danger" size="small"  @click="btnRemoveItems" :disabled="chechDeleteList===0" ) 批量删除

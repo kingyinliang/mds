@@ -8,8 +8,6 @@
             :query-form-data="queryFormData"
             :list-interface="getDataList"
             :custom-data="true"
-            @get-data-success="FnCallBackHandle"
-            @created-end="createdEnd"
         >
             <template slot="home">
                 <div class="item-sort-container">
@@ -38,7 +36,7 @@
 </template>
 <script lang="ts">
     import { Vue, Component } from 'vue-property-decorator';
-    import { COMMON_API, KOJI_API } from 'common/api/api';
+    import { KOJI_API } from 'common/api/api';
 
     import StockDetailTable from '../common/StockDetailTable.vue';
     import StockDetailNum from '../common/StockDetailNum.vue';
@@ -58,35 +56,10 @@
         stockInfoList: object[] = [];
 
         queryFormData = [
-            {
-                type: 'select',
-                label: '生产车间',
-                prop: 'workShop',
-                labelWidth: 90,
-                rule: [
-                    { required: true, message: '请选择车间', trigger: 'change' }
-                ],
-                defaultOptionsFn: () => {
-                    return COMMON_API.ORG_QUERY_WORKSHOP_API({
-                        factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
-                        deptType: ['WORK_SHOP'],
-                        deptName: '制曲'
-                    })
-                },
-                resVal: {
-                    resData: 'data',
-                    label: ['deptName'],
-                    value: 'id'
-                }
-            }
         ]
 
-        createdEnd() {
-            this.$nextTick(() => {
-                if (this.$refs.queryTable.queryForm.workShop !== '' && this.$refs.queryTable.queryForm.productDate !== '') {
-                    this.$refs.queryTable.getDataList(true)
-                }
-            })
+        mounted() {
+            this.getDataList();
         }
 
         private FnCallBackHandle(data) {
