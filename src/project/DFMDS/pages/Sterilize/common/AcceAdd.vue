@@ -419,7 +419,7 @@
         // 获取   煮料锅/罐下拉  煮料锅/罐下拉 转运罐号下拉  称取盒编号下拉
         getHolderList() {
             COMMON_API.HOLDER_DROPDOWN_API({
-                deptId: this.formHeader.workShop,
+                factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
                 holderType: '020'
             }).then(({ data }) => {
                 this.holderList = data.data
