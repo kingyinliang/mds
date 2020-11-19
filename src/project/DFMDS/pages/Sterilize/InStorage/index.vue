@@ -28,7 +28,7 @@
                     template(slot="1"): in-storage(ref="inStorage" :is-redact="isRedact" card-title="入库列表" :table-data="tableData" :order-info="orderData" :pkg-work-shop-list="pkgWorkShopList")
                     template(slot="2"): exc-record(ref="excRecord" :is-redact="isRedact" :form-header="formHeader")
                     template(slot="3"): text-record(ref="textRecord" :is-redact="isRedact")
-            redact-box(v-if="!(formHeader.inStorageStatus === 'C' || formHeader.inStorageStatus === 'D' || formHeader.inStorageStatus === 'P' || formHeader.inStorageStatus ==='M')" :disabled="redactBoxDisable" :is-redact.sync='isRedact' redact-auth="steStgEdit" save-auth="steStgEdit" submit-auth="steStgSubmit" :urgent-submit="false" :submit-rules="submitRules" :saved-rules="savedRules" :saved-datas="savedDatas" :submit-datas="submitDatas")
+            redact-box(v-if="!(formHeader.inStorageStatus === 'C' || formHeader.inStorageStatus === 'D' || formHeader.inStorageStatus === 'P' || formHeader.inStorageStatus ==='M')" :disabled="redactBoxDisable" :is-redact.sync='isRedact' redact-auth="steStgEdit" save-auth="steStgEdit" submit-auth="steStgSubmit" :urgent-submit="false" :submit-rules="submitRules" :saved-rules="savedRules" :saved-datas="savedDatas" :submit-datas="submitDatas" v-on:sendSuccess='successToDo')
 </template>
 
 <script lang="ts">
@@ -434,12 +434,12 @@
         }
 
         // {redact-box} 保存
-        async savedDatas() {
+        savedDatas() {
             const inStorageRequest = this.$refs.inStorage.getSavedOrSubmitData();
             const excRequest = this.$refs.excRecord.getSavedOrSubmitData(this.formHeader, 'INSTORAGE');
             const textRequest = this.$refs.textRecord.savedData(this.formHeader, 'sterilize');
 
-            await STE_API.STE_INSTORAGE_SAVE_API({
+            return STE_API.STE_INSTORAGE_SAVE_API({
                     exceptionDelete: excRequest.ids,
                     exceptionInsert: excRequest.insertDto,
                     exceptionUpdate: excRequest.updateDto,
@@ -449,26 +449,16 @@
                     steOrderUpdateDto: this.formHeader,
                     textInsert: textRequest.pkgTextInsert,
                     textUpdate: textRequest.pkgTextUpdate
-                }).then(() => {
-                    this.$successToast('保存成功');
-                    this.isRedact = false;
-                    // 重整数据
-
                 })
-
-            await this.getWorkshopList()
-                // 获取订单下拉
-            await this.selectOrder(this.globalOrderNumber)
-            await this.btnGetResult();
         }
 
         // {redact-box} 提交
-        async submitDatas() {
+        submitDatas() {
             const inStorageRequest = this.$refs.inStorage.getSavedOrSubmitData();
             const excRequest = this.$refs.excRecord.getSavedOrSubmitData(this.formHeader, 'INSTORAGE');
             const textRequest = this.$refs.textRecord.savedData(this.formHeader, 'sterilize');
 
-            await STE_API.STE_INSTORAGE_SUBMIT_API({
+            return STE_API.STE_INSTORAGE_SUBMIT_API({
                 exceptionDelete: excRequest.ids,
                 exceptionInsert: excRequest.insertDto,
                 exceptionUpdate: excRequest.updateDto,
@@ -478,14 +468,16 @@
                 steOrderUpdateDto: this.formHeader,
                 textInsert: textRequest.pkgTextInsert,
                 textUpdate: textRequest.pkgTextUpdate
-            }).then(() => {
-                this.$successToast('提交成功');
-                this.isRedact = false;
             })
-            await this.getWorkshopList()
+
+        }
+
+        successToDo() {
+            console.log('yuyuyuyuyuyu')
+            this.getWorkshopList();
             // 获取订单下拉
-            await this.selectOrder(this.globalOrderNumber)
-            await this.btnGetResult();
+            this.selectOrder(this.globalOrderNumber)
+            this.btnGetResult();
         }
 
         // {redact-box} 提交需跑的验证 function
