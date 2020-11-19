@@ -6,7 +6,7 @@
                     新增
                 </el-button>
             </el-row>
-            <el-table class="newTable" :data="dayLaborerArr" header-row-class-name="tableHead" border style="width: 100%; max-height: 200px;">
+            <el-table class="newTable" :data="dayLaborerArr" :height="mainClientHeight - 200" header-row-class-name="tableHead" border style="width: 100%;">
                 <el-table-column label="序号" type="index" width="60" fixed />
                 <el-table-column prop="status" :show-overflow-tooltip="true">
                     <template slot="header">
@@ -46,7 +46,11 @@ export default {
             userTypeName: ''
         };
     },
-    computed: {},
+    computed: {
+        mainClientHeight() {
+            return this.$store.state.common.mainClientHeight;
+        }
+    },
     methods: {
         init(row, userTypeName) {
             this.userTypeName = userTypeName;
