@@ -3,7 +3,7 @@
  * @Anthor: Telliex
  * @Date: 2020-09-16 12:08:51
  * @LastEditors: Telliex
- * @LastEditTime: 2020-10-20 20:42:18
+ * @LastEditTime: 2020-11-19 14:44:33
 -->
 <template lang="pug">
     div
@@ -112,21 +112,23 @@
                         return false;
                     }
                 }
-                this.savedDatas(str).then(res => {
+                this.savedDatas().then(res => {
                     if (res !== false) {
                         // this.isRedact = false;
                         this.$emit('update:isRedact', false)
+                        this.$emit('sendSuccess');
                         this.$successToast('保存成功');
-                        this.$emit('success');
+
                     }
                 });
             } else {
-                this.submitDatas(str).then(res => {
+                this.submitDatas().then(res => {
                     if (res !== false) {
                         // this.isRedact = false;
                         this.$emit('update:isRedact', false)
+                        this.$emit('sendSuccess');
                         this.$successToast('提交成功');
-                        this.$emit('success');
+
                     }
                 });
             }
