@@ -475,7 +475,6 @@
                             format="yyyy-MM-dd HH:mm"
                             value-format="yyyy-MM-dd HH:mm"
                             placeholder="请选择"
-                            clearable
                             style="width: 200px;"
                             :disabled="!isRedact"
                             @change="(val)=>turnStartTimeChange(val,scope.row)"
@@ -493,7 +492,6 @@
                             format="yyyy-MM-dd HH:mm"
                             value-format="yyyy-MM-dd HH:mm"
                             placeholder="请选择"
-                            clearable
                             style="width: 200px;"
                             :disabled="!isRedact"
                         />
@@ -774,7 +772,6 @@
             ruleKojiGuardForm: HTMLFormElement;
         }
 
-
         targetOrderObj: OrderObject={}
         controlManstarget=''
 
@@ -783,7 +780,7 @@
         isLoanedPersonnelStatusDialogShow=false // 入曲人选择弹窗
         orgTree: object[] = [];
         arrList: string[] = [];
-        // 出曲工藝
+        // 出曲工艺
         kojiOutCraftformData: KojiOutCraftObject= {}
 
         // 翻曲记录
@@ -815,7 +812,7 @@
             this.targetOrderObj = this.$store.state.koji.orderKojiInfo
             // 入曲情况
             this.getKojiStatus()
-            // 出曲工藝
+            // 出曲工艺
             this.getKojiOutCraft()
             // 翻曲记录
             this.getKojiDiscTurn()
@@ -881,41 +878,41 @@
                 if (data.data) {
                     this.kojiInformData = data.data
                 } else {
-                    this.kojiInformData.addKojiDuration = ''
-                    this.kojiInformData.addKojiEnd = ''
-                    this.kojiInformData.addKojiInfo = ''
-                    this.kojiInformData.addKojiMans = ''
-                    this.kojiInformData.addKojiStart = ''
-                    this.kojiInformData.addKojiTemp = 0
-                    this.kojiInformData.status = ''
+                    this.$set(this.kojiInformData, 'addKojiDuration', '')
+                    this.$set(this.kojiInformData, 'addKojiEnd', '')
+                    this.$set(this.kojiInformData, 'addKojiInfo', '')
+                    this.$set(this.kojiInformData, 'addKojiMans', '')
+                    this.$set(this.kojiInformData, 'addKojiStart', '')
+                    this.$set(this.kojiInformData, 'addKojiTemp', '')
+                    this.$set(this.kojiInformData, 'status', '')
                 }
-                this.kojiInformData.orderNo = this.targetOrderObj.orderNo;
-                this.kojiInformData.kojiOrderNo = this.targetOrderObj.kojiOrderNo;
+                this.$set(this.kojiInformData, 'orderNo', this.targetOrderObj.orderNo)
+                this.$set(this.kojiInformData, 'kojiOrderNo', this.targetOrderObj.kojiOrderNo)
             })
         }
 
-        // 出曲工藝
+        // 出曲工艺
         getKojiOutCraft() {
             KOJI_API.KOJI_DISC_QUERY_KOJIOUT_API({
                 //kojiOrderNo: '85100000188700120200918162640'
                 kojiOrderNo: this.targetOrderObj.kojiOrderNo
             }).then(({ data }) => {
-                console.log('出曲工藝data')
+                console.log('出曲工艺data')
                 console.log(data)
                 this.kojiOutCraftformData = {}
                 if (data.data) {
                     this.kojiOutCraftformData = data.data
                 } else {
-                    this.kojiOutCraftformData.outKojiDuration = 0
-                    this.kojiOutCraftformData.outKojiEnd = ''
-                    this.kojiOutCraftformData.outKojiMans = ''
-                    this.kojiOutCraftformData.outKojiStart = ''
-                    this.kojiOutCraftformData.status = ''
-                    this.kojiOutCraftformData.outKojiTemp = 0
+                    this.$set(this.kojiOutCraftformData, 'outKojiDuration', 0)
+                    this.$set(this.kojiOutCraftformData, 'outKojiEnd', '')
+                    this.$set(this.kojiOutCraftformData, 'outKojiMans', '')
+                    this.$set(this.kojiOutCraftformData, 'outKojiStart', '')
+                    this.$set(this.kojiOutCraftformData, 'status', '')
+                    this.$set(this.kojiOutCraftformData, 'outKojiTemp', '')
 
                 }
-                this.kojiOutCraftformData.orderNo = this.targetOrderObj.orderNo;
-                this.kojiOutCraftformData.kojiOrderNo = this.targetOrderObj.kojiOrderNo;
+                this.$set(this.kojiOutCraftformData, 'orderNo', this.targetOrderObj.orderNo)
+                this.$set(this.kojiOutCraftformData, 'kojiOrderNo', this.targetOrderObj.kojiOrderNo)
             })
         }
 
@@ -931,31 +928,50 @@
                 if (data.data) {
                     this.kojiDiscTurnData[0] = data.data.kojiDiscTurn1
                     this.kojiDiscTurnData[1] = data.data.kojiDiscTurn2
-                }
+
                 this.kojiDiscTurnData[0].orderNo = this.targetOrderObj.orderNo;
                 this.kojiDiscTurnData[0].kojiOrderNo = this.targetOrderObj.kojiOrderNo;
+
+                if (this.kojiDiscTurnData[0].turnStart === null) {
+                    this.kojiDiscTurnData[0].turnStart = '';
+                }
+                if (this.kojiDiscTurnData[0].turnEnd === null) {
+                    this.kojiDiscTurnData[0].turnEnd = '';
+                }
+
                 this.kojiDiscTurnData[1].orderNo = this.targetOrderObj.orderNo;
                 this.kojiDiscTurnData[1].kojiOrderNo = this.targetOrderObj.kojiOrderNo;
+                if (this.kojiDiscTurnData[1].turnStart === null) {
+                    this.kojiDiscTurnData[1].turnStart = '';
+                }
+                if (this.kojiDiscTurnData[1].turnEnd === null) {
+                    this.kojiDiscTurnData[1].turnEnd = '';
+                }
+                }
             })
         }
 
         // 翻曲开始时间 change
         turnStartTimeChange(val, target) {
-            console.log(val)
-            if (val !== '') {
+            if (val === null) {
+                target.turnStart = ''
+            }
+            target.turnDuration = 0
+            if (target.turnStart !== '' && this.kojiGuardData.length !== 0) {
                 const timeTemp = new Date(val).getTime();
                 let result = 0
                 if (this.kojiGuardData.length !== 0) {
+                    const compareTimeList: number[] = []// 时间暂存容器
                     this.kojiGuardData.forEach(item => {
                         if (item.guardDate) {
-                            const time = new Date(item.guardDate).getTime();
-                            result = Math.max(result, timeTemp - time)
+                            compareTimeList.push(new Date(item.guardDate).getTime())
                         }
                     })
-                    result = result / 3600000
+                    result = Math.min(...compareTimeList)
                 }
-                target.turnDuration = result
+                target.turnDuration = (timeTemp - result) / 3600000
             }
+
         }
 
         // 异常情况
@@ -1035,31 +1051,34 @@
         }
 
         // 看曲时间 change
-        kojiStartTimeChange(val) {
-            if (val !== '') {
-                if (this.kojiDiscTurnData[0] && this.kojiDiscTurnData[0].turnStart !== '') {
+        kojiStartTimeChange(val, target) {
+
+            if (val === null) {
+                target.guardDate = ''
+            }
+            this.kojiDiscTurnData[0].turnDuration = 0
+            this.kojiDiscTurnData[1].turnDuration = 0
+            const timeList: number[] = [];
+            this.kojiGuardData.forEach(item => {
+                if (item.guardDate) {
+                    timeList.push(new Date(item.guardDate).getTime())
+                }
+            })
+
+            if (timeList.length !== 0) {
+                if (this.kojiDiscTurnData[0] && this.kojiDiscTurnData[0].turnStart !== '' && this.kojiDiscTurnData[0].turnStart !== null) {
                     const timeTemp1 = new Date(this.kojiDiscTurnData[0].turnStart).getTime();
                     let turn1Result = 0
-                    this.kojiGuardData.forEach(item => {
-                        if (item.guardDate) {
-                            const time = new Date(item.guardDate).getTime();
-                            turn1Result = Math.max(turn1Result, timeTemp1 - time)
-                        }
-                    })
-                    turn1Result = turn1Result / 36000
+                    turn1Result = Math.min(...timeList)
+                    turn1Result = (timeTemp1 - turn1Result) / 3600000
                     this.kojiDiscTurnData[0].turnDuration = turn1Result
                 }
 
-                if (this.kojiDiscTurnData[1] && this.kojiDiscTurnData[1].turnStart !== '') {
+                if (this.kojiDiscTurnData[1] && this.kojiDiscTurnData[1].turnStart !== '' && this.kojiDiscTurnData[1].turnStart !== null) {
                     const timeTemp2 = new Date(this.kojiDiscTurnData[1].turnStart).getTime();
                     let turn2Result = 0
-                    this.kojiGuardData.forEach(item => {
-                        if (item.guardDate) {
-                            const time = new Date(item.guardDate).getTime();
-                            turn2Result = Math.max(turn2Result, timeTemp2 - time)
-                        }
-                    })
-                    turn2Result = turn2Result / 36000
+                    turn2Result = Math.min(...timeList)
+                    turn2Result = (timeTemp2 - turn2Result) / 3600000
                     this.kojiDiscTurnData[1].turnDuration = turn2Result
                 }
             }
