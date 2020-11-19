@@ -88,7 +88,11 @@ const AUDIT_API = {
     /**
      * @property {string} HOURS_WRITEOFFS_API 辅料调整
      */
-    ACCESSORIES_LIST_API: params => httpProxy('/verifyAccessoriesAdjust/query', 'POST', params)
+    ACCESSORIES_LIST_API: params => httpProxy('/verifyAccessoriesAdjust/query', 'POST', params),
+    /**
+     * @property {string} STE_AUDIT_LOG_API 杀菌车间 - 审核日志
+     */
+    STE_AUDIT_LOG_API: params => httpProxy('/verifyRecord/queryByNoAndType', 'POST', params)
 };
 
 export default AUDIT_API;
