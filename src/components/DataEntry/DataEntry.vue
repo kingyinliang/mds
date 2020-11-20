@@ -37,13 +37,14 @@
                         <el-select v-if="item.type === 'select'" v-model="formHeader[item.value]" size="mini" style="width: 120px;" :disabled="!(isRedact && item.disabled)">
                             <el-option v-for="(optionIt, subIndex) in item.option.list" :key="subIndex" :label="optionIt[item.option.label]" :value="optionIt[item.option.value]" />
                         </el-select>
+                        <el-input v-if="item.type === 'input'" :disabled="!isRedact" size="mini" :placeholder="item.placeholder" style="width: 120px;" />
                     </el-form-item>
                 </el-form>
             </div>
         </div>
         <!--tabs-->
         <div v-if="tabs.length === 0" class="box-card" style=" margin-top: 10px; padding: 10px !important; background: white;">
-            <slot name="contentBox" />
+            <slot name="contentBox" :isRedact="isRedact" />
         </div>
         <el-tabs v-else id="DaatTtabs" ref="tabs" v-model="activeName" class="NewDaatTtabs tabsPages" type="border-card" :before-leave="beforeLeave" @tab-click="tabClick">
             <el-tab-pane v-for="(item, index) in tabs" :key="index" :name="setKey(index)">
