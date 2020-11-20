@@ -85,8 +85,8 @@
                 </el-table-column>
             </el-table>
         </mds-card>
-        <mds-card :title="'半成品领用'" :name="'materialS'">
-            <el-table ref="materialS" header-row-class-name="tableHead" class="newTable" max-height="267" :data="materialS" :row-class-name="rowDelFlag" :span-method="spanTwoMethod" border tooltip-effect="dark">
+        <mds-card v-for="(item, index) in materialSArr" :key="index" :title="'灌装线' + (index + 1)" :name="'materialS' + index">
+            <el-table ref="materialS" header-row-class-name="tableHead" class="newTable" max-height="267" :data="item.data" :row-class-name="rowDelFlag" :span-method="({ rowIndex, columnIndex }) => spanTwoMethod(item, rowIndex, columnIndex)" border tooltip-effect="dark">
                 <el-table-column type="index" label="序号" width="50px" />
                 <el-table-column label="领用物料" prop="material" width="150" :show-overflow-tooltip="true">
                     <template slot-scope="scope">
@@ -97,7 +97,7 @@
                 <el-table-column label="需求用量" prop="needNum" width="80" :show-overflow-tooltip="true" />
                 <el-table-column width="70">
                     <template slot-scope="scope">
-                        <el-button v-if="isAuth('pkgPdInsert')" type="text" :disabled="!(isRedact && status !== 'C' && status !== 'D' && status !== 'P' && scope.row.materialStatus !== '3')" @click="SplitDateS('materialS', scope.row, scope.$index)">
+                        <el-button v-if="isAuth('pkgPdInsert')" type="text" :disabled="!(isRedact && status !== 'C' && status !== 'D' && status !== 'P' && scope.row.materialStatus !== '3')" @click="SplitDateS(item, scope.row, scope.$index)">
                             <em class="icons iconfont factory-chaifen" />拆分
                         </el-button>
                     </template>
@@ -149,7 +149,7 @@
                 </el-table-column>
                 <el-table-column label="操作" fixed="right" width="70">
                     <template slot-scope="scope">
-                        <el-button v-if="scope.row.splitFlag === 'Y'" :disabled="!(isRedact && status !== 'C' && status !== 'D' && status !== 'P' && scope.row.materialStatus !== '3')" class="delBtn" type="text" icon="el-icon-delete" size="mini" @click="delMaterial(scope.row, 'materialS')">
+                        <el-button v-if="scope.row.splitFlag === 'Y'" :disabled="!(isRedact && status !== 'C' && status !== 'D' && status !== 'P' && scope.row.materialStatus !== '3')" class="delBtn" type="text" icon="el-icon-delete" size="mini" @click="delMaterial(scope.row, 'materialS', item.data)">
                             删除
                         </el-button>
                     </template>
@@ -160,7 +160,7 @@
                     领用数合计：
                 </div>
                 <div class="input_bottom">
-                    {{ materialCount }}
+                    {{ materialCount(item.data) }}
                 </div>
             </el-row>
         </mds-card>
@@ -171,7 +171,7 @@
 <script lang="ts">
     import { Vue, Component, Prop } from 'vue-property-decorator';
     import { dateFormat, getUserNameNumber, accAdd } from 'utils/utils';
-    import { PKG_API, AUDIT_API } from 'common/api/api';
+    import { PKG_API, AUDIT_API, COMMON_API } from 'common/api/api';
     import _ from 'lodash';
 
     @Component({
@@ -189,32 +189,60 @@
 
         MaterialAudit = [];
 
+        bottleLineNum = 0;
+
+        materialSArr: MaterialArr[] = []
+        orgMaterialS: MaterialArr[] = [];
+
         currentDataTable: MaterialMap[] = [];
         orgDataTable: MaterialMap[] = [];
-        materialS: MaterialMap[] = [];
-        orgMaterialS: MaterialMap[] = [];
 
         spanOneArr: number[] = [];
-        spanTwoArr: number[] = [];
 
-        ruleSubmit() {
+        ruleSaved(): boolean {
+            for (const data of this.materialSArr) {
+                const rule: string[] = []
+                for (const item of data.data.filter(it => it.delFlag !== 1)) {
+                    if (item.sterilizeStorageNo) {
+                        rule.push(item.sterilizeStorageNo)
+                    }
+                }
+                if ([...new Set(rule)].length !== data.data.filter(it => it.delFlag !== 1 && it.sterilizeStorageNo).length) {
+                    this.$warningToast('锅序号重复 值重复，请修改后重新操作！');
+                    return false
+                }
+            }
+            return true
+        }
+
+        ruleSubmit(): boolean {
             for (const item of this.currentDataTable.filter(it => it.delFlag !== 1)) {
                 if (!item.realUseAmount) {
                     this.$warningToast('请填写物料领用页签包材领用实际用量');
                     return false
                 }
             }
-            for (const item of this.materialS.filter(it => it.delFlag !== 1)) {
-                if (!item.sterilizeStorageNo) {
-                    this.$warningToast('请填写物料领用页签半成品领用使用锅序');
-                    return false
+            for (const data of this.materialSArr) {
+                const rule: string[] = []
+                for (const item of data.data.filter(it => it.delFlag !== 1)) {
+                    if (!item.sterilizeStorageNo) {
+                        this.$warningToast('请填写物料领用页签半成品领用使用锅序');
+                        return false
+                    }
+                    if (!item.realUsed) {
+                        this.$warningToast('请填写物料领用页签半成品领用实际用量');
+                        return false
+                    }
+                    if (!item.startDate) {
+                        this.$warningToast('请填写物料领用页签半成品领用开始使用时间');
+                        return false
+                    }
+                    if (item.sterilizeStorageNo) {
+                        rule.push(item.sterilizeStorageNo)
+                    }
                 }
-                if (!item.realUsed) {
-                    this.$warningToast('请填写物料领用页签半成品领用实际用量');
-                    return false
-                }
-                if (!item.startDate) {
-                    this.$warningToast('请填写物料领用页签半成品领用开始使用时间');
+                if ([...new Set(rule)].length !== data.data.filter(it => it.delFlag !== 1 && it.sterilizeStorageNo).length) {
+                    this.$warningToast('锅序号重复 值重复，请修改后重新操作！');
                     return false
                 }
             }
@@ -229,7 +257,6 @@
                 packingMaterialUpdate: []
             };
             const pkgSemiMaterial: PkgMaterialSObj = {
-                materialCount: this.materialCount,
                 pkgSemiMaterialDelete: [],
                 pkgSemiMaterialItemDelete: [],
                 pkgSemiMaterialInsert: [],
@@ -312,64 +339,68 @@
                     })
                 }
             });
-            this.materialS.forEach(item => {
-                const filterArr1: (any) = pkgSemiMaterial.pkgSemiMaterialUpdate.filter(it => it.id === item.mainId);// eslint-disable-line
-                const filterArr2: (any) = pkgSemiMaterial.pkgSemiMaterialInsert.filter(it => it.merge === item.merge);// eslint-disable-line
-                if (item.materialStatus === '3') {
-                    pkgSemiMaterial.pkgSemiMaterialDelete.push(item.mainId);
-                } else if (item.delFlag === 1) {
-                    if (item.id) {
-                        pkgSemiMaterial.pkgSemiMaterialItemDelete.push(item.id)
-                    }
-                } else if (item.id) {
-                    const orgObj = this.orgMaterialS.filter(it => it.id === item.id)[0];
-                    if (!_.isEqual(orgObj, item)) {
-                        item.factory = JSON.parse(sessionStorage.getItem('factory') || '{}').id;
-                        if (filterArr1 && filterArr1[0]) {
-                            filterArr1[0].item.push(item)
-                        } else {
-                            pkgSemiMaterial.pkgSemiMaterialUpdate.push({
-                                factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
-                                merge: item.merge,
-                                mainId: item.mainId,
-                                id: item.mainId,
-                                checkStatus: item.checkStatus,
-                                materialType: item.materialType,
-                                materialCode: item.materialCode,
-                                materialName: item.materialName,
-                                materialUnit: item.materialUnit,
-                                needNum: item.needNum,
-                                orderId: item.orderId,
-                                orderNo: item.orderNo,
-                                posnr: item.posnr,
-                                item: [item]
-                            })
+            this.materialSArr.forEach((data, index) => {
+                data.data.forEach(item => {
+                    const filterArr1: (any) = pkgSemiMaterial.pkgSemiMaterialUpdate.filter(it => it.id === item.mainId);// eslint-disable-line
+                    const filterArr2: (any) = pkgSemiMaterial.pkgSemiMaterialInsert.filter(it => it.merge === item.merge && it.bottleLine === item.bottleLine);// eslint-disable-line
+                    if (item.materialStatus === '3') {
+                        pkgSemiMaterial.pkgSemiMaterialDelete.push(item.mainId);
+                    } else if (item.delFlag === 1) {
+                        if (item.id) {
+                            pkgSemiMaterial.pkgSemiMaterialItemDelete.push(item.id)
                         }
+                    } else if (item.id) {
+                        const orgObj = this.orgMaterialS[index].data.filter(it => it.id === item.id)[0];
+                        if (!_.isEqual(orgObj, item)) {
+                            item.factory = JSON.parse(sessionStorage.getItem('factory') || '{}').id;
+                            if (filterArr1 && filterArr1[0]) {
+                                filterArr1[0].item.push(item)
+                            } else {
+                                pkgSemiMaterial.pkgSemiMaterialUpdate.push({
+                                    factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
+                                    merge: item.merge,
+                                    mainId: item.mainId,
+                                    id: item.mainId,
+                                    checkStatus: item.checkStatus,
+                                    bottleLine: item.bottleLine,
+                                    materialType: item.materialType,
+                                    materialCode: item.materialCode,
+                                    materialName: item.materialName,
+                                    materialUnit: item.materialUnit,
+                                    needNum: item.needNum,
+                                    orderId: item.orderId,
+                                    orderNo: item.orderNo,
+                                    posnr: item.posnr,
+                                    item: [item]
+                                })
+                            }
+                        }
+                    } else if (filterArr2 && filterArr2[0]) {
+                        item.factory = JSON.parse(sessionStorage.getItem('factory') || '{}').id;
+                        filterArr2[0].item.push(item)
+                    } else {
+                        item.factory = JSON.parse(sessionStorage.getItem('factory') || '{}').id;
+                        pkgSemiMaterial.pkgSemiMaterialInsert.push({
+                            factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
+                            merge: item.merge,
+                            mainId: item.mainId,
+                            id: item.mainId,
+                            checkStatus: item.checkStatus,
+                            delFlag: item.delFlag,
+                            bottleLine: item.bottleLine,
+                            materialType: item.materialType,
+                            materialCode: item.materialCode,
+                            materialName: item.materialName,
+                            materialUnit: item.materialUnit,
+                            needNum: item.needNum,
+                            orderId: item.orderId,
+                            orderNo: item.orderNo,
+                            posnr: item.posnr,
+                            item: [item]
+                        })
                     }
-                } else if (filterArr2 && filterArr2[0]) {
-                    item.factory = JSON.parse(sessionStorage.getItem('factory') || '{}').id;
-                    filterArr2[0].item.push(item)
-                } else {
-                    item.factory = JSON.parse(sessionStorage.getItem('factory') || '{}').id;
-                    pkgSemiMaterial.pkgSemiMaterialInsert.push({
-                        factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
-                        merge: item.merge,
-                        mainId: item.mainId,
-                        id: item.mainId,
-                        checkStatus: item.checkStatus,
-                        delFlag: item.delFlag,
-                        materialType: item.materialType,
-                        materialCode: item.materialCode,
-                        materialName: item.materialName,
-                        materialUnit: item.materialUnit,
-                        needNum: item.needNum,
-                        orderId: item.orderId,
-                        orderNo: item.orderNo,
-                        posnr: item.posnr,
-                        item: [item]
-                    })
-                }
-            });
+                })
+            })
             return {
                 pkgPackingMaterial,
                 pkgSemiMaterial
@@ -383,22 +414,62 @@
                 orderStatus: formHeader.orderStatus,
                 productLine: formHeader.productLine
             }).then(({ data }) => {
-                this.processData(data.data, 'currentDataTable');
-                this.merge(this.currentDataTable, 'currentDataTable');
-                console.log(this.currentDataTable);
+                this.currentDataTable = this.processData(data.data, 'currentDataTable');
+                this.spanOneArr = this.merge(this.currentDataTable);
                 this.orgDataTable = JSON.parse(JSON.stringify(this.currentDataTable));
             });
+            if (formHeader.orderStatus !== 'T') {
+                COMMON_API.ORGDETAIL_API({
+                    id: formHeader.productLine
+                }).then(({ data }) => {
+                    this.bottleLineNum = Number(data.data.bottleLineNum)
+                    this.getMaterialS(formHeader, true);
+                })
+            } else {
+                this.getMaterialS(formHeader, false);
+            }
+            this.MaterialAudit = await this.getAudit(formHeader, 'MATERIAL');
+        }
+
+        getMaterialS(formHeader, tmp): void {
             PKG_API.PKG_MATERIAL_S_QUERY_API({
                 factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
                 orderNo: formHeader.orderNo,
                 orderStatus: formHeader.orderStatus,
                 productLine: formHeader.productLine
             }).then(({ data }) => {
-                this.processData(data.data, 'materialS');
-                this.merge(this.materialS, 'materialS');
-                this.orgMaterialS = JSON.parse(JSON.stringify(this.materialS));
+                this.materialSArr = []
+                if (tmp) {
+                    const list = this.processData(data.data, 'materialS');
+                    const spanArr = this.merge(list)
+                    for (let i = 0; i < this.bottleLineNum; i++) {
+                        const tmpList = JSON.parse(JSON.stringify(list));
+                        tmpList.forEach(it => {
+                            it.bottleLine = String(i + 1)
+                        })
+                        this.materialSArr.push({
+                            data: tmpList,
+                            spanArr: spanArr
+                        })
+                    }
+                } else {
+                    const list = this.processData(data.data, 'materialS');
+                    list.forEach(it => {
+                        if (this.materialSArr[Number(it.bottleLine) - 1]) {
+                            this.materialSArr[Number(it.bottleLine) - 1]['data'].push(it)
+                        } else {
+                            this.materialSArr[Number(it.bottleLine) - 1] = {
+                                data: [it],
+                                spanArr: []
+                            }
+                        }
+                    })
+                    this.materialSArr.forEach(it => {
+                        it.spanArr = this.merge(it.data)
+                    })
+                }
+                this.orgMaterialS = JSON.parse(JSON.stringify(this.materialSArr));
             })
-            this.MaterialAudit = await this.getAudit(formHeader, 'MATERIAL');
         }
 
         async getAudit(formHeader, verifyType) {
@@ -410,7 +481,7 @@
         }
 
         // 处理数据
-        processData(data, dataGroup) {
+        processData(data, dataGroup): MaterialMap[] {
             const finalData: MaterialMap[] = []
             data.forEach((item, index) => {
                 item.item.forEach((listitem) => {
@@ -422,6 +493,7 @@
                         orderId: item.orderId,
                         orderNo: item.orderNo,
                         posnr: item.posnr,
+                        bottleLine: item.bottleLine,
                         materialCode: item.materialCode,
                         materialName: item.materialName,
                         materialUnit: item.materialUnit,
@@ -440,11 +512,11 @@
                     finalData.push(materialMap)
                 })
             });
-            this[dataGroup] = finalData
+            return finalData
         }
 
         // 设置合并行
-        merge(tableData, Data) {
+        merge(tableData): number[] {
             const spanOneArr: number[] = [];
             let concatOne = 0;
             tableData.forEach((item, index) => {
@@ -460,12 +532,7 @@
                     concatOne = index;
                 }
             });
-            if (Data === 'currentDataTable') {
-                this.spanOneArr = spanOneArr
-            }
-            if (Data === 'materialS') {
-                this.spanTwoArr = spanOneArr
-            }
+            return spanOneArr
         }
 
         // 合并行
@@ -478,11 +545,11 @@
             }
         }
 
-        spanTwoMethod({ rowIndex, columnIndex }) {
+        spanTwoMethod(data, rowIndex, columnIndex) {
             if (columnIndex <= 4) {
                 return {
-                    rowspan: this.spanTwoArr[rowIndex],
-                    colspan: this.spanTwoArr[rowIndex] > 0 ? 1 : 0
+                    rowspan: data.spanArr[rowIndex],
+                    colspan: data.spanArr[rowIndex] > 0 ? 1 : 0
                 };
             }
         }
@@ -513,16 +580,16 @@
                 changed: dateFormat(new Date(), 'yyyy-MM-dd hh:mm:ss'),
                 changer: getUserNameNumber()
             });
-            this.merge(this[str], str)
+            this.spanOneArr = this.merge(this.currentDataTable);
         }
 
-        SplitDateS(str, row, index) {
+        SplitDateS(data, row, index) {
             let sterilizeStorageNo = ''
-            const dataArr = this.materialS.filter(it => it.merge === row.merge && it.delFlag !== 1);
+            const dataArr = data.data.filter(it => it.merge === row.merge && it.delFlag !== 1);
             if (dataArr.length) {
                 sterilizeStorageNo = String(Number(dataArr[dataArr.length - 1].sterilizeStorageNo) + 1)
             }
-            this[str].splice(index + this[str].filter(item => item.merge === row.merge).length, 0, {
+            data.data.splice(index + data.data.filter(item => item.merge === row.merge).length, 0, {
                 merge: row.merge,
                 id: '',
                 batch: '',
@@ -530,6 +597,7 @@
                 orderNo: row.orderNo,
                 posnr: row.posnr,
                 mainId: row.mainId,
+                bottleLine: row.bottleLine,
                 materialType: row.materialType,
                 materialCode: row.materialCode,
                 materialName: row.materialName,
@@ -539,7 +607,7 @@
                 endStocks: row.endStocks,
                 startStocks: row.startStocks,
                 receiveMaterial: row.receiveMaterial,
-                startDate: this[str].filter(item => item.merge === row.merge && item.delFlag !== 1)[this[str].filter(item => item.merge === row.merge && item.delFlag !== 1).length - 1].endDate || '',
+                startDate: data.data.filter(item => item.merge === row.merge && item.delFlag !== 1)[data.data.filter(item => item.merge === row.merge && item.delFlag !== 1).length - 1].endDate || '',
                 splitFlag: 'Y',
                 delFlag: 0,
                 realUsed: '',
@@ -548,10 +616,10 @@
                 changed: dateFormat(new Date(), 'yyyy-MM-dd hh:mm:ss'),
                 changer: getUserNameNumber()
             });
-            this.merge(this[str], str)
-            this.$nextTick(() => {
-                this.$refs.materialS.bodyWrapper.scrollTop = this.$refs.materialS.bodyWrapper.scrollHeight;
-            });
+            data.spanArr = this.merge(data.data);
+            // this.$nextTick(() => {
+            //     this.$refs.materialS.bodyWrapper.scrollTop = this.$refs.materialS.bodyWrapper.scrollHeight;
+            // });
         }
 
         rowDelFlag({ row }) {
@@ -566,7 +634,7 @@
         }
 
         // 删除
-        delMaterial(row, str) {
+        delMaterial(row, str, data) {
             this.$confirm('是否删除?', '提示', {
                 confirmButtonText: '确定',
                 cancelButtonText: '取消',
@@ -574,7 +642,11 @@
             }).then(() => {
                 this.$set(row, 'delFlag', 1)
                 this.$successToast('删除成功');
-                this.merge(this[str], str)
+                if (str === 'materialS') {
+                    data.spanArr = this.merge(data)
+                } else {
+                    this.spanOneArr = this.merge(this.currentDataTable);
+                }
             });
         }
 
@@ -595,22 +667,28 @@
             }
         }
 
-        get materialCount() {
+        materialCount(data) {
             let scrapNum = 0;
-            this.materialS.map((item: MaterialMap) => {
+            data.map((item: MaterialMap) => {
                 if (item.delFlag !== 1) {
                     scrapNum = accAdd(scrapNum, Number(item.realUsed));
                 }
             });
             return scrapNum;
         }
+
     }
+interface MaterialArr{
+    data: MaterialMap[];
+    spanArr: number[];
+}
 interface MaterialMap{
     merge?: number;
     mainId: string;
     id: string;
     delFlag?: number;
     original?: boolean;
+    bottleLine?: string;
     orderId?: string;
     orderNo?: string;
     posnr?: string;
@@ -643,7 +721,6 @@ interface PkgMaterialObj {
     packingMaterialUpdate: MaterialMap[];
 }
 interface PkgMaterialSObj {
-    materialCount: number;
     pkgSemiMaterialDelete: string[];
     pkgSemiMaterialItemDelete: string[];
     pkgSemiMaterialInsert: MaterialMap[];

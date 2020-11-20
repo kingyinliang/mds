@@ -95,13 +95,6 @@
                     <el-table-column label="阶段" prop="controlStageName" min-width="120" />
                     <el-table-column label="记录时间" prop="recordDate" min-width="165" />
                     <el-table-column label="温度" prop="temp" min-width="60" />
-                    <el-table-column label="操作" min-width="55" fixed="right">
-                        <template slot-scope="scope">
-                            <el-button type="text" size="small" :disabled="scope.row.allowReturnFlag === false" @click="pass(scope.row)">
-                                退回
-                            </el-button>
-                        </template>
-                    </el-table-column>
                 </el-table>
             </template>
             <template slot="4">
@@ -302,7 +295,6 @@
             },
             {
                 label: '工艺控制',
-                status: '未录入',
                 isRedact: false
             },
             {
@@ -368,7 +360,7 @@
                     this.passBtn = data.data[0].readyTagStatus;
                     this.tabs[0].status = data.data[0].materialStatus;
                     this.tabs[1].status = data.data[0].accessoriesStatus;
-                    this.tabs[2].status = data.data[0].controlStatus;
+                    // this.tabs[2].status = data.data[0].controlStatus;
                     this.tabs[3].status = data.data[0].instorageStatus;
                     this.tabs[5].status = data.data[0].timesheetStatus;
                     this.$refs.dataEntry.updateTabs();
@@ -412,7 +404,7 @@
         getHeaderInfo(orderNo) {
             COMMON_API.OREDER_QUERY_BY_NO_API({ orderNo: orderNo, workShopType: 'sterilize' }).then(({ data }) => {
                 this.formHeader = data.data;
-                this.formHeader['realPotCount'] = '第' + this.formHeader['realPotCount'] + '锅';
+                // this.formHeader['realPotCount'] = '第' + this.formHeader['realPotCount'] + '锅';
             })
         }
 

@@ -11,7 +11,88 @@
             @get-data-success="returnDataFromQueryTableForm"
         >
             <template v-if="targetQueryTableList.length!==0" slot="home">
-                <mds-card :title="'溶解罐列表'" :pack-up="false" :name="'fermenterTotal'" style="margin-top: 10px; overflow: initial;" />
+                <div v-show="fastS" class="box-card">
+                    <div class="box-card-title clearfix">
+                        <h3> <em class="title-icon" style="background: #ffbf00;" />发酵罐列表 </h3>
+                        <em v-if="isAuth('report:production:fermentation')" class="floatR" @click="goSummary()">
+                            <a href="#/DataEntry-Fermentation-Fermenter-summary">发酵罐一览表>></a>
+                        </em>
+                    </div>
+                    <div>
+                        <el-row class="potList" :gutter="10" style="min-height: 150px;">
+                            <el-col v-for="(item, index) in dataList" :key="index" :span="4">
+                                <div class="box">
+                                    <div class="box_title">
+                                        {{ item.holderNo }}-{{ item.holderStatus === '0' ? '空罐' : item.holderStatus === '1' ? '投料中' : item.holderStatus === '2' ? '发酵中' : item.holderStatus === '3' ? '已入库' : item.holderStatus === '4' ? '领用中' : item.holderStatus === '5' ? '待清洗' : '' }}
+                                        <a v-if="isAuth('fer:holderManage:detail')" @click="godetails(item)">详情>></a>
+                                    </div>
+                                    <div class="box_content">
+                                        <img v-if="item.ferOrderNo.slice(0, 4) === RDorder" src="@/assets/img/RD.png" alt="" style="position: absolute; top: 10px; left: 10px;">
+                                        <div class="box_content_itemPot">
+                                            <div class="pot_border">
+                                                <div class="pot" />
+                                                <div class="pot_water">
+                                                    <div
+                                                        class="pot_water_sole"
+                                                        :style="{'height': (item.holderStatus === '4' ? (item.sumAmout / item.holderAmout) * 100 : item.holderStatus === '3' ? (item.sumAmout / item.holderAmout) * 100 : item.halfAmount ? (item.halfAmount / item.holderAmout) * 100 : (item.ferAmount / item.holderAmout) * 100) + '%', 'background': item.potColor}"
+                                                    />
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="box_content_itemButton buttonCss">
+                                            <el-button type="primary" size="small" @click="toRouter('1', item)">
+                                                发料
+                                            </el-button>
+                                            <el-button type="primary" size="small" @click="toRouter('2', item)">
+                                                判定
+                                            </el-button>
+                                            <el-button type="primary" size="small" @click="toRouter('3', item)">
+                                                入库
+                                            </el-button>
+                                            <el-button type="primary" size="small" @click="toRouter('4', item)">
+                                                清洗
+                                            </el-button>
+                                        </div>
+                                    </div>
+                                    <div class="box_bottom">
+                                        <div v-if="item.sumAmout">
+                                            <div class="box_bottom_sole">
+                                                {{ item.halfTypeName ? item.halfTypeName : item.ferMaterialName }}
+                                            </div>
+                                            <div class="box_bottom_sole">
+                                                {{ item.ferDays }}天
+                                            </div>
+                                            <div class="box_bottom_sole">
+                                                {{ item.ferOrderNo }}
+                                            </div>
+                                            <div class="box_bottom_sole">
+                                                {{ (item.sumAmout / 1000).toFixed(2) }}方
+                                            </div>
+                                        </div>
+                                        <div v-else>
+                                            <div class="box_bottom_sole colorGray">
+                                                暂无数据
+                                            </div>
+                                            <div class="box_bottom_sole colorGray">
+                                                暂无数据
+                                            </div>
+                                            <div class="box_bottom_sole colorGray">
+                                                暂无数据
+                                            </div>
+                                            <div class="box_bottom_sole colorGray">
+                                                暂无数据
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </el-col>
+                        </el-row>
+                        <el-row>
+                            <el-pagination :current-page="formHeader.currPage" :page-sizes="[40, 60, 80]" :page-size="formHeader.pageSize" layout="total, sizes, prev, pager, next, jumper" :total="formHeader.totalCount" @size-change="handleSizeChange" @current-change="handleCurrentChange" />
+                        </el-row>
+                    </div>
+                </div>
+                <mds-card :title="'发酵罐管理'" :pack-up="false" :name="'fermenterTotal'" style="margin-top: 10px; overflow: initial;" />
             </template>
         </query-table>
     </div>
@@ -77,7 +158,7 @@
             },
             {
                 type: 'select',
-                label: '溶解罐号',
+                label: '容器类型',
                 prop: 'potId',
                 labelWidth: 90,
                 rule: [{ required: true, message: ' ', trigger: 'change' }],
@@ -100,7 +181,28 @@
                     resData: 'data.records',
                     label: ['holderName'],
                     value: 'id'
-                }
+                },
+                linkageProp: ['productLine']
+            },
+            {
+                type: 'select',
+                label: '容器号',
+                prop: 'potN',
+                labelWidth: 90,
+                rule: [{ required: true, message: ' ', trigger: 'change' }],
+
+                optionsFn: val => {
+                return COMMON_API.ORG_QUERY_CHILDREN_API({
+                    parentId: val || '',
+                    deptType: 'PRODUCT_LINE'
+                })
+            },
+            resVal: {
+                resData: 'data',
+                label: ['deptName'],
+                value: 'id'
+            },
+            defaultValue: ''
             },
             {
                 type: 'select',
@@ -110,19 +212,9 @@
                 defaultValue: '',
                 defaultOptionsFn: () => {
                     return new Promise((resolve) => {
-                        COMMON_API.DICTQUERY_API({ dictType: 'COMMON_HOLDER_STATUS' }).then((res) => {
-                            const temp = res
-                            temp.data.data = temp.data.data.filter(element => element.dictValue !== '发酵')
-                            temp.data.data.forEach(item => {
-                                if (item.dictValue === '投料') {
-                                    item.dictValue = '入料中'
-                                } else if (item.dictValue === '领用') {
-                                    item.dictValue = '领用中'
-                                } else if (item.dictValue === '清洗') {
-                                    item.dictValue = '待清洗'
-                                }
-                            })
-                            resolve(temp)
+                        COMMON_API.DICTQUERY_API({ dictType: 'COMMON_FERM_STATUS' }).then((res) => {
+
+                            resolve(res)
                         })
                     })
                 },

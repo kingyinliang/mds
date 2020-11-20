@@ -121,7 +121,7 @@
 
 <script lang="ts">
 import { Vue, Component, Prop } from 'vue-property-decorator';
-import { COMMON_API, STE_API } from 'common/api/api';
+import { COMMON_API, STE_API, AUDIT_API } from 'common/api/api';
 import { dateFormat, getUserNameNumber } from 'utils/utils';
 import _ from 'lodash';
 
@@ -140,7 +140,7 @@ export default class Crafts extends Vue {
 
     doAction = '';
 
-    init(formHeader) {
+    async init(formHeader) {
         this.getControlTypeList();
         STE_API.STE_DETAIL_CRAFT_INFO_API({
             potOrderNo: formHeader.potOrderNo
@@ -157,6 +157,16 @@ export default class Crafts extends Vue {
                 })
             }
         });
+        this.craftAudit = await this.getAudit(formHeader, ['CONTROL', 'TIMESHEET']);
+    }
+
+    async getAudit(formHeader, verifyType) {
+        const a = await AUDIT_API.STE_AUDIT_LOG_API({
+            orderNo: formHeader.orderNo,
+            splitOrderNo: formHeader.potOrderNo,
+            verifyType: verifyType
+        })
+        return a.data.data
     }
 
     ruleSubmit() {
