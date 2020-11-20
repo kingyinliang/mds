@@ -9,7 +9,7 @@
             status-title="状态"
             :redact-box-show="true"
         >
-            <template v-slot:contentBox>
+            <template v-slot:contentBox="{isRedact}">
                 <mds-card title="盐水发料" name="saltwater">
                     <template>
                         <el-form ref="selectFormRef" :model="selectForm" :inline="true" :rules="selectFormRules" size="small" label-suffix="：" label-width="90px" class="multi_row clearfix" style="font-size: 0;">
@@ -274,7 +274,7 @@ export default class SaltWaterDetail extends Vue {
 
     otherList = [{ aaaaaaaa: 'hello world' }];
 
-    isRedact = false; // 可否编辑
+    // isRedact = false; // 可否编辑
     redactBoxDisable = false; // control bar 可否禁用
     checkStatus = 'R'; // 发料状态
 
