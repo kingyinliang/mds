@@ -115,8 +115,7 @@
 
         get currentTabs() {
             const { washBeanMaterailName, washBeanCraftName } = this.$store.state.koji.houseTagInfo;
-            this.$set(this.formHeader, 'statusName', this.orderIndex[Math.min(this.orderIndex.indexOf(washBeanMaterailName), this.orderIndex.indexOf(washBeanCraftName))])
-            return [
+            const tabsTemp = [
                 {
                     label: '物料领用',
                     status: washBeanMaterailName || ''
@@ -132,6 +131,11 @@
                     label: '文本记录'
                 }
             ]
+
+            this.$set(tabsTemp[0], 'status', washBeanMaterailName)
+            this.$set(tabsTemp[1], 'status', washBeanCraftName)
+            this.$set(this.formHeader, 'statusName', this.orderIndex[Math.min(this.orderIndex.indexOf(washBeanMaterailName), this.orderIndex.indexOf(washBeanCraftName))])
+            return tabsTemp
         }
 
         submitRules(): Function[] {

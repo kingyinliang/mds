@@ -129,9 +129,8 @@
 
         get currentTabs() {
             const { steamBeanCraftName, steamBeanInStorageName } = this.$store.state.koji.houseTagInfo;
-            this.$set(this.formHeader, 'statusName', this.orderIndex[Math.min(this.orderIndex.indexOf(steamBeanCraftName), this.orderIndex.indexOf(steamBeanInStorageName))])
 
-            return [
+            const tabsTemp = [
                 {
                     label: '工艺控制',
                     status: steamBeanCraftName || ''
@@ -147,6 +146,12 @@
                     label: '文本记录'
                 }
             ]
+
+            this.$set(tabsTemp[0], 'status', steamBeanCraftName)
+            this.$set(tabsTemp[1], 'status', steamBeanInStorageName)
+            this.$set(this.formHeader, 'statusName', this.orderIndex[Math.min(this.orderIndex.indexOf(steamBeanCraftName), this.orderIndex.indexOf(steamBeanInStorageName))])
+            return tabsTemp
+
         }
 
         // 获取页签状态

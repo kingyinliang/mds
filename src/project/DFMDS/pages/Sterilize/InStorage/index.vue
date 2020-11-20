@@ -473,7 +473,7 @@
         }
 
         successToDo() {
-            console.log('yuyuyuyuyuyu')
+
             this.getWorkshopList();
             // 获取订单下拉
             this.selectOrder(this.globalOrderNumber)
