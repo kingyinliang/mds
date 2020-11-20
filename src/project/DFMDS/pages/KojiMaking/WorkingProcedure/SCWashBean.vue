@@ -6,6 +6,7 @@
             save-auth="steSemiEdit"
             submit-auth="steSemiSubmit"
             :order-status="formHeader.statusName"
+            :status-title="'工序状态'"
             :header-base="headerBase"
             :form-header="formHeader"
             :tabs="currentTabs"

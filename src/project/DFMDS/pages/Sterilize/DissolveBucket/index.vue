@@ -51,7 +51,7 @@
                                     </div>
                                 </div>
                                 <div class="card-bucket__fotter">
-                                    <div v-if="!(item.potStatus==='E'||item.potStatus==='C')">
+                                    <div v-show="!(item.potStatus==='E'||item.potStatus==='C')">
                                         <el-tooltip class="item" effect="dark" :content="item.prodcutMaterialName" placement="top">
                                             <span style="overflow: hidden; white-space: nowrap; text-overflow: ellipsis;">{{ item.prodcutMaterialName || '未有生产物料' }}</span>
                                         </el-tooltip>
@@ -651,6 +651,12 @@ interface CurrentDataTable{
         padding: 11px 10px;
         font-size: 14px;
         border-bottom: 1px #e8e8e8 solid;
+        span {
+            width: 80%;
+            overflow: hidden;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+        }
 
         .el-button {
             font-size: 12px;
