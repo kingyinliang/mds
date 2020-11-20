@@ -110,348 +110,316 @@
                     </el-button>
                 </div>
             </template>
-            <el-form ref="ruleKojiGuardForm" :model="ruleKojiGuardForm">
-                <el-table class="newTable other" :data="kojiGuardData" :row-class-name="rowDelFlag" max-height="300" header-row-class-name="tableHead" border tooltip-effect="dark">
-                    <el-table-column type="index" label="序号" width="50" align="center" fixed="left" />
-                    <el-table-column label="看曲时间" :show-overflow-tooltip="true" width="210">
+
+            <el-table class="newTable other" :data="kojiGuardData" :row-class-name="rowDelFlag" max-height="300" header-row-class-name="tableHead" border tooltip-effect="dark">
+                <el-table-column type="index" label="序号" width="50" align="center" fixed="left" />
+                <el-table-column label="看曲时间" :show-overflow-tooltip="true" width="210">
+                    <template slot="header">
+                        <span class="notNull">* </span>看曲时间
+                    </template>
+                    <template slot-scope="scope">
+                        <el-date-picker v-model="scope.row.guardDate" type="datetime" size="small" value-format="yyyy-MM-dd HH:mm" format="yyyy-MM-dd HH:mm" placeholder="选择时间" style="width: 180px;" :disabled="!isRedact" @change="(val)=>kojiStartTimeChange(val,scope.row)" />
+                    </template>
+                </el-table-column>
+                <el-table-column label="实际风温" :show-overflow-tooltip="true" width="140">
+                    <template slot="header">
+                        <span class="notNull">* </span>实际风温
+                    </template>
+                    <template slot-scope="scope">
+                        <el-input
+                            v-model.trim="scope.row.windTemp"
+                            size="small"
+                            placeholder="请输入"
+                            :disabled="!isRedact"
+                            @input="(val)=>oninput(val,scope.row,'windTemp')"
+                        >
+                            <span slot="suffix">°C</span>
+                        </el-input>
+                    </template>
+                </el-table-column>
+                <el-table-column label="设定风温" :show-overflow-tooltip="true" width="140">
+                    <template slot-scope="scope">
+                        <el-input
+                            v-model.trim="scope.row.settingWindTemp"
+                            size="small"
+                            placeholder="请输入"
+                            :disabled="!isRedact"
+                            @input="(val)=>oninput(val,scope.row,'settingWindTemp')"
+                        >
+                            <span slot="suffix">°C</span>
+                        </el-input>
+                    </template>
+                </el-table-column>
+                <el-table-column label="下室温度" :show-overflow-tooltip="true" width="140">
+                    <template slot="header">
+                        <span class="notNull">* </span>下室温度
+                    </template>
+                    <template slot-scope="scope">
+                        <el-input
+                            v-model.trim="scope.row.roomTemp"
+                            size="small"
+                            placeholder="请输入"
+                            :disabled="!isRedact"
+                            @input="(val)=>oninput(val,scope.row,'roomTemp')"
+                        >
+                            <span slot="suffix">°C</span>
+                        </el-input>
+                    </template>
+                </el-table-column>
+                <el-table-column label="风速" :show-overflow-tooltip="true" width="140">
+                    <template slot="header">
+                        <span class="notNull">* </span>风速
+                    </template>
+                    <template slot-scope="scope">
+                        <el-input
+                            v-model.trim="scope.row.windSpeed"
+                            size="small"
+                            placeholder="请输入"
+                            :disabled="!isRedact"
+                            @input="(val)=>oninput(val,scope.row,'windSpeed')"
+                        >
+                            <span slot="suffix">m/s</span>
+                        </el-input>
+                    </template>
+                </el-table-column>
+                <el-table-column label="品温" :show-overflow-tooltip="true" width="140">
+                    <template slot="header">
+                        <span class="notNull">* </span>品温
+                    </template>
+                    <template slot-scope="scope">
+                        <el-input
+                            v-model.trim="scope.row.prodTemp"
+                            size="small"
+                            placeholder="请输入"
+                            :disabled="!isRedact"
+                            @input="(val)=>oninput(val,scope.row,'prodTemp')"
+                        >
+                            <span slot="suffix">°C</span>
+                        </el-input>
+                    </template>
+                </el-table-column>
+                <el-table-column label="设定品温" :show-overflow-tooltip="true" width="140">
+                    <template slot-scope="scope">
+                        <el-input
+                            v-model.trim="scope.row.settingProdTemp"
+                            size="small"
+                            placeholder="请输入"
+                            :disabled="!isRedact"
+                            @input="(val)=>oninput(val,scope.row,'settingProdTemp')"
+                        >
+                            <span slot="suffix">°C</span>
+                        </el-input>
+                    </template>
+                </el-table-column>
+                <el-table-column label="探头温度" :show-overflow-tooltip="true">
+                    <el-table-column
+                        prop="outUpTemp"
+                        label="外上"
+                        width="100"
+                    >
                         <template slot="header">
-                            <span class="notNull">* </span>看曲时间
+                            <span class="notNull">* </span>外上
                         </template>
-                        <template slot-scope="scope">
-                            <el-form-item prop="guardDate">
-                                <el-date-picker v-model="scope.row.guardDate" type="datetime" size="small" value-format="yyyy-MM-dd HH:mm" format="yyyy-MM-dd HH:mm" placeholder="选择时间" style="width: 180px;" :disabled="!isRedact" @change="(val)=>kojiStartTimeChange(val,scope.row)" />
-                            </el-form-item>
-                        </template>
-                    </el-table-column>
-                    <el-table-column label="实际风温" :show-overflow-tooltip="true" width="140">
-                        <template slot="header">
-                            <span class="notNull">* </span>实际风温
-                        </template>
-                        <template slot-scope="scope">
-                            <el-form-item prop="windTemp">
-                                <el-input
-                                    v-model.trim="scope.row.windTemp"
-                                    size="small"
-                                    placeholder="请输入"
-                                    :disabled="!isRedact"
-                                    @input="(val)=>oninput(val,scope.row,'windTemp')"
-                                >
-                                    <span slot="suffix">°C</span>
-                                </el-input>
-                            </el-form-item>
-                        </template>
-                    </el-table-column>
-                    <el-table-column label="设定风温" :show-overflow-tooltip="true" width="140">
                         <template slot-scope="scope">
                             <el-input
-                                v-model.trim="scope.row.settingWindTemp"
+                                v-model.trim="scope.row.outUpTemp"
                                 size="small"
                                 placeholder="请输入"
                                 :disabled="!isRedact"
-                                @input="(val)=>oninput(val,scope.row,'settingWindTemp')"
+                                @input="(val)=>oninput(val,scope.row,'outUpTemp')"
                             >
                                 <span slot="suffix">°C</span>
                             </el-input>
                         </template>
                     </el-table-column>
-                    <el-table-column label="下室温度" :show-overflow-tooltip="true" width="140">
+                    <el-table-column
+                        prop="outMidTemp"
+                        label="外中"
+                        width="100"
+                    >
                         <template slot="header">
-                            <span class="notNull">* </span>下室温度
+                            <span class="notNull">* </span>外中
                         </template>
-                        <template slot-scope="scope">
-                            <el-form-item prop="roomTemp">
-                                <el-input
-                                    v-model.trim="scope.row.roomTemp"
-                                    size="small"
-                                    placeholder="请输入"
-                                    :disabled="!isRedact"
-                                    @input="(val)=>oninput(val,scope.row,'roomTemp')"
-                                >
-                                    <span slot="suffix">°C</span>
-                                </el-input>
-                            </el-form-item>
-                        </template>
-                    </el-table-column>
-                    <el-table-column label="风速" :show-overflow-tooltip="true" width="140">
-                        <template slot="header">
-                            <span class="notNull">* </span>风速
-                        </template>
-                        <template slot-scope="scope">
-                            <el-form-item prop="windSpeed">
-                                <el-input
-                                    v-model.trim="scope.row.windSpeed"
-                                    size="small"
-                                    placeholder="请输入"
-                                    :disabled="!isRedact"
-                                    @input="(val)=>oninput(val,scope.row,'windSpeed')"
-                                >
-                                    <span slot="suffix">m/s</span>
-                                </el-input>
-                            </el-form-item>
-                        </template>
-                    </el-table-column>
-                    <el-table-column label="品温" :show-overflow-tooltip="true" width="140">
-                        <template slot="header">
-                            <span class="notNull">* </span>品温
-                        </template>
-                        <template slot-scope="scope">
-                            <el-form-item prop="prodTemp">
-                                <el-input
-                                    v-model.trim="scope.row.prodTemp"
-                                    size="small"
-                                    placeholder="请输入"
-                                    :disabled="!isRedact"
-                                    @input="(val)=>oninput(val,scope.row,'prodTemp')"
-                                >
-                                    <span slot="suffix">°C</span>
-                                </el-input>
-                            </el-form-item>
-                        </template>
-                    </el-table-column>
-                    <el-table-column label="设定品温" :show-overflow-tooltip="true" width="140">
                         <template slot-scope="scope">
                             <el-input
-                                v-model.trim="scope.row.settingProdTemp"
+                                v-model.trim="scope.row.outMidTemp"
                                 size="small"
                                 placeholder="请输入"
                                 :disabled="!isRedact"
-                                @input="(val)=>oninput(val,scope.row,'settingProdTemp')"
+                                @input="(val)=>oninput(val,scope.row,'outMidTemp')"
                             >
                                 <span slot="suffix">°C</span>
                             </el-input>
                         </template>
                     </el-table-column>
-                    <el-table-column label="探头温度" :show-overflow-tooltip="true">
-                        <el-table-column
-                            prop="outUpTemp"
-                            label="外上"
-                            width="100"
-                        >
-                            <template slot="header">
-                                <span class="notNull">* </span>外上
-                            </template>
-                            <template slot-scope="scope">
-                                <el-form-item prop="outUpTemp">
-                                    <el-input
-                                        v-model.trim="scope.row.outUpTemp"
-                                        size="small"
-                                        placeholder="请输入"
-                                        :disabled="!isRedact"
-                                        @input="(val)=>oninput(val,scope.row,'outUpTemp')"
-                                    >
-                                        <span slot="suffix">°C</span>
-                                    </el-input>
-                                </el-form-item>
-                            </template>
-                        </el-table-column>
-                        <el-table-column
-                            prop="outMidTemp"
-                            label="外中"
-                            width="100"
-                        >
-                            <template slot="header">
-                                <span class="notNull">* </span>外中
-                            </template>
-                            <template slot-scope="scope">
-                                <el-form-item prop="outMidTemp">
-                                    <el-input
-                                        v-model.trim="scope.row.outMidTemp"
-                                        size="small"
-                                        placeholder="请输入"
-                                        :disabled="!isRedact"
-                                        @input="(val)=>oninput(val,scope.row,'outMidTemp')"
-                                    >
-                                        <span slot="suffix">°C</span>
-                                    </el-input>
-                                </el-form-item>
-                            </template>
-                        </el-table-column>
-                        <el-table-column
-                            prop="outDownTemp"
-                            label="外下"
-                            width="100"
-                        >
-                            <template slot="header">
-                                <span class="notNull">* </span>外下
-                            </template>
-                            <template slot-scope="scope">
-                                <el-form-item prop="outDownTemp">
-                                    <el-input
-                                        v-model.trim="scope.row.outDownTemp"
-                                        size="small"
-                                        placeholder="请输入"
-                                        :disabled="!isRedact"
-                                        @input="(val)=>oninput(val,scope.row,'outDownTemp')"
-                                    >
-                                        <span slot="suffix">°C</span>
-                                    </el-input>
-                                </el-form-item>
-                            </template>
-                        </el-table-column>
-                        <el-table-column
-                            prop="innerUpTemp"
-                            label="内上"
-                            width="100"
-                        >
-                            <template slot-scope="scope">
-                                <el-form-item prop="innerUpTemp">
-                                    <el-input
-                                        v-model.trim="scope.row.innerUpTemp"
-                                        size="small"
-                                        placeholder="请输入"
-                                        :disabled="!isRedact"
-                                        @input="(val)=>oninput(val,scope.row,'innerUpTemp')"
-                                    >
-                                        <span slot="suffix">°C</span>
-                                    </el-input>
-                                </el-form-item>
-                            </template>
-                        </el-table-column>
-                        <el-table-column
-                            prop="innerMidTemp"
-                            label="内中"
-                            width="100"
-                        >
-                            <template slot-scope="scope">
-                                <el-form-item prop="innerMidTemp">
-                                    <el-input
-                                        v-model.trim="scope.row.innerMidTemp"
-                                        size="small"
-                                        placeholder="请输入"
-                                        :disabled="!isRedact"
-                                        @input="(val)=>oninput(val,scope.row,'innerMidTemp')"
-                                    >
-                                        <span slot="suffix">°C</span>
-                                    </el-input>
-                                </el-form-item>
-                            </template>
-                        </el-table-column>
-                        <el-table-column
-                            prop="innerDownTemp"
-                            label="内下"
-                            width="100"
-                        >
-                            <template slot-scope="scope">
-                                <el-form-item prop="innerDownTemp">
-                                    <el-input
-                                        v-model.trim="scope.row.innerDownTemp"
-                                        size="small"
-                                        placeholder="请输入"
-                                        :disabled="!isRedact"
-                                        @input="(val)=>oninput(val,scope.row,'innerDownTemp')"
-                                    >
-                                        <span slot="suffix">°C</span>
-                                    </el-input>
-                                </el-form-item>
-                            </template>
-                        </el-table-column>
-                    </el-table-column>
-                    <el-table-column label="温度计测量" :show-overflow-tooltip="true">
-                        <el-table-column
-                            prop="testTempOne"
-                            label="测量点1"
-                            width="100"
-                        >
-                            <template slot="header">
-                                <span class="notNull">* </span>测量点1
-                            </template>
-                            <template slot-scope="scope">
-                                <el-form-item prop="testTempOne">
-                                    <el-input
-                                        v-model.trim="scope.row.testTempOne"
-                                        size="small"
-                                        placeholder="请输入"
-                                        :disabled="!isRedact"
-                                        @input="(val)=>oninput(val,scope.row,'testTempOne')"
-                                    >
-                                        <span slot="suffix">°C</span>
-                                    </el-input>
-                                </el-form-item>
-                            </template>
-                        </el-table-column>
-                        <el-table-column
-                            prop="testTempTwo"
-                            label="测量点2"
-                            width="100"
-                        >
-                            <template slot="header">
-                                <span class="notNull">* </span>测量点2
-                            </template>
-                            <template slot-scope="scope">
-                                <el-form-item prop="testTempTwo">
-                                    <el-input
-                                        v-model.trim="scope.row.testTempTwo"
-                                        size="small"
-                                        placeholder="请输入"
-                                        :disabled="!isRedact"
-                                        @input="(val)=>oninput(val,scope.row,'testTempTwo')"
-                                    >
-                                        <span slot="suffix">°C</span>
-                                    </el-input>
-                                </el-form-item>
-                            </template>
-                        </el-table-column>
-                    </el-table-column>
-                    <el-table-column label="中间风门" :show-overflow-tooltip="true" width="140">
+                    <el-table-column
+                        prop="outDownTemp"
+                        label="外下"
+                        width="100"
+                    >
                         <template slot="header">
-                            <span class="notNull">* </span>中间风门
+                            <span class="notNull">* </span>外下
                         </template>
                         <template slot-scope="scope">
-                            <el-form-item prop="windDoor">
-                                <el-input
-                                    v-model.trim="scope.row.windDoor"
-                                    size="small"
-                                    placeholder="请输入"
-                                    :disabled="!isRedact"
-                                    @input="(val)=>oninput(val,scope.row,'windDoor')"
-                                />
-                            </el-form-item>
+                            <el-input
+                                v-model.trim="scope.row.outDownTemp"
+                                size="small"
+                                placeholder="请输入"
+                                :disabled="!isRedact"
+                                @input="(val)=>oninput(val,scope.row,'outDownTemp')"
+                            >
+                                <span slot="suffix">°C</span>
+                            </el-input>
                         </template>
                     </el-table-column>
-                    <el-table-column label="强排" :show-overflow-tooltip="true" width="130">
+                    <el-table-column
+                        prop="innerUpTemp"
+                        label="内上"
+                        width="100"
+                    >
                         <template slot-scope="scope">
-                            <el-form-item prop="forceDrain">
-                                <el-select v-model="scope.row.forceDrain" size="small" clearable style="width: 100%;" :disabled="!isRedact">
-                                    <el-option
-                                        v-for="item in forceDrainOptions"
-                                        :key="item.optValue"
-                                        :label="item.optLabel"
-                                        :value="item.optValue"
-                                    />
-                                </el-select>
-                            </el-form-item>
+                            <el-input
+                                v-model.trim="scope.row.innerUpTemp"
+                                size="small"
+                                placeholder="请输入"
+                                :disabled="!isRedact"
+                                @input="(val)=>oninput(val,scope.row,'innerUpTemp')"
+                            >
+                                <span slot="suffix">°C</span>
+                            </el-input>
                         </template>
                     </el-table-column>
-                    <el-table-column label="换热" :show-overflow-tooltip="true" width="130">
+                    <el-table-column
+                        prop="innerMidTemp"
+                        label="内中"
+                        width="100"
+                    >
                         <template slot-scope="scope">
-                            <el-form-item prop="changeHot">
-                                <el-select v-model="scope.row.changeHot" size="small" clearable style="width: 100%;" :disabled="!isRedact">
-                                    <el-option
-                                        v-for="item in changeHotOptions"
-                                        :key="item.optValue"
-                                        :label="item.optLabel"
-                                        :value="item.optValue"
-                                    />
-                                </el-select>
-                            </el-form-item>
+                            <el-input
+                                v-model.trim="scope.row.innerMidTemp"
+                                size="small"
+                                placeholder="请输入"
+                                :disabled="!isRedact"
+                                @input="(val)=>oninput(val,scope.row,'innerMidTemp')"
+                            >
+                                <span slot="suffix">°C</span>
+                            </el-input>
                         </template>
                     </el-table-column>
-                    <el-table-column label="备注" :show-overflow-tooltip="true" min-width="200">
+                    <el-table-column
+                        prop="innerDownTemp"
+                        label="内下"
+                        width="100"
+                    >
                         <template slot-scope="scope">
-                            <el-input v-model.trim="scope.row.remark" size="small" placeholder="输入备注" :disabled="!isRedact" />
+                            <el-input
+                                v-model.trim="scope.row.innerDownTemp"
+                                size="small"
+                                placeholder="请输入"
+                                :disabled="!isRedact"
+                                @input="(val)=>oninput(val,scope.row,'innerDownTemp')"
+                            >
+                                <span slot="suffix">°C</span>
+                            </el-input>
                         </template>
                     </el-table-column>
-                    <el-table-column prop="changer" min-width="140" label="操作人" :show-overflow-tooltip="true" />
-                    <el-table-column prop="changed" min-width="180" label="操作时间" :show-overflow-tooltip="true" />
-                    <el-table-column fixed="right" label="操作" width="80" :show-overflow-tooltip="true">
+                </el-table-column>
+                <el-table-column label="温度计测量" :show-overflow-tooltip="true">
+                    <el-table-column
+                        prop="testTempOne"
+                        label="测量点1"
+                        width="100"
+                    >
+                        <template slot="header">
+                            <span class="notNull">* </span>测量点1
+                        </template>
                         <template slot-scope="scope">
-                            <el-button class="delBtn" type="text" icon="el-icon-delete" size="mini" :disabled="!isRedact" @click="removeFirstDataRow(scope.row)">
-                                删除
-                            </el-button>
+                            <el-input
+                                v-model.trim="scope.row.testTempOne"
+                                size="small"
+                                placeholder="请输入"
+                                :disabled="!isRedact"
+                                @input="(val)=>oninput(val,scope.row,'testTempOne')"
+                            >
+                                <span slot="suffix">°C</span>
+                            </el-input>
                         </template>
                     </el-table-column>
-                </el-table>
-            </el-form>
+                    <el-table-column
+                        prop="testTempTwo"
+                        label="测量点2"
+                        width="100"
+                    >
+                        <template slot="header">
+                            <span class="notNull">* </span>测量点2
+                        </template>
+                        <template slot-scope="scope">
+                            <el-input
+                                v-model.trim="scope.row.testTempTwo"
+                                size="small"
+                                placeholder="请输入"
+                                :disabled="!isRedact"
+                                @input="(val)=>oninput(val,scope.row,'testTempTwo')"
+                            >
+                                <span slot="suffix">°C</span>
+                            </el-input>
+                        </template>
+                    </el-table-column>
+                </el-table-column>
+                <el-table-column label="中间风门" :show-overflow-tooltip="true" width="140">
+                    <template slot="header">
+                        <span class="notNull">* </span>中间风门
+                    </template>
+                    <template slot-scope="scope">
+                        <el-input
+                            v-model.trim="scope.row.windDoor"
+                            size="small"
+                            placeholder="请输入"
+                            :disabled="!isRedact"
+                            @input="(val)=>oninput(val,scope.row,'windDoor')"
+                        />
+                    </template>
+                </el-table-column>
+                <el-table-column label="强排" :show-overflow-tooltip="true" width="130">
+                    <template slot-scope="scope">
+                        <el-select v-model="scope.row.forceDrain" size="small" clearable style="width: 100%;" :disabled="!isRedact">
+                            <el-option
+                                v-for="item in forceDrainOptions"
+                                :key="item.optValue"
+                                :label="item.optLabel"
+                                :value="item.optValue"
+                            />
+                        </el-select>
+                    </template>
+                </el-table-column>
+                <el-table-column label="换热" :show-overflow-tooltip="true" width="130">
+                    <template slot-scope="scope">
+                        <el-select v-model="scope.row.changeHot" size="small" clearable style="width: 100%;" :disabled="!isRedact">
+                            <el-option
+                                v-for="item in changeHotOptions"
+                                :key="item.optValue"
+                                :label="item.optLabel"
+                                :value="item.optValue"
+                            />
+                        </el-select>
+                    </template>
+                </el-table-column>
+                <el-table-column label="备注" :show-overflow-tooltip="true" min-width="200">
+                    <template slot-scope="scope">
+                        <el-input v-model.trim="scope.row.remark" size="small" placeholder="输入备注" :disabled="!isRedact" />
+                    </template>
+                </el-table-column>
+                <el-table-column prop="changer" min-width="140" label="操作人" :show-overflow-tooltip="true" />
+                <el-table-column prop="changed" min-width="180" label="操作时间" :show-overflow-tooltip="true" />
+                <el-table-column fixed="right" label="操作" width="80" :show-overflow-tooltip="true">
+                    <template slot-scope="scope">
+                        <el-button class="delBtn" type="text" icon="el-icon-delete" size="mini" :disabled="!isRedact" @click="removeFirstDataRow(scope.row)">
+                            删除
+                        </el-button>
+                    </template>
+                </el-table-column>
+            </el-table>
+
             <div>
                 <div style="margin: 10px 5px;">
                     异常情况：
@@ -472,6 +440,7 @@
                         <el-date-picker
                             v-model="scope.row.turnStart"
                             type="datetime"
+                            size="small"
                             format="yyyy-MM-dd HH:mm"
                             value-format="yyyy-MM-dd HH:mm"
                             placeholder="请选择"
@@ -489,6 +458,7 @@
                         <el-date-picker
                             v-model="scope.row.turnEnd"
                             type="datetime"
+                            size="small"
                             format="yyyy-MM-dd HH:mm"
                             value-format="yyyy-MM-dd HH:mm"
                             placeholder="请选择"
@@ -538,7 +508,7 @@
                         <el-input v-model="scope.row.remark" :disabled="!isRedact" size="small" placeholder="请输入" />
                     </template>
                 </el-table-column>
-                <el-table-column label="操作人" prop="changer" width="140">
+                <el-table-column label="操作人" prop="changer" width="180">
                     <template slot-scope="scope">
                         {{ scope.row.changer }}
                     </template>
@@ -894,7 +864,6 @@
         // 出曲工艺
         getKojiOutCraft() {
             KOJI_API.KOJI_DISC_QUERY_KOJIOUT_API({
-                //kojiOrderNo: '85100000188700120200918162640'
                 kojiOrderNo: this.targetOrderObj.kojiOrderNo
             }).then(({ data }) => {
                 console.log('出曲工艺data')
@@ -919,7 +888,6 @@
         // 翻曲记录
         getKojiDiscTurn() {
             KOJI_API.KOJI_DISC_QUERY_TURN_API({
-                // kojiOrderNo: '85100000188700120200918162640'
                 kojiOrderNo: this.targetOrderObj.kojiOrderNo
             }).then(({ data }) => {
                 console.log('翻曲记录')
@@ -929,24 +897,24 @@
                     this.kojiDiscTurnData[0] = data.data.kojiDiscTurn1
                     this.kojiDiscTurnData[1] = data.data.kojiDiscTurn2
 
-                this.kojiDiscTurnData[0].orderNo = this.targetOrderObj.orderNo;
-                this.kojiDiscTurnData[0].kojiOrderNo = this.targetOrderObj.kojiOrderNo;
+                    this.$set(this.kojiDiscTurnData[0], 'orderNo', this.targetOrderObj.orderNo)
+                    this.$set(this.kojiDiscTurnData[0], 'kojiOrderNo', this.targetOrderObj.kojiOrderNo)
 
-                if (this.kojiDiscTurnData[0].turnStart === null) {
-                    this.kojiDiscTurnData[0].turnStart = '';
-                }
-                if (this.kojiDiscTurnData[0].turnEnd === null) {
-                    this.kojiDiscTurnData[0].turnEnd = '';
-                }
+                    if (this.kojiDiscTurnData[0].turnStart === null) {
+                        this.$set(this.kojiDiscTurnData[0], 'turnStart', '')
+                    }
+                    if (this.kojiDiscTurnData[0].turnEnd === null) {
+                        this.$set(this.kojiDiscTurnData[0], 'turnEnd', '')
+                    }
 
-                this.kojiDiscTurnData[1].orderNo = this.targetOrderObj.orderNo;
-                this.kojiDiscTurnData[1].kojiOrderNo = this.targetOrderObj.kojiOrderNo;
-                if (this.kojiDiscTurnData[1].turnStart === null) {
-                    this.kojiDiscTurnData[1].turnStart = '';
-                }
-                if (this.kojiDiscTurnData[1].turnEnd === null) {
-                    this.kojiDiscTurnData[1].turnEnd = '';
-                }
+                    this.$set(this.kojiDiscTurnData[1], 'orderNo', this.targetOrderObj.orderNo)
+                    this.$set(this.kojiDiscTurnData[1], 'kojiOrderNo', this.targetOrderObj.kojiOrderNo)
+                    if (this.kojiDiscTurnData[1].turnStart === null) {
+                        this.$set(this.kojiDiscTurnData[1], 'turnStart', '')
+                    }
+                    if (this.kojiDiscTurnData[1].turnEnd === null) {
+                        this.$set(this.kojiDiscTurnData[1], 'turnEnd', '')
+                    }
                 }
             })
         }
@@ -957,7 +925,15 @@
                 target.turnStart = ''
             }
             target.turnDuration = 0
-            if (target.turnStart !== '' && this.kojiGuardData.length !== 0) {
+
+            const timeList: number[] = [];
+            this.kojiGuardData.forEach(item => {
+                if (item.guardDate) {
+                    timeList.push(new Date(item.guardDate).getTime())
+                }
+            })
+
+            if (target.turnStart !== '' && this.kojiGuardData.length !== 0 && Math.min(...timeList) !== Infinity) {
                 const timeTemp = new Date(val).getTime();
                 let result = 0
                 if (this.kojiGuardData.length !== 0) {
@@ -971,13 +947,11 @@
                 }
                 target.turnDuration = (timeTemp - result) / 3600000
             }
-
         }
 
         // 异常情况
         getKojiDiscException() {
             KOJI_API.KOJI_DISC_QUERY_EXCEPTION_API({
-                // kojiOrderNo: '85100000188700120200918162640'
                 kojiOrderNo: this.targetOrderObj.kojiOrderNo
             }).then(({ data }) => {
                 console.log('异常情况')
@@ -1009,7 +983,6 @@
             });
 
             KOJI_API.KOJI_DISC_QUERY_EVALUATE_API({
-                // kojiOrderNo: '85100000188700120200918162640'
                 kojiOrderNo: this.targetOrderObj.kojiOrderNo
             }).then(({ data }) => {
                 this.kojiEvaluateData = []
@@ -1039,7 +1012,6 @@
 
 
             KOJI_API.KOJI_DISC_QUERY_GUARD_API({
-                // kojiOrderNo: '85100000188700120200918162640'
                 kojiOrderNo: this.targetOrderObj.kojiOrderNo
             }).then(({ data }) => {
                 this.kojiGuardData = []
