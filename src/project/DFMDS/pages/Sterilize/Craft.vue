@@ -123,7 +123,7 @@
             STE_API.STE_DETAIL_CRAFTHEADER_STATUS_API({
                 potOrderNo: this.$store.state.sterilize.Craft.potOrderMap.potOrderNo
             }).then(({ data }) => {
-                this.tabs[0].status = data.data.controlStatus;
+                this.tabs[0].status = data.data.controlStatusName;
                 this.$refs.dataEntry.updateTabs();
             });
             STE_API.STE_DETAIL_CRAFTHEADER_INFO_API({
