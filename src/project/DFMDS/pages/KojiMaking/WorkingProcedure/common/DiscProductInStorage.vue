@@ -63,7 +63,7 @@
                         <el-input v-model.trim="scope.row.remark" size="small" placeholder="请输入" :disabled="!(isRedact && scope.row.checkStatus !== 'C' && scope.row.checkStatus !== 'D' && scope.row.checkStatus !== 'P')" />
                     </template>
                 </el-table-column>
-                <el-table-column label="操作人" prop="changer" width="140">
+                <el-table-column label="操作人" prop="changer" width="180">
                     <template slot-scope="scope">
                         {{ scope.row.changer }}
                     </template>
@@ -82,7 +82,7 @@
 <script lang="ts">
     import { Vue, Component, Prop, Watch } from 'vue-property-decorator';
     import { KOJI_API, AUDIT_API } from 'common/api/api';
-    // import { dateFormat, getUserNameNumber } from 'utils/utils';
+    import { dateFormat, getUserNameNumber } from 'utils/utils';
     // import _ from 'lodash';
 
     @Component({
@@ -156,6 +156,8 @@
             KOJI_API.KOJI_DISC_QUERY_INSTORAGE_API({
                 kojiOrderNo: this.targetOrderObj.kojiOrderNo
             }).then(({ data }) => {
+                console.log('生产入库')
+                console.log(data)
                 this.currentFormDataGroup = []
                 if (data.data) {
                     this.currentFormDataGroup[0] = data.data
@@ -189,6 +191,9 @@
             // const instorageInsert = [];
             // const instorageUpdate = [];
             // dataEntryData(formHeader, this.currentFormDataGroup, this.orgFormDataGroup, instorageDelete, instorageInsert, instorageUpdate);
+            this.$set(this.currentFormDataGroup[0], 'changed', dateFormat(new Date(), 'yyyy-MM-dd hh:mm'))
+            this.$set(this.currentFormDataGroup[0], 'changer', getUserNameNumber())
+
             return this.currentFormDataGroup[0]
         }
 

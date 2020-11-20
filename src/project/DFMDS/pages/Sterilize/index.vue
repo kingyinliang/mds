@@ -18,7 +18,7 @@
                             <div class="home_card__main__item">
                                 <div class="home_card__main__item__title clearfix">
                                     <p class="home_card__main__item__title__left">
-                                        锅号：<span class="home_card__main__item__title__left__proLine">{{ item.potNo }}</span>锅
+                                        锅号：<span class="home_card__main__item__title__left__proLine">{{ item.splitOrders[0].potName }}</span>
                                     </p>
                                     <p v-if="item.activeOrderNo!==''" :class="item.potOrderMap? item.potOrderMap.statusName === '已退回' ? 'noPass' : '' : ''" class="home_card__main__item__title__right">
                                         <span>状态：{{ item.potOrderMap? item.potOrderMap.statusName : '' }}</span>
