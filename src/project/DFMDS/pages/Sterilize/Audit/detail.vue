@@ -404,7 +404,7 @@
         getHeaderInfo(orderNo) {
             COMMON_API.OREDER_QUERY_BY_NO_API({ orderNo: orderNo, workShopType: 'sterilize' }).then(({ data }) => {
                 this.formHeader = data.data;
-                this.formHeader['realPotCount'] = '第' + this.formHeader['realPotCount'] + '锅';
+                // this.formHeader['realPotCount'] = '第' + this.formHeader['realPotCount'] + '锅';
             })
         }
 
