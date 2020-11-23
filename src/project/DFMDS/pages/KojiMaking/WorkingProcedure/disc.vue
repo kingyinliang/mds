@@ -8,7 +8,7 @@
         :order-status="formHeader.statusName"
         :header-base="headerBase"
         :form-header="formHeader"
-        :tabs="currentTabs"
+        :tabs="tabs"
         :submit-rules="submitRules"
         :saved-datas="savedDatas"
         :submit-datas="submitDatas"
@@ -49,6 +49,7 @@
     })
     export default class WashBeanIndex extends Vue {
         $refs: {
+            dataEntry: HTMLFormElement;
             craftControl: HTMLFormElement; // tab 工艺控制
             productInStorage: HTMLFormElement; // tab 工艺控制
             excRecord: HTMLFormElement; // 异常记录
@@ -123,23 +124,15 @@
         potNoNow: string|number = '';
         potNoList: OptionPotNoList[]=[]
 
-        @Watch('formHeader.fermentPotNo', { immediate: true, deep: true })
-        onChangeValue(newVal: number| string) {
-            if (newVal) {
-                this.potNoNow = newVal
-            }
-        }
 
-        get currentTabs() {
-            const { discCraftName, discInStorageName } = this.$store.state.koji.houseTagInfo;
-            const tabsTemp = [
+        tabs = [
                 {
                     label: '工艺控制',
-                    status: discCraftName || ''
+                    status: '未录入'
                 },
                 {
                     label: '生产入库',
-                    status: discInStorageName || ''
+                    status: '未录入'
                 },
                 {
                     label: '异常记录'
@@ -148,11 +141,12 @@
                     label: '文本记录'
                 }
             ]
-            this.$set(tabsTemp[0], 'status', discCraftName)
-            this.$set(tabsTemp[1], 'status', discInStorageName)
-            this.$set(this.formHeader, 'statusName', this.orderIndex[Math.min(this.orderIndex.indexOf(discCraftName), this.orderIndex.indexOf(discInStorageName))])
 
-            return tabsTemp
+        @Watch('formHeader.fermentPotNo', { immediate: true, deep: true })
+        onChangeValue(newVal: number| string) {
+            if (newVal) {
+                this.potNoNow = newVal
+            }
         }
 
         // 获取页签状态
@@ -162,6 +156,10 @@
                 kojiOrderNo: this.formHeader.kojiOrderNo
             }).then(({ data }) => {
                 this.$store.commit('koji/updateHouseTag', data.data);
+                this.tabs[0].status = data.data.discCraftName
+                this.tabs[1].status = data.data.discInStorageName
+                this.$refs.dataEntry.updateTabs();
+                this.$set(this.formHeader, 'statusName', this.orderIndex[Math.min(this.orderIndex.indexOf(data.data.discCraftName), this.orderIndex.indexOf(data.data.discInStorageName))])
             })
         }
 
@@ -192,8 +190,6 @@
                 size: 99999,
                 current: 1
             }).then(({ data }) => {
-                console.log('溶解罐')
-                console.log(data)
                 if (this.headerBase[5].option) {
                     this.headerBase[5].option.list = []
                     data.data.records.forEach(item => {
