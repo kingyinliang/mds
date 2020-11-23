@@ -191,8 +191,11 @@
             // const instorageInsert = [];
             // const instorageUpdate = [];
             // dataEntryData(formHeader, this.currentFormDataGroup, this.orgFormDataGroup, instorageDelete, instorageInsert, instorageUpdate);
-            this.$set(this.currentFormDataGroup[0], 'changed', dateFormat(new Date(), 'yyyy-MM-dd hh:mm'))
-            this.$set(this.currentFormDataGroup[0], 'changer', getUserNameNumber())
+            if (this.currentFormDataGroup[0]) {
+                this.$set(this.currentFormDataGroup[0], 'changed', dateFormat(new Date(), 'yyyy-MM-dd hh:mm'))
+                this.$set(this.currentFormDataGroup[0], 'changer', getUserNameNumber())
+            }
+
 
             return this.currentFormDataGroup[0]
         }
