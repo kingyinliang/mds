@@ -418,7 +418,7 @@
                 this.spanOneArr = this.merge(this.currentDataTable);
                 this.orgDataTable = JSON.parse(JSON.stringify(this.currentDataTable));
             });
-            if (formHeader.orderStatus !== 'T') {
+            if (formHeader.orderStatus === 'T') {
                 COMMON_API.ORGDETAIL_API({
                     id: formHeader.productLine
                 }).then(({ data }) => {
@@ -493,17 +493,17 @@
                         orderId: item.orderId,
                         orderNo: item.orderNo,
                         posnr: item.posnr,
-                        bottleLine: item.bottleLine,
+                        bottleLine: dataGroup === 'currentDataTable' ? '' : item.bottleLine,
                         materialCode: item.materialCode,
                         materialName: item.materialName,
                         materialUnit: item.materialUnit,
-                        materialUnitName: dataGroup === 'currentDataTable' ? item.materialUnitName : null,
+                        materialUnitName: dataGroup === 'currentDataTable' ? item.materialUnitName : '',
                         needNum: item.needNum,
-                        materialStatus: dataGroup === 'currentDataTable' ? item.materialStatus : null,
-                        materialType: dataGroup === 'currentDataTable' ? item.materialType : null,
-                        startStocks: dataGroup === 'currentDataTable' ? item.startStocks : null,
-                        endStocks: dataGroup === 'currentDataTable' ? item.endStocks : null,
-                        receiveMaterial: dataGroup === 'currentDataTable' ? item.receiveMaterial : null,
+                        materialStatus: dataGroup === 'currentDataTable' ? item.materialStatus : '',
+                        materialType: dataGroup === 'currentDataTable' ? item.materialType : '',
+                        startStocks: dataGroup === 'currentDataTable' ? item.startStocks : '',
+                        endStocks: dataGroup === 'currentDataTable' ? item.endStocks : '',
+                        receiveMaterial: dataGroup === 'currentDataTable' ? item.receiveMaterial : '',
                         changer: item.changer,
                         changed: item.changed
                     };

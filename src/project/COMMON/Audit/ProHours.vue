@@ -123,7 +123,11 @@
                 label: '单位'
             },
             {
-                prop: 'countOutput',
+                prop: 'carAmount',
+                label: '入库数量（箱）'
+            },
+            {
+                prop: 'yield',
                 label: '入库数量'
             },
             {
