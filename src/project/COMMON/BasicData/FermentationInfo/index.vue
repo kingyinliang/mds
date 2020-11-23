@@ -3,7 +3,7 @@
         <mds-card title="发酵信息" :pack-up="false">
             <template slot="titleBtn">
                 <div style="float: right; height: 32px; margin-bottom: 10px;">
-                    <el-input v-model.trim="queryForm.productMaterial" size="small" placeholder="物料" suffix-icon="el-icon-search" clearable style="width: 160px; margin-right: 10px;" @clear="clearForm" />
+                    <el-input v-model.trim="queryForm.productMaterial" size="small" placeholder="物料" suffix-icon="el-icon-search" clearable style="width: 160px; margin-right: 10px;" />
                     <el-button v-if="isAuth('craftQuery')" type="primary" size="small" style="margin-right: 10px;" @click="() => { queryForm.current = 1; queryType = 1; GetData() }">
                         查询
                     </el-button>
@@ -56,7 +56,7 @@
             <el-form :inline="true" size="small" :model="queryForm" label-width="100px">
                 <el-form-item label="工序段：">
                     <el-select v-model="queryForm.holderNo" placeholder="请选择" filterable style="width: 283px;" clearable>
-                        <el-option v-for="(sole, index) in processList" :key="index" :value="sole.holderNo" :label="sole.holderName" />
+                        <el-option v-for="(sole, index) in processList" :key="index" :value="sole.dictCode" :label="sole.dictValue" />
                     </el-select>
                 </el-form-item>
                 <el-form-item label="生产物料：">
@@ -140,6 +140,7 @@
 
         mounted() {
             this.getMaterial()
+            this.getOption()
         }
 
         getMaterial() {
@@ -149,6 +150,21 @@
             }).then(({ data }) => {
                 this.material = data.data
             })
+        }
+
+        getOption() {
+            COMMON_API.DICTQUERY_API({
+                factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
+                dictType: 'FER_PROCESS_STAGE'
+            }).then(({ data }) => {
+                this.processList = data.data
+            });
+            COMMON_API.DICTQUERY_API({
+                factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
+                dictType: 'FER_TIME_SHEET_END'
+            }).then(({ data }) => {
+                this.hoursList = data.data
+            });
         }
 
         remove() {

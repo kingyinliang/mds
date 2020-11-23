@@ -33,7 +33,7 @@
                     return COMMON_API.ORG_QUERY_WORKSHOP_API({
                         factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
                         deptType: ['WORK_SHOP'],
-                        deptName: '包装'
+                        deptName: '发酵'
                     });
                 },
                 resVal: {
@@ -84,7 +84,7 @@
                 defaultOptionsFn: () => {
                     return COMMON_API.DICTQUERY_API({
                         factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
-                        dictType: 'ORDER_TYPE'
+                        dictType: 'FER_OPEN_TYPE'
                     });
                 },
                 defaultValue: '',

@@ -99,16 +99,17 @@
                 type: 'select',
                 label: '调酱容器',
                 prop: 'productLine',
+                filterable: true,
                 defaultOptionsFn: () => {
                     return COMMON_API.HOLDER_DROPDOWN_API({
                         factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
-                        holderType: '014'
+                        holderTypeList: ['001', '028']
                     })
                 },
                 defaultValue: '',
                 resVal: {
                     resData: 'data',
-                    label: ['holderNo'],
+                    label: ['holderName'],
                     value: 'id'
                 }
             },
@@ -116,16 +117,17 @@
                 type: 'select',
                 label: '领用容器',
                 prop: 'a',
+                filterable: true,
                 defaultOptionsFn: () => {
                     return COMMON_API.HOLDER_DROPDOWN_API({
                         factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
-                        holderType: '014'
+                        holderType: '001'
                     })
                 },
                 defaultValue: '',
                 resVal: {
                     resData: 'data',
-                    label: ['holderNo'],
+                    label: ['holderName'],
                     value: 'id'
                 }
             },
@@ -158,7 +160,7 @@
                 defaultOptionsFn: () => {
                     return COMMON_API.DICTQUERY_API({
                         factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
-                        dictType: 'ORDER_TYPE'
+                        dictType: 'FER_OPEN_TYPE'
                     });
                 },
                 defaultValue: '',
