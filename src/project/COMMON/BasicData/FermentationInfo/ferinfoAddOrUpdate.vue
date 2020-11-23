@@ -3,7 +3,7 @@
         <el-form ref="dataForm" :model="dataForm" :rules="dataRule" label-width="140px" size="small">
             <el-form-item label="工序段：">
                 <el-select v-model="dataForm.holderNo" placeholder="请选择" filterable style="width: 220px;" clearable>
-                    <el-option v-for="(sole, index) in processList" :key="index" :value="sole.holderNo" :label="sole.holderName" />
+                    <el-option v-for="(sole, index) in processList" :key="index" :value="sole.dictCode" :label="sole.dictValue" />
                 </el-select>
             </el-form-item>
             <el-form-item label="生产物料：">

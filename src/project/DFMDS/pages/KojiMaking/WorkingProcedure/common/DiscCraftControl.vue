@@ -801,8 +801,8 @@
             let diff = '0';
             if (start && end) {
                 diff = getDateDiff(start, end, 'hour')
+                this.kojiInformData.addKojiDuration = diff
             }
-            this.kojiInformData.addKojiDuration = diff
             return diff
         }
 
@@ -810,8 +810,8 @@
             let diff = '0';
             if (start && end) {
                 diff = getDateDiff(start, end, 'hour')
+                this.kojiOutCraftformData.outKojiDuration = Number(diff)
             }
-            this.kojiOutCraftformData.outKojiDuration = Number(diff)
             return diff
         }
 
