@@ -9,7 +9,7 @@
             :order-status="formHeader.statusName"
             :header-base="headerBase"
             :form-header="formHeader"
-            :tabs="currentTabs"
+            :tabs="tabs"
             :submit-rules="submitRules"
             :saved-datas="savedDatas"
             :submit-datas="submitDatas"
@@ -55,6 +55,7 @@
             flourMaterialCraft: HTMLFormElement;
             excRecord: HTMLFormElement;
             textRecord: HTMLFormElement;
+            dataEntry: HTMLFormElement;
         }
 
         orderIndex=['已同步', '已保存', '待审核', '已审核', '已过账', '已退回', '未录入']
@@ -125,17 +126,14 @@
             }
         ];
 
-        get currentTabs() {
-            const { steamFlourMaterialName, steamFlourCraftName } = this.$store.state.koji.houseTagInfo;
-
-            const tabsTemp = [
+        tabs = [
                 {
                     label: '物料领用',
-                    status: steamFlourMaterialName || ''
+                    status: '未录入'
                 },
                 {
                     label: '工艺控制',
-                    status: steamFlourCraftName || ''
+                    status: '未录入'
                 },
                 {
                     label: '异常记录'
@@ -146,14 +144,6 @@
             ]
 
 
-            this.$set(tabsTemp[0], 'status', steamFlourMaterialName)
-            this.$set(tabsTemp[1], 'status', steamFlourCraftName)
-            this.$set(this.formHeader, 'statusName', this.orderIndex[Math.min(this.orderIndex.indexOf(steamFlourMaterialName), this.orderIndex.indexOf(steamFlourCraftName))])
-
-            return tabsTemp
-
-        }
-
         // 获取页签状态
         getHouseTag() {
             KOJI_API.KOJI_PAGE_TAG_STATUS_QUERY_API({
@@ -161,6 +151,12 @@
                 kojiOrderNo: this.formHeader.kojiOrderNo
             }).then(({ data }) => {
                 this.$store.commit('koji/updateHouseTag', data.data);
+                this.tabs[0].status = data.data.steamFlourMaterialName
+                this.tabs[1].status = data.data.steamFlourCraftName
+                this.$refs.dataEntry.updateTabs()
+
+                this.$set(this.formHeader, 'statusName', this.orderIndex[Math.min(this.orderIndex.indexOf(data.data.steamFlourMaterialName), this.orderIndex.indexOf(data.data.steamFlourCraftName))])
+
             })
         }
 
