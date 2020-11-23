@@ -127,9 +127,8 @@
 
         get currentTabs() {
             const { steamFlourMaterialName, steamFlourCraftName } = this.$store.state.koji.houseTagInfo;
-            this.$set(this.formHeader, 'statusName', this.orderIndex[Math.min(this.orderIndex.indexOf(steamFlourMaterialName), this.orderIndex.indexOf(steamFlourCraftName))])
 
-            return [
+            const tabsTemp = [
                 {
                     label: '物料领用',
                     status: steamFlourMaterialName || ''
@@ -145,6 +144,14 @@
                     label: '文本记录'
                 }
             ]
+
+
+            this.$set(tabsTemp[0], 'status', steamFlourMaterialName)
+            this.$set(tabsTemp[1], 'status', steamFlourCraftName)
+            this.$set(this.formHeader, 'statusName', this.orderIndex[Math.min(this.orderIndex.indexOf(steamFlourMaterialName), this.orderIndex.indexOf(steamFlourCraftName))])
+
+            return tabsTemp
+
         }
 
         // 获取页签状态

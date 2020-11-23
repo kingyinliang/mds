@@ -28,7 +28,7 @@
                     template(slot="1"): in-storage(ref="inStorage" :is-redact="isRedact" card-title="入库列表" :table-data="tableData" :order-info="orderData" :pkg-work-shop-list="pkgWorkShopList")
                     template(slot="2"): exc-record(ref="excRecord" :is-redact="isRedact" :form-header="formHeader")
                     template(slot="3"): text-record(ref="textRecord" :is-redact="isRedact")
-            redact-box(v-if="!(formHeader.inStorageStatus === 'C' || formHeader.inStorageStatus === 'D' || formHeader.inStorageStatus === 'P' || formHeader.inStorageStatus ==='M')" :disabled="redactBoxDisable" :is-redact.sync='isRedact' redact-auth="steStgEdit" save-auth="steStgEdit" submit-auth="steStgSubmit" :urgent-submit="false" :submit-rules="submitRules" :saved-rules="savedRules" :saved-datas="savedDatas" :submit-datas="submitDatas" v-on:sendSuccess='successToDo')
+            redact-box(v-if="!(formHeader.inStorageStatus === 'C' || formHeader.inStorageStatus === 'D' || formHeader.inStorageStatus === 'P' || formHeader.inStorageStatus ==='M')" :disabled="redactBoxDisable" :is-redact.sync='isRedact' redact-auth="steStgEdit" save-auth="steStgEdit" submit-auth="steStgSubmit" :urgent-submit="false" :submit-rules="submitRules" :saved-rules="savedRules" :saved-datas="savedDatas" :submit-datas="submitDatas" v-on:sendSuccess='successToDo' :changer="formHeader.changer" :changed="formHeader.changed" :orderStatus="formHeader.status" )
 </template>
 
 <script lang="ts">
@@ -374,7 +374,8 @@
             this.formHeader.orderType = this.orderData.orderType
             this.formHeader.productDate = this.orderData.productDate
             this.formHeader.productLine = this.orderData.productLine
-            this.formHeader.inStorageStatus = this.inStorageStatus.filter(item => item.orderNo === this.formHeader.orderNo)[0].instorageStatus
+            this.$set(this.formHeader, 'inStorageStatus', this.inStorageStatus.filter(item => item.orderNo === this.formHeader.orderNo)[0].instorageStatus)
+            // this.formHeader.inStorageStatus = this.inStorageStatus.filter(item => item.orderNo === this.formHeader.orderNo)[0].instorageStatus
             this.tabTitles[0]['status'] = this.formHeader.inStorageStatus
 
             // 表单数据清空
@@ -472,12 +473,12 @@
 
         }
 
-        successToDo() {
-            console.log('yuyuyuyuyuyu')
-            this.getWorkshopList();
+        async successToDo() {
+
+            await this.getWorkshopList();
             // 获取订单下拉
-            this.selectOrder(this.globalOrderNumber)
-            this.btnGetResult();
+            await this.selectOrder(this.globalOrderNumber)
+            await this.btnGetResult();
         }
 
         // {redact-box} 提交需跑的验证 function

@@ -132,24 +132,27 @@
 
         get currentTabs() {
             const { discCraftName, discInStorageName } = this.$store.state.koji.houseTagInfo;
+            const tabsTemp = [
+                {
+                    label: '工艺控制',
+                    status: discCraftName || ''
+                },
+                {
+                    label: '生产入库',
+                    status: discInStorageName || ''
+                },
+                {
+                    label: '异常记录'
+                },
+                {
+                    label: '文本记录'
+                }
+            ]
+            this.$set(tabsTemp[0], 'status', discCraftName)
+            this.$set(tabsTemp[1], 'status', discInStorageName)
             this.$set(this.formHeader, 'statusName', this.orderIndex[Math.min(this.orderIndex.indexOf(discCraftName), this.orderIndex.indexOf(discInStorageName))])
 
-            return [
-            {
-                label: '工艺控制',
-                status: discCraftName || ''
-            },
-            {
-                label: '生产入库',
-                status: discInStorageName || ''
-            },
-            {
-                label: '异常记录'
-            },
-            {
-                label: '文本记录'
-            }
-            ]
+            return tabsTemp
         }
 
         // 获取页签状态
