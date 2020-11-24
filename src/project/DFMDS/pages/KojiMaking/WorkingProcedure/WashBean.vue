@@ -9,7 +9,7 @@
             :order-status="formHeader.statusName"
             :header-base="headerBase"
             :form-header="formHeader"
-            :tabs="currentTabs"
+            :tabs="tabs"
             :submit-rules="submitRules"
             :saved-datas="savedDatas"
             :submit-datas="submitDatas"
@@ -127,16 +127,14 @@
             }
         ];
 
-        get currentTabs() {
-            const { washBeanMaterailName, washBeanCraftName } = this.$store.state.koji.houseTagInfo;
-            const tabsTemp = [
+        tabs = [
                 {
                     label: '物料领用',
-                    status: washBeanMaterailName || ''
+                    status: '未录入'
                 },
                 {
                     label: '工艺控制',
-                    status: washBeanCraftName || ''
+                    status: '未录入'
                 },
                 {
                     label: '异常记录'
@@ -145,11 +143,6 @@
                     label: '文本记录'
                 }
             ]
-            this.$set(tabsTemp[0], 'status', washBeanMaterailName)
-            this.$set(tabsTemp[1], 'status', washBeanCraftName)
-            this.$set(this.formHeader, 'statusName', this.orderIndex[Math.min(this.orderIndex.indexOf(washBeanMaterailName), this.orderIndex.indexOf(washBeanCraftName))])
-            return tabsTemp
-        }
 
         submitRules(): Function[] {
             return [this.$refs.washBeanMaterialCraft.ruleSubmit, this.$refs.excRecord.ruleSubmit]
@@ -187,7 +180,11 @@
                 kojiOrderNo: this.formHeader.kojiOrderNo
             }).then(({ data }) => {
                 this.$store.commit('koji/updateHouseTag', data.data);
+                this.tabs[0].status = data.data.washBeanMaterailName
+                this.tabs[1].status = data.data.washBeanCraftName
                 this.$refs.dataEntry.updateTabs();
+                this.$set(this.formHeader, 'statusName', this.orderIndex[Math.min(this.orderIndex.indexOf(data.data.washBeanMaterailName), this.orderIndex.indexOf(data.data.washBeanCraftName))])
+
             })
         }
 

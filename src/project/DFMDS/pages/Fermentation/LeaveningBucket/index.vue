@@ -11,88 +11,62 @@
             @get-data-success="returnDataFromQueryTableForm"
         >
             <template v-if="targetQueryTableList.length!==0" slot="home">
-                <div v-show="fastS" class="box-card">
-                    <div class="box-card-title clearfix">
-                        <h3> <em class="title-icon" style="background: #ffbf00;" />发酵罐列表 </h3>
-                        <em v-if="isAuth('report:production:fermentation')" class="floatR" @click="goSummary()">
-                            <a href="#/DataEntry-Fermentation-Fermenter-summary">发酵罐一览表>></a>
-                        </em>
-                    </div>
-                    <div>
-                        <el-row class="potList" :gutter="10" style="min-height: 150px;">
-                            <el-col v-for="(item, index) in dataList" :key="index" :span="4">
-                                <div class="box">
-                                    <div class="box_title">
-                                        {{ item.holderNo }}-{{ item.holderStatus === '0' ? '空罐' : item.holderStatus === '1' ? '投料中' : item.holderStatus === '2' ? '发酵中' : item.holderStatus === '3' ? '已入库' : item.holderStatus === '4' ? '领用中' : item.holderStatus === '5' ? '待清洗' : '' }}
-                                        <a v-if="isAuth('fer:holderManage:detail')" @click="godetails(item)">详情>></a>
-                                    </div>
-                                    <div class="box_content">
-                                        <img v-if="item.ferOrderNo.slice(0, 4) === RDorder" src="@/assets/img/RD.png" alt="" style="position: absolute; top: 10px; left: 10px;">
-                                        <div class="box_content_itemPot">
-                                            <div class="pot_border">
-                                                <div class="pot" />
-                                                <div class="pot_water">
-                                                    <div
-                                                        class="pot_water_sole"
-                                                        :style="{'height': (item.holderStatus === '4' ? (item.sumAmout / item.holderAmout) * 100 : item.holderStatus === '3' ? (item.sumAmout / item.holderAmout) * 100 : item.halfAmount ? (item.halfAmount / item.holderAmout) * 100 : (item.ferAmount / item.holderAmout) * 100) + '%', 'background': item.potColor}"
-                                                    />
-                                                </div>
+                <mds-card :title="'发酵罐列表'" :pack-up="false" :name="'fermenterTotal'" style="margin-top: 10px; overflow: initial;">
+                    <el-row class="home_card__main" :gutter="10">
+                        <el-col v-for="item in targetQueryTableList" :key="item.potId" :span="4" style="min-width: 203px;">
+                            <div class="card-bucket">
+                                <div class="card-bucket__head">
+                                    <span>{{ item.potName }} - {{ holderStatus.filter( element => element.dictCode===item.potStatus)[0].dictValue }}</span>
+                                    <el-button type="text" @click="goTargetDetail(item)">
+                                        详情
+                                    </el-button>
+                                </div>
+                                <div class="card-bucket__content">
+                                    <div class="bucket-image">
+                                        <div class="pot_border">
+                                            <div class="pot" />
+                                            <div class="pot_water">
+                                                <div
+                                                    class="pot_water_sole"
+                                                    :style="{height: item.ratio+'%', background: '#1890FF' }"
+                                                />
                                             </div>
-                                        </div>
-                                        <div class="box_content_itemButton buttonCss">
-                                            <el-button type="primary" size="small" @click="toRouter('1', item)">
-                                                发料
-                                            </el-button>
-                                            <el-button type="primary" size="small" @click="toRouter('2', item)">
-                                                判定
-                                            </el-button>
-                                            <el-button type="primary" size="small" @click="toRouter('3', item)">
-                                                入库
-                                            </el-button>
-                                            <el-button type="primary" size="small" @click="toRouter('4', item)">
-                                                清洗
-                                            </el-button>
                                         </div>
                                     </div>
-                                    <div class="box_bottom">
-                                        <div v-if="item.sumAmout">
-                                            <div class="box_bottom_sole">
-                                                {{ item.halfTypeName ? item.halfTypeName : item.ferMaterialName }}
-                                            </div>
-                                            <div class="box_bottom_sole">
-                                                {{ item.ferDays }}天
-                                            </div>
-                                            <div class="box_bottom_sole">
-                                                {{ item.ferOrderNo }}
-                                            </div>
-                                            <div class="box_bottom_sole">
-                                                {{ (item.sumAmout / 1000).toFixed(2) }}方
-                                            </div>
-                                        </div>
-                                        <div v-else>
-                                            <div class="box_bottom_sole colorGray">
-                                                暂无数据
-                                            </div>
-                                            <div class="box_bottom_sole colorGray">
-                                                暂无数据
-                                            </div>
-                                            <div class="box_bottom_sole colorGray">
-                                                暂无数据
-                                            </div>
-                                            <div class="box_bottom_sole colorGray">
-                                                暂无数据
-                                            </div>
-                                        </div>
+                                    <div class="btn-group">
+                                        <el-button v-if="isAuth()" size="small" plain :disabled="!(item.potStatus==='E'||item.potStatus==='R')" @click="btnFilledBucket(item)">
+                                            鼓罐
+                                        </el-button>
+                                        <el-button v-if="isAuth('')" size="small" plain :disabled="item.potStatus!=='R'" @click="btnLYCY(item)">
+                                            <!-- <el-button v-if="item.potStatus!=='M'" size="small" plain @click="btnFillBucket(item)"> -->
+                                            LY/CY
+                                        </el-button>
+                                        <el-button v-else-if="isAuth()" size="small" plain @click="btnAdjust(item)">
+                                            调整
+                                        </el-button>
+                                        <el-button v-if="isAuth()" size="small" plain :disabled="!(item.potStatus==='U')" @click="btnClearBucket(item)">
+                                            <!-- <el-button size="small" plain @click="btnClearBucket(item)"> -->
+                                            清罐
+                                        </el-button>
+                                        <el-button v-if="isAuth()" size="small" plain :disabled="!(item.potStatus==='U')" @click="btnWashBucket(item)">
+                                            清洗
+                                        </el-button>
                                     </div>
                                 </div>
-                            </el-col>
-                        </el-row>
-                        <el-row>
-                            <el-pagination :current-page="formHeader.currPage" :page-sizes="[40, 60, 80]" :page-size="formHeader.pageSize" layout="total, sizes, prev, pager, next, jumper" :total="formHeader.totalCount" @size-change="handleSizeChange" @current-change="handleCurrentChange" />
-                        </el-row>
-                    </div>
-                </div>
-                <mds-card :title="'发酵罐管理'" :pack-up="false" :name="'fermenterTotal'" style="margin-top: 10px; overflow: initial;" />
+                                <div class="card-bucket__fotter">
+                                    <div v-show="!(item.potStatus==='E'||item.potStatus==='C')">
+                                        <el-tooltip class="item" effect="dark" :content="item.prodcutMaterialName" placement="top">
+                                            <span style="overflow: hidden; white-space: nowrap; text-overflow: ellipsis;">{{ item.prodcutMaterialName || '未有生产物料' }}</span>
+                                        </el-tooltip>
+                                        <span>{{ item.potAmount || '0' }} </span>KG
+                                    </div>
+                                    <!-- <div><span>溶解辅料</span><span>10/100</span></div> -->
+                                </div>
+                            </div>
+                        </el-col>
+                    </el-row>
+                    <el-pagination v-if="targetQueryTableList.length!==0" :current-page="currPage" :page-sizes="[10, 20, 50]" :page-size="pageSize" layout="prev, pager, next,sizes, jumper" :total="totalCount" @size-change="handlePageSizeChangeFromRead" @current-change="handleCurrentPageChangeFromRead" />
+                </mds-card>
             </template>
         </query-table>
     </div>
@@ -107,7 +81,7 @@
     import { Vue, Component } from 'vue-property-decorator';
     // import { dateFormat, getUserNameNumber } from 'utils/utils';
     // import ImportBucket from './ImportBucket.vue';
-    import { COMMON_API, STE_API } from 'common/api/api';
+    import { COMMON_API, FER_API } from 'common/api/api';
     // import { dateFormat } from 'utils/utils';
 
     @Component({
@@ -132,6 +106,13 @@
         isTableDialogVisible=false
         isBucketDialogVisible = false;
         dialogType='filled' // 弹窗类型
+        dataList=[
+            {}
+        ]
+
+        totalCount = 0;
+        currPage= 1
+        pageSize= 10
 
         // queryTable 必要变数
         queryTableFormData = [
@@ -140,9 +121,6 @@
                 label: '生产车间',
                 prop: 'workShop',
                 labelWidth: 90,
-                rule: [
-                    { required: true, message: '请选择车间', trigger: 'change' }
-                ],
                 defaultOptionsFn: () => {
                     return COMMON_API.ORG_QUERY_WORKSHOP_API({
                         factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
@@ -159,47 +137,55 @@
             {
                 type: 'select',
                 label: '容器类型',
-                prop: 'potId',
+                prop: 'holderType',
                 labelWidth: 90,
-                rule: [{ required: true, message: ' ', trigger: 'change' }],
                 defaultValue: '',
                 defaultOptionsFn: () => {
                     return new Promise((resolve) => {
-                        COMMON_API.HOLDER_QUERY_API({ // /sysHolder/query
-                            factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
-                            current: 1,
-                            size: 9999,
-                            holderType: '019' // 溶解罐参数编码
+                        COMMON_API.DICTQUERY_API({
+                            dictType: 'COMMON_HOLDER_TYPE'
                         }).then((res) => {
-                            // eslint-disable-next-line no-invalid-this
-                            // this.setEnvVal(val)
-                            resolve(res)
+                            console.log('容器类型')
+                            console.log(res)
+                            const resData = res
+                            const holderTemp: object[] = []
+
+                            res.data.data.forEach(item => {
+                                if (item.dictCode === '001' || item.dictCode === '028' || item.dictCode === '029') {
+                                    holderTemp.push({ dictCode: item.dictCode, dictValue: item.dictValue })
+                                }
+                            })
+                            resData.data.data = holderTemp
+                            resolve(resData)
                         })
                     })
                 },
                 resVal: {
-                    resData: 'data.records',
-                    label: ['holderName'],
-                    value: 'id'
+                    resData: 'data',
+                    label: ['dictValue'],
+                    value: 'dictCode'
                 },
-                linkageProp: ['productLine']
+                linkageProp: ['holderId']
             },
             {
                 type: 'select',
                 label: '容器号',
-                prop: 'potN',
+                prop: 'holderId',
                 labelWidth: 90,
-                rule: [{ required: true, message: ' ', trigger: 'change' }],
-
                 optionsFn: val => {
-                return COMMON_API.ORG_QUERY_CHILDREN_API({
-                    parentId: val || '',
-                    deptType: 'PRODUCT_LINE'
+                return new Promise((resolve) => {
+                        COMMON_API.HOLDER_DROPDOWN_API({
+                        holderType: [val]
+                    }).then((res) => {
+                        console.log('容器号')
+                        console.log(res)
+                        resolve(res)
+                    })
                 })
             },
             resVal: {
                 resData: 'data',
-                label: ['deptName'],
+                label: ['holderNo'],
                 value: 'id'
             },
             defaultValue: ''
@@ -207,7 +193,7 @@
             {
                 type: 'select',
                 label: '状态',
-                prop: 'potStatus',
+                prop: 'fermStatus',
                 labelWidth: 50,
                 defaultValue: '',
                 defaultOptionsFn: () => {
@@ -227,24 +213,30 @@
         ]
 
         queryTableFormRules = [
-            {
-                prop: 'potId',
-                text: '请选择溶解罐号'
-            }
         ]
 
+        getData() {
+            //
+        }
+
         // queryTable 查询请求
-        queryTableListInterface = params => {
+        queryTableListInterface = (params) => {
             console.log('搜寻传值')
             console.log(params)
-            const paramsTemp = JSON.parse(JSON.stringify(params))
-            paramsTemp.factory = JSON.parse(sessionStorage.getItem('factory') || '{}').id;
-            if (params.potStatus === '') {
-                paramsTemp.potStatus = []
-            } else {
-                paramsTemp.potStatus = [params.potStatus]
+            const paramsTemp = {
+                factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
+                current: params.currPage,
+                size: params.pageSize,
+                workShop: params.workShop,
+                holderType: params.holderType,
+                holderId: params.holderId,
+                fermStatus: params.fermStatus
+
             }
-            return STE_API.STE_DISSOLUTIONBUCKET_QUERY_API(paramsTemp);
+
+            // paramsTemp.size = this.pageSize
+            // paramsTemp.current = this.currPage
+            return FER_API.FER_FERMENTOR_BATCH_QUERY_API(paramsTemp);
         };
 
         // queryTable 回传 result
@@ -259,7 +251,42 @@
             }
         }
 
+        // [btn][鼓罐]
+        btnFilledBucket(item) {
+            console.log(item)
+        }
 
+        // [btn][LYCY]
+        btnLYCY(item) {
+            console.log(item)
+        }
+
+        // [btn][btnAdjust]
+        btnAdjust(item) {
+            console.log(item)
+        }
+
+        // [btn][清罐]
+        btnClearBucket(item) {
+            console.log(item)
+        }
+
+        // [btn][洗罐]
+        btnWashBucket(item) {
+            console.log(item)
+        }
+
+        // 改变每页条数
+        handleSizeChange(val) {
+            this.pageSize = val;
+            this.getData();
+        }
+
+        // 跳转页数
+        handleCurrentChange(val) {
+            this.currPage = val;
+            this.getData();
+        }
     }
 
 interface DeptObject {

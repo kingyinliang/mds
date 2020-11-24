@@ -16,39 +16,105 @@
                 </div>
             </el-col>
             <el-col :span="20">
-                <div class="card-right" style="background: #487bff;">
-                    <p class="dataEntry-head-leftRight__title">
-                        <em class="iconfont factory-gongchang" />{{ formData.factoryName ? formData.factoryName : '' }}
-                    </p>
-                    <div class="dataEntry-head-leftRight-message">
-                        <div class="dataEntry-head-leftRight-message__item">
-                            <el-tooltip class="item" effect="dark" :content="formData.workShop ? formData.workShop : ''" placement="top">
-                                <p>{{ formData.workShop ? formData.workShop : '' }}</p>
+                <div class="card-right" style="background: #fff;">
+                    <el-form ref="Leavening" :model="LeaveningformData" size="small" label-width="120px" :inline="true" class="markStyle">
+                        <el-form-item
+                            label="生产车间："
+                        >
+                            <template slot="label">
+                                <span>{{ LeaveningformData.a }}：</span>
+                            </template>
+                        </el-form-item>
+                        <el-form-item
+                            label="生产订单："
+                        >
+                            <el-tooltip class="item" effect="dark" :content="LeaveningformData.b" placement="top">
+                                <el-input
+                                    v-model="LeaveningformData.b"
+                                    placeholder=""
+                                    :disabled="true"
+                                />
                             </el-tooltip>
-                            <p><em class="iconfont factory-37_zhusu" /> 杀菌车间</p>
-                        </div>
-                        <div class="dataEntry-head-leftRight-message__item">
-                            <el-tooltip class="item" effect="dark" :content="formData.prodcutMaterial ? formData.prodcutMaterial : ''" placement="top">
-                                <p>
-                                    {{ formData.prodcutMaterial ? formData.prodcutMaterial : '' }}
-                                </p>
+                        </el-form-item>
+                        <el-form-item
+                            label="生产物料："
+                        >
+                            <el-tooltip class="item" effect="dark" :content="LeaveningformData.c" placement="top">
+                                <el-input
+                                    v-model="LeaveningformData.c"
+                                    placeholder=""
+                                    :disabled="true"
+                                />
                             </el-tooltip>
-                            <p> <em class="iconfont factory-bianhao" />生产物料 </p>
-                        </div>
-                        <div class="dataEntry-head-leftRight-message__item">
-                            <p>
-                                {{ formData.potCount ? formData.potCount.toLocaleString() : 0 }}
-                            </p>
-                            <p> <em class="iconfont factory-cunchurongliang" />配置锅数 </p>
-                        </div>
-                        <div class="dataEntry-head-leftRight-message__item">
-                            <p>
-                                {{ formData.amount ? formData.amount.toLocaleString() : 0 }}
-                                <em>{{ formData.unit ? formData.unit : 'KG' }}</em>
-                            </p>
-                            <p> <em class="iconfont factory-cunchurongliang" />数量 </p>
-                        </div>
-                    </div>
+                        </el-form-item>
+                        <el-form-item
+                            label="订单数量："
+                        >
+                            <el-input
+                                v-model="LeaveningformData.d"
+                                placeholder=""
+                                style="width: 180px;"
+                                :disabled="true"
+                            />
+                        </el-form-item>
+                        <el-form-item
+                            label="库存数量："
+                        >
+                            <el-input
+                                v-model="LeaveningformData.e"
+                                placeholder=""
+                                style="width: 180px;"
+                                :disabled="true"
+                            />
+                        </el-form-item>
+                        <el-form-item
+                            label="状态："
+                        >
+                            <el-input
+                                v-model="LeaveningformData.f"
+                                placeholder=""
+                                style="width: 180px;"
+                                :disabled="true"
+                            />
+                        </el-form-item>
+                        <el-form-item
+                            label="入罐日期："
+                        >
+                            <el-input
+                                v-model="LeaveningformData.g"
+                                placeholder=""
+                                style="width: 180px;"
+                                :disabled="true"
+                            />
+                        </el-form-item>
+                        <el-form-item
+                            label="发酵天数："
+                        >
+                            <el-input
+                                v-model="LeaveningformData.h"
+                                placeholder=""
+                                style="width: 180px;"
+                                :disabled="true"
+                            />
+                        </el-form-item>
+                        <el-form-item
+                            label="是否成熟："
+                        >
+                            <el-input
+                                v-model="LeaveningformData.i"
+                                placeholder=""
+                                style="width: 180px;"
+                                :disabled="true"
+                            />
+                        </el-form-item>
+                        <el-form-item label="特殊资源：">
+                            <el-radio-group v-model="LeaveningformData.j">
+                                <el-radio label="盐水已发" />
+                                <el-radio label="盐水发料中" />
+                                <el-radio label="盐水未发" />
+                            </el-radio-group>
+                        </el-form-item>
+                    </el-form>
                 </div>
             </el-col>
         </el-row>
@@ -242,6 +308,7 @@ export default class DissolveBucketDetail extends Vue {
     totalAdjustList = [];
 
     formData = {}; // 上方表单讯息
+    LeaveningformData= {};
 
     mounted() {
         this.retrieveDetail();

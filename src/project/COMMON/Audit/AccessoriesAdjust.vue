@@ -158,7 +158,7 @@
                 optionsFn: val => {
                     return COMMON_API.HOLDER_DROPDOWN_API({
                         factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
-                        holderType: val || ''
+                        holderType: [val]
                         // deptType: 'PRODUCT_LINE'
                     })
                 },

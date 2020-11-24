@@ -9,7 +9,7 @@
             :order-status="formHeader.statusName"
             :header-base="headerBase"
             :form-header="formHeader"
-            :tabs="currentTabs"
+            :tabs="tabs"
             :submit-rules="submitRules"
             :saved-datas="savedDatas"
             :submit-datas="submitDatas"
@@ -55,6 +55,7 @@
             steamedInStorage: HTMLFormElement;
             excRecord: HTMLFormElement;
             textRecord: HTMLFormElement;
+            dataEntry: HTMLFormElement;
         }
 
         orderIndex=['已同步', '已保存', '待审核', '已审核', '已过账', '已退回', '未录入']
@@ -127,17 +128,14 @@
             ];
         }
 
-        get currentTabs() {
-            const { steamBeanCraftName, steamBeanInStorageName } = this.$store.state.koji.houseTagInfo;
-
-            const tabsTemp = [
+        tabs = [
                 {
                     label: '工艺控制',
-                    status: steamBeanCraftName || ''
+                    status: '未录入'
                 },
                 {
                     label: '生产入库',
-                    status: steamBeanInStorageName || ''
+                    status: '未录入'
                 },
                 {
                     label: '异常记录'
@@ -147,20 +145,19 @@
                 }
             ]
 
-            this.$set(tabsTemp[0], 'status', steamBeanCraftName)
-            this.$set(tabsTemp[1], 'status', steamBeanInStorageName)
-            this.$set(this.formHeader, 'statusName', this.orderIndex[Math.min(this.orderIndex.indexOf(steamBeanCraftName), this.orderIndex.indexOf(steamBeanInStorageName))])
-            return tabsTemp
-
-        }
-
         // 获取页签状态
         getHouseTag() {
             KOJI_API.KOJI_PAGE_TAG_STATUS_QUERY_API({
                 orderNo: this.formHeader.orderNo,
                 kojiOrderNo: this.formHeader.kojiOrderNo
             }).then(({ data }) => {
+
                 this.$store.commit('koji/updateHouseTag', data.data);
+                this.tabs[0].status = data.data.steamBeanCraftName
+                this.tabs[1].status = data.data.steamBeanInStorageName
+                this.$refs.dataEntry.updateTabs();
+                this.$set(this.formHeader, 'statusName', this.orderIndex[Math.min(this.orderIndex.indexOf(data.data.steamBeanCraftName), this.orderIndex.indexOf(data.data.steamBeanInStorageName))])
+
             })
         }
 
@@ -208,7 +205,7 @@
             COMMON_API.HOLDER_DROPDOWN_API({
                 deptId: this.formHeader.workShop,
                 factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
-                holderType: '025'
+                holderType: ['025']
             }).then(({ data }) => {
                 this.scanList = data.data || [];
             });

@@ -299,7 +299,7 @@ export default class CookingDetail extends Vue {
         if (deptId) {
             COMMON_API.HOLDER_DROPDOWN_API({
                 deptId: this.formHeaders.workShop,
-                holderType: '020'
+                holderType: ['020']
             }).then(({ data }) => {
                 this.holderList = data.data
                 if (getMaterial) {
