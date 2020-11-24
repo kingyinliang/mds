@@ -34,7 +34,7 @@
             <el-form-item v-if="dataForm.consumeType === '1'" label="发酵罐库存：">
                 <el-input v-model="dataForm.fermentStorage" type="number" placeholder="手动输入" />
             </el-form-item>
-            <el-form-item label="转运罐号：">
+            <el-form-item label="中转罐：">
                 <el-select v-model="dataForm.tankNo" placeholder="请选择" size="small" clearable filterable style="width: 100%;">
                     <el-option v-for="(item, optIndex) in transferTank" :key="optIndex" :label="item.holderName" :value="item.holderNo" />
                 </el-select>

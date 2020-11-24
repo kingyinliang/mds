@@ -34,12 +34,12 @@
                     <el-input v-model.number="scope.row.sealingPlug" size="small" placeholder="输入数量" :disabled="!isRedact" oninput="value=value.replace(/\D*/g,'')" />
                 </template>
             </el-table-column>
-            <el-table-column label="废酱" :show-overflow-tooltip="true" width="100">
+            <el-table-column label="废酱（正常）" :show-overflow-tooltip="true" width="140">
                 <template slot-scope="scope">
                     <el-input v-model.number="scope.row.wasteSauce" size="small" placeholder="输入数量" :disabled="!isRedact" oninput="value=value.replace(/\D*/g,'')" />
                 </template>
             </el-table-column>
-            <el-table-column label="设备残留" :show-overflow-tooltip="true" width="100">
+            <el-table-column label="废酱（异常）" :show-overflow-tooltip="true" width="140">
                 <template slot-scope="scope">
                     <el-input v-model.number="scope.row.deviceLoss" size="small" placeholder="输入数量" :disabled="!isRedact" oninput="value=value.replace(/\D*/g,'')" />
                 </template>
