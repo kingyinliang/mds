@@ -81,7 +81,7 @@
     import { Vue, Component } from 'vue-property-decorator';
     // import { dateFormat, getUserNameNumber } from 'utils/utils';
     // import ImportBucket from './ImportBucket.vue';
-    import { COMMON_API, STE_API } from 'common/api/api';
+    import { COMMON_API, FER_API } from 'common/api/api';
     // import { dateFormat } from 'utils/utils';
 
     @Component({
@@ -121,9 +121,6 @@
                 label: '生产车间',
                 prop: 'workShop',
                 labelWidth: 90,
-                rule: [
-                    { required: true, message: '请选择车间', trigger: 'change' }
-                ],
                 defaultOptionsFn: () => {
                     return COMMON_API.ORG_QUERY_WORKSHOP_API({
                         factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
@@ -142,7 +139,6 @@
                 label: '容器类型',
                 prop: 'holderType',
                 labelWidth: 90,
-                rule: [{ required: true, message: ' ', trigger: 'change' }],
                 defaultValue: '',
                 defaultOptionsFn: () => {
                     return new Promise((resolve) => {
@@ -162,16 +158,6 @@
                             resData.data.data = holderTemp
                             resolve(resData)
                         })
-                        // COMMON_API.HOLDER_DROPDOWN_API({ // /sysHolder/query
-                        //     factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
-                        //     holderTypeList: ['001', '028', '029'] // 发酵罐,调酱罐,泡豆罐参数编码
-                        // }).then((res) => {
-                        //     console.log('容器类型')
-                        //     console.log(res.data)
-                        //     // eslint-disable-next-line no-invalid-this
-                        //     // this.setEnvVal(val)
-                        //     resolve(res)
-                        // })
                     })
                 },
                 resVal: {
@@ -186,8 +172,6 @@
                 label: '容器号',
                 prop: 'holderId',
                 labelWidth: 90,
-                rule: [{ required: true, message: ' ', trigger: 'change' }],
-
                 optionsFn: val => {
                 return new Promise((resolve) => {
                         COMMON_API.HOLDER_DROPDOWN_API({
@@ -202,7 +186,7 @@
             resVal: {
                 resData: 'data',
                 label: ['holderNo'],
-                value: 'deptId'
+                value: 'id'
             },
             defaultValue: ''
             },
@@ -229,10 +213,6 @@
         ]
 
         queryTableFormRules = [
-            {
-                prop: 'potId',
-                text: '请选择溶解罐号'
-            }
         ]
 
         getData() {
@@ -240,17 +220,23 @@
         }
 
         // queryTable 查询请求
-        queryTableListInterface = params => {
+        queryTableListInterface = (params) => {
             console.log('搜寻传值')
             console.log(params)
-            const paramsTemp = JSON.parse(JSON.stringify(params))
-            paramsTemp.factory = JSON.parse(sessionStorage.getItem('factory') || '{}').id;
-            if (params.potStatus === '') {
-                paramsTemp.potStatus = []
-            } else {
-                paramsTemp.potStatus = [params.potStatus]
+            const paramsTemp = {
+                factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
+                current: params.currPage,
+                size: params.pageSize,
+                workShop: params.workShop,
+                holderType: params.holderType,
+                holderId: params.holderId,
+                fermStatus: params.fermStatus
+
             }
-            return STE_API.STE_DISSOLUTIONBUCKET_QUERY_API(paramsTemp);
+
+            // paramsTemp.size = this.pageSize
+            // paramsTemp.current = this.currPage
+            return FER_API.FER_FERMENTOR_BATCH_QUERY_API(paramsTemp);
         };
 
         // queryTable 回传 result
