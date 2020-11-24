@@ -61,7 +61,7 @@
             COMMON_API.HOLDER_DROPDOWN_API({
                 deptId,
                 factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
-                holderType: '025'
+                holderType: ['025']
             }).then(({ data }) => {
                 this.userlist = this.setUserList(data.data || []);
             });

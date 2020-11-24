@@ -248,7 +248,7 @@
             COMMON_API.HOLDER_DROPDOWN_API({
                 factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
                 deptId: params.workShop,
-                holderType: '014'
+                holderType: ['014']
             }).then(({ data }) => {
                 this.holder = data.data || [];
             })

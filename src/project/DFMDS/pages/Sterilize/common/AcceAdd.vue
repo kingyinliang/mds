@@ -420,7 +420,7 @@
         getHolderList() {
             COMMON_API.HOLDER_DROPDOWN_API({
                 factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
-                holderType: '020'
+                holderType: ['020']
             }).then(({ data }) => {
                 this.holderList = data.data
             })
