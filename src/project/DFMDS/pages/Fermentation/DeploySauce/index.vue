@@ -103,7 +103,7 @@
                 defaultOptionsFn: () => {
                     return COMMON_API.HOLDER_DROPDOWN_API({
                         factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
-                        holderTypeList: ['001', '028']
+                        holderType: ['001', '028']
                     })
                 },
                 defaultValue: '',
@@ -121,7 +121,7 @@
                 defaultOptionsFn: () => {
                     return COMMON_API.HOLDER_DROPDOWN_API({
                         factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
-                        holderType: '001'
+                        holderType: ['001']
                     })
                 },
                 defaultValue: '',
@@ -138,7 +138,7 @@
                 defaultOptionsFn: () => {
                     return COMMON_API.HOLDER_DROPDOWN_API({
                         factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
-                        holderType: '014'
+                        holderType: ['014']
                     })
                 },
                 defaultValue: '',

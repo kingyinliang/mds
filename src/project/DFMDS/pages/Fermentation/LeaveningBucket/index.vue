@@ -188,7 +188,7 @@
                 optionsFn: val => {
                 return new Promise((resolve) => {
                         COMMON_API.HOLDER_DROPDOWN_API({
-                        holderNoList: [val]
+                        holderType: [val]
                     }).then((res) => {
                         console.log('容器号')
                         console.log(res)
