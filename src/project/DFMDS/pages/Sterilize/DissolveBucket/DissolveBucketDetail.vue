@@ -214,7 +214,7 @@ export default class DissolveBucketDetail extends Vue {
     currentInventoryDataGroup = [];
     totalDataList = [];
     // 历史数据
-    historyInventoryDataGroup = [];
+    historyInventoryDataGroup: HistoryItem[] = [];
     totalAdjustList = [];
 
     formData = {}; // 上方表单讯息
@@ -254,6 +254,11 @@ export default class DissolveBucketDetail extends Vue {
                 })
                 this.historyInventoryDataGroup = data.data.historyItem
                 this.historyInventoryDataGroup.forEach(item => {
+                    if (item.moveType !== 'I') {
+                        this.$set(item, 'feedMaterial', this.importData.prodcutMaterial)
+                        this.$set(item, 'feedMaterialName', this.importData.prodcutMaterialName)
+                    }
+
                     this.$set(item, 'potName', this.importData.potName)
                 })
         });
@@ -284,6 +289,25 @@ interface ImportData{
     workShop?: string;
     potCount?: number;
 }
+
+interface HistoryItem{
+        changed: string;
+        changer: string;
+        feedBatch: string;
+        feedDate: string;
+        feedMan: string;
+        feedMaterial: string;
+        feedMaterialName: string;
+        moveAmount: number;
+        moveType: string;
+        moveUnit: string;
+        potNo: string;
+        prodcutMaterial: string;
+        prodcutMaterialName: string;
+        usePortOrderNo: string;
+        usePotNo: string;
+        workShop: string;
+    }
 
 </script>
 <style lang="scss" scoped>

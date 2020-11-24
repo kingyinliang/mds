@@ -90,7 +90,7 @@
                 <el-table-column type="index" label="序号" width="50px" fixed />
                 <el-table-column label="领用物料" min-width="160" :show-overflow-tooltip="true">
                     <template slot-scope="scope">
-                        {{ scope.row.useMaterialCode + ' ' + scope.row.useMaterialName }}
+                        {{ scope.row.useMaterialName + ' ' + scope.row.useMaterialCode }}
                     </template>
                 </el-table-column>
                 <el-table-column prop="useUnit" label="单位" width="50" :show-overflow-tooltip="true" />

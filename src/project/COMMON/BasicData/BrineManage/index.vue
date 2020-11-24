@@ -3,7 +3,9 @@
         <mds-card title="盐水管理" :pack-up="false">
             <template slot="titleBtn">
                 <div style="float: right; height: 32px; margin-bottom: 10px;">
-                    <el-input v-model.trim="queryForm.productMaterial" size="small" placeholder="物料" suffix-icon="el-icon-search" clearable style="width: 160px; margin-right: 10px;" />
+                    <el-select v-model="queryForm.virtualMaterial1" size="small" placeholder="物料" filterable suffix-icon="el-icon-search" clearable style="width: 160px; margin-right: 10px;">
+                        <el-option v-for="(sole, index) in virtualList" :key="index" :value="sole.materialCode" :label="`${sole.materialName} ${sole.materialCode}`" />
+                    </el-select>
                     <el-button v-if="isAuth('craftQuery')" type="primary" size="small" style="margin-right: 10px;" @click="() => { queryForm.current = 1; queryType = 1; GetData() }">
                         查询
                     </el-button>
@@ -53,12 +55,12 @@
         <el-dialog width="500px" title="高级查询" :close-on-click-modal="false" :visible.sync="visibleHightLevelQuery">
             <el-form :inline="true" size="small" :model="queryForm" label-width="95px">
                 <el-form-item label="虚拟物料：">
-                    <el-select v-model="queryForm.holderNo" placeholder="请选择" filterable style="width: 283px;" clearable>
+                    <el-select v-model="queryForm.virtualMaterial" placeholder="请选择" filterable style="width: 283px;" clearable>
                         <el-option v-for="(sole, index) in virtualList" :key="index" :value="sole.materialCode" :label="`${sole.materialName} ${sole.materialCode}`" />
                     </el-select>
                 </el-form-item>
                 <el-form-item label="组件物料：">
-                    <el-select v-model="queryForm.holderNo" placeholder="请选择" filterable style="width: 283px;" clearable>
+                    <el-select v-model="queryForm.useMaterial" placeholder="请选择" filterable style="width: 283px;" clearable>
                         <el-option v-for="(sole, index) in moduleList" :key="index" :value="sole.materialCode" :label="`${sole.materialName} ${sole.materialCode}`" />
                     </el-select>
                 </el-form-item>
@@ -97,13 +99,9 @@
             current: 1,
             size: 10,
             total: 0,
-            productMaterial: '',
-            warmTimeFloor: '',
-            warmTimeLower: '',
-            warmTempFloor: '',
-            warmTempLower: '',
-            startDate: '',
-            endDate: ''
+            virtualMaterial1: '',
+            virtualMaterial: '',
+            useMaterial: ''
         };
 
         visibleHightLevelQuery = false;
@@ -155,9 +153,7 @@
                     cancelButtonText: '取消',
                     type: 'warning'
                 }).then(() => {
-                    BASIC_API.CRAFT_DEL_API({
-                        ids: this.multipleSelection
-                    }).then(() => {
+                    BASIC_API.BRINE_DEL_API(this.multipleSelection).then(() => {
                         this.$successToast('删除成功!');
                         this.multipleSelection = [];
                         this.GetData();
@@ -170,7 +166,7 @@
             let params;
             if (this.queryType === 1) {
                 params = {
-                    productMaterial: this.queryForm.productMaterial,
+                    virtualMaterial: this.queryForm.virtualMaterial1,
                     current: this.queryForm.current,
                     size: this.queryForm.size,
                     total: this.queryForm.current
@@ -180,16 +176,11 @@
                     current: this.queryForm.current,
                     size: this.queryForm.size,
                     total: this.queryForm.current,
-                    productMaterial: '',
-                    warmTimeFloor: this.queryForm.warmTimeFloor,
-                    warmTimeLower: this.queryForm.warmTimeLower,
-                    warmTempFloor: this.queryForm.warmTempFloor,
-                    warmTempLower: this.queryForm.warmTempLower,
-                    startDate: this.queryForm.startDate,
-                    endDate: this.queryForm.endDate
+                    virtualMaterial: this.queryForm.virtualMaterial,
+                    warmTimeLower: this.queryForm.useMaterial
                 }
             }
-            BASIC_API.CRAFT_LIST_API(params).then(({ data }) => {
+            BASIC_API.BRINE_LIST_API(params).then(({ data }) => {
                 this.visibleHightLevelQuery = false;
                 this.addOrUpdate = false;
                 if (data.data.current === 1 && data.data.records.length === 0) {

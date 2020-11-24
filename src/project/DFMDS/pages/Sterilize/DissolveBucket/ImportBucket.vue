@@ -463,6 +463,7 @@
                 const insertDtosArray: CurrentDataTable[] = []
                 const updateDtosArray: CurrentDataTable[] = []
                 const steDissolutionPotOneDtoObject = {
+                    cycle: this.currentCycle,
                     potCount: this.headerInfo.headerPotCount,
                     potId: this.currentPotId,
                     potNo: this.currentPotNo,

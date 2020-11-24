@@ -3,7 +3,9 @@
         <mds-card title="发酵信息" :pack-up="false">
             <template slot="titleBtn">
                 <div style="float: right; height: 32px; margin-bottom: 10px;">
-                    <el-input v-model.trim="queryForm.productMaterial" size="small" placeholder="物料" suffix-icon="el-icon-search" clearable style="width: 160px; margin-right: 10px;" />
+                    <el-select v-model="queryForm.productMaterial" size="small" placeholder="请选择" suffix-icon="el-icon-search" clearable filterable style="width: 160px; margin-right: 10px;">
+                        <el-option v-for="(sole, index) in material" :key="index" :value="sole.materialCode" :label="`${sole.materialName} ${sole.materialCode}`" />
+                    </el-select>
                     <el-button v-if="isAuth('craftQuery')" type="primary" size="small" style="margin-right: 10px;" @click="() => { queryForm.current = 1; queryType = 1; GetData() }">
                         查询
                     </el-button>
@@ -21,22 +23,23 @@
             <el-table header-row-class-name="tableHead" class="newTable" :height="mainClientHeight - 72 - 47" :data="tableData" border tooltip-effect="dark" @selection-change="handleSelectionChange">
                 <el-table-column type="selection" width="50" fixed="left" align="center" />
                 <el-table-column type="index" :index="index => index + 1 + (Number(queryForm.current) - 1) * (Number(queryForm.size))" label="序号" width="50px" fixed />
-                <el-table-column label="工序段" prop="warmTimeLower" min-width="80" :show-overflow-tooltip="true" />
+                <el-table-column label="工序段" prop="productProcess" min-width="80" :show-overflow-tooltip="true" />
                 <el-table-column label="生产物料" min-width="180" :show-overflow-tooltip="true">
                     <template slot-scope="scope">
-                        {{ scope.row.productMaterial }} {{ scope.row.productMaterialName }}
-                    </template>
-                </el-table-column><el-table-column label="领用物料" min-width="180" :show-overflow-tooltip="true">
-                    <template slot-scope="scope">
-                        {{ scope.row.productMaterial }} {{ scope.row.productMaterialName }}
+                        {{ scope.row.productMaterialName }} {{ scope.row.productMaterialCode }}
                     </template>
                 </el-table-column>
-                <el-table-column label="订单天数" prop="warmTimeLower" min-width="100" :show-overflow-tooltip="true" />
-                <el-table-column label="报工成熟天数" prop="warmTimeFloor" min-width="120" :show-overflow-tooltip="true" />
-                <el-table-column label="发酵成熟天数" prop="warmTempLower" min-width="120" :show-overflow-tooltip="true" />
-                <el-table-column label="发酵超期天数" prop="warmTempFloor" min-width="120" :show-overflow-tooltip="true" />
-                <el-table-column label="报工标识" prop="startDate" min-width="100" :show-overflow-tooltip="true" />
-                <el-table-column label="数量倍数" prop="endDate" min-width="100" :show-overflow-tooltip="true" />
+                <el-table-column label="领用物料" min-width="180" :show-overflow-tooltip="true">
+                    <template slot-scope="scope">
+                        {{ scope.row.useMaterialName }} {{ scope.row.useMaterialCode }}
+                    </template>
+                </el-table-column>
+                <el-table-column label="订单天数" prop="orderDays" min-width="100" :show-overflow-tooltip="true" />
+                <el-table-column label="报工成熟天数" prop="jobDays" min-width="120" :show-overflow-tooltip="true" />
+                <el-table-column label="发酵成熟天数" prop="matureDays" min-width="120" :show-overflow-tooltip="true" />
+                <el-table-column label="发酵超期天数" prop="overdueDays" min-width="120" :show-overflow-tooltip="true" />
+                <el-table-column label="报工标识" prop="jobBookingFlag" min-width="100" :show-overflow-tooltip="true" />
+                <el-table-column label="数量倍数" prop="multiple" min-width="100" :show-overflow-tooltip="true" />
                 <el-table-column label="备注" prop="remark" :show-overflow-tooltip="true" />
                 <el-table-column label="操作人" prop="changer" :show-overflow-tooltip="true" />
                 <el-table-column label="操作时间" prop="changed" :show-overflow-tooltip="true" />
@@ -55,34 +58,34 @@
         <el-dialog width="500px" title="高级查询" :close-on-click-modal="false" :visible.sync="visibleHightLevelQuery">
             <el-form :inline="true" size="small" :model="queryForm" label-width="100px">
                 <el-form-item label="工序段：">
-                    <el-select v-model="queryForm.holderNo" placeholder="请选择" filterable style="width: 283px;" clearable>
+                    <el-select v-model="queryForm.productProcess" placeholder="请选择" filterable style="width: 283px;" clearable>
                         <el-option v-for="(sole, index) in processList" :key="index" :value="sole.dictCode" :label="sole.dictValue" />
                     </el-select>
                 </el-form-item>
                 <el-form-item label="生产物料：">
-                    <el-select v-model="queryForm.holderNo" placeholder="请选择" filterable style="width: 283px;" clearable>
+                    <el-select v-model="queryForm.productMaterial" placeholder="请选择" filterable style="width: 283px;" clearable>
                         <el-option v-for="(sole, index) in material" :key="index" :value="sole.materialCode" :label="`${sole.materialName} ${sole.materialCode}`" />
                     </el-select>
                 </el-form-item>
                 <el-form-item label="领用物料：">
-                    <el-select v-model="queryForm.holderNo" placeholder="请选择" filterable style="width: 283px;" clearable>
+                    <el-select v-model="queryForm.useMaterial" placeholder="请选择" filterable style="width: 283px;" clearable>
                         <el-option v-for="(sole, index) in material" :key="index" :value="sole.materialCode" :label="`${sole.materialName} ${sole.materialCode}`" />
                     </el-select>
                 </el-form-item>
                 <el-form-item label="订单天数：">
-                    <el-input v-model="queryForm.batch" style="width: 283px;" clearable />
+                    <el-input v-model="queryForm.orderDays" style="width: 283px;" clearable />
                 </el-form-item>
                 <el-form-item label="报工成熟天数：">
-                    <el-input v-model="queryForm.batch" style="width: 283px;" clearable />
+                    <el-input v-model="queryForm.jobDays" style="width: 283px;" clearable />
                 </el-form-item>
                 <el-form-item label="发酵成熟天数：">
-                    <el-input v-model="queryForm.batch" style="width: 283px;" clearable />
+                    <el-input v-model="queryForm.matureDays" style="width: 283px;" clearable />
                 </el-form-item>
                 <el-form-item label="发酵超期天数：">
-                    <el-input v-model="queryForm.batch" style="width: 283px;" clearable />
+                    <el-input v-model="queryForm.overdueDays" style="width: 283px;" clearable />
                 </el-form-item>
                 <el-form-item label="报工标识：">
-                    <el-select v-model="queryForm.holderNo" placeholder="请选择" filterable style="width: 283px;" clearable>
+                    <el-select v-model="queryForm.jobBookingFlag" placeholder="请选择" filterable style="width: 283px;" clearable>
                         <el-option v-for="(iteam, index) in hoursList" :key="index" :label="iteam.dictValue" :value="iteam.dictCode" />
                     </el-select>
                 </el-form-item>
@@ -122,12 +125,13 @@
             size: 10,
             total: 0,
             productMaterial: '',
-            warmTimeFloor: '',
-            warmTimeLower: '',
-            warmTempFloor: '',
-            warmTempLower: '',
-            startDate: '',
-            endDate: ''
+            useMaterial: '',
+            jobBookingFlag: '',
+            jobDays: '',
+            matureDays: '',
+            orderDays: '',
+            overdueDays: '',
+            productProcess: ''
         };
 
         visibleHightLevelQuery = false;
@@ -176,9 +180,7 @@
                     cancelButtonText: '取消',
                     type: 'warning'
                 }).then(() => {
-                    BASIC_API.CRAFT_DEL_API({
-                        ids: this.multipleSelection
-                    }).then(() => {
+                    BASIC_API.FERINFO_DEL_API(this.multipleSelection).then(() => {
                         this.$successToast('删除成功!');
                         this.multipleSelection = [];
                         this.GetData();
@@ -201,16 +203,17 @@
                     current: this.queryForm.current,
                     size: this.queryForm.size,
                     total: this.queryForm.current,
-                    productMaterial: '',
-                    warmTimeFloor: this.queryForm.warmTimeFloor,
-                    warmTimeLower: this.queryForm.warmTimeLower,
-                    warmTempFloor: this.queryForm.warmTempFloor,
-                    warmTempLower: this.queryForm.warmTempLower,
-                    startDate: this.queryForm.startDate,
-                    endDate: this.queryForm.endDate
+                    useMaterial: this.queryForm.useMaterial,
+                    productMaterial: this.queryForm.productMaterial,
+                    jobBookingFlag: this.queryForm.jobBookingFlag,
+                    jobDays: this.queryForm.jobDays,
+                    matureDays: this.queryForm.matureDays,
+                    orderDays: this.queryForm.orderDays,
+                    productProcess: this.queryForm.productProcess,
+                    overdueDays: this.queryForm.overdueDays
                 }
             }
-            BASIC_API.CRAFT_LIST_API(params).then(({ data }) => {
+            BASIC_API.FERINFO_LIST_API(params).then(({ data }) => {
                 this.visibleHightLevelQuery = false;
                 this.addOrUpdate = false;
                 if (data.data.current === 1 && data.data.records.length === 0) {

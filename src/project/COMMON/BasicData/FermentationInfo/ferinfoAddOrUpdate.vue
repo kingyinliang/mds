@@ -1,40 +1,40 @@
 <template>
     <el-dialog :close-on-click-modal="false" :visible.sync="visible" :title="dataForm.id? '修改' : '新增'" width="420px">
         <el-form ref="dataForm" :model="dataForm" :rules="dataRule" label-width="140px" size="small">
-            <el-form-item label="工序段：">
-                <el-select v-model="dataForm.holderNo" placeholder="请选择" filterable style="width: 220px;" clearable>
+            <el-form-item label="工序段：" prop="productProcess">
+                <el-select v-model="dataForm.productProcess" placeholder="请选择" filterable style="width: 220px;" clearable>
                     <el-option v-for="(sole, index) in processList" :key="index" :value="sole.dictCode" :label="sole.dictValue" />
                 </el-select>
             </el-form-item>
-            <el-form-item label="生产物料：">
-                <el-select v-model="dataForm.holderNo" placeholder="请选择" filterable style="width: 220px;" clearable>
+            <el-form-item label="生产物料：" prop="productMaterialCode">
+                <el-select v-model="dataForm.productMaterialCode" placeholder="请选择" filterable style="width: 220px;" clearable @change="setPro">
                     <el-option v-for="(sole, index) in material" :key="index" :value="sole.materialCode" :label="`${sole.materialName} ${sole.materialCode}`" />
                 </el-select>
             </el-form-item>
-            <el-form-item label="领用物料：">
-                <el-select v-model="dataForm.holderNo" placeholder="请选择" filterable style="width: 220px;" clearable>
+            <el-form-item label="领用物料：" prop="useMaterialCode">
+                <el-select v-model="dataForm.useMaterialCode" placeholder="请选择" filterable style="width: 220px;" clearable @change="setUse">
                     <el-option v-for="(sole, index) in material" :key="index" :value="sole.materialCode" :label="`${sole.materialName} ${sole.materialCode}`" />
                 </el-select>
             </el-form-item>
-            <el-form-item label="订单天数：">
-                <el-input v-model="dataForm.batch" style="width: 220px;" clearable />
+            <el-form-item label="订单天数：" prop="orderDays">
+                <el-input v-model="dataForm.orderDays" style="width: 220px;" clearable />
             </el-form-item>
             <el-form-item label="报工成熟天数：">
-                <el-input v-model="dataForm.batch" style="width: 220px;" clearable />
+                <el-input v-model="dataForm.jobDays" style="width: 220px;" clearable />
             </el-form-item>
             <el-form-item label="发酵成熟天数：">
-                <el-input v-model="dataForm.batch" style="width: 220px;" clearable />
+                <el-input v-model="dataForm.matureDays" style="width: 220px;" clearable />
             </el-form-item>
-            <el-form-item label="发酵超期天数：">
-                <el-input v-model="dataForm.batch" style="width: 220px;" clearable />
+            <el-form-item label="发酵超期天数：" prop="overdueDays">
+                <el-input v-model="dataForm.overdueDays" style="width: 220px;" clearable />
             </el-form-item>
-            <el-form-item label="报工标识：">
-                <el-select v-model="dataForm.holderNo" placeholder="请选择" filterable style="width: 220px;" clearable>
+            <el-form-item label="报工标识：" prop="jobBookingFlag">
+                <el-select v-model="dataForm.jobBookingFlag" placeholder="请选择" filterable style="width: 220px;" clearable>
                     <el-option v-for="(iteam, index) in hoursList" :key="index" :label="iteam.dictValue" :value="iteam.dictCode" />
                 </el-select>
             </el-form-item>
             <el-form-item label="数量倍数：">
-                <el-input v-model.trim="dataForm.remark" style="width: 220px;" clearable />
+                <el-input v-model.trim="dataForm.multiple" style="width: 220px;" clearable />
             </el-form-item>
             <el-form-item label="备注：">
                 <el-input v-model.trim="dataForm.remark" style="width: 220px;" clearable />
@@ -71,27 +71,31 @@
         visible = false;
         dataForm = {
             id: '',
-            productMaterial: '',
+            productMaterialCode: '',
             productMaterialName: '',
-            warmTimeLower: '',
-            warmTimeFloor: '',
-            warmTempLower: '',
-            warmTempFloor: '',
-            startDate: '',
-            endDate: '',
+            productMaterialType: '',
+            useMaterialCode: '',
+            useMaterialName: '',
+            useMaterialType: '',
+            productProcess: '',
+            orderDays: '',
+            jobDays: '',
+            matureDays: '',
+            overdueDays: '',
+            jobBookingFlag: '',
+            multiple: '',
             remark: '',
             changer: '',
             changed: ''
         };
 
         dataRule = {
-            productMaterial: [{ required: true, message: '物料不能为空', trigger: 'blur' }],
-            warmTimeLower: [{ required: true, message: '标准保温时间下限', trigger: 'blur' }],
-            warmTimeFloor: [{ required: true, message: '标准保温时间上限', trigger: 'blur' }],
-            warmTempLower: [{ required: true, message: '标准保温温度下限', trigger: 'blur' }],
-            warmTempFloor: [{ required: true, message: '标准保温温度上限', trigger: 'blur' }],
-            startDate: [{ required: true, message: '有效开始日期', trigger: 'blur' }],
-            endDate: [{ required: true, message: '有效结束日期', trigger: 'blur' }]
+            productProcess: [{ required: true, message: '工序段不能为空', trigger: 'blur' }],
+            productMaterialCode: [{ required: true, message: '生产物料不能为空', trigger: 'blur' }],
+            useMaterialCode: [{ required: true, message: '领用物料不能为空', trigger: 'blur' }],
+            orderDays: [{ required: true, message: '订单天数不能为空', trigger: 'blur' }],
+            overdueDays: [{ required: true, message: '发酵超期天数不能为空', trigger: 'blur' }],
+            jobBookingFlag: [{ required: true, message: '报工标识不能为空', trigger: 'blur' }]
         };
 
         init(data) {
@@ -100,14 +104,19 @@
             } else {
                 this.dataForm = {
                     id: '',
-                    productMaterial: '',
+                    productMaterialCode: '',
                     productMaterialName: '',
-                    warmTimeLower: '',
-                    warmTimeFloor: '',
-                    warmTempLower: '',
-                    warmTempFloor: '',
-                    startDate: '',
-                    endDate: '',
+                    productMaterialType: '',
+                    useMaterialCode: '',
+                    useMaterialName: '',
+                    useMaterialType: '',
+                    productProcess: '',
+                    orderDays: '',
+                    jobDays: '',
+                    matureDays: '',
+                    overdueDays: '',
+                    jobBookingFlag: '',
+                    multiple: '',
                     remark: '',
                     changer: getUserNameNumber(),
                     changed: dateFormat(new Date(), 'yyyy-MM-dd hh:mm:ss')
@@ -116,16 +125,22 @@
             this.visible = true;
         }
 
+        setPro() {
+            const filterArr1: (any) = this.material.filter(it => it.materialCode === this.dataForm.productMaterialCode);// eslint-disable-line
+            this.dataForm.productMaterialName = filterArr1[0].materialName;
+            this.dataForm.productMaterialType = filterArr1[0].materialTypeCode;
+        }
+
+        setUse() {
+            const filterArr1: (any) = this.material.filter(it => it.materialCode === this.dataForm.useMaterialCode);// eslint-disable-line
+            this.dataForm.useMaterialName = filterArr1[0].materialName;
+            this.dataForm.useMaterialType = filterArr1[0].materialTypeCode;
+        }
+
         dataFormSubmit() {
             this.$refs.dataForm.validate(valid => {
                 if (valid) {
-                    let net;
-                    if (this.dataForm.id) {
-                        net = BASIC_API.CRAFT_UPDATE_API
-                    } else {
-                        net = BASIC_API.CRAFT_ADD_API
-                    }
-                    net(this.dataForm).then(({ data }) => {
+                    BASIC_API.FERINFO_SAVE_API(this.dataForm).then(({ data }) => {
                         this.visible = false;
                         this.$successToast(data.msg);
                         this.$emit('refreshDataList');

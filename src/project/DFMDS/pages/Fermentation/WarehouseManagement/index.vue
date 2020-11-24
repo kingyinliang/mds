@@ -15,8 +15,8 @@
             <template slot="home">
                 <mds-card title="入库列表" :pack-up="false">
                     <el-table class="newTable markStyle" :data="targetQueryTableList" :row-class-name="rowDelFlag" header-row-class-name="tableHead" border style="width: 100%; min-height: 90px;">
-                        <el-table-column type="selection" />
-                        <el-table-column label="序号" type="index" />
+                        <el-table-column type="selection" fixed />
+                        <el-table-column label="序号" type="index" fixed />
                         <el-table-column label="状态" prop="status" />
                         <el-table-column label="生产订单" prop="status" />
                         <el-table-column label="容器号" prop="status" />
@@ -51,8 +51,11 @@
                         </el-table-column>
                         <el-table-column label="操作人员" prop="status" />
                         <el-table-column label="操作时间" prop="status" />
-                        <el-table-column label="操作">
+                        <el-table-column label="操作" width="120px" fixed="right">
                             <template slot-scope="scope">
+                                <el-button type="text" size="small" @click="returnHandler(scope.row)">
+                                    退回
+                                </el-button>
                                 <el-button type="text" size="small" @click="showLogHandler(scope.row)">
                                     审核日志
                                 </el-button>
@@ -98,7 +101,9 @@
             queryTable: HTMLFormElement;
         }
 
-        targetQueryTableList: SaltWaterObj[] = [];
+        targetQueryTableList: SaltWaterObj[] = [
+            { id: 'ss' }
+        ];
 
         isRedact = false; // 可否编辑
 
@@ -333,6 +338,17 @@
         showLogHandler(row) {
             console.log(row);
             this.dialogVisible = true;
+        }
+
+        returnHandler(row) {
+            console.log(row);
+            this.$confirm('是否退回?', '提示', {
+                confirmButtonText: '确定',
+                cancelButtonText: '取消',
+                type: 'warning'
+            }).then(() => {
+                this.$successToast('退回成功');
+            })
         }
 
         determinationHandler(row) {

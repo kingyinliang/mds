@@ -32,7 +32,31 @@ const BASIC_API = {
     /**
      * @property {string} STEPKG_UPDATE_API 杀菌包装对应-修改
      */
-    STEPKG_UPDATE_API: params => httpProxy('/ste/stePkgRelation/update', 'POST', params)
+    STEPKG_UPDATE_API: params => httpProxy('/ste/stePkgRelation/update', 'POST', params),
+    /**
+     * @property {string} STEPKG_UPDATE_API 发酵信息-查询
+     */
+    FERINFO_LIST_API: params => httpProxy('/fer/information/pagingOfQuery', 'POST', params),
+    /**
+     * @property {string} STEPKG_UPDATE_API 发酵信息-保存
+     */
+    FERINFO_SAVE_API: params => httpProxy('/fer/information/save', 'POST', params),
+    /**
+     * @property {string} STEPKG_UPDATE_API 发酵信息-删除
+     */
+    FERINFO_DEL_API: params => httpProxy('/fer/information/delete', 'POST', params),
+    /**
+     * @property {string} STEPKG_UPDATE_API 盐水管理-查询
+     */
+    BRINE_LIST_API: params => httpProxy('/fer/brineManage/pagingOfQuery', 'POST', params),
+    /**
+     * @property {string} STEPKG_UPDATE_API 盐水管理-保存
+     */
+    BRINE_SAVE_API: params => httpProxy('/fer/brineManage/save', 'POST', params),
+    /**
+     * @property {string} STEPKG_UPDATE_API 盐水管理-删除
+     */
+    BRINE_DEL_API: params => httpProxy('/fer/brineManage/delete', 'POST', params)
 };
 
 export default BASIC_API;

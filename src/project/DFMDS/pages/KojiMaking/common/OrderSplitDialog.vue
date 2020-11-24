@@ -58,8 +58,8 @@
                         format="yyyy-MM-dd"
                         :disabled="!['N','S','R'].includes(scope.row.status)||!scope.row.isChangeAddKojiDate"
                         @change="val=>{checkKojiDate(val,scope.row)}"
-                        @blur="checkKojiDateBlur(scope.row)"
-                        @focus="checkKojiDateFocus(scope.row)"
+                        @blur="checkKojiDateEvent(scope.row,'blur')"
+                        @focus="checkKojiDateEvent(scope.row,'focus')"
                     />
                 </template>
             </el-table-column>
@@ -161,40 +161,39 @@
 
         checkTheSame() {
             const tempCheckArray: string[] = []
+            const tempSplitTable: object[] = []
             this.splitTable.forEach(item => {
-                const temp = `${item.kojiHouseNo}-${item.addKojiDate}`
-                if (!(tempCheckArray.includes(temp))) {
-                    tempCheckArray.push(`${item.kojiHouseNo}-${item.addKojiDate}`)
+                if (item.kojiHouseNo && item.addKojiDate) {
+                    tempSplitTable.push(item)
+                    const temp = `${item.kojiHouseNo}-${item.addKojiDate}`
+                    if (!(tempCheckArray.includes(temp))) {
+                        tempCheckArray.push(`${item.kojiHouseNo}-${item.addKojiDate}`)
+                    }
                 }
             })
 
-            if (tempCheckArray.length === this.splitTable.length) {
+            if (tempCheckArray.length === tempSplitTable.length) {
                 return false
             }
             return true
         }
 
-        checkKojiDateBlur(item) {
+        checkKojiDateEvent(item, event) {
             KOJI_API.ORDER_SPLITE_DELETE_VALIDATEDATE_API({
                 date: item.addKojiDate,
                 workShop: this.orderObj.workShop
-            }).then((data) => {
+            }).then(({ data }) => {
                 if (data.data.length !== 0) {
-                    this.$warningToast(`此日期关联订单人工工时已提交，订单不调整至此日期下，请取消已审核订单：${data.data.join(',')}`)
-                    item.outKojiDate = ''
-                    item.addKojiDate = ''
-                }
-            })
-        }
+                    if (event === 'blur') {
+                        this.$warningToast(`此日期关联订单人工工时已提交，订单不调整至此日期下，请取消已审核订单：${data.data.join(',')}`)
+                        item.outKojiDate = ''
+                        item.addKojiDate = ''
+                    }
 
-        checkKojiDateFocus(item) {
-            KOJI_API.ORDER_SPLITE_DELETE_VALIDATEDATE_API({
-                date: item.addKojiDate,
-                workShop: this.orderObj.workShop
-            }).then((data) => {
-                if (data.data.length !== 0) {
-                    this.$warningToast(`关联订单人工工时已提交，此订单不可调整入曲日期，请取消已审核订单：${data.data.join(',')}`)
-                    item.isChangeAddKojiDate = false
+                    if (event === 'focus') {
+                        this.$warningToast(`关联订单人工工时已提交，此订单不可调整入曲日期，请取消已审核订单：${data.data.join(',')}`)
+                        item.isChangeAddKojiDate = false
+                    }
                 }
             })
         }
@@ -251,8 +250,9 @@
                 delFlag: 0,
                 isChangeAddKojiDate: true, // 是否可改变入曲时间改变
                 addKojiDate: this.orderObj.orderStartDate,
-                fermentPotId: this.orderObj.fermentPotId,
-                fermentPotNo: '',
+                fermentPotId: this.fermentPotNoOptions[0].optId,
+                fermentPotNo: this.fermentPotNoOptions[0].optValue,
+                fermentPotName: this.fermentPotNoOptions[0].optLabel,
                 orderNo: this.orderObj.orderNo,
                 kojiHouseId: this.orderObj.kojiHouseId,
                 kojiHouseNo: '',
