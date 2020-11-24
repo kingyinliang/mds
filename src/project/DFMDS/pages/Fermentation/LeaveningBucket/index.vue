@@ -106,6 +106,9 @@
         isTableDialogVisible=false
         isBucketDialogVisible = false;
         dialogType='filled' // 弹窗类型
+        dataList=[
+            {}
+        ]
 
         totalCount = 0;
         currPage= 1
