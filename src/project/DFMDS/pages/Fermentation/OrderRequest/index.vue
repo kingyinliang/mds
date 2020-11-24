@@ -14,6 +14,7 @@
             :show-select-column="true"
             :show-index-column="true"
             @get-data-success="returnDataFromQueryTableForm"
+            @created-end="createdEnd"
         >
             <template v-slot:tab-head0>
                 <div class="box-card-title clearfix">
@@ -34,7 +35,7 @@
 
 <script lang="ts">
     import { Vue, Component } from 'vue-property-decorator';
-    import { COMMON_API } from 'common/api/api';
+    import { COMMON_API, FER_API } from 'common/api/api';
     // import { dateFormat } from 'utils/utils';
 
     @Component({
@@ -74,7 +75,7 @@
             {
                 type: 'select',
                 label: '容器号',
-                prop: 'potId',
+                prop: 'fermentorId',
                 labelWidth: 80,
                 rule: [{ required: false, message: ' ', trigger: 'change' }],
                 defaultValue: '',
@@ -101,7 +102,7 @@
             {
                 type: 'select',
                 label: '生产物料',
-                prop: 'materialId',
+                prop: 'productMaterialCode',
                 labelWidth: 90,
                 rule: [{ required: false, message: ' ', trigger: 'change' }],
                 defaultValue: '',
@@ -131,8 +132,8 @@
                 labelWidth: 90,
                 valueFormat: 'yyyy-MM-dd',
                 // defaultValue: dateFormat(new Date(), 'yyyy-MM-dd'),
-                prop: 'orderStartDateBegin',
-                propTwo: 'orderStartDateEnd'
+                prop: 'startDate',
+                propTwo: 'endDate'
             }
         ]
 
@@ -247,22 +248,22 @@
             }
         ]
 
+        createdEnd() {
+            this.$nextTick(() => {
+                if (this.$refs.queryTable.queryForm.workShop !== '') {
+                    this.$refs.queryTable.getDataList(true)
+                }
+            })
+        }
+
         // queryTable 查询请求
         queryTableListInterface = params => {
             params.factory = JSON.parse(sessionStorage.getItem('factory') || '{}').id;
-            let orderStatus: string[] = [];
-            if (this.$refs.queryTable.activeName === '0') { // eslint-disable-line
-                orderStatus = ['D'];
-            } else if (this.$refs.queryTable.activeName === '1') {  // eslint-disable-line
-                orderStatus = ['C', 'P'];
-            } else {
-                orderStatus = ['R'];
-            }
-            params.orderStatus = orderStatus; // eslint-disable-line
+            // console.log(params, '=-==========+++++++++++++');
             params.current = this.$refs.queryTable.tabs[this.$refs.queryTable.activeName].pages.currPage;// eslint-disable-line
             params.size = this.$refs.queryTable.tabs[this.$refs.queryTable.activeName].pages.pageSize;// eslint-disable-line
             params.total = this.$refs.queryTable.tabs[this.$refs.queryTable.activeName].pages.totalCount;// eslint-disable-line
-            return COMMON_API.ORDER_QUERY_API(params);
+            return FER_API.FER_ORDER_LIST_API(params);
         }
 
         // queryTable 回传 result
