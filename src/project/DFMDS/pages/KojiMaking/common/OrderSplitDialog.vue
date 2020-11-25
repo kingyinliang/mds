@@ -334,6 +334,9 @@
                             this.$warningToast(`该曲房订单下存在领料数据，请删除数据后再删除曲房订单`)
                         }
                     })
+                } else {
+                    this.$set(row, 'delFlag', 1)
+                    this.$successToast('删除成功');
                 }
             });
         }

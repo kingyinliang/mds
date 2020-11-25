@@ -10,13 +10,65 @@
             :custom-data="true"
             @get-data-success="returnDataFromQueryTableForm"
         >
-            <template v-if="targetQueryTableList.length!==0" slot="home">
+            <template slot="home">
+                <mds-card :title="'发酵情况总览'" :pack-up="false" :name="'fermenterTotal'" style="margin-top: 10px; overflow: initial;">
+                    <el-row class="home_card__main" :gutter="10">
+                        <div v-for="(item, index) in topBox" :key="index" class="clearfix" style="float: left;">
+                            <div class="topBox_boxItem" @click="topClick(item)">
+                                <div style="overflow: hidden;">
+                                    <div class="topBox_boxItem_bar">
+                                        <div
+                                            class="topBox_boxItem_bar_box"
+                                            :style="{ background: `linear-gradient(to right,${item.startColor} 0%,${item.startColor} 10%,${item.startColor})`}"
+                                        />
+                                    </div>
+                                    <div style="float: left; width: 32px; font-size: 14px; line-height: 30px; text-align: center;">
+                                        {{ item.middleText }}
+                                    </div>
+                                    <div class="topBox_boxItem_bar">
+                                        <div
+                                            class="topBox_boxItem_bar_box"
+                                            :style="{
+                                                background: `linear-gradient(to right,${item.endColor} 0%,${item.endColor} 10%,${item.endColor})`,
+                                            }"
+                                        />
+                                    </div>
+                                </div>
+                                <p class="topBox_boxItem_tit">
+                                    {{ item.ptext }}
+                                </p>
+                                <p class="topBox_boxItem_detail">
+                                    总计: <span>{{ item.num }}</span> 罐
+                                </p>
+                                <div v-if="index > 0 && index < 7" class="topBox_boxItem_popover">
+                                    <p class="">
+                                        <em class="dot" style="background: #1890ff;" />味极鲜<span style="float: right;">{{ item.wdm }} 罐</span>
+                                    </p>
+                                    <p class="">
+                                        <em class="dot" style="background: #ffbf00;" />六月鲜<span style="float: right;">{{ item.lyx }} 罐</span>
+                                    </p>
+                                    <em class="topBox_boxItem_popover_ar" />
+                                </div>
+                            </div>
+                            <div v-if="item.color" class="topBox_circle" :style="{ background: item.color }">
+                                {{ item.text }}
+                            </div>
+                        </div>
+                    </el-row>
+                </mds-card>
                 <mds-card :title="'发酵罐列表'" :pack-up="false" :name="'fermenterTotal'" style="margin-top: 10px; overflow: initial;">
+                    <template slot="titleBtn">
+                        <div style="float: right;" class="moreItems">
+                            <el-button type="text" size="small" @click="getMore">
+                                发酵罐一览表
+                            </el-button>
+                        </div>
+                    </template>
                     <el-row class="home_card__main" :gutter="10">
                         <el-col v-for="item in targetQueryTableList" :key="item.potId" :span="4" style="min-width: 203px;">
                             <div class="card-bucket">
                                 <div class="card-bucket__head">
-                                    <span>{{ item.potName }} - {{ holderStatus.filter( element => element.dictCode===item.potStatus)[0].dictValue }}</span>
+                                    <span>{{ item.holderName }} - {{ item.fermentorStatusName }}</span>
                                     <el-button type="text" @click="goTargetDetail(item)">
                                         详情
                                     </el-button>
@@ -34,38 +86,43 @@
                                         </div>
                                     </div>
                                     <div class="btn-group">
-                                        <el-button v-if="isAuth()" size="small" plain :disabled="!(item.potStatus==='E'||item.potStatus==='R')" @click="btnFilledBucket(item)">
+                                        <el-button v-if="isAuth('')" size="small" plain @click="btnFilledBucket(item)">
                                             鼓罐
                                         </el-button>
-                                        <el-button v-if="isAuth('')" size="small" plain :disabled="item.potStatus!=='R'" @click="btnLYCY(item)">
-                                            <!-- <el-button v-if="item.potStatus!=='M'" size="small" plain @click="btnFillBucket(item)"> -->
+                                        <el-button v-if="isAuth('')" size="small" plain @click="btnLYCY(item)">
+                                            <!-- <el-button v-if="item.fermentorStatus!=='M'" size="small" plain @click="btnFillBucket(item)"> -->
                                             LY/CY
                                         </el-button>
-                                        <el-button v-else-if="isAuth()" size="small" plain @click="btnAdjust(item)">
+                                        <el-button v-if="isAuth('')" size="small" plain @click="btnAdjust(item)">
                                             调整
                                         </el-button>
-                                        <el-button v-if="isAuth()" size="small" plain :disabled="!(item.potStatus==='U')" @click="btnClearBucket(item)">
+                                        <el-button v-if="isAuth('')" size="small" plain @click="btnClearBucket(item)">
                                             <!-- <el-button size="small" plain @click="btnClearBucket(item)"> -->
                                             清罐
                                         </el-button>
-                                        <el-button v-if="isAuth()" size="small" plain :disabled="!(item.potStatus==='U')" @click="btnWashBucket(item)">
+                                        <el-button v-if="isAuth('')" size="small" plain @click="btnWashBucket(item)">
                                             清洗
                                         </el-button>
                                     </div>
                                 </div>
                                 <div class="card-bucket__fotter">
-                                    <div v-show="!(item.potStatus==='E'||item.potStatus==='C')">
-                                        <el-tooltip class="item" effect="dark" :content="item.prodcutMaterialName" placement="top">
-                                            <span style="overflow: hidden; white-space: nowrap; text-overflow: ellipsis;">{{ item.prodcutMaterialName || '未有生产物料' }}</span>
+                                    <div v-show="!(item.fermentorStatus==='E'||item.fermentorStatus==='C')">
+                                        <el-tooltip class="item" effect="dark" :content="item.materialName" placement="top">
+                                            <span style="overflow: hidden; white-space: nowrap; text-overflow: ellipsis;">{{ item.materialName || '未有生产物料' }}</span>
                                         </el-tooltip>
-                                        <span>{{ item.potAmount || '0' }} </span>KG
+                                        <span>{{ item.fermentDays || '0' }} 天</span>
                                     </div>
-                                    <!-- <div><span>溶解辅料</span><span>10/100</span></div> -->
+                                    <div v-show="!(item.fermentorStatus==='E'||item.fermentorStatus==='C')">
+                                        <el-tooltip class="item" effect="dark" :content="item.orderNo" placement="top">
+                                            <span style="overflow: hidden; white-space: nowrap; text-overflow: ellipsis;">{{ item.orderNo || '未有订单号' }}</span>
+                                        </el-tooltip>
+                                        <span>{{ item.currentStock || '0' }} 吨</span>
+                                    </div>
                                 </div>
                             </div>
                         </el-col>
                     </el-row>
-                    <el-pagination v-if="targetQueryTableList.length!==0" :current-page="currPage" :page-sizes="[10, 20, 50]" :page-size="pageSize" layout="prev, pager, next,sizes, jumper" :total="totalCount" @size-change="handlePageSizeChangeFromRead" @current-change="handleCurrentPageChangeFromRead" />
+                    <el-pagination :current-page="currPage" :page-sizes="[10, 20, 50]" :page-size="pageSize" layout="prev, pager, next,sizes, jumper" :total="totalCount" @size-change="handleSizeChange" @current-change="handleCurrentChange" />
                 </mds-card>
             </template>
         </query-table>
@@ -215,7 +272,134 @@
         queryTableFormRules = [
         ]
 
+        topBox: [
+            {
+                color: '#999999FF';
+                startColor: '#999999FF';
+                endColor: '#999999FF';
+                text: '空';
+                ptext: '';
+                numNew: 0;
+                potColor: '#FFF';
+                middleText: '空罐';
+                holderStatus: '0';
+                num: '0';
+            },
+            {
+                color: '#D6D2C4FF';
+                startColor: '#E9E9E9FF';
+                endColor: '#D6D2C4FF';
+                text: '1';
+                ptext: '30天';
+                numNew: 30;
+                potColor: '#999999';
+                middleText: '酿造';
+                search: '1';
+                num: '0';
+            },
+            {
+                color: '#CDA786FF';
+                startColor: '#D6D2C4FF';
+                endColor: '#CDA786FF';
+                text: '2';
+                ptext: '60天';
+                numNew: 60;
+                potColor: '#D6D2C4';
+                middleText: '酿造';
+                search: '2';
+                num: '0';
+            },
+            {
+                color: '#B58150FF';
+                startColor: '#CDA786FF';
+                endColor: '#B58150FF';
+                text: '3';
+                ptext: '90天';
+                numNew: 90;
+                potColor: '#CDA786';
+                middleText: '酿造';
+                search: '3';
+                num: '0';
+            },
+            {
+                color: '#C67C5AFF';
+                startColor: '#B58150FF';
+                endColor: '#C67C5AFF';
+                text: '4';
+                ptext: '130天';
+                numNew: 120;
+                potColor: '#B58150';
+                middleText: '酿造';
+                search: '4';
+                num: '0';
+            },
+            {
+                color: '#AD592DFF';
+                startColor: '#C67C5AFF';
+                endColor: '#AD592DFF';
+                text: '5';
+                ptext: '150天';
+                numNew: 150;
+                potColor: '#C67C5A';
+                middleText: '酿造';
+                search: '5';
+                num: '0';
+            },
+            {
+                color: '#8A391BFF';
+                startColor: '#8A391BFF';
+                endColor: '#8A391BFF';
+                text: '6';
+                ptext: '180天';
+                numNew: 180;
+                potColor: '#AD592D';
+                middleText: '酿造';
+                search: '6';
+                num: '0';
+            },
+            {
+                color: '#C70909FF';
+                startColor: '#8A391BFF';
+                endColor: '#C70909FF';
+                text: '超';
+                ptext: '180天以上';
+                numNew: 9999999999999;
+                potColor: '#8A391B';
+                middleText: '超期';
+                search: '7';
+                num: '0';
+            },
+            {
+                color: '#8BC34AFF';
+                startColor: '#C70909FF';
+                endColor: '#8BC34AFF';
+                text: '压';
+                ptext: ' ';
+                numNew: 0;
+                potColor: '#C70909';
+                middleText: '压榨';
+                holderStatus: '4';
+                num: '0';
+            },
+            {
+                color: '';
+                startColor: '#999999FF';
+                endColor: '#999999FF';
+                text: '';
+                ptext: '';
+                numNew: 0;
+                potColor: '#FFF';
+                middleText: '空罐';
+                holderStatus: '0';
+                num: '0';
+            }
+        ]
+
         getData() {
+            //
+        }
+
+        getMore() {
             //
         }
 
@@ -245,10 +429,14 @@
             console.log(data)
             this.targetQueryTableList = []
             if (data.data !== null) {
-                this.targetQueryTableList = data.data
+                this.targetQueryTableList = data.data.data.records
+                this.currPage = data.data.data.current
+                this.pageSize = data.data.data.size
+                this.totalCount = data.data.data.total
             } else {
                 this.$infoToast('暂无任何内容');
             }
+
         }
 
         // [btn][鼓罐]
@@ -287,20 +475,42 @@
             this.currPage = val;
             this.getData();
         }
+
+
     }
 
 interface DeptObject {
     id?: string;
 }
 interface BucketDataListObj{
-    cycle?: string;
-    id?: string;
-    potAmount?: string;
-    potId?: string;
-    potNo?: string;
-    potStatus?: string;
-    prodcutMaterial?: string;
-    prodcutMaterialName?: string;
+    brineFlag: string;
+    brineFlagName: string;
+    changed: string;
+    changer: string;
+    currentStock: number;
+    cycle: string;
+    fermentDays: number;
+    fermentorStatus: string;
+    fermentorStatusName: string;
+    freezeFlag: string;
+    fullDate: string;
+    holderId: string;
+    holderName: string;
+    holderNo: string;
+    holderType: string;
+    holderTypeName: string;
+    holderVolume: number;
+    id: string;
+    intoDate: string;
+    judgeResult: string;
+    judgeResultName: string;
+    materialCode: string;
+    materialName: string;
+    matureFlag: string;
+    openFlag: string;
+    orderNo: string;
+    remark: string;
+    workShop: string;
 }
 
 interface HolderStatus{
@@ -490,6 +700,15 @@ interface CurrentDataTable{
     background: #f5f5f5;
     border-radius: 4px;
 }
+
+.moreItems {
+    .el-button {
+        font-size: 12px;
+        &::after {
+            content: ">>";
+        }
+    }
+}
 .card-bucket {
     margin-bottom: 10px;
     background: #fff;
@@ -516,7 +735,7 @@ interface CurrentDataTable{
     }
     .card-bucket__content {
         display: flex;
-        padding: 6px;
+        padding: 20px 6px;
         .bucket-image {
             display: flex;
             flex: 2;
@@ -595,7 +814,7 @@ interface CurrentDataTable{
                 -webkit-box-sizing: border-box;
                 box-sizing: border-box;
                 margin: 0;
-                margin-bottom: 14px;
+                margin-bottom: 5px;
                 padding: 8px 16px;
                 font-weight: 500;
                 font-size: 14px;
@@ -604,7 +823,7 @@ interface CurrentDataTable{
         }
     }
     .card-bucket__fotter {
-        height: 20px;
+        height: 40px;
         padding: 0 10px;
         font-weight: 600;
         font-size: 12px;
@@ -631,4 +850,85 @@ interface CurrentDataTable{
     border-color: #ebeef5;
 }
 
+
+.topBox {
+    width: 1260px;
+    margin: auto;
+    padding: 10px 0;
+    &_boxItem {
+        position: relative;
+        // width: 102px;
+        float: left;
+        cursor: pointer;
+        &_bar {
+            float: left;
+            width: 30px;
+            height: 2px;
+            margin: 15px 0 0;
+            background: #f2f2f2;
+            &_box {
+                height: 2px;
+            }
+        }
+        &_tit {
+            height: 32px;
+            color: black;
+            font-size: 14px;
+            line-height: 32px;
+            // margin-top: 10px;
+            text-align: center;
+        }
+        &_detail {
+            color: #666;
+            font-size: 14px;
+            text-align: center;
+            span {
+                color: black;
+                font-size: 16px;
+            }
+        }
+        &_popover {
+            position: absolute;
+            top: -60px;
+            z-index: 999999;
+            display: none;
+            min-width: 150px;
+            min-height: 52px;
+            padding: 10px 16px;
+            font-size: 13px;
+            line-height: 18px;
+            background: white;
+            border-radius: 4px;
+            box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.3);
+            .dot {
+                float: left;
+                width: 6px;
+                height: 6px;
+                margin: 4px 5px 0 0;
+                border-radius: 50%;
+            }
+            &_ar {
+                position: absolute;
+                bottom: -12px;
+                width: 0;
+                height: 0;
+                border-color: #fff transparent transparent;
+                border-style: solid;
+                border-width: 6px;
+            }
+        }
+    }
+    &_circle {
+        float: left;
+        width: 32px;
+        height: 32px;
+        margin: 0 2px;
+        color: white;
+        line-height: 32px;
+        text-align: center;
+        background: #999;
+        border-radius: 50%;
+        transition: all 0.5s;
+    }
+}
 </style>
