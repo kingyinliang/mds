@@ -486,7 +486,7 @@
                 }).then(() => {
                     const list = this.$refs.queryTable.tabs[0].multipleSelection
                     for (const item of list) {
-                        if (!item.execStartDate || !item.setupFinDate || !item.operation || !item.finConf) {
+                        if (!item.execStartDate || !item.setupFinDate || !item.operation || !(item.finConf === '' || item.finConf === 'X')) {
                             this.$warningToast('请填写数据必填项')
                             return false;
                         }
