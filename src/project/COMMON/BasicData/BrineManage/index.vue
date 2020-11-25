@@ -25,18 +25,26 @@
                 <el-table-column type="index" :index="index => index + 1 + (Number(queryForm.current) - 1) * (Number(queryForm.size))" label="序号" width="50px" fixed />
                 <el-table-column label="虚拟物料" min-width="180" :show-overflow-tooltip="true">
                     <template slot-scope="scope">
-                        {{ scope.row.productMaterial }} {{ scope.row.productMaterialName }}
+                        {{ scope.row.ferBrineManage.virtualMaterialName }} {{ scope.row.ferBrineManage.virtualMaterialCode }}
                     </template>
                 </el-table-column>
-                <el-table-column label="基本数量" prop="warmTimeLower" min-width="100" :show-overflow-tooltip="true" />
-                <el-table-column label="单位" prop="warmTimeFloor" min-width="50" :show-overflow-tooltip="true" />
+                <el-table-column label="基本数量" prop="baseAmount" min-width="100" :show-overflow-tooltip="true">
+                    <template slot-scope="scope">
+                        {{ scope.row.ferBrineManage.baseAmount }}
+                    </template>
+                </el-table-column>
+                <el-table-column label="单位" prop="unitName" min-width="50" :show-overflow-tooltip="true">
+                    <template slot-scope="scope">
+                        {{ scope.row.ferBrineManage.unitName }}
+                    </template>
+                </el-table-column>
                 <el-table-column label="组件物料" min-width="180" :show-overflow-tooltip="true">
                     <template slot-scope="scope">
-                        {{ scope.row.productMaterial }} {{ scope.row.productMaterialName }}
+                        {{ scope.row.useMaterialName }} {{ scope.row.useMaterialCode }}
                     </template>
                 </el-table-column>
-                <el-table-column label="组件物料数量" prop="warmTempLower" min-width="120" :show-overflow-tooltip="true" />
-                <el-table-column label="单位" prop="warmTempFloor" min-width="50" :show-overflow-tooltip="true" />
+                <el-table-column label="组件物料数量" prop="useAmount" min-width="120" :show-overflow-tooltip="true" />
+                <el-table-column label="单位" prop="unitName" min-width="50" :show-overflow-tooltip="true" />
                 <el-table-column label="备注" prop="remark" :show-overflow-tooltip="true" />
                 <el-table-column label="操作人" prop="changer" :show-overflow-tooltip="true" />
                 <el-table-column label="操作时间" prop="changed" :show-overflow-tooltip="true" />
@@ -169,13 +177,13 @@
                     virtualMaterial: this.queryForm.virtualMaterial1,
                     current: this.queryForm.current,
                     size: this.queryForm.size,
-                    total: this.queryForm.current
+                    total: this.queryForm.total
                 }
             } else if (this.queryType === 2) {
                 params = {
                     current: this.queryForm.current,
                     size: this.queryForm.size,
-                    total: this.queryForm.current,
+                    total: this.queryForm.total,
                     virtualMaterial: this.queryForm.virtualMaterial,
                     warmTimeLower: this.queryForm.useMaterial
                 }
