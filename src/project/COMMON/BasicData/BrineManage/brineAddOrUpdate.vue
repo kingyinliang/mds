@@ -2,7 +2,7 @@
     <el-dialog :close-on-click-modal="false" :visible.sync="visible" :title="dataForm.id? '修改' : '新增'" width="880px">
         <el-form ref="dataForm" :model="dataForm" :rules="dataRule" :inline="true" label-width="90px" size="small">
             <el-form-item label="虚拟物料：" prop="virtualMaterialCode">
-                <el-select v-model="dataForm.virtualMaterialCode" placeholder="请选择" filterable style="width: 180px;" clearable>
+                <el-select v-model="dataForm.virtualMaterialCode" placeholder="请选择" filterable style="width: 180px;" clearable @change="setVirtual">
                     <el-option v-for="(sole, index) in virtualList" :key="index" :value="sole.materialCode" :label="`${sole.materialName} ${sole.materialCode}`" />
                 </el-select>
             </el-form-item>
@@ -18,9 +18,12 @@
         <el-button type="primary" size="small" style="float: right;" @click="addTable">
             新增
         </el-button>
-        <el-table header-row-class-name="tableHead" class="newTable" :data="tableData" border tooltip-effect="dark">
+        <el-table header-row-class-name="tableHead" class="newTable" :data="dataForm.ferBrineItemList" border tooltip-effect="dark">
             <el-table-column type="index" />
             <el-table-column label="组件物料" :show-overflow-tooltip="true">
+                <template slot="header">
+                    <span class="notNull">*</span>组件物料
+                </template>
                 <template slot-scope="scope">
                     <el-select v-model="scope.row.useMaterialCode" size="small" placeholder="请选择" filterable clearable @change="setUse(scope.row)">
                         <el-option v-for="(sole, index) in moduleList" :key="index" :value="sole.materialCode" :label="`${sole.materialName} ${sole.materialCode}`" />
@@ -28,13 +31,21 @@
                 </template>
             </el-table-column>
             <el-table-column label="组件物料数量" :show-overflow-tooltip="true">
+                <template slot="header">
+                    <span class="notNull">*</span>组件物料数量
+                </template>
                 <template slot-scope="scope">
                     <el-input v-model.trim="scope.row.useAmount" size="small" clearable />
                 </template>
             </el-table-column>
             <el-table-column label="单位" :show-overflow-tooltip="true">
+                <template slot="header">
+                    <span class="notNull">*</span>单位
+                </template>
                 <template slot-scope="scope">
-                    <el-input v-model.trim="scope.row.unit" size="small" clearable />
+                    <el-select v-model="scope.row.unit" placeholder="请选择" size="small" clearable filterable>
+                        <el-option v-for="(iteam, index) in unit" :key="index" :label="iteam.dictValue" :value="iteam.dictCode" />
+                    </el-select>
                 </template>
             </el-table-column>
             <el-table-column label="备注" :show-overflow-tooltip="true">
@@ -68,9 +79,12 @@
         dataForm = {
             id: '',
             virtualMaterialCode: '',
+            virtualMaterialName: '',
             baseAmount: '',
             unit: '',
-            tableData: [{
+            ferBrineItemList: [{
+                id: '',
+                ferBrineManageId: '',
                 useMaterialCode: '',
                 useMaterialName: '',
                 useMaterialType: '',
@@ -104,14 +118,31 @@
 
         init(data) {
             if (data) {
-                this.dataForm = JSON.parse(JSON.stringify(data));
+                this.dataForm = {
+                    id: data.ferBrineManage.id,
+                    virtualMaterialCode: data.ferBrineManage.virtualMaterialCode,
+                    virtualMaterialName: data.ferBrineManage.virtualMaterialName,
+                    baseAmount: data.ferBrineManage.baseAmount,
+                    unit: data.ferBrineManage.unit,
+                    ferBrineItemList: [{
+                        id: data.id,
+                        ferBrineManageId: data.ferBrineManageId,
+                        useMaterialCode: data.useMaterialCode,
+                        useMaterialName: data.useMaterialName,
+                        useMaterialType: data.useMaterialType,
+                        useAmount: data.useAmount,
+                        unit: data.unit,
+                        remark: data.remark
+                    }]
+                }
             } else {
                 this.dataForm = {
                     id: '',
                     virtualMaterialCode: '',
+                    virtualMaterialName: '',
                     baseAmount: '',
                     unit: '',
-                    tableData: []
+                    ferBrineItemList: []
                 }
             }
             this.visible = true;
@@ -123,13 +154,37 @@
             row.useMaterialType = filterArr1[0].materialTypeCode;
         }
 
+        setVirtual() {
+            const filterArr1: (any) = this.virtualList.filter(it => it.materialCode === this.dataForm.virtualMaterialCode);// eslint-disable-line
+            this.dataForm.virtualMaterialName = filterArr1[0].materialName;
+        }
+
         addTable() {
-            this.tableData.push({})
+            this.dataForm.ferBrineItemList.push({
+                id: '',
+                ferBrineManageId: '',
+                useMaterialCode: '',
+                useMaterialName: '',
+                useMaterialType: '',
+                useAmount: '',
+                unit: '',
+                remark: ''
+            })
         }
 
         dataFormSubmit() {
             this.$refs.dataForm.validate(valid => {
                 if (valid) {
+                    if (this.dataForm.ferBrineItemList.length === 0) {
+                        this.$warningToast('请填写组件物料');
+                        return false
+                    }
+                    for (let i = 0; i < this.dataForm.ferBrineItemList.length; i++) {
+                        if (!this.dataForm.ferBrineItemList[i].useMaterialCode || !this.dataForm.ferBrineItemList[i].useAmount || !this.dataForm.ferBrineItemList[i].unit) {
+                            this.$warningToast('请填写必填项');
+                            return false
+                        }
+                    }
                     BASIC_API.BRINE_SAVE_API(this.dataForm).then(({ data }) => {
                         this.visible = false;
                         this.$successToast(data.msg);

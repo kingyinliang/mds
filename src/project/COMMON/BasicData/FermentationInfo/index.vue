@@ -3,7 +3,7 @@
         <mds-card title="发酵信息" :pack-up="false">
             <template slot="titleBtn">
                 <div style="float: right; height: 32px; margin-bottom: 10px;">
-                    <el-select v-model="queryForm.productMaterial" size="small" placeholder="请选择" suffix-icon="el-icon-search" clearable filterable style="width: 160px; margin-right: 10px;">
+                    <el-select v-model="queryForm.productMaterial1" size="small" placeholder="请选择" suffix-icon="el-icon-search" clearable filterable style="width: 160px; margin-right: 10px;">
                         <el-option v-for="(sole, index) in material" :key="index" :value="sole.materialCode" :label="`${sole.materialName} ${sole.materialCode}`" />
                     </el-select>
                     <el-button v-if="isAuth('craftQuery')" type="primary" size="small" style="margin-right: 10px;" @click="() => { queryForm.current = 1; queryType = 1; GetData() }">
@@ -124,6 +124,7 @@
             current: 1,
             size: 10,
             total: 0,
+            productMaterial1: '',
             productMaterial: '',
             useMaterial: '',
             jobBookingFlag: '',
@@ -193,7 +194,7 @@
             let params;
             if (this.queryType === 1) {
                 params = {
-                    productMaterial: this.queryForm.productMaterial,
+                    productMaterial: this.queryForm.productMaterial1,
                     current: this.queryForm.current,
                     size: this.queryForm.size,
                     total: this.queryForm.current
