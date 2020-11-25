@@ -154,7 +154,7 @@
                 prop: 'material',
                 label: '入库物料',
                 minWidth: 200,
-                content: ['materialCode', 'materialName']
+                content: ['materialName', 'materialCode']
             },
             {
                 type: 'string',
@@ -359,7 +359,7 @@
                 return false
             }
             this.orderData = this.orderNoList.filter(item => item.orderNo === val)[0]
-            this.formHeader.material = this.orderData.materialCode + ' ' + this.orderData.materialName
+            this.formHeader.material = this.orderData.materialName + ' ' + this.orderData.materialCode
             // this.formHeader.status = this.orderData.orderStatusName
             this.formHeader.changer = this.orderData.changer
             this.formHeader.changed = this.orderData.changed
