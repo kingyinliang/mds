@@ -13,16 +13,16 @@
         >
             <template slot="home">
                 <mds-card title="发酵罐列表" :pack-up="false">
-                    <template slot="titleBtn">
+                    <!-- <template slot="titleBtn">
                         <el-button type="text" size="small" style="float: right; margin-top: 8px;">
                             发酵罐一览表>>
                         </el-button>
-                    </template>
+                    </template> -->
                     <template>
                         <div class="pots">
                             <div v-for="(item) in targetQueryTableList" :key="item.id" class="potbox">
                                 <div class="header">
-                                    <span>{{ item.holderNo + item.holderName + '-' + item.fermentorStatus }}</span>
+                                    <span>{{ item.holderName + '-' + item.fermentorStatusName }}</span>
                                     <el-button type="primary" size="mini" style="padding: 7px 6px;" @click="toDetailPage(item)">
                                         盐水发料
                                     </el-button>
@@ -43,7 +43,7 @@
                                 </div>
                                 <div class="foot">
                                     <p>
-                                        <span>{{ item.order.preMaterialCode + item.order.preMaterialName }}</span>
+                                        <span>{{ item.order.productMaterialName }}</span>
                                         <span>{{ item.fermentDays + '天' }}</span>
                                     </p>
                                     <p>
@@ -56,7 +56,7 @@
                     </template>
                 </mds-card>
                 <el-row>
-                    <el-pagination :current-page="1" :page-sizes="[10, 20, 50]" :page-size="10" layout="total, sizes, prev, pager, next, jumper" :total="10" @size-change="(val) => {'tabHandleSizeChange(tabItem.pages, val)'}" @current-change="(val) => {'tabHandleCurrentChange(tabItem.pages, val)'}" />
+                    <el-pagination :current-page.sync="currentPage" :page-sizes="[10, 20, 50]" :page-size="pageSize" layout="total, sizes, prev, pager, next, jumper" :total="total" @size-change="sizeChangeHandler" @current-change="currentPageChangeHanlder" />
                 </el-row>
             </template>
         </query-table>
@@ -82,6 +82,12 @@
         }
 
         targetQueryTableList: SaltWaterObj[] = []
+
+        currentPage = 1;
+
+        pageSize = 10;
+
+        total = 0;
 
         // queryTable 必要变数
         queryTableFormData = [
@@ -116,20 +122,16 @@
                 defaultValue: '',
                 defaultOptionsFn: () => {
                     return new Promise((resolve) => {
-                        COMMON_API.HOLDER_QUERY_API({ // /sysHolder/query
+                        COMMON_API.HOLDER_DROPDOWN_API({ // /sysHolder/query
                             factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
-                            current: 1,
-                            size: 9999,
-                            holderType: '001' // 发酵罐参数编码
+                            holderType: ['001'] // 发酵罐/池 参数编码
                         }).then((res) => {
-                            // eslint-disable-next-line no-invalid-this
-                            // this.setEnvVal(val)
                             resolve(res)
                         })
                     })
                 },
                 resVal: {
-                    resData: 'data.records',
+                    resData: 'data',
                     label: ['holderName'],
                     value: 'id'
                 }
@@ -161,14 +163,26 @@
         }
 
         // queryTable 查询请求
-        queryTableListInterface = params => {
+        queryTableListInterface(arg) {
+            const params = JSON.parse(JSON.stringify(arg));
             console.log('搜寻传值')
             console.log(params)
             params.factory = JSON.parse(sessionStorage.getItem('factory') || '{}').id;
-            params.current = params.currPage;
-            params.size = params.pageSize;
+            params.current = this.currentPage;
+            params.size = this.pageSize;
+            if (!params.startIntoDate) {
+                delete params.startIntoDate;
+            }
+            if (!params.endIntoDate) {
+                delete params.endIntoDate;
+            }
+            if (params.startIntoDate && !params.endIntoDate) {
+                const date = new Date(params.startIntoDate);
+                date.setDate(date.getDate() + 1);
+                params.endIntoDate = dateFormat(date, 'yyyy-MM-dd');
+            }
             return FER_API.FER_BRINE_POT_LIST_API(params);
-        };
+        }
 
         // queryTable 回传 result
         returnDataFromQueryTableForm(data) {
@@ -176,42 +190,56 @@
             console.log(data)
             this.targetQueryTableList = []
             if (data.data !== null) {
-                // this.targetQueryTableList = data.data.records as SaltWaterObj[];
-                this.targetQueryTableList = [
-                    {
-                        id: '1',
-                        brineFlag: 'saved', // 盐水发料状态
-                        brineFlagName: '发料中',
-                        intoDate: '2020-10-10',
-                        holderId: '22', // 容器id
-                        holderNo: '333', //容器号
-                        holderName: '容器名称', // 容器名称
-                        fermentorStatus: '空罐', // 发酵罐状态
-                        fermentDays: 10, // 发酵天数
-                        currentStock: 10, // 当前库存量
-                        holderVolume: 50, // 容器容量
-                        changed: '2020-10-10',
-                        changer: '张三',
-                        order: {
-                            id: '2',
-                            orderNo: '订单号', // 订单号
-                            preMaterialCode: 'A00', // 前置物料编码
-                            preMaterialName: '前置物料', // 前置物料描述
-                            preAmount: 28, // 前置订单数量
-                            productMaterialCode: '身缠编码', // 生产物料编码
-                            productMaterialName: '生产物料描述' // 生产物料描述
-                        } // 订单
-                    }
-                ]
+                this.targetQueryTableList = data.data.records as SaltWaterObj[];
+                this.total = data.data.total;
+                // this.targetQueryTableList = [
+                //     {
+                //         id: '1',
+                //         brineFlag: 'saved', // 盐水发料状态
+                //         brineFlagName: '发料中',
+                //         intoDate: '2020-10-10',
+                //         holderId: '22', // 容器id
+                //         holderNo: '333', //容器号
+                //         holderName: '容器名称', // 容器名称
+                //         fermentorStatus: '空罐', // 发酵罐状态
+                //         fermentDays: 10, // 发酵天数
+                //         currentStock: 30, // 当前库存量
+                //         holderVolume: 50, // 容器容量
+                //         changed: '2020-10-10',
+                //         changer: '张三',
+                //         order: {
+                //             id: '2',
+                //             orderNo: '订单号', // 订单号
+                //             preMaterialCode: 'A00', // 前置物料编码
+                //             preMaterialName: '前置物料', // 前置物料描述
+                //             preAmount: 28, // 前置订单数量
+                //             productMaterialCode: '身缠编码', // 生产物料编码
+                //             productMaterialName: '生产物料描述' // 生产物料描述
+                //         } // 订单
+                //     }
+                // ]
             } else {
                 this.$infoToast('暂无任何内容');
             }
         }
 
+        sizeChangeHandler(val) {
+            this.pageSize = val;
+            this.$refs.queryTable.getDataList();
+        }
+
+        currentPageChangeHanlder(val) {
+            this.currentPage = val;
+            this.$refs.queryTable.getDataList();
+        }
+
         toDetailPage(row) {
-            console.log(row);
+            // console.log(row, this.$refs.queryTable);
             // this.$store.commit('common/updateMainTabs', this.$store.state.common.mainTabs.filter(subItem => subItem.name !== 'DFMDS-pages-KojiMaking-Audit-AuditDetail'))
-            this.$store.commit('fer/updateBrineInfo', row);
+            this.$store.commit('fer/updateBrineInfo', {
+                ...row,
+                workShop: this.$refs.queryTable.queryForm.workShop
+            });
             // sessionStorage.setItem('brineInfo', JSON.stringify(row));
             setTimeout(() => {
                 this.$router.push({
@@ -232,6 +260,7 @@
         holderNo: string; //容器号
         holderName: string; // 容器名称
         fermentorStatus: string; // 发酵罐状态
+        fermentorStatusName: string; // 发酵罐状态
         fermentDays: number; // 发酵天数
         currentStock: number; // 当前库存量
         holderVolume: number; // 容器容量

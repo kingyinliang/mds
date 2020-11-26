@@ -77,10 +77,10 @@
         >
             <el-table :data="logList">
                 <el-table-column label="序号" type="index" />
-                <el-table-column label="审核动作" prop="aaaaa" />
-                <el-table-column label="审核意见" prop="aaaaa" />
-                <el-table-column label="审核人" prop="aaaaa" />
-                <el-table-column label="审核时间" prop="aaaaa" />
+                <el-table-column label="审核动作" prop="verifyType" />
+                <el-table-column label="审核意见" prop="memo" />
+                <el-table-column label="审核人" prop="verifyMan" />
+                <el-table-column label="审核时间" prop="verifyDate" />
             </el-table>
         </el-dialog>
     </div>
@@ -88,8 +88,9 @@
 
 <script lang="ts">
     import { Vue, Component } from 'vue-property-decorator';
-    import { COMMON_API } from 'common/api/api';
+    import { AUDIT_API, COMMON_API } from 'common/api/api';
     import RedactBox from 'components/RedactBox.vue'; // 下方状态 bar
+import FER_API from 'src/common/api/fer';
     @Component({
         name: 'WarehouseManagement',
         components: {
@@ -176,11 +177,9 @@
                 defaultValue: '',
                 defaultOptionsFn: () => {
                     return new Promise((resolve) => {
-                        COMMON_API.HOLDER_QUERY_API({ // /sysHolder/query
+                        COMMON_API.DICTIONARY_ITEM_DROPDOWN_POST_API({
                             factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
-                            current: 1,
-                            size: 9999,
-                            holderType: '019' // 溶解罐参数编码
+                            dictType: 'ORDER_TYPE' // 字典类型
                         }).then((res) => {
                             // eslint-disable-next-line no-invalid-this
                             // this.setEnvVal(val)
@@ -189,9 +188,9 @@
                     })
                 },
                 resVal: {
-                    resData: 'data.records',
-                    label: ['holderName'],
-                    value: 'id'
+                    resData: 'data',
+                    label: ['dictValue'],
+                    value: 'dictCode'
                 }
             },
             {
@@ -201,24 +200,20 @@
                 // labelWidth: 85,
                 rule: [{ required: false, message: ' ', trigger: 'change' }],
                 defaultValue: '',
+                filterable: true,
                 defaultOptionsFn: () => {
                     return new Promise((resolve) => {
-                        COMMON_API.HOLDER_QUERY_API({ // /sysHolder/query
-                            factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
-                            current: 1,
-                            size: 9999,
-                            holderType: '019' // 溶解罐参数编码
+                        COMMON_API.ALLMATERIAL_API({
+                            materialTypes: ['ZHAL'] // 物料类型列表 - 半成品
                         }).then((res) => {
-                            // eslint-disable-next-line no-invalid-this
-                            // this.setEnvVal(val)
                             resolve(res)
                         })
                     })
                 },
                 resVal: {
-                    resData: 'data.records',
-                    label: ['holderName'],
-                    value: 'id'
+                    resData: 'data',
+                    label: ['materialName', 'materialCode'],
+                    value: 'materialCode'
                 }
             },
             {
@@ -228,22 +223,19 @@
                 // labelWidth: 85,
                 rule: [{ required: false, message: ' ', trigger: 'change' }],
                 defaultValue: '',
+                filterable: true,
                 defaultOptionsFn: () => {
                     return new Promise((resolve) => {
-                        COMMON_API.HOLDER_QUERY_API({ // /sysHolder/query
+                        COMMON_API.HOLDER_DROPDOWN_API({ // /sysHolder/query
                             factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
-                            current: 1,
-                            size: 9999,
-                            holderType: '019' // 溶解罐参数编码
+                            holderType: ['001', '029', '028'] // 发酵罐/池、泡豆罐、调酱罐/池 参数编码
                         }).then((res) => {
-                            // eslint-disable-next-line no-invalid-this
-                            // this.setEnvVal(val)
                             resolve(res)
                         })
                     })
                 },
                 resVal: {
-                    resData: 'data.records',
+                    resData: 'data',
                     label: ['holderName'],
                     value: 'id'
                 }
@@ -257,22 +249,17 @@
                 defaultValue: '',
                 defaultOptionsFn: () => {
                     return new Promise((resolve) => {
-                        COMMON_API.HOLDER_QUERY_API({ // /sysHolder/query
-                            factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
-                            current: 1,
-                            size: 9999,
-                            holderType: '019' // 溶解罐参数编码
+                        COMMON_API.DICTIONARY_ITEM_DROPDOWN_API({
+                            dictType: 'COMMON_CHECK_STATUS'
                         }).then((res) => {
-                            // eslint-disable-next-line no-invalid-this
-                            // this.setEnvVal(val)
                             resolve(res)
                         })
                     })
                 },
                 resVal: {
-                    resData: 'data.records',
-                    label: ['holderName'],
-                    value: 'id'
+                    resData: 'data',
+                    label: ['dictValue'],
+                    value: 'dictCode'
                 }
             },
             {
@@ -289,19 +276,10 @@
         // queryTable 查询请求
         queryTableListInterface = params => {
             params.factory = JSON.parse(sessionStorage.getItem('factory') || '{}').id;
-            let orderStatus: string[] = [];
-            if (this.$refs.queryTable.activeName === '0') { // eslint-disable-line
-                orderStatus = ['D'];
-            } else if (this.$refs.queryTable.activeName === '1') {  // eslint-disable-line
-                orderStatus = ['C', 'P'];
-            } else {
-                orderStatus = ['R'];
-            }
-            params.orderStatus = orderStatus; // eslint-disable-line
             params.current = this.currentPage;// eslint-disable-line
             params.size = this.pageSize;// eslint-disable-line
             params.total = this.total;// eslint-disable-line
-            return COMMON_API.ORDER_QUERY_API(params);
+            return FER_API.FER_INSTORAGE_QUERY_API(params);
         }
 
         // queryTable 回传 result
@@ -311,6 +289,7 @@
             this.targetQueryTableList = []
             if (data.data !== null) {
                 this.targetQueryTableList = data.data.records as SaltWaterObj[];
+                this.total = data.data.total;
             } else {
                 this.$infoToast('暂无任何内容');
             }
@@ -336,8 +315,19 @@
         }
 
         showLogHandler(row) {
-            console.log(row);
-            this.dialogVisible = true;
+            /**
+             * 工时 TIMESHEET
+             * 入库 INSTORAGE
+             * 发料 MATERIAL
+             */
+            AUDIT_API.STE_AUDIT_LOG_API({
+                orderNo: row.orderNo
+                // splitOrderNo: row.splitOrderNo, // 拆分单号<有拆分单时必填>
+                // verifyType: ['MATERIAL'] // '审核类型'
+            }).then(res => {
+                this.dialogVisible = true;
+                this.logList = res.data;
+            })
         }
 
         returnHandler(row) {

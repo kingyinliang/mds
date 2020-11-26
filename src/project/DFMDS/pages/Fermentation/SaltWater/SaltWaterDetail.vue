@@ -8,16 +8,19 @@
             :order-status="formHeader.orderStatus"
             status-title="状态"
             :redact-box-show="true"
+            :saved-rules="savedRules"
             :saved-datas="savedDatas"
+            :submit-rules="savedRules"
             :submit-datas="submitDatas"
+            @success="successHandler"
         >
             <template v-slot:contentBox="{isRedact}">
                 <mds-card title="盐水发料" name="saltwater">
-                    <template>
-                        <el-form ref="selectFormRef" :model="selectForm" :inline="true" :rules="selectFormRules" size="small" label-suffix="：" label-width="90px" class="multi_row clearfix" style="font-size: 0;">
-                            <el-form-item label="盐水物料" prop="aaaaaaaa">
-                                <el-select v-model="selectForm.aaaaaaaa" :disabled="!isRedact" style="width: 160px;" :clearable="true" :placeholder="'请选择盐水物料'">
-                                    <el-option v-for="(opt, optIndex) in materialOptionsList" :key="optIndex" :label="opt.label" :value="opt.value" />
+                    <template slot="titleBtn">
+                        <el-form ref="selectFormRef" :model="selectForm" :inline="true" :rules="selectFormRules" size="small" label-suffix="：" label-width="90px" class="multi_row clearfix" style="float: right; font-size: 0;">
+                            <el-form-item label="盐水物料" prop="brineMaterialCode">
+                                <el-select v-model="selectForm.brineMaterialCode" :disabled="!isRedact" style="width: 160px;" :clearable="false" :placeholder="'请选择盐水物料'">
+                                    <el-option v-for="(opt, optIndex) in materialOptionsList" :key="optIndex" :label="opt.virtualMaterialCode + ' ' + opt.virtualMaterialName" :value="opt.virtualMaterialCode" />
                                 </el-select>
                             </el-form-item>
                             <el-form-item class="floatr">
@@ -26,6 +29,8 @@
                                 </el-button>
                             </el-form-item>
                         </el-form>
+                    </template>
+                    <template>
                         <el-table :key="Math.random()" class="newTable markStyle" :data="saltWaterList" :row-class-name="rowDelFlag" header-row-class-name="tableHead" border style="width: 100%; min-height: 90px;">
                             <el-table-column width="150" label="领用物料" :show-overflow-tooltip="true" class="star">
                                 <template slot="header">
@@ -85,7 +90,7 @@
                             <el-table-column prop="changed" width="180" label="操作时间" :show-overflow-tooltip="true" />
                             <el-table-column fixed="right" label="操作" width="80" :show-overflow-tooltip="true">
                                 <template slot-scope="scope">
-                                    <el-button class="delBtn" type="text" icon="el-icon-delete" size="mini" :disabled="!isRedact" @click="removeDataRow(scope.$index, 'saltWaterList')">
+                                    <el-button class="delBtn" type="text" icon="el-icon-delete" size="mini" :disabled="!isRedact" @click="removeDataRow(scope.row, scope.$index, 'saltWaterList', 'ferBrineIssueBrineRemoveIdList')">
                                         删除
                                     </el-button>
                                 </template>
@@ -94,23 +99,16 @@
                     </template>
                 </mds-card>
                 <mds-card title="其他发料" name="otherwater">
-                    <template slot="titleBtn">
+                    <!-- <template slot="titleBtn">
                         <el-button type="primary" size="small" style="float: right;" :disabled="!isRedact" @click="addMaterial()">
                             新增
                         </el-button>
-                    </template>
+                    </template> -->
                     <template>
-                        <el-table :key="Math.random()" class="newTable markStyle" :data="otherMaterialList" :row-class-name="rowDelFlag" header-row-class-name="tableHead" border style="width: 100%; min-height: 90px;">
+                        <el-table :key="Math.random()" class="newTable markStyle" :data="otherMaterialListComp" :row-class-name="rowDelFlag" :row-style="rowStyleHandler" header-row-class-name="tableHead" border style="width: 100%; min-height: 90px;">
                             <el-table-column width="150" label="领用物料" :show-overflow-tooltip="true" class="star">
                                 <template slot-scope="scope">
                                     {{ scope.row.useMaterialName + ' ' + scope.row.useMaterialCode }}
-                                </template>
-                            </el-table-column>
-                            <el-table-column width="60" label=" " :show-overflow-tooltip="true" class="star">
-                                <template slot-scope="scope">
-                                    <el-button type="text" size="samll" :disabled="!isRedact" @click="splitHandler(scope.row)">
-                                        拆分
-                                    </el-button>
                                 </template>
                             </el-table-column>
                             <el-table-column :show-overflow-tooltip="true" label="需求数量" width="130">
@@ -138,7 +136,7 @@
                                     <span>单位</span>
                                 </template>
                                 <template slot-scope="scope">
-                                    <el-input v-model="scope.row.unitName" size="small" placeholder="" :disabled="true" />
+                                    <el-input v-model="scope.row.unitName" size="small" placeholder="" :disabled="!isRedact" />
                                 </template>
                             </el-table-column>
                             <el-table-column :show-overflow-tooltip="true" min-width="200">
@@ -159,9 +157,12 @@
                             </el-table-column>
                             <el-table-column prop="changer" width="140" label="操作人" :show-overflow-tooltip="true" />
                             <el-table-column prop="changed" width="180" label="操作时间" :show-overflow-tooltip="true" />
-                            <el-table-column fixed="right" label="操作" width="80" :show-overflow-tooltip="true">
+                            <el-table-column fixed="right" label="操作" width="120" :show-overflow-tooltip="true">
                                 <template slot-scope="scope">
-                                    <el-button class="delBtn" type="text" icon="el-icon-delete" size="mini" :disabled="!isRedact" @click="removeDataRow(scope.$index, 'pots')">
+                                    <el-button type="text" size="samll" :disabled="!isRedact" @click="splitHandler(scope.row, scope.$index)">
+                                        拆分
+                                    </el-button>
+                                    <el-button class="delBtn" type="text" icon="el-icon-delete" size="mini" :disabled="!isRedact" @click="removeDataRow(scope.row, scope.$index, 'otherMaterialList', 'ferBrineIssueBomRemoveIdList')">
                                         删除
                                     </el-button>
                                 </template>
@@ -176,7 +177,7 @@
 
 <script lang="ts">
 import { Vue, Component } from 'vue-property-decorator';
-// import { dateFormat, getUserNameNumber } from 'utils/utils';
+import { dateFormat, getUserNameNumber } from 'utils/utils';
 // import ImportBucket from './ImportBucket.vue';
 import { FER_API } from 'common/api/api';
 // import { dateFormat } from 'utils/utils';
@@ -199,7 +200,7 @@ export default class SaltWaterDetail extends Vue {
             type: 'tooltip',
             icon: 'factory-riqi1',
             label: '发酵罐/池',
-            value: ['holderNo', 'holderName']
+            value: ['holderName']
         },
         {
             type: 'p',
@@ -220,7 +221,7 @@ export default class SaltWaterDetail extends Vue {
             value: 'kojiAmount'
         },
         {
-            type: 'p',
+            type: 'tooltip',
             icon: 'factory-riqi1',
             label: '出曲日期',
             value: 'kojiOutDate'
@@ -252,83 +253,99 @@ export default class SaltWaterDetail extends Vue {
         }
     ];
 
-    // formHeader = {
-    //     factoryName: JSON.parse(sessionStorage.getItem('factory') || '{}').deptName
-    // };
-
-    formDeatil = {
-        aaaaaaaa: '2020-07-25 22:22'
-    };
-
     selectForm = {
-        aaaaaaaa: '111'
+        brineMaterialCode: ''
     };
 
-    materialOptionsList = [
-        { label: '酱淡盐水', value: '111' },
-        { label: '黄豆酱淡盐水', value: '222' }
-    ];
+    materialOptionsList = [];
 
     selectFormRules = {
-        aaaaaaaa: [{ required: true, message: '请选择盐水物料', trigger: 'blur' }]
+        brineMaterialCode: [{ required: true, message: '请选择盐水物料', trigger: 'blur' }]
     };
 
     saltWaterList: SaltWaterObj[] = [];
 
     otherMaterialList: OtherMaterial[] = [];
 
-    // isRedact = false; // 可否编辑
-    redactBoxDisable = false; // control bar 可否禁用
-    checkStatus = 'R'; // 发料状态
+    ferBrineIssueBomRemoveIdList: string[] = [];
+
+    ferBrineIssueBrineRemoveIdList: string[] = [];
 
     saltWaterPots = [];
+
     pots = [];
 
-    // get statusColor() {
-    //     let res = '';
-    //     switch (this.checkStatus) {
-    //         case 'R':
-    //             res = 'red';
-    //             break;
-    //         case 'S':
-    //             res = '#1890ff';
-    //             break;
-    //         case 'M':
-    //             res = '#1890ff';
-    //             break;
-    //         case '已同步':
-    //             res = '#f5f7fa';
-    //             break;
-    //         default:
-    //             res = 'rgb(103, 194, 58)';
-    //             break;
-    //     }
-    //     return res;
-    // }
-
-    get formHeader() {
-        const info = { ...this.$store.state.fer.brineInfo };
-        const order = { ...info.order };
-        delete order.id;
-        return {
-            ...info,
-            ...order,
-            kojiAmount: order.preAmount,
-            kojiOutDate: info.intoDate,
-            orderStatus: info.brineFlag,
-            orderStatusName: info.brineFlagName,
-            factoryName: JSON.parse(sessionStorage.getItem('factory') || '{}').deptName
-        }
-    }
+    formHeader: FormHeaderObj = {};
 
     mounted() {
+        this.initHandler();
+    }
+
+    successHandler() {
+        const info = this.$store.state.fer.brineInfo;
+        this.$store.commit('fer/updateBrineInfo', {
+            ...info,
+            ferBrineIssue: {
+                ...info.ferBrineIssue,
+                kojiTempature: this.formHeader.kojiTempature
+            }
+        });
+        this.initHandler();
+    }
+
+    initHandler() {
+        this.getDetail();
+        FER_API.FER_BRINE_VIRTUAL_MATERIAL_API({ }).then(res => {
+            this.materialOptionsList = res.data.data;
+        })
+        this.getBrineList();
         this.getOrtherMaterialList();
-        this.getPotListByType(['011'], true, 'saltWaterPots');
-        this.getPotListByType(['001'], false, 'pots');
+        this.getPotListByType(['011'], true, 'saltWaterPots'); // 盐水罐
+        this.getPotListByType(['001', '027'], false, 'pots'); // 027 储存罐、001发酵罐
+    }
+
+    getDetail() {
+        const brineInfo = this.$store.state.fer.brineInfo;
+        FER_API.FER_BRINE_QUERY_DETAIL_API({ fermentorId: brineInfo.id }).then(res => {
+            const info = res.data.data;
+            const order = { ...info.order };
+            this.formHeader = {
+                holderNo: info.holderNo,
+                holderName: info.holderName,
+                kojiTempature: info.ferBrineIssue.kojiTempature,
+                changed: info.changed,
+                changer: info.changer,
+                productMaterialCode: order.productMaterialCode,
+                productMaterialName: order.productMaterialName,
+                kojiOutDate: info.intoDate,
+                kojiAmount: order.preAmount,
+                preMaterialCode: order.preMaterialCode,
+                preMaterialName: order.preMaterialName,
+                orderNo: order.orderNo,
+                orderStatus: info.ferBrineIssue.checkStatusName,
+                orderStatusName: info.brineFlagName,
+                factoryName: JSON.parse(sessionStorage.getItem('factory') || '{}').deptName
+            }
+            this.selectForm = {
+                brineMaterialCode: info.ferBrineIssue?.brineMaterialCode
+            }
+        })
+    }
+
+    get otherMaterialListComp() {
+        return this.otherMaterialList.filter(item => item.operatFlag !== -2);
+    }
+
+    getBrineList() {
+        const info = this.$store.state.fer.brineInfo;
+        FER_API.FER_BRINE_MATERIAL_API({ fermentorId: info.id, cycle: info.cycle }).then(({ data }) => {
+            this.saltWaterList = data.data;
+        })
     }
 
     getOrtherMaterialList() {
-        FER_API.FER_BRINE_OTHER_BOM_API({ ferBrineIssueId: this.formHeader.id }).then(({ data }) => {
+        const info = this.$store.state.fer.brineInfo;
+        FER_API.FER_BRINE_OTHER_BOM_API({ fermentorId: info.id, cycle: info.cycle, orderNo: info.order.orderNo }).then(({ data }) => {
             // console.log(data, '=-=-=-=-=-=-=')
             this.otherMaterialList = data.data;
         })
@@ -347,7 +364,7 @@ export default class SaltWaterDetail extends Vue {
     ruleSaltWaterMaterialSubmit() {
         for (const item of this.saltWaterList) {
             if (!item.brinePotId || !item.useAmount || !item.concentration) {
-                this.$warningToast('请填写其他物料必填栏位');
+                this.$warningToast('请填写盐水发料必填栏位');
                 return false;
             }
         }
@@ -357,7 +374,7 @@ export default class SaltWaterDetail extends Vue {
     ruleOtherMaterialSubmit() {
         for (const item of this.otherMaterialList) {
             if (!item.receiveBatch || !item.useAmount) {
-                this.$warningToast('请填写其他物料必填栏位');
+                this.$warningToast('请填写其他发料必填栏位');
                 return false;
             }
         }
@@ -370,50 +387,64 @@ export default class SaltWaterDetail extends Vue {
     }
 
     savedDatas() {
-        return new Promise((resolve) => {
-            resolve(null);
+        const info = this.$store.state.fer.brineInfo;
+        const obj = this.formHeader;
+        return FER_API.FER_BRINE_SAVE_API({
+            ferBrineIssueBomList: this.otherMaterialList,
+            ferBrineIssueBomRemoveIdList: this.ferBrineIssueBomRemoveIdList,
+            ferBrineIssueBrineList: this.saltWaterList,
+            ferBrineIssueBrineRemoveIdList: this.ferBrineIssueBrineRemoveIdList,
+            brineMaterialCode: this.selectForm.brineMaterialCode,
+            ferMaterialName: obj.productMaterialName,
+            cycle: info.cycle,
+            ferMaterialCode: obj.productMaterialCode,
+            // ferMaterialType: info., // 发酵物料类型
+            fermentorId: info.holderId,
+            id: info.id,
+            kojiAmount: obj.kojiAmount,
+            kojiMaterialCode: obj.preMaterialCode,
+            kojiMaterialName: obj.preMaterialName,
+            kojiOutDate: obj.kojiOutDate,
+            kojiTempature: obj.kojiTempature,
+            remark: info.remark,
+            workShop: info.workShop
         });
     }
 
     submitDatas() {
-        return new Promise((resolve) => {
-            resolve(null);
+        const info = this.$store.state.fer.brineInfo;
+        const obj = this.formHeader;
+        return FER_API.FER_BRINE_SUBMIT_API({
+            ferBrineIssueBomList: this.otherMaterialList,
+            ferBrineIssueBomRemoveIdList: this.ferBrineIssueBomRemoveIdList,
+            ferBrineIssueBrineList: this.saltWaterList,
+            ferBrineIssueBrineRemoveIdList: this.ferBrineIssueBrineRemoveIdList,
+            brineMaterialCode: this.selectForm.brineMaterialCode,
+            ferMaterialName: obj.productMaterialName,
+            cycle: info.cycle,
+            ferMaterialCode: obj.productMaterialCode,
+            // ferMaterialType: info., // 发酵物料类型
+            fermentorId: info.holderId,
+            id: info.id,
+            kojiAmount: obj.kojiAmount,
+            kojiMaterialCode: obj.preMaterialCode,
+            kojiMaterialName: obj.preMaterialName,
+            kojiOutDate: obj.kojiOutDate,
+            kojiTempature: obj.kojiTempature,
+            remark: info.remark,
+            workShop: info.workShop
         });
     }
 
     addMaterial(ref) {
-        if (!ref) {
-            this.otherMaterialList.push({
-                changed: '', // 最后操作时间''
-                changer: '', // 最后操作人
-                ferBrineIssue: '', // 盐水发料
-                ferBrineIssueId: '', // 盐水发料主键
-                // id: '', // 主键
-                needAmount: 0, // 需求数量
-                posnr: '', // bom行项目号
-                receiveBatch: '', // 领用批次
-                remark: '', // 备注
-                splitFlag: '', // 拆分标记('Y','N')
-                unit: '', // 单位
-                unitName: '', // 单位
-                useAmount: 0, // 领用数量
-                useMaterialCode: '', // 领用物料编码
-                useMaterialName: '', // 领用物料描述
-                useMaterialType: '', // 领用物料类型
-                usePotId: '', // 领用罐ID
-                usePotName: '', // 领用罐名称
-                usePotNo: '' // 领用罐号
-            })
-            return
-        }
         this.$refs[ref].validate(valid => {
             if (valid) {
                 this.saltWaterList.push({
                     brinePotId: '',	// 盐水罐ID
                     brinePotName: '', // 盐水罐名称
                     brinePotN: '', // 盐水罐号
-                    changed: '', // 最后操作时间
-                    changer: '', // 最后操作人
+                    changed: dateFormat(new Date(), 'yyyy-MM-dd hh:mm:ss'), // 最后操作时间
+                    changer: getUserNameNumber(), // 最后操作人
                     concentration: 0, // 盐水浓度
                     endDate: '', // 结束时间
                     ferBrineIssue: null, // 盐水发料
@@ -441,12 +472,32 @@ export default class SaltWaterDetail extends Vue {
         return '';
     }
 
-    removeDataRow(index, fileName) {
+    rowStyleHandler({ row }) {
+        let color = 'none';
+        switch (row.operatFlag) {
+            case 1:
+                color = 'rgba(251, 255, 0, .2)';
+                break;
+            case -1:
+                color = 'rgba(253, 0, 42, .2)';
+                break;
+            default:
+                break;
+        }
+        return {
+            backgroundColor: color
+        }
+    }
+
+    removeDataRow(row, index, fileName, removeFileName) {
         this.$confirm('是否删除?', '提示', {
             confirmButtonText: '确定',
             cancelButtonText: '取消',
             type: 'warning'
         }).then(() => {
+            if (row.id) {
+                this[removeFileName].push(row.id);
+            }
             this[fileName].splice(index, 1);
             // this.$set(row, 'delFlag', 1)
             // this.$successToast('删除成功');
@@ -454,9 +505,34 @@ export default class SaltWaterDetail extends Vue {
     }
 
     // 拆分
-    splitHandler(row) {
-        console.log(row);
+    splitHandler(row, index) {
+        // console.log(row);
+        const obj = {
+            ...row,
+            useAmount: 0,
+            receiveBatch: '',
+            splitFlag: 'Y'
+        } as OtherMaterial;
+        delete obj.id;
+        this.otherMaterialList.splice(index + 1, 0, obj);
     }
+}
+interface FormHeaderObj {
+    holderNo?: string;
+    holderName?: string;
+    kojiTempature?: string;
+    changed?: string;
+    changer?: string;
+    productMaterialCode?: string;
+    productMaterialName?: string;
+    kojiOutDate?: string;
+    kojiAmount?: string;
+    preMaterialCode?: string;
+    preMaterialName?: string;
+    orderNo?: string;
+    orderStatus?: string;
+    orderStatusName?: string;
+    factoryName?: string;
 }
 
 interface SaltWaterObj {
@@ -498,6 +574,7 @@ interface OtherMaterial {
     usePotId: string; // 领用罐ID
     usePotName: string; // 领用罐名称
     usePotNo: string; // 领用罐号
+    operatFlag: number; // 操作标记(0正常、-1提醒删除、1提醒维护、-2不显示但需要提交表单)
 }
 </script>
 

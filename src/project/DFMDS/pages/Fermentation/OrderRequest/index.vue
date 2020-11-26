@@ -79,22 +79,19 @@
                 labelWidth: 80,
                 rule: [{ required: false, message: ' ', trigger: 'change' }],
                 defaultValue: '',
+                filterable: true,
                 defaultOptionsFn: () => {
                     return new Promise((resolve) => {
-                        COMMON_API.HOLDER_QUERY_API({ // /sysHolder/query
+                        COMMON_API.HOLDER_DROPDOWN_API({ // /sysHolder/query
                             factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
-                            current: 1,
-                            size: 9999,
-                            holderType: '019' // 溶解罐参数编码
+                            holderType: ['001', '029', '028'] // 发酵罐/池、泡豆罐、调酱罐/池 参数编码
                         }).then((res) => {
-                            // eslint-disable-next-line no-invalid-this
-                            // this.setEnvVal(val)
                             resolve(res)
                         })
                     })
                 },
                 resVal: {
-                    resData: 'data.records',
+                    resData: 'data',
                     label: ['holderName'],
                     value: 'id'
                 }
@@ -146,66 +143,66 @@
 
         Column = [
             {
-                prop: 'orderStatusName',
+                prop: 'holderNo',
                 label: '容器号',
                 minwidth: '80'
             },
             {
-                prop: 'workShopName',
+                prop: 'productMaterialName',
                 label: '生产物料',
                 minwidth: '85'
             },
             {
-                prop: 'workShopName',
+                prop: 'amount',
                 label: '订单数量',
                 minwidth: '85'
             },
             {
-                prop: 'orderNo',
+                prop: 'unit',
                 label: '订单单位',
                 minwidth: '80',
                 onclick: true
             },
             {
-                prop: 'materialName',
+                prop: 'orderType',
                 label: '订单类型',
                 minwidth: '80',
                 formatter: (row) => {
-                    return row.materialName + ' ' + row.materialCode;
+                    return row.orderType + ' ' + row.materialCode;
                 }
             },
             {
-                prop: 'planOutput',
+                prop: 'ver',
                 label: '版本',
                 minwidth: '60'
             },
             {
-                prop: 'outputUnit',
+                prop: 'startDate',
                 label: '开始日期',
                 minwidth: '80'
             },
             {
-                prop: 'productDate',
+                prop: 'endDate',
                 label: '结束日期',
                 minwidth: '80'
             },
             {
-                prop: 'productDate',
+                prop: 'preOrderNo',
                 label: '前置订单',
                 minwidth: '80'
             },
             {
-                prop: 'productDate',
+                prop: 'preMaterialName',
                 label: '前置物料',
                 minwidth: '80'
             },
             {
-                prop: 'productDate',
+                prop: 'preAmount',
                 label: '数量',
                 minwidth: '80'
             },
             {
-                prop: 'productDate',
+                prop: 'preUnit',
                 label: '单位',
                 minwidth: '60'
             }
@@ -235,12 +232,12 @@
                 column: [
                     ...this.Column, // eslint-disable-line
                     {
-                        prop: 'orderCode',
+                        prop: 'applicant',
                         label: '申请人员',
                         minwidth: '90'
                     },
                     {
-                        prop: 'orderCode',
+                        prop: 'applyDate',
                         label: '申请时间',
                         minwidth: '90'
                     }

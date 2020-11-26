@@ -368,6 +368,10 @@ const COMMON_API = {
      */
     DICTIONARY_ITEM_DROPDOWN_API: params => httpProxy('/sysDictItem/dropDown', 'GET', params),
     /**
+     * @property {string} DICTIONARY_ITEM_DROPDOWN_POST_API 系统管理-数据字典-post下拉
+     */
+    DICTIONARY_ITEM_DROPDOWN_POST_API: params => httpProxy('/sysDictItem/dropDown', 'POST', params),
+    /**
      * @property {string} DICTIONARY_ITEM_INSERT_API 系统管理-数据字典-新增
      */
     DICTIONARY_ITEM_INSERT_API: params => httpProxy('/sysDictItem/insert', 'POST', params),
