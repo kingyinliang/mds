@@ -3,7 +3,7 @@
  * @Anthor: Telliex
  * @Date: 2020-08-03 18:13:58
  * @LastEditors: Telliex
- * @LastEditTime: 2020-11-25 18:41:26
+ * @LastEditTime: 2020-11-26 10:42:18
  * @Describe 弹窗式新增
 -->
 <template lang="pug">
@@ -29,7 +29,7 @@ div
                     :show-overflow-tooltip="true"
                     )
                     template(slot-scope="scope")
-                        template(v-for="(val,indexs) in item.content" ) {{ `${scope.row[val]} ` | itemValue(item.wrapper) }}
+                        template(v-for="(val,indexs) in item.content" ) {{ scope.row[val] | itemValue(item.wrapper) }} {{ }}
                 el-table-column(
                     v-if="item.type==='control'"
                     :width="item.width"
@@ -53,11 +53,10 @@ div
         },
         filters: {
             itemValue(value: string, target: object) {
-                if (target) {
+                if (typeof target !== 'undefined') {
                     return target[value]
                 }
                 return value
-
             }
         }
     })
