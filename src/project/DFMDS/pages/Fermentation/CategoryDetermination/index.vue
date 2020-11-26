@@ -18,22 +18,26 @@
                         <el-table-column type="index" label="序号" fixed />
                         <el-table-column label="冻结状态" prop="freezeFlag">
                             <template slot-scope="scope">
-                                {{ scope.row.freezeFlag === 'Y' ? '正常' : '冻结' }}
+                                {{ scope.row.freezeFlag === 'Y' ? '冻结' : '正常' }}
                             </template>
                         </el-table-column>
-                        <el-table-column label="容器号" prop="fermentorName" />
+                        <el-table-column label="容器号" prop="fermentorName" width="120px" />
                         <!-- 暂无该字段 -->
                         <el-table-column label="容器状态" prop="fermentorStatusName" />
-                        <el-table-column label="生产订单" prop="orderNo" />
+                        <el-table-column label="生产订单" prop="orderNo" width="120px" />
                         <el-table-column label="发酵天数" prop="fermentDays" />
-                        <el-table-column label="生产物料" prop="productMaterialName" />
+                        <el-table-column label="生产物料" prop="productMaterialName" width="140px" />
                         <el-table-column label="订单数量" prop="amount" />
                         <el-table-column label="订单单位" prop="unit" />
-                        <el-table-column label="满罐日期" prop="startDate" />
-                        <el-table-column label="判定结果" prop="judgeResult" />
+                        <el-table-column label="满罐日期" prop="startDate" width="160px" />
+                        <el-table-column label="判定结果" prop="judgeResult">
+                            <template slot-scope="scope">
+                                {{ scope.row.judgeResult === 'ZC' ? '正常' : '超期' }}
+                            </template>
+                        </el-table-column>
                         <el-table-column label="备注" prop="remark" width="160px" />
-                        <el-table-column label="操作人员" prop="changer" />
-                        <el-table-column label="操作时间" prop="changed" />
+                        <el-table-column label="操作人员" prop="changer" width="140px" />
+                        <el-table-column label="操作时间" prop="changed" width="160px" />
                         <el-table-column label="操作" fixed="right">
                             <template slot-scope="scope">
                                 <el-button type="primary" size="small" @click="determinationHandler(scope.row)">
@@ -51,7 +55,7 @@
         <el-dialog
             :title="currentRow.name"
             :visible.sync="dialogVisible"
-            width="30%"
+            width="400px"
             :before-close="handleClose"
         >
             <el-form :model="formObj" :inline="false" label-suffix="：" label-width="90px">
@@ -73,16 +77,16 @@
                 </el-form-item>
                 <el-form-item label="判定结果" prop="judgeResult">
                     <el-select v-model="formObj.judgeResult" size="small" placeholder="请选择">
-                        <el-option label="超期" value="超期" />
-                        <el-option label="正常" value="正常" />
+                        <el-option label="超期" value="CQ" />
+                        <el-option label="正常" value="ZC" />
                     </el-select>
                 </el-form-item>
                 <el-form-item label="冻结状态" prop="freezeFlag">
                     <el-radio-group v-model="formObj.freezeFlag">
-                        <el-radio label="N">
+                        <el-radio :label="'N'">
                             正常
                         </el-radio>
-                        <el-radio label="Y">
+                        <el-radio :label="'Y'">
                             冻结
                         </el-radio>
                     </el-radio-group>
@@ -262,8 +266,8 @@ import FER_API from 'src/common/api/fer';
                 rule: [{ required: false, message: ' ', trigger: 'change' }],
                 defaultValue: '',
                 defaultOptionsList: [
-                    { label: '是', value: 'Y' },
-                    { label: '否', value: 'N' }
+                    { label: '冻结', value: 'Y' },
+                    { label: '正常', value: 'N' }
                 ]
             },
             {
@@ -302,18 +306,19 @@ import FER_API from 'src/common/api/fer';
         determinationHandler(row) {
             console.log(row);
             this.formObj = {
-                ...row,
-                freezeFlag: 'N'
+                ...row
             }
             this.dialogVisible = true;
         }
 
         sizeChangeHandler(val) {
             this.pageSize = val;
+            this.$refs.queryTable.getDataList();
         }
 
         currentPageChangeHanlder(val) {
             this.currentPage = val;
+            this.$refs.queryTable.getDataList();
         }
 
         handleClose() {
@@ -330,6 +335,7 @@ import FER_API from 'src/common/api/fer';
             FER_API.FER_CATEGORY_JUDGED_API(params).then(res => {
                 this.dialogVisible = false;
                 this.$successToast(res.data.msg);
+                this.$refs.queryTable.getDataList();
             })
         }
     }

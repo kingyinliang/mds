@@ -47,8 +47,6 @@
             queryTable: HTMLFormElement;
         }
 
-        targetQueryTableList: SaltWaterObj[] = []
-
         // queryTable 必要变数
         queryTableFormData = [
             {
@@ -103,24 +101,20 @@
                 labelWidth: 90,
                 rule: [{ required: false, message: ' ', trigger: 'change' }],
                 defaultValue: '',
+                filterable: true,
                 defaultOptionsFn: () => {
                     return new Promise((resolve) => {
-                        COMMON_API.HOLDER_QUERY_API({ // /sysHolder/query
-                            factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
-                            current: 1,
-                            size: 9999,
-                            holderType: '019' // 溶解罐参数编码
+                        COMMON_API.ALLMATERIAL_API({
+                            materialTypes: ['ZHAL'] // 物料类型列表 - 半成品
                         }).then((res) => {
-                            // eslint-disable-next-line no-invalid-this
-                            // this.setEnvVal(val)
                             resolve(res)
                         })
                     })
                 },
                 resVal: {
-                    resData: 'data.records',
-                    label: ['holderName'],
-                    value: 'id'
+                    resData: 'data',
+                    label: ['materialName', 'materialCode'],
+                    value: 'materialCode'
                 }
             },
             {
@@ -131,6 +125,30 @@
                 // defaultValue: dateFormat(new Date(), 'yyyy-MM-dd'),
                 prop: 'startDate',
                 propTwo: 'endDate'
+            },
+            {
+                type: 'select',
+                hide: true,
+                label: '订单类型',
+                prop: 'orderType',
+                // labelWidth: 85,
+                rule: [{ required: false, message: ' ', trigger: 'change' }],
+                defaultValue: '',
+                defaultOptionsFn: () => {
+                    return new Promise((resolve) => {
+                        COMMON_API.DICTIONARY_ITEM_DROPDOWN_POST_API({
+                            factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
+                            dictType: 'ORDER_TYPE' // 字典类型
+                        }).then((res) => {
+                            resolve(res)
+                        })
+                    })
+                },
+                resVal: {
+                    resData: 'data',
+                    label: 'dictValue',
+                    value: 'dictCode'
+                }
             }
         ]
 
@@ -145,12 +163,12 @@
             {
                 prop: 'holderNo',
                 label: '容器号',
-                minwidth: '80'
+                minwidth: '160'
             },
             {
                 prop: 'productMaterialName',
                 label: '生产物料',
-                minwidth: '85'
+                minwidth: '160'
             },
             {
                 prop: 'amount',
@@ -166,10 +184,9 @@
             {
                 prop: 'orderType',
                 label: '订单类型',
-                minwidth: '80',
-                formatter: (row) => {
-                    return row.orderType + ' ' + row.materialCode;
-                }
+                minwidth: '160',
+                type: 'select',
+                redact: true
             },
             {
                 prop: 'ver',
@@ -179,22 +196,22 @@
             {
                 prop: 'startDate',
                 label: '开始日期',
-                minwidth: '80'
+                minwidth: '120'
             },
             {
                 prop: 'endDate',
                 label: '结束日期',
-                minwidth: '80'
+                minwidth: '120'
             },
             {
                 prop: 'preOrderNo',
                 label: '前置订单',
-                minwidth: '80'
+                minwidth: '160'
             },
             {
                 prop: 'preMaterialName',
                 label: '前置物料',
-                minwidth: '80'
+                minwidth: '160'
             },
             {
                 prop: 'preAmount',
@@ -212,6 +229,7 @@
             {
                 label: '未申请',
                 tableData: [],
+                multipleSelection: [],
                 pages: {
                     currPage: 1,
                     pageSize: 10,
@@ -224,6 +242,7 @@
             {
                 label: '已申请',
                 tableData: [],
+                multipleSelection: [],
                 pages: {
                     currPage: 1,
                     pageSize: 10,
@@ -234,12 +253,12 @@
                     {
                         prop: 'applicant',
                         label: '申请人员',
-                        minwidth: '90'
+                        minwidth: '160'
                     },
                     {
                         prop: 'applyDate',
                         label: '申请时间',
-                        minwidth: '90'
+                        minwidth: '160'
                     }
                 ]
             }
@@ -254,8 +273,13 @@
         }
 
         // queryTable 查询请求
-        queryTableListInterface = params => {
+        queryTableListInterface(params) {
             params.factory = JSON.parse(sessionStorage.getItem('factory') || '{}').id;
+            if (Number(this.$refs.queryTable.activeName) === 0) {
+                params.applyFlag = 'N'; // 申请标识(Y,N)
+            } else {
+                params.applyFlag = 'Y'; // 申请标识(Y,N)
+            }
             // console.log(params, '=-==========+++++++++++++');
             params.current = this.$refs.queryTable.tabs[this.$refs.queryTable.activeName].pages.currPage;// eslint-disable-line
             params.size = this.$refs.queryTable.tabs[this.$refs.queryTable.activeName].pages.pageSize;// eslint-disable-line
@@ -264,23 +288,78 @@
         }
 
         // queryTable 回传 result
-        returnDataFromQueryTableForm(data) {
-            console.log('查询结果回传')
-            console.log(data)
-            this.targetQueryTableList = []
-            if (data.data !== null) {
-                this.targetQueryTableList = data.data as SaltWaterObj[];
+        returnDataFromQueryTableForm(datas, st) {
+            const edit = 1;
+            if (st) {
+                this.tabs.map((item, index) => {
+                    if (index !== Number(this.$refs.queryTable.activeName)) {
+                        const params = JSON.parse(JSON.stringify(this.$refs.queryTable.queryForm))
+                        params.factory = JSON.parse(sessionStorage.getItem('factory') || '{}').id;
+                        if (index === 0) {
+                            params.applyFlag = 'N'; // 申请标识(Y,N)
+                        } else {
+                            params.applyFlag = 'Y'; // 申请标识(Y,N)
+                        }
+                        params.current = 1;
+                        params.size = this.$refs.queryTable.tabs[index].pages.pageSize;
+                        params.total = this.$refs.queryTable.tabs[index].pages.totalCount;
+                        FER_API.FER_ORDER_LIST_API(params).then(({ data }) => {
+                            if (index === edit) {
+                                data.data.records.map(row => {
+                                    row.redact = true;
+                                })
+                            }
+                            this.tabs[index].tableData = data.data.records;
+                            this.$refs.queryTable.tabs[index].pages.currPage = data.data.current;
+                            this.$refs.queryTable.tabs[index].pages.pageSize = data.data.size;
+                            this.$refs.queryTable.tabs[index].pages.totalCount = data.data.total;
+                        });
+                    } else {
+                        if (index === edit) {
+                            datas.data.records.map(row => {
+                                row.redact = true;
+                            })
+                        }
+                        this.tabs[this.$refs.queryTable.activeName].tableData = datas.data.records;
+                        this.$refs.queryTable.tabs[this.$refs.queryTable.activeName].pages.currPage = datas.data.current;
+                        this.$refs.queryTable.tabs[this.$refs.queryTable.activeName].pages.pageSize = datas.data.size;
+                        this.$refs.queryTable.tabs[this.$refs.queryTable.activeName].pages.totalCount = datas.data.total;
+                    }
+                })
             } else {
-                this.$infoToast('暂无任何内容');
+                if (Number(this.$refs.queryTable.activeName) === edit) {
+                    datas.data.records.map(row => {
+                        row.redact = true;
+                    })
+                }
+                this.tabs[this.$refs.queryTable.activeName].tableData = datas.data.records;
+                this.$refs.queryTable.tabs[this.$refs.queryTable.activeName].pages.currPage = datas.data.current;
+                this.$refs.queryTable.tabs[this.$refs.queryTable.activeName].pages.pageSize = datas.data.size;
+                this.$refs.queryTable.tabs[this.$refs.queryTable.activeName].pages.totalCount = datas.data.total;
             }
         }
 
         requestOrderHandler() {
-            alert(11);
+            const arr = this.tabs[0].multipleSelection;
+            if (!arr.length) {
+                this.$warningToast('请选择订单');
+                return false;
+            }
+            const params = arr.map((item: OrderObj) => ({
+                id: item.id,
+                orderType: item.orderType,
+                ver: item.ver
+            }));
+            FER_API.FER_ORDER_SEND_API(params).then(res => {
+                this.$successToast(res.data.msg);
+                this.$refs.queryTable.getDataList();
+            })
         }
     }
-    interface SaltWaterObj {
+    interface OrderObj {
         id: string;
+        orderType: string;
+        ver: string;
     }
 </script>
 
