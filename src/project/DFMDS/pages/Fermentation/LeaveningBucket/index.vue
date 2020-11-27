@@ -128,31 +128,27 @@
                 </mds-card>
             </template>
         </query-table>
+        <drum-bucket ref="drumBucket" @drumBucketFinish="drumBucketFinish" />
     </div>
 </template>
 <script lang="ts">
 
-    // 空罐 E v
-    // 入料中 R (投料)  v
-    // 待清洗 C
-    // 满罐 M  v
-    // 领用中 U  v
     import { Vue, Component } from 'vue-property-decorator';
     // import { dateFormat, getUserNameNumber } from 'utils/utils';
-    // import ImportBucket from './ImportBucket.vue';
+    import DrumBucket from './DrumBucket.vue';
     import { COMMON_API, FER_API } from 'common/api/api';
     // import { dateFormat } from 'utils/utils';
 
     @Component({
         name: 'DissolveBucketIndex',
         components: {
-
+            DrumBucket
         }
     })
     export default class DissolveBucketIndex extends Vue {
         $refs: {
             queryTable: HTMLFormElement;
-            importBucket: HTMLFormElement;
+            drumBucket: HTMLFormElement;
         }
 
         // 共用变数
@@ -424,6 +420,10 @@
             // this.ani();
         }
 
+        // 入罐完成
+        drumBucketFinish() {
+            this.$refs.queryTable.getDataList(true)
+        }
 
         // 总览点击
         getResultBymetroItem(item) {
@@ -581,6 +581,8 @@
         // [btn][鼓罐]
         btnFilledBucket(item) {
             console.log(item)
+            this.isTableDialogVisible = true;
+            this.$refs.drumBucket.init(item)
         }
 
         // [btn][LYCY]
