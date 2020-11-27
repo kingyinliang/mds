@@ -19,7 +19,7 @@
                 </div>
                 <div class="inner-area__body">
                     <el-form ref="importBucketForm" :model="importBucketForm" size="size" class="markStyle">
-                        <el-table class="table-style-light" :data="importBucketInfo" :row-class-name="rowDelFlag" header-row-class-name="tableHead" size="mini" border style="width: 100%;" max-height="300">
+                        <el-table class="table-style-light" :data="drumBucketInfo" :row-class-name="rowDelFlag" header-row-class-name="tableHead" size="mini" border style="width: 100%;" max-height="300">
                             <el-table-column label="序号" type="index" width="55" fixed="left" align="center" />
                             <el-table-column min-width="200" :show-overflow-tooltip="true">
                                 <template slot="header">
@@ -156,7 +156,7 @@
         currentRowIndex=0
 
 
-        importBucketInfo: CurrentDataTable[]=[] // 主 data
+        drumBucketInfo: CurrentDataTable[]=[] // 主 data
         orgFormDataGroup: CurrentDataTable[] = [] // 主 data 复制
         // 入罐表单数据
         importBucketForm= {}
@@ -212,21 +212,21 @@
                     console.log('鼓罐查询')
                     console.log(data)
 
-                    this.importBucketInfo = []
+                    this.drumBucketInfo = []
                     if (data.data) {
-                        this.importBucketInfo = data.data
-                        this.importBucketInfo.forEach((element) => {
+                        this.drumBucketInfo = data.data
+                        this.drumBucketInfo.forEach((element) => {
                             this.$set(element, 'delFlag', 0)
                         })
                     }
-                    this.orgFormDataGroup = JSON.parse(JSON.stringify(this.importBucketInfo))
+                    this.orgFormDataGroup = JSON.parse(JSON.stringify(this.drumBucketInfo))
 
                 })
 
         }
 
         getDrumStage() {
-            COMMON_API.DICTQUERY_API({ dictType: 'DRUM_STAGE' }).then(({ data }) => {
+            COMMON_API.DICTQUERY_API({ dictType: 'COMMON_HOLDER_TYPE' }).then(({ data }) => {
                 console.log('鼓罐阶段')
                 console.log(data)
             })
@@ -253,7 +253,7 @@
 
         // 员工确认
         changeUser(item) {
-            this.importBucketInfo[this.currentRowIndex].inflationMan = item.join(',')
+            this.drumBucketInfo[this.currentRowIndex].inflationMan = item.join(',')
             this.isLoanedPersonnelStatusDialogVisible = false;
         }
 
@@ -269,7 +269,7 @@
 
         // 新增行
         addNewDataRow() {
-            this.importBucketInfo.push({
+            this.drumBucketInfo.push({
                     fermentorId: '',
                     inflationDate: '',
                     inflationMan: '',
@@ -296,7 +296,7 @@
 
         // 入罐确认
         comfirmImportBucket() {
-            this.importBucketInfo.forEach(() => {
+            this.drumBucketInfo.forEach(() => {
                 // item.prodcutMaterial = this.headerInfo.headerProdcutMaterial
                 // item.productMaterialName = this.headerInfo.headerProductMaterialName.split(' ')[0] as string
                 // item.potCount = this.headerInfo.headerPotCount
@@ -310,7 +310,7 @@
                 const updateListArray: CurrentDataTable[] = []
 
 
-                this.importBucketInfo.forEach((item: CurrentDataTable, index) => {
+                this.drumBucketInfo.forEach((item: CurrentDataTable, index) => {
 
                     if (item.delFlag === 1) {
                         if (item.id) {
@@ -336,7 +336,7 @@
                     updateList: updateListArray
                 }).then(() => {
                     this.$successToast('保存成功');
-                    this.$emit('importBucketFinish', obj);
+                    this.$emit('drumBucketFinish', obj);
                     this.isTableDialogVisible = false
                 });
 
@@ -349,13 +349,13 @@
 
         // 提交时跑校验
         ruleSubmit() {
-            if (this.importBucketInfo.length === 0 && this.importBucketInfo.filter(it => it.delFlag !== 1).length === 0) {
+            if (this.drumBucketInfo.length === 0 && this.drumBucketInfo.filter(it => it.delFlag !== 1).length === 0) {
                 this.$warningToast('请录入鼓罐');
                 return false
             }
 
             // 表格栏位
-            for (const item of this.importBucketInfo.filter(it => it.delFlag !== 1)) {
+            for (const item of this.drumBucketInfo.filter(it => it.delFlag !== 1)) {
                 if (!item.inflationMan || !item.inflationDate || !item.inflationStage) {
                     this.$warningToast('请填写鼓罐必填项');
                     return false

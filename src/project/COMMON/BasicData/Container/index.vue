@@ -156,8 +156,6 @@
                     materialType: 'ZHAL'
                 }).then(({ data }) => {
                     this.materialList = data.data
-                    console.log('77777')
-                    console.log(data)
                 });
 
 

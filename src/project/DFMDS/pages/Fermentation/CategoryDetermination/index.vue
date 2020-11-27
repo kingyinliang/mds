@@ -15,21 +15,30 @@
             <template slot="home">
                 <mds-card title="类别判定" :pack-up="false">
                     <el-table class="newTable markStyle" :data="targetQueryTableList" :row-class-name="rowDelFlag" header-row-class-name="tableHead" border style="width: 100%; min-height: 90px;">
-                        <el-table-column type="index" label="序号" />
-                        <el-table-column label="冻结状态" prop="status" />
-                        <el-table-column label="容器号" prop="status" />
-                        <el-table-column label="容器状态" prop="status" />
-                        <el-table-column label="生产订单" prop="status" />
-                        <el-table-column label="发酵天数" prop="status" />
-                        <el-table-column label="生产物料" prop="status" />
-                        <el-table-column label="订单数量" prop="status" />
-                        <el-table-column label="订单单位" prop="status" />
-                        <el-table-column label="满罐日期" prop="status" />
-                        <el-table-column label="判定结果" prop="status" />
-                        <el-table-column label="备注" prop="status" width="160px" />
-                        <el-table-column label="操作人员" prop="status" />
-                        <el-table-column label="操作时间" prop="status" />
-                        <el-table-column label="操作">
+                        <el-table-column type="index" label="序号" fixed />
+                        <el-table-column label="冻结状态" prop="freezeFlag">
+                            <template slot-scope="scope">
+                                {{ scope.row.freezeFlag === 'Y' ? '冻结' : '正常' }}
+                            </template>
+                        </el-table-column>
+                        <el-table-column label="容器号" prop="fermentorName" width="120px" />
+                        <!-- 暂无该字段 -->
+                        <el-table-column label="容器状态" prop="fermentorStatusName" />
+                        <el-table-column label="生产订单" prop="orderNo" width="120px" />
+                        <el-table-column label="发酵天数" prop="fermentDays" />
+                        <el-table-column label="生产物料" prop="productMaterialName" width="140px" />
+                        <el-table-column label="订单数量" prop="amount" />
+                        <el-table-column label="订单单位" prop="unit" />
+                        <el-table-column label="满罐日期" prop="startDate" width="160px" />
+                        <el-table-column label="判定结果" prop="judgeResult">
+                            <template slot-scope="scope">
+                                {{ scope.row.judgeResult === 'ZC' ? '正常' : '超期' }}
+                            </template>
+                        </el-table-column>
+                        <el-table-column label="备注" prop="remark" width="160px" />
+                        <el-table-column label="操作人员" prop="changer" width="140px" />
+                        <el-table-column label="操作时间" prop="changed" width="160px" />
+                        <el-table-column label="操作" fixed="right">
                             <template slot-scope="scope">
                                 <el-button type="primary" size="small" @click="determinationHandler(scope.row)">
                                     判定
@@ -46,55 +55,57 @@
         <el-dialog
             :title="currentRow.name"
             :visible.sync="dialogVisible"
-            width="30%"
+            width="400px"
             :before-close="handleClose"
         >
             <el-form :model="formObj" :inline="false" label-suffix="：" label-width="90px">
-                <el-form-item label="容器号" prop="name">
-                    <el-input v-model="formObj.name" size="small" disabled />
+                <el-form-item label="容器号" prop="fermentorName">
+                    <el-input v-model="formObj.fermentorName" size="small" disabled />
                 </el-form-item>
-                <el-form-item label="状态" prop="name">
-                    <el-input v-model="formObj.name" size="small" disabled />
+                <!-- 暂无该字段 -->
+                <el-form-item label="状态" prop="fermentorStatusName">
+                    <el-input v-model="formObj.fermentorStatusName" size="small" disabled />
                 </el-form-item>
-                <el-form-item label="生产订单" prop="name">
-                    <el-input v-model="formObj.name" size="small" disabled />
+                <el-form-item label="生产订单" prop="orderNo">
+                    <el-input v-model="formObj.orderNo" size="small" disabled />
                 </el-form-item>
-                <el-form-item label="生产物料" prop="name">
-                    <el-input v-model="formObj.name" size="small" disabled />
+                <el-form-item label="生产物料" prop="productMaterialName">
+                    <el-input v-model="formObj.productMaterialName" size="small" disabled />
                 </el-form-item>
-                <el-form-item label="发酵天数" prop="name">
-                    <el-input v-model="formObj.name" size="small" disabled />
+                <el-form-item label="发酵天数" prop="fermentDays">
+                    <el-input v-model="formObj.fermentDays" size="small" disabled />
                 </el-form-item>
-                <el-form-item label="判定结果" prop="name">
-                    <el-select v-model="formObj.name" size="small" placeholder="请选择">
-                        <el-option label="驳回" value="1" />
+                <el-form-item label="判定结果" prop="judgeResult">
+                    <el-select v-model="formObj.judgeResult" size="small" placeholder="请选择">
+                        <el-option label="超期" value="CQ" />
+                        <el-option label="正常" value="ZC" />
                     </el-select>
                 </el-form-item>
-                <el-form-item label="冻结状态" prop="name">
-                    <el-radio-group v-model="formObj.name">
-                        <el-radio :label="3">
+                <el-form-item label="冻结状态" prop="freezeFlag">
+                    <el-radio-group v-model="formObj.freezeFlag">
+                        <el-radio :label="'N'">
                             正常
                         </el-radio>
-                        <el-radio :label="6">
+                        <el-radio :label="'Y'">
                             冻结
                         </el-radio>
                     </el-radio-group>
                 </el-form-item>
-                <el-form-item label="备注" prop="name">
-                    <el-input v-model="formObj.name" size="small" />
+                <el-form-item label="备注" prop="remark">
+                    <el-input v-model="formObj.remark" size="small" />
                 </el-form-item>
-                <el-form-item label="操作人" prop="name">
-                    <el-input v-model="formObj.name" size="small" disabled />
+                <el-form-item label="操作人" prop="changer">
+                    <el-input v-model="formObj.changer" size="small" disabled />
                 </el-form-item>
-                <el-form-item label="操作时间" prop="name">
-                    <el-input v-model="formObj.name" size="small" disabled />
+                <el-form-item label="操作时间" prop="changed">
+                    <el-input v-model="formObj.changed" size="small" disabled />
                 </el-form-item>
                 <el-form-item>
                     <div class="dialog-btn-box">
                         <el-button type="default" size="small" @click="handleClose">
                             取消
                         </el-button>
-                        <el-button type="primary" size="small">
+                        <el-button type="primary" size="small" @click="judgedHandler">
                             确定
                         </el-button>
                     </div>
@@ -107,6 +118,7 @@
 <script lang="ts">
     import { Vue, Component } from 'vue-property-decorator';
     import { COMMON_API } from 'common/api/api';
+import FER_API from 'src/common/api/fer';
     @Component({
         name: 'CategoryDetermination',
         components: {}
@@ -116,7 +128,7 @@
             queryTable: HTMLFormElement;
         }
 
-        targetQueryTableList: SaltWaterObj[] = [];
+        targetQueryTableList: CategoryJudgedType[] = [];
 
         isRedact = false; // 可否编辑
 
@@ -124,9 +136,7 @@
             name: '001发酵罐判定'
         }; // 当前判定项
 
-        formObj = {
-            name: 'hello '
-        };
+        formObj: CategoryJudgedType = {};
 
         redactBoxDisable = false; // control bar 可否禁用
 
@@ -134,7 +144,7 @@
 
         pageSize = 10;
 
-        total = 20;
+        total = 0;
 
         dialogVisible = false;
 
@@ -171,7 +181,7 @@
             {
                 type: 'input',
                 label: '生产订单',
-                prop: 'orderId',
+                prop: 'orderNo',
                 // labelWidth: 85,
                 rule: [{ required: false, message: ' ', trigger: 'change' }]
                 // defaultValue: ''
@@ -185,11 +195,9 @@
                 defaultValue: '',
                 defaultOptionsFn: () => {
                     return new Promise((resolve) => {
-                        COMMON_API.HOLDER_QUERY_API({ // /sysHolder/query
+                        COMMON_API.DICTIONARY_ITEM_DROPDOWN_POST_API({
                             factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
-                            current: 1,
-                            size: 9999,
-                            holderType: '019' // 溶解罐参数编码
+                            dictType: 'ORDER_TYPE' // 字典类型
                         }).then((res) => {
                             // eslint-disable-next-line no-invalid-this
                             // this.setEnvVal(val)
@@ -198,61 +206,54 @@
                     })
                 },
                 resVal: {
-                    resData: 'data.records',
-                    label: ['holderName'],
-                    value: 'id'
+                    resData: 'data',
+                    label: ['dictValue'],
+                    value: 'dictCode'
                 }
             },
             {
                 type: 'select',
                 label: '生产物料',
-                prop: 'materialId',
+                prop: 'productMaterialCode',
                 // labelWidth: 85,
                 rule: [{ required: false, message: ' ', trigger: 'change' }],
                 defaultValue: '',
+                filterable: true,
                 defaultOptionsFn: () => {
                     return new Promise((resolve) => {
-                        COMMON_API.HOLDER_QUERY_API({ // /sysHolder/query
-                            factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
-                            current: 1,
-                            size: 9999,
-                            holderType: '019' // 溶解罐参数编码
+                        COMMON_API.ALLMATERIAL_API({
+                            materialTypes: ['ZHAL'] // 物料类型列表 - 半成品
                         }).then((res) => {
-                            // eslint-disable-next-line no-invalid-this
-                            // this.setEnvVal(val)
                             resolve(res)
                         })
                     })
                 },
                 resVal: {
-                    resData: 'data.records',
-                    label: ['holderName'],
-                    value: 'id'
+                    resData: 'data',
+                    label: ['materialName', 'materialCode'],
+                    value: 'materialCode'
                 }
             },
             {
                 type: 'select',
                 label: '容器号',
-                prop: 'materialId3',
+                prop: 'fermentorId',
                 // labelWidth: 85,
                 rule: [{ required: false, message: ' ', trigger: 'change' }],
                 defaultValue: '',
+                filterable: true,
                 defaultOptionsFn: () => {
                     return new Promise((resolve) => {
-                        COMMON_API.HOLDER_QUERY_API({ // /sysHolder/query
+                        COMMON_API.HOLDER_DROPDOWN_API({ // /sysHolder/query
                             factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
-                            current: 1,
-                            size: 9999,
-                            holderType: '019' // 溶解罐参数编码
+                            holderType: ['001', '029', '028'] // 发酵罐/池、泡豆罐、调酱罐/池 参数编码
                         }).then((res) => {
-                            // eslint-disable-next-line no-invalid-this
-                            // this.setEnvVal(val)
                             resolve(res)
                         })
                     })
                 },
                 resVal: {
-                    resData: 'data.records',
+                    resData: 'data',
                     label: ['holderName'],
                     value: 'id'
                 }
@@ -260,29 +261,14 @@
             {
                 type: 'select',
                 label: '冻结状态',
-                prop: 'status',
+                prop: 'freezeFlag',
                 // labelWidth: 85,
                 rule: [{ required: false, message: ' ', trigger: 'change' }],
                 defaultValue: '',
-                defaultOptionsFn: () => {
-                    return new Promise((resolve) => {
-                        COMMON_API.HOLDER_QUERY_API({ // /sysHolder/query
-                            factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
-                            current: 1,
-                            size: 9999,
-                            holderType: '019' // 溶解罐参数编码
-                        }).then((res) => {
-                            // eslint-disable-next-line no-invalid-this
-                            // this.setEnvVal(val)
-                            resolve(res)
-                        })
-                    })
-                },
-                resVal: {
-                    resData: 'data.records',
-                    label: ['holderName'],
-                    value: 'id'
-                }
+                defaultOptionsList: [
+                    { label: '冻结', value: 'Y' },
+                    { label: '正常', value: 'N' }
+                ]
             },
             {
                 type: 'date-interval',
@@ -290,27 +276,18 @@
                 // labelWidth: 85,
                 valueFormat: 'yyyy-MM-dd',
                 // defaultValue: dateFormat(new Date(), 'yyyy-MM-dd'),
-                prop: 'orderStartDateBegin',
-                propTwo: 'orderStartDateEnd'
+                prop: 'startDate',
+                propTwo: 'endDate'
             }
         ]
 
         // queryTable 查询请求
-        queryTableListInterface = params => {
+        queryTableListInterface(params) {
             params.factory = JSON.parse(sessionStorage.getItem('factory') || '{}').id;
-            let orderStatus: string[] = [];
-            if (this.$refs.queryTable.activeName === '0') { // eslint-disable-line
-                orderStatus = ['D'];
-            } else if (this.$refs.queryTable.activeName === '1') {  // eslint-disable-line
-                orderStatus = ['C', 'P'];
-            } else {
-                orderStatus = ['R'];
-            }
-            params.orderStatus = orderStatus; // eslint-disable-line
             params.current = this.currentPage;// eslint-disable-line
             params.size = this.pageSize;// eslint-disable-line
             params.total = this.total;// eslint-disable-line
-            return COMMON_API.ORDER_QUERY_API(params);
+            return FER_API.FER_CATEGORY_JUDGED_QUERY_API(params);
         }
 
         // queryTable 回传 result
@@ -319,7 +296,8 @@
             console.log(data)
             this.targetQueryTableList = []
             if (data.data !== null) {
-                this.targetQueryTableList = data.data.records as SaltWaterObj[];
+                this.targetQueryTableList = data.data.records as CategoryJudgedType[];
+                this.total = data.data.total;
             } else {
                 this.$infoToast('暂无任何内容');
             }
@@ -327,23 +305,42 @@
 
         determinationHandler(row) {
             console.log(row);
+            this.formObj = {
+                ...row
+            }
             this.dialogVisible = true;
         }
 
         sizeChangeHandler(val) {
             this.pageSize = val;
+            this.$refs.queryTable.getDataList();
         }
 
         currentPageChangeHanlder(val) {
             this.currentPage = val;
+            this.$refs.queryTable.getDataList();
         }
 
         handleClose() {
             this.dialogVisible = false;
         }
+
+        judgedHandler() {
+            const params = {
+                freezeFlag: this.formObj.freezeFlag,
+                id: this.formObj.id,
+                judgeResult: this.formObj.judgeResult,
+                remark: this.formObj.remark
+            }
+            FER_API.FER_CATEGORY_JUDGED_API(params).then(res => {
+                this.dialogVisible = false;
+                this.$successToast(res.data.msg);
+                this.$refs.queryTable.getDataList();
+            })
+        }
     }
-    interface SaltWaterObj {
-        id: string;
+    interface CategoryJudgedType {
+        [name: string]: string;
     }
 </script>
 

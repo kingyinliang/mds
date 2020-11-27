@@ -37,7 +37,7 @@
                         <el-select v-if="item.type === 'select'" v-model="formHeader[item.value]" size="mini" style="width: 120px;" :disabled="!(isRedact && item.disabled)">
                             <el-option v-for="(optionIt, subIndex) in item.option.list" :key="subIndex" :label="optionIt[item.option.label]" :value="optionIt[item.option.value]" />
                         </el-select>
-                        <el-input v-if="item.type === 'input'" :disabled="!isRedact" size="mini" :placeholder="item.placeholder" style="width: 120px;" />
+                        <el-input v-if="item.type === 'input'" v-model="formHeader[item.value]" :disabled="!isRedact" size="mini" :placeholder="item.placeholder" style="width: 120px;" />
                     </el-form-item>
                 </el-form>
             </div>

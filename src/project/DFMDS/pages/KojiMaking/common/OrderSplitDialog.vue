@@ -213,15 +213,13 @@
 
         // 获取发酵罐下拉选项
         getFermentationHolder() {
-            COMMON_API.HOLDER_QUERY_API({
+            COMMON_API.HOLDER_QUERY_BY_NOPAGE_API({
                 // deptId: params.workShop,
                 factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
-                holderType: '001',
-                size: 99999,
-                current: 1
+                holderType: '001'
             }).then(({ data }) => {
                 this.fermentPotNoOptions = []
-                data.data.records.forEach(item => {
+                data.data.forEach(item => {
                     this.fermentPotNoOptions.push({ optLabel: item.holderName, optValue: item.holderNo, optId: item.id })
                 })
             })
@@ -229,15 +227,13 @@
 
         // 获取曲房下拉选项
         getKojiHolder(params) {
-            COMMON_API.HOLDER_QUERY_API({
+            COMMON_API.HOLDER_QUERY_BY_NOPAGE_API({
                 factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
                 deptId: params.workShop,
-                holderType: '005',
-                size: 99999,
-                current: 1
+                holderType: '005'
             }).then(({ data }) => {
                 this.kojiHouseNoOptions = []
-                data.data.records.forEach(item => {
+                data.data.forEach(item => {
                     this.kojiHouseNoOptions.push({ optLabel: item.holderName, optValue: item.holderNo, optId: item.id })
                 })
             })

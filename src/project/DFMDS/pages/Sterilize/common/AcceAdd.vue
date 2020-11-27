@@ -429,21 +429,17 @@
             }).then(({ data }) => {
                 this.Unit = data.data;
             });
-            COMMON_API.HOLDER_QUERY_API({
+            COMMON_API.HOLDER_QUERY_BY_NOPAGE_API({
                 deptId: this.formHeader.workShop,
-                holderType: '022',
-                size: 99999,
-                current: 1
+                holderType: '022'
             }).then(({ data }) => {
-                this.transferTank = data.data.records
+                this.transferTank = data.data
             })
             COMMON_API.HOLDER_QUERY_API({
                 deptId: this.formHeader.workShop,
-                holderType: '023',
-                size: 99999,
-                current: 1
+                holderType: '023'
             }).then(({ data }) => {
-                this.useBoxNo = data.data.records
+                this.useBoxNo = data.data
             })
         }
 

@@ -1346,11 +1346,11 @@ export const SQU_API = {
      */
     SUM_MATERIAL_LIST_API: HOST + '/mid/prsMaterial/materialList',
     /**
-     * 车间汇总发酵罐号
+     * 车间汇总发酵罐/池号
      */
     SUM_POT_LIST_API: HOST + '/mid/prsMaterial/holderInfo',
     /**
-     * 车间汇总发酵罐号
+     * 车间汇总发酵罐/池号
      */
     SUM_POT_STATUS_API: HOST + '/mid/prsMaterial/updateHolderStatus',
     /**

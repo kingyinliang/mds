@@ -100,7 +100,7 @@
                         <el-table-column prop="useAmount" label="领用数量" min-width="50" />
                         <el-table-column prop="unitName" label="单位" min-width="35" />
                         <el-table-column prop="batch" label="领用批次" min-width="50" />
-                        <el-table-column prop="holderName" label="发酵罐/池" min-width="40" />
+                        <el-table-column prop="holderName" label="发酵罐/池号" min-width="40" />
                     </el-table>
                 </mds-card>
             </template>

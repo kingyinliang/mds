@@ -78,13 +78,13 @@
                 </el-table-column>
                 <el-table-column min-width="150px">
                     <template slot="header">
-                        <em class="reqI">*</em><span>发酵罐号1</span>
+                        <em class="reqI">*</em><span>发酵罐/池号1</span>
                     </template>
                     <template slot-scope="scope">
                         {{ scope.row.potOne }}
                     </template>
                 </el-table-column>
-                <el-table-column prop="potTwo" label="发酵罐号2" min-width="150px" />
+                <el-table-column prop="potTwo" label="发酵罐/池号2" min-width="150px" />
                 <el-table-column prop="classes" width="100px">
                     <template slot="header">
                         <em class="reqI">*</em><span>白/中/夜班</span>
@@ -158,12 +158,12 @@
                         <el-option v-for="(item, index) in sauceClassList" :key="index" :label="item.code + ' ' + item.value" :value="item.code + ' ' + item.value" />
                     </el-select>
                 </el-form-item>
-                <el-form-item label="发酵罐号：" :label-width="formLabelWidth" prop="potOne">
+                <el-form-item label="发酵罐/池号：" :label-width="formLabelWidth" prop="potOne">
                     <el-input v-model="sauce.potOne" style=" float: left; width: 259px;" /><el-button style="float: left; margin-left: 10px;" @click="addGuan()">
                         +
                     </el-button>
                 </el-form-item>
-                <el-form-item label="发酵罐号2：" :label-width="formLabelWidth" prop="potTwo" :style="{ display: guanTwoDisplayNo ? 'none' : '' }">
+                <el-form-item label="发酵罐/池号2：" :label-width="formLabelWidth" prop="potTwo" :style="{ display: guanTwoDisplayNo ? 'none' : '' }">
                     <el-input v-model="sauce.potTwo" style=" float: left; width: 259px;" /><el-button type="danger" icon="el-icon-delete" circle size="small" style="float: left; margin-left: 10px;" @click="delGuan()" />
                 </el-form-item>
                 <el-form-item label="白/中/夜班：" :label-width="formLabelWidth" prop="classes">
