@@ -129,13 +129,11 @@
             }).then(({ data }) => {
                 this.steWorkShop = data.data
             });
-            COMMON_API.HOLDER_QUERY_API({
-                current: 1,
+            COMMON_API.HOLDER_QUERY_BY_NOPAGE_API({
                 factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
-                holderType: '014',
-                size: 999
+                holderType: '014'
             }).then(({ data }) => {
-                this.holderList = data.data.records
+                this.holderList = data.data
             })
             this.GetData()
         }

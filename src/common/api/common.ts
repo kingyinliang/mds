@@ -200,6 +200,10 @@ const COMMON_API = {
      */
     HOLDER_QUERY_API: params => httpProxy('/sysHolder/query', 'POST', params),
     /**
+     * @property {string} HOLDER_QUERY_BY_NOPAGE_API 基础数据-容器管理-不分页查询
+     */
+    HOLDER_QUERY_BY_NOPAGE_API: params => httpProxy('/sysHolder/list/query', 'POST', params),
+    /**
      * @property {string} HOLDER_ID_QUERY_API 基础数据-容器管理-按ID查询容器
      */
     HOLDER_ID_QUERY_API: params => httpProxy('/sysHolder/queryById', 'GET', params),

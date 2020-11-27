@@ -185,10 +185,8 @@
                 defaultValue: '',
                 defaultOptionsFn: () => {
                     return new Promise((resolve) => {
-                        COMMON_API.HOLDER_QUERY_API({ // /sysHolder/query
+                        COMMON_API.HOLDER_QUERY_BY_NOPAGE_API({ // /sysHolder/query
                             factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
-                            current: 1,
-                            size: 9999,
                             holderType: '019' // 溶解罐参数编码
                         }).then((res) => {
                             resolve(res)
@@ -196,7 +194,7 @@
                     })
                 },
                 resVal: {
-                    resData: 'data.records',
+                    resData: 'data',
                     label: ['holderName'],
                     value: 'id'
                 }
