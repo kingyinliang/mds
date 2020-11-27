@@ -93,7 +93,7 @@
                 </el-table-column>
             </el-table>
             <el-form :inline="true" :model="craftInfo" style="margin-top: 5px;">
-                <el-form-item label="保温阶段-ZK：" style="margin-bottom: 5px;">
+                <el-form-item label="保温阶段-ZK：" style="margin-bottom: 0;">
                     <el-radio-group v-model="craftInfo.keepZkFlag" :disabled="!isRedact">
                         <el-radio label="Y">
                             是
@@ -103,7 +103,7 @@
                         </el-radio>
                     </el-radio-group>
                 </el-form-item>
-                <el-form-item label="降温阶段-ZK：" label-width="150px" style="margin-bottom: 5px;">
+                <el-form-item label="降温阶段-ZK：" label-width="100px" style="margin-bottom: 0;">
                     <el-radio-group v-model="craftInfo.coolZkFlag" :disabled="!isRedact">
                         <el-radio label="Y">
                             是
@@ -112,10 +112,50 @@
                             否
                         </el-radio>
                     </el-radio-group>
+                </el-form-item><br>
+                <el-form-item label="出料人：" style="margin-bottom: 0;">
+                    <div class="craftInputCss">
+                        <el-tooltip class="item" effect="dark" :content="dischargeManString" placement="top-start">
+                            <span v-if="!isRedact" style="cursor: not-allowed;">
+                                <em>{{ dischargeManString }}</em>
+                            </span>
+                            <span v-if="isRedact" style="cursor: pointer;" @click="selectUser(craftInfo.dischargeMan, 'dischargeMan', '出料人')">
+                                <em>{{ dischargeManString }}</em>
+                                <em>点击选择人员</em>
+                            </span>
+                        </el-tooltip>
+                    </div>
+                </el-form-item>
+                <el-form-item label="确认人：" label-width="100px" style="margin-bottom: 0;">
+                    <div class="craftInputCss">
+                        <el-tooltip class="item" effect="dark" :content="confirmManString" placement="top-start">
+                            <span v-if="!isRedact" style="cursor: not-allowed;">
+                                <em>{{ confirmManString }}</em>
+                            </span>
+                            <span v-if="isRedact" style="cursor: pointer;" @click="selectUser(craftInfo.confirmMan, 'confirmMan', '确认人')">
+                                <em>{{ confirmManString }}</em>
+                                <em> 点击选择人员</em>
+                            </span>
+                        </el-tooltip>
+                    </div>
+                </el-form-item>
+                <el-form-item label="要料人：" label-width="100px" style="margin-bottom: 0;">
+                    <div class="craftInputCss">
+                        <el-tooltip class="item" effect="dark" :content="wantManString" placement="top-start">
+                            <span v-if="!isRedact" style="cursor: not-allowed;">
+                                <em>{{ wantManString }}</em>
+                            </span>
+                            <span v-if="isRedact" style="cursor: pointer;" @click="selectUser(craftInfo.wantMan, 'wantMan', '要料人')">
+                                <em>{{ wantManString }}</em>
+                                <em> 点击选择人员</em>
+                            </span>
+                        </el-tooltip>
+                    </div>
                 </el-form-item>
             </el-form>
         </mds-card>
         <audit-log :table-data="craftAudit" :verify-man="'verifyMan'" :verify-date="'verifyDate'" :status="true" />
+        <loaned-personnel v-if="loanedPersonnelStatus" ref="loanedPersonnel" :arr-list="arrList" @changeUser="changeUser" />
     </div>
 </template>
 
@@ -123,11 +163,22 @@
 import { Vue, Component, Prop } from 'vue-property-decorator';
 import { COMMON_API, STE_API, AUDIT_API } from 'common/api/api';
 import { dateFormat, getUserNameNumber } from 'utils/utils';
+import LoanedPersonnel from 'components/LoanedPersonnel.vue';
 import _ from 'lodash';
 
-@Component
+@Component({
+    name: 'Craft',
+    components: {
+        LoanedPersonnel
+    }
+})
+
 export default class Crafts extends Vue {
     @Prop({ default: false }) isRedact: boolean;
+
+    $refs: {
+        loanedPersonnel: HTMLFormElement;
+    };
 
     controlTypeList = [];
     craftAudit = [];
@@ -139,6 +190,12 @@ export default class Crafts extends Vue {
     };
 
     doAction = '';
+    loanedPersonnelStatus = false;
+    arrList = [];
+    userType = ''; // 出料人、确认人、要料人
+    dischargeManString = '';
+    confirmManString = '';
+    wantManString = '';
 
     async init(formHeader) {
         this.getControlTypeList();
@@ -150,6 +207,18 @@ export default class Crafts extends Vue {
             } else {
                 this.doAction = 'update';
                 this.craftInfo = data.data
+                const dischargeMan = this.craftInfo.dischargeMan
+                if (dischargeMan) {
+                    this.dischargeManString = dischargeMan.join(',');
+                }
+                const confirmMan = this.craftInfo.confirmMan
+                if (confirmMan) {
+                    this.confirmManString = confirmMan.join(',');
+                }
+                const wantMan = this.craftInfo.wantMan
+                if (wantMan) {
+                    this.wantManString = wantMan.join(',');
+                }
                 this.craftTable = data.data.item
                 this.craftTableOrg = JSON.parse(JSON.stringify(data.data.item))
                 this.craftTable.map(item => {
@@ -288,6 +357,31 @@ export default class Crafts extends Vue {
         }
         return '';
     }
+
+    // 选择人员 正式借调
+    selectUser(userList, UserType, title) {
+        if (this.isRedact) {
+            this.userType = UserType;
+            this.loanedPersonnelStatus = true;
+            this.$nextTick(() => {
+                this.$refs.loanedPersonnel.init(userList, title);
+            });
+        }
+    }
+
+    // 员工确认
+    changeUser(userId) {
+        this.craftInfo[this.userType] = userId;
+        if (this.userType === 'dischargeMan') {
+            this.dischargeManString = userId.join(',');
+        } else if (this.userType === 'confirmMan') {
+            this.confirmManString = userId.join(',');
+        } else {
+            this.wantManString = userId.join(',');
+        }
+        this.arrList = userId;
+        this.loanedPersonnelStatus = false;
+    }
 }
 
 interface Craft {
@@ -298,6 +392,9 @@ interface Craft {
     craftTable?: object[];
     coolZkFlag?: string;
     keepZkFlag?: string;
+    dischargeMan?: string[];
+    confirmMan?: string[];
+    wantMan?: string[];
 }
 interface CraftList {
     id?: string;
@@ -316,5 +413,12 @@ interface CraftList {
 </script>
 
 <style scoped>
-
+.craftInputCss {
+    width: 200px;
+    min-height: 40px;
+    overflow: hidden;
+    line-height: 40px;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
 </style>

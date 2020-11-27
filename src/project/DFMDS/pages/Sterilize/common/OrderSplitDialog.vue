@@ -101,13 +101,11 @@
         }
 
         getHolder(params) {
-            COMMON_API.HOLDER_QUERY_API({
+            COMMON_API.HOLDER_LIST_ALL_API({
                 deptId: params.workShop,
-                holderType: '014',
-                size: 99999,
-                current: 1
+                holderType: '014'
             }).then(({ data }) => {
-                this.holder = data.data.records
+                this.holder = data.data
             })
         }
 

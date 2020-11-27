@@ -192,6 +192,10 @@ const COMMON_API = {
      */
     HOLDER_DROPDOWN_API: params => httpProxy('/sysHolder/dropDown', 'POST', params),
     /**
+     * @property {string} HOLDER_DROPDOWN_API 基础数据-容器管理-下拉列表查询
+     */
+    HOLDER_LIST_ALL_API: params => httpProxy('/sysHolder/list/query', 'POST', params),
+    /**
      * @property {string} HOLDER_INSERT_API 基础数据-容器管理-保存容器
      */
     HOLDER_INSERT_API: params => httpProxy('/sysHolder/insert', 'POST', params),

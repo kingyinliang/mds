@@ -88,13 +88,11 @@
         };
 
         mounted() {
-            COMMON_API.HOLDER_QUERY_API({
+            COMMON_API.HOLDER_LIST_ALL_API({
                 factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
-                current: 1,
-                size: 9999,
                 holderType: '001'
             }).then(({ data }) => {
-                this.potArr = data.data.records
+                this.potArr = data.data
             })
             ORDER_API.ORDER_BOOM_LIST_API({
                 materialType: 'ZHAL',
