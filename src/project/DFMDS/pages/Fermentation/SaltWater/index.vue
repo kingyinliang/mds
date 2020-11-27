@@ -114,7 +114,7 @@
             },
             {
                 type: 'select',
-                label: '发酵罐/池',
+                label: '发酵罐/池号',
                 prop: 'holderId',
                 labelWidth: 90,
                 filterable: true,

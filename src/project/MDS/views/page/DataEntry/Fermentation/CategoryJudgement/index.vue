@@ -28,7 +28,7 @@
                                 <el-option v-for="(item, index) of statusList" :key="index" :label="item.name" :value="item.value" />
                             </el-select>
                         </el-form-item>
-                        <el-form-item label="发酵罐号：">
+                        <el-form-item label="发酵罐/池号：">
                             <el-select v-model="form.holderId" filterable class="width160px">
                                 <el-option value="">
                                     请选择

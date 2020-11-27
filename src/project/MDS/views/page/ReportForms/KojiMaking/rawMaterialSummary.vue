@@ -42,7 +42,7 @@ export default {
                 },
                 {
                     type: 'select',
-                    label: '发酵罐号',
+                    label: '发酵罐/池号',
                     prop: 'inPotNo',
                     filterable: true,
                     resVal: {
@@ -95,7 +95,7 @@ export default {
                 },
                 {
                     prop: 'inPotNo',
-                    label: '发酵罐号',
+                    label: '发酵罐/池号',
                     width: '100'
                 },
                 {
