@@ -180,6 +180,11 @@
                             {{ scope.row.feedDate }}
                         </template>
                     </el-table-column>
+                    <el-table-column label="备注" width="160">
+                        <template slot-scope="scope">
+                            {{ scope.row.remark }}
+                        </template>
+                    </el-table-column>
                     <el-table-column label="操作人" width="160">
                         <template slot-scope="scope">
                             {{ scope.row.changer }}
