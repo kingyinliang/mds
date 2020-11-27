@@ -101,7 +101,7 @@
         }
 
         getHolder(params) {
-            COMMON_API.HOLDER_LIST_ALL_API({
+            COMMON_API.HOLDER_QUERY_BY_NOPAGE_API({
                 deptId: params.workShop,
                 holderType: '014'
             }).then(({ data }) => {

@@ -18,7 +18,7 @@
                                         <el-option v-for="sole in workshopList" :key="sole.deptId" :label="sole.deptName" :value="sole.deptId" />
                                     </el-select>
                                 </el-form-item>
-                                <el-form-item label="发酵罐号：">
+                                <el-form-item label="发酵罐/池号：">
                                     <el-select v-model="params.holderId" size="small" filterable style="width: 150px;">
                                         <el-option label="请选择" value="" />
                                         <el-option v-for="sole in holderSemList" :key="sole.holderId" :label="sole.holderName" :value="sole.holderId" />

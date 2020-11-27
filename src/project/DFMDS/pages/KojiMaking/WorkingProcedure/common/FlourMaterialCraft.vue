@@ -506,14 +506,12 @@
 
         // 查询蒸球list
         getSteamBallList() {
-            COMMON_API.HOLDER_QUERY_API({
+            COMMON_API.HOLDER_QUERY_BY_NOPAGE_API({
                 deptId: this.formHeader.workShop,
                 factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
-                holderType: '026',
-                size: 99999,
-                current: 1
+                holderType: '026'
             }).then(({ data }) => {
-                this.steamBallList = data.data.records
+                this.steamBallList = data.data
             })
         }
     }

@@ -276,7 +276,7 @@
             this.importBucketStatus = false
 
             // API 容器管理-分页查询-查询生产物料
-            await COMMON_API.HOLDER_QUERY_API({
+            await COMMON_API.HOLDER_QUERY_BY_NOPAGE_API({
                 factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
                 deptId: this.currentWorkShop,
                 current: 1,
@@ -284,9 +284,10 @@
                 holderNo: this.currentPotNo,
                 holderType: '019' // 溶解罐参数编码
             }).then(({ data }) => {
+                console.log(data)
                 this.optionsTree = []
-                if (data.data.records[0].material) {
-                    data.data.records[0].material.forEach((element, index) => {
+                if (data.data[0].material.length !== 0) {
+                    data.data[0].material.forEach((element, index) => {
                         this.optionsTree.push({
                             productMaterialList: [{ dictCode: element.materialCode, dictValue: `${element.materialName} ${element.materialCode}` }],
                             feedMateriallList: []

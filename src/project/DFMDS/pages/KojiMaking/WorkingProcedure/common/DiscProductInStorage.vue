@@ -100,7 +100,7 @@
 
         @Prop({ type: Boolean, default: false }) isRedact;
         @Prop({ type: String, default: '' }) status;
-        @Prop({ default: '' }) potNoNow: number|string; // 发酵罐号
+        @Prop({ default: '' }) potNoNow: number|string; // 发酵罐/池号
 
         targetOrderObj: OrderObject={}
         currentAudit = [];

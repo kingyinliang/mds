@@ -523,15 +523,13 @@
 
         // 获取曲房下拉选项
         getKojiHolder() {
-            COMMON_API.HOLDER_QUERY_API({
+            COMMON_API.HOLDER_QUERY_BY_NOPAGE_API({
                 factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
                 deptId: this.formHeader.workShop,
-                holderType: '005',
-                size: 99999,
-                current: 1
+                holderType: '005'
             }).then(({ data }) => {
                 this.kojiHouseNoOptions = []
-                data.data.records.forEach(item => {
+                data.data.forEach(item => {
                     this.kojiHouseNoOptions.push({ optLabel: item.holderName, optValue: item.holderNo, optId: item.id })
                 })
             })

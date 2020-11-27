@@ -120,7 +120,7 @@
             }
         ];
 
-        // 当前发酵罐号
+        // 当前发酵罐/池号
         potNoNow: string|number = '';
         potNoList: OptionPotNoList[]=[]
 
@@ -184,15 +184,13 @@
 
         // 获取溶解罐下拉选项
         getFermentationHolder() {
-            COMMON_API.HOLDER_QUERY_API({
+            COMMON_API.HOLDER_QUERY_BY_NOPAGE_API({
                 factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
-                holderType: '001',
-                size: 99999,
-                current: 1
+                holderType: '001'
             }).then(({ data }) => {
                 if (this.headerBase[5].option) {
                     this.headerBase[5].option.list = []
-                    data.data.records.forEach(item => {
+                    data.data.forEach(item => {
                         if (this.headerBase[5].option) {
                             this.headerBase[5].option.list.push({ optLabel: item.holderName, optValue: item.holderNo })
                         }
@@ -279,8 +277,8 @@
                         removeIds: excRecordTemp.ids,
                         updateDatas: excRecordTemp.updateDto
                     }, // 异常记录
-                    fermentPotId: this.formHeader.fermentPotId, // 发酵罐Id
-                    fermentPotNo: this.formHeader.fermentPotNo, // 发酵罐号
+                    fermentPotId: this.formHeader.fermentPotId, // 发酵罐/池号Id
+                    fermentPotNo: this.formHeader.fermentPotNo, // 发酵罐/池号
                     inStorage: productInStorageTemp,
                     kojiOrderNo: this.formHeader.kojiOrderNo, // 曲房单号
                     orderNo: this.formHeader.orderNo, // 订单号
