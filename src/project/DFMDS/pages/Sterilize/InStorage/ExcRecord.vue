@@ -117,6 +117,7 @@ export default class ExcRecord extends Vue {
         });
         Promise.all([net1, net2]).then(() => {
             COMMON_API.DEVICE_LISTBYTYPE_API({ deptId: formHeader.workShop }).then(({ data }) => {
+                this.excReasonTotal.FAULTSHUTDOWN = []
                 data.data.map(item => {
                     this.excReasonTotal.FAULTSHUTDOWN.push({
                         dictValue: item.deviceName,
