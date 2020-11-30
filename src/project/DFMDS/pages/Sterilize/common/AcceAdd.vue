@@ -435,9 +435,9 @@
             }).then(({ data }) => {
                 this.transferTank = data.data
             })
-            COMMON_API.HOLDER_QUERY_API({
+            COMMON_API.HOLDER_DROPDOWN_API({
                 deptId: this.formHeader.workShop,
-                holderType: '023'
+                holderType: ['023']
             }).then(({ data }) => {
                 this.useBoxNo = data.data
             })
