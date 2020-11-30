@@ -385,6 +385,7 @@
                     });
                     Promise.all([net1, net2, net3, net4]).then(() => {
                         // COMMON_API.DEVICE_LISTBYTYPE_API({ deptId: this.auditDetail['workShop'] }).then(({ data }) => {
+                        //  this.excReasonTotal.FAULTSHUTDOWN = []
                         //     data.data.map(item => {
                         //         this.excReasonTotal.FAULTSHUTDOWN.push({
                         //             dictValue: item.deviceName,

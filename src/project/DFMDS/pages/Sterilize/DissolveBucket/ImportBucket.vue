@@ -279,8 +279,6 @@
             await COMMON_API.HOLDER_QUERY_BY_NOPAGE_API({
                 factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
                 deptId: this.currentWorkShop,
-                current: 1,
-                size: 9999,
                 holderNo: this.currentPotNo,
                 holderType: '019' // 溶解罐参数编码
             }).then(({ data }) => {
@@ -308,6 +306,11 @@
                                 }
                             });
 
+                    })
+                } else {
+                    this.optionsTree.push({
+                        productMaterialList: [],
+                        feedMateriallList: []
                     })
                 }
             });
