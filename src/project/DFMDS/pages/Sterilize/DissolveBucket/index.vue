@@ -51,7 +51,7 @@
                                     </div>
                                 </div>
                                 <div class="card-bucket__fotter">
-                                    <div v-if="!(item.potStatus==='E'||item.potStatus==='C')">
+                                    <div v-show="!(item.potStatus==='E'||item.potStatus==='C')">
                                         <el-tooltip class="item" effect="dark" :content="item.prodcutMaterialName" placement="top">
                                             <span style="overflow: hidden; white-space: nowrap; text-overflow: ellipsis;">{{ item.prodcutMaterialName || '未有生产物料' }}</span>
                                         </el-tooltip>
@@ -134,7 +134,7 @@
         }
 
         // 共用变数
-        currentWorkShop='' // 当前车间
+        currentWorkShop=null // 当前车间  溶解罐取消车间维度
         currentPotId='' // 选取的当前罐id
         currentPotNo='' // 选取的当前罐号
         holderStatus: HolderStatus[]=[] // 罐状态对应
@@ -179,16 +179,15 @@
         queryTableFormData = [
             {
                 type: 'select',
-                label: '生产车间',
-                prop: 'workShop',
-                rule: [{ required: true, message: ' ', trigger: 'change' }],
+                label: '溶解罐号',
+                prop: 'potId',
                 labelWidth: 90,
+                defaultValue: '',
                 defaultOptionsFn: () => {
                     return new Promise((resolve) => {
-                        COMMON_API.ORG_QUERY_WORKSHOP_API({
+                        COMMON_API.HOLDER_QUERY_BY_NOPAGE_API({ // /sysHolder/query
                             factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
-                            deptType: ['WORK_SHOP'],
-                            deptName: '杀菌'
+                            holderType: '019' // 溶解罐参数编码
                         }).then((res) => {
                             resolve(res)
                         })
@@ -196,34 +195,6 @@
                 },
                 resVal: {
                     resData: 'data',
-                    label: ['deptName'],
-                    value: 'id'
-                },
-                linkageProp: ['potId']
-            },
-            {
-                type: 'select',
-                label: '溶解罐号',
-                prop: 'potId',
-                labelWidth: 80,
-                defaultValue: '',
-                optionsFn: val => {
-                    return new Promise((resolve) => {
-                        COMMON_API.HOLDER_QUERY_API({ // /sysHolder/query
-                            factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
-                            deptId: val,
-                            current: 1,
-                            size: 9999,
-                            holderType: '019' // 溶解罐参数编码
-                        }).then((res) => {
-                            // eslint-disable-next-line no-invalid-this
-                            this.setEnvVal(val)
-                            resolve(res)
-                        })
-                    })
-                },
-                resVal: {
-                    resData: 'data.records',
                     label: ['holderName'],
                     value: 'id'
                 }
@@ -261,10 +232,6 @@
         ]
 
         queryTableFormRules = [
-            {
-                prop: 'workShop',
-                text: '请选择生产车间'
-            }
         ]
 
 
@@ -286,10 +253,6 @@
                 })
             });
 
-        }
-
-        setEnvVal(val) {
-            this.currentWorkShop = val
         }
 
         // 入罐完成
@@ -686,6 +649,12 @@ interface CurrentDataTable{
         padding: 11px 10px;
         font-size: 14px;
         border-bottom: 1px #e8e8e8 solid;
+        span {
+            width: 80%;
+            overflow: hidden;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+        }
 
         .el-button {
             font-size: 12px;

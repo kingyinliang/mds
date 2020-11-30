@@ -25,7 +25,7 @@
                             {{ scope.row.consumeType==='1'?'是':'否' }}
                         </template>
                     </el-table-column>
-                    <el-table-column prop="fermentPotName" label="发酵罐号" min-width="100" :show-overflow-tooltip="true" />
+                    <el-table-column prop="fermentPotName" label="发酵罐/池号" min-width="100" :show-overflow-tooltip="true" />
                     <el-table-column prop="aiShelves" label="领用物料" min-width="120" :show-overflow-tooltip="true">
                         <template slot-scope="scope">
                             {{ scope.row.materialCode }}
@@ -92,13 +92,17 @@
                 this.semiTable = JSON.parse(JSON.stringify(data.data));
                 this.orgSemiTable = JSON.parse(JSON.stringify(data.data));
             })
-            this.semiAudit = await this.getAudit(formHeader, 'MATERIAL');
+            this.semiAudit = await this.getAudit(formHeader, ['SEMI', 'MATERIAL']);
         }
 
         async getAudit(formHeader, verifyType) {
-            const a = await AUDIT_API.AUDIT_LOG_LIST_API({
-                orderNo: formHeader.potOrderNo,
+            console.log(formHeader);
+            const a = await AUDIT_API.STE_AUDIT_LOG_API({
+                orderNo: formHeader.orderNo,
+                splitOrderNo: formHeader.potOrderNo,
                 verifyType: verifyType
+                // orderNo: formHeader.potOrderNo,
+                // verifyType: verifyType
             })
             return a.data.data
         }

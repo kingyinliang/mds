@@ -3,7 +3,7 @@
  * @Anthor: Telliex
  * @Date: 2020-09-16 12:08:51
  * @LastEditors: Telliex
- * @LastEditTime: 2020-10-20 20:42:18
+ * @LastEditTime: 2020-11-20 17:14:29
 -->
 <template lang="pug">
     div
@@ -17,7 +17,7 @@
                         span(v-else-if="orderStatus === '待审核'") 已提交至主管审核，请等待
                         span(v-else-if="orderStatus === '已审核'") 已提交至生管审核，请等待
                         span(v-else-if="orderStatus === '已保存'")
-                            span(v-if="isRedact") {{ formHeader.changer }}于{{ dateChange }}分钟前已保存
+                            span(v-if="isRedact") {{ changer }}于{{ dateChange }}分钟前已保存
                             span(v-else) 点击编辑按钮，对当前页面进行编辑
                         span(v-else-if="orderStatus === '已退回'")
                             span(v-if="isRedact") 请及时保存数据
@@ -42,7 +42,6 @@
                     div(class="redact_btn")
                         el-button(v-if="isRedact && isAuth(redactAuth)" type="primary" size="small" @click="cancel") 取消
                         el-button(v-if="isAuth(saveAuth)" type="primary" size="small" @click="save") {{ isRedact ? '保存' : '编辑' }}
-
         el-dialog(width="400px" title="分批提交" :close-on-click-modal="false" :visible.sync="visible")
             p(style="margin-bottom: 20px; font-size: 18px;") 本次提交是否提交全部数据
             el-radio(v-model="submitRadio" label="1" style="font-size: 18px;") 紧急提交
@@ -50,10 +49,10 @@
             span(slot="footer" class="dialog-footer")
                 el-button(@click="visible = false") 取消
                 el-button(type="primary" @click="") 确定
-
 </template>
 <script lang="ts">
     import { Vue, Component, Prop } from 'vue-property-decorator';
+    import { getDateDiff, dateFormat } from 'utils/utils';
     // import { COMMON_API, STE_API } from 'common/api/api';
     // import { dateFormat } from 'utils/utils';
 
@@ -68,7 +67,7 @@
 
         }
 
-        @Prop({ default: true }) redactBoxStatus: boolean;
+        @Prop({ default: true }) redactBoxStatus: boolean; // 检测数据底部只显示取消和编辑
         @Prop({ default: false }) onlySubmit: boolean;
         @Prop({ default: false }) isRedact: boolean;
         @Prop({ default: true }) isShowSubmitBtn: boolean;
@@ -76,6 +75,8 @@
         @Prop({ type: Array, default: () => { return ['submit', 'checked'] } }) notPermitSubmitStatus;
 
         @Prop({ default: 'entry' }) type: string;
+        @Prop({ default: '' }) changer: string;
+        @Prop({ default: '' }) changed: string;
         @Prop({ default: '' }) redactAuth: string; // 编辑取消按钮操作权限
         @Prop({ default: '' }) submitAuth: string; // 提交按钮操作权限
         @Prop({ default: '' }) saveAuth: string; // 保存按钮操作权限
@@ -90,9 +91,14 @@
         // isRedact=false
         visible=false
         submitRadio = '2';
+        dateChange = 0;
 
         mounted() {
-           //
+            setInterval(() => {
+                if (this.changed) {
+                    this.dateChange = Math.trunc(Number(getDateDiff(this.changed, dateFormat(new Date(), 'yyyy-MM-dd hh:mm:ss'), 'minute')))
+                }
+            }, 3000)
         }
 
         setRedact() {
@@ -112,21 +118,23 @@
                         return false;
                     }
                 }
-                this.savedDatas(str).then(res => {
+                this.savedDatas().then(res => {
                     if (res !== false) {
                         // this.isRedact = false;
                         this.$emit('update:isRedact', false)
+                        this.$emit('sendSuccess');
                         this.$successToast('保存成功');
-                        this.$emit('success');
+
                     }
                 });
             } else {
-                this.submitDatas(str).then(res => {
+                this.submitDatas().then(res => {
                     if (res !== false) {
                         // this.isRedact = false;
                         this.$emit('update:isRedact', false)
+                        this.$emit('sendSuccess');
                         this.$successToast('提交成功');
-                        this.$emit('success');
+
                     }
                 });
             }

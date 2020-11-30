@@ -1,4 +1,6 @@
 const HOST = process.env.VUE_APP_MDS_API;
+const HOST_DFMDS = process.env.VUE_APP_BASE_API;
+const HOST_DFMDS_API_V = process.env.VUE_APP_API_V;
 /*
  *MAINapi
  */
@@ -1344,11 +1346,11 @@ export const SQU_API = {
      */
     SUM_MATERIAL_LIST_API: HOST + '/mid/prsMaterial/materialList',
     /**
-     * 车间汇总发酵罐号
+     * 车间汇总发酵罐/池号
      */
     SUM_POT_LIST_API: HOST + '/mid/prsMaterial/holderInfo',
     /**
-     * 车间汇总发酵罐号
+     * 车间汇总发酵罐/池号
      */
     SUM_POT_STATUS_API: HOST + '/mid/prsMaterial/updateHolderStatus',
     /**
@@ -1791,8 +1793,11 @@ export const ECHARTS_API = {
     KOJIMAKING_WORKSHOP_HOUSEMATERIAL: HOST + '/zhiqu/board/houseUsedMaterial',
     KOJIMAKING_WORKSHOP_HOUSEPHASE: HOST + '/zhiqu/board/houseUsedPhase',
     KOJIMAKING_DETAIL_LINE: HOST + '/zhiqu/board/lineChart',
-    OZONE_LINE: HOST + '/o3/board/boardList'
+    OZONE_LINE: HOST + '/o3/board/boardList',
+    OYSTER_SAUCE_LIST: HOST_DFMDS + HOST_DFMDS_API_V + '/sterilizePot/query',
+    OYSTER_SAUCE_LINE: HOST_DFMDS + HOST_DFMDS_API_V + '/sterilizePot/queryDetail'
 };
+
 /**
  *  计粮仓 api
  * /realTime/wheat/wheatMeasuringBin

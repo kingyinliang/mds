@@ -9,7 +9,7 @@
             :order-status="formHeader.statusName"
             :header-base="headerBase"
             :form-header="formHeader"
-            :tabs="currentTabs"
+            :tabs="tabs"
             :submit-rules="submitRules"
             :saved-datas="savedDatas"
             :submit-datas="submitDatas"
@@ -55,6 +55,7 @@
             washBeanMaterialCraft: HTMLFormElement;
             excRecord: HTMLFormElement;
             textRecord: HTMLFormElement;
+            dataEntry: HTMLFormElement;
         }
 
         orderIndex=['已同步', '已保存', '待审核', '已审核', '已过账', '已退回', '未录入']
@@ -109,7 +110,7 @@
             {
                 type: 'p',
                 icon: 'factory-riqi1',
-                label: '发酵罐号',
+                label: '发酵罐/池号',
                 value: 'fermentPotName'
             },
             {
@@ -126,17 +127,14 @@
             }
         ];
 
-        get currentTabs() {
-            const { washBeanMaterailName, washBeanCraftName } = this.$store.state.koji.houseTagInfo;
-            this.$set(this.formHeader, 'statusName', this.orderIndex[Math.min(this.orderIndex.indexOf(washBeanMaterailName), this.orderIndex.indexOf(washBeanCraftName))])
-            return [
+        tabs = [
                 {
                     label: '物料领用',
-                    status: washBeanMaterailName || ''
+                    status: '未录入'
                 },
                 {
                     label: '工艺控制',
-                    status: washBeanCraftName || ''
+                    status: '未录入'
                 },
                 {
                     label: '异常记录'
@@ -145,7 +143,6 @@
                     label: '文本记录'
                 }
             ]
-        }
 
         submitRules(): Function[] {
             return [this.$refs.washBeanMaterialCraft.ruleSubmit, this.$refs.excRecord.ruleSubmit]
@@ -183,6 +180,11 @@
                 kojiOrderNo: this.formHeader.kojiOrderNo
             }).then(({ data }) => {
                 this.$store.commit('koji/updateHouseTag', data.data);
+                this.tabs[0].status = data.data.washBeanMaterailName
+                this.tabs[1].status = data.data.washBeanCraftName
+                this.$refs.dataEntry.updateTabs();
+                this.$set(this.formHeader, 'statusName', this.orderIndex[Math.min(this.orderIndex.indexOf(data.data.washBeanMaterailName), this.orderIndex.indexOf(data.data.washBeanCraftName))])
+
             })
         }
 

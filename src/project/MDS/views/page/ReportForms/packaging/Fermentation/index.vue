@@ -18,7 +18,7 @@
                         <el-option v-for="(item, index) in workshop" :key="index" :value="item.deptId" :label="item.deptName" />
                     </el-select>
                 </el-form-item>
-                <el-form-item label="发酵罐号：">
+                <el-form-item label="发酵罐/池号：">
                     <el-select v-model="formHeader.potNo" placeholder="请选择" multiple filterable allow-create default-first-op style="width: 140px;" @change="ChangeSearch()">
                         <el-option v-for="(sole, index) in guanList" :key="index" :value="sole.holderNo" :label="sole.holderName" />
                     </el-select>

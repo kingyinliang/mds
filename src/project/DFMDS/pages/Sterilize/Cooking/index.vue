@@ -104,7 +104,7 @@
                         {{ formatData.potStatusName }}
                     </el-form-item>
                     <el-form-item label="生产物料：">
-                        {{ formatData.productMaterial }} {{ formatData.productMaterialName }}
+                        {{ formatData.productMaterialName }} {{ formatData.productMaterial }}
                     </el-form-item>
                     <el-form-item label="罐内数量：">
                         {{ formatData.remainder }} KG
@@ -211,7 +211,7 @@ export default class CookingIndex extends Vue {
         if (deptId) {
             COMMON_API.HOLDER_DROPDOWN_API({
                 deptId: this.formHeader.workShop,
-                holderType: '020'
+                holderType: ['020']
             }).then(({ data }) => {
                 this.holderList = data.data
             })
@@ -322,7 +322,7 @@ export default class CookingIndex extends Vue {
             potNoName: row.potNoName,
             remainder: row.remainder,
             productMaterial: row.productMaterial,
-            productMaterialName: row.productMaterial,
+            productMaterialName: row.productMaterialName,
             potStatusName: row.potStatusName,
             moveAmount: row.remainder,
             moveUnit: 'KG',

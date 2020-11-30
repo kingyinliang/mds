@@ -4,20 +4,21 @@
         redact-auth="steSemiEdit"
         save-auth="steSemiEdit"
         submit-auth="steSemiSubmit"
+        :status-title="'工序状态'"
         :order-status="formHeader.statusName"
         :header-base="headerBase"
         :form-header="formHeader"
-        :tabs="currentTabs"
+        :tabs="tabs"
         :submit-rules="submitRules"
         :saved-datas="savedDatas"
         :submit-datas="submitDatas"
         @success="getOrderList"
     >
         <template slot="1" slot-scope="data">
-            <craft-control ref="craftControl" :is-redact="data.isRedact" :target-obj="formHeader" />
+            <craft-control ref="craftControl" :is-redact="data.isRedact" :form-header="formHeader" />
         </template>
         <template slot="2" slot-scope="data">
-            <product-in-storage ref="productInStorage" :is-redact="data.isRedact" :target-obj="formHeader" />
+            <product-in-storage ref="productInStorage" :pot-no-now="potNoNow" :pot-no-list="potNoList" :is-redact="data.isRedact" :form-header="formHeader" />
         </template>
         <template slot="3" slot-scope="data">
             <koji-exc-record ref="excRecord" :is-redact="data.isRedact" :form-header="formHeader" />
@@ -29,7 +30,7 @@
 </template>
 
 <script lang="ts">
-    import { Vue, Component } from 'vue-property-decorator';
+    import { Vue, Component, Watch } from 'vue-property-decorator';
     import { COMMON_API, KOJI_API } from 'common/api/api';
 
     import CraftControl from './common/DiscCraftControl.vue'; // import tab 工艺控制
@@ -48,6 +49,7 @@
     })
     export default class WashBeanIndex extends Vue {
         $refs: {
+            dataEntry: HTMLFormElement;
             craftControl: HTMLFormElement; // tab 工艺控制
             productInStorage: HTMLFormElement; // tab 工艺控制
             excRecord: HTMLFormElement; // 异常记录
@@ -118,26 +120,33 @@
             }
         ];
 
-        get currentTabs() {
-            const { discCraftName, discInStorageName } = this.$store.state.koji.houseTagInfo;
-            this.$set(this.formHeader, 'statusName', this.orderIndex[Math.min(this.orderIndex.indexOf(discCraftName), this.orderIndex.indexOf(discInStorageName))])
+        // 当前发酵罐/池号
+        potNoNow: string|number = '';
+        potNoList: OptionPotNoList[]=[]
 
-            return [
-            {
-                label: '工艺控制',
-                status: discCraftName || ''
-            },
-            {
-                label: '生产入库',
-                status: discInStorageName || ''
-            },
-            {
-                label: '异常记录'
-            },
-            {
-                label: '文本记录'
-            }
+
+        tabs = [
+                {
+                    label: '工艺控制',
+                    status: '未录入'
+                },
+                {
+                    label: '生产入库',
+                    status: '未录入'
+                },
+                {
+                    label: '异常记录'
+                },
+                {
+                    label: '文本记录'
+                }
             ]
+
+        @Watch('formHeader.fermentPotNo', { immediate: true, deep: true })
+        onChangeValue(newVal: number| string) {
+            if (newVal) {
+                this.potNoNow = newVal
+            }
         }
 
         // 获取页签状态
@@ -147,6 +156,10 @@
                 kojiOrderNo: this.formHeader.kojiOrderNo
             }).then(({ data }) => {
                 this.$store.commit('koji/updateHouseTag', data.data);
+                this.tabs[0].status = data.data.discCraftName
+                this.tabs[1].status = data.data.discInStorageName
+                this.$refs.dataEntry.updateTabs();
+                this.$set(this.formHeader, 'statusName', this.orderIndex[Math.min(this.orderIndex.indexOf(data.data.discCraftName), this.orderIndex.indexOf(data.data.discInStorageName))])
             })
         }
 
@@ -171,19 +184,19 @@
 
         // 获取溶解罐下拉选项
         getFermentationHolder() {
-            COMMON_API.HOLDER_QUERY_API({
+            COMMON_API.HOLDER_QUERY_BY_NOPAGE_API({
                 factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
-                holderType: '001',
-                size: 99999,
-                current: 1
+                holderType: '001'
             }).then(({ data }) => {
                 if (this.headerBase[5].option) {
                     this.headerBase[5].option.list = []
-                    data.data.records.forEach(item => {
+                    data.data.forEach(item => {
                         if (this.headerBase[5].option) {
                             this.headerBase[5].option.list.push({ optLabel: item.holderName, optValue: item.holderNo })
                         }
+                        this.potNoList.push({ optValue: item.holderNo, optId: item.id })
                     })
+
                 }
             })
         }
@@ -264,8 +277,8 @@
                         removeIds: excRecordTemp.ids,
                         updateDatas: excRecordTemp.updateDto
                     }, // 异常记录
-                    fermentPotId: this.formHeader.fermentPotId, // 发酵罐Id
-                    fermentPotNo: this.formHeader.fermentPotNo, // 发酵罐号
+                    fermentPotId: this.formHeader.fermentPotId, // 发酵罐/池号Id
+                    fermentPotNo: this.formHeader.fermentPotNo, // 发酵罐/池号
                     inStorage: productInStorageTemp,
                     kojiOrderNo: this.formHeader.kojiOrderNo, // 曲房单号
                     orderNo: this.formHeader.orderNo, // 订单号
@@ -279,6 +292,11 @@
     interface OptionObj {
         optLabel?: string;
         optValue?: string;
+        optId?: string;
+    }
+    interface OptionPotNoList {
+        optValue?: string;
+        optId?: string;
     }
 
     interface HeaderBaseOption{

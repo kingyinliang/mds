@@ -18,7 +18,7 @@
                             <div class="home_card__main__item">
                                 <div class="home_card__main__item__title clearfix">
                                     <p class="home_card__main__item__title__left">
-                                        锅号：<span class="home_card__main__item__title__left__proLine">{{ item.potNo }}</span>锅
+                                        锅号：<span class="home_card__main__item__title__left__proLine">{{ item.splitOrders[0].potName }}</span>
                                     </p>
                                     <p v-if="item.activeOrderNo!==''" :class="item.potOrderMap? item.potOrderMap.statusName === '已退回' ? 'noPass' : '' : ''" class="home_card__main__item__title__right">
                                         <span>状态：{{ item.potOrderMap? item.potOrderMap.statusName : '' }}</span>
@@ -41,7 +41,7 @@
                                         <el-form-item label="生产物料：">
                                             <div class="disabled-input el-input el-input--small is-disabled">
                                                 <el-tooltip class="item" effect="dark" :content=" item.orderNoMap? `${item.orderNoMap.materialCode} ${item.orderNoMap.materialName}` : ''" placement="top">
-                                                    <span class="el-input__inner">{{ item.orderNoMap? `${item.orderNoMap.materialCode} ${item.orderNoMap.materialName}` : '' }}</span>
+                                                    <span class="el-input__inner">{{ item.orderNoMap? `${item.orderNoMap.materialName} ${item.orderNoMap.materialCode}` : '' }}</span>
                                                 </el-tooltip>
                                             </div>
                                         </el-form-item>

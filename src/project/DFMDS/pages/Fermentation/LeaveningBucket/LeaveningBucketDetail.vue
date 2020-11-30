@@ -1,0 +1,419 @@
+<template>
+    <div class="header_main">
+        <el-row class="dataEntry-head-leftRight" :gutter="10">
+            <el-col :span="4">
+                <div class="card-left" style="background: #fff;">
+                    <p class="dataEntry-head-leftRight__title" style="color: #333;">
+                        罐号：{{ formData.potName }}
+                    </p>
+                    <div class="dataEntry-head-leftRight-pot">
+                        <!-- <div class="dataEntry-head-leftRight-pot__tank">
+                            <div class="dataEntry-head-leftRight-pot__tank__bg" />
+                        </div> -->
+                        <img src="~DFMDS/assets/img/pot-c.png" alt="" style=" left: 0; z-index: 1;">
+                        <img src="~DFMDS/assets/img/pot.png" alt="" style=" left: 0; z-index: 2;">
+                    </div>
+                </div>
+            </el-col>
+            <el-col :span="20">
+                <div class="card-right" style="background: #fff;">
+                    <el-form ref="Leavening" :model="LeaveningformData" size="small" label-width="120px" :inline="true" class="markStyle">
+                        <el-form-item
+                            label="生产车间："
+                        >
+                            <template slot="label">
+                                <span>{{ LeaveningformData.a }}：</span>
+                            </template>
+                        </el-form-item>
+                        <el-form-item
+                            label="生产订单："
+                        >
+                            <el-tooltip class="item" effect="dark" :content="LeaveningformData.b" placement="top">
+                                <el-input
+                                    v-model="LeaveningformData.b"
+                                    placeholder=""
+                                    :disabled="true"
+                                />
+                            </el-tooltip>
+                        </el-form-item>
+                        <el-form-item
+                            label="生产物料："
+                        >
+                            <el-tooltip class="item" effect="dark" :content="LeaveningformData.c" placement="top">
+                                <el-input
+                                    v-model="LeaveningformData.c"
+                                    placeholder=""
+                                    :disabled="true"
+                                />
+                            </el-tooltip>
+                        </el-form-item>
+                        <el-form-item
+                            label="订单数量："
+                        >
+                            <el-input
+                                v-model="LeaveningformData.d"
+                                placeholder=""
+                                style="width: 180px;"
+                                :disabled="true"
+                            />
+                        </el-form-item>
+                        <el-form-item
+                            label="库存数量："
+                        >
+                            <el-input
+                                v-model="LeaveningformData.e"
+                                placeholder=""
+                                style="width: 180px;"
+                                :disabled="true"
+                            />
+                        </el-form-item>
+                        <el-form-item
+                            label="状态："
+                        >
+                            <el-input
+                                v-model="LeaveningformData.f"
+                                placeholder=""
+                                style="width: 180px;"
+                                :disabled="true"
+                            />
+                        </el-form-item>
+                        <el-form-item
+                            label="入罐日期："
+                        >
+                            <el-input
+                                v-model="LeaveningformData.g"
+                                placeholder=""
+                                style="width: 180px;"
+                                :disabled="true"
+                            />
+                        </el-form-item>
+                        <el-form-item
+                            label="发酵天数："
+                        >
+                            <el-input
+                                v-model="LeaveningformData.h"
+                                placeholder=""
+                                style="width: 180px;"
+                                :disabled="true"
+                            />
+                        </el-form-item>
+                        <el-form-item
+                            label="是否成熟："
+                        >
+                            <el-input
+                                v-model="LeaveningformData.i"
+                                placeholder=""
+                                style="width: 180px;"
+                                :disabled="true"
+                            />
+                        </el-form-item>
+                        <el-form-item label="特殊资源：">
+                            <el-radio-group v-model="LeaveningformData.j">
+                                <el-radio label="盐水已发" />
+                                <el-radio label="盐水发料中" />
+                                <el-radio label="盐水未发" />
+                            </el-radio-group>
+                        </el-form-item>
+                    </el-form>
+                </div>
+            </el-col>
+        </el-row>
+        <el-tabs id="DaatTtabs" ref="tabs" v-model="activetTabName" class="NewDaatTtabs tabsPages" type="border-card">
+            <el-tab-pane name="1">
+                <span slot="label" class="spanview">
+                    当前库存
+                </span>
+                <el-table header-row-class-name="" :data="currentInventoryDataGroup" border tooltip-effect="dark" class="newTable" size="mini">
+                    <el-table-column type="index" label="序号" width="55" fixed align="center" />
+                    <el-table-column label="车间" :show-overflow-tooltip="true" width="180">
+                        <template slot-scope="scope">
+                            {{ scope.row.a }}
+                        </template>
+                    </el-table-column>
+                    <el-table-column label="生产订单" :show-overflow-tooltip="true" width="280">
+                        <template slot-scope="scope">
+                            {{ scope.row.b }}
+                        </template>
+                    </el-table-column>
+                    <el-table-column label="订单类型" :show-overflow-tooltip="true" width="180">
+                        <template slot-scope="scope">
+                            {{ scope.row.c }}
+                        </template>
+                    </el-table-column>
+                    <el-table-column label="物料" :show-overflow-tooltip="true" width="180">
+                        <template slot-scope="scope">
+                            {{ scope.row.d }}
+                        </template>
+                    </el-table-column>
+                    <el-table-column label="物料批次" :show-overflow-tooltip="true" width="180">
+                        <template slot-scope="scope">
+                            {{ scope.row.e }}
+                        </template>
+                    </el-table-column>
+                    <el-table-column label="移动类型" :show-overflow-tooltip="true" width="180">
+                        <template slot-scope="scope">
+                            {{ scope.row.f }}
+                        </template>
+                    </el-table-column>
+                    <el-table-column label="移动数量" :show-overflow-tooltip="true" width="180">
+                        <template slot-scope="scope">
+                            {{ scope.row.g }}
+                        </template>
+                    </el-table-column>
+                    <el-table-column label="单位" :show-overflow-tooltip="true" width="180">
+                        <template slot-scope="scope">
+                            {{ scope.row.h }}
+                        </template>
+                    </el-table-column>
+                    <el-table-column label="来源车间" :show-overflow-tooltip="true" width="180">
+                        <template slot-scope="scope">
+                            {{ scope.row.i }}
+                        </template>
+                    </el-table-column>
+                    <el-table-column label="来源订单" :show-overflow-tooltip="true" width="180">
+                        <template slot-scope="scope">
+                            {{ scope.row.j }}
+                        </template>
+                    </el-table-column>
+                    <el-table-column label="曲房号" :show-overflow-tooltip="true" width="180">
+                        <template slot-scope="scope">
+                            {{ scope.row.k }}
+                        </template>
+                    </el-table-column>
+                    <el-table-column label="来源罐号" :show-overflow-tooltip="true" width="180">
+                        <template slot-scope="scope">
+                            {{ scope.row.l }}
+                        </template>
+                    </el-table-column>
+                    <el-table-column label="入罐日期" :show-overflow-tooltip="true" width="180">
+                        <template slot-scope="scope">
+                            {{ scope.row.m }}
+                        </template>
+                    </el-table-column>
+                    <el-table-column label="操作人" width="160">
+                        <template slot-scope="scope">
+                            {{ scope.row.changer }}
+                        </template>
+                    </el-table-column>
+                    <el-table-column label="操作时间" width="160">
+                        <template slot-scope="scope">
+                            {{ scope.row.changed }}
+                        </template>
+                    </el-table-column>
+                </el-table>
+            </el-tab-pane>
+            <el-tab-pane name="2">
+                <span slot="label" class="spanview">
+                    历史库存
+                </span>
+                <el-table header-row-class-name="" :data="historyInventoryDataGroup" border tooltip-effect="dark" class="newTable" size="mini">
+                    <el-table-column type="index" label="序号" width="55" fixed />
+                    <el-table-column label="车间" :show-overflow-tooltip="true" width="180">
+                        <template slot-scope="scope">
+                            {{ scope.row.a }}
+                        </template>
+                    </el-table-column>
+                    <el-table-column label="生产订单" :show-overflow-tooltip="true" width="280">
+                        <template slot-scope="scope">
+                            {{ scope.row.b }}
+                        </template>
+                    </el-table-column>
+                    <el-table-column label="订单类型" :show-overflow-tooltip="true" width="180">
+                        <template slot-scope="scope">
+                            {{ scope.row.c }}
+                        </template>
+                    </el-table-column>
+                    <el-table-column label="物料" :show-overflow-tooltip="true" width="180">
+                        <template slot-scope="scope">
+                            {{ scope.row.d }}
+                        </template>
+                    </el-table-column>
+                    <el-table-column label="物料批次" :show-overflow-tooltip="true" width="180">
+                        <template slot-scope="scope">
+                            {{ scope.row.e }}
+                        </template>
+                    </el-table-column>
+                    <el-table-column label="移动类型" :show-overflow-tooltip="true" width="180">
+                        <template slot-scope="scope">
+                            {{ scope.row.f }}
+                        </template>
+                    </el-table-column>
+                    <el-table-column label="移动数量" :show-overflow-tooltip="true" width="180">
+                        <template slot-scope="scope">
+                            {{ scope.row.g }}
+                        </template>
+                    </el-table-column>
+                    <el-table-column label="单位" :show-overflow-tooltip="true" width="180">
+                        <template slot-scope="scope">
+                            {{ scope.row.h }}
+                        </template>
+                    </el-table-column>
+                    <el-table-column label="来源车间" :show-overflow-tooltip="true" width="180">
+                        <template slot-scope="scope">
+                            {{ scope.row.i }}
+                        </template>
+                    </el-table-column>
+                    <el-table-column label="来源订单" :show-overflow-tooltip="true" width="180">
+                        <template slot-scope="scope">
+                            {{ scope.row.j }}
+                        </template>
+                    </el-table-column>
+                    <el-table-column label="曲房号" :show-overflow-tooltip="true" width="180">
+                        <template slot-scope="scope">
+                            {{ scope.row.k }}
+                        </template>
+                    </el-table-column>
+                    <el-table-column label="来源罐号" :show-overflow-tooltip="true" width="180">
+                        <template slot-scope="scope">
+                            {{ scope.row.l }}
+                        </template>
+                    </el-table-column>
+                    <el-table-column label="入罐日期" :show-overflow-tooltip="true" width="180">
+                        <template slot-scope="scope">
+                            {{ scope.row.m }}
+                        </template>
+                    </el-table-column>
+                    <el-table-column label="操作人" width="160">
+                        <template slot-scope="scope">
+                            {{ scope.row.changer }}
+                        </template>
+                    </el-table-column>
+                    <el-table-column label="操作时间" width="160">
+                        <template slot-scope="scope">
+                            {{ scope.row.changed }}
+                        </template>
+                    </el-table-column>
+                </el-table>
+            </el-tab-pane>
+        </el-tabs>
+    </div>
+</template>
+
+<script lang="ts">
+import { Vue, Component } from 'vue-property-decorator';
+// import { FRE_API } from 'common/api/api';
+// import MSG from '@/assets/js/hint-msg';
+@Component({
+    components: {},
+    name: 'DissolveBucketDetail'
+})
+export default class DissolveBucketDetail extends Vue {
+    importData: ImportData={}
+    activetTabName = '1';
+    // 当前数据
+    currentInventoryDataGroup = [];
+    totalDataList = [];
+    // 历史数据
+    historyInventoryDataGroup = [];
+    totalAdjustList = [];
+
+    formData = {}; // 上方表单讯息
+    LeaveningformData= {};
+
+    mounted() {
+        this.retrieveDetail();
+    }
+
+    retrieveDetail() {
+        console.log('取值')
+        console.log(this.$store.state.sterilize.dissolveBucketDetail)
+        this.importData = this.$store.state.sterilize.dissolveBucketDetail
+        // STE_API.STE_DISSOLUTIONBUCKET_ITEM_QUERY_API({
+        //     cycle: this.importData.cycle,
+        //     factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
+        //     potId: this.importData.potId,
+        //     potNo: this.importData.potNo,
+        //     // potStatus: this.importData.potStatus
+        //     workShop: this.importData.workShop
+        //     }).then(({ data }) => {
+        //         console.log('详细数据')
+        //         console.log(data)
+        //         this.formData = {
+        //             potName: this.importData.potName,
+        //             potAmount: this.importData.potAmount,
+        //             potCount: this.importData.potCount,
+        //             potNo: this.importData.potNo,
+        //             factoryName: JSON.parse(sessionStorage.getItem('factory') || '{}').deptShort,
+        //             amount: data.data.number,
+        //             unit: data.data.unit,
+        //             prodcutMaterial: data.data.materialName,
+        //             workShop: data.data.workShop
+        //         };
+        //         this.currentInventoryDataGroup = data.data.item
+        //         this.currentInventoryDataGroup.forEach(item => {
+        //             this.$set(item, 'potName', this.importData.potName)
+        //         })
+        //         this.historyInventoryDataGroup = data.data.historyItem
+        //         this.historyInventoryDataGroup.forEach(item => {
+        //             this.$set(item, 'potName', this.importData.potName)
+        //         })
+        // });
+
+    }
+
+    chechMoveType(typeString) {
+        if (typeString === 'I') {
+            return '投料'
+        } else if (typeString === 'F') {
+            return '领用'
+        }
+        return ''
+    }
+}
+interface ImportData{
+    potName?: string;
+    cycle?: string;
+    feedDate?: string;
+    id?: string;
+    potAmount?: string;
+    potId?: string;
+    potNo?: string;
+    potStatus?: string;
+    prodcutMaterial?: string;
+    prodcutMaterialName?: string;
+    ratio?: number;
+    workShop?: string;
+    potCount?: number;
+}
+
+</script>
+<style lang="scss" scoped>
+.header_main {
+    .dataEntry-head-leftRight-pot {
+        position: relative;
+        height: 150px;
+        overflow: hidden;
+        img {
+            position: absolute;
+        }
+    }
+    .dataEntry-head-leftRight-pot__tank {
+        bottom: 0;
+        left: 34px;
+        width: 32px;
+        height: 54px;
+    }
+    .dataEntry-head-leftRight-pot__tank__bg {
+        background-image: radial-gradient(at center top, #91d5ff, #1890ff);
+    }
+    .dataEntry-head-leftRight-message__item p:first-child {
+        font-size: 24px;
+    }
+    .dataEntry-head-leftRight-message__item p:first-child em {
+        font-size: 16px;
+    }
+}
+
+
+.el-form-item--small.el-form-item {
+    margin-bottom: 18px;
+}
+
+@media (max-width: 1367px) {
+    .header_main .dataEntry-head-leftRight .card-left,
+    .header_main .dataEntry-head-leftRight .card-right {
+        height: 170px;
+        padding: 10px;
+    }
+}
+</style>

@@ -314,14 +314,12 @@
                 ],
                 emitChange: (val) => {
                     return new Promise((resolve) => {
-                        COMMON_API.HOLDER_QUERY_API({
+                        COMMON_API.HOLDER_QUERY_BY_NOPAGE_API({
                             factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
                             deptId: val,
-                            holderType: '005',
-                            size: 99999,
-                            current: 1
+                            holderType: '005'
                         }).then(({ data }) => {
-                            const optionList = data.data.records;
+                            const optionList = data.data;
                             optionList.forEach(item => {
                                 // eslint-disable-next-line no-invalid-this
                                 this.$set(item, 'optLabel', item.holderName)
@@ -459,14 +457,12 @@
                 emitChange: (val) => {
                     // eslint-disable-next-line no-invalid-this
                     return new Promise((resolve) => {
-                        COMMON_API.HOLDER_QUERY_API({
+                        COMMON_API.HOLDER_QUERY_BY_NOPAGE_API({
                             factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
                             deptId: val,
-                            holderType: '005',
-                            size: 99999,
-                            current: 1
+                            holderType: '005'
                         }).then(({ data }) => {
-                            const optionList = data.data.records;
+                            const optionList = data.data;
                             optionList.forEach(item => {
                                 // eslint-disable-next-line no-invalid-this
                                 this.$set(item, 'optLabel', item.holderName)

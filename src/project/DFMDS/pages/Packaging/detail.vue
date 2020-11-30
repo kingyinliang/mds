@@ -11,6 +11,7 @@
             :tabs="tabs"
             :urgent-submit="true"
             :submit-rules="submitRules"
+            :saved-rules="savedRules"
             :saved-datas="savedDatas"
             :submit-datas="submitDatas"
             :submit-urgent="false"
@@ -191,6 +192,10 @@
             }
         ];
 
+        savedRules(): Function[] {
+            return [this.$refs.material.ruleSaved]
+        }
+
         // 提交校验
         submitRules(): Function[] {
             return [this.$refs.readyTime.ruleSubmit, this.$refs.productPeople.ruleSubmit, this.$refs.pendingNum.ruleSubmit, this.$refs.material.ruleSubmit, this.$refs.equipment.ruleSubmit, this.$refs.productInStorage.ruleSubmit]
@@ -206,6 +211,7 @@
             const { pkgDeviceSaveRequestDto, pkgExceptionSaveRequestDto } = this.$refs.equipment.savedData(this.formHeader);
             const { pkgPackingMaterial, pkgSemiMaterial } = this.$refs.material.savedData(this.formHeader);
             this.formHeader.orderId = this.formHeader.id;
+            console.log(pkgSemiMaterial);
 
             return PKG_API.PKG_ALL_SAVE_API({
                 pkgOrderUpdate: this.formHeader,

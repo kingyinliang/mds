@@ -6,10 +6,10 @@
                     <el-row style="float: right;">
                         <el-form :inline="true" :model="form" size="small" label-width="68px" class="topforms2" @submit.native.prevent>
                             <el-form-item>
-                                <el-input v-model="form.deptName" placeholder="车间" suffix-icon="el-icon-search" clearable @clear="getQueryItemList()" @keyup.enter.native="getQueryItemList()" />
+                                <el-input v-model="form.deptName" placeholder="车间" suffix-icon="el-icon-search" clearable />
                             </el-form-item>
                             <el-form-item style="height: 32px;">
-                                <el-button v-if="isAuth('stgcQuery')" type="primary" size="small" :disabled="form.deptName.trim() === ''" @click="getQueryItemList()">
+                                <el-button v-if="isAuth('stgcQuery')" type="primary" size="small" @click="getQueryItemList()">
                                     查询
                                 </el-button>
                                 <el-button v-if="isAuth('stgcInsert')" type="primary" size="small" @click="isAdvanceSearchDialogShow = true">

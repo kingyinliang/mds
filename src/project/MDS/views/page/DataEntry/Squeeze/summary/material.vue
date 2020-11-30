@@ -57,10 +57,10 @@
                         </el-button>
                     </template>
                 </el-table-column>
-                <el-table-column label="发酵罐号">
+                <el-table-column label="发酵罐/池号">
                     <el-table-column width="120">
                         <template slot="header">
-                            <em class="reqI">*</em><span>发酵罐号</span>
+                            <em class="reqI">*</em><span>发发酵罐/池号</span>
                         </template>
                         <template slot-scope="scope">
                             <el-select v-model="scope.row.material.childPotNo" filterable placeholder="请选择" :disabled="!(isRedact && scope.row.material.childStatus !== 'submit' && scope.row.material.childStatus !== 'checked' && scope.row.material.isDropDown === '1')" size="small" @visible-change="PotChange($event, scope.row)">

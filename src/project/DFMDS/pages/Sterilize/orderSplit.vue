@@ -73,7 +73,7 @@
                                 <el-table-column label="计划数量" width="120" prop="planOutput" :show-overflow-tooltip="true" />
                                 <el-table-column label="单位" width="70" prop="outputUnit" :show-overflow-tooltip="true" />
                                 <el-table-column label="生产日期" width="100" prop="productDate" :show-overflow-tooltip="true" />
-                                <el-table-column label="锅号" width="100" prop="potNo" :show-overflow-tooltip="true" />
+                                <el-table-column label="锅号" width="100" prop="potName" :show-overflow-tooltip="true" />
                                 <el-table-column label="锅数" width="100" prop="potCount" :show-overflow-tooltip="true" />
                                 <el-table-column label="每锅数量" width="100" prop="potAmount" :show-overflow-tooltip="true" />
                                 <el-table-column label="备注" width="100" prop="remark" />
@@ -248,7 +248,7 @@
             COMMON_API.HOLDER_DROPDOWN_API({
                 factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
                 deptId: params.workShop,
-                holderType: '014'
+                holderType: ['014']
             }).then(({ data }) => {
                 this.holder = data.data || [];
             })

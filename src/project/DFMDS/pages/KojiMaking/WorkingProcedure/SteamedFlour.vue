@@ -5,10 +5,11 @@
             redact-auth="steSemiEdit"
             save-auth="steSemiEdit"
             submit-auth="steSemiSubmit"
+            :status-title="'工序状态'"
             :order-status="formHeader.statusName"
             :header-base="headerBase"
             :form-header="formHeader"
-            :tabs="currentTabs"
+            :tabs="tabs"
             :submit-rules="submitRules"
             :saved-datas="savedDatas"
             :submit-datas="submitDatas"
@@ -54,6 +55,7 @@
             flourMaterialCraft: HTMLFormElement;
             excRecord: HTMLFormElement;
             textRecord: HTMLFormElement;
+            dataEntry: HTMLFormElement;
         }
 
         orderIndex=['已同步', '已保存', '待审核', '已审核', '已过账', '已退回', '未录入']
@@ -107,7 +109,7 @@
             {
                 type: 'p',
                 icon: 'factory-riqi1',
-                label: '发酵罐号',
+                label: '发酵罐/池号',
                 value: 'fermentPotName'
             },
             {
@@ -124,18 +126,14 @@
             }
         ];
 
-        get currentTabs() {
-            const { steamFlourMaterialName, steamFlourCraftName } = this.$store.state.koji.houseTagInfo;
-            this.$set(this.formHeader, 'statusName', this.orderIndex[Math.min(this.orderIndex.indexOf(steamFlourMaterialName), this.orderIndex.indexOf(steamFlourCraftName))])
-
-            return [
+        tabs = [
                 {
                     label: '物料领用',
-                    status: steamFlourMaterialName || ''
+                    status: '未录入'
                 },
                 {
                     label: '工艺控制',
-                    status: steamFlourCraftName || ''
+                    status: '未录入'
                 },
                 {
                     label: '异常记录'
@@ -144,7 +142,7 @@
                     label: '文本记录'
                 }
             ]
-        }
+
 
         // 获取页签状态
         getHouseTag() {
@@ -153,6 +151,12 @@
                 kojiOrderNo: this.formHeader.kojiOrderNo
             }).then(({ data }) => {
                 this.$store.commit('koji/updateHouseTag', data.data);
+                this.tabs[0].status = data.data.steamFlourMaterialName
+                this.tabs[1].status = data.data.steamFlourCraftName
+                this.$refs.dataEntry.updateTabs()
+
+                this.$set(this.formHeader, 'statusName', this.orderIndex[Math.min(this.orderIndex.indexOf(data.data.steamFlourMaterialName), this.orderIndex.indexOf(data.data.steamFlourCraftName))])
+
             })
         }
 

@@ -200,6 +200,10 @@ const COMMON_API = {
      */
     HOLDER_QUERY_API: params => httpProxy('/sysHolder/query', 'POST', params),
     /**
+     * @property {string} HOLDER_QUERY_BY_NOPAGE_API 基础数据-容器管理-不分页查询
+     */
+    HOLDER_QUERY_BY_NOPAGE_API: params => httpProxy('/sysHolder/list/query', 'POST', params),
+    /**
      * @property {string} HOLDER_ID_QUERY_API 基础数据-容器管理-按ID查询容器
      */
     HOLDER_ID_QUERY_API: params => httpProxy('/sysHolder/queryById', 'GET', params),
@@ -274,7 +278,7 @@ const COMMON_API = {
     /**
      * @property {string} 根据编码查物料
      */
-    SEARCH_MATERIAL_API: params => httpProxy('/sysMaterial/queryListByType', 'POST', params, 'MDS', false),
+    SEARCH_MATERIAL_API: params => httpProxy('/sysMaterial/queryListByType', 'POST', params, 'MDS'),
     /**
      * @property {string} SPECS_DROPDOWN_API 基础数据--规格管理-下拉列表
      */
@@ -367,6 +371,10 @@ const COMMON_API = {
      * @property {string} DICTIONARY_ITEM_DROPDOWN_API 系统管理-数据字典-下拉
      */
     DICTIONARY_ITEM_DROPDOWN_API: params => httpProxy('/sysDictItem/dropDown', 'GET', params),
+    /**
+     * @property {string} DICTIONARY_ITEM_DROPDOWN_POST_API 系统管理-数据字典-post下拉
+     */
+    DICTIONARY_ITEM_DROPDOWN_POST_API: params => httpProxy('/sysDictItem/dropDown', 'POST', params),
     /**
      * @property {string} DICTIONARY_ITEM_INSERT_API 系统管理-数据字典-新增
      */

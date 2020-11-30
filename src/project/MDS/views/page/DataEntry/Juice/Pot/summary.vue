@@ -64,7 +64,7 @@
                         </template>
                     </el-table-column>
                     <el-table-column label="罐内总量" :show-overflow-tooltip="true" prop="amount" min-width="100" />
-                    <el-table-column label="发酵罐号" :show-overflow-tooltip="true" prop="fermentationHolderName" min-width="100" />
+                    <el-table-column label="发酵罐/池号" :show-overflow-tooltip="true" prop="fermentationHolderName" min-width="100" />
                     <el-table-column label="满罐日期" :show-overflow-tooltip="true" prop="fullDate" min-width="160" />
                     <el-table-column label="车间" :show-overflow-tooltip="true" prop="workShop" min-width="70" />
                     <el-table-column label="物料" :show-overflow-tooltip="true" min-width="220">
@@ -116,7 +116,7 @@
                         </template>
                     </el-table-column>
                     <el-table-column label="罐内总量" :show-overflow-tooltip="true" prop="amount" min-width="100" />
-                    <el-table-column label="发酵罐号" :show-overflow-tooltip="true" prop="fermentationHolderName" min-width="100" />
+                    <el-table-column label="发酵罐/池号" :show-overflow-tooltip="true" prop="fermentationHolderName" min-width="100" />
                     <el-table-column label="满罐日期" :show-overflow-tooltip="true" prop="fullDate" min-width="160" />
                     <el-table-column label="车间" :show-overflow-tooltip="true" prop="workShop" min-width="70" />
                     <el-table-column label="物料" :show-overflow-tooltip="true" min-width="220">

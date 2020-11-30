@@ -103,39 +103,31 @@
                 current: this.tablePage,
                 // factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
                 size: this.tableSize,
-                workShop: this.workShopInfo.workShop,
+                workShop: this.workShopInfo.workShop || null,
                 wareHouseNo: this.workShopInfo.wareHouseNo || null,
                 materialLocation: this.workShopInfo.materialLocation || null
             };
 
-            if (!queryObj.wareHouseNo) {
-                delete queryObj.wareHouseNo
-            }
-            if (!queryObj.materialLocation) {
-                delete queryObj.materialLocation
-            }
+            // if (!queryObj.wareHouseNo) {
+            //     delete queryObj.wareHouseNo
+            // }
+            // if (!queryObj.materialLocation) {
+            //     delete queryObj.materialLocation
+            // }
 
+            // KOJI_STOCK_Y158_DETAIL_CUR_LIST_API
+            // KOJI_STOCK_Y158_DETAIL_HISTORY_LIST_API
             if (!this.isHistoryPage) {
                 KOJI_API[`KOJI_STOCK_${this.stockType}_DETAIL_CUR_LIST_API`](queryObj).then(({ data }) => {
-                    if (data.code === 200) {
-                        this.tableDataList = data.data.records || [];
-                        this.tableTotal = data.data.total || 0;
-                    } else {
-                        this.tableDataList = [];
-                        this.tableTotal = 0;
-                    }
+                    this.tableDataList = data.data.records || [];
+                    this.tableTotal = data.data.total || 0;
                 });
             }
 
             if (this.isHistoryPage) {
                 KOJI_API[`KOJI_STOCK_${this.stockType}_DETAIL_HISTORY_LIST_API`](queryObj).then(({ data }) => {
-                    if (data.code === 200) {
-                        this.tableDataList = data.data.records || [];
-                        this.tableTotal = data.data.total || 0;
-                    } else {
-                        this.tableDataList = [];
-                        this.tableTotal = 0;
-                    }
+                    this.tableDataList = data.data.records || [];
+                    this.tableTotal = data.data.total || 0;
                 })
             }
         }

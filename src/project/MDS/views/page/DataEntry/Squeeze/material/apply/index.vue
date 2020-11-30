@@ -103,7 +103,7 @@
                                     {{ scope.row.storagePotName }}
                                 </template>
                             </el-table-column>
-                            <el-table-column label="发酵罐号" :show-overflow-tooltip="true" width="120">
+                            <el-table-column label="发酵罐/池号" :show-overflow-tooltip="true" width="120">
                                 <template slot-scope="scope">
                                     {{ scope.row.fermentPotName }}
                                 </template>

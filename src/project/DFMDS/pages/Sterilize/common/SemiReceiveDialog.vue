@@ -12,7 +12,7 @@
                     否
                 </el-radio>
             </el-form-item>
-            <el-form-item v-if="dataForm.consumeType === '1'" label="发酵罐号：" prop="fermentPotNo">
+            <el-form-item v-if="dataForm.consumeType === '1'" label="发酵罐/池号：" prop="fermentPotNo">
                 <el-select v-model="dataForm.fermentPotNo" placeholder="请选择" style="width: 100%;" clearable>
                     <el-option v-for="(item, index) in potArr" :key="index" :label="item.holderName" :value="item.holderNo" />
                 </el-select>
@@ -34,7 +34,7 @@
             <el-form-item v-if="dataForm.consumeType === '1'" label="发酵罐库存：">
                 <el-input v-model="dataForm.fermentStorage" type="number" placeholder="手动输入" />
             </el-form-item>
-            <el-form-item label="转运罐号：">
+            <el-form-item label="中转罐：">
                 <el-select v-model="dataForm.tankNo" placeholder="请选择" size="small" clearable filterable style="width: 100%;">
                     <el-option v-for="(item, optIndex) in transferTank" :key="optIndex" :label="item.holderName" :value="item.holderNo" />
                 </el-select>
@@ -76,7 +76,7 @@
         materialArr: MaterialObj[] = [];
         dataRule = {
             stePotNo: [{ required: true, message: '生产锅号不能为空', trigger: 'blur' }],
-            fermentPotNo: [{ required: true, message: '发酵罐号不能为空', trigger: 'blur' }],
+            fermentPotNo: [{ required: true, message: '发酵罐/池号不能为空', trigger: 'blur' }],
             materialCode: [{ required: true, message: '领用物料不能为空', trigger: 'blur' }],
             consumeUnit: [{ required: true, message: '单位不能为空', trigger: 'blur' }],
             consumeAmount: [{ required: true, message: '领用数量不能为空', trigger: 'blur' }],
@@ -88,13 +88,11 @@
         };
 
         mounted() {
-            COMMON_API.HOLDER_QUERY_API({
+            COMMON_API.HOLDER_QUERY_BY_NOPAGE_API({
                 factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
-                current: 1,
-                size: 9999,
                 holderType: '001'
             }).then(({ data }) => {
-                this.potArr = data.data.records
+                this.potArr = data.data
             })
             ORDER_API.ORDER_BOOM_LIST_API({
                 materialType: 'ZHAL',
@@ -105,13 +103,11 @@
         }
 
         init(Data, formHeader) {
-            COMMON_API.HOLDER_QUERY_API({
+            COMMON_API.HOLDER_QUERY_BY_NOPAGE_API({
                 deptId: this.formHeader.workShop,
-                holderType: '022',
-                size: 99999,
-                current: 1
+                holderType: '022'
             }).then(({ data }) => {
-                this.transferTank = data.data.records
+                this.transferTank = data.data
             })
             this.visible = true;
             if (Data) {

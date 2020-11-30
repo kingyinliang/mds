@@ -6,6 +6,76 @@
   "description": "味达美工厂后台管理系统",
   "glyphs": [
     {
+      "icon_id": "2077527",
+      "name": "调整",
+      "font_class": "tiaozheng",
+      "unicode": "e63b",
+      "unicode_decimal": 58939
+    },
+    {
+      "icon_id": "13434871",
+      "name": "文档管理",
+      "font_class": "wendangguanli",
+      "unicode": "e63d",
+      "unicode_decimal": 58941
+    },
+    {
+      "icon_id": "14747246",
+      "name": "产量",
+      "font_class": "chanliang",
+      "unicode": "e650",
+      "unicode_decimal": 58960
+    },
+    {
+      "icon_id": "2206553",
+      "name": "初步审核资格",
+      "font_class": "chubushenhezige",
+      "unicode": "e634",
+      "unicode_decimal": 58932
+    },
+    {
+      "icon_id": "7920461",
+      "name": "异常记录列表",
+      "font_class": "yichangjiluliebiao",
+      "unicode": "e635",
+      "unicode_decimal": 58933
+    },
+    {
+      "icon_id": "9911823",
+      "name": "异常记录-已选",
+      "font_class": "yichangjilu-yixuan",
+      "unicode": "e643",
+      "unicode_decimal": 58947
+    },
+    {
+      "icon_id": "10736720",
+      "name": "工作台2",
+      "font_class": "gongzuotai",
+      "unicode": "e636",
+      "unicode_decimal": 58934
+    },
+    {
+      "icon_id": "10942658",
+      "name": "材料工程",
+      "font_class": "cailiaogongcheng",
+      "unicode": "e639",
+      "unicode_decimal": 58937
+    },
+    {
+      "icon_id": "11177884",
+      "name": "首页",
+      "font_class": "shouye1",
+      "unicode": "e6a7",
+      "unicode_decimal": 59047
+    },
+    {
+      "icon_id": "13625324",
+      "name": "我的",
+      "font_class": "wode",
+      "unicode": "e63a",
+      "unicode_decimal": 58938
+    },
+    {
       "icon_id": "15357601",
       "name": "bell",
       "font_class": "bell",

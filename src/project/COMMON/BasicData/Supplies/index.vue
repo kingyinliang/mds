@@ -5,10 +5,10 @@
                 <el-row style="float: right;">
                     <el-form :inline="true" :model="controllableForm" size="small" label-width="68px" class="topforms2" @submit.native.prevent>
                         <el-form-item>
-                            <el-input v-model="controllableForm.param" placeholder="物料" suffix-icon="el-icon-search" clearable @clear="getItemsList" @blur="controllableForm.param===''?getItemsList():false" />
+                            <el-input v-model="controllableForm.param" placeholder="物料" suffix-icon="el-icon-search" clearable />
                         </el-form-item>
                         <el-form-item style="height: 32px;">
-                            <el-button v-if="isAuth('materialQuery')" type="primary" size="small" :disabled="controllableForm.param.trim()===''" @click="getItemsList(true)">
+                            <el-button v-if="isAuth('materialQuery')" type="primary" size="small" @click="getItemsList(true)">
                                 查询
                             </el-button>
                             <el-button v-if="isAuth('materialSync')" type="primary" size="small" @click="syncData">

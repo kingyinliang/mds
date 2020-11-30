@@ -90,7 +90,7 @@
                 <el-table-column type="index" label="序号" width="50px" fixed />
                 <el-table-column label="领用物料" min-width="160" :show-overflow-tooltip="true">
                     <template slot-scope="scope">
-                        {{ scope.row.useMaterialCode + ' ' + scope.row.useMaterialName }}
+                        {{ scope.row.useMaterialName + ' ' + scope.row.useMaterialCode }}
                     </template>
                 </el-table-column>
                 <el-table-column prop="useUnit" label="单位" width="50" :show-overflow-tooltip="true" />
@@ -359,12 +359,13 @@
                this.merge(this.steAccessoriesConsume, 'steAccessoriesConsume');
                this.merge(this.newSteAccessoriesConsume, 'newSteAccessoriesConsume');
             })
-            this.acceAddAudit = await this.getAudit(formHeader, 'MATERIAL');
+            this.acceAddAudit = await this.getAudit(formHeader, ['ACCESSORIES', 'MATERIAL']);
         }
 
         async getAudit(formHeader, verifyType) {
-            const a = await AUDIT_API.AUDIT_LOG_LIST_API({
-                orderNo: formHeader.potOrderNo,
+            const a = await AUDIT_API.STE_AUDIT_LOG_API({
+                orderNo: formHeader.orderNo,
+                splitOrderNo: formHeader.potOrderNo,
                 verifyType: verifyType
             })
             return a.data.data
@@ -418,8 +419,8 @@
         // 获取   煮料锅/罐下拉  煮料锅/罐下拉 转运罐号下拉  称取盒编号下拉
         getHolderList() {
             COMMON_API.HOLDER_DROPDOWN_API({
-                deptId: this.formHeader.workShop,
-                holderType: '020'
+                factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
+                holderType: ['020']
             }).then(({ data }) => {
                 this.holderList = data.data
             })
@@ -428,21 +429,17 @@
             }).then(({ data }) => {
                 this.Unit = data.data;
             });
-            COMMON_API.HOLDER_QUERY_API({
+            COMMON_API.HOLDER_QUERY_BY_NOPAGE_API({
                 deptId: this.formHeader.workShop,
-                holderType: '022',
-                size: 99999,
-                current: 1
+                holderType: '022'
             }).then(({ data }) => {
-                this.transferTank = data.data.records
+                this.transferTank = data.data
             })
-            COMMON_API.HOLDER_QUERY_API({
+            COMMON_API.HOLDER_DROPDOWN_API({
                 deptId: this.formHeader.workShop,
-                holderType: '023',
-                size: 99999,
-                current: 1
+                holderType: ['023']
             }).then(({ data }) => {
-                this.useBoxNo = data.data.records
+                this.useBoxNo = data.data
             })
         }
 

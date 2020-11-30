@@ -172,8 +172,8 @@
         headerInfo: HeaderInfo={
             headerProdcutMaterial: '',
             headerProductMaterialName: '',
-            headerFeedMaterial: '',
-            headerFeedMaterialName: '',
+            // headerFeedMaterial: '',
+            // headerFeedMaterialName: '',
             headerPotCount: 0
         }
 
@@ -233,13 +233,17 @@
 
             this.importBucketInfo.forEach(item => {
                 item.feedMaterial = ''
+                item.feedMaterialName = ''
             })
         }
 
         changeFeedMaterialOption(val) {
+
             if (val.feedMaterial !== '') {
-                this.headerInfo.headerFeedMaterialName = this.findIndex(val.prodcutMaterial).filter(item => item.dictCode === val.feedMaterial)[0].dictValue as string
-                val.feedMaterialName = this.findIndex(val.prodcutMaterial).filter(item => item.dictCode === val.feedMaterial)[0].dictValue
+                // this.headerInfo.headerFeedMaterialName = this.findIndex(val.prodcutMaterial).filter(item => item.dictCode === val.feedMaterial)[0].dictValue as string
+                const temp: string = this.findIndex(val.prodcutMaterial).filter(item => item.dictCode === val.feedMaterial)[0].dictValue as string
+                val.feedMaterial = temp.split(' ')[1] as string
+                val.feedMaterialName = temp.split(' ')[0] as string
             }
         }
 
@@ -252,14 +256,12 @@
 
         // 入罐
         async init(item, workshop) {
-            console.log('入罐item')
-            console.log(item)
 
             this.headerInfo = {
                 headerProdcutMaterial: '',
                 headerProductMaterialName: '',
-                headerFeedMaterial: '',
-                headerFeedMaterialName: '',
+                // headerFeedMaterial: '',
+                // headerFeedMaterialName: '',
                 headerPotCount: 0
             }
             this.isTableDialogVisible = true
@@ -274,7 +276,7 @@
             this.importBucketStatus = false
 
             // API 容器管理-分页查询-查询生产物料
-            await COMMON_API.HOLDER_QUERY_API({
+            await COMMON_API.HOLDER_QUERY_BY_NOPAGE_API({
                 factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
                 deptId: this.currentWorkShop,
                 current: 1,
@@ -282,9 +284,10 @@
                 holderNo: this.currentPotNo,
                 holderType: '019' // 溶解罐参数编码
             }).then(({ data }) => {
+                console.log(data)
                 this.optionsTree = []
-                if (data.data.records[0].material) {
-                    data.data.records[0].material.forEach((element, index) => {
+                if (data.data[0].material.length !== 0) {
+                    data.data[0].material.forEach((element, index) => {
                         this.optionsTree.push({
                             productMaterialList: [{ dictCode: element.materialCode, dictValue: `${element.materialName} ${element.materialCode}` }],
                             feedMateriallList: []
@@ -331,9 +334,9 @@
                     this.headerInfo = {
                         headerProdcutMaterial: this.currentProdcutMaterial,
                         headerProductMaterialName: this.currentProdcutMaterialName,
-                        headerPotCount: this.importBucketInfo[0].potCount,
-                        headerFeedMaterial: '',
-                        headerFeedMaterialName: ''
+                        headerPotCount: this.importBucketInfo[0].potCount
+                        // headerFeedMaterial: '',
+                        // headerFeedMaterialName: ''
                     }
                     this.orgFormDataGroup = JSON.parse(JSON.stringify(this.importBucketInfo))
                 }
@@ -444,9 +447,9 @@
         comfirmImportBucket() {
             this.importBucketInfo.forEach(item => {
                 item.prodcutMaterial = this.headerInfo.headerProdcutMaterial
-                item.potCount = this.headerInfo.headerPotCount
                 item.productMaterialName = this.headerInfo.headerProductMaterialName.split(' ')[0] as string
-                item.feedMaterialName = this.headerInfo.headerFeedMaterialName.split(' ')[0] as string
+                item.potCount = this.headerInfo.headerPotCount
+                // item.feedMaterialName = this.headerInfo.headerFeedMaterialName.split(' ')[0] as string
             })
 
             if (this.ruleSubmit()) {
@@ -461,6 +464,7 @@
                 const insertDtosArray: CurrentDataTable[] = []
                 const updateDtosArray: CurrentDataTable[] = []
                 const steDissolutionPotOneDtoObject = {
+                    cycle: this.currentCycle,
                     potCount: this.headerInfo.headerPotCount,
                     potId: this.currentPotId,
                     potNo: this.currentPotNo,
@@ -478,33 +482,27 @@
                             delIdsArray.push(item.id)
                         }
                     } else if (item.id) {
+
                         if (!_.isEqual(this.orgFormDataGroup[index], item)) {
                             item.potStatus = this.currentPotStatus
-                            item.workShop = this.currentWorkShop
                             updateDtosArray.push(item)
                         }
                     } else {
                         item.potStatus = this.currentPotStatus
-                        item.workShop = this.currentWorkShop
                         insertDtosArray.push(item)
                     }
                 })
 
-                console.log('insertDtosArray')
-                console.log(insertDtosArray)
-                console.log('updateDtosArray')
-                console.log(updateDtosArray)
-
-                    STE_API.STE_DISSOLUTIONBUCKET_SAVE_API({
-                        delIds: delIdsArray,
-                        insertDtos: insertDtosArray,
-                        updateDtos: updateDtosArray,
-                        steDissolutionPotOneDto: steDissolutionPotOneDtoObject
-                    }).then(() => {
-                        this.$successToast('保存成功');
-                        this.$emit('importBucketFinish', obj);
-                        this.isTableDialogVisible = false
-                    });
+                STE_API.STE_DISSOLUTIONBUCKET_SAVE_API({
+                    delIds: delIdsArray,
+                    insertDtos: insertDtosArray,
+                    updateDtos: updateDtosArray,
+                    steDissolutionPotOneDto: steDissolutionPotOneDtoObject
+                }).then(() => {
+                    this.$successToast('保存成功');
+                    this.$emit('importBucketFinish', obj);
+                    this.isTableDialogVisible = false
+                });
 
             }
         }
@@ -573,15 +571,14 @@ interface CurrentDataTable{
     productMaterialName?: string;
     remark?: string;
     delFlag?: number;
-    workShop?: string;
 }
 
 interface HeaderInfo {
     headerProductMaterialName: string;
     headerProdcutMaterial?: string;
     headerPotCount?: number;
-    headerFeedMaterial?: string;
-    headerFeedMaterialName: string;
+    // headerFeedMaterial?: string;
+    // headerFeedMaterialName: string;
 }
 </script>
 <style scoped>

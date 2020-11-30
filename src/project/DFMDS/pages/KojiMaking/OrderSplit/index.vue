@@ -51,7 +51,7 @@
                                 <el-table-column label="曲房状态" width="100" prop="statusName" :show-overflow-tooltip="true" />
                                 <el-table-column label="生产订单" min-width="120" prop="orderNo" :show-overflow-tooltip="true" />
                                 <el-table-column label="曲房号" min-width="100" prop="kojiHouseName" :show-overflow-tooltip="true" />
-                                <el-table-column label="发酵罐号" min-width="100" prop="fermentPotName" :show-overflow-tooltip="true" />
+                                <el-table-column label="发酵罐/池" min-width="100" prop="fermentPotName" :show-overflow-tooltip="true" />
                                 <el-table-column label="入曲日期" width="140" prop="addKojiDate" :show-overflow-tooltip="true" />
                                 <el-table-column label="出曲日期" width="140" prop="outKojiDate" :show-overflow-tooltip="true" />
                                 <el-table-column label="操作人" width="160" prop="changer" :show-overflow-tooltip="true" />
