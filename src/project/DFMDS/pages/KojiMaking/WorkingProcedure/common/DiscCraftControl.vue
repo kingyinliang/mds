@@ -41,7 +41,7 @@
                 >
                     <el-input
                         v-model="kojiInformData.addKojiTemp"
-                        placeholder=""
+                        placeholder="请输入"
                         clearable
                         style="width: 180px;"
                         :disabled="!isRedact"
@@ -98,7 +98,7 @@
                     class="star"
                     :style="{color: (Number(kojiInformData.addKojiDuration)-Number(kojiInformData.kojiDurationStandard))>0?'#f00':'#333'}"
                 >
-                    <span :class="{'input-in-form-disabled':true}">{{ addKojiInDuration(kojiInformData.addKojiStart,kojiInformData.addKojiEnd) }} H</span>
+                    <span :class="{'input-in-form-disabled':true}" style="width: 180px;">{{ addKojiInDuration(kojiInformData.addKojiStart,kojiInformData.addKojiEnd) }} H</span>
                 </el-form-item>
             </el-form>
         </mds-card>
@@ -1032,7 +1032,37 @@
             this.kojiDiscTurnData[1].turnDuration = 0
             const timeList: number[] = [];
             this.kojiGuardData.forEach(item => {
-                if (item.guardDate) {
+                if (item.guardDate && item.delFlag === 0) {
+                    timeList.push(new Date(item.guardDate).getTime())
+                }
+            })
+
+            if (timeList.length !== 0) {
+                if (this.kojiDiscTurnData[0] && this.kojiDiscTurnData[0].turnStart !== '' && this.kojiDiscTurnData[0].turnStart !== null) {
+                    const timeTemp1 = new Date(this.kojiDiscTurnData[0].turnStart).getTime();
+                    let turn1Result = 0
+                    turn1Result = Math.min(...timeList)
+                    turn1Result = (timeTemp1 - turn1Result) / 3600000
+                    this.kojiDiscTurnData[0].turnDuration = turn1Result
+                }
+
+                if (this.kojiDiscTurnData[1] && this.kojiDiscTurnData[1].turnStart !== '' && this.kojiDiscTurnData[1].turnStart !== null) {
+                    const timeTemp2 = new Date(this.kojiDiscTurnData[1].turnStart).getTime();
+                    let turn2Result = 0
+                    turn2Result = Math.min(...timeList)
+                    turn2Result = (timeTemp2 - turn2Result) / 3600000
+                    this.kojiDiscTurnData[1].turnDuration = turn2Result
+                }
+            }
+        }
+
+        kojiStartTimeDelet() {
+
+            this.kojiDiscTurnData[0].turnDuration = 0
+            this.kojiDiscTurnData[1].turnDuration = 0
+            const timeList: number[] = [];
+            this.kojiGuardData.forEach(item => {
+                if (item.guardDate && item.delFlag === 0) {
                     timeList.push(new Date(item.guardDate).getTime())
                 }
             })
