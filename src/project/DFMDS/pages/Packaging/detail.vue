@@ -11,7 +11,6 @@
             :tabs="tabs"
             :urgent-submit="true"
             :submit-rules="submitRules"
-            :saved-rules="savedRules"
             :saved-datas="savedDatas"
             :submit-datas="submitDatas"
             :submit-urgent="false"
