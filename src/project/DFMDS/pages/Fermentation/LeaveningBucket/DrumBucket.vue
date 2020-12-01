@@ -9,8 +9,8 @@
                             <el-input v-model="headerInfo.holderName" placeholder="" disabled style="width: 100px;" />
                         </el-form-item>
 
-                        <el-form-item class="star" label="状态：" size="mini">
-                            <el-input v-model="headerInfo.fermentorStatus" placeholder="请输入" clearable style="width: 80px;" />
+                        <el-form-item label="状态：" size="mini">
+                            <el-input v-model="headerInfo.fermentorStatusName" placeholder="" disabled style="width: 120px;" />
                         </el-form-item>
                         <el-button type="primary" size="small" @click="addNewDataRow()">
                             新增
@@ -56,7 +56,7 @@
                                     </el-form-item>
                                 </template>
                             </el-table-column>
-                            <el-table-column min-width="200" :show-overflow-tooltip="true">
+                            <el-table-column min-width="100" :show-overflow-tooltip="true">
                                 <template slot="header">
                                     <span>酱料温度</span>
                                 </template>
@@ -88,8 +88,8 @@
                                     <el-input v-model.trim="scope.row.remark" size="small" placeholder="输入备注" />
                                 </template>
                             </el-table-column>
-                            <el-table-column prop="changer" label="操作人" :show-overflow-tooltip="true" width="180" />
-                            <el-table-column prop="changed" label="操作时间" :show-overflow-tooltip="true" width="180" />
+                            <el-table-column prop="changer" label="操作人" :show-overflow-tooltip="true" width="160" />
+                            <el-table-column prop="changed" label="操作时间" :show-overflow-tooltip="true" width="160" />
                             <el-table-column fixed="right" label="操作" width="80" :show-overflow-tooltip="true">
                                 <template slot-scope="scope">
                                     <el-button class="delBtn" type="text" icon="el-icon-delete" size="mini" @click="removeDataRow(scope.row)">
@@ -145,13 +145,15 @@
         currentWorkShop=''
         headerInfo: HeaderInfo={
             fermentorStatus: '',
-            headerInfo: ''
+            holderName: '',
+            fermentorStatusName: '',
+            holderId: ''
         }
 
         // 点击赋予 item info
         currentCycle=''
         currentHolderId=''
-        drumStageOptions=[]
+        drumStageOptions: Options[]=[]
 
         currentRowIndex=0
 
@@ -169,8 +171,6 @@
         mounted() {
             // 获取组织树
             this.getTree()
-            // 获取鼓罐阶段
-            this.getDrumStage()
         }
 
         totalNum(target) {
@@ -195,14 +195,16 @@
         }
 
         // 入罐
-        async init(item, workshop) {
+        async init(item) {
 
             this.headerInfo = {
-                fermentorStatus: '',
-                headerInfo: ''
+                fermentorStatus: item.fermentorStatus,
+                fermentorStatusName: item.fermentorStatusName,
+                holderName: item.holderName,
+                holderId: item.holderId
             }
             this.isTableDialogVisible = true
-            this.currentWorkShop = workshop
+            this.currentWorkShop = item.workshop
             this.currentCycle = item.cycle
             this.currentHolderId = item.holderId
 
@@ -223,12 +225,25 @@
 
                 })
 
+             // 获取鼓罐阶段
+            this.getDrumStage()
+
         }
 
         getDrumStage() {
-            COMMON_API.DICTQUERY_API({ dictType: 'COMMON_HOLDER_TYPE' }).then(({ data }) => {
+
+            COMMON_API.DICTQUERY_API({ dictType: 'DRUM_STAGE' }).then(({ data }) => {
                 console.log('鼓罐阶段')
                 console.log(data)
+                // this.drumStageOptions = []
+                // if (data.data.length !== 0) {
+                //     data.data.forEach(item => {
+                //         this.drumStageOptions.push({ dictValue: item.inflationStageName, dictCode: item.inflationStage })
+                //     })
+
+                // }
+                // console.log('this.drumStageOptions')
+                // console.log(this.drumStageOptions)
             })
         }
 
@@ -366,7 +381,7 @@
     }
 
 
-interface HolderStatus{
+interface Options{
     dictCode?: string;
     dictValue?: string;
 }
@@ -377,10 +392,6 @@ interface ProductMaterial{
     id?: string;
 }
 
-interface OptionsTree{
-    productMaterialList: ProductMaterial[];
-    feedMateriallList: HolderStatus[];
-}
 
 interface CurrentDataTable{
     changed?: string;
@@ -399,7 +410,9 @@ interface CurrentDataTable{
 
 interface HeaderInfo {
     fermentorStatus: string;
-    headerInfo: string;
+    holderName: string;
+    fermentorStatusName: string;
+    holderId: string;
 }
 </script>
 <style scoped>

@@ -512,6 +512,17 @@
             //
         }
 
+        // 去详请
+        goTargetDetail(item) {
+            this.$store.commit('fer/updatefermentBucket', item);
+            this.$store.commit('common/updateMainTabs', this.$store.state.common.mainTabs.filter(subItem => subItem.name !== 'DFMDS-pages-Fermentation-LeaveningBucket-LeaveningBucketDetail'))
+            setTimeout(() => {
+                this.$router.push({
+                    name: `DFMDS-pages-Fermentation-LeaveningBucket-LeaveningBucketDetail`
+                });
+            }, 100);
+        }
+
         // queryTable 查询请求
         queryTableListInterface = (params) => {
             console.log('搜寻传值')
@@ -533,8 +544,6 @@
         returnDataFromQueryTableForm(data) {
             console.log('查询结果回传')
             console.log(data)
-            console.log('queryForm回传')
-            console.log(this.$refs.queryTable.queryForm)
             // 取得查找字段
             const queryForm = this.$refs.queryTable.queryForm
             this.targetQueryTableList = []
@@ -598,9 +607,19 @@
         // [btn][清罐]
         btnClearBucket(item) {
             console.log(item)
+
+            // FER_API.FER_FERMENTOR_CLEAR_API({
+            //     clearDate: item.clearDate,
+            //     holderId: item.holderId
+            // }).then(() => {
+            //     this.$successToast('清罐成功');
+
+
+            // });
+
         }
 
-        // [btn][洗罐]
+        // [btn][清洗]
         btnWashBucket(item) {
             console.log(item)
         }

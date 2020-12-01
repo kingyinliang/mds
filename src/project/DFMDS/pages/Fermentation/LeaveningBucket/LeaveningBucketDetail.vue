@@ -21,29 +21,34 @@
                         <el-form-item
                             label="生产车间："
                         >
-                            <template slot="label">
-                                <span>{{ LeaveningformData.a }}：</span>
-                            </template>
+                            <el-input
+                                v-model="LeaveningformData.workShop"
+                                placeholder=""
+                                :disabled="true"
+                                style="width: 180px;"
+                            />
                         </el-form-item>
                         <el-form-item
                             label="生产订单："
                         >
-                            <el-tooltip class="item" effect="dark" :content="LeaveningformData.b" placement="top">
+                            <el-tooltip class="item" effect="dark" :content="LeaveningformData.orderNo" placement="top">
                                 <el-input
-                                    v-model="LeaveningformData.b"
+                                    v-model="LeaveningformData.orderNo"
                                     placeholder=""
                                     :disabled="true"
+                                    style="width: 180px;"
                                 />
                             </el-tooltip>
                         </el-form-item>
                         <el-form-item
                             label="生产物料："
                         >
-                            <el-tooltip class="item" effect="dark" :content="LeaveningformData.c" placement="top">
+                            <el-tooltip class="item" effect="dark" :content="LeaveningformData.material" placement="top">
                                 <el-input
-                                    v-model="LeaveningformData.c"
+                                    v-model="LeaveningformData.material"
                                     placeholder=""
                                     :disabled="true"
+                                    style="width: 180px;"
                                 />
                             </el-tooltip>
                         </el-form-item>
@@ -51,7 +56,7 @@
                             label="订单数量："
                         >
                             <el-input
-                                v-model="LeaveningformData.d"
+                                v-model="LeaveningformData.currentStock"
                                 placeholder=""
                                 style="width: 180px;"
                                 :disabled="true"
@@ -71,7 +76,7 @@
                             label="状态："
                         >
                             <el-input
-                                v-model="LeaveningformData.f"
+                                v-model="LeaveningformData.fermentorStatusName"
                                 placeholder=""
                                 style="width: 180px;"
                                 :disabled="true"
@@ -81,7 +86,7 @@
                             label="入罐日期："
                         >
                             <el-input
-                                v-model="LeaveningformData.g"
+                                v-model="LeaveningformData.intoDate"
                                 placeholder=""
                                 style="width: 180px;"
                                 :disabled="true"
@@ -91,17 +96,19 @@
                             label="发酵天数："
                         >
                             <el-input
-                                v-model="LeaveningformData.h"
+                                v-model="LeaveningformData.fermentDays"
                                 placeholder=""
                                 style="width: 180px;"
                                 :disabled="true"
-                            />
+                            >
+                                <span slot="suffix">天</span>
+                            </el-input>
                         </el-form-item>
                         <el-form-item
                             label="是否成熟："
                         >
                             <el-input
-                                v-model="LeaveningformData.i"
+                                v-model="LeaveningformData.freezeFlagnName"
                                 placeholder=""
                                 style="width: 180px;"
                                 :disabled="true"
@@ -295,10 +302,18 @@ import { Vue, Component } from 'vue-property-decorator';
 // import MSG from '@/assets/js/hint-msg';
 @Component({
     components: {},
-    name: 'DissolveBucketDetail'
+    name: 'DissolveBucketDetail',
+    filters: {
+            itemValue(value: string, target: object) {
+                if (typeof target !== 'undefined') {
+                    return target[value]
+                }
+                return value
+            }
+        }
 })
 export default class DissolveBucketDetail extends Vue {
-    importData: ImportData={}
+
     activetTabName = '1';
     // 当前数据
     currentInventoryDataGroup = [];
@@ -308,7 +323,7 @@ export default class DissolveBucketDetail extends Vue {
     totalAdjustList = [];
 
     formData = {}; // 上方表单讯息
-    LeaveningformData= {};
+    LeaveningformData: LeaveningData= {};
 
     mounted() {
         this.retrieveDetail();
@@ -316,8 +331,10 @@ export default class DissolveBucketDetail extends Vue {
 
     retrieveDetail() {
         console.log('取值')
-        console.log(this.$store.state.sterilize.dissolveBucketDetail)
-        this.importData = this.$store.state.sterilize.dissolveBucketDetail
+        console.log(this.$store.state.fer.fermentBucketDetail)
+        this.LeaveningformData = this.$store.state.fer.fermentBucketDetail
+        this.$set(this.LeaveningformData, 'material', `${this.LeaveningformData.materialName} ${this.LeaveningformData.materialCode}`)
+        this.$set(this.LeaveningformData, 'freezeFlagnName', this.LeaveningformData.freezeFlag === 'Y' ? '是' : '否')
         // STE_API.STE_DISSOLUTIONBUCKET_ITEM_QUERY_API({
         //     cycle: this.importData.cycle,
         //     factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
@@ -360,21 +377,36 @@ export default class DissolveBucketDetail extends Vue {
         return ''
     }
 }
-interface ImportData{
-    potName?: string;
-    cycle?: string;
-    feedDate?: string;
-    id?: string;
-    potAmount?: string;
-    potId?: string;
-    potNo?: string;
-    potStatus?: string;
-    prodcutMaterial?: string;
-    prodcutMaterialName?: string;
-    ratio?: number;
-    workShop?: string;
-    potCount?: number;
-}
+interface LeaveningData{
+        brineFlag?: string;
+        brineFlagName?: string;
+        changed?: string;
+        changer?: string;
+        currentStock?: number;
+        cycle?: string;
+        fermentDays?: number;
+        fermentorStatus?: string;
+        fermentorStatusName?: string;
+        freezeFlag?: string;
+        fullDate?: string;
+        holderId?: string;
+        holderName?: string;
+        holderNo?: string;
+        holderType?: string;
+        holderTypeName?: string;
+        holderVolume?: number;
+        id?: string;
+        intoDate?: string;
+        judgeResult?: string;
+        judgeResultName?: string;
+        materialCode?: string;
+        materialName?: string;
+        matureFlag?: string;
+        openFlag?: string;
+        orderNo?: string;
+        remark?: string;
+        workShop?: string;
+    }
 
 </script>
 <style lang="scss" scoped>
