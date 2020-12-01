@@ -435,7 +435,7 @@
                 this.transferTank = data.data
             })
             COMMON_API.HOLDER_DROPDOWN_API({
-                deptId: this.formHeader.workShop,
+                factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
                 holderType: ['023']
             }).then(({ data }) => {
                 this.useBoxNo = data.data
