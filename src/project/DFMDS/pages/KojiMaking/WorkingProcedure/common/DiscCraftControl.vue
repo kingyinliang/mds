@@ -413,7 +413,7 @@
                 <el-table-column prop="changed" min-width="180" label="操作时间" :show-overflow-tooltip="true" />
                 <el-table-column fixed="right" label="操作" width="80" :show-overflow-tooltip="true">
                     <template slot-scope="scope">
-                        <el-button class="delBtn" type="text" icon="el-icon-delete" size="mini" :disabled="!isRedact" @click="removeFirstDataRow(scope.row)">
+                        <el-button class="delBtn" type="text" icon="el-icon-delete" size="mini" :disabled="!isRedact" @click="removeFirstDataRow(scope.row);">
                             删除
                         </el-button>
                     </template>
@@ -1269,6 +1269,9 @@
                 cancelButtonText: '取消',
                 type: 'warning'
             }).then(() => {
+                if (row.guardDate || row.guardDate === '') {
+                    this.kojiStartTimeDelet()
+                }
                 this.$set(row, 'delFlag', 1)
                 this.$successToast('删除成功');
 
