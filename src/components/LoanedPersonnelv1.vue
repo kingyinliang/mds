@@ -64,8 +64,6 @@ export default {
             this.openOrgTree = !this.openOrgTree
         },
         init(userId, userTypeName) {
-            console.log('userId')
-            console.log(userId)
             let temp = []
             if (userId !== '') {
                 temp = userId.split(',')
@@ -74,8 +72,6 @@ export default {
             this.userTypeName = userTypeName;
             this.visible = true;
             this.selctId = temp;
-            console.log('this.selctId')
-            console.log(this.selctId)
             this.userlist = [];
             // if (userId && userId.length > 0) {
             //     userId.forEach((item) => {
@@ -85,13 +81,10 @@ export default {
         },
         // 根据组织架构查人
         setdetail(dataObj) {
-            console.log(dataObj.deptName)
             COMMON_API.USER_ROLE_ALL_QUERY_API({
                 factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
                 deptId: dataObj.id
             }).then(({ data }) => {
-                console.log('11111')
-                console.log(data)
                 this.userlist = []
                 data.data.forEach(item => {
                     this.userlist.push({
@@ -104,8 +97,6 @@ export default {
         updateUser() {
             this.visible = false;
             const row = [];
-            console.log('selctId')
-            console.log(this.selctId)
             this.selctId.forEach(item => {
                 row.push(item);
             });

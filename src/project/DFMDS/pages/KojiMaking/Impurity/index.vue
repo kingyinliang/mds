@@ -380,7 +380,7 @@
                 deviceId: '',
                 deviceName: '',
                 id: '',
-                impurityAmount: 0,
+                impurityAmount: null,
                 impurityName: '',
                 impurityType: '',
                 remark: '',
@@ -553,7 +553,7 @@ interface ForiegnMatterDataListObj{
     deviceId: string;
     deviceName: string;
     id: string;
-    impurityAmount: number;
+    impurityAmount: number | null;
     impurityName: string;
     impurityType: string;
     remark: string;

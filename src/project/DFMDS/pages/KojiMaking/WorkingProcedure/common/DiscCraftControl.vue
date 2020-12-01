@@ -30,7 +30,7 @@
                                     :disabled="!isRedact"
                                 />
                             </el-tooltip>
-                            <em v-if="!kojiInformData.addKojiMans">点击选择人员</em>
+                            <em v-if="!kojiInformData.addKojiMans" :class="{'like-el-input__inner':isRedact,'input-in-form-disabled':!isRedact}">点击选择人员</em>
                         </span>
                     </div>
                 </el-form-item>
@@ -98,7 +98,7 @@
                     class="star"
                     :style="{color: (Number(kojiInformData.addKojiDuration)-Number(kojiInformData.kojiDurationStandard))>0?'#f00':'#333'}"
                 >
-                    {{ addKojiInDuration(kojiInformData.addKojiStart,kojiInformData.addKojiEnd) }} H
+                    <span :class="{'input-in-form-disabled':true}">{{ addKojiInDuration(kojiInformData.addKojiStart,kojiInformData.addKojiEnd) }} H</span>
                 </el-form-item>
             </el-form>
         </mds-card>
@@ -215,7 +215,7 @@
                     <el-table-column
                         prop="outUpTemp"
                         label="外上"
-                        width="100"
+                        width="120"
                     >
                         <template slot="header">
                             <span class="notNull">* </span>外上
@@ -235,7 +235,7 @@
                     <el-table-column
                         prop="outMidTemp"
                         label="外中"
-                        width="100"
+                        width="120"
                     >
                         <template slot="header">
                             <span class="notNull">* </span>外中
@@ -255,7 +255,7 @@
                     <el-table-column
                         prop="outDownTemp"
                         label="外下"
-                        width="100"
+                        width="120"
                     >
                         <template slot="header">
                             <span class="notNull">* </span>外下
@@ -275,7 +275,7 @@
                     <el-table-column
                         prop="innerUpTemp"
                         label="内上"
-                        width="100"
+                        width="120"
                     >
                         <template slot-scope="scope">
                             <el-input
@@ -292,7 +292,7 @@
                     <el-table-column
                         prop="innerMidTemp"
                         label="内中"
-                        width="100"
+                        width="120"
                     >
                         <template slot-scope="scope">
                             <el-input
@@ -309,7 +309,7 @@
                     <el-table-column
                         prop="innerDownTemp"
                         label="内下"
-                        width="100"
+                        width="120"
                     >
                         <template slot-scope="scope">
                             <el-input
@@ -499,7 +499,7 @@
                                     :disabled="!isRedact"
                                 />
                             </el-tooltip>
-                            <em v-if="!scope.row.turnMans">点击选择人员</em>
+                            <em v-if="!scope.row.turnMans" :class="{'like-el-input__inner':isRedact,'input-in-table-disabled':!isRedact}">点击选择人员</em>
                         </span>
                     </template>
                 </el-table-column>
@@ -604,7 +604,7 @@
                                         :disabled="!isRedact"
                                     />
                                 </el-tooltip>
-                                <em v-if="!scope.row.recordMans">点击选择人员</em>
+                                <em v-if="!scope.row.recordMans" :class="{'like-el-input__inner':isRedact,'input-in-table-disabled':!isRedact}">点击选择人员</em>
                             </span>
                         </template>
                     </el-table-column>
@@ -665,7 +665,7 @@
                     prop="outKojiDuration"
                     class="star"
                 >
-                    <span style="width: 180px;">{{ addOutCraftDuration(kojiOutCraftformData.outKojiStart,kojiOutCraftformData.outKojiEnd) }} H</span>
+                    <span style="width: 180px;" :class="{'input-in-form-disabled':true}">{{ addOutCraftDuration(kojiOutCraftformData.outKojiStart,kojiOutCraftformData.outKojiEnd) }} H</span>
                 </el-form-item>
                 <el-form-item
                     label="出曲操作人："
@@ -683,7 +683,7 @@
                                     :disabled="!isRedact"
                                 />
                             </el-tooltip>
-                            <em v-if="!kojiOutCraftformData.outKojiMans">点击选择人员</em>
+                            <em v-if="!kojiOutCraftformData.outKojiMans" :class="{'like-el-input__inner':isRedact,'input-in-form-disabled':!isRedact}">点击选择人员</em>
                         </span>
                     </div>
                 </el-form-item>
@@ -694,7 +694,7 @@
                 >
                     <el-input
                         v-model="kojiOutCraftformData.outKojiTemp"
-                        placeholder=""
+                        placeholder="请输入"
                         clearable
                         style="width: 180px;"
                         :disabled="!isRedact"
@@ -1089,25 +1089,25 @@
                 forceDrainName: '',
                 guardDate: '',
                 id: '',
-                innerDownTemp: 0,
-                innerMidTemp: 0,
-                innerUpTemp: 0,
+                innerDownTemp: null,
+                innerMidTemp: null,
+                innerUpTemp: null,
                 kojiOrderNo: this.targetOrderObj.kojiOrderNo,
                 orderNo: this.targetOrderObj.orderNo,
-                outDownTemp: 0,
-                outMidTemp: 0,
-                outUpTemp: 0,
-                prodTemp: 0,
+                outDownTemp: null,
+                outMidTemp: null,
+                outUpTemp: null,
+                prodTemp: null,
                 remark: '',
-                roomTemp: 0,
-                settingProdTemp: 0,
-                settingWindTemp: 0,
+                roomTemp: null,
+                settingProdTemp: null,
+                settingWindTemp: null,
                 status: '',
-                testTempOne: 0,
-                testTempTwo: 0,
-                windDoor: 0,
-                windSpeed: 0,
-                windTemp: 0,
+                testTempOne: null,
+                testTempTwo: null,
+                windDoor: null,
+                windSpeed: null,
+                windTemp: null,
                 delFlag: 0
             }
 
@@ -1357,25 +1357,25 @@ interface KojiGuard{
     forceDrainName?: string;
     guardDate?: string;
     id?: string;
-    innerDownTemp?: number;
-    innerMidTemp?: number;
-    innerUpTemp?: number;
+    innerDownTemp?: number | null;
+    innerMidTemp?: number | null;
+    innerUpTemp?: number | null;
     kojiOrderNo?: string;
     orderNo?: string;
-    outDownTemp?: number;
-    outMidTemp?: number;
-    outUpTemp?: number;
-    prodTemp?: number;
+    outDownTemp?: number | null;
+    outMidTemp?: number | null;
+    outUpTemp?: number | null;
+    prodTemp?: number | null;
     remark?: string;
-    roomTemp?: number;
-    settingProdTemp?: number;
-    settingWindTemp?: number;
+    roomTemp?: number | null;
+    settingProdTemp?: number | null;
+    settingWindTemp?: number | null;
     status?: string;
-    testTempOne?: number;
-    testTempTwo?: number;
-    windDoor?: number;
-    windSpeed?: number;
-    windTemp?: number;
+    testTempOne?: number| null;
+    testTempTwo?: number| null;
+    windDoor?: number | null;
+    windSpeed?: number | null;
+    windTemp?: number| null;
     delFlag?: number;
 }
 
@@ -1417,5 +1417,50 @@ interface DiscGuard {
         .input_bottom {
             margin-right: 50px;
         }
+    }
+
+    .like-el-input__inner {
+        display: inline-block;
+        -webkit-box-sizing: border-box;
+        box-sizing: border-box;
+        width: 100%;
+        height: 32px;
+        padding: 0 14px;
+        color: #606266;
+        font-size: 13px;
+        line-height: 32px;
+        background-color: #fff;
+        background-image: none;
+        border: 1px solid #dcdfe6;
+        border-radius: 4px;
+        outline: 0;
+        -webkit-transition: border-color 0.2s cubic-bezier(0.645, 0.045, 0.355, 1);
+        transition: border-color 0.2s cubic-bezier(0.645, 0.045, 0.355, 1);
+        -webkit-appearance: none;
+    }
+
+    .input-in-form-disabled {
+        display: inline-block;
+        width: 100%;
+        padding: 0 14px;
+        overflow: hidden;
+        color: #bbb;
+        font-weight: 500;
+        font-size: 13px;
+        background-color: #f5f5f5;
+        border: none;
+        border-radius: 4px;
+    }
+
+    .input-in-table-disabled {
+        width: 100%;
+        padding: 0 14px;
+        overflow: hidden;
+        color: #bbb;
+        font-weight: 500;
+        font-size: 13px;
+        background-color: none;
+        border: none;
+        border-radius: 4px;
     }
 </style>

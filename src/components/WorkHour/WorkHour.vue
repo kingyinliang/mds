@@ -191,11 +191,13 @@ export default class ProductPeople extends Vue {
     }
 
     changeList(dataList) {
-        this.currentFormDataGroup = JSON.parse(JSON.stringify(dataList));
-        this.currentFormDataGroup.forEach(item => {
-            this.$set(item, 'delFlag', 0)
-        })
 
+        this.currentFormDataGroup = JSON.parse(JSON.stringify(dataList));
+        if (this.currentFormDataGroup.length !== 0) {
+            this.currentFormDataGroup.forEach(item => {
+                this.$set(item, 'delFlag', 0)
+            })
+        }
         this.orgFormDataGroup = JSON.parse(JSON.stringify(dataList));
     }
 
