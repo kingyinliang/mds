@@ -52,7 +52,7 @@ const FER_API = {
     /**
      * @property {string} FER_BRINE_POT_LIST_API 发酵车间-盐水发料-分页查询-罐
      */
-    FER_BRINE_POT_LIST_API: params => httpProxy('/fer/brineIssue/pagingOfQueryByFermentor', 'POST', params),
+    FER_BRINE_POT_LIST_API: params => httpProxy('/fer/brineIssue/pagingQueryOfFermentor', 'POST', params),
     /**
      * @property {string} FER_BRINE_MATERIAL_API 发酵车间-盐水发料-查询盐水物料
      */
@@ -112,15 +112,57 @@ const FER_API = {
     /**
      * @property {string} FER_INSTORAGE_QUERY_API 发酵车间-入库管理-分页列表查询
      */
-    FER_INSTORAGE_QUERY_API: params => httpProxy('/fer/instorage/query', 'POST', params),
+    FER_INSTORAGE_QUERY_API: params => httpProxy('/fer/inStorage/query', 'POST', params),
     /**
      * @property {string} FER_INSTORAGE_SAVE_API 发酵车间-入库管理-保存
      */
-    FER_INSTORAGE_SAVE_API: params => httpProxy('/fer/instorage/save', 'POST', params),
+    FER_INSTORAGE_SAVE_API: params => httpProxy('/fer/inStorage/save', 'POST', params),
     /**
      * @property {string} FER_INSTORAGE_SUBMIT_API 发酵车间-入库管理-提交
      */
-    FER_INSTORAGE_SUBMIT_API: params => httpProxy('/fer/instorage/submit', 'POST', params)
+    FER_INSTORAGE_SUBMIT_API: params => httpProxy('/fer/inStorage/submit', 'POST', params),
+    // ==================== 工时录入 ==================
+    /**
+     * @property {string} FER_TIME_SHEET_QUERY_API 发酵车间-准备工时-查询
+     */
+    FER_TIME_SHEET_QUERY_API: params => httpProxy('/fer/ferTimeSheet/query', 'POST', params),
+    /**
+     * @property {string} FER_TIME_SHEET_SAVE_API 发酵车间-准备工时-保存
+     */
+    FER_TIME_SHEET_SAVE_API: params => httpProxy('/fer/ferTimeSheet/save', 'POST', params),
+    /**
+     * @property {string} FER_TIME_SHEET_SUBMIT_API 发酵车间-准备工时-提交
+     */
+    FER_TIME_SHEET_SUBMIT_API: params => httpProxy('/fer/ferTimeSheet/submit', 'POST', params),
+    /**
+     * @property {string} FER_USER_QUERY_API 发酵车间-准备工时-人员列表-查询
+     */
+    FER_USER_QUERY_API: params => httpProxy('/fer/user/query', 'POST', params),
+    // ==================== 报工管理 ==================
+    /**
+     * @property {string} FER_JOB_BOOKING_QUERY_API 发酵车间-报工管理-报工信息分页查询
+     */
+    FER_JOB_BOOKING_QUERY_API: params => httpProxy('/fer/jobBooking/pageQuery', 'POST', params),
+    /**
+     * @property {string} FER_JOB_BOOKING_CALCULATE_API 发酵车间-报工管理-报工信息根据执行结束时间计算工时
+     */
+    FER_JOB_BOOKING_CALCULATE_API: params => httpProxy('/fer/jobBooking/calculate', 'POST', params),
+    /**
+     * @property {string} FER_JOB_BOOKING_DELETE_API 发酵车间-报工管理-报工信息提交
+     */
+    FER_JOB_BOOKING_DELETE_API: params => httpProxy('/fer/jobBooking/delete', 'GET', params),
+    /**
+     * @property {string} FER_JOB_BOOKING_PRODUCE_API 发酵车间-报工管理-报工信息重新生成
+     */
+    FER_JOB_BOOKING_PRODUCE_API: params => httpProxy('/fer/jobBooking/produce', 'POST', params),
+    /**
+     * @property {string} FER_JOB_BOOKING_SAVE_API 发酵车间-报工管理-报工信息保存
+     */
+    FER_JOB_BOOKING_SAVE_API: params => httpProxy('/fer/jobBooking/save', 'POST', params),
+    /**
+     * @property {string} FER_JOB_BOOKING_SUBMIT_API 发酵车间-报工管理-报工信息提交
+     */
+    FER_JOB_BOOKING_SUBMIT_API: params => httpProxy('/fer/jobBooking/submit', 'POST', params)
 };
 
 export default FER_API;

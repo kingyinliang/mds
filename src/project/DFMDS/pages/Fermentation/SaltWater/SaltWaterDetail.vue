@@ -442,7 +442,7 @@ export default class SaltWaterDetail extends Vue {
                 this.saltWaterList.push({
                     brinePotId: '',	// 盐水罐ID
                     brinePotName: '', // 盐水罐名称
-                    brinePotN: '', // 盐水罐号
+                    brinePotNo: '', // 盐水罐号
                     changed: dateFormat(new Date(), 'yyyy-MM-dd hh:mm:ss'), // 最后操作时间
                     changer: getUserNameNumber(), // 最后操作人
                     concentration: 0, // 盐水浓度
@@ -538,7 +538,7 @@ interface FormHeaderObj {
 interface SaltWaterObj {
     brinePotId: string;	// 盐水罐ID
     brinePotName: string; // 盐水罐名称
-    brinePotN: string; // 盐水罐号
+    brinePotNo: string; // 盐水罐号
     changed: string; // 最后操作时间
     changer: string; // 最后操作人
     concentration: number; // 盐水浓度

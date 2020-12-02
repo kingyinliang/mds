@@ -240,6 +240,11 @@
                 ...row,
                 workShop: this.$refs.queryTable.queryForm.workShop
             });
+
+            this.$store.commit(
+                'common/updateMainTabs',
+                this.$store.state.common.mainTabs.filter(subItem => subItem.name !== 'DFMDS-pages-Fermentation-SaltWater-SaltWaterDetail')
+            );
             // sessionStorage.setItem('brineInfo', JSON.stringify(row));
             setTimeout(() => {
                 this.$router.push({

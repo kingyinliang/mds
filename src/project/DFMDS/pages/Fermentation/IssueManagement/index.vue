@@ -14,22 +14,28 @@
         >
             <template slot="home">
                 <mds-card title="发料列表" :pack-up="false">
-                    <el-table class="newTable markStyle" :data="targetQueryTableList" :row-class-name="rowDelFlag" header-row-class-name="tableHead" border style="width: 100%; min-height: 90px;">
+                    <el-table class="newTable markStyle" :data="targetQueryTableList.filter(item => item.delFlag !== 1)" :row-class-name="rowDelFlag" header-row-class-name="tableHead" border style="width: 100%; min-height: 90px;" @selection-change="selectionChange">
                         <el-table-column type="selection" width="55" fixed />
                         <el-table-column type="index" label="序号" fixed />
-                        <el-table-column label="状态" prop="checkStatusName" />
-                        <el-table-column label="生产订单" prop="orderNo" />
-                        <el-table-column label="容器号" prop="aaaaaaaaaaaaaaaaaaaa" />
-                        <el-table-column label="生产物料" prop="productMaterialName" />
+                        <el-table-column label="状态" prop="checkStatus" width="120px">
+                            <template slot-scope="scope">
+                                <el-select v-model="scope.row.checkStatus" :disabled="true" size="small">
+                                    <el-option v-for="item in $refs.queryTable.optionLists.checkStatus" :key="item.value" :label="item.dictValue" :value="item.dictCode" />
+                                </el-select>
+                            </template>
+                        </el-table-column>
+                        <el-table-column label="生产订单" prop="orderNo" width="120px" />
+                        <el-table-column label="容器号" prop="fermentorName" width="120px" />
+                        <el-table-column label="生产物料" prop="productMaterialName" width="140px" />
                         <el-table-column label="订单数量" prop="amount" />
                         <el-table-column label="订单单位" prop="unit" />
-                        <el-table-column label="组件物料" prop="materialName" />
+                        <el-table-column label="组件物料" prop="materialName" width="120px" />
                         <el-table-column prop="" width="160px">
                             <template slot="header">
                                 <span class="notNull">数量</span>
                             </template>
                             <template slot-scope="scope">
-                                <el-input v-model="scope.row.useAmount" size="small" placeholder="输入数量" :disabled="!isRedact" />
+                                <el-input v-model.number="scope.row.useAmount" oninput="value=value.replace(/\D*/g,'')" size="small" placeholder="输入数量" :disabled="!isRedact || (scope.row.checkStatus !== 'N' && scope.row.checkStatus !== 'R' && scope.row.checkStatus !== 'S')" />
                             </template>
                         </el-table-column>
                         <el-table-column label="单位" prop="useUnit" />
@@ -38,22 +44,22 @@
                                 <span class="notNull">批次</span>
                             </template>
                             <template slot-scope="scope">
-                                <el-input v-model="scope.row.useBatch" size="small" placeholder="输入批次" :disabled="!isRedact" />
+                                <el-input v-model="scope.row.useBatch" size="small" placeholder="输入批次" :disabled="!isRedact || (scope.row.checkStatus !== 'N' && scope.row.checkStatus !== 'R' && scope.row.checkStatus !== 'S')" />
                             </template>
                         </el-table-column>
                         <el-table-column label="备注" prop="" width="160px">
                             <template slot-scope="scope">
-                                <el-input v-model="scope.row.remark" size="small" placeholder="输入备注" :disabled="!isRedact" />
+                                <el-input v-model="scope.row.remark" size="small" placeholder="输入备注" :disabled="!isRedact || (scope.row.checkStatus !== 'N' && scope.row.checkStatus !== 'R' && scope.row.checkStatus !== 'S')" />
                             </template>
                         </el-table-column>
-                        <el-table-column label="操作人员" prop="changer" />
-                        <el-table-column label="操作时间" prop="changed" />
+                        <el-table-column label="操作人员" prop="changer" width="160px" />
+                        <el-table-column label="操作时间" prop="changed" width="160px" />
                         <el-table-column label="操作" width="175px" fixed="right">
                             <template slot-scope="scope">
-                                <el-button v-if="scope.row.isSplit" class="delBtn" type="text" icon="el-icon-delete" size="mini" :disabled="!isRedact" @click="removeDataRow(scope.row, scope.$index)">
+                                <el-button v-if="scope.row.splitFlag === 'Y'" class="delBtn" type="text" icon="el-icon-delete" size="mini" :disabled="!isRedact" @click="removeDataRow(scope.row, scope.$index)">
                                     删除
                                 </el-button>
-                                <el-button type="text" size="mini" :disabled="!isRedact" @click="splitHandler(scope.row, scope.$index)">
+                                <el-button type="text" size="mini" :disabled="!isRedact || (scope.row.checkStatus !== 'N' && scope.row.checkStatus !== 'R' && scope.row.checkStatus !== 'S')" @click="splitHandler(scope.row, scope.$index)">
                                     拆分
                                 </el-button>
                                 <el-button type="text" size="samll" @click="showLogHandler(scope.row)">
@@ -68,7 +74,7 @@
                 </el-row>
             </template>
         </query-table>
-        <redact-box :disabled="redactBoxDisable" :is-redact.sync="isRedact" redact-auth="steStgEdit" save-auth="steStgEdit" :is-show-submit-btn="true" :saved-rules="savedRules" :submit-rules="savedRules" :saved-datas="savedDatas" :submit-datas="submitDatas" />
+        <redact-box :disabled="redactBoxDisable" :is-redact.sync="isRedact" redact-auth="steStgEdit" :is-show-submit-btn="true" :saved-rules="savedRules" :submit-rules="submitRules" :saved-datas="savedDatas" :submit-datas="submitDatas" />
         <el-dialog
             title="审核日志"
             :visible.sync="dialogVisible"
@@ -90,6 +96,12 @@
     import { Vue, Component } from 'vue-property-decorator';
     import { COMMON_API, FER_API, AUDIT_API } from 'common/api/api';
     import RedactBox from 'components/RedactBox.vue'; // 下方状态 bar
+    import { dateFormat } from 'src/utils/utils';
+
+    enum FileNameType {
+        targetQueryTableList = 'targetQueryTableList', // 所有
+        selections = 'targetQueryTableList' // 复选框
+    }
 
     @Component({
         name: 'IssueManagement',
@@ -102,9 +114,9 @@
             queryTable: HTMLFormElement;
         };
 
-        targetQueryTableList: SaltWaterObj[] = [
-            {}
-        ];
+        targetQueryTableList: SaltWaterObj[] = [];
+
+        selections: SaltWaterObj[] = [];
 
         isRedact = false; // 可否编辑
 
@@ -118,9 +130,7 @@
 
         dialogVisible = false;
 
-        logList = [
-            { aaaaa: 'xxxxxxxxxxx' }
-        ]; // 审核日志列表
+        logList = []; // 审核日志列表
 
         rowDelFlag({ row }) {
             if (row.delFlag === 1) {
@@ -282,11 +292,15 @@
                 label: '订单日期',
                 // labelWidth: 85,
                 valueFormat: 'yyyy-MM-dd',
-                // defaultValue: dateFormat(new Date(), 'yyyy-MM-dd'),
+                defaultValue: dateFormat(new Date(), 'yyyy-MM-dd'),
                 prop: 'startDate',
                 propTwo: 'endDate'
             }
         ]
+
+        selectionChange(rows) {
+            this.selections = rows;
+        }
 
         // queryTable 查询请求
         queryTableListInterface(params) {
@@ -320,17 +334,25 @@
              * 发料 MATERIAL
              */
             AUDIT_API.STE_AUDIT_LOG_API({
-                orderNo: row.orderNo
+                orderNo: row.orderNo,
                 // splitOrderNo: row.splitOrderNo, // 拆分单号<有拆分单时必填>
-                // verifyType: ['MATERIAL'] // '审核类型'
+                verifyType: ['MATERIAL'] // '审核类型'
             }).then(res => {
                 this.dialogVisible = true;
-                this.logList = res.data;
+                this.logList = res.data.data;
             })
         }
 
         splitHandler(row, index) {
-            this.targetQueryTableList.splice(index + 1, 0, { ...row, isSplit: true });
+            const obj: SaltWaterObj = {
+                ...row,
+                id: null,
+                useAmount: '',
+                useBatch: '',
+                remark: '',
+                splitFlag: 'Y'
+            }
+            this.targetQueryTableList.splice(index + 1, 0, obj);
         }
 
         removeDataRow(row, index) {
@@ -340,14 +362,28 @@
                 type: 'warning'
             }).then(() => {
                 console.log(row, index);
-                this.targetQueryTableList.splice(index, 1);
-                // this.$set(row, 'delFlag', 1)
-                // this.$successToast('删除成功');
+                // this.targetQueryTableList.splice(index, 1, { ...row, delFlag: 1 });
+                this.$set(row, 'delFlag', 1);
+                this.$successToast('删除成功');
             });
         }
 
-        ruleMagnetSubmit() {
-            for (const item of this.targetQueryTableList) {
+        ruleSave() {
+            for (const item of this.targetQueryTableList.filter(row => row.delFlag !== 1)) {
+                if (!item.useAmount || !item.useBatch) {
+                    this.$warningToast('请填写发料列表必填栏位');
+                    return false;
+                }
+            }
+            return true;
+        }
+
+        ruleSubmit() {
+            if (!this.selections.length) {
+                this.$warningToast('请选择发料提交项');
+                return false;
+            }
+            for (const item of this.selections) {
                 if (!item.useAmount || !item.useBatch) {
                     this.$warningToast('请填写发料列表必填栏位');
                     return false;
@@ -358,16 +394,52 @@
 
         // {redact-box} 提交需跑的验证 function
         savedRules(): Function[] {
-            return [this.ruleMagnetSubmit];
+            return [this.ruleSave];
+        }
+
+        submitRules(): Function[] {
+            return [this.ruleSubmit];
+        }
+
+        getSaveOrSubmitParams(fileName: FileNameType): SaveOrSubmitDto {
+            const params: SaveOrSubmitDto = {
+                insertDtos: [], // 拆分发料(插入)
+                removeIds: [], // 删除发料
+                updateDtos: [] // 更新发料
+            };
+            this[fileName].map(item => {
+                if (item.id) {
+                    const updateDto: UpdateDto = {
+                        batch: item.useBatch,
+                        id: item.id,
+                        realUseAmount: item.useAmount,
+                        remark: item.remark,
+                        splitFlag: item.splitFlag || 'N',
+                        unit: item.unit
+                    }
+                    params.updateDtos.push(updateDto);
+                } else {
+                    const insertDto: InsertDto = {
+                        batch: item.useBatch,
+                        // ferMaterialId: item., // ？ 发料管理主键？
+                        realUseAmount: item.useAmount,
+                        remark: item.remark,
+                        splitFlag: item.splitFlag,
+                        unit: item.unit
+                    }
+                    params.insertDtos.push(insertDto);
+                }
+            });
+            return params;
         }
 
         savedDatas() {
-            const params = { };
+            const params = this.getSaveOrSubmitParams(FileNameType.targetQueryTableList);
             return FER_API.FER_MATERIAL_SAVE_API(params);
         }
 
         submitDatas() {
-            const params = { };
+            const params = this.getSaveOrSubmitParams(FileNameType.selections);
             return FER_API.FER_MATERIAL_SUBMIT_API(params);
         }
 
@@ -387,24 +459,48 @@
     }
     interface SaltWaterObj {
         id?: string;
-        amount?: number; //订单数量
-        changed?: string; //修改日期
-        changer?: string; //修改人
-        checkStatus?: string; //审核状态，生产发料审核
-        checkStatusName?: string; //审核状态名称，生产发料审核
-        fermentorId?: string; //发酵罐ID
-        fermentorName?: string; //发酵罐名称
-        materialCode?: string; //组件物料编码
-        materialName?: string; //组件物料描述
-        orderNo?: string; //订单号
-        productMaterialCode?: string; //生产物料编码
-        productMaterialName?: string; //生产物料描述
-        remark?: string; //备注
-        unit?: string; //单位
-        useAmount?: number; //领用数量
-        useBatch?: string; //领用批次
-        useUnit?: string; //领用数量单位
+        amount?: number; // 订单数量
+        changed?: string; // 修改日期
+        changer?: string; // 修改人
+        checkStatus?: string; // 审核状态，生产发料审核
+        checkStatusName?: string; // 审核状态名称，生产发料审核
+        fermentorId?: string; // 发酵罐ID
+        fermentorName?: string; // 发酵罐名称
+        materialCode?: string; // 组件物料编码
+        materialName?: string; // 组件物料描述
+        orderNo?: string; // 订单号
+        productMaterialCode?: string; // 生产物料编码
+        productMaterialName?: string; // 生产物料描述
+        remark?: string; // 备注
+        unit?: string; // 单位
+        useAmount?: number; // 领用数量
+        useBatch?: string; // 领用批次
+        useUnit?: string; // 领用数量单位
+        splitFlag?: string; // 拆分标记
+        delFlag?: number; // 删除标记
     }
+    interface SaveOrSubmitDto {
+        insertDtos: InsertDto[];
+        removeIds: string[];
+        updateDtos: UpdateDto[];
+    }
+    interface InsertDto {
+        batch?: string; // 批次
+        ferMaterialId?: string; // 发料管理主键
+        realUseAmount?: number; // 实际用量
+        remark?: string; // 备注
+        splitFlag?: string; // 拆分标记(是：Y，否：N)
+        unit?: string; // 用量单位
+    }
+    interface UpdateDto {
+        batch?: string; // 批次
+        id: string; // 主键
+        realUseAmount?: number; // 实际用量
+        remark?: string; // 备注
+        splitFlag?: string; // 拆分标记(是：Y，否：N)
+        unit?: string; // 用量单位
+    }
+
 </script>
 
 <style scoped>
