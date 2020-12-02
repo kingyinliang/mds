@@ -243,6 +243,11 @@
                 type: Boolean,
                 default: true
             },
+            //head 显示与否
+            headShow: {
+                type: Boolean,
+                default: true
+            },
             //检测数据底部只显示取消和编辑
             redactBoxStatus: {
                 type: Boolean,
@@ -252,7 +257,6 @@
         data() {
             return {
                 dateChange: 0,
-                headShow: true,
                 isRedact: false,
                 activeName: '1'
             };

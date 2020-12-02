@@ -509,7 +509,12 @@
         }
 
         getMore() {
-            //
+            this.$store.commit('common/updateMainTabs', this.$store.state.common.mainTabs.filter(subItem => subItem.name !== 'DFMDS-pages-Fermentation-LeaveningBucket-Overview'))
+            setTimeout(() => {
+                this.$router.push({
+                    name: `DFMDS-pages-Fermentation-LeaveningBucket-Overview`
+                });
+            }, 100);
         }
 
         // 去详请
@@ -607,21 +612,21 @@
         // [btn][清罐]
         btnClearBucket(item) {
             console.log(item)
-
-            // FER_API.FER_FERMENTOR_CLEAR_API({
-            //     clearDate: item.clearDate,
-            //     holderId: item.holderId
-            // }).then(() => {
-            //     this.$successToast('清罐成功');
-
-
-            // });
-
+                FER_API.FER_FERMENTOR_CLEAR_API({
+                holderId: item.holderId
+            }).then(() => {
+                //
+            });
         }
 
         // [btn][清洗]
         btnWashBucket(item) {
             console.log(item)
+            FER_API.FER_FERMENTOR_CLEAN_API({
+                holderId: item.holderId
+            }).then(() => {
+                //
+            });
         }
 
         // 改变每页条数
