@@ -129,44 +129,121 @@
             </template>
         </query-table>
         <drum-bucket ref="drumBucket" @drumBucketFinish="drumBucketFinish" />
+        <l-y-c-y-bucket ref="LYCYBucket" @drumBucketFinish="drumBucketFinish" />
+        <modify-bucket ref="modifyBucket" @drumBucketFinish="drumBucketFinish" />
+
+
+        <el-dialog :title="`${clearDataForm.holderName}清罐`" width="400px" :close-on-click-modal="false" :visible.sync="isClearDialogVisible">
+            <div style="font-size: 14px;">
+                罐完成后，库存数量清零,请确认!
+            </div>
+            <el-form :model="clearDataForm" size="small" label-width="100px" class="orderMangedialog markStyle" style="margin-top: 10px;">
+                <el-form-item label="清罐日期：" class="star">
+                    <el-date-picker v-model="clearDataForm.clearDate" type="datetime" placeholder="请选择" style="width: 180px;" value-format="yyyy-MM-dd" format="yyyy-MM-dd" size="small" />
+                </el-form-item>
+            </el-form>
+            <div slot="footer" class="dialog-footer">
+                <el-button size="small" @click="btnCloseDialog">
+                    取消
+                </el-button>
+                <el-button type="primary" size="small" @click="saveWashBucket">
+                    确定
+                </el-button>
+            </div>
+        </el-dialog>
+
+        <el-dialog :title="`${cleanDataForm.holderName}清洗`" width="50%" :close-on-click-modal="false" :visible.sync="isCleanDialogVisible">
+            <el-form :model="cleanDataForm" size="small" label-width="110px" class="orderMangedialog">
+                <el-form-item label="溶解罐号：">
+                    <span class="default">{{ cleanDataForm.holderName }}</span>
+                </el-form-item>
+                <el-form-item label="状态：">
+                    <span class="default">{{ cleanDataForm.fermentorStatusName }}</span>
+                </el-form-item>
+                <el-form-item>
+                    <el-checkbox v-model="cleanDataForm.doit">
+                        清洗完成
+                    </el-checkbox>
+                </el-form-item>
+                <el-form-item label="备注：">
+                    <el-input v-model.trim="cleanDataForm.remark" placeholder="请输入" clearable />
+                </el-form-item>
+                <el-form-item label="操作人：">
+                    <span class="default">{{ cleanDataForm.changer }}</span>
+                </el-form-item>
+                <el-form-item label="操作时间：">
+                    <span class="default">{{ cleanDataForm.changed }}</span>
+                </el-form-item>
+            </el-form>
+            <div slot="footer" class="dialog-footer">
+                <el-button size="small" @click="btnCloseDialog">
+                    取消
+                </el-button>
+                <el-button type="primary" size="small" @click="saveClearBucket">
+                    确定
+                </el-button>
+            </div>
+        </el-dialog>
     </div>
 </template>
 <script lang="ts">
 
     import { Vue, Component } from 'vue-property-decorator';
-    // import { dateFormat, getUserNameNumber } from 'utils/utils';
+    import { dateFormat, getUserNameNumber } from 'utils/utils';
     import DrumBucket from './DrumBucket.vue';
+    import LYCYBucket from './LYCYBucke.vue';
+    import ModifyBucket from './ModifyBucket.vue';
     import { COMMON_API, FER_API } from 'common/api/api';
     // import { dateFormat } from 'utils/utils';
 
     @Component({
         name: 'DissolveBucketIndex',
         components: {
-            DrumBucket
+            DrumBucket,
+            LYCYBucket,
+            ModifyBucket
         }
     })
     export default class DissolveBucketIndex extends Vue {
         $refs: {
             queryTable: HTMLFormElement;
             drumBucket: HTMLFormElement;
+            LYCYBucket: HTMLFormElement;
+            modifyBucket: HTMLFormElement;
         }
 
         // 共用变数
         currentWorkShop=null // 当前车间  溶解罐取消车间维度
-        currentPotId='' // 选取的当前罐id
-        currentPotNo='' // 选取的当前罐号
-        holderStatus: HolderStatus[]=[] // 罐状态对应
+        workShopList: Options[]=[]
+
+        holderStatus: Options[]=[] // 罐状态对应
 
         targetQueryTableList: BucketDataListObj[] = []
         isTableDialogVisible=false
-        isBucketDialogVisible = false;
-        dialogType='filled' // 弹窗类型
-        dataList=[
-            {}
-        ]
 
+
+        // 清罐弹窗 data
+        isClearDialogVisible = false;
+        clearDataForm={
+            holderId: '',
+            holderName: '',
+            clearDate: ''
+        }
+
+        // 清洗弹窗 data
+        isCleanDialogVisible = false;
+        cleanDataForm={
+                holderId: '',
+                holderName: '',
+                fermentorStatusName: '',
+                remark: '',
+                doit: false,
+                changer: '',
+                changed: ''
+        }
+
+        // 查询结果呈现
         isSearchResultShow=false
-
         formHeader={
             currPage: 1,
             fermStatus: '',
@@ -178,9 +255,6 @@
             fermentStage: ''
         }
 
-        // totalCount = 0;
-        // currPage= 1
-        // pageSize= 10
 
         // queryTable 必要变数
         queryTableFormData = [
@@ -190,10 +264,19 @@
                 prop: 'workShop',
                 labelWidth: 90,
                 defaultOptionsFn: () => {
-                    return COMMON_API.ORG_QUERY_WORKSHOP_API({
-                        factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
-                        deptType: ['WORK_SHOP'],
-                        deptName: '发酵'
+                    return new Promise((resolve) => {
+                        COMMON_API.ORG_QUERY_WORKSHOP_API({
+                            factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
+                            deptType: ['WORK_SHOP'],
+                            deptName: '发酵'
+                        }).then((res) => {
+                            res.data.data.forEach(item => {
+                                // eslint-disable-next-line no-invalid-this
+                                this.workShopList.push({ dictCode: item.deptCode, dictValue: item.deptName })
+                            })
+
+                            resolve(res)
+                        })
                     })
                 },
                 resVal: {
@@ -283,6 +366,7 @@
         queryTableFormRules = [
         ]
 
+        // 地铁图样式
         topBox= [
             {
                 color: '#999999FF',
@@ -420,6 +504,7 @@
             // this.ani();
         }
 
+
         // 入罐完成
         drumBucketFinish() {
             this.$refs.queryTable.getDataList(true)
@@ -519,6 +604,13 @@
 
         // 去详请
         goTargetDetail(item) {
+
+            console.log('item')
+            console.log(item)
+            console.log('this.workShopList')
+            console.log(this.workShopList)
+
+            this.$set(item, 'workShopName', this.workShopList.filter(element => element.dictCode === item.workShop)[0].dictValue)
             this.$store.commit('fer/updatefermentBucket', item);
             this.$store.commit('common/updateMainTabs', this.$store.state.common.mainTabs.filter(subItem => subItem.name !== 'DFMDS-pages-Fermentation-LeaveningBucket-LeaveningBucketDetail'))
             setTimeout(() => {
@@ -595,39 +687,78 @@
         // [btn][鼓罐]
         btnFilledBucket(item) {
             console.log(item)
-            this.isTableDialogVisible = true;
             this.$refs.drumBucket.init(item)
         }
 
         // [btn][LYCY]
         btnLYCY(item) {
             console.log(item)
+            this.$refs.LYCYBucket.init(item)
         }
 
         // [btn][btnAdjust]
         btnAdjust(item) {
             console.log(item)
+            this.$refs.modifyBucket.init(item)
         }
 
         // [btn][清罐]
         btnClearBucket(item) {
             console.log(item)
-                FER_API.FER_FERMENTOR_CLEAR_API({
-                holderId: item.holderId
-            }).then(() => {
-                //
-            });
+            this.isClearDialogVisible = true
+            this.clearDataForm = {
+                holderId: item.holderId,
+                holderName: item.holderName,
+                clearDate: dateFormat(new Date(), 'yyyy-MM-dd')
+            }
         }
 
         // [btn][清洗]
         btnWashBucket(item) {
             console.log(item)
+            this.isCleanDialogVisible = true
+            this.cleanDataForm = {
+                holderId: item.holderId,
+                holderName: item.holderName,
+                fermentorStatusName: item.fermentorStatusName,
+                remark: '',
+                doit: false,
+                changer: getUserNameNumber(),
+                changed: dateFormat(new Date(), 'yyyy-MM-dd hh:mm:ss')
+            }
+        }
+
+
+        // 关闭弹窗
+        btnCloseDialog() {
+            this.isCleanDialogVisible = false
+            this.isClearDialogVisible = false
+        }
+
+
+        // 保存清罐  /fer/fermentor/clear
+        saveClearBucket() {
+            if (this.cleanDataForm.doit === true) {
+                FER_API.FER_FERMENTOR_CLEAR_API({
+                    holderId: this.clearDataForm.holderId,
+                    clearDate: this.clearDataForm.clearDate
+                }).then(() => {
+                    this.isCleanDialogVisible = false
+                });
+            }
+            this.isCleanDialogVisible = false
+        }
+
+        // 保存清洗
+        saveWashBucket() {
             FER_API.FER_FERMENTOR_CLEAN_API({
-                holderId: item.holderId
+                holderId: this.cleanDataForm.holderId,
+                remark: this.cleanDataForm.remark
             }).then(() => {
-                //
+                this.isClearDialogVisible = false
             });
         }
+
 
         // 改变每页条数
         handleSizeChange(val) {
@@ -676,9 +807,10 @@ interface BucketDataListObj{
     orderNo: string;
     remark: string;
     workShop: string;
+    workShopName: string;
 }
 
-interface HolderStatus{
+interface Options{
     dictCode: string;
     dictValue: string;
 }
@@ -705,6 +837,23 @@ interface CurrentDataTable{
 
 </script>
 <style scoped>
+
+.markStyle >>> th .notNull::before {
+    margin-right: 4px;
+    color: #f00;
+    content: "*";
+}
+.markStyle >>> th .notNull {
+    color: #333;
+}
+
+
+.markStyle >>> .star .el-form-item__label::before {
+    margin-right: 4px;
+    color: #f56c6c;
+    content: "*";
+}
+
 .el-pagination >>> .el-pager li.active {
     width: 24px;
     min-width: auto;

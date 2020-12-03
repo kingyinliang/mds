@@ -4,7 +4,7 @@
             <el-col :span="4">
                 <div class="card-left" style="background: #fff;">
                     <p class="dataEntry-head-leftRight__title" style="color: #333;">
-                        罐号：{{ formData.potName }}
+                        罐号：{{ LeaveningformData.holderName }}
                     </p>
                     <div class="dataEntry-head-leftRight-pot">
                         <!-- <div class="dataEntry-head-leftRight-pot__tank">
@@ -22,7 +22,7 @@
                             label="生产车间："
                         >
                             <el-input
-                                v-model="LeaveningformData.workShop"
+                                v-model="LeaveningformData.workShopName"
                                 placeholder=""
                                 :disabled="true"
                                 style="width: 180px;"
@@ -66,7 +66,7 @@
                             label="库存数量："
                         >
                             <el-input
-                                v-model="LeaveningformData.e"
+                                v-model="LeaveningformData.currentStock"
                                 placeholder=""
                                 style="width: 180px;"
                                 :disabled="true"
@@ -115,10 +115,16 @@
                             />
                         </el-form-item>
                         <el-form-item label="特殊资源：">
-                            <el-radio-group v-model="LeaveningformData.j">
-                                <el-radio label="盐水已发" />
-                                <el-radio label="盐水发料中" />
-                                <el-radio label="盐水未发" />
+                            <el-radio-group v-model="LeaveningformData.brineFlag">
+                                <el-radio label="N">
+                                    盐水发料未发
+                                </el-radio>
+                                <el-radio label="N1">
+                                    盐水发料中
+                                </el-radio>
+                                <el-radio label="Y">
+                                    盐水发料已发
+                                </el-radio>
                             </el-radio-group>
                         </el-form-item>
                     </el-form>
@@ -128,166 +134,161 @@
         <el-tabs id="DaatTtabs" ref="tabs" v-model="activetTabName" class="NewDaatTtabs tabsPages" type="border-card">
             <el-tab-pane name="1">
                 <span slot="label" class="spanview">
-                    当前库存
+                    投料信息
                 </span>
-                <el-table header-row-class-name="" :data="currentInventoryDataGroup" border tooltip-effect="dark" class="newTable" size="mini">
+                <el-table header-row-class-name="" :data="currentInStockDataGroup" border tooltip-effect="dark" class="newTable" size="mini">
                     <el-table-column type="index" label="序号" width="55" fixed align="center" />
                     <el-table-column label="车间" :show-overflow-tooltip="true" width="180">
-                        <template slot-scope="scope">
-                            {{ scope.row.a }}
+                        <template>
+                            {{ currentWorkShopName }}
                         </template>
                     </el-table-column>
                     <el-table-column label="生产订单" :show-overflow-tooltip="true" width="280">
                         <template slot-scope="scope">
-                            {{ scope.row.b }}
+                            {{ scope.row.productOrderNo }}
                         </template>
                     </el-table-column>
                     <el-table-column label="订单类型" :show-overflow-tooltip="true" width="180">
                         <template slot-scope="scope">
-                            {{ scope.row.c }}
+                            {{ scope.row.orderTypeName }}
                         </template>
                     </el-table-column>
                     <el-table-column label="物料" :show-overflow-tooltip="true" width="180">
                         <template slot-scope="scope">
-                            {{ scope.row.d }}
+                            {{ `${scope.row.moveMaterialName} ${scope.row.moveMaterialCode}` }}
                         </template>
                     </el-table-column>
                     <el-table-column label="物料批次" :show-overflow-tooltip="true" width="180">
                         <template slot-scope="scope">
-                            {{ scope.row.e }}
+                            {{ scope.row.moveBatch }}
                         </template>
                     </el-table-column>
                     <el-table-column label="移动类型" :show-overflow-tooltip="true" width="180">
                         <template slot-scope="scope">
-                            {{ scope.row.f }}
+                            {{ scope.row.moveTypeName }}
                         </template>
                     </el-table-column>
                     <el-table-column label="移动数量" :show-overflow-tooltip="true" width="180">
                         <template slot-scope="scope">
-                            {{ scope.row.g }}
+                            {{ scope.row.moveAmount }}
                         </template>
                     </el-table-column>
                     <el-table-column label="单位" :show-overflow-tooltip="true" width="180">
                         <template slot-scope="scope">
-                            {{ scope.row.h }}
+                            {{ scope.row.unit }}
                         </template>
                     </el-table-column>
                     <el-table-column label="来源车间" :show-overflow-tooltip="true" width="180">
                         <template slot-scope="scope">
-                            {{ scope.row.i }}
+                            {{ scope.row.workShop }}
                         </template>
                     </el-table-column>
                     <el-table-column label="来源订单" :show-overflow-tooltip="true" width="180">
                         <template slot-scope="scope">
-                            {{ scope.row.j }}
+                            {{ scope.row.orderNo }}
                         </template>
                     </el-table-column>
                     <el-table-column label="曲房号" :show-overflow-tooltip="true" width="180">
                         <template slot-scope="scope">
-                            {{ scope.row.k }}
+                            {{ scope.row.kojiHouse }}
                         </template>
                     </el-table-column>
                     <el-table-column label="来源罐号" :show-overflow-tooltip="true" width="180">
                         <template slot-scope="scope">
-                            {{ scope.row.l }}
+                            {{ scope.row.potName }}
                         </template>
                     </el-table-column>
                     <el-table-column label="入罐日期" :show-overflow-tooltip="true" width="180">
                         <template slot-scope="scope">
-                            {{ scope.row.m }}
+                            {{ scope.row.moveDate }}
                         </template>
                     </el-table-column>
-                    <el-table-column label="操作人" width="160">
+                    <el-table-column label="操作人员" width="160">
                         <template slot-scope="scope">
-                            {{ scope.row.changer }}
+                            {{ scope.row.operators }}
                         </template>
                     </el-table-column>
                     <el-table-column label="操作时间" width="160">
                         <template slot-scope="scope">
-                            {{ scope.row.changed }}
+                            {{ scope.row.operated }}
                         </template>
                     </el-table-column>
                 </el-table>
             </el-tab-pane>
             <el-tab-pane name="2">
                 <span slot="label" class="spanview">
-                    历史库存
+                    领用信息
                 </span>
-                <el-table header-row-class-name="" :data="historyInventoryDataGroup" border tooltip-effect="dark" class="newTable" size="mini">
+                <el-table header-row-class-name="" :data="currentOutStockDataGroup" border tooltip-effect="dark" class="newTable" size="mini">
                     <el-table-column type="index" label="序号" width="55" fixed />
                     <el-table-column label="车间" :show-overflow-tooltip="true" width="180">
-                        <template slot-scope="scope">
-                            {{ scope.row.a }}
+                        <template>
+                            {{ currentWorkShopName }}
                         </template>
                     </el-table-column>
                     <el-table-column label="生产订单" :show-overflow-tooltip="true" width="280">
                         <template slot-scope="scope">
-                            {{ scope.row.b }}
+                            {{ scope.row.productOrderNo }}
                         </template>
                     </el-table-column>
                     <el-table-column label="订单类型" :show-overflow-tooltip="true" width="180">
                         <template slot-scope="scope">
-                            {{ scope.row.c }}
+                            {{ scope.row.orderTypeName }}
                         </template>
                     </el-table-column>
                     <el-table-column label="物料" :show-overflow-tooltip="true" width="180">
                         <template slot-scope="scope">
-                            {{ scope.row.d }}
+                            {{ `${scope.row.moveMaterialName} ${scope.row.moveMaterialCode}` }}
                         </template>
                     </el-table-column>
                     <el-table-column label="物料批次" :show-overflow-tooltip="true" width="180">
                         <template slot-scope="scope">
-                            {{ scope.row.e }}
+                            {{ scope.row.moveBatch }}
                         </template>
                     </el-table-column>
                     <el-table-column label="移动类型" :show-overflow-tooltip="true" width="180">
                         <template slot-scope="scope">
-                            {{ scope.row.f }}
+                            {{ scope.row.moveType }}
                         </template>
                     </el-table-column>
                     <el-table-column label="移动数量" :show-overflow-tooltip="true" width="180">
                         <template slot-scope="scope">
-                            {{ scope.row.g }}
+                            {{ scope.row.moveAmount }}
                         </template>
                     </el-table-column>
                     <el-table-column label="单位" :show-overflow-tooltip="true" width="180">
                         <template slot-scope="scope">
-                            {{ scope.row.h }}
+                            {{ scope.row.unit }}
                         </template>
                     </el-table-column>
-                    <el-table-column label="来源车间" :show-overflow-tooltip="true" width="180">
+                    <el-table-column label="领用车间" :show-overflow-tooltip="true" width="180">
                         <template slot-scope="scope">
-                            {{ scope.row.i }}
+                            {{ scope.row.workShop }}
                         </template>
                     </el-table-column>
-                    <el-table-column label="来源订单" :show-overflow-tooltip="true" width="180">
+                    <el-table-column label="领用订单" :show-overflow-tooltip="true" width="180">
                         <template slot-scope="scope">
-                            {{ scope.row.j }}
+                            {{ scope.row.orderNo }}
                         </template>
                     </el-table-column>
-                    <el-table-column label="曲房号" :show-overflow-tooltip="true" width="180">
+                    <el-table-column label="目标罐号" :show-overflow-tooltip="true" width="180">
                         <template slot-scope="scope">
-                            {{ scope.row.k }}
+                            {{ scope.row.potName }}
                         </template>
                     </el-table-column>
-                    <el-table-column label="来源罐号" :show-overflow-tooltip="true" width="180">
+                    <el-table-column label="领用日期" :show-overflow-tooltip="true" width="180">
                         <template slot-scope="scope">
-                            {{ scope.row.l }}
+                            {{ scope.row.moveDate }}
                         </template>
                     </el-table-column>
-                    <el-table-column label="入罐日期" :show-overflow-tooltip="true" width="180">
+                    <el-table-column label="操作人员" width="160">
                         <template slot-scope="scope">
-                            {{ scope.row.m }}
-                        </template>
-                    </el-table-column>
-                    <el-table-column label="操作人" width="160">
-                        <template slot-scope="scope">
-                            {{ scope.row.changer }}
+                            {{ scope.row.operators }}
                         </template>
                     </el-table-column>
                     <el-table-column label="操作时间" width="160">
                         <template slot-scope="scope">
-                            {{ scope.row.changed }}
+                            {{ scope.row.operated }}
                         </template>
                     </el-table-column>
                 </el-table>
@@ -298,32 +299,24 @@
 
 <script lang="ts">
 import { Vue, Component } from 'vue-property-decorator';
-// import { FRE_API } from 'common/api/api';
-// import MSG from '@/assets/js/hint-msg';
+import { FER_API } from 'common/api/api';
+
 @Component({
     components: {},
-    name: 'DissolveBucketDetail',
-    filters: {
-            itemValue(value: string, target: object) {
-                if (typeof target !== 'undefined') {
-                    return target[value]
-                }
-                return value
-            }
-        }
+    name: 'LeaveningBucketDetail'
 })
-export default class DissolveBucketDetail extends Vue {
+export default class LeaveningBucketDetail extends Vue {
 
     activetTabName = '1';
-    // 当前数据
-    currentInventoryDataGroup = [];
-    totalDataList = [];
-    // 历史数据
-    historyInventoryDataGroup = [];
-    totalAdjustList = [];
 
-    formData = {}; // 上方表单讯息
-    LeaveningformData: LeaveningData= {};
+    currentWorkShopName=''
+    // 投料信息
+    currentInStockDataGroup = [];
+    totalDataList = [];
+    // 领用信息
+    currentOutStockDataGroup = [];
+
+    LeaveningformData: LeaveningData= {}; // 上方表单讯息
 
     mounted() {
         this.retrieveDetail();
@@ -335,47 +328,26 @@ export default class DissolveBucketDetail extends Vue {
         this.LeaveningformData = this.$store.state.fer.fermentBucketDetail
         this.$set(this.LeaveningformData, 'material', `${this.LeaveningformData.materialName} ${this.LeaveningformData.materialCode}`)
         this.$set(this.LeaveningformData, 'freezeFlagnName', this.LeaveningformData.freezeFlag === 'Y' ? '是' : '否')
-        // STE_API.STE_DISSOLUTIONBUCKET_ITEM_QUERY_API({
-        //     cycle: this.importData.cycle,
-        //     factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
-        //     potId: this.importData.potId,
-        //     potNo: this.importData.potNo,
-        //     // potStatus: this.importData.potStatus
-        //     workShop: this.importData.workShop
-        //     }).then(({ data }) => {
-        //         console.log('详细数据')
-        //         console.log(data)
-        //         this.formData = {
-        //             potName: this.importData.potName,
-        //             potAmount: this.importData.potAmount,
-        //             potCount: this.importData.potCount,
-        //             potNo: this.importData.potNo,
-        //             factoryName: JSON.parse(sessionStorage.getItem('factory') || '{}').deptShort,
-        //             amount: data.data.number,
-        //             unit: data.data.unit,
-        //             prodcutMaterial: data.data.materialName,
-        //             workShop: data.data.workShop
-        //         };
-        //         this.currentInventoryDataGroup = data.data.item
-        //         this.currentInventoryDataGroup.forEach(item => {
-        //             this.$set(item, 'potName', this.importData.potName)
-        //         })
-        //         this.historyInventoryDataGroup = data.data.historyItem
-        //         this.historyInventoryDataGroup.forEach(item => {
-        //             this.$set(item, 'potName', this.importData.potName)
-        //         })
-        // });
+        this.currentWorkShopName = this.LeaveningformData.workShopName as string
+
+        FER_API.FER_FERMENTOR_STOCK_DETAIL_QUERY_API({
+            holderId: '96'
+            }).then(({ data }) => {
+                console.log('详细数据')
+                console.log(data)
+                 // 投料信息
+                this.currentInStockDataGroup = [];
+                // 领用信息
+                this.currentOutStockDataGroup = [];
+                if (data.data) {
+                    this.currentInStockDataGroup = data.data.inStock;
+                    this.currentOutStockDataGroup = data.data.outStock;
+                }
+
+        });
 
     }
 
-    chechMoveType(typeString) {
-        if (typeString === 'I') {
-            return '投料'
-        } else if (typeString === 'F') {
-            return '领用'
-        }
-        return ''
-    }
 }
 interface LeaveningData{
         brineFlag?: string;
@@ -406,9 +378,30 @@ interface LeaveningData{
         orderNo?: string;
         remark?: string;
         workShop?: string;
+        workShopName?: string;
     }
 
 </script>
+
+<style lang="css" scoped>
+
+.markStyle >>> th .notNull::before {
+    margin-right: 4px;
+    color: #f00;
+    content: "*";
+}
+.markStyle >>> th .notNull {
+    color: #333;
+}
+
+
+.markStyle >>> .star .el-form-item__label::before {
+    margin-right: 4px;
+    color: #f56c6c;
+    content: "*";
+}
+
+</style>
 <style lang="scss" scoped>
 .header_main {
     .dataEntry-head-leftRight-pot {

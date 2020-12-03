@@ -231,19 +231,14 @@
         }
 
         getDrumStage() {
-
             COMMON_API.DICTQUERY_API({ dictType: 'DRUM_STAGE' }).then(({ data }) => {
-                console.log('鼓罐阶段')
-                console.log(data)
-                // this.drumStageOptions = []
-                // if (data.data.length !== 0) {
-                //     data.data.forEach(item => {
-                //         this.drumStageOptions.push({ dictValue: item.inflationStageName, dictCode: item.inflationStage })
-                //     })
+                this.drumStageOptions = []
+                if (data.data.length !== 0) {
+                    data.data.forEach(item => {
+                        this.drumStageOptions.push({ dictValue: item.dictValue, dictCode: item.dictCode })
+                    })
 
-                // }
-                // console.log('this.drumStageOptions')
-                // console.log(this.drumStageOptions)
+                }
             })
         }
 

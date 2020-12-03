@@ -3,11 +3,12 @@
  * @Anthor: Telliex
  * @Date: 2020-11-18 14:53:12
  * @LastEditors: Telliex
- * @LastEditTime: 2020-11-24 09:45:46
+ * @LastEditTime: 2020-12-03 00:09:42
  */
 import httpProxy from 'utils/net/httpProxy';
 
 const FER_API = {
+    // ==================== 发酵罐 ==================
     /**
      * @property {string} FER_FERMENTOR_BATCH_QUERY_API 发酵车间-发酵罐管理-查询发酵罐信息(分页)
      */
@@ -70,13 +71,33 @@ const FER_API = {
      */
     FER_BRINE_SUBMIT_API: params => httpProxy('/fer/brineIssue/submit', 'POST', params),
     /**
-     * @property {string} FER_BRINE_SUBMIT_API 发酵车间-盐水发料-虚拟物料下拉
+     * @property {string} FER_BRINE_VIRTUAL_MATERIAL_API 发酵车间-盐水发料-虚拟物料下拉
      */
     FER_BRINE_VIRTUAL_MATERIAL_API: params => httpProxy('/fer/brineManage/dropDownOfVirtualMaterial', 'GET', params),
     /**
-     * @property {string} FER_BRINE_SUBMIT_API 发酵车间-盐水发料-查询详情
+     * @property {string} FER_BRINE_QUERY_DETAIL_API 发酵车间-盐水发料-查询详情
      */
     FER_BRINE_QUERY_DETAIL_API: params => httpProxy('/fer/brineIssue/queryByFermentorId', 'GET', params),
+    /**
+     * @property {string}  FER_FERMENTOR_SUMMARY_QUERY_API 发酵车间-发酵罐管理-查询发酵一览表
+     */
+    FER_FERMENTOR_SUMMARY_QUERY_API: params => httpProxy('/fer/fermentor/querySummary', 'GET', params),
+    /**
+     * @property {string}  FER_EXPORT_FERMENTOR_SUMMARY_QUERY_API 发酵车间-发酵罐管理-查询发酵一览表Excel
+     */
+    FER_EXPORT_FERMENTOR_SUMMARY_QUERY_API: params => httpProxy('/fer/fermentor/querySummaryExcel', 'GET', params),
+    /**
+     * @property {string} FER_FERMENTOR_STOCK_SUMMARY_QUERY_API 发酵车间-发酵罐管理-查询发酵罐库存汇总信息
+     */
+    FER_FERMENTOR_STOCK_SUMMARY_QUERY_API: params => httpProxy('/fer/fermentor/queryStockSummary', 'GET', params),
+    /**
+     * @property {string} FER_EXPORT_FERMENTOR_STOCK_SUMMARY_QUERY_API 发酵车间-发酵罐管理-查询发酵罐库存汇总信息excel
+     */
+    FER_EXPORT_FERMENTOR_STOCK_SUMMARY_QUERY_API: params => httpProxy('/fer/fermentor/queryStockSummaryExcel', 'GET', params),
+    /**
+     * @property {string} FER_FERMENTOR_STOCK_DETAIL_QUERY_API 发酵车间-发酵罐管理-根据容器id查询发酵罐信息(含库存明细)
+     */
+    FER_FERMENTOR_STOCK_DETAIL_QUERY_API: params => httpProxy('/fer/fermentor/queryFermentorDetail', 'GET', params),
     // ==================== 发料管理 ==================
     /**
      * @property {string} FER_MATERIAL_QUERY_API 发酵车间-发料管理-查询

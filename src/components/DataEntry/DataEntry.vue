@@ -1,6 +1,6 @@
 <template>
     <div class="header_main">
-        <div class="dataEntry-head">
+        <div v-if="headerAreaShow" class="dataEntry-head">
             <div v-if="orderStatusShow" class="dataEntry-head-title">
                 <em class="dataEntry-head-title__icon iconfont factory-gongchang" />
                 <span v-if="headShow" class="dataEntry-head-title__text">{{ formHeader.factoryName }}</span>
@@ -238,13 +238,13 @@
                 type: Boolean,
                 default: true
             },
-            //检测数据订单状态不显示
-            orderStatusShow: {
+            // header 是否显示
+            headerAreaShow: {
                 type: Boolean,
                 default: true
             },
-            //head 显示与否
-            headShow: {
+            //检测数据订单状态不显示
+            orderStatusShow: {
                 type: Boolean,
                 default: true
             },
@@ -257,6 +257,7 @@
         data() {
             return {
                 dateChange: 0,
+                headShow: true,
                 isRedact: false,
                 activeName: '1'
             };
