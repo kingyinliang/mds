@@ -37,7 +37,6 @@
                             size="small"
                             placeholder="请输入"
                             :disabled="!isRedact"
-                            @input="(val)=>oninput(val,scope.row,'inStorageAmount')"
                         />
                     </template>
                 </el-table-column>
@@ -114,15 +113,14 @@
         @Watch('potNoNow', { immediate: true, deep: true })
         onChangeValue(newVal: number| string) {
             if (newVal && this.currentFormDataGroup[0]) {
-                // this.currentFormDataGroup[0].scPotNo = String(newVal) || ''
-                this.currentFormDataGroup[0].inStorageBatch = this.getNowFormatDate() + '1' + newVal
+                this.$set(this.currentFormDataGroup[0], 'inStorageBatch', this.getNowFormatDate() + '1' + newVal)
                 this.$infoToast('生产入库的入库批次自动生成')
                 KOJI_API.KOJI_DISC_QUERY_INSTORAGE_AMOUNT_API({
                     orderNo: this.formHeader.orderNo,
                     fermentPotId: this.potNoList.filter(item => item.optValue === newVal)[0].optId
                 }).then(({ data }) => {
                     console.log('罐量')
-                    this.currentFormDataGroup[0].inStorageAmount = data.data
+                    this.$set(this.currentFormDataGroup[0], 'inStorageAmount', data.data)
                 })
             }
         }
@@ -158,11 +156,13 @@
             }).then(({ data }) => {
                 console.log('生产入库')
                 console.log(data)
-                this.currentFormDataGroup = []
+                this.$set(this.currentFormDataGroup, 0, [])
                 if (data.data) {
                     this.currentFormDataGroup[0] = data.data
-                    this.currentFormDataGroup[0].orderNo = this.targetOrderObj.orderNo;
-                    this.currentFormDataGroup[0].kojiOrderNo = this.targetOrderObj.kojiOrderNo;
+                    this.$set(this.currentFormDataGroup, 0, data.data)
+
+                    this.$set(this.currentFormDataGroup[0], 'orderNo', this.targetOrderObj.orderNo)
+                    this.$set(this.currentFormDataGroup[0], 'kojiOrderNo', this.targetOrderObj.kojiOrderNo)
                 }
             });
         }

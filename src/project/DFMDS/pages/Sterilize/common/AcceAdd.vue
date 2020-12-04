@@ -350,14 +350,14 @@
                 potOrderNo: formHeader.potOrderNo
             }).then(({ data }) => {
                 this.steCookingConsumeFlag = data.data.steCookingConsumeFlag;
-               this.newSteAccessoriesConsume = JSON.parse(JSON.stringify(data.data.newSteAccessoriesConsume));
-               this.OrgNewSteAccessoriesConsume = JSON.parse(JSON.stringify(data.data.newSteAccessoriesConsume));
-               this.steAccessoriesConsume = JSON.parse(JSON.stringify(data.data.steAccessoriesConsume));
-               this.OrgSteAccessoriesConsume = JSON.parse(JSON.stringify(data.data.steAccessoriesConsume));
-               this.steCookingConsume = JSON.parse(JSON.stringify(data.data.steCookingConsume));
-               this.OrgSteCookingConsume = JSON.parse(JSON.stringify(data.data.steCookingConsume));
-               this.merge(this.steAccessoriesConsume, 'steAccessoriesConsume');
-               this.merge(this.newSteAccessoriesConsume, 'newSteAccessoriesConsume');
+                this.newSteAccessoriesConsume = JSON.parse(JSON.stringify(data.data.newSteAccessoriesConsume));
+                this.OrgNewSteAccessoriesConsume = JSON.parse(JSON.stringify(data.data.newSteAccessoriesConsume));
+                this.steAccessoriesConsume = JSON.parse(JSON.stringify(data.data.steAccessoriesConsume));
+                this.OrgSteAccessoriesConsume = JSON.parse(JSON.stringify(data.data.steAccessoriesConsume));
+                this.steCookingConsume = JSON.parse(JSON.stringify(data.data.steCookingConsume));
+                this.OrgSteCookingConsume = JSON.parse(JSON.stringify(data.data.steCookingConsume));
+                this.merge(this.steAccessoriesConsume, 'steAccessoriesConsume');
+                this.merge(this.newSteAccessoriesConsume, 'newSteAccessoriesConsume');
             })
             this.acceAddAudit = await this.getAudit(formHeader, ['ACCESSORIES', 'MATERIAL']);
         }
@@ -374,7 +374,6 @@
         // 煮料锅下拉触发
         getCookingNum(row, index) {
             STE_API.STE_COOKINGNO_LIST_API({
-                workShop: this.formHeader.workShop,
                 configStartDate: row.configDate,
                 potNo: row.potNo
             }).then(({ data }) => {

@@ -997,6 +997,7 @@
         // 异常原因第三种情况
         getExcConitionList(workShop, resolve) {
             COMMON_API.DEVICE_LISTBYTYPE_API({ deptId: workShop }).then(({ data }) => {
+                this.excReasonTotal.FAULTSHUTDOWN = []
                 data.data.map(item => {
                     this.excReasonTotal.FAULTSHUTDOWN.push({
                         dictValue: item.deviceName,
