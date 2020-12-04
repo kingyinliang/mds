@@ -4,6 +4,9 @@
             ref="queryTable"
             :query-form-data="queryFormData"
             :tabs="tabs"
+            :list-interface="listInterface"
+            get-list-field="data"
+            @get-data-success="setData"
         >
             <template slot="operation_column" slot-scope="{ scope }">
                 <el-button class="ra_btn" type="text" round size="mini" style="margin-left: 0;" @click="del(scope.row, true)">
@@ -170,6 +173,15 @@
                 column: this.Column // eslint-disable-line
             }
         ]
+
+        // 查询
+        listInterface(params) {
+            params['factory'] = JSON.parse(sessionStorage.getItem('factory') || '{}').id;
+            return COMMON_API.DICTQUERY_API({
+                factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
+                dictType: 'ORDER_TYPE'
+            });
+        }
 
         del() {
         //

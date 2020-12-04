@@ -4,11 +4,15 @@ export default {
         packDetail: {},
         packCheckData: {},
         auditDetail: {},
+        pickingDetail: {},
         auditDetailDetail: {}
     },
     mutations: {
         updatePackDetail(state, packDetail) {
             state.packDetail = packDetail;
+        },
+        updatePickingDetail(state, pickingDetail) {
+            state.pickingDetail = pickingDetail;
         },
         updatePackCheckData(state, packCheckData) {
             state.packCheckData = packCheckData;

@@ -1,6 +1,6 @@
 <template>
     <div class="header_main">
-        <div class="dataEntry-head">
+        <div v-if="headShow" class="dataEntry-head">
             <div v-if="orderStatusShow" class="dataEntry-head-title">
                 <em class="dataEntry-head-title__icon iconfont factory-gongchang" />
                 <span v-if="headShow" class="dataEntry-head-title__text">{{ formHeader.factoryName }}</span>
@@ -18,7 +18,7 @@
                     {{ statusTitle }}：{{ getTagStatus(orderStatus) }}
                 </em>
             </div>
-            <div v-if="headShow" class="dataEntry-head-base">
+            <div class="dataEntry-head-base">
                 <el-form :inline="true" :model="formHeader" size="small" class="dataEntry-head-base__form" label-width="120px">
                     <el-form-item v-for="(item, index) in headerBase" :key="index">
                         <template slot="label">
@@ -37,11 +37,21 @@
                         <el-select v-if="item.type === 'select'" v-model="formHeader[item.value]" size="mini" style="width: 120px;" :disabled="!(isRedact && item.disabled)">
                             <el-option v-for="(optionIt, subIndex) in item.option.list" :key="subIndex" :label="optionIt[item.option.label]" :value="optionIt[item.option.value]" />
                         </el-select>
+                        <el-radio-group v-if="item.type === 'radio'" v-model="formHeader[item.value]" size="mini" :disabled="!isRedact">
+                            <el-radio v-for="(optionIt, subIndex) in item.option.list" :key="subIndex" :label="optionIt[item.option.value]">
+                                {{ optionIt[item.option.label] }}
+                            </el-radio>
+                        </el-radio-group>
+                        <p v-if="item.type === 'orgSelectUser'" :class="{headP: isRedact}" @click="() => { isRedact?selectUser(item.value):''}">
+                            <em v-for="(user, i) in formHeader[item.value]" :key="i">{{ user }}，</em>
+                            <em v-if="formHeader[item.value].length === 0">点击选择人员</em>
+                        </p>
                         <el-input v-if="item.type === 'input'" v-model="formHeader[item.value]" :disabled="!isRedact" size="mini" :placeholder="item.placeholder" style="width: 120px;" />
                     </el-form-item>
                 </el-form>
             </div>
         </div>
+        <slot name="headerCard" :isRedact="isRedact" />
         <!--tabs-->
         <div v-if="tabs.length === 0" class="box-card" style=" margin-top: 10px; padding: 10px !important; background: white;">
             <slot name="contentBox" :isRedact="isRedact" />
@@ -122,11 +132,13 @@
                 </div>
             </div>
         </div>
+        <loaned-personnel v-if="loanedPersonnelStatus" ref="loanedPersonnel" @changeUser="changeUser" />
     </div>
 </template>
 
 <script>
     import { getDateDiff, dateFormat } from 'utils/utils';
+    import LoanedPersonnel from 'components/LoanedPersonnel.vue';
     export default {
         name: 'DataEntry',
         filters: {
@@ -141,7 +153,9 @@
                 return formHeader[value];
             }
         },
-        components: {},
+        components: {
+            LoanedPersonnel
+        },
         props: {
             type: {
                 type: String,
@@ -196,6 +210,10 @@
             urgentSubmit: {
                 type: Boolean,
                 default: false
+            },
+            headShow: {
+                type: Boolean,
+                default: true
             },
             submitRules: {
                 type: Function,
@@ -252,8 +270,9 @@
         data() {
             return {
                 dateChange: 0,
-                headShow: true,
                 isRedact: false,
+                loanedPersonnelStatus: false,
+                orgValue: '',
                 activeName: '1'
             };
         },
@@ -326,6 +345,17 @@
             }, 3000)
         },
         methods: {
+            selectUser(value) {
+                this.orgValue = value
+                this.loanedPersonnelStatus = true;
+                this.$nextTick(() => {
+                    this.$refs.loanedPersonnel.init(this.formHeader[value], '操作人');
+                });
+            },
+            changeUser(userId) {
+                this.formHeader[this.orgValue] = userId
+                this.loanedPersonnelStatus = false;
+            },
             setRedact() {
                 if (this.isRedact) {
                     this.$emit('success');
@@ -412,4 +442,10 @@
     };
 </script>
 
-<style lang="scss"></style>
+<style lang="scss">
+    .dataEntry-head-base__form .headP {
+        color: #606266;
+        background: white;
+        border: 1px solid #dcdfe6;
+    }
+</style>
