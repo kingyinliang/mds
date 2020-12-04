@@ -87,6 +87,7 @@
                                                 />
                                             </div>
                                         </div>
+                                        <span v-if="item.judgeResult==='CQ'" class="cq">CQ</span>
                                     </div>
                                     <div class="btn-group">
                                         <el-button v-if="isAuth('')" size="small" plain :disabled="item.fermentorStatus!=='F'" @click="btnFilledBucket(item)">
@@ -238,7 +239,7 @@
                 holderName: '',
                 fermentorStatusName: '',
                 remark: '',
-                doit: false,
+                doit: true,
                 changer: '',
                 changed: ''
         }
@@ -324,6 +325,7 @@
                 label: '容器号',
                 prop: 'holderId',
                 labelWidth: 90,
+                filterable: true,
                 optionsFn: val => {
                 return new Promise((resolve) => {
                         COMMON_API.HOLDER_DROPDOWN_API({
@@ -337,7 +339,7 @@
             },
             resVal: {
                 resData: 'data',
-                label: ['holderNo'],
+                label: ['holderName'],
                 value: 'id'
             },
             defaultValue: ''
@@ -1131,6 +1133,7 @@ interface CurrentDataTable{
         display: flex;
         padding: 20px 6px;
         .bucket-image {
+            position: relative;
             display: flex;
             flex: 2;
             justify-content: center;
@@ -1195,6 +1198,42 @@ interface CurrentDataTable{
                     100% {
                         transform: translate(-50%) rotateZ(360deg);
                     }
+                }
+            }
+
+            .cq {
+                position: absolute;
+                top: 0;
+                left: 0;
+                z-index: 99;
+                width: 30px;
+                height: 30px;
+                color: #f00;
+                font-size: 12px;
+                line-height: 30px;
+                text-align: center;
+                border: 1px solid #f00;
+                border-radius: 15px;
+                &::after {
+                    position: absolute;
+                    top: -4px;
+                    left: -4px;
+                    width: 36px;
+                    height: 36px;
+                    border: 1px solid #f00;
+                    border-radius: 18px;
+                    content: "";
+                }
+                &::before {
+                    position: absolute;
+                    top: 6px;
+                    left: 4px;
+                    width: 20px;
+                    height: 16px;
+                    border: 1px solid #f00;
+                    border-right: none;
+                    border-left: none;
+                    content: "";
                 }
             }
         }

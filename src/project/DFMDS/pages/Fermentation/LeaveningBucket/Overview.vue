@@ -3,10 +3,10 @@
  * @Anthor: Telliex
  * @Date: 2020-12-01 20:33:02
  * @LastEditors: Telliex
- * @LastEditTime: 2020-12-02 17:53:12
+ * @LastEditTime: 2020-12-04 14:06:29
 -->
 <template>
-    <data-entry ref="dataEntry" :tabs="tabs" :order-status-show="false" :header-area-show="false" :redact-box-show="false">
+    <data-entry ref="dataEntry" :tabs="tabs" :order-status-show="false" :header-area-show="false" :redact-box-show="false" class="mainForm">
         <template slot="1">
             <mds-card title="发酵罐一览表(单位: 罐/个)" :name="'kojiGuard'">
                 <template slot="titleBtn">
@@ -299,6 +299,11 @@
         yieldRate: string;
     }
 </script>
+<style  scoped>
+.mainForm >>> .dataEntry-head {
+    display: none;
+}
+</style>
 <style lang="scss" scoped>
 .solerow {
     display: flex;
@@ -325,4 +330,5 @@
         border-radius: 4px;
     }
 }
+
 </style>
