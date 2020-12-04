@@ -308,20 +308,20 @@ export default class SaltWaterDetail extends Vue {
         const brineInfo = this.$store.state.fer.brineInfo;
         FER_API.FER_BRINE_QUERY_DETAIL_API({ fermentorId: brineInfo.id }).then(res => {
             const info = res.data.data;
-            const order = { ...info.order };
+            const ferOrder = { ...info.ferOrder };
             this.formHeader = {
                 holderNo: info.holderNo,
                 holderName: info.holderName,
                 kojiTempature: info.ferBrineIssue.kojiTempature,
                 changed: info.changed,
                 changer: info.changer,
-                productMaterialCode: order.productMaterialCode,
-                productMaterialName: order.productMaterialName,
+                productMaterialCode: ferOrder.productMaterialCode,
+                productMaterialName: ferOrder.productMaterialName,
                 kojiOutDate: info.intoDate,
-                kojiAmount: order.preAmount,
-                preMaterialCode: order.preMaterialCode,
-                preMaterialName: order.preMaterialName,
-                orderNo: order.orderNo,
+                kojiAmount: ferOrder.preAmount,
+                preMaterialCode: ferOrder.preMaterialCode,
+                preMaterialName: ferOrder.preMaterialName,
+                orderNo: ferOrder.orderNo,
                 orderStatus: info.ferBrineIssue.checkStatusName,
                 orderStatusName: info.brineFlagName,
                 factoryName: JSON.parse(sessionStorage.getItem('factory') || '{}').deptName
@@ -345,7 +345,7 @@ export default class SaltWaterDetail extends Vue {
 
     getOrtherMaterialList() {
         const info = this.$store.state.fer.brineInfo;
-        FER_API.FER_BRINE_OTHER_BOM_API({ fermentorId: info.id, cycle: info.cycle, orderNo: info.order.orderNo }).then(({ data }) => {
+        FER_API.FER_BRINE_OTHER_BOM_API({ fermentorId: info.id, cycle: info.cycle, orderNo: info.ferOrder.orderNo }).then(({ data }) => {
             // console.log(data, '=-=-=-=-=-=-=')
             this.otherMaterialList = data.data;
         })

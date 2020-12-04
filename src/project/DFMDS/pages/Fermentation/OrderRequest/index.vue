@@ -358,7 +358,7 @@ import { dateFormat } from 'src/utils/utils';
             }));
             FER_API.FER_ORDER_SEND_API(params).then(res => {
                 this.$successToast(res.data.msg);
-                this.$refs.queryTable.getDataList();
+                this.$refs.queryTable.getDataList(true);
             })
         }
     }

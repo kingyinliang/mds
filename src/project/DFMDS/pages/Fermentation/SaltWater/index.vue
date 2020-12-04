@@ -43,11 +43,11 @@
                                 </div>
                                 <div class="foot">
                                     <p>
-                                        <span>{{ item.order.productMaterialName }}</span>
+                                        <span>{{ item.ferOrder.productMaterialName }}</span>
                                         <span>{{ item.fermentDays + '天' }}</span>
                                     </p>
                                     <p>
-                                        <span>{{ item.order.orderNo }}</span>
+                                        <span>{{ item.ferOrder.orderNo }}</span>
                                         <span>{{ item.currentStock / 1000 + '吨' }}</span>
                                     </p>
                                 </div>
@@ -207,7 +207,7 @@
                 //         holderVolume: 50, // 容器容量
                 //         changed: '2020-10-10',
                 //         changer: '张三',
-                //         order: {
+                //         ferOrder: {
                 //             id: '2',
                 //             orderNo: '订单号', // 订单号
                 //             preMaterialCode: 'A00', // 前置物料编码
@@ -271,7 +271,7 @@
         holderVolume: number; // 容器容量
         changed: string; // 最后操作时间
         changer: string; // 最后操作人
-        order: OrderType; // 订单
+        ferOrder: OrderType; // 订单
     }
     interface OrderType {
         id: string;

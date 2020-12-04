@@ -29,14 +29,14 @@
                         <el-table-column label="发酵天数" prop="fermentDays" width="120px" />
                         <el-table-column label="生产物料" prop="productMaterialName" width="160px" />
                         <el-table-column label="订单数量" prop="amount" width="120px" />
-                        <el-table-column label="订单单位" prop="111111111111111111111" width="120px" />
-                        <el-table-column label="移动类型" prop="111111111111111111111" width="120px" />
-                        <el-table-column label="入库数量" prop="inStorageAmoount" width="140px">
+                        <el-table-column label="订单单位" prop="orderUnit" width="120px" />
+                        <el-table-column label="移动类型" prop="inStorageType" width="120px" />
+                        <el-table-column label="入库数量" prop="inStorageAmount" width="140px">
                             <template slot="header">
                                 <span class="notNull">入库数量</span>
                             </template>
                             <template slot-scope="scope">
-                                <el-input v-model.number="scope.row.inStorageAmoount" oninput="value=value.replace(/\D*/g,'')" size="small" placeholder="入库数量" :disabled="!isRedact || (scope.row.checkStatus !== 'N' && scope.row.checkStatus !== 'R' && scope.row.checkStatus !== 'S')" />
+                                <el-input v-model.number="scope.row.inStorageAmount" oninput="value=value.replace(/\D*/g,'')" size="small" placeholder="入库数量" :disabled="!isRedact || (scope.row.checkStatus !== 'N' && scope.row.checkStatus !== 'R' && scope.row.checkStatus !== 'S')" />
                             </template>
                         </el-table-column>
                         <el-table-column label="单位" prop="unit" width="120px" />
@@ -60,7 +60,7 @@
                         <el-table-column label="操作时间" prop="changed" width="160px" />
                         <el-table-column label="操作" width="120px" fixed="right">
                             <template slot-scope="scope">
-                                <el-button type="text" size="small" @click="returnHandler(scope.row)">
+                                <el-button type="text" size="small" :disabled="Number(scope.row.inStorageType) !== 531" @click="returnHandler(scope.row)">
                                     退回
                                 </el-button>
                                 <el-button type="text" size="small" @click="showLogHandler(scope.row)">
@@ -304,7 +304,7 @@
 
         ruleSave() {
             for (const item of this.targetQueryTableList) {
-                if (!item.inStorageAmoount || !item.inStorageBatch) {
+                if (!item.inStorageAmount || !item.inStorageBatch) {
                     this.$warningToast('请填写必填栏位');
                     return false;
                 }
@@ -318,7 +318,7 @@
                 return false;
             }
             for (const item of this.selections) {
-                if (!item.inStorageAmoount || !item.inStorageBatch) {
+                if (!item.inStorageAmount || !item.inStorageBatch) {
                     this.$warningToast('请填写必填栏位');
                     return false;
                 }
@@ -338,7 +338,7 @@
         savedDatas() {
             const params = this.targetQueryTableList.map(item => ({
                 id: item.id,
-                inStorageAmoount: item.inStorageAmoount,
+                inStorageAmount: item.inStorageAmount,
                 inStorageBatch: item.inStorageBatch,
                 remark: item.remark
             }));
@@ -349,7 +349,7 @@
             // 选中的提交
             const params = this.selections.map(item => ({
                 id: item.id,
-                inStorageAmoount: item.inStorageAmoount,
+                inStorageAmount: item.inStorageAmount,
                 inStorageBatch: item.inStorageBatch,
                 remark: item.remark
             }));
@@ -414,7 +414,7 @@
         fermentDays: string;
         productMaterialName: string;
         amount: string;
-        inStorageAmoount: string;
+        inStorageAmount: string;
         unit: string;
         inStorageBatch: string;
         remark: string;

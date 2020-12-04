@@ -35,7 +35,7 @@
                                 <span class="notNull">数量</span>
                             </template>
                             <template slot-scope="scope">
-                                <el-input v-model.number="scope.row.useAmount" oninput="value=value.replace(/\D*/g,'')" size="small" placeholder="输入数量" :disabled="!isRedact || (scope.row.checkStatus !== 'N' && scope.row.checkStatus !== 'R' && scope.row.checkStatus !== 'S')" />
+                                <el-input v-model.number="scope.row.realUseAmount" oninput="value=value.replace(/\D*/g,'')" size="small" placeholder="输入数量" :disabled="!isRedact || (scope.row.checkStatus !== 'N' && scope.row.checkStatus !== 'R' && scope.row.checkStatus !== 'S')" />
                             </template>
                         </el-table-column>
                         <el-table-column label="单位" prop="useUnit" />
@@ -44,19 +44,19 @@
                                 <span class="notNull">批次</span>
                             </template>
                             <template slot-scope="scope">
-                                <el-input v-model="scope.row.useBatch" size="small" placeholder="输入批次" :disabled="!isRedact || (scope.row.checkStatus !== 'N' && scope.row.checkStatus !== 'R' && scope.row.checkStatus !== 'S')" />
+                                <el-input v-model="scope.row.batch" size="small" :maxlength="10" placeholder="输入批次" :disabled="!isRedact || (scope.row.checkStatus !== 'N' && scope.row.checkStatus !== 'R' && scope.row.checkStatus !== 'S')" />
                             </template>
                         </el-table-column>
                         <el-table-column label="备注" prop="" width="160px">
                             <template slot-scope="scope">
-                                <el-input v-model="scope.row.remark" size="small" placeholder="输入备注" :disabled="!isRedact || (scope.row.checkStatus !== 'N' && scope.row.checkStatus !== 'R' && scope.row.checkStatus !== 'S')" />
+                                <el-input v-model="scope.row.remark" size="small" :maxlength="255" placeholder="输入备注" :disabled="!isRedact || (scope.row.checkStatus !== 'N' && scope.row.checkStatus !== 'R' && scope.row.checkStatus !== 'S')" />
                             </template>
                         </el-table-column>
                         <el-table-column label="操作人员" prop="changer" width="160px" />
                         <el-table-column label="操作时间" prop="changed" width="160px" />
                         <el-table-column label="操作" width="175px" fixed="right">
                             <template slot-scope="scope">
-                                <el-button v-if="scope.row.splitFlag === 'Y'" class="delBtn" type="text" icon="el-icon-delete" size="mini" :disabled="!isRedact" @click="removeDataRow(scope.row, scope.$index)">
+                                <el-button v-if="scope.row.splitFlag === 'Y'" class="delBtn" type="text" icon="el-icon-delete" size="mini" :disabled="!isRedact || (scope.row.checkStatus !== 'N' && scope.row.checkStatus !== 'R' && scope.row.checkStatus !== 'S')" @click="removeDataRow(scope.row, scope.$index)">
                                     删除
                                 </el-button>
                                 <el-button type="text" size="mini" :disabled="!isRedact || (scope.row.checkStatus !== 'N' && scope.row.checkStatus !== 'R' && scope.row.checkStatus !== 'S')" @click="splitHandler(scope.row, scope.$index)">
@@ -74,7 +74,7 @@
                 </el-row>
             </template>
         </query-table>
-        <redact-box :disabled="redactBoxDisable" :is-redact.sync="isRedact" redact-auth="steStgEdit" :is-show-submit-btn="true" :saved-rules="savedRules" :submit-rules="submitRules" :saved-datas="savedDatas" :submit-datas="submitDatas" />
+        <redact-box :disabled="redactBoxDisable" :is-redact.sync="isRedact" redact-auth="steStgEdit" :is-show-submit-btn="true" :saved-rules="savedRules" :submit-rules="submitRules" :saved-datas="savedDatas" :submit-datas="submitDatas" @sendSuccess="sendSuccess" />
         <el-dialog
             title="审核日志"
             :visible.sync="dialogVisible"
@@ -96,11 +96,12 @@
     import { Vue, Component } from 'vue-property-decorator';
     import { COMMON_API, FER_API, AUDIT_API } from 'common/api/api';
     import RedactBox from 'components/RedactBox.vue'; // 下方状态 bar
-    import { dateFormat } from 'src/utils/utils';
+    import { dateFormat, getUserNameNumber } from 'src/utils/utils';
+    import _ from 'lodash';
 
-    enum FileNameType {
-        targetQueryTableList = 'targetQueryTableList', // 所有
-        selections = 'targetQueryTableList' // 复选框
+    enum OperateType {
+        save = 'save',
+        submit = 'submit'
     }
 
     @Component({
@@ -115,6 +116,8 @@
         };
 
         targetQueryTableList: SaltWaterObj[] = [];
+
+        oldTargetQueryTableList: SaltWaterObj[] = [];
 
         selections: SaltWaterObj[] = [];
 
@@ -321,6 +324,7 @@
             this.targetQueryTableList = []
             if (data.data !== null) {
                 this.targetQueryTableList = data.data.records as SaltWaterObj[];
+                this.oldTargetQueryTableList = JSON.parse(JSON.stringify(data.data.records));
                 this.total = data.data.total;
             } else {
                 this.$infoToast('暂无任何内容');
@@ -347,10 +351,15 @@
             const obj: SaltWaterObj = {
                 ...row,
                 id: null,
-                useAmount: '',
-                useBatch: '',
+                realUseAmount: '',
+                batch: '',
                 remark: '',
-                splitFlag: 'Y'
+                splitFlag: 'Y',
+                changer: getUserNameNumber(),
+                changed: dateFormat(new Date(), 'yyyy-MM-dd hh:mm:ss'),
+                ferMaterialItemId: null,
+                fromId: row.id || row.fromId,
+                onlyOne: String(Date.now()) + Math.random()
             }
             this.targetQueryTableList.splice(index + 1, 0, obj);
         }
@@ -362,18 +371,29 @@
                 type: 'warning'
             }).then(() => {
                 console.log(row, index);
+                if (row.id) {
+                    this.$set(row, 'delFlag', 1);
+                } else {
+                    this.targetQueryTableList.splice(index, 1);
+                }
                 // this.targetQueryTableList.splice(index, 1, { ...row, delFlag: 1 });
-                this.$set(row, 'delFlag', 1);
                 this.$successToast('删除成功');
             });
         }
 
         ruleSave() {
+            console.log(this.getSaveOrSubmitParams(OperateType.save), this.getSaveOrSubmitParams(OperateType.submit), '======');
             for (const item of this.targetQueryTableList.filter(row => row.delFlag !== 1)) {
-                if (!item.useAmount || !item.useBatch) {
+                if (!item.realUseAmount || !item.batch) {
                     this.$warningToast('请填写发料列表必填栏位');
                     return false;
                 }
+            }
+            const { insertDtos, removeIds, updateDtos } = this.getSaveOrSubmitParams(OperateType.save);
+            if (!insertDtos.length && !removeIds.length && !updateDtos.length) {
+                // this.isRedact = false;
+                this.$warningToast('请修改后再保存');
+                return false;
             }
             return true;
         }
@@ -384,7 +404,7 @@
                 return false;
             }
             for (const item of this.selections) {
-                if (!item.useAmount || !item.useBatch) {
+                if (!item.realUseAmount || !item.batch) {
                     this.$warningToast('请填写发料列表必填栏位');
                     return false;
                 }
@@ -401,31 +421,49 @@
             return [this.ruleSubmit];
         }
 
-        getSaveOrSubmitParams(fileName: FileNameType): SaveOrSubmitDto {
+        getSaveOrSubmitParams(type: OperateType): SaveOrSubmitDto {
             const params: SaveOrSubmitDto = {
                 insertDtos: [], // 拆分发料(插入)
                 removeIds: [], // 删除发料
                 updateDtos: [] // 更新发料
             };
-            this[fileName].map(item => {
-                if (item.id) {
-                    const updateDto: UpdateDto = {
-                        batch: item.useBatch,
-                        id: item.id,
-                        realUseAmount: item.useAmount,
-                        remark: item.remark,
-                        splitFlag: item.splitFlag || 'N',
-                        unit: item.unit
+            if (type === OperateType.submit) {
+                params.submitIdSet = [];
+                this.selections.map(item => {
+                    if (item.ferMaterialItemId) {
+                        // @ts-ignore
+                        params.submitIdSet.push(item.ferMaterialItemId);
                     }
-                    params.updateDtos.push(updateDto);
+                })
+            }
+            this.targetQueryTableList.map(item => {
+                if (item.delFlag === 1 && item.ferMaterialItemId) {
+                    params.removeIds.push(item.ferMaterialItemId);
+                    return false;
+                }
+                if (item.id) {
+                    const old = this.oldTargetQueryTableList.find(row => row.ferMaterialItemId === item.ferMaterialItemId);
+                    if (!_.isEqual(old, item)) {
+                        const updateDto: UpdateDto = {
+                            batch: item.batch,
+                            id: item.ferMaterialItemId,
+                            realUseAmount: item.realUseAmount,
+                            remark: item.remark,
+                            splitFlag: item.splitFlag,
+                            unit: item.unit
+                        }
+                        params.updateDtos.push(updateDto);
+                    }
                 } else {
+                    const row = this.selections.find(o => o.onlyOne === item.onlyOne);
                     const insertDto: InsertDto = {
-                        batch: item.useBatch,
-                        // ferMaterialId: item., // ？ 发料管理主键？
-                        realUseAmount: item.useAmount,
+                        batch: item.batch,
+                        ferMaterialId: item.fromId,
+                        realUseAmount: item.realUseAmount,
                         remark: item.remark,
                         splitFlag: item.splitFlag,
-                        unit: item.unit
+                        unit: item.unit,
+                        needSubmit: type === OperateType.submit && Boolean(row)
                     }
                     params.insertDtos.push(insertDto);
                 }
@@ -434,13 +472,17 @@
         }
 
         savedDatas() {
-            const params = this.getSaveOrSubmitParams(FileNameType.targetQueryTableList);
+            const params = this.getSaveOrSubmitParams(OperateType.save);
             return FER_API.FER_MATERIAL_SAVE_API(params);
         }
 
         submitDatas() {
-            const params = this.getSaveOrSubmitParams(FileNameType.selections);
+            const params = this.getSaveOrSubmitParams(OperateType.submit);
             return FER_API.FER_MATERIAL_SUBMIT_API(params);
+        }
+
+        sendSuccess() {
+            this.$refs.queryTable.getDataList();
         }
 
         sizeChangeHandler(val) {
@@ -459,6 +501,8 @@
     }
     interface SaltWaterObj {
         id?: string;
+        ferMaterialItemId?: string; // 发料管理明细id
+        fromId?: string; // 从哪拆出来的
         amount?: number; // 订单数量
         changed?: string; // 修改日期
         changer?: string; // 修改人
@@ -473,16 +517,18 @@
         productMaterialName?: string; // 生产物料描述
         remark?: string; // 备注
         unit?: string; // 单位
-        useAmount?: number; // 领用数量
-        useBatch?: string; // 领用批次
+        realUseAmount?: number; // 领用数量
+        batch?: string; // 领用批次
         useUnit?: string; // 领用数量单位
         splitFlag?: string; // 拆分标记
         delFlag?: number; // 删除标记
+        onlyOne?: string; // 新增的唯一标识
     }
     interface SaveOrSubmitDto {
         insertDtos: InsertDto[];
         removeIds: string[];
         updateDtos: UpdateDto[];
+        submitIdSet?: string[];
     }
     interface InsertDto {
         batch?: string; // 批次
@@ -491,10 +537,11 @@
         remark?: string; // 备注
         splitFlag?: string; // 拆分标记(是：Y，否：N)
         unit?: string; // 用量单位
+        needSubmit?: boolean; // 提交标识
     }
     interface UpdateDto {
         batch?: string; // 批次
-        id: string; // 主键
+        id?: string; // 主键
         realUseAmount?: number; // 实际用量
         remark?: string; // 备注
         splitFlag?: string; // 拆分标记(是：Y，否：N)

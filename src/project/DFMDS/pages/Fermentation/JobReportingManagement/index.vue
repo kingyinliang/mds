@@ -425,7 +425,9 @@
         }
 
         produceHandler() {
-            FER_API.FER_JOB_BOOKING_PRODUCE_API({ });
+            FER_API.FER_JOB_BOOKING_PRODUCE_API({ }).then(() => {
+                this.$refs.queryTable.getDataList(true);
+            });
         }
 
         endDateChange(value) {
@@ -524,6 +526,11 @@
         }
 
         ruleSaved() {
+            const list = this.getEditData();
+            if (!list.length) {
+                this.$warningToast('请修改后再保存');
+                return false;
+            }
             return true;
         }
 
@@ -619,7 +626,7 @@
                 const element = arr[index];
                 // @ts-ignore
                 const old = JSON.parse(JSON.stringify(this['oldDataList' + this.$refs.queryTable.activeName].find(item => item.id === element?.id)));
-                old.redact = true;
+                old.redact = this.isRedact && (old.checkStatus === 'N' || old.checkStatus === 'S');
                 if (!_.isEqual(old, element)) {
                     res.push(element);
                 }
