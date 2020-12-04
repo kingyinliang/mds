@@ -14,46 +14,53 @@
         >
             <template slot="home">
                 <mds-card title="入库列表" :pack-up="false">
-                    <el-table class="newTable markStyle" :data="targetQueryTableList" :row-class-name="rowDelFlag" header-row-class-name="tableHead" border style="width: 100%; min-height: 90px;">
+                    <el-table class="newTable markStyle" :data="targetQueryTableList" :row-class-name="rowDelFlag" header-row-class-name="tableHead" border style="width: 100%; min-height: 90px;" @selection-change="selectionChange">
                         <el-table-column type="selection" fixed />
                         <el-table-column label="序号" type="index" fixed />
-                        <el-table-column label="状态" prop="status" />
-                        <el-table-column label="生产订单" prop="status" />
-                        <el-table-column label="容器号" prop="status" />
-                        <el-table-column label="发酵天数" prop="status" />
-                        <el-table-column label="生产物料" prop="status" />
-                        <el-table-column label="订单数量" prop="status" />
-                        <el-table-column label="订单单位" prop="status" />
-                        <el-table-column label="入库数量" prop="status" width="120px">
+                        <el-table-column label="状态" prop="checkStatus" width="120px">
+                            <template slot-scope="scope">
+                                <el-select v-model="scope.row.checkStatus" disabled size="small">
+                                    <el-option v-for="item in $refs.queryTable.optionLists.checkStatus" :key="item.value" :label="item.dictValue" :value="item.dictCode" />
+                                </el-select>
+                            </template>
+                        </el-table-column>
+                        <el-table-column label="生产订单" prop="orderNo" width="120px" />
+                        <el-table-column label="容器号" prop="fermentorName" width="120px" />
+                        <el-table-column label="发酵天数" prop="fermentDays" width="120px" />
+                        <el-table-column label="生产物料" prop="productMaterialName" width="160px" />
+                        <el-table-column label="订单数量" prop="amount" width="120px" />
+                        <el-table-column label="订单单位" prop="orderUnit" width="120px" />
+                        <el-table-column label="移动类型" prop="inStorageType" width="120px" />
+                        <el-table-column label="入库数量" prop="inStorageAmount" width="140px">
                             <template slot="header">
                                 <span class="notNull">入库数量</span>
                             </template>
                             <template slot-scope="scope">
-                                <el-input v-model="scope.row.aaaaaaaa" size="small" placeholder="入库数量" :disabled="!isRedact" />
+                                <el-input v-model.number="scope.row.inStorageAmount" oninput="value=value.replace(/\D*/g,'')" size="small" placeholder="入库数量" :disabled="!isRedact || (scope.row.checkStatus !== 'N' && scope.row.checkStatus !== 'R' && scope.row.checkStatus !== 'S')" />
                             </template>
                         </el-table-column>
-                        <el-table-column label="单位" prop="status" />
-                        <el-table-column label="批次" prop="status" width="120px">
+                        <el-table-column label="单位" prop="unit" width="120px" />
+                        <el-table-column label="批次" prop="" width="160px">
                             <template slot="header">
                                 <span class="notNull">批次</span>
                             </template>
                             <template slot-scope="scope">
-                                <el-input v-model="scope.row.aaaaaaaa" size="small" placeholder="输入批次" :disabled="!isRedact" />
+                                <el-input v-model="scope.row.inStorageBatch" :maxlength="10" size="small" placeholder="输入批次" :disabled="!isRedact || (scope.row.checkStatus !== 'N' && scope.row.checkStatus !== 'R' && scope.row.checkStatus !== 'S')" />
                             </template>
                         </el-table-column>
-                        <el-table-column label="备注" prop="status" width="160px">
+                        <el-table-column label="备注" prop="" width="180px">
                             <template slot="header">
-                                <span class="notNull">备注</span>
+                                <span>备注</span>
                             </template>
                             <template slot-scope="scope">
-                                <el-input v-model="scope.row.aaaaaaaa" size="small" placeholder="输入备注" :disabled="!isRedact" />
+                                <el-input v-model="scope.row.remark" :maxlength="255" size="small" placeholder="输入备注" :disabled="!isRedact || (scope.row.checkStatus !== 'N' && scope.row.checkStatus !== 'R' && scope.row.checkStatus !== 'S')" />
                             </template>
                         </el-table-column>
-                        <el-table-column label="操作人员" prop="status" />
-                        <el-table-column label="操作时间" prop="status" />
+                        <el-table-column label="操作人员" prop="changer" width="140px" />
+                        <el-table-column label="操作时间" prop="changed" width="160px" />
                         <el-table-column label="操作" width="120px" fixed="right">
                             <template slot-scope="scope">
-                                <el-button type="text" size="small" @click="returnHandler(scope.row)">
+                                <el-button type="text" size="small" :disabled="Number(scope.row.inStorageType) !== 531" @click="returnHandler(scope.row)">
                                     退回
                                 </el-button>
                                 <el-button type="text" size="small" @click="showLogHandler(scope.row)">
@@ -68,7 +75,7 @@
                 </el-row>
             </template>
         </query-table>
-        <redact-box :disabled="redactBoxDisable" :is-redact.sync="isRedact" redact-auth="steStgEdit" save-auth="steStgEdit" :is-show-submit-btn="true" :saved-rules="savedRules" :saved-datas="savedDatas" />
+        <redact-box :disabled="redactBoxDisable" :is-redact.sync="isRedact" redact-auth="steStgEdit" save-auth="steStgEdit" :is-show-submit-btn="true" :saved-rules="savedRules" :submit-rules="submitRules" :saved-datas="savedDatas" :submit-datas="submitDatas" @sendSuccess="sendSuccess" />
         <el-dialog
             title="审核日志"
             :visible.sync="dialogVisible"
@@ -90,7 +97,8 @@
     import { Vue, Component } from 'vue-property-decorator';
     import { AUDIT_API, COMMON_API } from 'common/api/api';
     import RedactBox from 'components/RedactBox.vue'; // 下方状态 bar
-import FER_API from 'src/common/api/fer';
+    import FER_API from 'src/common/api/fer';
+    import { dateFormat } from 'src/utils/utils';
     @Component({
         name: 'WarehouseManagement',
         components: {
@@ -102,19 +110,15 @@ import FER_API from 'src/common/api/fer';
             queryTable: HTMLFormElement;
         }
 
-        targetQueryTableList: SaltWaterObj[] = [
-            { id: 'ss' }
-        ];
+        targetQueryTableList: SaltWaterObj[] = [];
+
+        selections: SaltWaterObj[] = [];
 
         isRedact = false; // 可否编辑
 
-        currentRow = {
-            name: '001发酵罐判定'
-        }; // 当前判定项
+        currentRow = {}; // 当前判定项
 
-        formObj = {
-            name: 'hello '
-        };
+        formObj = {};
 
         redactBoxDisable = false; // control bar 可否禁用
 
@@ -122,13 +126,11 @@ import FER_API from 'src/common/api/fer';
 
         pageSize = 10;
 
-        total = 20;
+        total = 0;
 
         dialogVisible = false;
 
-        logList = [
-            { aaaaa: 'xxxxxxxxxxx' }
-        ]; // 审核日志列表
+        logList = []; // 审核日志列表
 
         rowDelFlag({ row }) {
             if (row.delFlag === 1) {
@@ -163,7 +165,7 @@ import FER_API from 'src/common/api/fer';
             {
                 type: 'input',
                 label: '生产订单',
-                prop: 'orderId',
+                prop: 'orderNo',
                 // labelWidth: 85,
                 rule: [{ required: false, message: ' ', trigger: 'change' }]
                 // defaultValue: ''
@@ -196,7 +198,7 @@ import FER_API from 'src/common/api/fer';
             {
                 type: 'select',
                 label: '生产物料',
-                prop: 'materialId',
+                prop: 'productMaterialCode',
                 // labelWidth: 85,
                 rule: [{ required: false, message: ' ', trigger: 'change' }],
                 defaultValue: '',
@@ -219,7 +221,7 @@ import FER_API from 'src/common/api/fer';
             {
                 type: 'select',
                 label: '容器号',
-                prop: 'materialId3',
+                prop: 'fermentorId',
                 // labelWidth: 85,
                 rule: [{ required: false, message: ' ', trigger: 'change' }],
                 defaultValue: '',
@@ -243,7 +245,7 @@ import FER_API from 'src/common/api/fer';
             {
                 type: 'select',
                 label: '状态',
-                prop: 'status',
+                prop: 'checkStatus',
                 // labelWidth: 85,
                 rule: [{ required: false, message: ' ', trigger: 'change' }],
                 defaultValue: '',
@@ -267,11 +269,16 @@ import FER_API from 'src/common/api/fer';
                 label: '订单日期',
                 // labelWidth: 85,
                 valueFormat: 'yyyy-MM-dd',
-                // defaultValue: dateFormat(new Date(), 'yyyy-MM-dd'),
-                prop: 'orderStartDateBegin',
-                propTwo: 'orderStartDateEnd'
+                defaultValue: dateFormat(new Date(), 'yyyy-MM-dd'),
+                prop: 'startDate',
+                propTwo: 'endDate'
             }
         ]
+
+        selectionChange(row) {
+            // console.log(row, '=====');
+            this.selections = row;
+        }
 
         // queryTable 查询请求
         queryTableListInterface = params => {
@@ -295,23 +302,62 @@ import FER_API from 'src/common/api/fer';
             }
         }
 
-        ruleMagnetSubmit() {
+        ruleSave() {
+            for (const item of this.targetQueryTableList) {
+                if (!item.inStorageAmount || !item.inStorageBatch) {
+                    this.$warningToast('请填写必填栏位');
+                    return false;
+                }
+            }
             return true;
         }
 
-        ruleForiegnMatterSubmit() {
+        ruleSubmit() {
+            if (!this.selections.length) {
+                this.$warningToast('请选择入库提交项');
+                return false;
+            }
+            for (const item of this.selections) {
+                if (!item.inStorageAmount || !item.inStorageBatch) {
+                    this.$warningToast('请填写必填栏位');
+                    return false;
+                }
+            }
             return true;
         }
 
         // {redact-box} 提交需跑的验证 function
         savedRules(): Function[] {
-            return [this.ruleMagnetSubmit, this.ruleForiegnMatterSubmit];
+            return [this.ruleSave];
+        }
+
+        submitRules(): Function[] {
+            return [this.ruleSubmit];
         }
 
         savedDatas() {
-            return new Promise((resolve) => {
-                resolve(null);
-            });
+            const params = this.targetQueryTableList.map(item => ({
+                id: item.id,
+                inStorageAmount: item.inStorageAmount,
+                inStorageBatch: item.inStorageBatch,
+                remark: item.remark
+            }));
+            return FER_API.FER_INSTORAGE_SAVE_API(params);
+        }
+
+        submitDatas() {
+            // 选中的提交
+            const params = this.selections.map(item => ({
+                id: item.id,
+                inStorageAmount: item.inStorageAmount,
+                inStorageBatch: item.inStorageBatch,
+                remark: item.remark
+            }));
+            return FER_API.FER_INSTORAGE_SUBMIT_API(params);
+        }
+
+        sendSuccess() {
+            this.$refs.queryTable.getDataList();
         }
 
         showLogHandler(row) {
@@ -321,12 +367,12 @@ import FER_API from 'src/common/api/fer';
              * 发料 MATERIAL
              */
             AUDIT_API.STE_AUDIT_LOG_API({
-                orderNo: row.orderNo
+                orderNo: row.orderNo,
                 // splitOrderNo: row.splitOrderNo, // 拆分单号<有拆分单时必填>
-                // verifyType: ['MATERIAL'] // '审核类型'
+                verifyType: ['TIMESHEET'] // '审核类型'
             }).then(res => {
                 this.dialogVisible = true;
-                this.logList = res.data;
+                this.logList = res.data.data;
             })
         }
 
@@ -337,7 +383,7 @@ import FER_API from 'src/common/api/fer';
                 cancelButtonText: '取消',
                 type: 'warning'
             }).then(() => {
-                this.$successToast('退回成功');
+                this.$successToast('暂无退回接口');
             })
         }
 
@@ -348,10 +394,12 @@ import FER_API from 'src/common/api/fer';
 
         sizeChangeHandler(val) {
             this.pageSize = val;
+            this.$refs.queryTable.getDataList();
         }
 
         currentPageChangeHanlder(val) {
             this.currentPage = val;
+            this.$refs.queryTable.getDataList();
         }
 
         handleClose() {
@@ -360,6 +408,18 @@ import FER_API from 'src/common/api/fer';
     }
     interface SaltWaterObj {
         id: string;
+        checkStatus: string;
+        orderNo: string;
+        fermentorName: string;
+        fermentDays: string;
+        productMaterialName: string;
+        amount: string;
+        inStorageAmount: string;
+        unit: string;
+        inStorageBatch: string;
+        remark: string;
+        changer: string;
+        changed: string;
     }
 </script>
 

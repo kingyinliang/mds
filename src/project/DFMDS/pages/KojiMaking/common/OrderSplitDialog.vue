@@ -241,33 +241,72 @@
 
         // 新增 item
         addSplitTable() {
-            this.splitTable.push({
-                id: '',
-                delFlag: 0,
-                isChangeAddKojiDate: true, // 是否可改变入曲时间改变
-                addKojiDate: this.orderObj.orderStartDate,
-                fermentPotId: this.fermentPotNoOptions[0].optId,
-                fermentPotNo: this.fermentPotNoOptions[0].optValue,
-                fermentPotName: this.fermentPotNoOptions[0].optLabel,
-                orderNo: this.orderObj.orderNo,
-                kojiHouseId: this.orderObj.kojiHouseId,
-                kojiHouseNo: '',
-                materialCode: this.orderObj.materialCode,
-                materialName: this.orderObj.materialName,
-                // orderId: string;
-                orderType: this.orderObj.orderType,
-                outKojiDate: getNewDay(this.orderObj.orderStartDate, 2),
-                productDate: this.orderObj.productDate,
-                statusName: '未录入',
-                status: 'N',
-                workShopName: this.orderObj.workShopName,
-                workShop: this.orderObj.workShop,
-                planOutput: this.orderObj.planOutput,
-                outputUnit: this.orderObj.outputUnit,
-                outputUnitName: this.orderObj.outputUnitName,
-                changed: dateFormat(new Date(), 'yyyy-MM-dd hh:mm:ss'),
-                changer: getUserNameNumber()
-            })
+
+            const splitTableTemp: SplitObj[] = this.splitTable.filter(item => item.delFlag !== 1)
+            const splitTableTempLength = splitTableTemp.length
+
+            if (splitTableTempLength !== 0) {
+                this.splitTable.push({
+                    id: '',
+                    delFlag: 0,
+                    isChangeAddKojiDate: true, // 是否可改变入曲时间改变
+                    addKojiDate: this.orderObj.orderStartDate,
+                    fermentPotId: splitTableTemp[splitTableTempLength - 1].fermentPotId,
+                    fermentPotNo: splitTableTemp[splitTableTempLength - 1].fermentPotNo,
+                    fermentPotName: splitTableTemp[splitTableTempLength - 1].fermentPotName,
+                    orderNo: this.orderObj.orderNo,
+                    kojiHouseId: this.orderObj.kojiHouseId,
+                    kojiHouseNo: '',
+                    materialCode: this.orderObj.materialCode,
+                    materialName: this.orderObj.materialName,
+                    // orderId: string;
+                    orderType: this.orderObj.orderType,
+                    outKojiDate: getNewDay(this.orderObj.orderStartDate, 2),
+                    productDate: this.orderObj.productDate,
+                    statusName: '未录入',
+                    status: 'N',
+                    workShopName: this.orderObj.workShopName,
+                    workShop: this.orderObj.workShop,
+                    planOutput: this.orderObj.planOutput,
+                    outputUnit: this.orderObj.outputUnit,
+                    outputUnitName: this.orderObj.outputUnitName,
+                    changed: dateFormat(new Date(), 'yyyy-MM-dd hh:mm:ss'),
+                    changer: getUserNameNumber()
+                })
+
+            } else {
+                this.splitTable.push({
+                    id: '',
+                    delFlag: 0,
+                    isChangeAddKojiDate: true, // 是否可改变入曲时间改变
+                    addKojiDate: this.orderObj.orderStartDate,
+                    // fermentPotId: this.fermentPotNoOptions[0].optId,
+                    // fermentPotNo: this.fermentPotNoOptions[0].optValue,
+                    // fermentPotName: this.fermentPotNoOptions[0].optLabel,
+                    fermentPotId: '',
+                    fermentPotNo: '',
+                    fermentPotName: '',
+                    orderNo: this.orderObj.orderNo,
+                    kojiHouseId: this.orderObj.kojiHouseId,
+                    kojiHouseNo: '',
+                    materialCode: this.orderObj.materialCode,
+                    materialName: this.orderObj.materialName,
+                    // orderId: string;
+                    orderType: this.orderObj.orderType,
+                    outKojiDate: getNewDay(this.orderObj.orderStartDate, 2),
+                    productDate: this.orderObj.productDate,
+                    statusName: '未录入',
+                    status: 'N',
+                    workShopName: this.orderObj.workShopName,
+                    workShop: this.orderObj.workShop,
+                    planOutput: this.orderObj.planOutput,
+                    outputUnit: this.orderObj.outputUnit,
+                    outputUnitName: this.orderObj.outputUnitName,
+                    changed: dateFormat(new Date(), 'yyyy-MM-dd hh:mm:ss'),
+                    changer: getUserNameNumber()
+                })
+            }
+
         }
 
         submitForm() {
@@ -325,14 +364,12 @@
                     }).then(({ data }) => {
                         if (data.data === true) {
                             this.$set(row, 'delFlag', 1)
-                            this.$successToast('删除成功');
                         } else {
                             this.$warningToast(`该曲房订单下存在领料数据，请删除数据后再删除曲房订单`)
                         }
                     })
                 } else {
                     this.$set(row, 'delFlag', 1)
-                    this.$successToast('删除成功');
                 }
             });
         }

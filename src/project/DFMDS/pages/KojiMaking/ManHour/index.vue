@@ -195,13 +195,14 @@ export default class KojiManHour extends Vue {
                 console.log('data')
                 console.log(data)
                 // this.searchCard = true;
+                this.isRedact = false
                 if (data.data.kojiTimeSheetResponseDto === null && data.data.kojiUserDtos.length === 0) {
                     this.$infoToast('暂无任何内容');
                     this.formHeader.checkStatus = '';
                     this.formHeader.checkStatusName = '';
                     this.formHeader.changed = '';
                     this.formHeader.changer = '';
-                    this.$refs.readyTime.changeList({});
+                    this.$refs.readyTime.changeList(null);
                     this.$refs.workHour.changeList([]);
                 } else {
                     this.formHeader.checkStatus = data.data.kojiTimeSheetResponseDto.status;

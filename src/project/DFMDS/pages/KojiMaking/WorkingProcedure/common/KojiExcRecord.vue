@@ -144,6 +144,7 @@
             });
             Promise.all([net1, net2]).then(() => {
                 COMMON_API.DEVICE_LISTBYTYPE_API({ deptId: formHeader.workShop }).then(({ data }) => {
+                    this.excReasonTotal.FAULTSHUTDOWN = []
                     data.data.map(item => {
                         this.excReasonTotal.FAULTSHUTDOWN.push({
                             dictValue: item.deviceName,
@@ -185,7 +186,6 @@
                 exceptionStage: tagName
             }).then(({ data }) => {
                 this.excList = data.data;
-                this.excListOrg = JSON.parse(JSON.stringify(data.data));
                 this.excList.map(item => {
                     if (item.exceptionSituation === 'FAULT' || item.exceptionSituation === 'SHUTDOWN') {
                         item.excReasonList = this.excReasonTotal.FAULTSHUTDOWN;
@@ -195,6 +195,7 @@
                         item.excReasonList = this.excReasonTotal.ENERGY;
                     }
                 });
+                this.excListOrg = JSON.parse(JSON.stringify(data.data));
             });
         }
 
