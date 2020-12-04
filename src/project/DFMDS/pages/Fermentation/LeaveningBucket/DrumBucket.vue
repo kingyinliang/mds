@@ -3,7 +3,7 @@
         <el-dialog :title="dialogTitle" :close-on-click-modal="false" :visible.sync="isTableDialogVisible" width="70%">
             <div class="inner-area">
                 <div class="inner-area__title">
-                    <h3><em class="title-icon" style="background: rgb(72, 123, 255);" />发酵罐鼓罐列表 </h3>
+                    <h3 />
                     <el-form :inline="true" :model="headerInfo" class="markStyle">
                         <el-form-item label="容器号：" size="mini">
                             <el-input v-model="headerInfo.holderName" placeholder="" disabled style="width: 100px;" />
@@ -280,13 +280,13 @@
         // 新增行
         addNewDataRow() {
             this.drumBucketInfo.push({
-                    fermentorId: '',
+                    fermentorId: this.headerInfo.holderId,
                     inflationDate: '',
                     inflationMan: '',
                     inflationStage: '',
                     inflationStageName: '',
                     sauceTemperature: 0,
-                    cycle: '',
+                    cycle: this.currentCycle,
                     delFlag: 0,
                     remark: '',
                     changer: getUserNameNumber(),

@@ -7,17 +7,14 @@
                         罐号：{{ LeaveningformData.holderName }}
                     </p>
                     <div class="dataEntry-head-leftRight-pot">
-                        <!-- <div class="dataEntry-head-leftRight-pot__tank">
-                            <div class="dataEntry-head-leftRight-pot__tank__bg" />
-                        </div> -->
                         <img src="~DFMDS/assets/img/pot-c.png" alt="" style=" left: 0; z-index: 1;">
                         <img src="~DFMDS/assets/img/pot.png" alt="" style=" left: 0; z-index: 2;">
                     </div>
                 </div>
             </el-col>
             <el-col :span="20">
-                <div class="card-right" style="background: #fff;">
-                    <el-form ref="Leavening" :model="LeaveningformData" size="small" label-width="120px" :inline="true" class="markStyle">
+                <div class="card-right" style="background: #fff; cursor: default;">
+                    <el-form ref="Leavening" :model="LeaveningformData" size="small" label-width="120px" :inline="true">
                         <el-form-item
                             label="生产车间："
                         >
@@ -116,13 +113,13 @@
                         </el-form-item>
                         <el-form-item label="特殊资源：">
                             <el-radio-group v-model="LeaveningformData.brineFlag">
-                                <el-radio label="N">
+                                <el-radio label="N" disabled>
                                     盐水发料未发
                                 </el-radio>
-                                <el-radio label="N1">
+                                <el-radio label="N1" disabled>
                                     盐水发料中
                                 </el-radio>
-                                <el-radio label="Y">
+                                <el-radio label="Y" disabled>
                                     盐水发料已发
                                 </el-radio>
                             </el-radio-group>
@@ -136,7 +133,7 @@
                 <span slot="label" class="spanview">
                     投料信息
                 </span>
-                <el-table header-row-class-name="" :data="currentInStockDataGroup" border tooltip-effect="dark" class="newTable" size="mini">
+                <el-table header-row-class-name="" :data="currentInStockDataGroup" border tooltip-effect="dark" class="newTable" size="mini" max-height="500">
                     <el-table-column type="index" label="序号" width="55" fixed align="center" />
                     <el-table-column label="车间" :show-overflow-tooltip="true" width="180">
                         <template>
@@ -219,7 +216,7 @@
                 <span slot="label" class="spanview">
                     领用信息
                 </span>
-                <el-table header-row-class-name="" :data="currentOutStockDataGroup" border tooltip-effect="dark" class="newTable" size="mini">
+                <el-table header-row-class-name="" :data="currentOutStockDataGroup" border tooltip-effect="dark" class="newTable" size="mini" max-height="500">
                     <el-table-column type="index" label="序号" width="55" fixed />
                     <el-table-column label="车间" :show-overflow-tooltip="true" width="180">
                         <template>
@@ -394,15 +391,25 @@ interface LeaveningData{
     color: #333;
 }
 
-
 .markStyle >>> .star .el-form-item__label::before {
     margin-right: 4px;
     color: #f56c6c;
     content: "*";
 }
 
+/* 个例处理 */
+.card-right >>> .el-input__inner {
+    cursor: default;
+}
+.card-right >>> .el-radio__input.is-disabled + span.el-radio__label {
+    color: #606266;
+    font-weight: 400;
+    cursor: default;
+}
+
 </style>
 <style lang="scss" scoped>
+// 容器罐呈现
 .header_main {
     .dataEntry-head-leftRight-pot {
         position: relative;
@@ -412,32 +419,21 @@ interface LeaveningData{
             position: absolute;
         }
     }
-    .dataEntry-head-leftRight-pot__tank {
-        bottom: 0;
-        left: 34px;
-        width: 32px;
-        height: 54px;
-    }
-    .dataEntry-head-leftRight-pot__tank__bg {
-        background-image: radial-gradient(at center top, #91d5ff, #1890ff);
-    }
-    .dataEntry-head-leftRight-message__item p:first-child {
-        font-size: 24px;
-    }
-    .dataEntry-head-leftRight-message__item p:first-child em {
-        font-size: 16px;
-    }
 }
 
 
-.el-form-item--small.el-form-item {
-    margin-bottom: 18px;
-}
-
-@media (max-width: 1367px) {
+@media (max-width: 1600px) {
     .header_main .dataEntry-head-leftRight .card-left,
     .header_main .dataEntry-head-leftRight .card-right {
-        height: 170px;
+        height: 200px;
+        padding: 10px;
+    }
+}
+
+@media (max-width: 1200px) {
+    .header_main .dataEntry-head-leftRight .card-left,
+    .header_main .dataEntry-head-leftRight .card-right {
+        height: 300px;
         padding: 10px;
     }
 }

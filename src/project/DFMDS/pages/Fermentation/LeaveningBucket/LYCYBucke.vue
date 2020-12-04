@@ -3,9 +3,16 @@
         <el-dialog :title="dialogTitle" :close-on-click-modal="false" :visible.sync="isTableDialogVisible" width="70%">
             <div class="inner-area">
                 <div class="inner-area__title">
-                    <h3><em class="title-icon" style="background: rgb(72, 123, 255);" />发酵罐 LY/CY 列表</h3>
+                    <el-radio-group v-model="currentTab" style="margin-top: 10px; margin-left: 5px;">
+                        <el-radio label="LY">
+                            LY
+                        </el-radio>
+                        <el-radio label="CY">
+                            CY
+                        </el-radio>
+                    </el-radio-group>
                     <el-form :inline="true" :model="headerInfo" class="markStyle">
-                        <el-form-item label="特殊资源：">
+                        <!-- <el-form-item>
                             <el-radio-group v-model="currentTab">
                                 <el-radio label="LY">
                                     LY
@@ -14,20 +21,20 @@
                                     CY
                                 </el-radio>
                             </el-radio-group>
-                        </el-form-item>
+                        </el-form-item> -->
                         <el-form-item label="容器号：" size="mini">
                             <el-input v-model="headerInfo.holderName" placeholder="" disabled style="width: 100px;" />
                         </el-form-item>
                         <el-form-item label="状态：" size="mini">
                             <el-input v-model="headerInfo.fermentorStatusName" placeholder="" disabled style="width: 120px;" />
                         </el-form-item>
-                        <el-form-item label="CY 物料：" size="mini">
+                        <el-form-item v-if="currentTab==='CY'" label="CY 物料：" size="mini" class="star">
                             <el-select v-model="CYProdcutMaterial" placeholder="请选择" clearable style="width: 220px;" @change="changeProdcutMaterialOption">
                                 <el-option
                                     v-for="item in CYProdcutMaterialOption"
-                                    :key="item.productMaterialList[0].dictCode"
-                                    :label="item.productMaterialList[0].dictValue"
-                                    :value="item.productMaterialList[0].dictCode"
+                                    :key="item.dictCode"
+                                    :label="`${item.dictValue} ${item.dictCode}`"
+                                    :value="item.dictCode"
                                 />
                             </el-select>
                         </el-form-item>
@@ -82,7 +89,21 @@
                             <el-table class="table-style-light markStyle" :data="cyDataGroup" :row-class-name="rowDelFlag" header-row-class-name="tableHead" size="mini" border style="width: 100%;" max-height="300">
                                 <el-table-column label="序号" type="index" width="55" fixed="left" align="center" />
                                 <el-table-column label="审核状态" width="160" :show-overflow-tooltip="true" prop="checkStatusName" />
-                                <el-table-column label="打入罐" width="160" :show-overflow-tooltip="true" prop="injectionPotName" />
+                                <el-table-column :show-overflow-tooltip="true" width="160" prop="injectionPotName">
+                                    <template slot="header">
+                                        <span class="notNull">打入罐</span>
+                                    </template>
+                                    <template slot-scope="scope">
+                                        <el-select v-model="scope.row.injectionPotId" size="small" clearable @change="val=>changeContainerTypeOption(val,scope.row)">
+                                            <el-option
+                                                v-for="item in containerTypeList"
+                                                :key="item.dictCode"
+                                                :label="item.dictValue"
+                                                :value="item.dictCode"
+                                            />
+                                        </el-select>
+                                    </template>
+                                </el-table-column>
                                 <el-table-column :show-overflow-tooltip="true" min-width="100">
                                     <template slot="header">
                                         <span class="notNull">CY 量</span>
@@ -178,6 +199,10 @@
             CYProdcutMaterialOption: Options[]=[]
 
             currentWorkShop=''
+
+            containerTypeList: Options[]=[] // sc容器罐下拉
+            cyMaterialCode= ''
+            cyMaterialName= ''
             headerInfo: HeaderInfo={
                 fermentorStatus: '',
                 holderName: '',
@@ -188,7 +213,6 @@
             // 点击赋予 item info
             currentCycle=''
             currentHolderId=''
-            drumStageOptions: Options[]=[]
 
             // 当前 row
             currentRowIndex=0
@@ -207,6 +231,9 @@
             mounted() {
                 // 获取组织树
                 this.getTree()
+
+                // 容器罐
+                this.getContainerTypeList()
             }
 
             // 获取当前年月日 (年两位) 201010
@@ -223,6 +250,37 @@
                 }
                 const currentdate = year.substr(2, 2) + month + strDate;
                 return currentdate;
+            }
+
+            getContainerTypeList() {
+
+                COMMON_API.HOLDER_DROPDOWN_API({ // /sysHolder/dropDown
+                    factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
+                    holderType: ['027'],
+                    holderNoList: ['004']
+                }).then(({ data }) => {
+                    console.log('容器罐')
+                    console.log(data)
+                    this.containerTypeList = []
+                    data.data.forEach(item => {
+                        this.containerTypeList.push({ dictCode: item.id, dictValue: item.holderName, dictNo: item.holderNo })
+                    })
+                })
+            }
+
+            changeContainerTypeOption(val, target) {
+
+                if (val !== '') {
+                    const temp = this.containerTypeList.filter(item => item.dictCode === val)[0]
+                    target.injectionPotName = temp.dictValue as string
+
+                    target.injectionPotNo = temp.dictNo as string
+                } else {
+                    target.injectionPotName = ''
+                    target.injectionPotNo = ''
+                }
+
+
             }
 
 
@@ -244,6 +302,7 @@
 
             // 入罐
             async init(item) {
+                this.currentTab = 'LY'
                 console.log('入罐')
                 console.log(item)
 
@@ -296,16 +355,18 @@
 
                 })
                  // cy 物料
-                // this.getCyMatiral()
+                this.getCyMatiral()
 
             }
 
             getCyMatiral() {
-                COMMON_API.DICTQUERY_API({ dictType: 'DRUM_STAGE' }).then(({ data }) => {
-                    this.drumStageOptions = []
+                COMMON_API.DICTQUERY_API({ dictType: 'CY_COMMENT' }).then(({ data }) => {
+                    console.log('11111')
+                    console.log(data)
+                    this.CYProdcutMaterialOption = []
                     if (data.data.length !== 0) {
                         data.data.forEach(item => {
-                            this.drumStageOptions.push({ dictValue: item.dictValue, dictCode: item.dictCode })
+                            this.CYProdcutMaterialOption.push({ dictValue: item.dictValue, dictCode: item.dictCode })
                         })
 
                     }
@@ -315,7 +376,12 @@
             changeProdcutMaterialOption(val) {
 
             if (val !== '') {
-                //this.CYProdcutMaterial = this.CYProdcutMaterialOption.filter(item => item.productMaterialList[0].dictCode === val)[0].productMaterialList[0].dictValue as string
+                this.CYProdcutMaterial = this.CYProdcutMaterialOption.filter(item => item.dictCode === val)[0].dictValue as string
+                this.cyMaterialCode = val
+                this.cyMaterialName = this.CYProdcutMaterial
+            } else {
+                this.cyMaterialCode = ''
+                this.cyMaterialName = ''
             }
 
         }
@@ -369,7 +435,8 @@
             addNewDataRow() {
                 if (this.currentTab === 'LY') {
                     this.lyDataGroup.push({
-                        fermentorId: '',
+                        cycle: this.currentCycle,
+                        fermentorId: this.headerInfo.holderId,
                         lyDate: '',
                         lyMans: '',
                         delFlag: 0,
@@ -380,12 +447,16 @@
 
                 } else {
                     this.cyDataGroup.push({
+                        cycle: this.currentCycle,
                         checkStatus: '',
                         checkStatusName: '',
                         cyAmount: 0,
                         cyBatch: this.getNowFormatDate() + '1' + '777',
                         cyMans: '',
-                        fermentorId: '',
+                        cyMaterialCode: '',
+                        cyMaterialName: '',
+                        cyMaterialType: 'ZHAL',
+                        fermentorId: this.headerInfo.holderId,
                         injectionPotId: '416',
                         injectionPotName: '4#储罐（SC汁）',
                         injectionPotNo: '004',
@@ -428,7 +499,7 @@
                         } else if (item.id) {
 
                             if (!_.isEqual(this.orgLyDataGroup[index], item)) {
-                                // item.potStatus = this.currentPotStatus
+                                // item.potStatus = this.currentPotStatu
                                 updateListArray.push(item)
                             }
                         } else {
@@ -467,10 +538,16 @@
 
                             if (!_.isEqual(this.orgLyDataGroup[index], item)) {
                                 // item.potStatus = this.currentPotStatus
+
+                                item.cyMaterialCode = this.cyMaterialCode
+                                item.cyMaterialName = this.cyMaterialName
                                 updateListArray.push(item)
                             }
                         } else {
                             // item.potStatus = this.currentPotStatus
+
+                            item.cyMaterialCode = this.cyMaterialCode
+                            item.cyMaterialName = this.cyMaterialName
                             insertListArray.push(item)
                         }
                     })
@@ -500,27 +577,33 @@
                 if (this.currentTab === 'LY') {
 
                     if (this.lyDataGroup.length === 0 && this.lyDataGroup.filter(it => it.delFlag !== 1).length === 0) {
-                        this.$warningToast('请录入LY');
+                        this.$warningToast('请录入 LY');
                         return false
                     }
 
                     // 表格栏位
                     for (const item of this.lyDataGroup.filter(it => it.delFlag !== 1)) {
                         if (!item.lyDate || !item.lyMans) {
-                            this.$warningToast('请填写LY必填项');
+                            this.$warningToast('请填写 LY 必填项');
                             return false
                         }
                     }
                 } else {
+
+                    if (this.CYProdcutMaterial === '' || this.CYProdcutMaterial === null) {
+                        this.$warningToast('请选择 CY 物料');
+                        return false
+                    }
+
                     if (this.cyDataGroup.length === 0 && this.cyDataGroup.filter(it => it.delFlag !== 1).length === 0) {
-                        this.$warningToast('请录入CY');
+                        this.$warningToast('请录入 CY');
                         return false
                     }
 
                     // 表格栏位
                     for (const item of this.cyDataGroup.filter(it => it.delFlag !== 1)) {
                         if (!item.cyAmount || !item.cyBatch || !item.cyMans) {
-                            this.$warningToast('请填写CY必填项');
+                            this.$warningToast('请填写 CY 必填项');
                             return false
                         }
                     }
@@ -535,6 +618,7 @@
     interface Options{
         dictCode?: string;
         dictValue?: string;
+        dictNo?: string;
     }
 
     interface ProductMaterial{
@@ -547,7 +631,7 @@
     interface CurrentLyDataTable{
         changed: string;
         changer: string;
-        cycle?: number;
+        cycle?: string;
         fermentorId: string;
         id?: string;
         lyDate: string;
@@ -572,6 +656,9 @@
         injectionPotNo: string;
         remark: string;
         delFlag: number;
+        cyMaterialCode: string;
+        cyMaterialName: string;
+        cyMaterialType: string;
     }
     interface HeaderInfo {
         fermentorStatus: string;

@@ -3,7 +3,7 @@
  * @Anthor: Telliex
  * @Date: 2020-11-18 14:53:12
  * @LastEditors: Telliex
- * @LastEditTime: 2020-12-03 00:09:42
+ * @LastEditTime: 2020-12-03 21:02:12
  */
 import httpProxy from 'utils/net/httpProxy';
 
@@ -32,7 +32,7 @@ const FER_API = {
     /**
      * @property {string} FER_FERMENTOR_CY_SAVE_API 发酵车间-发酵罐管理-保存CY记录
      */
-    FER_FERMENTOR_CY_SAVE_API: params => httpProxy('/fer/fermentorCy/save', 'POST', params),
+    FER_FERMENTOR_CY_SAVE_API: params => httpProxy('/fer/fermentorCy/batchSave', 'POST', params),
     /**
      * @property {string} FER_FERMENTOR_FLATION_BATCH_QUERY_API 发酵车间-发酵罐管理-根据容器id查询鼓罐记录列表
      */
@@ -40,7 +40,7 @@ const FER_API = {
     /**
      * @property {string} FER_FERMENTOR_FLATION_SAVE_API 发酵车间-发酵罐管理-保存鼓罐记录
      */
-    FER_FERMENTOR_FLATION_SAVE_API: params => httpProxy('/fer/fermentorInflation/save', 'POST', params),
+    FER_FERMENTOR_FLATION_SAVE_API: params => httpProxy('/fer/fermentorInflation/batchSave', 'POST', params),
     /**
      * @property {string} FER_FERMENTOR_LY_BATCH_QUERY_API 发酵车间-发酵罐管理-根据容器id查询LY记录列表
      */
@@ -48,7 +48,7 @@ const FER_API = {
     /**
      * @property {string} FER_FERMENTOR_LY_SAVE_API 发酵车间-发酵罐管理-保存LY记录
      */
-    FER_FERMENTOR_LY_SAVE_API: params => httpProxy('/fer/fermentorLy/save', 'POST', params),
+    FER_FERMENTOR_LY_SAVE_API: params => httpProxy('/fer/fermentorLy/batchSave', 'POST', params),
     // ==================== 盐水发料 ==================
     /**
      * @property {string} FER_BRINE_POT_LIST_API 发酵车间-盐水发料-分页查询-罐

@@ -8,10 +8,11 @@
             :query-form-data="queryTableFormData"
             :list-interface="queryTableListInterface"
             :custom-data="true"
+            :show-page="false"
             @get-data-success="returnDataFromQueryTableForm"
         >
             <template slot="home">
-                <mds-card v-show="isSearchResultShow" :title="'发酵情况总览'" :pack-up="false" :name="'fermenterTotal'" style="margin-top: 10px; overflow: initial;">
+                <mds-card v-show="isSearchResultMetroShow" :title="'发酵情况总览'" :pack-up="false" :name="'fermenterTotal'" style="margin-top: 10px; overflow: initial;">
                     <div class="sumbox">
                         <div class="topBox clearfix">
                             <div v-for="(item, index) in topBox" :key="index" class="clearfix" style="float: left;">
@@ -58,7 +59,7 @@
                         </div>
                     </div>
                 </mds-card>
-                <mds-card v-show="isSearchResultShow" :title="'发酵罐列表'" :pack-up="false" :name="'fermenterTotal'" style="margin-top: 10px; overflow: initial;">
+                <mds-card v-show="isSearchResultListShow" :title="'发酵罐列表'" :pack-up="false" :name="'fermenterTotal'" style="margin-top: 10px; overflow: initial;">
                     <template slot="titleBtn">
                         <div style="float: right;" class="moreItems">
                             <el-button type="text" size="small" @click="getMore">
@@ -82,27 +83,27 @@
                                             <div class="pot_water">
                                                 <div
                                                     class="pot_water_sole"
-                                                    :style="{height: item.ratio+'%', background: '#1890FF' }"
+                                                    :style="{height: (item.volumePercent*100)+'%', background: item.volumePercent===1? '#590101':item.volumePercent>=0.5? '#8A391B':'C67C5A'}"
                                                 />
                                             </div>
                                         </div>
                                     </div>
                                     <div class="btn-group">
-                                        <el-button v-if="isAuth('')" size="small" plain @click="btnFilledBucket(item)">
+                                        <el-button v-if="isAuth('')" size="small" plain :disabled="item.fermentorStatus!=='F'" @click="btnFilledBucket(item)">
                                             鼓罐
                                         </el-button>
-                                        <el-button v-if="isAuth('')" size="small" plain @click="btnLYCY(item)">
+                                        <el-button v-if="isAuth('')" size="small" plain :disabled="item.fermentorStatus!=='F'" @click="btnLYCY(item)">
                                             <!-- <el-button v-if="item.fermentorStatus!=='M'" size="small" plain @click="btnFillBucket(item)"> -->
                                             LY/CY
                                         </el-button>
                                         <el-button v-if="isAuth('')" size="small" plain @click="btnAdjust(item)">
                                             调整
                                         </el-button>
-                                        <el-button v-if="isAuth('')" size="small" plain @click="btnClearBucket(item)">
+                                        <el-button v-if="isAuth('')" size="small" plain :disabled="item.fermentorStatus!=='U'" @click="btnClearBucket(item)">
                                             <!-- <el-button size="small" plain @click="btnClearBucket(item)"> -->
                                             清罐
                                         </el-button>
-                                        <el-button v-if="isAuth('')" size="small" plain @click="btnWashBucket(item)">
+                                        <el-button v-if="isAuth('')" size="small" plain :disabled="item.fermentorStatus!=='C'" @click="btnWashBucket(item)">
                                             清洗
                                         </el-button>
                                     </div>
@@ -197,14 +198,14 @@
     // import { dateFormat } from 'utils/utils';
 
     @Component({
-        name: 'DissolveBucketIndex',
+        name: 'FermentBucketIndex',
         components: {
             DrumBucket,
             LYCYBucket,
             ModifyBucket
         }
     })
-    export default class DissolveBucketIndex extends Vue {
+    export default class FermentBucketIndex extends Vue {
         $refs: {
             queryTable: HTMLFormElement;
             drumBucket: HTMLFormElement;
@@ -213,14 +214,14 @@
         }
 
         // 共用变数
-        currentWorkShop=null // 当前车间  溶解罐取消车间维度
+
         workShopList: Options[]=[]
 
         holderStatus: Options[]=[] // 罐状态对应
 
         targetQueryTableList: BucketDataListObj[] = []
-        isTableDialogVisible=false
 
+        searchSource='bar' // 查询来自哪？ bar/ metro
 
         // 清罐弹窗 data
         isClearDialogVisible = false;
@@ -242,8 +243,8 @@
                 changed: ''
         }
 
-        // 查询结果呈现
-        isSearchResultShow=false
+        isSearchResultMetroShow=false // 查询结果地铁图呈现
+        isSearchResultListShow=false // 查询结果清单呈现
         formHeader={
             currPage: 1,
             fermStatus: '',
@@ -476,13 +477,39 @@
                 color: '#8BC34AFF',
                 startColor: '#C70909FF',
                 endColor: '#8BC34AFF',
-                text: '领',
+                text: '调',
                 ptext: ' ',
                 numNew: 0,
                 potColor: '#C70909',
                 middleText: '压榨',
                 fermentStage: 'O',
                 holderStatus: '4',
+                num: '0'
+            },
+            {
+                color: '#82ab53',
+                startColor: '#999999FF',
+                endColor: '#999999FF',
+                text: '已调',
+                ptext: '0个月',
+                numNew: 0,
+                potColor: '#FFF',
+                middleText: '调酱',
+                fermentStage: 'T',
+                holderStatus: '0',
+                num: '0'
+            },
+            {
+                color: '#5b8031',
+                startColor: '#999999FF',
+                endColor: '#999999FF',
+                text: '领',
+                ptext: '0个月',
+                numNew: 0,
+                potColor: '#FFF',
+                middleText: '已调',
+                fermentStage: 'A',
+                holderStatus: '0',
                 num: '0'
             },
             {
@@ -494,7 +521,7 @@
                 numNew: 0,
                 potColor: '#FFF',
                 middleText: '空罐',
-                fermentStage: 'E',
+                fermentStage: 'U',
                 holderStatus: '0',
                 num: '0'
             }
@@ -514,6 +541,7 @@
         getResultBymetroItem(item) {
             console.log('地铁图传值')
             console.log(item)
+            this.searchSource = 'metro'
 
             this.formHeader.fermentStage = item.fermentStage
             this.formHeader.currPage = 1
@@ -521,11 +549,13 @@
             this.$refs.queryTable.queryForm.currPage = 1
             this.$refs.queryTable.queryForm.pageSize = 10
             this.$set(this.$refs.queryTable.queryForm, 'fermentStage', item.fermentStage)
+            this.isSearchResultListShow = true
 
             this.queryTableListInterface({
+                searchSource: 'metro',
                 factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
-                currPage: this.formHeader.currPage,
-                pageSize: this.formHeader.pageSize,
+                current: this.formHeader.currPage,
+                size: this.formHeader.pageSize,
                 workShop: this.formHeader.workShop,
                 holderType: this.formHeader.holderType,
                 holderId: this.formHeader.holderId,
@@ -590,7 +620,47 @@
         }
 
         getData() {
-            //
+
+            if (this.searchSource === 'bar') {
+                this.formHeader.fermentStage = ''
+                    this.queryTableListInterface({
+                    factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
+                    currPage: this.formHeader.currPage,
+                    pageSize: this.formHeader.pageSize,
+                    workShop: this.formHeader.workShop,
+                    holderType: this.formHeader.holderType,
+                    holderId: this.formHeader.holderId,
+                    fermStatus: this.formHeader.fermStatus,
+                    fermentStage: this.formHeader.fermentStage
+                }).then(({ data }) => {
+                    this.returnDataFromQueryTableForm(data)
+                })
+            } else {
+                this.queryTableListInterface({
+                    searchSource: 'metro',
+                    factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
+                    current: this.formHeader.currPage,
+                    size: this.formHeader.pageSize,
+                    workShop: this.formHeader.workShop,
+                    holderType: this.formHeader.holderType,
+                    holderId: this.formHeader.holderId,
+                    fermStatus: this.formHeader.fermStatus,
+                    fermentStage: this.formHeader.fermentStage
+                }).then(({ data }) => {
+                    this.returnDataFromQueryTableForm(data)
+                })
+            }
+
+
+        }
+
+        // 自动搜索(目前无用)
+        createdEnd() {
+            this.$nextTick(() => {
+                if (this.$refs.queryTable.queryForm.workShop !== '') {
+                    this.$refs.queryTable.getDataList(true)
+                }
+            })
         }
 
         getMore() {
@@ -604,12 +674,6 @@
 
         // 去详请
         goTargetDetail(item) {
-
-            console.log('item')
-            console.log(item)
-            console.log('this.workShopList')
-            console.log(this.workShopList)
-
             this.$set(item, 'workShopName', this.workShopList.filter(element => element.dictCode === item.workShop)[0].dictValue)
             this.$store.commit('fer/updatefermentBucket', item);
             this.$store.commit('common/updateMainTabs', this.$store.state.common.mainTabs.filter(subItem => subItem.name !== 'DFMDS-pages-Fermentation-LeaveningBucket-LeaveningBucketDetail'))
@@ -624,7 +688,15 @@
         queryTableListInterface = (params) => {
             console.log('搜寻传值')
             console.log(params)
-            const paramsTemp = {
+            let paramsTemp = {}
+            if (params.searchSource === 'metro') {
+                console.log('我来自地图')
+                paramsTemp = params
+            } else {
+                console.log('我来自按钮查询')
+                // eslint-disable-next-line no-invalid-this
+                this.searchSource = 'bar'
+                paramsTemp = {
                 factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
                 current: params.currPage,
                 size: params.pageSize,
@@ -632,8 +704,10 @@
                 holderType: params.holderType,
                 holderId: params.holderId,
                 fermStatus: params.fermStatus,
-                fermentStage: params.fermentStage || ''
+                fermentStage: ''
             }
+            }
+
             return FER_API.FER_FERMENTOR_BATCH_QUERY_API(paramsTemp);
         };
 
@@ -641,44 +715,46 @@
         returnDataFromQueryTableForm(data) {
             console.log('查询结果回传')
             console.log(data)
-            // 取得查找字段
+            // 取得组件查找字段
             const queryForm = this.$refs.queryTable.queryForm
+            // 清空结果 array
             this.targetQueryTableList = []
+            // 更新地铁图数据
+            this.topBox[0].num = data.data.emptyAmount;
+            this.topBox[1].num = data.data.fermentingAmount0;
+            this.topBox[2].num = data.data.fermentingAmount30;
+            this.topBox[3].num = data.data.fermentingAmount60;
+            this.topBox[4].num = data.data.fermentingAmount90;
+            this.topBox[5].num = data.data.fermentingAmount120;
+            this.topBox[6].num = data.data.fermentingAmount150;
+            this.topBox[7].num = data.data.fermentingAmount180;
+            this.topBox[8].num = data.data.overdueAmount;
+            this.topBox[9].num = data.data.mixingAmount;
+            this.topBox[10].num = data.data.adjustAmount;
+            this.topBox[11].num = data.data.useAmount;
+
             if (data.data.data.records.length !== 0) {
-                this.isSearchResultShow = true
+                this.isSearchResultMetroShow = true // 地铁图区块呈现
+                this.isSearchResultListShow = true // 结果区块呈现
                 this.targetQueryTableList = data.data.data.records
 
-                // this.formHeader = {
-                //     currPage: data.data.data.current,
-                //     fermStatus: queryForm.fermStatus,
-                //     holderId: queryForm.holderId,
-                //     holderType: queryForm.holderType,
-                //     pageSize: data.data.data.size,
-                //     totalCount: data.data.data.total,
-                //     workShop: queryForm.workShop
-                // }
+                this.$set(this.formHeader, 'currPage', data.data.data.current)
+                this.$set(this.formHeader, 'fermStatus', queryForm.fermStatus)
+                this.$set(this.formHeader, 'holderId ', queryForm.holderId)
+                this.$set(this.formHeader, 'holderType', queryForm.holderType)
+                this.$set(this.formHeader, 'pageSize', data.data.data.size)
+                this.$set(this.formHeader, 'totalCount', data.data.data.total)
+                this.$set(this.formHeader, 'workShop', queryForm.workShop)
 
-                this.formHeader.currPage = data.data.data.current
-                this.formHeader.fermStatus = queryForm.fermStatus
-                this.formHeader.holderId = queryForm.holderId
-                this.formHeader.holderType = queryForm.holderType
-                this.formHeader.pageSize = data.data.data.size
-                this.formHeader.totalCount = data.data.data.total
-                this.formHeader.workShop = queryForm.workShop
-
-
-                this.topBox[0].num = data.data.emptyAmount;
-                this.topBox[1].num = data.data.fermentingAmount0;
-                this.topBox[2].num = data.data.fermentingAmount30;
-                this.topBox[3].num = data.data.fermentingAmount60;
-                this.topBox[4].num = data.data.fermentingAmount90;
-                this.topBox[5].num = data.data.fermentingAmount120;
-                this.topBox[6].num = data.data.fermentingAmount150;
-                this.topBox[7].num = data.data.fermentingAmount180;
-                this.topBox[8].num = data.data.overdueAmount;
-                this.topBox[9].num = data.data.useAmount;
             } else {
-                this.isSearchResultShow = false
+
+                if (this.searchSource === 'bar') { //查询来自按钮
+                    this.isSearchResultMetroShow = false
+                    this.isSearchResultListShow = false
+                } else { //查询来自地铁图
+                    this.isSearchResultListShow = false
+                }
+
                 this.$infoToast('暂无任何内容');
             }
 
@@ -740,10 +816,12 @@
         saveClearBucket() {
             if (this.cleanDataForm.doit === true) {
                 FER_API.FER_FERMENTOR_CLEAR_API({
-                    holderId: this.clearDataForm.holderId,
-                    clearDate: this.clearDataForm.clearDate
+                    holderId: this.cleanDataForm.holderId,
+                    remark: this.cleanDataForm.remark
                 }).then(() => {
                     this.isCleanDialogVisible = false
+                    this.$successToast('清罐成功');
+                    this.getData() // 刷新结果
                 });
             }
             this.isCleanDialogVisible = false
@@ -752,10 +830,12 @@
         // 保存清洗
         saveWashBucket() {
             FER_API.FER_FERMENTOR_CLEAN_API({
-                holderId: this.cleanDataForm.holderId,
-                remark: this.cleanDataForm.remark
+                holderId: this.clearDataForm.holderId,
+                clearDate: this.clearDataForm.clearDate
             }).then(() => {
                 this.isClearDialogVisible = false
+                this.$successToast('清洗成功');
+                this.getData() // 刷新结果
             });
         }
 
@@ -1166,9 +1246,10 @@ interface CurrentDataTable{
 
 
 .topBox {
-    width: 1260px;
+    width: 1500px;
     margin: auto;
     padding: 10px 0;
+    overflow-x: scroll;
     &_boxItem {
         position: relative;
         // width: 102px;
