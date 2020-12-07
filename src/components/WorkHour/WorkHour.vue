@@ -427,6 +427,7 @@ export default class ProductPeople extends Vue {
         });
         return scrapNum;
     }
+
 }
 interface CurrentDataTable {
     factory?: string;
@@ -467,5 +468,8 @@ interface UserTypeListObject {
     div {
         float: left;
     }
+}
+.el-table th.gutter {
+    display: table-cell !important;
 }
 </style>

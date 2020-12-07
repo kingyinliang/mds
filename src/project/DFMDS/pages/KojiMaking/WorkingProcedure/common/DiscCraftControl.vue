@@ -1248,7 +1248,13 @@
         // 处理小数点后两位
         oninput(val, target, prop) {
             // 通过正则过滤小数点后两位
-            target[prop] = (val.match(/^\d*(\.?\d{0,2})/g)[0]) || null
+            if (val >= 99.99) {
+                this.$errorToast('超过温度限制');
+                target[prop] = null
+            } else {
+                target[prop] = (val.match(/^\d*(\.?\d{0,2})/g)[0]) || null
+            }
+
         }
 
         rowDelFlag({ row }) {
