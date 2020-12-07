@@ -251,6 +251,10 @@
                     //
                 }
             },
+            headerAreaShow: {
+                type: Boolean,
+                default: true
+            },
             // 下方 bar 显示与否
             redactBoxShow: {
                 type: Boolean,
