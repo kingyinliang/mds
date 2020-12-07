@@ -137,7 +137,7 @@
                         <template slot="label">
                             <span class="notNull">* </span>洗豆操作人：
                         </template>
-                        <el-tooltip class="item" effect="dark" :content="craftWashBeanInfo.washMans + '点击选择人员'" placement="top">
+                        <el-tooltip class="item" effect="dark" :content="craftWashBeanInfo.washMans" placement="top" :disabled="craftWashBeanInfo.washMans===''">
                             <div class="koji-control-form_select" @click="selectUser(craftWashBeanInfo, '洗豆操作人', 'washMans')">
                                 {{ craftWashBeanInfo.washMans }} 点击选择人员
                             </div>
