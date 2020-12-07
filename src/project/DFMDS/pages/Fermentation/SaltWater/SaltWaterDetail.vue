@@ -62,12 +62,12 @@
                                     <span class="notNull">盐水用量（KG）</span>
                                 </template>
                                 <template slot-scope="scope">
-                                    <el-input v-model="scope.row.useAmount" size="small" type="number" placeholder="输入数量" :disabled="!isRedact" />
+                                    <el-input v-model.number="scope.row.useAmount" oninput="value=value.replace(/\D*/g,'')" size="small" placeholder="输入数量" :disabled="!isRedact" />
                                 </template>
                             </el-table-column>
                             <el-table-column width="120" label="盐水温度（°C）" :show-overflow-tooltip="true" class="star">
                                 <template slot-scope="scope">
-                                    <el-input v-model="scope.row.temperature" :disabled="!isRedact" size="small" type="number" placeholder="输入温度" />
+                                    <el-input v-model.number="scope.row.temperature" oninput="value=value.replace(/\D*/g,'')" :disabled="!isRedact" size="small" placeholder="输入温度" />
                                 </template>
                             </el-table-column>
                             <el-table-column width="150" :show-overflow-tooltip="true" class="star">
@@ -75,7 +75,7 @@
                                     <span class="notNull">盐水浓度</span>
                                 </template>
                                 <template slot-scope="scope">
-                                    <el-input v-model="scope.row.concentration" size="small" type="number" placeholder="输入浓度" :disabled="!isRedact" />
+                                    <el-input v-model.number="scope.row.concentration" oninput="value=value.replace(/\D*/g,'')" size="small" placeholder="输入浓度" :disabled="!isRedact" />
                                 </template>
                             </el-table-column>
                             <el-table-column :show-overflow-tooltip="true" min-width="200">
@@ -308,20 +308,20 @@ export default class SaltWaterDetail extends Vue {
         const brineInfo = this.$store.state.fer.brineInfo;
         FER_API.FER_BRINE_QUERY_DETAIL_API({ fermentorId: brineInfo.id }).then(res => {
             const info = res.data.data;
-            const order = { ...info.order };
+            const ferOrder = { ...info.ferOrder };
             this.formHeader = {
                 holderNo: info.holderNo,
                 holderName: info.holderName,
                 kojiTempature: info.ferBrineIssue.kojiTempature,
                 changed: info.changed,
                 changer: info.changer,
-                productMaterialCode: order.productMaterialCode,
-                productMaterialName: order.productMaterialName,
+                productMaterialCode: ferOrder.productMaterialCode,
+                productMaterialName: ferOrder.productMaterialName,
                 kojiOutDate: info.intoDate,
-                kojiAmount: order.preAmount,
-                preMaterialCode: order.preMaterialCode,
-                preMaterialName: order.preMaterialName,
-                orderNo: order.orderNo,
+                kojiAmount: ferOrder.preAmount,
+                preMaterialCode: ferOrder.preMaterialCode,
+                preMaterialName: ferOrder.preMaterialName,
+                orderNo: ferOrder.orderNo,
                 orderStatus: info.ferBrineIssue.checkStatusName,
                 orderStatusName: info.brineFlagName,
                 factoryName: JSON.parse(sessionStorage.getItem('factory') || '{}').deptName
@@ -345,7 +345,7 @@ export default class SaltWaterDetail extends Vue {
 
     getOrtherMaterialList() {
         const info = this.$store.state.fer.brineInfo;
-        FER_API.FER_BRINE_OTHER_BOM_API({ fermentorId: info.id, cycle: info.cycle, orderNo: info.order.orderNo }).then(({ data }) => {
+        FER_API.FER_BRINE_OTHER_BOM_API({ fermentorId: info.id, cycle: info.cycle, orderNo: info.ferOrder.orderNo }).then(({ data }) => {
             // console.log(data, '=-=-=-=-=-=-=')
             this.otherMaterialList = data.data;
         })
@@ -442,12 +442,12 @@ export default class SaltWaterDetail extends Vue {
                 this.saltWaterList.push({
                     brinePotId: '',	// 盐水罐ID
                     brinePotName: '', // 盐水罐名称
-                    brinePotN: '', // 盐水罐号
+                    brinePotNo: '', // 盐水罐号
                     changed: dateFormat(new Date(), 'yyyy-MM-dd hh:mm:ss'), // 最后操作时间
                     changer: getUserNameNumber(), // 最后操作人
                     concentration: 0, // 盐水浓度
                     endDate: '', // 结束时间
-                    ferBrineIssue: null, // 盐水发料
+                    ferBrineIssue: {}, // 盐水发料
                     ferBrineIssueId: '', // 盐水发料主键
                     // id: string; // 主键
                     matchDate: '', // 盐水配置日期
@@ -538,12 +538,12 @@ interface FormHeaderObj {
 interface SaltWaterObj {
     brinePotId: string;	// 盐水罐ID
     brinePotName: string; // 盐水罐名称
-    brinePotN: string; // 盐水罐号
+    brinePotNo: string; // 盐水罐号
     changed: string; // 最后操作时间
     changer: string; // 最后操作人
     concentration: number; // 盐水浓度
     endDate: string; // 结束时间
-    ferBrineIssue: any; // 盐水发料
+    ferBrineIssue: FerBrineIssue; // 盐水发料
     ferBrineIssueId: string; // 盐水发料主键
     id?: string; // 主键
     matchDate: string; // 盐水配置日期
@@ -557,7 +557,7 @@ interface SaltWaterObj {
 interface OtherMaterial {
     changed: string; // 最后操作时间
     changer: string; // 最后操作人
-    ferBrineIssue: string; // 盐水发料
+    ferBrineIssue: FerBrineIssue; // 盐水发料
     ferBrineIssueId: string; // 盐水发料主键
     id?: string; // 主键
     needAmount: number; // 需求数量
@@ -575,6 +575,11 @@ interface OtherMaterial {
     usePotName: string; // 领用罐名称
     usePotNo: string; // 领用罐号
     operatFlag: number; // 操作标记(0正常、-1提醒删除、1提醒维护、-2不显示但需要提交表单)
+}
+interface FerBrineIssue {
+    kojiTempature?: number;
+    checkStatusName?: string;
+    brineMaterialCode?: string;
 }
 </script>
 

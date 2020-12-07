@@ -19,14 +19,14 @@
                             </el-button>
                         </div>
                     </template>
-                    <el-table class="newTable markStyle" :data="targetQueryTableListOfForiegnMatter" :row-class-name="rowDelFlag" header-row-class-name="tableHead" border style="width: 100%; min-height: 90px;">
+                    <el-table class="newTable markStyle" :data="targetQueryTableListOfForiegnMatter" :row-class-name="rowDelFlag" header-row-class-name="tableHead" border style="width: 100%; min-height: 80px;">
                         <el-table-column label="序号" type="index" width="50" fixed="left" align="center" />
                         <el-table-column width="150" :show-overflow-tooltip="true" class="star">
                             <template slot="header">
                                 <span class="notNull">设备名称</span>
                             </template>
                             <template slot-scope="scope">
-                                <el-select v-model="scope.row.deviceName" size="small" clearable style="width: 100%;" :disabled="!isRedact">
+                                <el-select v-model="scope.row.deviceId" size="small" clearable style="width: 100%;" :disabled="!isRedact" @change="val=>setObjectProp(val,scope.row,'deviceName',deviceNameOptions)">
                                     <el-option
                                         v-for="item in deviceNameOptions"
                                         :key="item.optValue"
@@ -41,7 +41,7 @@
                                 <span class="notNull">异物数量</span>
                             </template>
                             <template slot-scope="scope">
-                                <el-input v-model="scope.row.impurityAmount" size="small" placeholder="请输入" :disabled="!isRedact" />
+                                <el-input v-model.number="scope.row.impurityAmount" size="small" placeholder="请输入" :disabled="!isRedact" />
                             </template>
                         </el-table-column>
                         <el-table-column width="150" :show-overflow-tooltip="true">
@@ -49,7 +49,7 @@
                                 <span class="notNull">异物种类</span>
                             </template>
                             <template slot-scope="scope">
-                                <el-select v-model="scope.row.impurityType" size="small" clearable style="width: 100%;" :disabled="!isRedact">
+                                <el-select v-model="scope.row.impurityType" size="small" clearable style="width: 100%;" :disabled="!isRedact" @change="val=>setObjectProp(val,scope.row,'impurityName',foriegnMatterImpurityTypeOptions)">
                                     <el-option
                                         v-for="item in foriegnMatterImpurityTypeOptions"
                                         :key="item.optValue"
@@ -85,6 +85,14 @@
                             </template>
                         </el-table-column>
                     </el-table>
+                    <div class="solerow">
+                        <span>
+                            异物数量汇总:
+                        </span>
+                        <span class="input_bottom">
+                            {{ totalImpurityAmount }} 个
+                        </span>
+                    </div>
                 </mds-card>
             </template>
             <template v-if="isShowContent" slot="home">
@@ -96,7 +104,7 @@
                             </el-button>
                         </div>
                     </template>
-                    <el-table class="newTable markStyle" :data="targetQueryTableListOfMagnet" :row-class-name="rowDelFlag" header-row-class-name="tableHead" border style="width: 100%; min-height: 90px;">
+                    <el-table class="newTable markStyle" :data="targetQueryTableListOfMagnet" :row-class-name="rowDelFlag" header-row-class-name="tableHead" border style="width: 100%; min-height: 80px;">
                         <el-table-column label="序号" type="index" width="50" fixed="left" align="center" />
                         <el-table-column width="150" :show-overflow-tooltip="true">
                             <template slot="header">
@@ -118,7 +126,7 @@
                                 <span class="notNull">异物种类</span>
                             </template>
                             <template slot-scope="scope">
-                                <el-select v-model="scope.row.impurityType" size="small" clearable style="width: 100%;" :disabled="!isRedact" @change="clearImpurityInfo(scope.row)">
+                                <el-select v-model="scope.row.impurityType" size="small" clearable style="width: 100%;" :disabled="!isRedact" @change="val=>setImpurityInfo(val,scope.row,'impurityName',magnetImpurityTypeOptions)">
                                     <el-option
                                         v-for="item in magnetImpurityTypeOptions"
                                         :key="item.optValue"
@@ -254,9 +262,21 @@
         ruleForiegnMatterForm={}
         ruleMagnetForm={}
 
-        clearImpurityInfo(row) {
-            console.log(row)
-            row.impurityInfo = ''
+        get totalImpurityAmount() {
+            let amountTemp = 0;
+            if (this.targetQueryTableListOfForiegnMatter.length !== 0) {
+                this.targetQueryTableListOfForiegnMatter.forEach(item => {
+                    amountTemp += item.impurityAmount as number
+                })
+            }
+
+            return amountTemp
+        }
+
+        setImpurityInfo(val, target, prop, who) {
+            this.setObjectProp(val, target, prop, who)
+
+            target.impurityInfo = ''
 
         }
 
@@ -270,7 +290,7 @@
                     this.deviceNameOptions = []
                     if (data.data) {
                         data.data.forEach(item => {
-                        this.deviceNameOptions.push({ optLabel: item.deviceName, optValue: item.deviceNo })
+                        this.deviceNameOptions.push({ optLabel: item.deviceName, optValue: item.id })
                         })
                     }
                 });
@@ -314,11 +334,12 @@
             return '';
         }
 
+        setObjectProp(val, target, prop, who) {
+            target[prop] = who.filter(item => item.optValue === val)[0].optLabel
+        }
 
         // queryTable 查询请求
         queryTableListInterface(params) {
-            console.log('查询传值')
-            console.log(params)
             this.globalVal = params
 
             // ：若今天以后时间，终止查询并提示
@@ -380,7 +401,7 @@
                 deviceId: '',
                 deviceName: '',
                 id: '',
-                impurityAmount: 0,
+                impurityAmount: null,
                 impurityName: '',
                 impurityType: '',
                 remark: '',
@@ -482,7 +503,7 @@
 
         ruleForiegnMatterSubmit() {
             for (const item of this.targetQueryTableListOfForiegnMatter.filter(it => it.delFlag !== 1)) {
-                if (!item.deviceName || !item.impurityAmount || !item.impurityType) {
+                if (!item.deviceId || !item.impurityAmount || !item.impurityType) {
                     this.$warningToast('请填写异物统计必填栏位');
                     return false;
                 }
@@ -504,11 +525,13 @@
                     deleteDto: magnetDataTemp.deleteDto,
                     insertDto: magnetDataTemp.insertDto,
                     updateDto: magnetDataTemp.updateDto
+                    // orderNo
                 },
                 other: {
                     deleteDto: foriegnMatterDataTemp.deleteDto,
                     insertDto: foriegnMatterDataTemp.insertDto,
                     updateDto: foriegnMatterDataTemp.updateDto
+                    // orderNo
                 }
             })
         }
@@ -553,7 +576,7 @@ interface ForiegnMatterDataListObj{
     deviceId: string;
     deviceName: string;
     id: string;
-    impurityAmount: number;
+    impurityAmount: number |null;
     impurityName: string;
     impurityType: string;
     remark: string;
@@ -582,14 +605,35 @@ interface Options {
 
 <style lang="scss" scoped>
 
+.el-form-item {
+    margin-bottom: 0;
+}
+
+.orderMangedialog {
     .el-form-item {
-        margin-bottom: 0;
+        margin-bottom: 10px;
     }
+}
 
-    .orderMangedialog {
-        .el-form-item {
-            margin-bottom: 10px;
-        }
+
+.solerow {
+    display: flex;
+    width: 220px;
+    margin-top: 5px;
+    font-weight: 500;
+    font-size: 12px;
+    line-height: 33px;
+    span:first-child {
+        flex: 2;
     }
-
+    .input_bottom {
+        flex: 1;
+        padding: 0 14px;
+        color: #bbb;
+        text-align: left;
+        background-color: #f5f5f5;
+        border: none;
+        border-radius: 4px;
+    }
+}
 </style>

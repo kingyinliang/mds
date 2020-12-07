@@ -198,7 +198,7 @@
 </template>
 
 <script lang="ts">
-import { Vue, Component, Prop, Watch } from 'vue-property-decorator';
+import { Vue, Component, Prop } from 'vue-property-decorator';
 import { COMMON_API } from 'common/api/api';
 
 @Component({
@@ -226,27 +226,29 @@ export default class ReadyTimes extends Vue {
     readyTimesAudit = [];
     classesOptions: ClassesOptions[] = [];
 
-    @Watch('currentFormDataGroup.classes')
-    WatchClass() {
-        if (!this.currentFormDataGroup.dayQuality) {
-            this.currentFormDataGroup.dayQuality = 0;
-        }
-        if (!this.currentFormDataGroup.dayChange) {
-            this.currentFormDataGroup.dayChange = 0;
-        }
-        if (!this.currentFormDataGroup.midQualiry) {
-            this.currentFormDataGroup.midQualiry = 0;
-        }
-        if (!this.currentFormDataGroup.midChange) {
-            this.currentFormDataGroup.midChange = 0;
-        }
-        if (!this.currentFormDataGroup.nightQuality) {
-            this.currentFormDataGroup.nightQuality = 0;
-        }
-        if (!this.currentFormDataGroup.nightChange) {
-            this.currentFormDataGroup.nightChange = 0;
-        }
-    }
+
+    // DFMDS-2571 需求
+    // @Watch('currentFormDataGroup.classes')
+    // WatchClass() {
+    //     if (!this.currentFormDataGroup.dayQuality) {
+    //         this.currentFormDataGroup.dayQuality = 0;
+    //     }
+    //     if (!this.currentFormDataGroup.dayChange) {
+    //         this.currentFormDataGroup.dayChange = 0;
+    //     }
+    //     if (!this.currentFormDataGroup.midQualiry) {
+    //         this.currentFormDataGroup.midQualiry = 0;
+    //     }
+    //     if (!this.currentFormDataGroup.midChange) {
+    //         this.currentFormDataGroup.midChange = 0;
+    //     }
+    //     if (!this.currentFormDataGroup.nightQuality) {
+    //         this.currentFormDataGroup.nightQuality = 0;
+    //     }
+    //     if (!this.currentFormDataGroup.nightChange) {
+    //         this.currentFormDataGroup.nightChange = 0;
+    //     }
+    // }
 
     init() {
         this.currentFormDataGroup['classes'] = '';
@@ -279,6 +281,24 @@ export default class ReadyTimes extends Vue {
         let pkgTimeSheetDto: ReadyTimesData = {};
         this.currentFormDataGroup.orderNo = formHeader.orderNo;
         this.currentFormDataGroup.orderId = formHeader.orderId;
+        if (!this.currentFormDataGroup.dayQuality) {
+            this.currentFormDataGroup.dayQuality = 0;
+        }
+        if (!this.currentFormDataGroup.dayChange) {
+            this.currentFormDataGroup.dayChange = 0;
+        }
+        if (!this.currentFormDataGroup.midQualiry) {
+            this.currentFormDataGroup.midQualiry = 0;
+        }
+        if (!this.currentFormDataGroup.midChange) {
+            this.currentFormDataGroup.midChange = 0;
+        }
+        if (!this.currentFormDataGroup.nightQuality) {
+            this.currentFormDataGroup.nightQuality = 0;
+        }
+        if (!this.currentFormDataGroup.nightChange) {
+            this.currentFormDataGroup.nightChange = 0;
+        }
         pkgTimeSheetDto = this.returnDataGroup()
         return pkgTimeSheetDto
     }

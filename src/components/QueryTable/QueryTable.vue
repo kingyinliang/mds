@@ -85,7 +85,7 @@
                             </template>
                             <template slot-scope="scope">
                                 <el-input v-if="item.redact && item.type === 'input'" v-model="scope.row[item.prop]" :disabled="!scope.row.redact" placeholder="手工录入" size="small" />
-                                <el-date-picker v-else-if="item.redact && item.type === 'date-picker'" v-model="scope.row[item.prop]" :disabled="!scope.row.redact" :type="item.dataType" placeholder="请选择" :value-format="item.valueFormat" :style="{width: item.width - 25 + 'px'}" size="small" />
+                                <el-date-picker v-else-if="item.redact && item.type === 'date-picker'" v-model="scope.row[item.prop]" :disabled="!scope.row.redact" :type="item.dataType" placeholder="请选择" :value-format="item.valueFormat" :style="{width: item.width - 25 + 'px'}" size="small" @change="val => selectChange(scope.row, scope.$index, val)" />
                                 <el-select v-else-if="item.redact && item.type === 'select'" v-model="scope.row[item.prop]" :disabled="!scope.row.redact" :type="item.dataType" placeholder="请选择" size="small">
                                     <!--<el-option label="请选择" value="" />-->
                                     <el-option v-for="(opt, optIndex) in optionLists[item.prop]" :key="optIndex" :label="opt[item.resVal.label]" :value="opt[item.resVal.value]" />
@@ -104,7 +104,7 @@
                     </el-table-column>
                 </el-table>
                 <el-row v-if="tabItem.pages">
-                    <el-pagination :current-page="tabItem.pages.currPage" :page-sizes="[10, 20, 50]" :page-size="tabItem.pages.pageSize" layout="total, sizes, prev, pager, next, jumper" :total="tabItem.pages.totalCount" @size-change="(val) => {tabHandleSizeChange(tabItem.pages, val)}" @current-change="(val) => {tabHandleCurrentChange(tabItem.pages, val)}" />
+                    <el-pagination :current-page.sync="tabItem.pages.currPage" :page-sizes="[10, 20, 50]" :page-size="tabItem.pages.pageSize" layout="total, sizes, prev, pager, next, jumper" :total="tabItem.pages.totalCount" @size-change="(val) => {tabHandleSizeChange(tabItem.pages, val)}" @current-change="(val) => {tabHandleCurrentChange(tabItem.pages, val)}" />
                 </el-row>
             </el-tab-pane>
         </el-tabs>
@@ -302,6 +302,10 @@
             tableHeight: {
                 type: Number,
                 default: 405
+            },
+            isRedact: {
+                type: Boolean,
+                default: false
             }
         },
         data() {
@@ -316,7 +320,8 @@
                 multipleSelection: [],
                 tableHeightSet: this.tableHeight,
                 currpageConfig: 'currPage',
-                pagesizeConfig: 'pageSize'
+                pagesizeConfig: 'pageSize',
+                prePage: 1
             };
         },
         computed: {},
@@ -581,11 +586,21 @@
             },
             // 改变每页条数
             tabHandleSizeChange(item, val) {
+                if (this.isRedact) {
+                    this.$warningToast('请先保存数据');
+                    return false;
+                }
                 item.pageSize = val;
                 this.getDataList();
             },
             // 跳转页数
             tabHandleCurrentChange(item, val) {
+                if (this.isRedact) {
+                    this.$warningToast('请先保存数据');
+                    item.currPage = item.prePage;
+                    return false;
+                }
+                item.prePage = item.currPage;
                 item.currPage = val;
                 this.getDataList();
             },
@@ -605,6 +620,10 @@
             },
             lineClick(row) {
                 this.$emit('line-click', row);
+            },
+            // 选择变化
+            selectChange(row, index, val) {
+                this.$emit('select-change', row, index, val);
             }
         }
     };

@@ -81,6 +81,7 @@
 
 <script lang="ts">
     import { Vue, Component } from 'vue-property-decorator';
+    import { PKG_API } from 'common/api/api';
 
     @Component
     export default class PickingMaterialDetail extends Vue {
@@ -134,6 +135,17 @@
         formHeader = {
             orderStatusName: '已同步'
         };
+
+        mounted() {
+            this.int()
+        }
+
+        int() {
+            PKG_API.PKG_PICKING_MATERIAL_DETAIL_API({
+                orderNo: this.$store.state.packaging.pickingDetail.orderNo,
+                productLine: this.$store.state.packaging.pickingDetail.productLine
+            })
+        }
 
         rowDelFlag({ row }) {
             if (row.delFlag === 1) {

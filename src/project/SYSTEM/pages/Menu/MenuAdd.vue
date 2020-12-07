@@ -126,6 +126,7 @@ export default class MenuAdd extends Vue {
         'factory-guolv',
         'factory-chuiping',
         'factory-yuanshui',
+        'factory-wendangguanli',
         'factory-calc'
     ];
 
