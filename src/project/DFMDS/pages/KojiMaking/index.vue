@@ -70,7 +70,7 @@
                             <el-tooltip
                                 class="item"
                                 effect="dark"
-                                :content="orderStatusMapping[item.houseSplitList[item.nowIndex].houseTag.washBeanCraft]"
+                                :content="orderStatusMapping[item.houseSplitList[item.nowIndex].houseTag.washBeanStatus]"
                                 placement="top-start"
                             >
                                 <el-button class="bottom-item" type="primary" @click="goDetail('first',1, item.houseSplitList[item.nowIndex])">
@@ -79,13 +79,13 @@
                                 </el-button>
                             </el-tooltip>
 
-                            <el-tooltip class="item" effect="dark" :content="orderStatusMapping[item.houseSplitList[item.nowIndex].houseTag.steamFlourCraft]" placement="top-start">
+                            <el-tooltip class="item" effect="dark" :content="orderStatusMapping[item.houseSplitList[item.nowIndex].houseTag.steamFlourStatus]" placement="top-start">
                                 <el-button class="bottom-item" type="primary" @click="goDetail('first',2, item.houseSplitList[item.nowIndex])">
                                     <!-- <el-button :disabled="!isAuth('bottle:workshop:techProductParameterList')" class="bottom-item" @click="goDetail('first',2, item)"> -->
                                     蒸面
                                 </el-button>
                             </el-tooltip>
-                            <el-tooltip class="item" effect="dark" :content="orderStatusMapping[item.houseSplitList[item.nowIndex].houseTag.discCraft]" placement="top-start">
+                            <el-tooltip class="item" effect="dark" :content="orderStatusMapping[item.houseSplitList[item.nowIndex].houseTag.discStatus]" placement="top-start">
                                 <el-button class="bottom-item" type="primary" @click="goDetail('first',3, item.houseSplitList[item.nowIndex])">
                                     <!-- <el-button :disabled="!isAuth('bottle:workshop:qualityInspectionList')" class="bottom-item" @click="goDetail('first',3, item)"> -->
                                     圆盘
@@ -150,7 +150,7 @@
                                 <el-tooltip
                                     class="item"
                                     effect="dark"
-                                    :content="orderStatusMapping[querySecondResultList[secondObjIndex].houseTag.washBeanCraft]"
+                                    :content="orderStatusMapping[querySecondResultList[secondObjIndex].houseTag.washBeanStatus]"
                                     placement="top-start"
                                 >
                                     <el-button class="bottom-item" type="primary" @click="goDetail('second',1, querySecondResultList[secondObjIndex])">
@@ -159,7 +159,7 @@
                                     </el-button>
                                 </el-tooltip>
 
-                                <el-tooltip class="item" effect="dark" :content="orderStatusMapping[querySecondResultList[secondObjIndex].houseTag.steamBeanCraft]" placement="top-start">
+                                <el-tooltip class="item" effect="dark" :content="orderStatusMapping[querySecondResultList[secondObjIndex].houseTag.steamBeanStatus]" placement="top-start">
                                     <el-button class="bottom-item" type="primary" @click="goDetail('second',2, querySecondResultList[secondObjIndex])">
                                         <!-- <el-button :disabled="!isAuth('bottle:workshop:techProductParameterList')" class="bottom-item" @click="goDetail('first',2, item)"> -->
                                         蒸豆

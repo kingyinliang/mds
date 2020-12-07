@@ -61,14 +61,18 @@
                     </el-select>
                 </template>
             </el-table-column>
-            <el-table-column label="异常描述" min-width="140">
+            <el-table-column label="异常描述" min-width="220">
                 <template slot-scope="scope">
-                    <el-input v-model.trim="scope.row.exceptionInfo" size="small" placeholder="请输入" :disabled="!isRedact" />
+                    <el-tooltip class="item" effect="dark" :disabled="scope.row.exceptionInfo===''" :content="scope.row.exceptionInfo" placement="top-start">
+                        <el-input v-model.trim="scope.row.exceptionInfo" size="small" placeholder="请输入" :disabled="!isRedact" />
+                    </el-tooltip>
                 </template>
             </el-table-column>
             <el-table-column label="备注" min-width="100">
                 <template slot-scope="scope">
-                    <el-input v-model.trim="scope.row.remark" size="small" placeholder="请输入" :disabled="!isRedact" />
+                    <el-tooltip class="item" effect="dark" :disabled="scope.row.remark===''" :content="scope.row.remark" placement="top-start">
+                        <el-input v-model.trim="scope.row.remark" size="small" placeholder="请输入" :disabled="!isRedact" />
+                    </el-tooltip>
                 </template>
             </el-table-column>
             <el-table-column label="操作人" width="140">
@@ -129,7 +133,7 @@
             let MinNum = 0;
             this.excList.map((item: ExcList) => {
                 if (item.delFlag !== 1) {
-                    MinNum = accAdd(String(MinNum), item.duration || '');
+                    MinNum = accAdd(MinNum, item.duration);
                 }
             });
             return MinNum;
@@ -195,7 +199,7 @@
                         item.excReasonList = this.excReasonTotal.ENERGY;
                     }
                 });
-                this.excListOrg = JSON.parse(JSON.stringify(data.data));
+                this.excListOrg = JSON.parse(JSON.stringify(this.excList));
             });
         }
 
@@ -219,18 +223,15 @@
                 exceptionSituation: '',
                 startDate: '',
                 endDate: '',
-                duration: '',
+                duration: 0,
                 durationUnit: 'MIN',
                 exceptionReason: '',
                 exceptionInfo: '',
                 remark: '',
+                excReasonList: [],
                 changed: dateFormat(new Date(), 'yyyy-MM-dd hh:mm:ss'),
                 changer: getUserNameNumber(),
-                delFlag: 0,
-                exceptionStage: '',
-                id: '',
-                kojiOrderNo: this.formHeader.kojiOrderNo,
-                orderNo: this.formHeader.orderNo
+                delFlag: 0
             });
         }
 
@@ -251,6 +252,7 @@
             const InsertDto: ExcList[] = [];
             const UpdateDto: ExcList[] = [];
             this.excList.map((item: ExcList) => {
+                item.kojiOrderNo = formHeader.kojiOrderNo;
                 item.exceptionStage = tagName;
                 item.orderId = formHeader.orderId;
                 item.orderNo = formHeader.orderNo;
@@ -291,6 +293,10 @@
                     this.$warningToast('请填写异常记录页签必填项');
                     return false;
                 }
+                if (item.duration && item.duration <= 0) {
+                    this.$warningToast('结束时间不能小于或等于开始时间');
+                    return false;
+                }
             }
             return true;
         }
@@ -328,7 +334,7 @@
         exceptionSituation?: string;
         startDate?: string;
         endDate?: string;
-        duration?: string;
+        duration?: number;
         durationUnit?: string;
         exceptionReason?: string;
         exceptionInfo?: string;

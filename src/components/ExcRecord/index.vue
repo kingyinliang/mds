@@ -15,12 +15,7 @@
                 </template>
                 <template slot-scope="scope">
                     <el-select v-model="scope.row.classes" size="small" :disabled="!isRedact" clearable>
-                        <el-option
-                            v-for="item in classesOptions"
-                            :key="item.dictCode"
-                            :label="item.dictValue"
-                            :value="item.dictCode"
-                        />
+                        <el-option v-for="item in classesOptions" :key="item.dictCode" :label="item.dictValue" :value="item.dictCode" />
                     </el-select>
                 </template>
             </el-table-column>
@@ -30,12 +25,7 @@
                 </template>
                 <template slot-scope="scope">
                     <el-select v-model="scope.row.exceptionSituation" size="small" :disabled="!isRedact" @change="changeExc($event, scope.row)">
-                        <el-option
-                            v-for="item in abnormalList"
-                            :key="item.dictCode"
-                            :label="item.dictValue"
-                            :value="item.dictCode"
-                        />
+                        <el-option v-for="item in abnormalList" :key="item.dictCode" :label="item.dictValue" :value="item.dictCode" />
                     </el-select>
                 </template>
             </el-table-column>
@@ -57,7 +47,7 @@
             </el-table-column>
             <el-table-column label="时长" min-width="100">
                 <template slot-scope="scope">
-                    {{ scope.row.duration = Number(workTime(scope.row.endDate, scope.row.startDate, scope.row)) }}
+                    {{ (scope.row.duration = Number(workTime(scope.row.endDate, scope.row.startDate, scope.row))) }}
                 </template>
             </el-table-column>
             <el-table-column min-width="80" label="单位" prop="durationUnit" />
@@ -71,14 +61,18 @@
                     </el-select>
                 </template>
             </el-table-column>
-            <el-table-column label="异常描述" min-width="140">
+            <el-table-column label="异常描述" min-width="220">
                 <template slot-scope="scope">
-                    <el-input v-model.trim="scope.row.exceptionInfo" size="small" placeholder="请输入" :disabled="!isRedact" />
+                    <el-tooltip class="item" effect="dark" :disabled="scope.row.exceptionInfo===''" :content="scope.row.exceptionInfo" placement="top-start">
+                        <el-input v-model.trim="scope.row.exceptionInfo" size="small" placeholder="请输入" :disabled="!isRedact" />
+                    </el-tooltip>
                 </template>
             </el-table-column>
             <el-table-column label="备注" min-width="100">
                 <template slot-scope="scope">
-                    <el-input v-model.trim="scope.row.remark" size="small" placeholder="请输入" :disabled="!isRedact" />
+                    <el-tooltip class="item" effect="dark" :disabled="scope.row.remark===''" :content="scope.row.remark" placement="top-start">
+                        <el-input v-model.trim="scope.row.remark" size="small" placeholder="请输入" :disabled="!isRedact" />
+                    </el-tooltip>
                 </template>
             </el-table-column>
             <el-table-column label="操作人" width="140">
@@ -86,7 +80,7 @@
                     {{ scope.row.changer }}
                 </template>
             </el-table-column>
-            <el-table-column label="操作时间" width="160">
+            <el-table-column label="操作时间" width="170">
                 <template slot-scope="scope">
                     {{ scope.row.changed }}
                 </template>
@@ -120,8 +114,8 @@ import _ from 'lodash';
     name: 'ExcRecord'
 })
 export default class ExcRecord extends Vue {
-    @Prop({ type: Boolean, default: false }) isRedact
-    @Prop({ type: Object, default: {} }) formHeader
+    @Prop({ type: Boolean, default: false }) isRedact;
+    @Prop({ type: Object, default: {} }) formHeader;
 
     classesOptions: object[] = [];
     abnormalList: object[] = [];
@@ -146,10 +140,10 @@ export default class ExcRecord extends Vue {
     }
 
     init(formHeader, tagName) {
-        const net1 = new Promise((resolve) => {
+        const net1 = new Promise(resolve => {
             this.getexcReasonTwo(formHeader, resolve);
         });
-        const net2 = new Promise((resolve) => {
+        const net2 = new Promise(resolve => {
             this.getexcReasonThree(formHeader, resolve);
         });
         Promise.all([net1, net2]).then(() => {
@@ -159,19 +153,19 @@ export default class ExcRecord extends Vue {
                     this.excReasonTotal.FAULTSHUTDOWN.push({
                         dictValue: item.deviceName,
                         dictCode: item.deviceNo
-                    })
-                })
+                    });
+                });
                 this.getClassesList();
                 this.getAbnormalList();
                 this.getExcList(formHeader, tagName);
-            })
-        })
+            });
+        });
     }
 
     // 异常原因
     getexcReasonTwo(formHeader, resolve) {
         COMMON_API.DICTQUERY_API({ dictType: 'WAIT' }).then(({ data }) => {
-            this.excReasonTotal.POORPROCESSWAIT = data.data
+            this.excReasonTotal.POORPROCESSWAIT = data.data;
             if (resolve) {
                 resolve('resolve');
             }
@@ -181,7 +175,7 @@ export default class ExcRecord extends Vue {
     // 异常原因
     getexcReasonThree(formHeader, resolve) {
         COMMON_API.DICTQUERY_API({ dictType: 'ENERGY' }).then(({ data }) => {
-            this.excReasonTotal.ENERGY = data.data
+            this.excReasonTotal.ENERGY = data.data;
         });
         if (resolve) {
             resolve('resolve');
@@ -194,16 +188,16 @@ export default class ExcRecord extends Vue {
             orderNo: formHeader.orderNo,
             exceptionStage: tagName
         }).then(({ data }) => {
-            this.excList = JSON.parse(JSON.stringify(data.data));
+            this.excList = data.data;
             this.excList.map(item => {
                 if (item.exceptionSituation === 'FAULT' || item.exceptionSituation === 'SHUTDOWN') {
-                    item.excReasonList = this.excReasonTotal.FAULTSHUTDOWN
+                    item.excReasonList = this.excReasonTotal.FAULTSHUTDOWN;
                 } else if (item.exceptionSituation === 'POOR_PROCESS' || item.exceptionSituation === 'WAIT') {
-                    item.excReasonList = this.excReasonTotal.POORPROCESSWAIT
+                    item.excReasonList = this.excReasonTotal.POORPROCESSWAIT;
                 } else if (item.exceptionSituation === 'ENERGY') {
-                    item.excReasonList = this.excReasonTotal.ENERGY
+                    item.excReasonList = this.excReasonTotal.ENERGY;
                 }
-            })
+            });
             this.excListOrg = JSON.parse(JSON.stringify(this.excList));
         });
     }
@@ -218,7 +212,7 @@ export default class ExcRecord extends Vue {
     // 异常
     getAbnormalList() {
         COMMON_API.DICTQUERY_API({ dictType: 'ABNORMAL_HALT' }).then(({ data }) => {
-            this.abnormalList = data.data
+            this.abnormalList = data.data;
         });
     }
 
@@ -228,26 +222,27 @@ export default class ExcRecord extends Vue {
             exceptionSituation: '',
             startDate: '',
             endDate: '',
-            duration: '',
+            duration: 0,
             durationUnit: 'MIN',
             exceptionReason: '',
             exceptionInfo: '',
             remark: '',
+            excReasonList: [],
             changed: dateFormat(new Date(), 'yyyy-MM-dd hh:mm:ss'),
             changer: getUserNameNumber(),
             delFlag: 0
-        })
+        });
     }
 
     //异常原因
     changeExc(val, row) {
         row.exceptionReason = '';
         if (val === 'FAULT' || val === 'SHUTDOWN') {
-            row.excReasonList = this.excReasonTotal.FAULTSHUTDOWN
+            row.excReasonList = this.excReasonTotal.FAULTSHUTDOWN;
         } else if (val === 'POOR_PROCESS' || val === 'WAIT') {
-            row.excReasonList = this.excReasonTotal.POORPROCESSWAIT
+            row.excReasonList = this.excReasonTotal.POORPROCESSWAIT;
         } else if (val === 'ENERGY') {
-            row.excReasonList = this.excReasonTotal.ENERGY
+            row.excReasonList = this.excReasonTotal.ENERGY;
         }
     }
 
@@ -261,25 +256,25 @@ export default class ExcRecord extends Vue {
             item.orderNo = formHeader.orderNo;
             item.potOrderId = formHeader.id;
             item.potOrderNo = formHeader.potOrderNo;
-        })
+        });
         this.excList.forEach((item, index) => {
             if (item.delFlag === 1) {
                 if (item.id) {
-                    ids.push(item.id)
+                    ids.push(item.id);
                 }
             } else if (item.id) {
                 if (!_.isEqual(this.excListOrg[index], item)) {
-                    UpdateDto.push(item)
+                    UpdateDto.push(item);
                 }
             } else {
-                InsertDto.push(item)
+                InsertDto.push(item);
             }
-        })
+        });
         return {
             ids,
             InsertDto,
             UpdateDto
-        }
+        };
     }
 
     ruleSubmit() {
@@ -296,6 +291,10 @@ export default class ExcRecord extends Vue {
                 this.$warningToast('请填写异常记录页签必填项');
                 return false;
             }
+            if (item.duration && item.duration <= 0) {
+                this.$warningToast('结束时间不能小于或等于开始时间');
+                return false;
+            }
         }
         return true;
     }
@@ -308,7 +307,7 @@ export default class ExcRecord extends Vue {
         }).then(() => {
             this.$set(row, 'delFlag', 1)
             this.$successToast('删除成功');
-        })
+        });
     }
 
     RowDelFlag({ row }) {
@@ -333,7 +332,7 @@ interface ExcList {
     exceptionSituation?: string;
     startDate?: string;
     endDate?: string;
-    duration?: string;
+    duration?: number;
     durationUnit?: string;
     exceptionReason?: string;
     exceptionInfo?: string;
@@ -362,6 +361,4 @@ interface Reason {
 }
 </script>
 
-<style scoped>
-
-</style>
+<style scoped></style>

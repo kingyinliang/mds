@@ -35,7 +35,7 @@
 
     import CraftControl from './common/DiscCraftControl.vue'; // import tab 工艺控制
     import ProductInStorage from './common/DiscProductInStorage.vue'; // import tab 生产入库
-    import kojiExcRecord from './common/DiscKojiExcRecord.vue'; // import 异常记录
+    import kojiExcRecord from './common/KojiExcRecord.vue'; // import 异常记录
     import kojiTextRecord from './common/DiscKojiTextRecord.vue'; // import 文本记录
 
     @Component({
@@ -243,9 +243,9 @@
                 discGuardException: craftControlTemp.discGuardException, // 看曲记录异常情况
                 discTurnException: craftControlTemp.discTurnException, // 翻曲记录异常情况
                 exception: { // 异常记录
-                    insertDatas: excRecordTemp.insertDto,
+                    insertDatas: excRecordTemp.InsertDto,
                     removeIds: excRecordTemp.ids,
-                    updateDatas: excRecordTemp.updateDto
+                    updateDatas: excRecordTemp.UpdateDto
                 }, // 异常记录
                 fermentPotId: this.formHeader.fermentPotId, // 发酵罐Id
                 fermentPotNo: this.formHeader.fermentPotNo, // 发酵罐号
