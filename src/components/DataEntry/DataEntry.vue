@@ -112,7 +112,7 @@
                         </el-button>
                     </div>
                     <div v-else class="redact_btn">
-                        <slot name="custom_btn" />
+                        <slot name="custom_btn" :isRedact="isRedact" />
                     </div>
                 </div>
                 <div v-else class="redact clearfix">

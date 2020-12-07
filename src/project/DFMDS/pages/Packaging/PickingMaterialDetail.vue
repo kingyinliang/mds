@@ -15,9 +15,9 @@
                                 {{ scope.row.materialCode + ' ' + scope.row.materialName }}
                             </template>
                         </el-table-column>
-                        <el-table-column label="单位" prop="materialUnit" width="50" :show-overflow-tooltip="true" />
-                        <el-table-column label="需求用量" prop="materialUnit" width="100" :show-overflow-tooltip="true" />
-                        <el-table-column label="当前库存" prop="materialUnit" width="100" :show-overflow-tooltip="true" />
+                        <el-table-column label="单位" prop="unit" width="50" :show-overflow-tooltip="true" />
+                        <el-table-column label="需求用量" prop="needNum" width="100" :show-overflow-tooltip="true" />
+                        <el-table-column label="当前库存" prop="storage" width="100" :show-overflow-tooltip="true" />
                         <el-table-column width="70">
                             <template slot-scope="scope">
                                 <el-button v-if="isAuth('pkgPdInsert')" type="text" @click="SplitDate(scope.row, scope.$index)">
@@ -30,7 +30,7 @@
                                 <span class="notNull">* </span>领料类型
                             </template>
                             <template slot-scope="scope">
-                                <el-select v-model="scope.row.classes" placeholder="请选择" size="small">
+                                <el-select v-model="scope.row.useType" placeholder="请选择" size="small">
                                     <el-option label="正常领料" value="正常领料" />
                                     <el-option label="补领" value="补领" />
                                 </el-select>
@@ -41,7 +41,7 @@
                                 <span class="notNull">* </span>订单领料量
                             </template>
                             <template slot-scope="scope">
-                                <el-input v-model="scope.row.realUsed" size="small" placeholder="请输入" />
+                                <el-input v-model="scope.row.useAmount" size="small" placeholder="请输入" />
                             </template>
                         </el-table-column>
                         <el-table-column label="物料批次" min-width="140">
@@ -49,12 +49,12 @@
                                 <span class="notNull">* </span>物料批次
                             </template>
                             <template slot-scope="scope">
-                                <el-input v-model="scope.row.realUsed" size="small" placeholder="请输入" />
+                                <el-input v-model="scope.row.batch" size="small" placeholder="请输入" />
                             </template>
                         </el-table-column>
                         <el-table-column label="厂家" min-width="140">
                             <template slot-scope="scope">
-                                <el-input v-model="scope.row.realUsed" size="small" placeholder="请输入" />
+                                <el-input v-model="scope.row.manufactor" size="small" placeholder="请输入" />
                             </template>
                         </el-table-column>
                         <el-table-column label="备注" prop="remark" min-width="140">
@@ -141,9 +141,17 @@
         }
 
         int() {
+            PKG_API.PKG_HOME_QUERY_BY_NO_API({ // 基础数据-订单管理-根据订单号查询
+                factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
+                orderNo: this.$store.state.packaging.pickingDetail.orderNo
+            }).then(({ data }) => {
+                this.formHeader = data.data;
+            })
             PKG_API.PKG_PICKING_MATERIAL_DETAIL_API({
                 orderNo: this.$store.state.packaging.pickingDetail.orderNo,
                 productLine: this.$store.state.packaging.pickingDetail.productLine
+            }).then(({ data }) => {
+                this.tableData = data.data
             })
         }
 
