@@ -11,14 +11,6 @@
                 <span slot="title">首页</span>
             </el-menu-item>
             <page-sub-menu v-for="(item, index) in menuList.filter(it => it.type === '4')[0].list" :key="index" :page="item" />
-            <el-menu-item
-                index="100"
-                @click="
-                    menuActiveName = 'realTime';
-                    $router.push({ path: '/DataEcharts/RealTime-index' });"
-            >
-                <span slot="title">蚝油杀菌</span>
-            </el-menu-item>
         </el-menu>
         <div class="DataEchartsContent">
             <router-view v-if="isRouterAlive" />
