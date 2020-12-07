@@ -33,7 +33,7 @@
                                 <el-table-column label="单位" width="60" prop="outputUnit" />
                                 <el-table-column label="操作" fixed="right" align="center" width="80">
                                     <template slot-scope="scope">
-                                        <el-button v-if="isAuth('steSplit')" class="iconfont factory-chaifen" type="text" @click="orderSplit(scope.row)">
+                                        <el-button v-if="isAuth('steSplit')" class="iconfont factory-chaifen" type="text" :disabled="['D','P','X'].includes(scope.row.orderStatus)" @click="orderSplit(scope.row)">
                                             拆分
                                         </el-button>
                                     </template>
