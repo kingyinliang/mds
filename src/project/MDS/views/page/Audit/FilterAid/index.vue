@@ -48,7 +48,7 @@
                     </el-form>
                 </div>
             </template>
-            <el-table ref="table1" class="newTable" header-row-class-name="tableHead" :data="AuditList" border tooltip-effect="dark" style="width: 100%; margin-bottom: 20px;" @selection-change="handleSelectionChange">
+            <el-table ref="table1" class="newTable" header-row-class-name="tableHead" :data="AuditList" border tooltip-effect="dark" style="width: 100%;" @selection-change="handleSelectionChange">
                 <el-table-column type="selection" :selectable="checkboxT" width="50" />
                 <el-table-column type="index" label="序号" :index="indexMethod" width="55" fixed />
                 <el-table-column label="审核状态" width="100">
@@ -116,6 +116,9 @@
                     </template>
                 </el-table-column>
             </el-table>
+            <el-row style="width: 100%; margin-bottom: 20px;">
+                <el-pagination :current-page="formHeader.currPage" :page-sizes="[10, 20, 50]" :page-size="formHeader.pageSize" layout="total, sizes, prev, pager, next, jumper" :total="formHeader.totalCount" @size-change="handleSizeChange" @current-change="handleCurrentChange" />
+            </el-row>
         </mds-card>
         <el-dialog title="审核拒绝" :close-on-click-modal="false" :visible.sync="visible">
             <p style="line-height: 42px;">
@@ -386,6 +389,16 @@ export default {
         // 序号
         indexMethod(index) {
             return index + 1 + (Number(this.formHeader.currPage) - 1) * (Number(this.formHeader.pageSize));
+        },
+        // 改变每页条数
+        handleSizeChange(val) {
+            this.formHeader.pageSize = val;
+            this.GetDataList();
+        },
+        // 跳转页数
+        handleCurrentChange(val) {
+            this.formHeader.currPage = val;
+            this.GetDataList();
         }
     }
 };

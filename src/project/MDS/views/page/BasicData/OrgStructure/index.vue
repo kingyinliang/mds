@@ -36,7 +36,7 @@
                         </div>
                         <div class="detail-main SelfScrollbar">
                             <div class="detail-main-form">
-                                <el-form ref="orgDetail" class="org-detail-form" :model="orgDetail" size="small" label-width="90px" :rules="dataRules" :inline="true">
+                                <el-form ref="orgDetail" class="org-detail-form" :model="orgDetail" size="small" label-width="90px" :rules="dataRules">
                                     <el-form-item label="部门编码：">
                                         <el-input v-model="orgDetail.deptCode" :disabled="true" auto-complete="off" style="width: 250px;" />
                                     </el-form-item>
@@ -110,7 +110,7 @@
             <el-dialog id="adddepform" :close-on-click-modal="false" :visible.sync="dialogFormVisible" :title="sibling ? '新增同级' : '新增下级'" @close="closeAddOrgForm('addDep')">
                 <el-form ref="addDep" :model="addDep" :rules="dataRules" size="small" label-position="left" label-width="125px" style="padding-bottom: 20px;">
                     <el-form-item label="部门编号：" prop="deptCode" :inline-message="true">
-                        <el-input v-model="addDep.deptCode" auto-complete="off" />
+                        <el-input v-model="addDep.deptCode" placeholder="格式：ABC123456" auto-complete="off" />
                     </el-form-item>
                     <el-form-item label="部门名称：" prop="deptName">
                         <el-input v-model="addDep.deptName" auto-complete="off" />
@@ -219,7 +219,7 @@ export default {
             fileReader: {},
             dataRules: {
                 deptCode: [
-                    { required: true, message: '请输入编号', trigger: 'blur' }
+                    { required: true, message: '请输入编号（大写字母+数字）', trigger: 'blur' }
                     // { type: 'number', message: '必须为数字值' }
                 ],
                 deptName: [
