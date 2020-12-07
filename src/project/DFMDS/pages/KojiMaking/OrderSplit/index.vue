@@ -33,7 +33,7 @@
                                 <el-table-column label="单位" width="60" prop="outputUnit" />
                                 <el-table-column label="操作" fixed="right" align="center" width="80">
                                     <template slot-scope="scope">
-                                        <el-button v-if="isAuth('steSplit')" class="iconfont factory-chaifen" type="text" :disabled="['D','P','X'].includes(scope.row.orderStatus)" @click="orderSplit(scope.row)">
+                                        <el-button v-if="isAuth('steSplit')" class="iconfont factory-chaifen" type="text" @click="orderSplit(scope.row)">
                                             拆分
                                         </el-button>
                                     </template>
@@ -243,11 +243,11 @@
 
         // 表格双击
         showSplitTable(row) { // 已审核C、已过账P、已反审按钮不可操作X
-            if (!(row.orderStatus === 'D' || row.orderStatus === 'P' || row.orderStatus === 'X')) {
+            // if (!(row.orderStatus === 'D' || row.orderStatus === 'P' || row.orderStatus === 'X')) {
                 this.splitForm.orderNo = row.orderNo
                 this.nowRow = row
                 this.getSplitTable()
-            }
+            // }
 
         }
 
@@ -276,13 +276,13 @@
 
         // 拆分
         orderSplit(row) {
-            if (!(row.orderStatus === 'D' || row.orderStatus === 'P' || row.orderStatus === 'X')) {
+            // if (!(row.orderStatus === 'D' || row.orderStatus === 'P' || row.orderStatus === 'X')) {
                 this.orderSplitRow = row;
                 this.dialogFormVisible = true;
                 this.$nextTick(() => {
                     this.$refs.orderSplitDialog.init(row, this.orderStatusMapping);
                 });
-            }
+            // }
         }
 
 
