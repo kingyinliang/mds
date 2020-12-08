@@ -19,7 +19,6 @@
                 <el-table-column type="index" label="序号" width="50" align="center" fixed />
                 <el-table-column prop="orderNo" label="生产订单" width="140" show-overflow-tooltip />
                 <el-table-column prop="orderType" label="订单类型" width="80" show-overflow-tooltip />
-                <el-table-column prop="factoryCode" label="工厂" width="80" show-overflow-tooltip />
                 <el-table-column prop="orderEndDate" label="基本完成日期" width="120" show-overflow-tooltip />
                 <el-table-column prop="orderStartDate" label="基本开始日期" width="120" show-overflow-tooltip />
                 <el-table-column label="物料" show-overflow-tooltip min-width="340">

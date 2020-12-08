@@ -79,14 +79,7 @@ const mainRoutes = {
 const DataEchartsRoutes = {
     path: '/DataEcharts',
     component: importTarget('page/DataEcharts/Layout/index'),
-    children: [
-        {
-            path: '/DataEcharts/RealTime-index',
-            component: importTarget('page/DataEcharts/RealTime/index'),
-            name: 'realTime',
-            meta: { title: 'realTime' }
-        }
-    ],
+    children: [],
     beforeEnter(to, from, next) {
         const token = Vue.cookie.get('token');
         if (!token || !/\S/.test(token)) {

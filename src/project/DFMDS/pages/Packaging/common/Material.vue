@@ -10,15 +10,10 @@
                 </el-table-column>
                 <el-table-column label="单位" prop="materialUnitName" width="50" :show-overflow-tooltip="true" />
                 <el-table-column label="需求用量" prop="needNum" width="80" :show-overflow-tooltip="true" />
+                <el-table-column label="订单领料" prop="receiveMaterial" width="80" :show-overflow-tooltip="true" />
                 <el-table-column label="结算库存" width="80" :show-overflow-tooltip="true">
                     <template slot-scope="scope">
                         {{ scope.row.endStocks = getEndStocks(scope.row) }}
-                    </template>
-                </el-table-column>
-                <el-table-column label="初始库存" prop="startStocks" width="80" :show-overflow-tooltip="true" />
-                <el-table-column label="订单领料" prop="receiveMaterial" width="120" :show-overflow-tooltip="true">
-                    <template slot-scope="scope">
-                        <el-input v-model="scope.row.receiveMaterial" :disabled="!(isRedact && scope.row.checkStatus !== 'C' && scope.row.checkStatus !== 'D' && scope.row.checkStatus !== 'P' && scope.row.materialStatus !== '3')" size="small" placeholder="请输入" />
                     </template>
                 </el-table-column>
                 <el-table-column width="70">
@@ -28,17 +23,21 @@
                         </el-button>
                     </template>
                 </el-table-column>
-                <el-table-column label="实际用量" prop="realUseAmount" width="120">
+
+                <el-table-column label="批次" prop="batch" width="150">
+                    <template slot-scope="scope">
+                        <el-select v-model="scope.row.batch" :disabled="!(isRedact && scope.row.checkStatus !== 'C' && scope.row.checkStatus !== 'D' && scope.row.checkStatus !== 'P' && scope.row.materialStatus !== '3')" filterable placeholder="请选择" size="small" clearable @change="batchChange(scope.row)">
+                            <el-option v-for="(iteam, index) in scope.row.batchArr" :key="index" :label="iteam.batch" :value="iteam.batch" />
+                        </el-select>
+                    </template>
+                </el-table-column>
+                <el-table-column label="初始库存" prop="startStocks" width="80" :show-overflow-tooltip="true" />
+                <el-table-column label="领用数量" prop="realUseAmount" width="120">
                     <template slot="header">
-                        <span class="notNull">* </span>实际用量
+                        <span class="notNull">* </span>领用数量
                     </template>
                     <template slot-scope="scope">
                         <el-input v-model="scope.row.realUseAmount" :disabled="!(isRedact && scope.row.checkStatus !== 'C' && scope.row.checkStatus !== 'D' && scope.row.checkStatus !== 'P' && scope.row.materialStatus !== '3')" size="small" placeholder="请输入" />
-                    </template>
-                </el-table-column>
-                <el-table-column label="批次" prop="batch" width="150">
-                    <template slot-scope="scope">
-                        <el-input v-model="scope.row.batch" maxlength="10" :disabled="!(isRedact && scope.row.checkStatus !== 'C' && scope.row.checkStatus !== 'D' && scope.row.checkStatus !== 'P' && scope.row.materialStatus !== '3')" size="small" />
                     </template>
                 </el-table-column>
                 <el-table-column label="实际损耗" prop="realLoss" width="120">
@@ -51,16 +50,7 @@
                         <el-input v-model="scope.row.unqualified" :disabled="!(isRedact && scope.row.checkStatus !== 'C' && scope.row.checkStatus !== 'D' && scope.row.checkStatus !== 'P' && scope.row.materialStatus !== '3')" size="small" placeholder="请输入" />
                     </template>
                 </el-table-column>
-                <el-table-column label="不良批次" prop="badBatch" width="120">
-                    <template slot-scope="scope">
-                        <el-input v-model="scope.row.badBatch" :disabled="!(isRedact && scope.row.checkStatus !== 'C' && scope.row.checkStatus !== 'D' && scope.row.checkStatus !== 'P' && scope.row.materialStatus !== '3')" size="small" placeholder="请输入" />
-                    </template>
-                </el-table-column>
-                <el-table-column label="厂家" prop="manufactor" width="120">
-                    <template slot-scope="scope">
-                        <el-input v-model="scope.row.manufactor" :disabled="!(isRedact && scope.row.checkStatus !== 'C' && scope.row.checkStatus !== 'D' && scope.row.checkStatus !== 'P' && scope.row.materialStatus !== '3')" size="small" placeholder="请输入" />
-                    </template>
-                </el-table-column>
+                <el-table-column label="厂家" prop="manufactor" width="120" :show-overflow-tooltip="true" />
                 <el-table-column label="备注" prop="remark" min-width="140">
                     <template slot-scope="scope">
                         <el-input v-model="scope.row.remark" :disabled="!(isRedact && scope.row.checkStatus !== 'C' && scope.row.checkStatus !== 'D' && scope.row.checkStatus !== 'P' && scope.row.materialStatus !== '3')" size="small" placeholder="请输入" />
@@ -86,7 +76,7 @@
             </el-table>
         </mds-card>
         <mds-card v-for="(item, index) in materialSArr" :key="index" :title="'灌装线' + (index + 1)" :name="'materialS' + index">
-            <el-table ref="materialS" header-row-class-name="tableHead" class="newTable" max-height="267" :data="item.data" :row-class-name="rowDelFlag" :span-method="({ rowIndex, columnIndex }) => spanTwoMethod(item, rowIndex, columnIndex)" border tooltip-effect="dark">
+            <el-table ref="materialS" header-row-class-name="tableHead" class="newTable" max-height="267" :data="item.data" :row-class-name="rowDelFlag" border tooltip-effect="dark">
                 <el-table-column type="index" label="序号" width="50px" />
                 <el-table-column label="领用物料" prop="material" width="150" :show-overflow-tooltip="true">
                     <template slot-scope="scope">
@@ -97,7 +87,7 @@
                 <el-table-column label="需求用量" prop="needNum" width="80" :show-overflow-tooltip="true" />
                 <el-table-column width="70">
                     <template slot-scope="scope">
-                        <el-button v-if="isAuth('pkgPdInsert')" type="text" :disabled="!(isRedact && status !== 'C' && status !== 'D' && status !== 'P' && scope.row.materialStatus !== '3')" @click="SplitDateS(item, scope.row, scope.$index)">
+                        <el-button v-if="isAuth('pkgPdInsert') && scope.row.splitFlag === 'N'" type="text" :disabled="!(isRedact && status !== 'C' && status !== 'D' && status !== 'P' && scope.row.materialStatus !== '3')" @click="SplitDateS(item, scope.row, scope.$index)">
                             <em class="icons iconfont factory-chaifen" />拆分
                         </el-button>
                     </template>
@@ -110,7 +100,6 @@
                         <el-input v-model="scope.row.sterilizeStorageNo" :disabled="!(isRedact && status !== 'C' && status !== 'D' && status !== 'P' && scope.row.materialStatus !== '3')" size="small" placeholder="请输入" />
                     </template>
                 </el-table-column>
-                <el-table-column label="锅号" prop="sterilizePotNo" width="150" :show-overflow-tooltip="true" />
                 <el-table-column label="实际用量" min-width="140">
                     <template slot="header">
                         <span class="notNull">* </span>实际用量
@@ -188,6 +177,8 @@
         }
 
         MaterialAudit = [];
+        formHeader: OrderData = {};
+        batch = [];
 
         bottleLineNum = 0;
 
@@ -408,15 +399,17 @@
         }
 
         async init(formHeader) {
+            this.formHeader = formHeader
             PKG_API.PKG_MATERIAL_P_QUERY_API({
                 factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
                 orderNo: formHeader.orderNo,
                 orderStatus: formHeader.orderStatus,
                 productLine: formHeader.productLine
             }).then(({ data }) => {
-                this.currentDataTable = this.processData(data.data, 'currentDataTable');
-                this.spanOneArr = this.merge(this.currentDataTable);
-                this.orgDataTable = JSON.parse(JSON.stringify(this.currentDataTable));
+                this.processData1(data.data, 'currentDataTable')
+                // this.currentDataTable = this.processData(data.data, 'currentDataTable');
+                // this.spanOneArr = this.merge(this.currentDataTable);
+                // this.orgDataTable = JSON.parse(JSON.stringify(this.currentDataTable));
             });
             if (formHeader.orderStatus === 'T') {
                 COMMON_API.ORGDETAIL_API({
@@ -480,12 +473,27 @@
             return a.data.data
         }
 
-        // 处理数据
-        processData(data, dataGroup): MaterialMap[] {
+        batchChange(row) {
+            const filterArr: (any) = row.batchArr.filter(it => it.batch === row.batch);// eslint-disable-line
+            row.startStocks = filterArr.storageAmount
+        }
+
+        // 处理数据1
+        async processData1(data, dataGroup) {
             const finalData: MaterialMap[] = []
-            data.forEach((item, index) => {
+            for (let i = 0; i < data.length; i++) {
+                const item = data[i]
+                const index = i
+                let batchArr: BatchArr[] = []
+                const res = await PKG_API.PKG_BATCH_LIST_API({
+                    orderNo: this.formHeader.orderNo,
+                    materialCode: item.materialCode,
+                    productLine: this.formHeader.productLine
+                })
+                batchArr = res.data.data
                 item.item.forEach((listitem) => {
                     const materialMap: MaterialMap = {
+                        batchArr,
                         id: '',
                         merge: index,
                         mainId: item.id,
@@ -511,6 +519,83 @@
                     materialMap.mainId = item.id;
                     finalData.push(materialMap)
                 })
+            }
+            this.currentDataTable = JSON.parse(JSON.stringify(finalData));
+            this.orgDataTable = JSON.parse(JSON.stringify(finalData));
+            this.spanOneArr = this.merge(this.currentDataTable);
+        }
+
+        // 处理数据
+        processData(data, dataGroup): MaterialMap[] {
+            const finalData: MaterialMap[] = []
+            data.forEach((item, index) => {
+                if (dataGroup === 'currentDataTable') {
+                    let batchArr: BatchArr[] = []
+                    PKG_API.PKG_BATCH_LIST_API({
+                        orderNo: this.formHeader.orderNo,
+                        materialCode: item.materialCode,
+                        productLine: this.formHeader.productLine
+                    }).then((res) => {
+                        batchArr = res.data.data
+                        item.item.forEach((listitem) => {
+                            const materialMap: MaterialMap = {
+                                batchArr,
+                                id: '',
+                                merge: index,
+                                mainId: item.id,
+                                checkStatus: item.checkStatus,
+                                orderId: item.orderId,
+                                orderNo: item.orderNo,
+                                posnr: item.posnr,
+                                bottleLine: dataGroup === 'currentDataTable' ? '' : item.bottleLine,
+                                materialCode: item.materialCode,
+                                materialName: item.materialName,
+                                materialUnit: item.materialUnit,
+                                materialUnitName: dataGroup === 'currentDataTable' ? item.materialUnitName : '',
+                                needNum: item.needNum,
+                                materialStatus: dataGroup === 'currentDataTable' ? item.materialStatus : '',
+                                materialType: dataGroup === 'currentDataTable' ? item.materialType : '',
+                                startStocks: dataGroup === 'currentDataTable' ? item.startStocks : '',
+                                endStocks: dataGroup === 'currentDataTable' ? item.endStocks : '',
+                                receiveMaterial: dataGroup === 'currentDataTable' ? item.receiveMaterial : '',
+                                changer: item.changer,
+                                changed: item.changed
+                            };
+                            Object.assign(materialMap, listitem);
+                            materialMap.mainId = item.id;
+                            finalData.push(materialMap)
+                        })
+                    });
+                } else {
+                    item.item.forEach((listitem) => {
+                        const materialMap: MaterialMap = {
+                            id: '',
+                            merge: index,
+                            mainId: item.id,
+                            checkStatus: item.checkStatus,
+                            orderId: item.orderId,
+                            orderNo: item.orderNo,
+                            posnr: item.posnr,
+                            bottleLine: dataGroup === 'currentDataTable' ? '' : item.bottleLine,
+                            materialCode: item.materialCode,
+                            materialName: item.materialName,
+                            materialUnit: item.materialUnit,
+                            materialUnitName: dataGroup === 'currentDataTable' ? item.materialUnitName : '',
+                            needNum: item.needNum,
+                            materialStatus: dataGroup === 'currentDataTable' ? item.materialStatus : '',
+                            materialType: dataGroup === 'currentDataTable' ? item.materialType : '',
+                            startStocks: dataGroup === 'currentDataTable' ? item.startStocks : '',
+                            endStocks: dataGroup === 'currentDataTable' ? item.endStocks : '',
+                            receiveMaterial: dataGroup === 'currentDataTable' ? item.receiveMaterial : '',
+                            changer: item.changer,
+                            changed: item.changed
+                        };
+                        Object.assign(materialMap, listitem);
+                        materialMap.mainId = item.id;
+                        finalData.push(materialMap)
+                    })
+                }
+
             });
             return finalData
         }
@@ -537,7 +622,7 @@
 
         // 合并行
         spanMethod({ rowIndex, columnIndex }) {
-            if (columnIndex <= 7) {
+            if (columnIndex <= 6) {
                 return {
                     rowspan: this.spanOneArr[rowIndex],
                     colspan: this.spanOneArr[rowIndex] > 0 ? 1 : 0
@@ -659,7 +744,7 @@
                 const realLossNum = dataArr.reduce((total, currentValue: MaterialMap) => {
                     return total + (currentValue.realLoss ? Number(currentValue.realLoss) : 0)
                 }, 0);
-                const sumnum = Number(row.startStocks) + Number(row.receiveMaterial) - Number(num) - Number(realLossNum);
+                const sumnum = Number(row.startStocks) - Number(num) - Number(realLossNum);
                 dataArr.forEach(item => {
                     item.endStocks = sumnum
                 })
@@ -678,12 +763,16 @@
         }
 
     }
+interface BatchArr{
+    id?: string;
+}
 interface MaterialArr{
     data: MaterialMap[];
     spanArr: number[];
 }
 interface MaterialMap{
     merge?: number;
+    batchArr?: BatchArr[];
     mainId: string;
     id: string;
     delFlag?: number;
@@ -725,6 +814,40 @@ interface PkgMaterialSObj {
     pkgSemiMaterialItemDelete: string[];
     pkgSemiMaterialInsert: MaterialMap[];
     pkgSemiMaterialUpdate: MaterialMap[];
+}
+interface OrderData{
+    factoryName?: string;
+    changed?: string;
+    countMan?: number;
+    countOutput?: number;
+    countOutputUnit?: string;
+    dispatchMan?: string;
+    exceptionDateCount?: number;
+    factory?: string;
+    factoryCode?: string;
+    germs?: number;
+    id?: string;
+    materialCode?: string;
+    materialName?: string;
+    operator?: string;
+    operatorDate?: string;
+    orderEndDate?: string;
+    orderId?: string;
+    orderNo?: string;
+    orderStartDate?: string;
+    orderStatus?: string;
+    orderStatusName?: string;
+    orderType?: string;
+    outputUnit?: string;
+    planOutput?: number;
+    productDate?: string;
+    productLine?: string;
+    productLineName?: string;
+    realInAmount?: number;
+    realOutput?: number;
+    version?: number;
+    workShop?: string;
+    workShopName?: string;
 }
 </script>
 
