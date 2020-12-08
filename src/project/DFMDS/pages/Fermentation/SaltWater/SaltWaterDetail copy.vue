@@ -29,7 +29,7 @@
                             <el-input v-model="formDeatil.aaaaaaaa" size="small" disabled style="width: 160px;" />
                         </el-form-item>
                         <el-form-item label="曲料温度" prop="aaaaaaaa">
-                            <el-input v-model="formDeatil.bbbb" placeholder="输入温度°C" size="small" style="width: 160px;" />
+                            <el-input v-model="formDeatil.bbbb" placeholder="请输入温度°C" size="small" style="width: 160px;" />
                         </el-form-item>
                     </el-form>
                 </el-col>
@@ -87,12 +87,12 @@
                             <span class="notNull">盐水用量（KG）</span>
                         </template>
                         <template slot-scope="scope">
-                            <el-input v-model="scope.row.aaaaaaaa" size="small" type="number" placeholder="输入数量" :disabled="!isRedact" />
+                            <el-input v-model="scope.row.aaaaaaaa" size="small" type="number" placeholder="请输入数量" :disabled="!isRedact" />
                         </template>
                     </el-table-column>
                     <el-table-column width="120" label="盐水温度（°C）" :show-overflow-tooltip="true" class="star">
                         <template slot-scope="scope">
-                            <el-input v-model="scope.row.aaaaaaaa" :disabled="!isRedact" size="small" type="number" placeholder="输入温度" />
+                            <el-input v-model="scope.row.aaaaaaaa" :disabled="!isRedact" size="small" type="number" placeholder="请输入温度" />
                         </template>
                     </el-table-column>
                     <el-table-column width="150" :show-overflow-tooltip="true" class="star">
@@ -100,7 +100,7 @@
                             <span class="notNull">盐水浓度</span>
                         </template>
                         <template slot-scope="scope">
-                            <el-input v-model="scope.row.aaaaaaaa" size="small" type="number" placeholder="输入浓度" :disabled="!isRedact" />
+                            <el-input v-model="scope.row.aaaaaaaa" size="small" type="number" placeholder="请输入浓度" :disabled="!isRedact" />
                         </template>
                     </el-table-column>
                     <el-table-column :show-overflow-tooltip="true" min-width="200">
@@ -160,7 +160,7 @@
                             <span class="notNull">领用数量</span>
                         </template>
                         <template slot-scope="scope">
-                            <el-input v-model="scope.row.aaaaaaaa" size="small" placeholder="输入数量" :disabled="!isRedact" />
+                            <el-input v-model="scope.row.aaaaaaaa" size="small" placeholder="请输入数量" :disabled="!isRedact" />
                         </template>
                     </el-table-column>
                     <el-table-column :show-overflow-tooltip="true" width="100">
@@ -176,7 +176,7 @@
                             <span>批次</span>
                         </template>
                         <template slot-scope="scope">
-                            <el-input v-model.trim="scope.row.remark" size="small" placeholder="输入批次" :disabled="!isRedact" />
+                            <el-input v-model.trim="scope.row.remark" size="small" placeholder="请输入批次" :disabled="!isRedact" />
                         </template>
                     </el-table-column>
                     <el-table-column :show-overflow-tooltip="true" min-width="200">

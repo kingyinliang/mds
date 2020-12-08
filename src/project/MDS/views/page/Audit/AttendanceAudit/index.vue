@@ -23,7 +23,7 @@
                             </el-select>
                         </el-form-item>
                         <el-form-item label="日期：">
-                            <el-date-picker v-model="plantList.setDate" type="date" placeholder="选择" value-format="yyyy-MM-dd" style="width: 160px;" />
+                            <el-date-picker v-model="plantList.setDate" type="date" placeholder="请选择" value-format="yyyy-MM-dd" style="width: 160px;" />
                         </el-form-item>
                         <el-form-item label="考勤类型：">
                             <el-select v-model="plantList.kqlx" placeholder="请选择" size="small" style="width: 160px;">

@@ -23,7 +23,7 @@
                         <span class="notNull">* </span>配置日期
                     </template>
                     <template slot-scope="scope">
-                        <el-date-picker v-model="scope.row.configDate" type="date" value-format="yyyy-MM-dd" format="yyyy.MM.dd" placeholder="选择" :disabled="!(isRedact && scope.row.checkStatus !== 'C' && scope.row.checkStatus !== 'D' && scope.row.checkStatus !== 'P')" size="small" style="width: 130px;" @change="getCookingNum(scope.row, scope.$index)" />
+                        <el-date-picker v-model="scope.row.configDate" type="date" value-format="yyyy-MM-dd" format="yyyy.MM.dd" placeholder="请选择" :disabled="!(isRedact && scope.row.checkStatus !== 'C' && scope.row.checkStatus !== 'D' && scope.row.checkStatus !== 'P')" size="small" style="width: 130px;" @change="getCookingNum(scope.row, scope.$index)" />
                     </template>
                 </el-table-column>
                 <el-table-column min-width="100px">
@@ -59,7 +59,7 @@
                         <span class="notNull">* </span>添加时间
                     </template>
                     <template slot-scope="scope">
-                        <el-date-picker v-model="scope.row.addDate" type="datetime" value-format="yyyy-MM-dd HH:mm" format="yyyy.MM.dd HH:mm" placeholder="选择" :disabled="!(isRedact && scope.row.checkStatus !== 'C' && scope.row.checkStatus !== 'D' && scope.row.checkStatus !== 'P')" size="small" style="width: 170px;" />
+                        <el-date-picker v-model="scope.row.addDate" type="datetime" value-format="yyyy-MM-dd HH:mm" format="yyyy.MM.dd HH:mm" placeholder="请选择" :disabled="!(isRedact && scope.row.checkStatus !== 'C' && scope.row.checkStatus !== 'D' && scope.row.checkStatus !== 'P')" size="small" style="width: 170px;" />
                     </template>
                 </el-table-column>
                 <el-table-column prop="transferTank" label="转运罐号" min-width="100px" :show-overflow-tooltip="true">
@@ -122,7 +122,7 @@
                         <span class="notNull">* </span>添加时间
                     </template>
                     <template slot-scope="scope">
-                        <el-date-picker v-model="scope.row.addDate" type="datetime" value-format="yyyy-MM-dd HH:mm:ss" format="yyyy.MM.dd HH:mm" placeholder="选择" :disabled="!(isRedact && scope.row.checkStatus !== 'C' && scope.row.checkStatus !== 'D' && scope.row.checkStatus !== 'P')" size="small" style="width: 170px;" />
+                        <el-date-picker v-model="scope.row.addDate" type="datetime" value-format="yyyy-MM-dd HH:mm:ss" format="yyyy.MM.dd HH:mm" placeholder="请选择" :disabled="!(isRedact && scope.row.checkStatus !== 'C' && scope.row.checkStatus !== 'D' && scope.row.checkStatus !== 'P')" size="small" style="width: 170px;" />
                     </template>
                 </el-table-column>
                 <el-table-column min-width="140" label="称取盒编号">
@@ -209,7 +209,7 @@
                         <span class="notNull">* </span>添加时间
                     </template>
                     <template slot-scope="scope">
-                        <el-date-picker v-model="scope.row.addDate" type="datetime" value-format="yyyy-MM-dd HH:mm:ss" format="yyyy.MM.dd HH:mm" placeholder="选择" :disabled="!(isRedact && scope.row.checkStatus !== 'C' && scope.row.checkStatus !== 'D' && scope.row.checkStatus !== 'P')" size="small" />
+                        <el-date-picker v-model="scope.row.addDate" type="datetime" value-format="yyyy-MM-dd HH:mm:ss" format="yyyy.MM.dd HH:mm" placeholder="请选择" :disabled="!(isRedact && scope.row.checkStatus !== 'C' && scope.row.checkStatus !== 'D' && scope.row.checkStatus !== 'P')" size="small" />
                     </template>
                 </el-table-column>
                 <el-table-column label="备注">

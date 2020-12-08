@@ -9,7 +9,7 @@
         <el-table class="newTable" :data="machineTest" header-row-class-name="tableHead" :row-class-name="RowDelFlag" border tooltip-effect="dark">
             <el-table-column label="检测时间" width="160">
                 <template slot-scope="scope">
-                    <el-date-picker v-model="scope.row.checkTime" type="datetime" value-format="yyyy-MM-dd HH:mm:ss" format="yyyy-MM-dd HH:mm" placeholder="选择" size="small" />
+                    <el-date-picker v-model="scope.row.checkTime" type="datetime" value-format="yyyy-MM-dd HH:mm:ss" format="yyyy-MM-dd HH:mm" placeholder="请选择" size="small" />
                 </template>
             </el-table-column>
             <el-table-column width="120">

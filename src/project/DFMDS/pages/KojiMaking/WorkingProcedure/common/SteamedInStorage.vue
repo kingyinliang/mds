@@ -13,7 +13,7 @@
                         <span class="notNull">* </span>入库数量
                     </template>
                     <template slot-scope="scope">
-                        <el-input v-model="scope.row.inStorageAmount" placeholder="输入" :disabled="!isRedact" size="small" style="width: 120px;" />
+                        <el-input v-model="scope.row.inStorageAmount" placeholder="请输入" :disabled="!isRedact" size="small" style="width: 120px;" />
                     </template>
                 </el-table-column>
                 <el-table-column label="单位" width="80">
@@ -26,7 +26,7 @@
                         <span class="notNull">* </span>入库批次
                     </template>
                     <template slot-scope="scope">
-                        <el-input v-model="scope.row.inStorageBatch" placeholder="输入" :disabled="!isRedact" size="small" maxlength="10" style="width: 160px;" />
+                        <el-input v-model="scope.row.inStorageBatch" placeholder="请输入" :disabled="!isRedact" size="small" maxlength="10" style="width: 160px;" />
                     </template>
                 </el-table-column>
                 <el-table-column label="备注">
