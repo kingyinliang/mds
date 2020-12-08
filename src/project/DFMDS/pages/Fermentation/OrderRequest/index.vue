@@ -36,6 +36,7 @@
 <script lang="ts">
     import { Vue, Component } from 'vue-property-decorator';
     import { COMMON_API, FER_API } from 'common/api/api';
+import { dateFormat } from 'src/utils/utils';
     // import { dateFormat } from 'utils/utils';
 
     @Component({
@@ -122,33 +123,9 @@
                 label: '订单日期',
                 labelWidth: 90,
                 valueFormat: 'yyyy-MM-dd',
-                // defaultValue: dateFormat(new Date(), 'yyyy-MM-dd'),
+                defaultValue: dateFormat(new Date(), 'yyyy-MM-dd'),
                 prop: 'startDate',
                 propTwo: 'endDate'
-            },
-            {
-                type: 'select',
-                hide: true,
-                label: '订单类型',
-                prop: 'orderType',
-                // labelWidth: 85,
-                rule: [{ required: false, message: ' ', trigger: 'change' }],
-                defaultValue: '',
-                defaultOptionsFn: () => {
-                    return new Promise((resolve) => {
-                        COMMON_API.DICTIONARY_ITEM_DROPDOWN_POST_API({
-                            factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
-                            dictType: 'ORDER_TYPE' // 字典类型
-                        }).then((res) => {
-                            resolve(res)
-                        })
-                    })
-                },
-                resVal: {
-                    resData: 'data',
-                    label: 'dictValue',
-                    value: 'dictCode'
-                }
             }
         ]
 
@@ -186,12 +163,19 @@
                 label: '订单类型',
                 minwidth: '160',
                 type: 'select',
-                redact: true
+                redact: true,
+                resVal: {
+                    resData: 'data',
+                    label: 'dictValue',
+                    value: 'dictCode'
+                }
             },
             {
                 prop: 'ver',
                 label: '版本',
-                minwidth: '60'
+                minwidth: '120',
+                type: 'input',
+                redact: true
             },
             {
                 prop: 'startDate',
@@ -249,6 +233,11 @@
                     totalCount: 0
                 },
                 column: [
+                    {
+                        prop: 'orderNo',
+                        label: '订单号',
+                        minwidth: '160'
+                    },
                     ...this.Column, // eslint-disable-line
                     {
                         prop: 'applicant',
@@ -265,10 +254,21 @@
         ]
 
         createdEnd() {
+            this.getOrderType();
             this.$nextTick(() => {
                 if (this.$refs.queryTable.queryForm.workShop !== '') {
                     this.$refs.queryTable.getDataList(true)
                 }
+            })
+        }
+
+        getOrderType() {
+            COMMON_API.DICTIONARY_ITEM_DROPDOWN_POST_API({
+                factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
+                dictType: 'ORDER_TYPE' // 字典类型
+            }).then(({ data }) => {
+                this.$refs.queryTable.optionLists.orderType = data.data;
+                // this.orderType = data.data;
             })
         }
 
@@ -289,7 +289,7 @@
 
         // queryTable 回传 result
         returnDataFromQueryTableForm(datas, st) {
-            const edit = 1;
+            const edit = 0;
             if (st) {
                 this.tabs.map((item, index) => {
                     if (index !== Number(this.$refs.queryTable.activeName)) {
@@ -340,10 +340,16 @@
         }
 
         requestOrderHandler() {
-            const arr = this.tabs[0].multipleSelection;
+            const arr = this.tabs[0].multipleSelection as OrderObj[];
             if (!arr.length) {
                 this.$warningToast('请选择订单');
                 return false;
+            }
+            for (const item of arr) {
+                if (!item.orderType) {
+                    this.$warningToast('请填写必填项');
+                    return false;
+                }
             }
             const params = arr.map((item: OrderObj) => ({
                 id: item.id,
@@ -352,7 +358,7 @@
             }));
             FER_API.FER_ORDER_SEND_API(params).then(res => {
                 this.$successToast(res.data.msg);
-                this.$refs.queryTable.getDataList();
+                this.$refs.queryTable.getDataList(true);
             })
         }
     }

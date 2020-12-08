@@ -132,7 +132,15 @@ const PKG_API = {
     /**
      * @property {string}  PKG_AUDIT_DETAIL_PROMATERIALDIFF_API 审核详情-生产效率
      */
-    PKG_AUDIT_DETAIL_OEE_API: params => httpProxy('/pkgOeeOrOpe/query', 'GET', params)
+    PKG_AUDIT_DETAIL_OEE_API: params => httpProxy('/pkgOeeOrOpe/query', 'GET', params),
+    /**
+     * @property {string}  PKG_PICKING_MATERIAL_LIST_API 包材领料-查询
+     */
+    PKG_PICKING_MATERIAL_LIST_API: params => httpProxy('/pkgMaterialUse/query', 'POST', params),
+    /**
+     * @property {string}  PKG_PICKING_MATERIAL_DETAIL_API 包材领料-详情
+     */
+    PKG_PICKING_MATERIAL_DETAIL_API: params => httpProxy('/pkgMaterialUse/queryItem', 'POST', params)
 };
 
 export default PKG_API;

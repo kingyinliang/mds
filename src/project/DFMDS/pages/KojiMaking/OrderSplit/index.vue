@@ -243,11 +243,11 @@
 
         // 表格双击
         showSplitTable(row) { // 已审核C、已过账P、已反审按钮不可操作X
-            if (!(row.orderStatus === 'D' || row.orderStatus === 'P' || row.orderStatus === 'X')) {
+            // if (!(row.orderStatus === 'D' || row.orderStatus === 'P' || row.orderStatus === 'X')) {
                 this.splitForm.orderNo = row.orderNo
                 this.nowRow = row
                 this.getSplitTable()
-            }
+            // }
 
         }
 
@@ -276,13 +276,13 @@
 
         // 拆分
         orderSplit(row) {
-            if (!(row.orderStatus === 'D' || row.orderStatus === 'P' || row.orderStatus === 'X')) {
+            // if (!(row.orderStatus === 'D' || row.orderStatus === 'P' || row.orderStatus === 'X')) {
                 this.orderSplitRow = row;
                 this.dialogFormVisible = true;
                 this.$nextTick(() => {
                     this.$refs.orderSplitDialog.init(row, this.orderStatusMapping);
                 });
-            }
+            // }
         }
 
 

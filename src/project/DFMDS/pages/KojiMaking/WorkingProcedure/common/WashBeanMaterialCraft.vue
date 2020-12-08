@@ -176,7 +176,7 @@
                     </template>
                     <template slot-scope="scope">
                         <div class="required" style="min-height: 32px; line-height: 32px;">
-                            <span style="cursor: pointer;" @click="selectScan(scope.row)">
+                            <span :style="{cursor: isRedact===true?'pointer':'default'}" @click="selectScan(scope.row)">
                                 <em>{{ scope.row.relStr }}</em>
                                 <em> 点击选择</em>
                             </span>

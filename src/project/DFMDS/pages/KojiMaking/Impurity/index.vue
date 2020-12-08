@@ -26,7 +26,7 @@
                                 <span class="notNull">设备名称</span>
                             </template>
                             <template slot-scope="scope">
-                                <el-select v-model="scope.row.deviceName" size="small" clearable style="width: 100%;" :disabled="!isRedact">
+                                <el-select v-model="scope.row.deviceId" size="small" clearable style="width: 100%;" :disabled="!isRedact" @change="val=>setObjectProp(val,scope.row,'deviceName',deviceNameOptions)">
                                     <el-option
                                         v-for="item in deviceNameOptions"
                                         :key="item.optValue"
@@ -41,7 +41,7 @@
                                 <span class="notNull">异物数量</span>
                             </template>
                             <template slot-scope="scope">
-                                <el-input v-model="scope.row.impurityAmount" size="small" placeholder="请输入" :disabled="!isRedact" />
+                                <el-input v-model.number="scope.row.impurityAmount" size="small" placeholder="请输入" :disabled="!isRedact" />
                             </template>
                         </el-table-column>
                         <el-table-column width="150" :show-overflow-tooltip="true">
@@ -49,7 +49,7 @@
                                 <span class="notNull">异物种类</span>
                             </template>
                             <template slot-scope="scope">
-                                <el-select v-model="scope.row.impurityType" size="small" clearable style="width: 100%;" :disabled="!isRedact">
+                                <el-select v-model="scope.row.impurityType" size="small" clearable style="width: 100%;" :disabled="!isRedact" @change="val=>setObjectProp(val,scope.row,'impurityName',foriegnMatterImpurityTypeOptions)">
                                     <el-option
                                         v-for="item in foriegnMatterImpurityTypeOptions"
                                         :key="item.optValue"
@@ -126,7 +126,7 @@
                                 <span class="notNull">异物种类</span>
                             </template>
                             <template slot-scope="scope">
-                                <el-select v-model="scope.row.impurityType" size="small" clearable style="width: 100%;" :disabled="!isRedact" @change="clearImpurityInfo(scope.row)">
+                                <el-select v-model="scope.row.impurityType" size="small" clearable style="width: 100%;" :disabled="!isRedact" @change="val=>setImpurityInfo(val,scope.row,'impurityName',magnetImpurityTypeOptions)">
                                     <el-option
                                         v-for="item in magnetImpurityTypeOptions"
                                         :key="item.optValue"
@@ -273,10 +273,9 @@
             return amountTemp
         }
 
-        clearImpurityInfo(row) {
-            console.log(row)
-            row.impurityInfo = ''
-
+        setImpurityInfo(val, target, prop, who) {
+            this.setObjectProp(val, target, prop, who)
+            target.impurityInfo = ''
         }
 
         // 表格内下拉选项
@@ -291,7 +290,7 @@
                     this.deviceNameOptions = []
                     if (data.data) {
                         data.data.forEach(item => {
-                        this.deviceNameOptions.push({ optLabel: item.deviceName, optValue: item.deviceNo })
+                        this.deviceNameOptions.push({ optLabel: item.deviceName, optValue: item.id })
                         })
                     }
                 });
@@ -335,11 +334,12 @@
             return '';
         }
 
+        setObjectProp(val, target, prop, who) {
+            target[prop] = who.filter(item => item.optValue === val)[0].optLabel
+        }
 
         // queryTable 查询请求
         queryTableListInterface(params) {
-            console.log('查询传值')
-            console.log(params)
             this.globalVal = params
 
             // ：若今天以后时间，终止查询并提示
@@ -503,7 +503,7 @@
 
         ruleForiegnMatterSubmit() {
             for (const item of this.targetQueryTableListOfForiegnMatter.filter(it => it.delFlag !== 1)) {
-                if (!item.deviceName || !item.impurityAmount || !item.impurityType) {
+                if (!item.deviceId || !item.impurityAmount || !item.impurityType) {
                     this.$warningToast('请填写异物统计必填栏位');
                     return false;
                 }
