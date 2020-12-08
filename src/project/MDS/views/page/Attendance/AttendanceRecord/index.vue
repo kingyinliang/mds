@@ -34,7 +34,7 @@
                                 </el-select>
                             </el-form-item>
                             <el-form-item label="日期：">
-                                <el-date-picker v-model="plantList.setDate" type="date" placeholder="选择" value-format="yyyy-MM-dd" style="width: 200px;" />
+                                <el-date-picker v-model="plantList.setDate" type="date" placeholder="请选择" value-format="yyyy-MM-dd" style="width: 200px;" />
                             </el-form-item>
                             <el-form-item class="floatr">
                                 <el-button v-if="isAuth('sys:att:listAtt')" type="primary" size="small" @click="GetList(true)">
@@ -71,7 +71,7 @@
                         <el-table-column prop="workShopName" label="车间" :show-overflow-tooltip="true" width="120" />
                         <el-table-column prop="kqrq" label="考勤日期" :show-overflow-tooltip="true" width="140">
                             <template slot-scope="scope">
-                                <el-date-picker v-if="scope.row.redactStatus" v-model="scope.row.kqrq" size="small" type="datetime" value-format="yyyy-MM-dd" format="yyyy-MM-dd" placeholder="选择" />
+                                <el-date-picker v-if="scope.row.redactStatus" v-model="scope.row.kqrq" size="small" type="datetime" value-format="yyyy-MM-dd" format="yyyy-MM-dd" placeholder="请选择" />
                                 <span v-else>{{ scope.row.kqrq }}</span>
                             </template>
                         </el-table-column>

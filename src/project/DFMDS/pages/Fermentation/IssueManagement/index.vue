@@ -42,7 +42,7 @@
                                 <span class="notNull">数量</span>
                             </template>
                             <template slot-scope="scope">
-                                <el-input v-model.number="scope.row.realUseAmount" oninput="value=value.replace(/\D*/g,'')" size="small" placeholder="输入数量" :disabled="!isRedact || (scope.row.checkStatus !== 'N' && scope.row.checkStatus !== 'R' && scope.row.checkStatus !== 'S')" />
+                                <el-input v-model.number="scope.row.realUseAmount" oninput="value=value.replace(/\D*/g,'')" size="small" placeholder="请输入数量" :disabled="!isRedact || (scope.row.checkStatus !== 'N' && scope.row.checkStatus !== 'R' && scope.row.checkStatus !== 'S')" />
                             </template>
                         </el-table-column>
                         <el-table-column label="单位" prop="useUnit" />
@@ -51,12 +51,12 @@
                                 <span class="notNull">批次</span>
                             </template>
                             <template slot-scope="scope">
-                                <el-input v-model="scope.row.batch" size="small" :maxlength="10" placeholder="输入批次" :disabled="!isRedact || (scope.row.checkStatus !== 'N' && scope.row.checkStatus !== 'R' && scope.row.checkStatus !== 'S')" />
+                                <el-input v-model="scope.row.batch" size="small" :maxlength="10" placeholder="请输入批次" :disabled="!isRedact || (scope.row.checkStatus !== 'N' && scope.row.checkStatus !== 'R' && scope.row.checkStatus !== 'S')" />
                             </template>
                         </el-table-column>
                         <el-table-column label="备注" prop="" width="160px">
                             <template slot-scope="scope">
-                                <el-input v-model="scope.row.remark" size="small" :maxlength="255" placeholder="输入备注" :disabled="!isRedact || (scope.row.checkStatus !== 'N' && scope.row.checkStatus !== 'R' && scope.row.checkStatus !== 'S')" />
+                                <el-input v-model="scope.row.remark" size="small" :maxlength="255" placeholder="请输入备注" :disabled="!isRedact || (scope.row.checkStatus !== 'N' && scope.row.checkStatus !== 'R' && scope.row.checkStatus !== 'S')" />
                             </template>
                         </el-table-column>
                         <el-table-column label="操作人员" prop="changer" width="160px" />

@@ -116,13 +116,13 @@
                         <span class="notNull">*</span>领用数量
                     </template>
                     <template slot-scope="scope">
-                        <el-input v-model.number="scope.row.userAmount" type="number" placeholder="输入数量" size="small" :disabled="!isRedact" />
+                        <el-input v-model.number="scope.row.userAmount" type="number" placeholder="请输入数量" size="small" :disabled="!isRedact" />
                     </template>
                 </el-table-column>
                 <el-table-column label="溶解罐库存" min-width="90" prop="remainder" />
                 <el-table-column label="备注" min-width="100">
                     <template slot-scope="scope">
-                        <el-input v-model="scope.row.remark" placeholder="输入备注" size="small" :disabled="!isRedact" />
+                        <el-input v-model="scope.row.remark" placeholder="请输入备注" size="small" :disabled="!isRedact" />
                     </template>
                 </el-table-column>
                 <el-table-column label="操作人" min-width="140" prop="changer" />

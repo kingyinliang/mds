@@ -51,7 +51,7 @@
                         </template>
                         <template slot-scope="scope">
                             <el-form-item :prop="'r'+scope.$index+'.batch'" :rules="dataRules.batch">
-                                <el-input v-model.trim="scope.row.batch" maxlength="10" placeholder="输入批次" size="small" :disabled="!(isRedact && scope.row.checkStatus !== 'C' && scope.row.checkStatus !== 'D' && scope.row.checkStatus !== 'P')" />
+                                <el-input v-model.trim="scope.row.batch" maxlength="10" placeholder="请输入批次" size="small" :disabled="!(isRedact && scope.row.checkStatus !== 'C' && scope.row.checkStatus !== 'D' && scope.row.checkStatus !== 'P')" />
                             </el-form-item>
                         </template>
                     </el-table-column>
@@ -61,7 +61,7 @@
                         </template>
                         <template slot-scope="scope">
                             <el-form-item :prop="'r'+scope.$index+'.inStorageCount'" :rules="dataRules.inStorageCount">
-                                <el-input v-model.number="scope.row.inStorageCount" size="small" placeholder="输入数量" :disabled="!(isRedact && scope.row.checkStatus !== 'C' && scope.row.checkStatus !== 'D' && scope.row.checkStatus !== 'P')" clearable oninput="value=value.replace(/\D*/g,'')" />
+                                <el-input v-model.number="scope.row.inStorageCount" size="small" placeholder="请输入数量" :disabled="!(isRedact && scope.row.checkStatus !== 'C' && scope.row.checkStatus !== 'D' && scope.row.checkStatus !== 'P')" clearable oninput="value=value.replace(/\D*/g,'')" />
                             </el-form-item>
                         </template>
                     </el-table-column>
@@ -84,7 +84,7 @@
                     </el-table-column>
                     <el-table-column label="入库不良" prop="inStorageBadCount" width="140">
                         <template slot-scope="scope">
-                            <el-input v-model.number="scope.row.inStorageBadCount" size="small" placeholder="输入数量" :disabled="!(isRedact && scope.row.checkStatus !== 'C' && scope.row.checkStatus !== 'D' && scope.row.checkStatus !== 'P')" clearable oninput="value=value.replace(/\D*/g,'')" />
+                            <el-input v-model.number="scope.row.inStorageBadCount" size="small" placeholder="请输入数量" :disabled="!(isRedact && scope.row.checkStatus !== 'C' && scope.row.checkStatus !== 'D' && scope.row.checkStatus !== 'P')" clearable oninput="value=value.replace(/\D*/g,'')" />
                         </template>
                     </el-table-column>
                     <el-table-column label="单位" prop="inStorageBadUnit" width="100">
@@ -101,7 +101,7 @@
                     </el-table-column>
                     <el-table-column label="线上不良" prop="onlineBadCount" width="140">
                         <template slot-scope="scope">
-                            <el-input v-model.number="scope.row.onlineBadCount" size="small" placeholder="输入数量" :disabled="!(isRedact && scope.row.checkStatus !== 'C' && scope.row.checkStatus !== 'D' && scope.row.checkStatus !== 'P')" clearable oninput="value=value.replace(/\D*/g,'')" />
+                            <el-input v-model.number="scope.row.onlineBadCount" size="small" placeholder="请输入数量" :disabled="!(isRedact && scope.row.checkStatus !== 'C' && scope.row.checkStatus !== 'D' && scope.row.checkStatus !== 'P')" clearable oninput="value=value.replace(/\D*/g,'')" />
                         </template>
                     </el-table-column>
                     <el-table-column label="单位" prop="onlineBadUnit" width="100">
@@ -118,7 +118,7 @@
                     </el-table-column>
                     <el-table-column label="样品" prop="sampleCount" width="140">
                         <template slot-scope="scope">
-                            <el-input v-model.number="scope.row.sampleCount" size="small" placeholder="输入数量" :disabled="!(isRedact && scope.row.sampleStatus !== 'C' && scope.row.sampleStatus !== 'D' && scope.row.sampleStatus !== 'P')" clearable oninput="value=value.replace(/\D*/g,'')" />
+                            <el-input v-model.number="scope.row.sampleCount" size="small" placeholder="请输入数量" :disabled="!(isRedact && scope.row.sampleStatus !== 'C' && scope.row.sampleStatus !== 'D' && scope.row.sampleStatus !== 'P')" clearable oninput="value=value.replace(/\D*/g,'')" />
                         </template>
                     </el-table-column>
                     <el-table-column label="单位" prop="sampleUnit" width="100">

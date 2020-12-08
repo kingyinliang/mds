@@ -124,7 +124,7 @@
                             <span class="notNull">*</span>开始时间
                         </template>
                         <template slot-scope="scope">
-                            <el-date-picker v-model="scope.row.startTime" type="datetime" value-format="yyyy-MM-dd HH:mm" format="yyyy-MM-dd HH:mm" placeholder="选择" size="small" :disabled="!scope.row.isRedact" style="width: 180px;" />
+                            <el-date-picker v-model="scope.row.startTime" type="datetime" value-format="yyyy-MM-dd HH:mm" format="yyyy-MM-dd HH:mm" placeholder="请选择" size="small" :disabled="!scope.row.isRedact" style="width: 180px;" />
                         </template>
                     </el-table-column>
                     <el-table-column prop="dinner" width="135" label="用餐时间(MIN)" :show-overflow-tooltip="true">
@@ -140,7 +140,7 @@
                             <span class="notNull">*</span>结束时间
                         </template>
                         <template slot-scope="scope">
-                            <el-date-picker v-model="scope.row.endTime" type="datetime" value-format="yyyy-MM-dd HH:mm" format="yyyy-MM-dd HH:mm" placeholder="选择" size="small" :disabled="!scope.row.isRedact" style="width: 180px;" />
+                            <el-date-picker v-model="scope.row.endTime" type="datetime" value-format="yyyy-MM-dd HH:mm" format="yyyy-MM-dd HH:mm" placeholder="请选择" size="small" :disabled="!scope.row.isRedact" style="width: 180px;" />
                         </template>
                     </el-table-column>
                     <el-table-column prop="duration" min-width="80" label="时长(H)" :show-overflow-tooltip="true">

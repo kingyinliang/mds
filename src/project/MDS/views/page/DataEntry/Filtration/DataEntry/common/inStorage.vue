@@ -77,7 +77,7 @@
                     </el-select>
                 </el-form-item>
                 <el-form-item label="满罐时间：">
-                    <el-date-picker v-model="dataForm.fullDate" type="datetime" :disabled="dialogDisabled" value-format="yyyy-MM-dd HH:mm:ss" format="yyyy-MM-dd HH:mm" placeholder="选择" style="width: 190px;" />
+                    <el-date-picker v-model="dataForm.fullDate" type="datetime" :disabled="dialogDisabled" value-format="yyyy-MM-dd HH:mm:ss" format="yyyy-MM-dd HH:mm" placeholder="请选择" style="width: 190px;" />
                 </el-form-item>
                 <el-form-item label="备注：">
                     <el-input v-model="dataForm.remark" placeholder="请输入" />
