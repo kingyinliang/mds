@@ -30,6 +30,13 @@
                         <el-table-column label="订单数量" prop="amount" />
                         <el-table-column label="订单单位" prop="unit" />
                         <el-table-column label="组件物料" prop="materialName" width="120px" />
+                        <el-table-column prop="">
+                            <template slot-scope="scope">
+                                <el-button type="text" size="mini" :disabled="!isRedact || (scope.row.checkStatus !== 'N' && scope.row.checkStatus !== 'R' && scope.row.checkStatus !== 'S')" @click="splitHandler(scope.row, scope.$index)">
+                                    拆分
+                                </el-button>
+                            </template>
+                        </el-table-column>
                         <el-table-column prop="" width="160px">
                             <template slot="header">
                                 <span class="notNull">数量</span>
@@ -54,13 +61,10 @@
                         </el-table-column>
                         <el-table-column label="操作人员" prop="changer" width="160px" />
                         <el-table-column label="操作时间" prop="changed" width="160px" />
-                        <el-table-column label="操作" width="175px" fixed="right">
+                        <el-table-column label="操作" width="140px" fixed="right">
                             <template slot-scope="scope">
                                 <el-button v-if="scope.row.splitFlag === 'Y'" class="delBtn" type="text" icon="el-icon-delete" size="mini" :disabled="!isRedact || (scope.row.checkStatus !== 'N' && scope.row.checkStatus !== 'R' && scope.row.checkStatus !== 'S')" @click="removeDataRow(scope.row, scope.$index)">
                                     删除
-                                </el-button>
-                                <el-button type="text" size="mini" :disabled="!isRedact || (scope.row.checkStatus !== 'N' && scope.row.checkStatus !== 'R' && scope.row.checkStatus !== 'S')" @click="splitHandler(scope.row, scope.$index)">
-                                    拆分
                                 </el-button>
                                 <el-button type="text" size="samll" @click="showLogHandler(scope.row)">
                                     审核日志
@@ -75,19 +79,9 @@
             </template>
         </query-table>
         <redact-box :disabled="redactBoxDisable" :is-redact.sync="isRedact" redact-auth="steStgEdit" :is-show-submit-btn="true" :saved-rules="savedRules" :submit-rules="submitRules" :saved-datas="savedDatas" :submit-datas="submitDatas" @sendSuccess="sendSuccess" />
-        <el-dialog
-            title="审核日志"
-            :visible.sync="dialogVisible"
-            width="60%"
-            :before-close="handleClose"
-        >
-            <el-table :data="logList">
-                <el-table-column label="序号" type="index" />
-                <el-table-column label="审核动作" prop="verifyType" />
-                <el-table-column label="审核意见" prop="memo" />
-                <el-table-column label="审核人" prop="verifyMan" />
-                <el-table-column label="审核时间" prop="verifyDate" />
-            </el-table>
+        <el-dialog title="审核日志" width="900px" :close-on-click-modal="false" :visible.sync="dialogVisible">
+            <audit-log :table-data="logList" :verify-man="'verifyMan'" :verify-date="'verifyDate'" :pack-up="false" :status="true" />
+            <div slot="footer" class="dialog-footer" />
         </el-dialog>
     </div>
 </template>
@@ -383,12 +377,6 @@
 
         ruleSave() {
             console.log(this.getSaveOrSubmitParams(OperateType.save), this.getSaveOrSubmitParams(OperateType.submit), '======');
-            for (const item of this.targetQueryTableList.filter(row => row.delFlag !== 1)) {
-                if (!item.realUseAmount || !item.batch) {
-                    this.$warningToast('请填写发料列表必填栏位');
-                    return false;
-                }
-            }
             const { insertDtos, removeIds, updateDtos } = this.getSaveOrSubmitParams(OperateType.save);
             if (!insertDtos.length && !removeIds.length && !updateDtos.length) {
                 // this.isRedact = false;
@@ -400,8 +388,14 @@
 
         ruleSubmit() {
             if (!this.selections.length) {
-                this.$warningToast('请选择发料提交项');
+                this.$warningToast('请选择发料提交');
                 return false;
+            }
+            for (const item of this.selections) {
+                if (!item.realUseAmount || !item.batch) {
+                    this.$warningToast('请填写发料列表必填栏位');
+                    return false;
+                }
             }
             for (const item of this.selections) {
                 if (!item.realUseAmount || !item.batch) {
