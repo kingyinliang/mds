@@ -33,7 +33,7 @@
                                 <el-table-column label="单位" width="60" prop="outputUnit" />
                                 <el-table-column label="操作" fixed="right" align="center" width="80">
                                     <template slot-scope="scope">
-                                        <el-button v-if="isAuth('steSplit')" class="iconfont factory-chaifen" type="text" :disabled="['C','P'].includes(scope.row.orderStatus)" @click="orderSplit(scope.row)">
+                                        <el-button v-if="isAuth('steSplit')" class="iconfont factory-chaifen" type="text" :disabled="['D','P','X'].includes(scope.row.orderStatus)" @click="orderSplit(scope.row)">
                                             拆分
                                         </el-button>
                                     </template>
@@ -58,7 +58,7 @@
                                 <el-table-column label="操作时间" width="180" prop="changed" :show-overflow-tooltip="true" />
                                 <el-table-column label="操作" fixed="right" align="center" width="140">
                                     <template slot-scope="scope">
-                                        <el-button v-if="isAuth('steSplitDel')" type="text" icon="el-icon-delete" :disabled="['C','D','P'].includes(scope.row.status)" @click="delSplitRow(scope.row)">
+                                        <el-button v-if="isAuth('steSplitDel')" type="text" icon="el-icon-delete" :disabled="['0'].includes(scope.row.canBeDeleted)" @click="delSplitRow(scope.row)">
                                             删除
                                         </el-button>
                                     </template>
@@ -168,8 +168,14 @@
                 label: '状态',
                 prop: 'status',
                 defaultOptionsFn: () => {
-                    return COMMON_API.DICTQUERY_API({
-                        dictType: 'COMMON_CHECK_STATUS'
+                    return new Promise((resolve) => {
+                        COMMON_API.DICTQUERY_API({
+                            dictType: 'COMMON_CHECK_STATUS'
+                        }).then((res) => {
+                            const temp = res.data.data.filter(item => item.dictValue !== '已提交') // DFMDS-2548
+                            res.data.data = temp
+                            resolve(res)
+                        })
                     })
                 },
                 defaultValue: '',
@@ -236,12 +242,12 @@
 
 
         // 表格双击
-        showSplitTable(row) {
-            if (!(row.orderStatus === 'D' || row.orderStatus === 'P')) {
+        showSplitTable(row) { // 已审核C、已过账P、已反审按钮不可操作X
+            // if (!(row.orderStatus === 'D' || row.orderStatus === 'P' || row.orderStatus === 'X')) {
                 this.splitForm.orderNo = row.orderNo
                 this.nowRow = row
                 this.getSplitTable()
-            }
+            // }
 
         }
 
@@ -270,11 +276,13 @@
 
         // 拆分
         orderSplit(row) {
-            this.orderSplitRow = row;
-            this.dialogFormVisible = true;
-            this.$nextTick(() => {
-                this.$refs.orderSplitDialog.init(row, this.orderStatusMapping);
-            });
+            // if (!(row.orderStatus === 'D' || row.orderStatus === 'P' || row.orderStatus === 'X')) {
+                this.orderSplitRow = row;
+                this.dialogFormVisible = true;
+                this.$nextTick(() => {
+                    this.$refs.orderSplitDialog.init(row, this.orderStatusMapping);
+                });
+            // }
         }
 
 
@@ -388,6 +396,7 @@
         status: string;
         workShop: string;
         workShopName: string;
+        canBeDeleted: string;
     }
 
     interface OptionObj {

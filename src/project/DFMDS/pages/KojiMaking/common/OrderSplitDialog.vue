@@ -72,7 +72,7 @@
             <el-table-column label="操作时间" width="180" prop="changed" :show-overflow-tooltip="true" />
             <el-table-column label="操作" fixed="right" align="center" width="80">
                 <template slot-scope="scope">
-                    <el-button v-if="isAuth('steSplit')" type="text" icon="el-icon-delete" :disabled="['D','C','P'].includes(orderObj.orderStatus)" @click="removeDataRow(scope.row)">
+                    <el-button v-if="isAuth('steSplit')" type="text" icon="el-icon-delete" :disabled="['0'].includes(scope.row.canBeDeleted)" @click="removeDataRow(scope.row)">
                         删除
                     </el-button>
                 </template>
@@ -427,6 +427,7 @@
         planOutput?: number;
         outputUnit?: string;
         outputUnitName?: string;
+        canBeDeleted?: string;
     }
 
     interface OrderObject {

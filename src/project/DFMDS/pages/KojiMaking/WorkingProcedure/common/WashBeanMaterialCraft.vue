@@ -137,7 +137,7 @@
                         <template slot="label">
                             <span class="notNull">* </span>洗豆操作人：
                         </template>
-                        <el-tooltip class="item" effect="dark" :content="craftWashBeanInfo.washMans + '点击选择人员'" placement="top">
+                        <el-tooltip class="item" effect="dark" :content="craftWashBeanInfo.washMans" placement="top" :disabled="craftWashBeanInfo.washMans===''">
                             <div class="koji-control-form_select" @click="selectUser(craftWashBeanInfo, '洗豆操作人', 'washMans')">
                                 {{ craftWashBeanInfo.washMans }} 点击选择人员
                             </div>
@@ -176,7 +176,7 @@
                     </template>
                     <template slot-scope="scope">
                         <div class="required" style="min-height: 32px; line-height: 32px;">
-                            <span style="cursor: pointer;" @click="selectScan(scope.row)">
+                            <span :style="{cursor: isRedact===true?'pointer':'default'}" @click="selectScan(scope.row)">
                                 <em>{{ scope.row.relStr }}</em>
                                 <em> 点击选择</em>
                             </span>
