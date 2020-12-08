@@ -110,7 +110,7 @@
                     option: {
                         list: this.scanList,
                         label: 'holderName',
-                        value: 'holderNo'
+                        value: 'id'
                     }
                 },
                 {
@@ -198,12 +198,19 @@
                     this.$refs.textRecord.init(this.formHeader, 'koji');
                 });
             })
+
+            // 获取泡豆罐栏位资讯
+            KOJI_API.KOJI_QUERY_STEAMBEAN_API({
+                orderNo: this.jumpFromAudit ? this.$route.params.order : this.$store.state.koji.orderScInfo.orderNo || ''
+            }).then(({ data }) => {
+                this.potNoNow = data.data.beanJarId
+            });
         }
 
         // 获取泡豆罐
         getScanList() {
             COMMON_API.HOLDER_DROPDOWN_API({
-                deptId: this.formHeader.workShop,
+                // deptId: this.formHeader.workShop,
                 factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
                 holderType: ['025']
             }).then(({ data }) => {

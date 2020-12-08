@@ -3,7 +3,7 @@
  * @Anthor: Telliex
  * @Date: 2020-08-27 14:28:27
  * @LastEditors: Telliex
- * @LastEditTime: 2020-12-08 14:30:48
+ * @LastEditTime: 2020-12-08 16:06:03
  */
 import httpProxy from 'utils/net/httpProxy';
 const KOJI_API = {
@@ -329,6 +329,10 @@ const KOJI_API = {
      * @property KOJI_IMPURITY_SAVE_API 制曲车间-提交准备工时
      */
     KOJI_TIMESHEET_SUBMIT_API: params => httpProxy('/koji/kojiTimeSheet/submit', 'POST', params),
+    /**
+     * @property KOJI_QUERY_STEAMBEAN_API 查询SC泡豆罐
+     */
+    KOJI_QUERY_STEAMBEAN_API: params => httpProxy('/kojiSteamBean/getScPot', 'GET', params),
     /**
      * @property KOJI_AUDIT_QUERY_CRAFT_API 审核(SC)详情-查询工艺列表
      */
