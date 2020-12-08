@@ -20,7 +20,7 @@
                         <el-table-column label="当前库存" prop="storage" width="100" :show-overflow-tooltip="true" />
                         <el-table-column width="70">
                             <template slot-scope="scope">
-                                <el-button v-if="isAuth('pkgPdInsert')" type="text" @click="SplitDate(scope.row, scope.$index)">
+                                <el-button v-if="isAuth('pkgPdInsert')" :disabled="!(isRedact)" type="text" @click="SplitDate(scope.row, scope.$index)">
                                     <em class="icons iconfont factory-chaifen" />拆分
                                 </el-button>
                             </template>
@@ -30,7 +30,7 @@
                                 <span class="notNull">* </span>领料类型
                             </template>
                             <template slot-scope="scope">
-                                <el-select v-model="scope.row.useType" placeholder="请选择" size="small">
+                                <el-select v-model="scope.row.useType" :disabled="!(isRedact)" placeholder="请选择" size="small">
                                     <el-option label="正常领料" value="正常领料" />
                                     <el-option label="补领" value="补领" />
                                 </el-select>
@@ -41,7 +41,7 @@
                                 <span class="notNull">* </span>订单领料量
                             </template>
                             <template slot-scope="scope">
-                                <el-input v-model="scope.row.useAmount" size="small" placeholder="请输入" />
+                                <el-input v-model="scope.row.useAmount" :disabled="!(isRedact)" size="small" placeholder="请输入" />
                             </template>
                         </el-table-column>
                         <el-table-column label="物料批次" min-width="140">
@@ -49,21 +49,30 @@
                                 <span class="notNull">* </span>物料批次
                             </template>
                             <template slot-scope="scope">
-                                <el-input v-model="scope.row.batch" size="small" placeholder="请输入" />
+                                <el-input v-model="scope.row.batch" :disabled="!(isRedact)" size="small" placeholder="请输入" />
                             </template>
                         </el-table-column>
                         <el-table-column label="厂家" min-width="140">
                             <template slot-scope="scope">
-                                <el-input v-model="scope.row.manufactor" size="small" placeholder="请输入" />
+                                <el-select v-model="scope.row.manufactor" filterable placeholder="请选择" size="small" :disabled="!(isRedact)" clearable>
+                                    <el-option v-for="(iteam, index) in manufactor" :key="index" :label="iteam.dictValue" :value="iteam.dictCode" />
+                                </el-select>
                             </template>
                         </el-table-column>
                         <el-table-column label="备注" prop="remark" min-width="140">
                             <template slot-scope="scope">
-                                <el-input v-model="scope.row.remark" size="small" placeholder="请输入" />
+                                <el-input v-model="scope.row.remark" :disabled="!(isRedact)" size="small" placeholder="请输入" />
                             </template>
                         </el-table-column>
                         <el-table-column label="操作人" prop="changer" width="100" :show-overflow-tooltip="true" />
                         <el-table-column label="操作时间" prop="changed" width="100" :show-overflow-tooltip="true" />
+                        <el-table-column label="操作" fixed="right" width="70">
+                            <template slot-scope="scope">
+                                <el-button v-if="scope.row.splitFlag === 'Y' && isAuth('pkgPdDel')" :disabled="!(isRedact)" class="delBtn" type="text" icon="el-icon-delete" size="mini" @click="del(scope.row)">
+                                    删除
+                                </el-button>
+                            </template>
+                        </el-table-column>
                     </el-table>
                 </mds-card>
             </template>
@@ -81,12 +90,16 @@
 
 <script lang="ts">
     import { Vue, Component } from 'vue-property-decorator';
-    import { PKG_API } from 'common/api/api';
+    import { COMMON_API, PKG_API } from 'common/api/api';
+    import { dataEntryData } from 'utils/utils';
 
     @Component
     export default class PickingMaterialDetail extends Vue {
         isRedact = false;
-        tableData = [];
+        tableData: DataObj[] = [];
+        OrgTableData = [];
+        manufactor = [];
+        spanArr: number[] = [];
         headerBase = [
             {
                 type: 'p',
@@ -140,7 +153,9 @@
             this.int()
         }
 
+        //初始化表头表格和厂家
         int() {
+            this.isRedact = false
             PKG_API.PKG_HOME_QUERY_BY_NO_API({ // 基础数据-订单管理-根据订单号查询
                 factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
                 orderNo: this.$store.state.packaging.pickingDetail.orderNo
@@ -151,24 +166,147 @@
                 orderNo: this.$store.state.packaging.pickingDetail.orderNo,
                 productLine: this.$store.state.packaging.pickingDetail.productLine
             }).then(({ data }) => {
-                this.tableData = data.data
+                this.tableData = JSON.parse(JSON.stringify(data.data));
+                this.OrgTableData = JSON.parse(JSON.stringify(data.data));
+                this.spanArr = this.merge(this.tableData)
             })
+            COMMON_API.DICTQUERY_API({
+                factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
+                dictType: 'PKG_SUPPLIER'
+            }).then(({ data }) => {
+                this.manufactor = data.data
+            });
         }
 
+        // 拆分
+        SplitDate(row, index) {
+            this.tableData.splice(index + this.tableData.filter(item => item.materialCode === row.materialCode).length, 0, {
+                id: '',
+                posnr: row.posnr,
+                materialCode: row.materialCode,
+                materialName: row.materialName,
+                unit: row.unit,
+                needNum: row.needNum,
+                storage: row.needNum,
+                splitFlag: 'Y'
+            })
+            this.spanArr = this.merge(this.tableData)
+        }
+
+        //删除
+        del(row) {
+            this.$confirm('是否删除?', '提示', {
+                confirmButtonText: '确定',
+                cancelButtonText: '取消',
+                type: 'warning'
+            }).then(() => {
+                this.$set(row, 'delFlag', 1)
+                this.spanArr = this.merge(this.tableData)
+                this.$successToast('删除成功');
+            });
+        }
+
+        //表格行名
         rowDelFlag({ row }) {
             if (row.delFlag === 1) {
                 return 'rowDel';
+            } else if (row.status === '3') {
+                return 'disabled-row'
+            } else if (row.status === '1') {
+                return 'warning-row'
             }
             return '';
         }
 
-        spanMethod() {
-        //
+        //设置合并行
+        merge(tableData): number[] {
+            const spanOneArr: number[] = [];
+            let concatOne = 0;
+            tableData.forEach((item, index) => {
+                if (index === 0) {
+                    spanOneArr.push(1);
+                } else if (item.materialCode === tableData[index - 1].materialCode) {
+                    if (item.delFlag !== 1) {
+                        spanOneArr[concatOne] += 1;
+                    }
+                    spanOneArr.push(0);
+                } else {
+                    spanOneArr.push(1);
+                    concatOne = index;
+                }
+            });
+            return spanOneArr
         }
 
-        saved() {
-        //
+        //设置合并行
+        spanMethod({ rowIndex, columnIndex }) {
+            if (columnIndex <= 4) {
+                return {
+                    rowspan: this.spanArr[rowIndex],
+                    colspan: this.spanArr[rowIndex] > 0 ? 1 : 0
+                };
+            }
         }
+
+        //保存校验
+        ruleFn(): boolean {
+            for (const item of this.tableData.filter(it => it.delFlag !== 1)) {
+                if (!item.useType || !item.useAmount || !item.batch) {
+                    this.$warningToast('请填写必填项');
+                    return false
+                }
+            }
+            return true
+        }
+
+        //保存
+        saved() {
+            if (!this.ruleFn()) {
+                return false
+            }
+
+            const delIds: string[] = []
+            const insertDto = []
+            const updateDto = []
+
+            this.tableData.forEach(item => {
+                if (item.status === '3') {
+                    delIds.push(item.id)
+                }
+            })
+
+            dataEntryData(this.formHeader, this.tableData, this.OrgTableData, delIds, insertDto, updateDto, (item) => {
+                item.productLine = this.formHeader['productLine']
+            });
+
+            PKG_API.PKG_PICKING_MATERIAL_SAVE_API({
+                workShop: this.formHeader['workShop'],
+                delIds,
+                insertDto,
+                updateDto
+            }).then(() => {
+                this.$successToast('保存成功');
+                this.int()
+            })
+        }
+    }
+    interface DataObj{
+        delFlag?: number;
+        id: string;
+        orderId?: string;
+        factory?: string;
+        orderNo?: string;
+        posnr?: string;
+        materialCode?: string;
+        materialName?: string;
+        unit?: string;
+        needNum?: string;
+        storage?: string;
+        useType?: string;
+        useAmount?: string;
+        batch?: string;
+        splitFlag?: string;
+        status?: string;
     }
 </script>
 
