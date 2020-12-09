@@ -6,9 +6,17 @@
  * @LastEditTime: 2020-08-07 16:39:11
 -->
 <template>
-    <mds-card title="文本记录">
-        <el-input v-model="textObj.pkgText" type="textarea" class="textarea" :disabled="!isRedact" style="width: 100%; height: 200px;" />
-    </mds-card>
+    <div>
+        <mds-card v-if="isPackaging === false" title="文本记录">
+            <el-input v-model="textObj.pkgText" type="textarea" class="textarea" :disabled="!isRedact" style="width: 100%; height: 200px;" />
+        </mds-card>
+        <mds-card v-if="isPackaging === true" title="未完成原因">
+            <el-input v-model="textObj.pkgText" type="textarea" class="textarea" :disabled="!isRedact" style="width: 100%; height: 100px;" />
+        </mds-card>
+        <mds-card v-if="isPackaging === true" title="文本记录">
+            <el-input v-model="textObj.textRecord" type="textarea" class="textarea" :disabled="!isRedact" style="width: 100%; height: 100px;" />
+        </mds-card>
+    </div>
 </template>
 
 <script>
@@ -19,13 +27,18 @@ export default {
     props: {
         isRedact: {
             type: Boolean
+        },
+        isPackaging: {
+            type: Boolean,
+            default: false
         }
     },
     data() {
         return {
             textObj: {
                 id: '',
-                pkgText: ''
+                pkgText: '',
+                textRecord: ''
             }
         };
     },
