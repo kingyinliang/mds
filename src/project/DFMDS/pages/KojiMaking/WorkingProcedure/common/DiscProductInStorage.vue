@@ -113,8 +113,10 @@
         @Watch('potNoNow', { immediate: true, deep: true })
         onChangeValue(newVal: number| string) {
             if (newVal && this.currentFormDataGroup[0]) {
-                this.$set(this.currentFormDataGroup[0], 'inStorageBatch', this.getNowFormatDate() + '1' + newVal)
-                this.$infoToast('生产入库的入库批次自动生成')
+                if (this.targetOrderObj.addKojiDate) {
+                    this.$set(this.currentFormDataGroup[0], 'inStorageBatch', this.targetOrderObj.addKojiDate.replace(/-/gi, '').slice(2) + '1' + newVal)
+                    this.$infoToast('生产入库的入库批次自动生成')
+                }
                 KOJI_API.KOJI_DISC_QUERY_INSTORAGE_AMOUNT_API({
                     orderNo: this.formHeader.orderNo,
                     fermentPotId: this.potNoList.filter(item => item.optValue === newVal)[0].optId
