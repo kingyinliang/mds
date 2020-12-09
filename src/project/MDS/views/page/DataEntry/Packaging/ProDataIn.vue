@@ -108,7 +108,7 @@
                 <span slot="label" class="spanview">
                     <span>文本记录</span>
                 </span>
-                <text-record ref="textrecord" :is-redact="isRedact" />
+                <text-record ref="textrecord" :is-redact="isRedact" :is-packaging="true" />
             </el-tab-pane>
         </el-tabs>
         <el-dialog width="400px" title="分批提交" :close-on-click-modal="false" :visible.sync="visible">
