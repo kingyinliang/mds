@@ -285,8 +285,6 @@
                 deptId: workShop,
                 factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id
                 }).then(({ data }) => {
-                    console.log('获取设备')
-                    console.log(data)
                     this.deviceNameOptions = []
                     if (data.data) {
                         data.data.forEach(item => {
