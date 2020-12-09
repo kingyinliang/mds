@@ -36,7 +36,7 @@
                                 <span class="notNull">入库数量</span>
                             </template>
                             <template slot-scope="scope">
-                                <el-input v-model.number="scope.row.inStorageAmount" oninput="value=value.replace(/\D*/g,'')" size="small" placeholder="入库数量" :disabled="!isRedact || (scope.row.checkStatus !== 'N' && scope.row.checkStatus !== 'R' && scope.row.checkStatus !== 'S')" />
+                                <el-input v-model.number="scope.row.inStorageAmount" oninput="value=value.replace(/\D*/g,'')" size="small" placeholder="入库数量" :disabled="!isRedact || (scope.row.checkStatus !== 'N' && scope.row.checkStatus !== 'R' && scope.row.checkStatus !== 'S' && scope.row.checkStatus !== '')" />
                             </template>
                         </el-table-column>
                         <el-table-column label="单位" prop="unit" width="100px" />
@@ -45,7 +45,7 @@
                                 <span class="notNull">批次</span>
                             </template>
                             <template slot-scope="scope">
-                                <el-input v-model="scope.row.inStorageBatch" :maxlength="10" size="small" placeholder="请输入批次" :disabled="!isRedact || (scope.row.checkStatus !== 'N' && scope.row.checkStatus !== 'R' && scope.row.checkStatus !== 'S')" />
+                                <el-input v-model="scope.row.inStorageBatch" :maxlength="10" size="small" placeholder="输入批次" :disabled="!isRedact || (scope.row.checkStatus !== 'N' && scope.row.checkStatus !== 'R' && scope.row.checkStatus !== 'S' && scope.row.checkStatus !== '')" />
                             </template>
                         </el-table-column>
                         <el-table-column label="备注" prop="" width="180px">
@@ -53,7 +53,7 @@
                                 <span>备注</span>
                             </template>
                             <template slot-scope="scope">
-                                <el-input v-model="scope.row.remark" :maxlength="255" size="small" placeholder="请输入备注" :disabled="!isRedact || (scope.row.checkStatus !== 'N' && scope.row.checkStatus !== 'R' && scope.row.checkStatus !== 'S')" />
+                                <el-input v-model="scope.row.remark" :maxlength="255" size="small" placeholder="输入备注" :disabled="!isRedact || (scope.row.checkStatus !== 'N' && scope.row.checkStatus !== 'R' && scope.row.checkStatus !== 'S' && scope.row.checkStatus !== '')" />
                             </template>
                         </el-table-column>
                         <el-table-column label="操作人员" prop="changer" width="160px" />
@@ -290,6 +290,11 @@
             console.log(data)
             this.targetQueryTableList = []
             if (data.data !== null) {
+                data.data.records.map((item, index) => {
+                    if (!item.id) {
+                        item.onlyOne = Date.now() + index;
+                    }
+                })
                 this.targetQueryTableList = data.data.records as SaltWaterObj[];
                 this.oldDataList = JSON.parse(JSON.stringify(data.data.records));
                 this.total = data.data.total;
@@ -305,7 +310,7 @@
             //         return false;
             //     }
             // }
-            const list = this.getEditData();
+            const list = this.getEditData('targetQueryTableList');
             if (!list.length) {
                 this.$warningToast('请修改后再保存');
                 return false;
@@ -337,33 +342,126 @@
         }
 
         savedDatas() {
-            const params = this.targetQueryTableList.map(item => ({
-                id: item.id,
-                inStorageAmount: item.inStorageAmount,
-                inStorageBatch: item.inStorageBatch,
-                remark: item.remark
-            }));
+            const params = this.getSaveOrSubmitDtos('save', 'targetQueryTableList');
             return FER_API.FER_INSTORAGE_SAVE_API(params);
         }
 
         submitDatas() {
             // 选中的提交
-            // const params = this.selections.map(item => ({
-            //     id: item.id,
-            //     inStorageAmount: item.inStorageAmount,
-            //     inStorageBatch: item.inStorageBatch,
-            //     remark: item.remark
-            // }));
-            return FER_API.FER_INSTORAGE_SUBMIT_API(this.selections);
+            /**
+             * 保存里面获取的是已经编辑的，有id 或者 没id
+             * 提交里面获取的是勾选的，也就是说有可能没编辑，也有可能编辑了， 有id 或者 没id
+             *
+             * 1、有id的，勾选的全部放入submitIdSet
+             * 2、有id的，编辑了，放到ferInStorageUpdateDtoList
+             * 3、无id的，编辑了，没勾选，放到ferInStorageInsertDtoList 标识 false
+             * 4、无id的，编辑了，勾选了，放到ferInStorageInsertDtoList 标识 true
+             */
+            const params: SaveOrSubmitDto = {
+                ferInStorageInsertDtoList: [],
+                ferInStorageUpdateDtoList: [],
+                submitIdSet: []
+            };
+            // 1
+            this.selections.map(item => {
+                if (item.id) {
+                    // @ts-ignore
+                    params.submitIdSet.push(item.id);
+                }
+            })
+            this.targetQueryTableList.map(item => {
+                // 2
+                if (item.id) {
+                    // @ts-ignore
+                    const old = this.oldDataList.find(row => row.id === item.id);
+                    if (!_.isEqual(old, item)) {
+                        params.ferInStorageUpdateDtoList.push({
+                            id: item.id,
+                            inStorageAmount: item.inStorageAmount,
+                            inStorageBatch: item.inStorageBatch,
+                            remark: item.remark
+                        })
+                    }
+                } else {
+                    // 3
+                    // row有值 则勾选了， 没值 则未勾选
+                    const row = this.selections.find(o => o.onlyOne === item.onlyOne);
+                    // @ts-ignore
+                    const old = this.oldDataList.find(row1 => row1.onlyOne === item.onlyOne);
+                    if (!_.isEqual(old, item)) {
+                        const obj: InsertDto = {
+                            fermentDays: item.fermentDays,
+                            inStorageAmount: item.inStorageAmount,
+                            inStorageBatch: item.inStorageBatch,
+                            inStorageType: item.inStorageType,
+                            needSubmit: Boolean(row),
+                            orderId: item.orderId,
+                            orderNo: item.orderNo,
+                            remark: item.remark,
+                            unit: item.unit
+                        }
+                        params.ferInStorageInsertDtoList.push(obj);
+                    }
+                }
+            });
+            return FER_API.FER_INSTORAGE_SUBMIT_API(params);
         }
 
-        getEditData() {
-            const res = [];
-            const arr = this.targetQueryTableList.filter((item: SaltWaterObj) => item.checkStatus === 'N' || item.checkStatus === 'S' || item.checkStatus === 'R');
+        getSaveOrSubmitDtos(type = 'save', fileName = 'targetQueryTableList') {
+            const list: SaltWaterObj[] = this.getEditData(fileName);
+            const params: SaveOrSubmitDto = {
+                ferInStorageInsertDtoList: [],
+                ferInStorageUpdateDtoList: [],
+                submitIdSet: []
+            };
+            if (type === 'submit') {
+                this.selections.map(item => {
+                    if (item.id) {
+                        // @ts-ignore
+                        params.submitIdSet.push(item.id);
+                    }
+                })
+            }
+            list.map(item => {
+                if (item.id) {
+                    params.ferInStorageUpdateDtoList.push({
+                        id: item.id,
+                        inStorageAmount: item.inStorageAmount,
+                        inStorageBatch: item.inStorageBatch,
+                        remark: item.remark
+                    })
+                } else {
+                    const selectRow = this.selections.find(row => row.onlyOne === item.onlyOne);
+                    const obj: InsertDto = {
+                        fermentDays: item.fermentDays,
+                        inStorageAmount: item.inStorageAmount,
+                        inStorageBatch: item.inStorageBatch,
+                        inStorageType: item.inStorageType,
+                        needSubmit: type === 'submit' && Boolean(selectRow),
+                        orderId: item.orderId,
+                        orderNo: item.orderNo,
+                        remark: item.remark,
+                        unit: item.unit,
+                        onlyOne: item.onlyOne
+                    }
+                    params.ferInStorageInsertDtoList.push(obj);
+                }
+            });
+            return params;
+        }
+
+        getEditData(fileName) {
+            const res: SaltWaterObj[] = [];
+            // targetQueryTableList
+            const arr = this[fileName].filter((item: SaltWaterObj) => item.checkStatus === 'N' || item.checkStatus === 'S' || item.checkStatus === 'R' || item.checkStatus === '');
             for (let index = 0; index < arr.length; index++) {
                 const element = arr[index];
-                // @ts-ignore
-                const old = JSON.parse(JSON.stringify(this.oldDataList.find(item => item.id === element?.id)));
+                const old = JSON.parse(JSON.stringify(this.oldDataList.find((item: { id: string; onlyOne: number }) => {
+                    if (item.id) {
+                        return item.id === element?.id;
+                    }
+                    return item.onlyOne === element.onlyOne;
+                })));
                 if (!_.isEqual(old, element)) {
                     // @ts-ignore
                     res.push(element);
@@ -385,7 +483,7 @@
             AUDIT_API.STE_AUDIT_LOG_API({
                 orderNo: row.orderNo,
                 // splitOrderNo: row.splitOrderNo, // 拆分单号<有拆分单时必填>
-                verifyType: ['TIMESHEET'] // '审核类型'
+                verifyType: ['INSTORAGE'] // '审核类型'
             }).then(res => {
                 this.dialogVisible = true;
                 this.logList = res.data.data;
@@ -427,15 +525,41 @@
         checkStatus: string;
         orderNo: string;
         fermentorName: string;
-        fermentDays: string;
+        fermentDays: number;
         productMaterialName: string;
         amount: string;
-        inStorageAmount: string;
+        inStorageAmount: number;
+        inStorageType: string;
         unit: string;
+        orderId: string;
         inStorageBatch: string;
         remark: string;
         changer: string;
         changed: string;
+        onlyOne?: number; // 唯一标识
+    }
+    interface SaveOrSubmitDto {
+        ferInStorageInsertDtoList: InsertDto[];
+        ferInStorageUpdateDtoList: UpdateDto[];
+        submitIdSet?: string[];
+    }
+    interface InsertDto {
+        fermentDays: number;
+        inStorageAmount: number;
+        inStorageBatch: string;
+        inStorageType: string;
+        needSubmit: boolean;
+        orderId: string;
+        orderNo: string;
+        remark: string;
+        unit: string;
+        onlyOne?: number;
+    }
+    interface UpdateDto {
+        id: string;
+        inStorageAmount: number;
+        inStorageBatch: string;
+        remark: string;
     }
 </script>
 
