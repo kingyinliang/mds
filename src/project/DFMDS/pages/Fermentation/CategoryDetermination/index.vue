@@ -35,7 +35,7 @@
                             </template>
                         </el-table-column>
                         <el-table-column label="备注" prop="remark" width="160px" />
-                        <el-table-column label="操作人员" prop="changer" width="140px" />
+                        <el-table-column label="操作人员" prop="changer" width="160px" />
                         <el-table-column label="操作时间" prop="changed" width="160px" />
                         <el-table-column label="操作" fixed="right">
                             <template slot-scope="scope">

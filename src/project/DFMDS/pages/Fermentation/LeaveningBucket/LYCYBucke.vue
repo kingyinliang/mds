@@ -71,7 +71,7 @@
                                 </el-table-column>
                                 <el-table-column label="备注" :show-overflow-tooltip="true" min-width="200">
                                     <template slot-scope="scope">
-                                        <el-input v-model.trim="scope.row.remark" size="small" placeholder="输入备注" />
+                                        <el-input v-model.trim="scope.row.remark" size="small" placeholder="请输入备注" />
                                     </template>
                                 </el-table-column>
                                 <el-table-column prop="changer" label="操作人" :show-overflow-tooltip="true" width="160" />
@@ -109,7 +109,7 @@
                                         <span class="notNull">CY 量</span>
                                     </template>
                                     <template slot-scope="scope">
-                                        <el-input v-model.trim="scope.row.cyAmount" size="small" placeholder="输入批次" maxlength="10" />
+                                        <el-input v-model.trim="scope.row.cyAmount" size="small" placeholder="请输入批次" maxlength="10" />
                                     </template>
                                 </el-table-column>
                                 <el-table-column :show-overflow-tooltip="true" min-width="160">
@@ -117,7 +117,7 @@
                                         <span class="notNull">批次</span>
                                     </template>
                                     <template slot-scope="scope">
-                                        <el-input v-model.trim="scope.row.cyBatch" size="small" placeholder="输入批次" />
+                                        <el-input v-model.trim="scope.row.cyBatch" size="small" placeholder="请输入批次" />
                                     </template>
                                 </el-table-column>
                                 <el-table-column min-width="200" :show-overflow-tooltip="true">
@@ -135,7 +135,7 @@
                                 </el-table-column>
                                 <el-table-column label="备注" :show-overflow-tooltip="true" min-width="200">
                                     <template slot-scope="scope">
-                                        <el-input v-model.trim="scope.row.remark" size="small" placeholder="输入备注" />
+                                        <el-input v-model.trim="scope.row.remark" size="small" placeholder="请输入备注" />
                                     </template>
                                 </el-table-column>
                                 <el-table-column prop="changer" label="操作人" :show-overflow-tooltip="true" width="160" />

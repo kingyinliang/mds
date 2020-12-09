@@ -35,7 +35,7 @@
                             <el-input v-model="plantList.orderNo" placeholder="订单号" style="width: 160px;" />
                         </el-form-item>
                         <el-form-item label="日期：">
-                            <el-date-picker v-model="plantList.productdate" type="date" placeholder="选择" value-format="yyyy-MM-dd" style="width: 160px;" />
+                            <el-date-picker v-model="plantList.productdate" type="date" placeholder="请选择" value-format="yyyy-MM-dd" style="width: 160px;" />
                         </el-form-item>
                         <el-form-item class="floatr">
                             <el-button v-if="isAuth('sys:verifyLTK:list')" type="primary" size="small" @click="GetLtkList(true)">

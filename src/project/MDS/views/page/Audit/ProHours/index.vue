@@ -44,11 +44,11 @@
                         <el-form-item label="生产日期：" class="dateinput">
                             <el-row>
                                 <el-col :span="12">
-                                    <el-date-picker v-model="plantList.productDateBegin" type="date" placeholder="选择" value-format="yyyy-MM-dd" style="width: 135px;" />
+                                    <el-date-picker v-model="plantList.productDateBegin" type="date" placeholder="请选择" value-format="yyyy-MM-dd" style="width: 135px;" />
                                     <span> -</span>
                                 </el-col>
                                 <el-col :span="12">
-                                    <el-date-picker v-model="plantList.productDateEnd" type="date" placeholder="选择" value-format="yyyy-MM-dd" style="width: 135px;" />
+                                    <el-date-picker v-model="plantList.productDateEnd" type="date" placeholder="请选择" value-format="yyyy-MM-dd" style="width: 135px;" />
                                 </el-col>
                             </el-row>
                         </el-form-item>
@@ -66,7 +66,7 @@
                 <div style="float: right; width: 465px;">
                     <el-form ref="postgDate" :model="plantList" :rules="plantListRule" size="small" :inline="true" label-position="right" label-width="100px" class="topforms" style="float: left; width: 280px;">
                         <el-form-item label="记账日期：" prop="postgDate">
-                            <el-date-picker v-model="plantList.postgDate" type="date" placeholder="选择" value-format="yyyy-MM-dd" style="width: 160px;" />
+                            <el-date-picker v-model="plantList.postgDate" type="date" placeholder="请选择" value-format="yyyy-MM-dd" style="width: 160px;" />
                         </el-form-item>
                     </el-form>
                     <el-button v-if="isAuth('verify:time:update')" type="primary" size="small" @click="subAutio">
@@ -104,13 +104,13 @@
                 <el-table-column prop="interfaceReturn" label="接口回写" :show-overflow-tooltip="true" width="150" />
                 <el-table-column label="执行开始的确认日期" width="148">
                     <template slot-scope="scope">
-                        <el-date-picker v-if="scope.row.redact" v-model="scope.row.execStartDate" type="date" value-format="yyyy-MM-dd" format="yyyy-MM-dd" placeholder="选择" size="small" />
+                        <el-date-picker v-if="scope.row.redact" v-model="scope.row.execStartDate" type="date" value-format="yyyy-MM-dd" format="yyyy-MM-dd" placeholder="请选择" size="small" />
                         <span v-else>{{ scope.row.execStartDate }}</span>
                     </template>
                 </el-table-column>
                 <el-table-column label="设置完成的确认日期" width="148">
                     <template slot-scope="scope">
-                        <el-date-picker v-if="scope.row.redact" v-model="scope.row.setupFinDate" type="date" value-format="yyyy-MM-dd" format="yyyy-MM-dd" placeholder="选择" size="small" />
+                        <el-date-picker v-if="scope.row.redact" v-model="scope.row.setupFinDate" type="date" value-format="yyyy-MM-dd" format="yyyy-MM-dd" placeholder="请选择" size="small" />
                         <span v-else>{{ scope.row.setupFinDate }}</span>
                     </template>
                 </el-table-column>

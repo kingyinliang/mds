@@ -39,13 +39,13 @@
                                 <el-input v-model.number="scope.row.inStorageAmount" oninput="value=value.replace(/\D*/g,'')" size="small" placeholder="入库数量" :disabled="!isRedact || (scope.row.checkStatus !== 'N' && scope.row.checkStatus !== 'R' && scope.row.checkStatus !== 'S')" />
                             </template>
                         </el-table-column>
-                        <el-table-column label="单位" prop="unit" width="120px" />
+                        <el-table-column label="单位" prop="unit" width="100px" />
                         <el-table-column label="批次" prop="" width="160px">
                             <template slot="header">
                                 <span class="notNull">批次</span>
                             </template>
                             <template slot-scope="scope">
-                                <el-input v-model="scope.row.inStorageBatch" :maxlength="10" size="small" placeholder="输入批次" :disabled="!isRedact || (scope.row.checkStatus !== 'N' && scope.row.checkStatus !== 'R' && scope.row.checkStatus !== 'S')" />
+                                <el-input v-model="scope.row.inStorageBatch" :maxlength="10" size="small" placeholder="请输入批次" :disabled="!isRedact || (scope.row.checkStatus !== 'N' && scope.row.checkStatus !== 'R' && scope.row.checkStatus !== 'S')" />
                             </template>
                         </el-table-column>
                         <el-table-column label="备注" prop="" width="180px">
@@ -53,10 +53,10 @@
                                 <span>备注</span>
                             </template>
                             <template slot-scope="scope">
-                                <el-input v-model="scope.row.remark" :maxlength="255" size="small" placeholder="输入备注" :disabled="!isRedact || (scope.row.checkStatus !== 'N' && scope.row.checkStatus !== 'R' && scope.row.checkStatus !== 'S')" />
+                                <el-input v-model="scope.row.remark" :maxlength="255" size="small" placeholder="请输入备注" :disabled="!isRedact || (scope.row.checkStatus !== 'N' && scope.row.checkStatus !== 'R' && scope.row.checkStatus !== 'S')" />
                             </template>
                         </el-table-column>
-                        <el-table-column label="操作人员" prop="changer" width="140px" />
+                        <el-table-column label="操作人员" prop="changer" width="160px" />
                         <el-table-column label="操作时间" prop="changed" width="160px" />
                         <el-table-column label="操作" width="120px" fixed="right">
                             <template slot-scope="scope">
@@ -76,19 +76,9 @@
             </template>
         </query-table>
         <redact-box :disabled="redactBoxDisable" :is-redact.sync="isRedact" redact-auth="steStgEdit" save-auth="steStgEdit" :is-show-submit-btn="true" :saved-rules="savedRules" :submit-rules="submitRules" :saved-datas="savedDatas" :submit-datas="submitDatas" @sendSuccess="sendSuccess" />
-        <el-dialog
-            title="审核日志"
-            :visible.sync="dialogVisible"
-            width="60%"
-            :before-close="handleClose"
-        >
-            <el-table :data="logList">
-                <el-table-column label="序号" type="index" />
-                <el-table-column label="审核动作" prop="verifyType" />
-                <el-table-column label="审核意见" prop="memo" />
-                <el-table-column label="审核人" prop="verifyMan" />
-                <el-table-column label="审核时间" prop="verifyDate" />
-            </el-table>
+        <el-dialog title="审核日志" width="900px" :close-on-click-modal="false" :visible.sync="dialogVisible">
+            <audit-log :table-data="logList" :verify-man="'verifyMan'" :verify-date="'verifyDate'" :pack-up="false" :status="true" />
+            <div slot="footer" class="dialog-footer" />
         </el-dialog>
     </div>
 </template>
@@ -99,6 +89,8 @@
     import RedactBox from 'components/RedactBox.vue'; // 下方状态 bar
     import FER_API from 'src/common/api/fer';
     import { dateFormat } from 'src/utils/utils';
+    import _ from 'lodash';
+
     @Component({
         name: 'WarehouseManagement',
         components: {
@@ -131,6 +123,9 @@
         dialogVisible = false;
 
         logList = []; // 审核日志列表
+
+        // 缓存数据
+        oldDataList = [];
 
         rowDelFlag({ row }) {
             if (row.delFlag === 1) {
@@ -296,6 +291,7 @@
             this.targetQueryTableList = []
             if (data.data !== null) {
                 this.targetQueryTableList = data.data.records as SaltWaterObj[];
+                this.oldDataList = JSON.parse(JSON.stringify(data.data.records));
                 this.total = data.data.total;
             } else {
                 this.$infoToast('暂无任何内容');
@@ -303,11 +299,16 @@
         }
 
         ruleSave() {
-            for (const item of this.targetQueryTableList) {
-                if (!item.inStorageAmount || !item.inStorageBatch) {
-                    this.$warningToast('请填写必填栏位');
-                    return false;
-                }
+            // for (const item of this.targetQueryTableList) {
+            //     if (!item.inStorageAmount || !item.inStorageBatch) {
+            //         this.$warningToast('请填写必填栏位');
+            //         return false;
+            //     }
+            // }
+            const list = this.getEditData();
+            if (!list.length) {
+                this.$warningToast('请修改后再保存');
+                return false;
             }
             return true;
         }
@@ -347,13 +348,28 @@
 
         submitDatas() {
             // 选中的提交
-            const params = this.selections.map(item => ({
-                id: item.id,
-                inStorageAmount: item.inStorageAmount,
-                inStorageBatch: item.inStorageBatch,
-                remark: item.remark
-            }));
-            return FER_API.FER_INSTORAGE_SUBMIT_API(params);
+            // const params = this.selections.map(item => ({
+            //     id: item.id,
+            //     inStorageAmount: item.inStorageAmount,
+            //     inStorageBatch: item.inStorageBatch,
+            //     remark: item.remark
+            // }));
+            return FER_API.FER_INSTORAGE_SUBMIT_API(this.selections);
+        }
+
+        getEditData() {
+            const res = [];
+            const arr = this.targetQueryTableList.filter((item: SaltWaterObj) => item.checkStatus === 'N' || item.checkStatus === 'S' || item.checkStatus === 'R');
+            for (let index = 0; index < arr.length; index++) {
+                const element = arr[index];
+                // @ts-ignore
+                const old = JSON.parse(JSON.stringify(this.oldDataList.find(item => item.id === element?.id)));
+                if (!_.isEqual(old, element)) {
+                    // @ts-ignore
+                    res.push(element);
+                }
+            }
+            return res;
         }
 
         sendSuccess() {
@@ -444,4 +460,3 @@
     padding: 8px 0;
 }
 </style>
-

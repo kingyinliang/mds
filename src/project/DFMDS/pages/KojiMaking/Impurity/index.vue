@@ -266,7 +266,7 @@
             let amountTemp = 0;
             if (this.targetQueryTableListOfForiegnMatter.length !== 0) {
                 this.targetQueryTableListOfForiegnMatter.forEach(item => {
-                    amountTemp += item.impurityAmount as number
+                    amountTemp += Number(item.impurityAmount) as number
                 })
             }
 

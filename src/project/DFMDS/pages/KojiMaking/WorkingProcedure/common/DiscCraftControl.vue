@@ -406,7 +406,7 @@
                 </el-table-column>
                 <el-table-column label="备注" :show-overflow-tooltip="true" min-width="200">
                     <template slot-scope="scope">
-                        <el-input v-model.trim="scope.row.remark" size="small" placeholder="输入备注" :disabled="!isRedact" />
+                        <el-input v-model.trim="scope.row.remark" size="small" placeholder="请输入备注" :disabled="!isRedact" />
                     </template>
                 </el-table-column>
                 <el-table-column prop="changer" min-width="140" label="操作人" :show-overflow-tooltip="true" />
@@ -584,7 +584,7 @@
                     </el-table-column>
                     <el-table-column label="异常描述" :show-overflow-tooltip="true" min-width="200">
                         <template slot-scope="scope">
-                            <el-input v-model.trim="scope.row.exceptionInfo" size="small" placeholder="输入异常描述" :disabled="!isRedact || scope.row.growInfo==='GOOD'" />
+                            <el-input v-model.trim="scope.row.exceptionInfo" size="small" placeholder="请输入异常描述" :disabled="!isRedact || scope.row.growInfo==='GOOD'" />
                         </template>
                     </el-table-column>
                     <el-table-column
@@ -610,7 +610,7 @@
                     </el-table-column>
                     <el-table-column label="备注" :show-overflow-tooltip="true" min-width="200">
                         <template slot-scope="scope">
-                            <el-input v-model.trim="scope.row.remark" size="small" placeholder="输入备注" :disabled="!isRedact" />
+                            <el-input v-model.trim="scope.row.remark" size="small" placeholder="请输入备注" :disabled="!isRedact" />
                         </template>
                     </el-table-column>
                     <el-table-column prop="changer" min-width="140" label="操作人" :show-overflow-tooltip="true" />
@@ -1248,7 +1248,13 @@
         // 处理小数点后两位
         oninput(val, target, prop) {
             // 通过正则过滤小数点后两位
-            target[prop] = (val.match(/^\d*(\.?\d{0,2})/g)[0]) || null
+            if (val >= 99.99) {
+                this.$errorToast('超过温度限制');
+                target[prop] = null
+            } else {
+                target[prop] = (val.match(/^\d*(\.?\d{0,2})/g)[0]) || null
+            }
+
         }
 
         rowDelFlag({ row }) {

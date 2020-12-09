@@ -23,7 +23,7 @@
             <el-table header-row-class-name="tableHead" class="newTable" :height="mainClientHeight - 72 - 47" :data="tableData" border tooltip-effect="dark" @selection-change="handleSelectionChange">
                 <el-table-column type="selection" width="50" fixed="left" align="center" />
                 <el-table-column type="index" :index="index => index + 1 + (Number(queryForm.current) - 1) * (Number(queryForm.size))" label="序号" width="50px" fixed />
-                <el-table-column label="工序段" prop="productProcess" min-width="80" :show-overflow-tooltip="true" />
+                <el-table-column label="工序段" prop="productProcessName" min-width="80" :show-overflow-tooltip="true" />
                 <el-table-column label="生产物料" min-width="180" :show-overflow-tooltip="true">
                     <template slot-scope="scope">
                         {{ scope.row.productMaterialName }} {{ scope.row.productMaterialCode }}
@@ -38,7 +38,7 @@
                 <el-table-column label="报工成熟天数" prop="jobDays" min-width="120" :show-overflow-tooltip="true" />
                 <el-table-column label="发酵成熟天数" prop="matureDays" min-width="120" :show-overflow-tooltip="true" />
                 <el-table-column label="发酵超期天数" prop="overdueDays" min-width="120" :show-overflow-tooltip="true" />
-                <el-table-column label="报工标识" prop="jobBookingFlag" min-width="100" :show-overflow-tooltip="true" />
+                <el-table-column label="报工标识" prop="jobBookingFlagName" min-width="100" :show-overflow-tooltip="true" />
                 <el-table-column label="数量倍数" prop="multiple" min-width="100" :show-overflow-tooltip="true" />
                 <el-table-column label="备注" prop="remark" :show-overflow-tooltip="true" />
                 <el-table-column label="操作人" prop="changer" :show-overflow-tooltip="true" />

@@ -5,7 +5,7 @@
                 <el-col v-for="(item, opIndex) in stockInfoList" :key="opIndex" :span="6">
                     <div class="card-stock">
                         <div class="card-stock__head">
-                            <span>{{ `${item.workShopName}${item.wareHouseNo? '：' + item.wareHouseNo : ''}` }}</span>
+                            <span>{{ `${item.workShopName}${item.wareHouseName? '：' + item.wareHouseName: ''}` }}</span>
                             <el-button class="floatr" type="text" :disabled="!isRedact" @click="addRow(item)">
                                 领用
                             </el-button>

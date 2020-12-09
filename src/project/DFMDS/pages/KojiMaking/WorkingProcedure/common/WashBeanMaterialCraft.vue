@@ -7,13 +7,13 @@
                         <template slot="label">
                             <span class="notNull">* </span>筛豆开始时间：
                         </template>
-                        <el-date-picker v-model="craftSeiveBeanInfo.sieveStartDate" type="datetime" value-format="yyyy-MM-dd HH:mm" format="yyyy-MM-dd HH:mm" placeholder="选择" :disabled="!isRedact" size="small" style="width: 175px;" />
+                        <el-date-picker v-model="craftSeiveBeanInfo.sieveStartDate" type="datetime" value-format="yyyy-MM-dd HH:mm" format="yyyy-MM-dd HH:mm" placeholder="请选择" :disabled="!isRedact" size="small" style="width: 175px;" />
                     </el-form-item>
                     <el-form-item class="cleanMarginBottom">
                         <template slot="label">
                             <span class="notNull">* </span>筛豆结束时间：
                         </template>
-                        <el-date-picker v-model="craftSeiveBeanInfo.sieveEndDate" type="datetime" value-format="yyyy-MM-dd HH:mm" format="yyyy-MM-dd HH:mm" placeholder="选择" :disabled="!isRedact" size="small" style="width: 175px;" />
+                        <el-date-picker v-model="craftSeiveBeanInfo.sieveEndDate" type="datetime" value-format="yyyy-MM-dd HH:mm" format="yyyy-MM-dd HH:mm" placeholder="请选择" :disabled="!isRedact" size="small" style="width: 175px;" />
                     </el-form-item>
                     <el-form-item class="cleanMarginBottom">
                         <template slot="label">
@@ -137,7 +137,7 @@
                         <template slot="label">
                             <span class="notNull">* </span>洗豆操作人：
                         </template>
-                        <el-tooltip class="item" effect="dark" :content="craftWashBeanInfo.washMans + '点击选择人员'" placement="top">
+                        <el-tooltip class="item" effect="dark" :content="craftWashBeanInfo.washMans" placement="top" :disabled="craftWashBeanInfo.washMans===''">
                             <div class="koji-control-form_select" @click="selectUser(craftWashBeanInfo, '洗豆操作人', 'washMans')">
                                 {{ craftWashBeanInfo.washMans }} 点击选择人员
                             </div>
@@ -147,13 +147,13 @@
                         <template slot="label">
                             <span class="notNull">* </span>洗豆开始时间：
                         </template>
-                        <el-date-picker v-model="craftWashBeanInfo.washStartDate" type="datetime" value-format="yyyy-MM-dd HH:mm" format="yyyy-MM-dd HH:mm" placeholder="选择" :disabled="!isRedact" size="small" style="width: 175px;" />
+                        <el-date-picker v-model="craftWashBeanInfo.washStartDate" type="datetime" value-format="yyyy-MM-dd HH:mm" format="yyyy-MM-dd HH:mm" placeholder="请选择" :disabled="!isRedact" size="small" style="width: 175px;" />
                     </el-form-item>
                     <el-form-item class="cleanMarginBottom">
                         <template slot="label">
                             <span class="notNull">* </span>洗豆结束时间：
                         </template>
-                        <el-date-picker v-model="craftWashBeanInfo.washEndDate" type="datetime" value-format="yyyy-MM-dd HH:mm" format="yyyy-MM-dd HH:mm" placeholder="选择" :disabled="!isRedact" size="small" style="width: 175px;" />
+                        <el-date-picker v-model="craftWashBeanInfo.washEndDate" type="datetime" value-format="yyyy-MM-dd HH:mm" format="yyyy-MM-dd HH:mm" placeholder="请选择" :disabled="!isRedact" size="small" style="width: 175px;" />
                     </el-form-item>
                 </el-form>
             </div>
@@ -176,27 +176,27 @@
                     </template>
                     <template slot-scope="scope">
                         <div class="required" style="min-height: 32px; line-height: 32px;">
-                            <span style="cursor: pointer;" @click="selectScan(scope.row)">
+                            <span :style="{cursor: isRedact===true?'pointer':'default'}" @click="selectScan(scope.row)">
                                 <em>{{ scope.row.relStr }}</em>
                                 <em> 点击选择</em>
                             </span>
                         </div>
                     </template>
                 </el-table-column>
-                <el-table-column min-width="192">
+                <el-table-column min-width="210">
                     <template slot="header">
                         <span class="notNull">* </span>加水开始时间
                     </template>
                     <template slot-scope="scope">
-                        <el-date-picker v-model="scope.row.waterStartDate" type="datetime" value-format="yyyy-MM-dd HH:mm" format="yyyy-MM-dd HH:mm" placeholder="选择" :disabled="!isRedact" style="width: 180px;" size="small" />
+                        <el-date-picker v-model="scope.row.waterStartDate" type="datetime" value-format="yyyy-MM-dd HH:mm" format="yyyy-MM-dd HH:mm" placeholder="请选择" :disabled="!isRedact" style="width: 187px;" size="small" />
                     </template>
                 </el-table-column>
-                <el-table-column min-width="192">
+                <el-table-column min-width="210">
                     <template slot="header">
                         <span class="notNull">* </span>加水结束时间
                     </template>
                     <template slot-scope="scope">
-                        <el-date-picker v-model="scope.row.waterEndDate" type="datetime" value-format="yyyy-MM-dd HH:mm" format="yyyy-MM-dd HH:mm" placeholder="选择" :disabled="!isRedact" style="width: 180px;" size="small" />
+                        <el-date-picker v-model="scope.row.waterEndDate" type="datetime" value-format="yyyy-MM-dd HH:mm" format="yyyy-MM-dd HH:mm" placeholder="请选择" :disabled="!isRedact" style="width: 187px;" size="small" />
                     </template>
                 </el-table-column>
                 <el-table-column width="140" show-overflow-tooltip>
@@ -212,20 +212,20 @@
                         </div>
                     </template>
                 </el-table-column>
-                <el-table-column min-width="192">
+                <el-table-column min-width="210">
                     <template slot="header">
                         <span class="notNull">* </span>排水开始时间
                     </template>
                     <template slot-scope="scope">
-                        <el-date-picker v-model="scope.row.drainStartDate" type="datetime" value-format="yyyy-MM-dd HH:mm" format="yyyy-MM-dd HH:mm" placeholder="选择" :disabled="!isRedact" style="width: 180px;" size="small" />
+                        <el-date-picker v-model="scope.row.drainStartDate" type="datetime" value-format="yyyy-MM-dd HH:mm" format="yyyy-MM-dd HH:mm" placeholder="请选择" :disabled="!isRedact" style="width: 187px;" size="small" />
                     </template>
                 </el-table-column>
-                <el-table-column min-width="192">
+                <el-table-column min-width="210">
                     <template slot="header">
                         <span class="notNull">* </span>排水结束时间
                     </template>
                     <template slot-scope="scope">
-                        <el-date-picker v-model="scope.row.drainEndDate" type="datetime" value-format="yyyy-MM-dd HH:mm" format="yyyy-MM-dd HH:mm" placeholder="选择" :disabled="!isRedact" style="width: 180px;" size="small" />
+                        <el-date-picker v-model="scope.row.drainEndDate" type="datetime" value-format="yyyy-MM-dd HH:mm" format="yyyy-MM-dd HH:mm" placeholder="请选择" :disabled="!isRedact" style="width: 187px;" size="small" />
                     </template>
                 </el-table-column>
                 <el-table-column width="140" show-overflow-tooltip>

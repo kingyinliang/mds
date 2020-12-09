@@ -51,19 +51,9 @@
             </template>
         </query-table>
         <redact-box :disabled="redactBoxDisable" :is-redact.sync="isRedact" redact-auth="steStgEdit" save-auth="steStgEdit" :is-show-submit-btn="true" :saved-rules="savedRules" :submit-rules="submitRules" :saved-datas="savedDatas" :submit-datas="submitDatas" @sendSuccess="sendSuccess" />
-        <el-dialog
-            title="审核日志"
-            :visible.sync="dialogVisible"
-            width="60%"
-            :before-close="handleClose"
-        >
-            <el-table :data="logList">
-                <el-table-column label="序号" type="index" />
-                <el-table-column label="审核动作" prop="verifyType" />
-                <el-table-column label="审核意见" prop="memo" />
-                <el-table-column label="审核人" prop="verifyMan" />
-                <el-table-column label="审核时间" prop="verifyDate" />
-            </el-table>
+        <el-dialog title="审核日志" width="900px" :close-on-click-modal="false" :visible.sync="dialogVisible">
+            <audit-log :table-data="logList" :verify-man="'verifyMan'" :verify-date="'verifyDate'" :pack-up="false" :status="true" />
+            <div slot="footer" class="dialog-footer" />
         </el-dialog>
     </div>
 </template>
@@ -425,8 +415,9 @@
         }
 
         produceHandler() {
-            FER_API.FER_JOB_BOOKING_PRODUCE_API({ }).then(() => {
+            FER_API.FER_JOB_BOOKING_PRODUCE_API({ }).then(res => {
                 this.$refs.queryTable.getDataList(true);
+                this.$successToast(res.data.msg)
             });
         }
 

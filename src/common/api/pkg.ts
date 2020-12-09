@@ -140,7 +140,15 @@ const PKG_API = {
     /**
      * @property {string}  PKG_PICKING_MATERIAL_DETAIL_API 包材领料-详情
      */
-    PKG_PICKING_MATERIAL_DETAIL_API: params => httpProxy('/pkgMaterialUse/queryItem', 'POST', params)
+    PKG_PICKING_MATERIAL_DETAIL_API: params => httpProxy('/pkgMaterialUse/queryItem', 'POST', params),
+    /**
+     * @property {string}  PKG_PICKING_MATERIAL_SAVE_API 包材领料-保存
+     */
+    PKG_PICKING_MATERIAL_SAVE_API: params => httpProxy('/pkgMaterialUse/save', 'POST', params),
+    /**
+     * @property {string}  PKG_BATCH_LIST_API 包装录入批次下拉
+     */
+    PKG_BATCH_LIST_API: params => httpProxy('/pkg/packageStorage/getBatch', 'POST', params)
 };
 
 export default PKG_API;

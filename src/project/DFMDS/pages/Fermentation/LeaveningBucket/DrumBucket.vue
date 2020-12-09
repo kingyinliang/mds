@@ -62,7 +62,7 @@
                                 </template>
                                 <template slot-scope="scope">
                                     <el-form-item prop="sauceTemperature">
-                                        <el-input v-model.trim="scope.row.sauceTemperature" size="small" placeholder="输入温度">
+                                        <el-input v-model.trim="scope.row.sauceTemperature" size="small" placeholder="请输入温度">
                                             <span slot="suffix">°C</span>
                                         </el-input>
                                     </el-form-item>
@@ -85,7 +85,7 @@
                             </el-table-column>
                             <el-table-column label="备注" :show-overflow-tooltip="true" min-width="200">
                                 <template slot-scope="scope">
-                                    <el-input v-model.trim="scope.row.remark" size="small" placeholder="输入备注" />
+                                    <el-input v-model.trim="scope.row.remark" size="small" placeholder="请输入备注" />
                                 </template>
                             </el-table-column>
                             <el-table-column prop="changer" label="操作人" :show-overflow-tooltip="true" width="160" />

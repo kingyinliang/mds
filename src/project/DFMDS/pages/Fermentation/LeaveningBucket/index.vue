@@ -87,7 +87,7 @@
                                                 />
                                             </div>
                                         </div>
-                                        <span v-if="item.judgeResult==='CQ'" class="cq">CQ</span>
+                                        <span v-if="item.judgeResult==='CQ'" class="cq"><img src="../../../assets/img/icon-cq.png" alt=""></span>
                                     </div>
                                     <div class="btn-group">
                                         <el-button v-if="isAuth('')" size="small" plain :disabled="item.fermentorStatus!=='F'" @click="btnFilledBucket(item)">
@@ -1206,34 +1206,8 @@ interface CurrentDataTable{
                 top: 0;
                 left: 0;
                 z-index: 99;
-                width: 30px;
-                height: 30px;
-                color: #f00;
-                font-size: 12px;
-                line-height: 30px;
-                text-align: center;
-                border: 1px solid #f00;
-                border-radius: 15px;
-                &::after {
-                    position: absolute;
-                    top: -4px;
-                    left: -4px;
-                    width: 36px;
-                    height: 36px;
-                    border: 1px solid #f00;
-                    border-radius: 18px;
-                    content: "";
-                }
-                &::before {
-                    position: absolute;
-                    top: 6px;
-                    left: 4px;
-                    width: 20px;
-                    height: 16px;
-                    border: 1px solid #f00;
-                    border-right: none;
-                    border-left: none;
-                    content: "";
+                img {
+                    width: 40px;
                 }
             }
         }

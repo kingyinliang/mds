@@ -26,7 +26,7 @@
                             <span>{{ item.label }}：</span>
                         </template>
                         <p v-if="item.type === 'p'">
-                            {{ item.value | itemValue(formHeader) }}
+                            {{ item.value | itemValue(formHeader) }} {{ item.unit }}
                         </p>
                         <el-tooltip v-if="item.type === 'tooltip'" class="item" effect="dark" :content="item.value | itemValue(formHeader)" placement="top">
                             <p>
@@ -46,7 +46,9 @@
                             <em v-for="(user, i) in formHeader[item.value]" :key="i">{{ user }}，</em>
                             <em v-if="formHeader[item.value].length === 0">点击选择人员</em>
                         </p>
-                        <el-input v-if="item.type === 'input'" v-model="formHeader[item.value]" :disabled="!isRedact" size="mini" :placeholder="item.placeholder" style="width: 120px;" />
+                        <el-input v-if="item.type === 'input'" v-model="formHeader[item.value]" :disabled="!isRedact" size="mini" :placeholder="item.placeholder" style="width: 120px;">
+                            <span slot="suffix">{{ item.unit }}</span>
+                        </el-input>
                     </el-form-item>
                 </el-form>
             </div>
@@ -112,7 +114,7 @@
                         </el-button>
                     </div>
                     <div v-else class="redact_btn">
-                        <slot name="custom_btn" />
+                        <slot name="custom_btn" :isRedact="isRedact" />
                     </div>
                 </div>
                 <div v-else class="redact clearfix">

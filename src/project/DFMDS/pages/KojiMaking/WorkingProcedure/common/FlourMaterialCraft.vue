@@ -7,7 +7,7 @@
                         <template slot="label">
                             <span class="notNull">* </span>气泡压力：
                         </template>
-                        <el-input v-model="craftSteamFlourInfo.steamPacketPressure" placeholder="输入" :disabled="!isRedact" size="small" style="width: 175px;">
+                        <el-input v-model="craftSteamFlourInfo.steamPacketPressure" placeholder="请输入" :disabled="!isRedact" size="small" style="width: 180px;">
                             <span slot="suffix" class="stock-form_item_input_suffix">Mpa</span>
                         </el-input>
                     </el-form-item>
@@ -15,7 +15,7 @@
                         <template slot="label">
                             <span class="notNull">* </span>蒸面加水流速：
                         </template>
-                        <el-input v-model="craftSteamFlourInfo.steamFlourSpeed" placeholder="输入" :disabled="!isRedact" size="small" style="width: 175px;">
+                        <el-input v-model="craftSteamFlourInfo.steamFlourSpeed" placeholder="请输入" :disabled="!isRedact" size="small" style="width: 180px;">
                             <span slot="suffix" class="stock-form_item_input_suffix">L/H</span>
                         </el-input>
                     </el-form-item>
@@ -54,32 +54,32 @@
                         </el-select>
                     </template>
                 </el-table-column>
-                <el-table-column min-width="192">
+                <el-table-column min-width="210">
                     <template slot="header">
                         <span class="notNull">* </span>加汽开始时间
                     </template>
                     <template slot-scope="scope">
-                        <el-date-picker v-model="scope.row.addSteamStart" type="datetime" value-format="yyyy-MM-dd HH:mm" format="yyyy-MM-dd HH:mm" placeholder="选择" :disabled="!isRedact" style="width: 170px;" size="small" />
+                        <el-date-picker v-model="scope.row.addSteamStart" type="datetime" value-format="yyyy-MM-dd HH:mm" format="yyyy-MM-dd HH:mm" placeholder="请选择" :disabled="!isRedact" style="width: 186px;" size="small" />
                     </template>
                 </el-table-column>
-                <el-table-column min-width="192">
+                <el-table-column min-width="210">
                     <template slot="header">
                         <span class="notNull">* </span>加汽结束时间
                     </template>
                     <template slot-scope="scope">
-                        <el-date-picker v-model="scope.row.addSteamEnd" type="datetime" value-format="yyyy-MM-dd HH:mm" format="yyyy-MM-dd HH:mm" placeholder="选择" :disabled="!isRedact" style="width: 170px;" size="small" />
+                        <el-date-picker v-model="scope.row.addSteamEnd" type="datetime" value-format="yyyy-MM-dd HH:mm" format="yyyy-MM-dd HH:mm" placeholder="请选择" :disabled="!isRedact" style="width: 186px;" size="small" />
                     </template>
                 </el-table-column>
                 <el-table-column label="汽包压力" width="144">
                     <template slot-scope="scope">
-                        <el-input v-model="scope.row.steamPocketPressure" placeholder="输入" :disabled="!isRedact" size="small" style="width: 120px;">
+                        <el-input v-model="scope.row.steamPocketPressure" placeholder="请输入" :disabled="!isRedact" size="small" style="width: 120px;">
                             <span slot="suffix" class="stock-form_item_input_suffix">Mpa</span>
                         </el-input>
                     </template>
                 </el-table-column>
                 <el-table-column label="转动圈数" width="144">
                     <template slot-scope="scope">
-                        <el-input v-model="scope.row.turnCount" placeholder="输入" :disabled="!isRedact" size="small" style="width: 120px;">
+                        <el-input v-model="scope.row.turnCount" placeholder="请输入" :disabled="!isRedact" size="small" style="width: 120px;">
                             <!-- <span slot="suffix" class="stock-form_item_input_suffix">Mpa</span> -->
                         </el-input>
                     </template>
@@ -91,17 +91,17 @@
                 </el-table-column>
                 <el-table-column label="保压时间" width="144">
                     <template slot-scope="scope">
-                        <el-input v-model="scope.row.pressureDuration" placeholder="输入" :disabled="!isRedact" size="small" style="width: 120px;">
+                        <el-input v-model="scope.row.pressureDuration" placeholder="请输入" :disabled="!isRedact" size="small" style="width: 120px;">
                             <span slot="suffix" class="stock-form_item_input_suffix">min</span>
                         </el-input>
                     </template>
                 </el-table-column>
-                <el-table-column min-width="192">
+                <el-table-column min-width="210">
                     <template slot="header">
                         熟豆放豆时间
                     </template>
                     <template slot-scope="scope">
-                        <el-date-picker v-model="scope.row.addBeanDate" type="datetime" value-format="yyyy-MM-dd HH:mm" format="yyyy-MM-dd HH:mm" placeholder="选择" :disabled="!isRedact" style="width: 170px;" size="small" />
+                        <el-date-picker v-model="scope.row.addBeanDate" type="datetime" value-format="yyyy-MM-dd HH:mm" format="yyyy-MM-dd HH:mm" placeholder="请选择" :disabled="!isRedact" style="width: 186px;" size="small" />
                     </template>
                 </el-table-column>
                 <el-table-column label="备注" width="170">
@@ -135,7 +135,7 @@
                         <template slot="label">
                             <span class="notNull">* </span>蒸面风冷温度：
                         </template>
-                        <el-input v-model="craftControlInfo.flourWindTemp" placeholder="输入" :disabled="!isRedact" size="small" style="width: 175px;">
+                        <el-input v-model="craftControlInfo.flourWindTemp" placeholder="请输入" :disabled="!isRedact" size="small" style="width: 180px;">
                             <span slot="suffix" class="stock-form_item_input_suffix">°C</span>
                         </el-input>
                     </el-form-item>
@@ -143,7 +143,7 @@
                         <template slot="label">
                             <span class="notNull">* </span>大豆风冷温度1：
                         </template>
-                        <el-input v-model="craftControlInfo.beanWindTempOne" placeholder="输入" :disabled="!isRedact" size="small" style="width: 175px;">
+                        <el-input v-model="craftControlInfo.beanWindTempOne" placeholder="请输入" :disabled="!isRedact" size="small" style="width: 180px;">
                             <span slot="suffix" class="stock-form_item_input_suffix">°C</span>
                         </el-input>
                     </el-form-item>
@@ -151,7 +151,7 @@
                         <template slot="label">
                             大豆风冷温度2：
                         </template>
-                        <el-input v-model="craftControlInfo.beanWindTempTwo" placeholder="输入" :disabled="!isRedact" size="small" style="width: 175px;">
+                        <el-input v-model="craftControlInfo.beanWindTempTwo" placeholder="请输入" :disabled="!isRedact" size="small" style="width: 180px;">
                             <span slot="suffix" class="stock-form_item_input_suffix">°C</span>
                         </el-input>
                     </el-form-item>
@@ -159,7 +159,7 @@
                         <template slot="label">
                             <span class="notNull">* </span>混合料温度1：
                         </template>
-                        <el-input v-model="craftControlInfo.mixtureTempOne" placeholder="输入" :disabled="!isRedact" size="small" style="width: 175px;">
+                        <el-input v-model="craftControlInfo.mixtureTempOne" placeholder="请输入" :disabled="!isRedact" size="small" style="width: 180px;">
                             <span slot="suffix" class="stock-form_item_input_suffix">°C</span>
                         </el-input>
                     </el-form-item>
@@ -167,7 +167,7 @@
                         <template slot="label">
                             混合料温度2：
                         </template>
-                        <el-input v-model="craftControlInfo.mixtureTempTwo" placeholder="输入" :disabled="!isRedact" size="small" style="width: 175px;">
+                        <el-input v-model="craftControlInfo.mixtureTempTwo" placeholder="请输入" :disabled="!isRedact" size="small" style="width: 180px;">
                             <span slot="suffix" class="stock-form_item_input_suffix">°C</span>
                         </el-input>
                     </el-form-item>
@@ -175,7 +175,7 @@
                         <template slot="label">
                             <span class="notNull">* </span>大豆风冷变频：
                         </template>
-                        <el-input v-model="craftControlInfo.beanWindFrequency" placeholder="输入" :disabled="!isRedact" size="small" style="width: 175px;">
+                        <el-input v-model="craftControlInfo.beanWindFrequency" placeholder="请输入" :disabled="!isRedact" size="small" style="width: 180px;">
                             <span slot="suffix" class="stock-form_item_input_suffix">Hz</span>
                         </el-input>
                     </el-form-item>
@@ -183,13 +183,13 @@
                         <template slot="label">
                             <span class="notNull">* </span>混合开始时间：
                         </template>
-                        <el-date-picker v-model="craftControlInfo.mixtureStart" type="datetime" value-format="yyyy-MM-dd HH:mm" format="yyyy-MM-dd HH:mm" placeholder="选择" :disabled="!isRedact" size="small" style="width: 175px;" />
+                        <el-date-picker v-model="craftControlInfo.mixtureStart" type="datetime" value-format="yyyy-MM-dd HH:mm" format="yyyy-MM-dd HH:mm" placeholder="请选择" :disabled="!isRedact" size="small" style="width: 180px;" />
                     </el-form-item>
                     <el-form-item class="cleanMarginBottom">
                         <template slot="label">
                             <span class="notNull">* </span>混合结束时间：
                         </template>
-                        <el-date-picker v-model="craftControlInfo.mixtrueEnd" type="datetime" value-format="yyyy-MM-dd HH:mm" format="yyyy-MM-dd HH:mm" placeholder="选择" :disabled="!isRedact" size="small" style="width: 175px;" />
+                        <el-date-picker v-model="craftControlInfo.mixtrueEnd" type="datetime" value-format="yyyy-MM-dd HH:mm" format="yyyy-MM-dd HH:mm" placeholder="请选择" :disabled="!isRedact" size="small" style="width: 180px;" />
                     </el-form-item>
                 </el-form>
             </div>
