@@ -474,8 +474,8 @@
 
         batchChange(row) {
             const filterArr: (any) = row.batchArr.filter(it => it.batch === row.batch);// eslint-disable-line
-            row.startStocks = filterArr.storageAmount
-            row.manufactor = filterArr.manufactor
+            row.startStocks = filterArr[0].storageAmount
+            row.manufactor = filterArr[0].manufactor
         }
 
         // 处理数据1
@@ -511,7 +511,7 @@
                         materialType: dataGroup === 'currentDataTable' ? item.materialType : '',
                         startStocks: dataGroup === 'currentDataTable' ? item.startStocks : '',
                         endStocks: dataGroup === 'currentDataTable' ? item.endStocks : '',
-                        receiveMaterial: dataGroup === 'currentDataTable' ? item.receiveMaterial : '',
+                        receiveMaterial: batchArr[0].useMaterialAmount,
                         changer: item.changer,
                         changed: item.changed
                     };
@@ -765,6 +765,7 @@
     }
 interface BatchArr{
     id?: string;
+    useMaterialAmount?: string;
 }
 interface MaterialArr{
     data: MaterialMap[];

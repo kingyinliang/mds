@@ -187,7 +187,11 @@ const FER_API = {
     /**
      * @property {string} FER_JOB_BOOKING_SUBMIT_API 发酵车间-调酱列表-首页查询
      */
-    FER_DEPLOY_SAUCE_LIST_API: params => httpProxy('/fer/mix/pagingQuery', 'POST', params)
+    FER_DEPLOY_SAUCE_LIST_API: params => httpProxy('/fer/mix/pagingQuery', 'POST', params),
+    /**
+     * @property {string} FER_OPEN_POT_APPLY_LIST_API 发酵车间-开罐申请-首页查询
+     */
+    FER_OPEN_POT_APPLY_LIST_API: params => httpProxy('/fer/open/pagingQuery', 'POST', params)
 };
 
 export default FER_API;
