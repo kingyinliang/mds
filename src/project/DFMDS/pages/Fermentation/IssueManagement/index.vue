@@ -16,7 +16,7 @@
                 <mds-card title="发料列表" :pack-up="false">
                     <el-table class="newTable markStyle" :data="targetQueryTableList.filter(item => item.delFlag !== 1)" :row-class-name="rowDelFlag" header-row-class-name="tableHead" border style="width: 100%; min-height: 90px;" @selection-change="selectionChange">
                         <el-table-column type="selection" width="55" fixed />
-                        <el-table-column type="index" label="序号" fixed />
+                        <el-table-column type="index" :index="index => getIndexMethod(index, targetQueryTableList.filter(item => item.delFlag !== 1))" label="序号" width="55" fixed />
                         <el-table-column label="状态" prop="checkStatus" width="120px">
                             <template slot-scope="scope">
                                 <el-select v-model="scope.row.checkStatus" :disabled="true" size="small">

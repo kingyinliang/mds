@@ -63,7 +63,7 @@
                                 </el-form>
                             </template>
                             <el-table :data="splitTable" header-row-class-name="tableHead" class="newTable" :height="mainClientHeight - 61 - 62 - 47" border tooltip-effect="dark">
-                                <el-table-column type="index" width="55" label="序号" fixed />
+                                <el-table-column type="index" :index="index => getIndexMethod(index, splitTable)" label="序号" width="55" fixed />
                                 <el-table-column label="生产订单" width="120" prop="orderNo" :show-overflow-tooltip="true" />
                                 <el-table-column min-width="180" label="生产物料" :show-overflow-tooltip="true">
                                     <template slot-scope="scope">

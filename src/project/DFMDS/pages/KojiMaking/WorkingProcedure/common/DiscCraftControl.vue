@@ -112,7 +112,7 @@
             </template>
 
             <el-table class="newTable other" :data="kojiGuardData" :row-class-name="rowDelFlag" max-height="300" header-row-class-name="tableHead" border tooltip-effect="dark">
-                <el-table-column type="index" label="序号" width="50" align="center" fixed="left" />
+                <el-table-column type="index" :index="index => getIndexMethod(index, kojiGuardData)" label="序号" width="55" fixed />
                 <el-table-column label="看曲时间" :show-overflow-tooltip="true" width="210">
                     <template slot="header">
                         <span class="notNull">* </span>看曲时间
@@ -430,7 +430,7 @@
 
         <mds-card :title="'翻曲记录'" :name="'kojiTurn'">
             <el-table ref="kojiTurn" header-row-class-name="tableHead" class="newTable" max-height="267" :data="kojiDiscTurnData" :row-class-name="rowDelFlag" border tooltip-effect="dark">
-                <el-table-column type="index" label="序号" width="50px" align="center" />
+                <el-table-column type="index" :index="index => getIndexMethod(index, kojiDiscTurnData)" label="序号" width="55" fixed />
                 <el-table-column label="翻曲" prop="turnStageName" width="100" />
                 <el-table-column label="翻曲开始时间" prop="turnStart" width="230">
                     <template slot="header">

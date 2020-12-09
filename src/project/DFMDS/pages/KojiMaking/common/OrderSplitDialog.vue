@@ -6,7 +6,7 @@
             </el-button>
         </div>
         <el-table :data="splitTable" :row-class-name="rowDelFlag" header-row-class-name="tableHead" class="newTable" border tooltip-effect="dark">
-            <el-table-column type="index" width="55" label="序号" fixed align="center" />
+            <el-table-column type="index" :index="index => getIndexMethod(index, splitTable)" width="55" label="序号" fixed align="center" />
             <el-table-column label="曲房状态" width="80" prop="statusName" :show-overflow-tooltip="true" />
             <el-table-column label="生产订单" width="120" prop="orderNo" :show-overflow-tooltip="true" />
             <el-table-column min-width="250" label="生产物料" :show-overflow-tooltip="true">
