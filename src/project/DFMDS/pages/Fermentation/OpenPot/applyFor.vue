@@ -111,22 +111,10 @@
                 minwidth: '160'
             },
             {
+                type: 'clickSpan',
                 label: '开罐单号',
                 prop: 'productLineName',
-                formatter: (row) => {
-                    const h = this.$createElement; // eslint-disable-line
-                    return h('div', {
-                        style: {
-                            color: '#45c2b5',
-                            cursor: 'pointer'
-                        },
-                        on: {
-                            click: () => {
-                                this.goDetail(row); // eslint-disable-line
-                            }
-                        }
-                    }, row.dictValue);
-                },
+                onclick: (row)=> this.goDetail(row), // eslint-disable-line
                 minwidth: '160'
             },
             {
