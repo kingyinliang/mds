@@ -80,7 +80,7 @@
                 </mds-card>
             </template>
             <template slot="custom_btn">
-                <el-button type="primary" size="small" @click="isRedact = !isRedact">
+                <el-button v-if="orderStatus !== 'submit' && orderStatus !== 'checked' && orderStatus !== 'D' && orderStatus !== '已审核' && orderStatus !== '待审核' && orderStatus !== '已过账'" type="primary" size="small" @click="isRedact = !isRedact">
                     {{ isRedact ? '取消' : '编辑' }}
                 </el-button>
                 <el-button v-if="isRedact" type="primary" size="small" @click="saved()">
@@ -102,6 +102,7 @@
         tableData: DataObj[] = [];
         OrgTableData = [];
         manufactor = [];
+        orderStatus = '';
         spanArr: number[] = [];
         headerBase = [
             {
@@ -164,6 +165,7 @@
                 orderNo: this.$store.state.packaging.pickingDetail.orderNo
             }).then(({ data }) => {
                 this.formHeader = data.data;
+                this.orderStatus = this.formHeader.orderStatusName
             })
             PKG_API.PKG_PICKING_MATERIAL_DETAIL_API({
                 orderNo: this.$store.state.packaging.pickingDetail.orderNo,

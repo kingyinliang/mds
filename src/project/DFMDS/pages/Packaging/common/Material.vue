@@ -642,6 +642,7 @@
         // 拆分
         SplitDate(str, row, index) {
             this[str].splice(index + this[str].filter(item => item.merge === row.merge).length, 0, {
+                batchArr: row.batchArr,
                 merge: row.merge,
                 id: '',
                 batch: '',
