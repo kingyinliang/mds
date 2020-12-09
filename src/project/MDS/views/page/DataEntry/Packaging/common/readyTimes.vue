@@ -30,7 +30,7 @@
                             type="datetime"
                             value-format="yyyy-MM-dd HH:mm:ss"
                             format="yyyy.MM.dd HH:mm"
-                            placeholder="选择"
+                            placeholder="请选择"
                             :disabled="!(isRedact && (readyDate.status === 'noPass' || readyDate.status === 'saved' || readyDate.status === ''))"
                             style="width: 184px;"
                         />
@@ -41,7 +41,7 @@
                             type="datetime"
                             value-format="yyyy-MM-dd HH:mm:ss"
                             format="yyyy.MM.dd HH:mm"
-                            placeholder="选择"
+                            placeholder="请选择"
                             :disabled="!(isRedact && (readyDate.status === 'noPass' || readyDate.status === 'saved' || readyDate.status === ''))"
                             style="width: 184px;"
                         />
@@ -55,7 +55,7 @@
                             type="datetime"
                             value-format="yyyy-MM-dd HH:mm:ss"
                             format="yyyy.MM.dd HH:mm"
-                            placeholder="选择"
+                            placeholder="请选择"
                             :disabled="!(isRedact && (readyDate.status === 'noPass' || readyDate.status === 'saved' || readyDate.status === ''))"
                             style="width: 184px;"
                         />
@@ -66,7 +66,7 @@
                             type="datetime"
                             value-format="yyyy-MM-dd HH:mm:ss"
                             format="yyyy.MM.dd HH:mm"
-                            placeholder="选择"
+                            placeholder="请选择"
                             :disabled="!(isRedact && (readyDate.status === 'noPass' || readyDate.status === 'saved' || readyDate.status === ''))"
                             style="width: 184px;"
                         />
@@ -87,7 +87,7 @@
                             type="datetime"
                             value-format="yyyy-MM-dd HH:mm:ss"
                             format="yyyy.MM.dd HH:mm"
-                            placeholder="选择"
+                            placeholder="请选择"
                             :disabled="!(isRedact && (readyDate.status === 'noPass' || readyDate.status === 'saved' || readyDate.status === ''))"
                             style="width: 184px;"
                         />
@@ -98,7 +98,7 @@
                             type="datetime"
                             value-format="yyyy-MM-dd HH:mm:ss"
                             format="yyyy.MM.dd HH:mm"
-                            placeholder="选择"
+                            placeholder="请选择"
                             :disabled="!(isRedact && (readyDate.status === 'noPass' || readyDate.status === 'saved' || readyDate.status === ''))"
                             style="width: 184px;"
                         />
@@ -112,7 +112,7 @@
                             type="datetime"
                             value-format="yyyy-MM-dd HH:mm:ss"
                             format="yyyy.MM.dd HH:mm"
-                            placeholder="选择"
+                            placeholder="请选择"
                             :disabled="!(isRedact && (readyDate.status === 'noPass' || readyDate.status === 'saved' || readyDate.status === ''))"
                             style="width: 184px;"
                         />
@@ -123,7 +123,7 @@
                             type="datetime"
                             value-format="yyyy-MM-dd HH:mm:ss"
                             format="yyyy.MM.dd HH:mm"
-                            placeholder="选择"
+                            placeholder="请选择"
                             :disabled="!(isRedact && (readyDate.status === 'noPass' || readyDate.status === 'saved' || readyDate.status === ''))"
                             style="width: 184px;"
                         />
@@ -144,7 +144,7 @@
                             type="datetime"
                             value-format="yyyy-MM-dd HH:mm:ss"
                             format="yyyy.MM.dd HH:mm"
-                            placeholder="选择"
+                            placeholder="请选择"
                             :disabled="!(isRedact && (readyDate.status === 'noPass' || readyDate.status === 'saved' || readyDate.status === ''))"
                             style="width: 184px;"
                         />
@@ -155,7 +155,7 @@
                             type="datetime"
                             value-format="yyyy-MM-dd HH:mm:ss"
                             format="yyyy.MM.dd HH:mm"
-                            placeholder="选择"
+                            placeholder="请选择"
                             :disabled="!(isRedact && (readyDate.status === 'noPass' || readyDate.status === 'saved' || readyDate.status === ''))"
                             style="width: 184px;"
                         />
@@ -169,7 +169,7 @@
                             type="datetime"
                             value-format="yyyy-MM-dd HH:mm:ss"
                             format="yyyy.MM.dd HH:mm"
-                            placeholder="选择"
+                            placeholder="请选择"
                             :disabled="!(isRedact && (readyDate.status === 'noPass' || readyDate.status === 'saved' || readyDate.status === ''))"
                             style="width: 184px;"
                         />
@@ -180,7 +180,7 @@
                             type="datetime"
                             value-format="yyyy-MM-dd HH:mm:ss"
                             format="yyyy.MM.dd HH:mm"
-                            placeholder="选择"
+                            placeholder="请选择"
                             :disabled="!(isRedact && (readyDate.status === 'noPass' || readyDate.status === 'saved' || readyDate.status === ''))"
                             style="width: 184px;"
                         />

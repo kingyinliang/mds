@@ -163,7 +163,7 @@
             const tempCheckArray: string[] = []
             const tempSplitTable: object[] = []
             this.splitTable.forEach(item => {
-                if (item.kojiHouseNo && item.addKojiDate) {
+                if (item.kojiHouseNo && item.addKojiDate && item.delFlag !== 1) {
                     tempSplitTable.push(item)
                     const temp = `${item.kojiHouseNo}-${item.addKojiDate}`
                     if (!(tempCheckArray.includes(temp))) {

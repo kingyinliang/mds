@@ -64,7 +64,7 @@
                                 </template>
                                 <template slot-scope="scope">
                                     <el-form-item prop="feedAmount">
-                                        <el-input v-model.trim="scope.row.feedAmount" size="small" placeholder="输入数量" />
+                                        <el-input v-model.trim="scope.row.feedAmount" size="small" placeholder="请输入数量" />
                                     </el-form-item>
                                 </template>
                             </el-table-column>
@@ -74,7 +74,7 @@
                                 </template>
                                 <template slot-scope="scope">
                                     <el-form-item prop="feedBatch">
-                                        <el-input v-model.trim="scope.row.feedBatch" size="small" maxlength="10" placeholder="输入批次" />
+                                        <el-input v-model.trim="scope.row.feedBatch" size="small" maxlength="10" placeholder="请输入批次" />
                                     </el-form-item>
                                 </template>
                             </el-table-column>
@@ -113,7 +113,7 @@
                             </el-table-column>
                             <el-table-column label="备注" :show-overflow-tooltip="true" min-width="200">
                                 <template slot-scope="scope">
-                                    <el-input v-model.trim="scope.row.remark" size="small" placeholder="输入备注" />
+                                    <el-input v-model.trim="scope.row.remark" size="small" placeholder="请输入备注" />
                                 </template>
                             </el-table-column>
                             <el-table-column prop="changer" label="操作人" :show-overflow-tooltip="true" width="180" />

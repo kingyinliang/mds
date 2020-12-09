@@ -45,7 +45,7 @@
                                 <span class="notNull">批次</span>
                             </template>
                             <template slot-scope="scope">
-                                <el-input v-model="scope.row.inStorageBatch" :maxlength="10" size="small" placeholder="输入批次" :disabled="!isRedact || (scope.row.checkStatus !== 'N' && scope.row.checkStatus !== 'R' && scope.row.checkStatus !== 'S')" />
+                                <el-input v-model="scope.row.inStorageBatch" :maxlength="10" size="small" placeholder="请输入批次" :disabled="!isRedact || (scope.row.checkStatus !== 'N' && scope.row.checkStatus !== 'R' && scope.row.checkStatus !== 'S')" />
                             </template>
                         </el-table-column>
                         <el-table-column label="备注" prop="" width="180px">
@@ -53,7 +53,7 @@
                                 <span>备注</span>
                             </template>
                             <template slot-scope="scope">
-                                <el-input v-model="scope.row.remark" :maxlength="255" size="small" placeholder="输入备注" :disabled="!isRedact || (scope.row.checkStatus !== 'N' && scope.row.checkStatus !== 'R' && scope.row.checkStatus !== 'S')" />
+                                <el-input v-model="scope.row.remark" :maxlength="255" size="small" placeholder="请输入备注" :disabled="!isRedact || (scope.row.checkStatus !== 'N' && scope.row.checkStatus !== 'R' && scope.row.checkStatus !== 'S')" />
                             </template>
                         </el-table-column>
                         <el-table-column label="操作人员" prop="changer" width="160px" />
@@ -460,4 +460,3 @@
     padding: 8px 0;
 }
 </style>
-

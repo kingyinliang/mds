@@ -6,25 +6,25 @@
                     <template slot="label">
                         <span class="notNull">* </span>入料开始时间：
                     </template>
-                    <el-date-picker v-model="craftInfo.feedStartDate" type="datetime" value-format="yyyy-MM-dd HH:mm" format="yyyy-MM-dd HH:mm" placeholder="选择" :disabled="!isRedact" size="small" style="width: 175px;" />
+                    <el-date-picker v-model="craftInfo.feedStartDate" type="datetime" value-format="yyyy-MM-dd HH:mm" format="yyyy-MM-dd HH:mm" placeholder="请选择" :disabled="!isRedact" size="small" style="width: 175px;" />
                 </el-form-item>
                 <el-form-item>
                     <template slot="label">
                         <span class="notNull">* </span>入料结束时间：
                     </template>
-                    <el-date-picker v-model="craftInfo.feeEndDate" type="datetime" value-format="yyyy-MM-dd HH:mm" format="yyyy-MM-dd HH:mm" placeholder="选择" :disabled="!isRedact" size="small" style="width: 175px;" />
+                    <el-date-picker v-model="craftInfo.feeEndDate" type="datetime" value-format="yyyy-MM-dd HH:mm" format="yyyy-MM-dd HH:mm" placeholder="请选择" :disabled="!isRedact" size="small" style="width: 175px;" />
                 </el-form-item>
                 <el-form-item>
                     <template slot="label">
                         <span class="notNull">* </span>升温开始时间：
                     </template>
-                    <el-date-picker v-model="craftInfo.riseStartDate" type="datetime" value-format="yyyy-MM-dd HH:mm" format="yyyy-MM-dd HH:mm" placeholder="选择" :disabled="!isRedact" size="small" style="width: 175px;" />
+                    <el-date-picker v-model="craftInfo.riseStartDate" type="datetime" value-format="yyyy-MM-dd HH:mm" format="yyyy-MM-dd HH:mm" placeholder="请选择" :disabled="!isRedact" size="small" style="width: 175px;" />
                 </el-form-item>
                 <el-form-item>
                     <template slot="label">
                         <span class="notNull">* </span>升温结束时间：
                     </template>
-                    <el-date-picker v-model="craftInfo.riseEndDate" type="datetime" value-format="yyyy-MM-dd HH:mm" format="yyyy-MM-dd HH:mm" placeholder="选择" :disabled="!isRedact" size="small" style="width: 175px;" />
+                    <el-date-picker v-model="craftInfo.riseEndDate" type="datetime" value-format="yyyy-MM-dd HH:mm" format="yyyy-MM-dd HH:mm" placeholder="请选择" :disabled="!isRedact" size="small" style="width: 175px;" />
                 </el-form-item>
             </el-form>
         </mds-card>
@@ -61,7 +61,7 @@
                         <span class="notNull">* </span>记录时间
                     </template>
                     <template slot-scope="scope">
-                        <el-date-picker v-model="scope.row.recordDate" type="datetime" value-format="yyyy-MM-dd HH:mm" format="yyyy-MM-dd HH:mm" placeholder="选择" :disabled="!isRedact" style="width: 180px;" size="small" />
+                        <el-date-picker v-model="scope.row.recordDate" type="datetime" value-format="yyyy-MM-dd HH:mm" format="yyyy-MM-dd HH:mm" placeholder="请选择" :disabled="!isRedact" style="width: 180px;" size="small" />
                     </template>
                 </el-table-column>
                 <el-table-column label="温度(℃)">

@@ -42,7 +42,7 @@
                     <span>异常开始时间</span>
                 </template>
                 <template slot-scope="scope">
-                    <el-date-picker v-model="scope.row.expStartDate" type="datetime" value-format="yyyy-MM-dd HH:mm:ss" format="yyyy.MM.dd HH:mm" placeholder="选择" :disabled="!isRedact" size="small" style="width: 160px;" />
+                    <el-date-picker v-model="scope.row.expStartDate" type="datetime" value-format="yyyy-MM-dd HH:mm:ss" format="yyyy.MM.dd HH:mm" placeholder="请选择" :disabled="!isRedact" size="small" style="width: 160px;" />
                 </template>
             </el-table-column>
             <el-table-column width="185" label="异常结束时间">
@@ -51,7 +51,7 @@
                     <span>异常结束时间</span>
                 </template>
                 <template slot-scope="scope">
-                    <el-date-picker v-model="scope.row.expEndDate" type="datetime" value-format="yyyy-MM-dd HH:mm:ss" format="yyyy.MM.dd HH:mm" placeholder="选择" :disabled="!isRedact" size="small" style="width: 160px;" />
+                    <el-date-picker v-model="scope.row.expEndDate" type="datetime" value-format="yyyy-MM-dd HH:mm:ss" format="yyyy.MM.dd HH:mm" placeholder="请选择" :disabled="!isRedact" size="small" style="width: 160px;" />
                 </template>
             </el-table-column>
             <el-table-column label="异常时间" width="80">

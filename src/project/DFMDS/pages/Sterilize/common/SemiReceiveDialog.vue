@@ -46,7 +46,7 @@
                 <el-input v-model="dataForm.changer" placeholder="手动输入" disabled />
             </el-form-item>
             <el-form-item label="操作时间：">
-                <el-date-picker v-model="dataForm.changed" type="datetime" placeholder="选择" disabled style="width: 100%;" />
+                <el-date-picker v-model="dataForm.changed" type="datetime" placeholder="请选择" disabled style="width: 100%;" />
             </el-form-item>
         </el-form>
         <div slot="footer" class="dialog-footer">
