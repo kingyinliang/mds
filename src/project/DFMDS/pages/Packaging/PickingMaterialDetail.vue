@@ -49,10 +49,13 @@
                                 <span class="notNull">* </span>物料批次
                             </template>
                             <template slot-scope="scope">
-                                <el-input v-model="scope.row.batch" :disabled="!(isRedact)" size="small" placeholder="请输入" />
+                                <el-input v-model="scope.row.batch" maxlength="10" :disabled="!(isRedact)" size="small" placeholder="请输入" />
                             </template>
                         </el-table-column>
                         <el-table-column label="厂家" min-width="140">
+                            <template slot="header">
+                                <span class="notNull">* </span>厂家
+                            </template>
                             <template slot-scope="scope">
                                 <el-select v-model="scope.row.manufactor" filterable placeholder="请选择" size="small" :disabled="!(isRedact)" clearable>
                                     <el-option v-for="(iteam, index) in manufactor" :key="index" :label="iteam.dictValue" :value="iteam.dictCode" />
@@ -166,6 +169,11 @@
                 orderNo: this.$store.state.packaging.pickingDetail.orderNo,
                 productLine: this.$store.state.packaging.pickingDetail.productLine
             }).then(({ data }) => {
+                data.data.forEach(item => {
+                    if (!item.useType) {
+                        item.useType = '正常领料'
+                    }
+                })
                 this.tableData = JSON.parse(JSON.stringify(data.data));
                 this.OrgTableData = JSON.parse(JSON.stringify(data.data));
                 this.spanArr = this.merge(this.tableData)
@@ -187,7 +195,8 @@
                 materialName: row.materialName,
                 unit: row.unit,
                 needNum: row.needNum,
-                storage: row.needNum,
+                storage: row.storage,
+                useType: '正常领料',
                 splitFlag: 'Y'
             })
             this.spanArr = this.merge(this.tableData)
@@ -251,7 +260,7 @@
         //保存校验
         ruleFn(): boolean {
             for (const item of this.tableData.filter(it => it.delFlag !== 1)) {
-                if (!item.useType || !item.useAmount || !item.batch) {
+                if (!item.useType || !item.useAmount || !item.batch || !item.manufactor) {
                     this.$warningToast('请填写必填项');
                     return false
                 }
@@ -305,6 +314,7 @@
         useType?: string;
         useAmount?: string;
         batch?: string;
+        manufactor?: string;
         splitFlag?: string;
         status?: string;
     }

@@ -111,22 +111,10 @@
                 minwidth: '90'
             },
             {
+                type: 'clickSpan',
                 prop: 'orderNo',
                 label: '开罐单号',
-                formatter: (row) => {
-                    const h = this.$createElement; // eslint-disable-line
-                    return h('div', {
-                        style: {
-                            color: '#45c2b5',
-                            cursor: 'pointer'
-                        },
-                        on: {
-                            click: () => {
-                                console.log(row);
-                            }
-                        }
-                    }, row.dictValue);
-                },
+                onclick: (row)=> this.goDetail(row), // eslint-disable-line
                 minwidth: '70'
             },
             {
@@ -185,6 +173,16 @@
 
         del() {
         //
+        }
+
+        goDetail(row) {
+            console.log(row);
+            this.$store.commit('common/updateMainTabs', this.$store.state.common.mainTabs.filter(subItem => subItem.name !== 'DFMDS-pages-Fermentation-OpenPot-OpenPotDedail'))
+            setTimeout(() => {
+                this.$router.push({
+                    name: `DFMDS-pages-Fermentation-OpenPot-OpenPotDedail`
+                });
+            }, 100);
         }
     }
 </script>
