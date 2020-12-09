@@ -138,7 +138,7 @@ import { dateFormat } from 'src/utils/utils';
 
         Column = [
             {
-                prop: 'holderNo',
+                prop: 'fermentorName',
                 label: '容器号',
                 minwidth: '160'
             },
@@ -173,9 +173,14 @@ import { dateFormat } from 'src/utils/utils';
             {
                 prop: 'ver',
                 label: '版本',
-                minwidth: '120',
-                type: 'input',
-                redact: true
+                minwidth: '160',
+                type: 'select',
+                redact: true,
+                resVal: {
+                    resData: 'data',
+                    label: 'dictValue',
+                    value: 'dictCode'
+                }
             },
             {
                 prop: 'startDate',
@@ -254,7 +259,7 @@ import { dateFormat } from 'src/utils/utils';
         ]
 
         createdEnd() {
-            this.getOrderType();
+            this.getDict();
             this.$nextTick(() => {
                 if (this.$refs.queryTable.queryForm.workShop !== '') {
                     this.$refs.queryTable.getDataList(true)
@@ -262,13 +267,19 @@ import { dateFormat } from 'src/utils/utils';
             })
         }
 
-        getOrderType() {
+        getDict() {
             COMMON_API.DICTIONARY_ITEM_DROPDOWN_POST_API({
                 factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
                 dictType: 'ORDER_TYPE' // 字典类型
             }).then(({ data }) => {
                 this.$refs.queryTable.optionLists.orderType = data.data;
                 // this.orderType = data.data;
+            })
+            COMMON_API.DICTIONARY_ITEM_DROPDOWN_POST_API({
+                factory: 'common',
+                dictType: 'COMMON_PBREV' // 字典类型 版本
+            }).then(({ data }) => {
+                this.$refs.queryTable.optionLists.ver = data.data;
             })
         }
 
