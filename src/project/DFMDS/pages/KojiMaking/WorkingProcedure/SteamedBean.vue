@@ -212,7 +212,7 @@
             COMMON_API.HOLDER_DROPDOWN_API({
                 // deptId: this.formHeader.workShop,
                 factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
-                holderType: ['025']
+                holderType: ['029']
             }).then(({ data }) => {
                 this.scanList = data.data || [];
             });

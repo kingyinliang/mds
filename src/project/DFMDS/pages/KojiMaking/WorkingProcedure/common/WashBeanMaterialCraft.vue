@@ -538,7 +538,7 @@
         // 计算筛豆数量总数
         get totalSieveImpurityAmount() {
             let num = 0;
-            this.craftSeiveBeanTable.map(item => {
+            this.craftSeiveBeanTable.filter(item => item.delFlag !== 1).map(item => {
                 if (item.sieveImpurityAmount) {
                     num += Number(item.sieveImpurityAmount);
                 }
