@@ -191,7 +191,31 @@ const FER_API = {
     /**
      * @property {string} FER_OPEN_POT_APPLY_LIST_API 发酵车间-开罐申请-首页查询
      */
-    FER_OPEN_POT_APPLY_LIST_API: params => httpProxy('/fer/open/pagingQuery', 'POST', params)
+    FER_OPEN_POT_APPLY_LIST_API: params => httpProxy('/fer/open/pagingQuery', 'POST', params),
+    /**
+     * @property {string} FER_OPEN_POT_APPLY_DEL_API 发酵车间-开罐申请-删除
+     */
+    FER_OPEN_POT_APPLY_DEL_API: params => httpProxy('/fer/open/delete', 'POST', params),
+    /**
+     * @property {string} FER_OPEN_POT_APPLY_REVOCATION_API 发酵车间-开罐申请-撤回
+     */
+    FER_OPEN_POT_APPLY_REVOCATION_API: params => httpProxy('/fer/open/revocation', 'GET', params),
+    /**
+     * @property {string} FER_OPEN_POT_APPLY_DETAIL_API 发酵车间-开罐申请-详情页-申请基本信息
+     */
+    FER_OPEN_POT_APPLY_DETAIL_API: params => httpProxy('/fer/open/get', 'GET', params),
+    /**
+     * @property {string} FER_OPEN_POT_APPLY_DETAIL_TABLE_API 发酵车间-开罐申请-详情页-反馈信息
+     */
+    FER_OPEN_POT_APPLY_DETAIL_TABLE_API: params => httpProxy('/fer/open/queryOfFermentorOrderInStorage', 'GET', params),
+    /**
+     * @property {string} FER_OPEN_POT_APPLY_DETAIL_SAVE_API 发酵车间-开罐申请-详情页-保存
+     */
+    FER_OPEN_POT_APPLY_DETAIL_SAVE_API: params => httpProxy('/fer/open/save', 'POST', params),
+    /**
+     * @property {string} FER_OPEN_POT_APPLY_DETAIL_SUBMIT_API 发酵车间-开罐申请-详情页-提交
+     */
+    FER_OPEN_POT_APPLY_DETAIL_SUBMIT_API: params => httpProxy('/fer/open/submit', 'POST', params)
 };
 
 export default FER_API;
