@@ -115,9 +115,13 @@
                     }
                 } else if (item.id) {
                     if (!_.isEqual(this.temTableData[index], item)) {
+                        item.kojiOrderNo = formHeader.kojiOrderNo
+                        item.orderNo = formHeader.orderNo
                         tableDataDto.updateDto.push(item)
                     }
                 } else if (!_.isEqual(this.temTableData[index], item)) {
+                        item.kojiOrderNo = formHeader.kojiOrderNo
+                        item.orderNo = formHeader.orderNo
                         tableDataDto.insertDto.push(item)
                     }
             })

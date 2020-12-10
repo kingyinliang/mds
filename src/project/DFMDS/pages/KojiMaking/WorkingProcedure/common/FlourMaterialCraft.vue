@@ -296,9 +296,13 @@
                     }
                 } else if (item.id) {
                     if (!_.isEqual(this.temCraftSteamBeanTable[index], item)) {
+                        item.kojiOrderNo = formHeader.kojiOrderNo
+                        item.orderNo = formHeader.orderNo
                         tempSteamBean.updateDto.push(item)
                     }
                 } else {
+                    item.kojiOrderNo = formHeader.kojiOrderNo
+                    item.orderNo = formHeader.orderNo
                     tempSteamBean.insertDto.push(item)
                 }
             })
@@ -308,10 +312,14 @@
                 newCraftSteamFlourInfo = false
             }
 
+
             let newCraftControlInfo = true
             if (this.craftControlInfo.id) {
                 newCraftControlInfo = false
             }
+            this.craftControlInfo.kojiOrderNo = formHeader.kojiOrderNo
+            this.craftControlInfo.orderNo = formHeader.orderNo
+
             return {
                 steamBean: tempSteamBean.insertDto.length === 0 && tempSteamBean.updateDto.length === 0 && tempSteamBean.deleteDto.length === 0 ? null : {
                     insertDto: tempSteamBean.insertDto,
@@ -484,7 +492,9 @@
             }).then(({ data }) => {
                 if (data.data && data.data.length > 0) {
                     this.craftSteamFlourInfo = data.data[0];
-                    this.temCraftSteamFlourInfo = JSON.parse(JSON.stringify(data.data[0]));
+                    this.craftSteamFlourInfo.kojiOrderNo = this.formHeader.kojiOrderNo
+                    this.craftSteamFlourInfo.orderNo = this.formHeader.orderNo
+                    this.temCraftSteamFlourInfo = JSON.parse(JSON.stringify(this.craftSteamFlourInfo));
                 }
             });
         }
@@ -508,7 +518,9 @@
             }).then(({ data }) => {
                 if (data.data && data.data.length > 0) {
                     this.craftControlInfo = data.data[0];
-                    this.temCraftControlInfo = JSON.parse(JSON.stringify(data.data[0]));
+                    this.craftControlInfo.kojiOrderNo = this.formHeader.kojiOrderNo
+                    this.craftControlInfo.orderNo = this.formHeader.orderNo
+                    this.temCraftControlInfo = JSON.parse(JSON.stringify(this.craftControlInfo));
                 }
             });
         }
