@@ -6,7 +6,7 @@
             :show-index-column="true"
             :column="column"
             :show-page="true"
-            query-auth="ckTimeQuery"
+            query-auth="ckAccessoriesQuery"
             :query-form-data="queryFormData"
             :list-interface="listInterface"
             :custom-data="true"

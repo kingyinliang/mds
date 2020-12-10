@@ -3,6 +3,7 @@
         <query-table
             ref="queryTable"
             :column="column"
+            :rules="rules"
             :query-form-data="queryFormData"
             :list-interface="listInterface"
             get-list-field="data"
@@ -79,6 +80,16 @@
                 propTwo: 'productEndDate'
             }
         ]
+
+        rules = [
+            {
+                prop: 'workShop',
+                text: '请选择生产车间'
+            }, {
+                prop: 'productStartDate',
+                text: '请选择日期'
+            }
+        ];
 
         column = [
             {

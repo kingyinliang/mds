@@ -26,7 +26,9 @@
                 <el-table-column label="批次" prop="batch" width="150">
                     <template slot-scope="scope">
                         <el-select v-model="scope.row.batch" :disabled="!(isRedact && scope.row.checkStatus !== 'C' && scope.row.checkStatus !== 'D' && scope.row.checkStatus !== 'P' && scope.row.materialStatus !== '3')" filterable placeholder="请选择" size="small" clearable @change="batchChange(scope.row)">
-                            <el-option v-for="(iteam, index) in scope.row.batchArr" :key="index" :label="iteam.batch" :value="iteam.batch" />
+                            <template v-for="(iteam, index) in scope.row.batchArr">
+                                <el-option v-if="iteam.useMaterialAmount !== '0.0000'" :key="index" :label="iteam.batch" :value="iteam.batch" />
+                            </template>
                         </el-select>
                     </template>
                 </el-table-column>
@@ -745,7 +747,10 @@
                 const realLossNum = dataArr.reduce((total, currentValue: MaterialMap) => {
                     return total + (currentValue.realLoss ? Number(currentValue.realLoss) : 0)
                 }, 0);
-                const sumnum = Number(row.startStocks) - Number(num) - Number(realLossNum);
+                const startStocksNum = dataArr.reduce((total, currentValue: MaterialMap) => {
+                    return total + (currentValue.startStocks ? Number(currentValue.startStocks) : 0)
+                }, 0);
+                const sumnum = Number(startStocksNum) - Number(num) - Number(realLossNum);
                 dataArr.forEach(item => {
                     item.endStocks = sumnum
                 })
