@@ -317,36 +317,15 @@
                 }
             })
 
-            // dataEntryData(formHeader, this.craftSteamBeanTable, this.temCraftSteamBeanTable, tableSaveDto.deleteDto, tableSaveDto.insertDto, tableSaveDto.updateDto, (item) => {
-            //     item.kojiOrderNo = formHeader.kojiOrderNo;
-            //     item.orderNo = formHeader.orderNo;
-            // });
-            // dataEntryData(formHeader, this.hardTable, this.temHardTable, hardTableSaveDto.deleteDto, hardTableSaveDto.insertDto, hardTableSaveDto.updateDto, (item) => {
-            //     item.kojiOrderNo = formHeader.kojiOrderNo;
-            //     item.orderNo = formHeader.orderNo;
-            // });
-
-            // function filterTableData(whichTable, type) {
-            //     if (type === 'insert') {
-            //         return whichTable.filter(item => !item.id && item.delFlag !== 1);
-            //     }
-            //     if (type === 'update') {
-            //         return whichTable.filter(item => item.id && item.delFlag !== 1);
-            //     }
-            //     if (type === 'del') {
-            //         return whichTable.filter(item => item.id && item.delFlag === 0);
-            //     }
-            // }
-
             return {
-                steamBean: {
+                steamBean: tableSaveDto.insertDto.length === 0 && tableSaveDto.updateDto.length === 0 && tableSaveDto.deleteDto.length === 0 ? null : {
                     insertDto: tableSaveDto.insertDto,
                     updateDto: tableSaveDto.updateDto,
                     deleteDto: tableSaveDto.deleteDto,
                     kojiOrderNo: formHeader.kojiOrderNo,
                     orderNo: formHeader.orderNo
                 },
-                steamBeanHardness: {
+                steamBeanHardness: hardTableSaveDto.insertDto.length === 0 && hardTableSaveDto.updateDto.length === 0 && hardTableSaveDto.deleteDto.length === 0 ? null : {
                     insertDto: hardTableSaveDto.insertDto,
                     updateDto: hardTableSaveDto.updateDto,
                     deleteDto: hardTableSaveDto.deleteDto,

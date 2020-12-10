@@ -232,7 +232,11 @@
             steamFlourMans: ''
         };
 
-        temCraftSteamFlourInfo: Craft ={};
+        temCraftSteamFlourInfo: Craft ={
+            steamPacketPressure: '',
+            steamFlourSpeed: '',
+            steamFlourMans: ''
+        };
 
         // 蒸豆记录表格数据
         craftSteamBeanTable: CraftList[] = [];
@@ -249,7 +253,16 @@
             mixtrueEnd: ''
         };
 
-        temCraftControlInfo: CraftList ={};
+        temCraftControlInfo: CraftList ={
+            flourWindTemp: '',
+            beanWindTempOne: '',
+            beanWindTempTwo: '',
+            mixtureTempOne: '',
+            mixtureTempTwo: '',
+            beanWindFrequency: '',
+            mixtureStart: '',
+            mixtrueEnd: ''
+        };
 
         // 存储历史数据
         temCraftSteamBeanTable = [];
@@ -274,24 +287,6 @@
                 insertDto: [],
                 updateDto: []
             };
-
-            // dataEntryData(formHeader, this.craftSteamBeanTable, this.temCraftSteamBeanTable, tableSaveDto.deleteDto, tableSaveDto.insertDto, tableSaveDto.updateDto, () => {
-            //     // item.kojiOrderNo = formHeader.kojiOrderNo;
-            //     // item.orderNo = formHeader.orderNo;
-            // });
-
-
-            // function filterTableData(whichTable, type) {
-            //     if (type === 'insert') {
-            //         return whichTable.filter(item => !item.id && item.delFlag !== 1);
-            //     }
-            //     if (type === 'update') {
-            //         return whichTable.filter(item => item.id && item.delFlag !== 1);
-            //     }
-            //     if (type === 'del') {
-            //         return whichTable.filter(item => item.id && item.delFlag === 0);
-            //     }
-            // }
 
 
             this.craftSteamBeanTable.forEach((item: CraftList, index) => {
@@ -318,7 +313,7 @@
                 newCraftControlInfo = false
             }
             return {
-                steamBean: {
+                steamBean: tempSteamBean.insertDto.length === 0 && tempSteamBean.updateDto.length === 0 && tempSteamBean.deleteDto.length === 0 ? null : {
                     insertDto: tempSteamBean.insertDto,
                     updateDto: tempSteamBean.updateDto,
                     deleteDto: tempSteamBean.deleteDto,
@@ -326,14 +321,14 @@
                     orderNo: formHeader.orderNo
                 },
                 steamFlour: {
-                    insertDto: newCraftSteamFlourInfo === true ? [this.craftSteamFlourInfo] : [],
+                    insertDto: newCraftSteamFlourInfo === true && !_.isEqual(this.craftSteamFlourInfo, this.temCraftSteamFlourInfo) ? [this.craftSteamFlourInfo] : [],
                     updateDto: newCraftSteamFlourInfo === false && !_.isEqual(this.craftSteamFlourInfo, this.temCraftSteamFlourInfo) ? [this.craftSteamFlourInfo] : [],
                     deleteDto: [],
                     kojiOrderNo: formHeader.kojiOrderNo,
                     orderNo: formHeader.orderNo
                 },
                 steamControl: {
-                    insertDto: newCraftControlInfo === true ? [this.craftControlInfo] : [],
+                    insertDto: newCraftControlInfo === true && !_.isEqual(this.craftControlInfo, this.temCraftControlInfo) ? [this.craftControlInfo] : [],
                     updateDto: newCraftControlInfo === false && !_.isEqual(this.craftControlInfo, this.temCraftControlInfo) ? [this.craftControlInfo] : [],
                     deleteDto: [],
                     kojiOrderNo: formHeader.kojiOrderNo,
