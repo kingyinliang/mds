@@ -283,6 +283,9 @@
                     this.querySecondResultList.forEach(item => {
                         this.$set(item, 'orderNoTemp', item.orderNo)
                     })
+
+                    console.log('this.querySecondResultList')
+                    console.log(this.querySecondResultList)
                 }
 
             })
@@ -319,6 +322,7 @@
             this.queryFirstResultList = [];
             if (data.data.length !== 0) {
                 this.queryFirstResultList = data.data;
+
                 this.queryFirstResultList.forEach(item => {
                     this.$set(item, 'nowIndex', 0)
                     item.houseSplitList.forEach(subItem => {
@@ -326,6 +330,8 @@
                         this.$set(subItem, 'orderNoTemp', subItem.orderNo)
                     })
                 })
+                console.log('this.queryFirstResultList')
+                console.log(this.queryFirstResultList)
             } else if (this.querySecondResultList.length === 0) {
                     this.$infoToast('暂无任何内容');
                 }

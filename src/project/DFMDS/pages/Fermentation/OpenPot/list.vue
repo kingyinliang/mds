@@ -2,10 +2,11 @@
     <div class="header_main">
         <query-table
             ref="queryTable"
+            :factory-type="1"
             :query-form-data="queryFormData"
             :tabs="tabs"
             :list-interface="listInterface"
-            get-list-field="data"
+            :custom-data="true"
             @get-data-success="setData"
         >
             <template slot="operation_column" slot-scope="{ scope }">
@@ -19,7 +20,7 @@
 
 <script lang="ts">
     import { Vue, Component } from 'vue-property-decorator';
-    import { COMMON_API } from 'common/api/api';
+    import { COMMON_API, FER_API } from 'common/api/api';
 
     @Component
     export default class List extends Vue {
@@ -48,7 +49,7 @@
             {
                 type: 'select',
                 label: '生产物料',
-                prop: 'productMaterialCode',
+                prop: 'material',
                 defaultValue: '',
                 filterable: true,
                 defaultOptionsFn: () => {
@@ -66,24 +67,24 @@
             {
                 type: 'date-picker',
                 label: '申请日期',
-                prop: 'productDate',
+                prop: 'created',
                 valueFormat: 'yyyy-MM-dd hh:mm:ss'
             },
             {
                 type: 'date-picker',
                 label: '使用日期',
-                prop: 'productDate1',
+                prop: 'useDate',
                 valueFormat: 'yyyy-MM-dd hh:mm:ss'
             },
             {
                 type: 'input',
                 label: '开罐单号',
-                prop: 'orderNo'
+                prop: 'openPotNo'
             },
             {
                 type: 'select',
                 label: '开罐类型',
-                prop: 'orderType',
+                prop: 'openType',
                 defaultOptionsFn: () => {
                     return COMMON_API.DICTQUERY_API({
                         factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
@@ -165,10 +166,51 @@
         // 查询
         listInterface(params) {
             params['factory'] = JSON.parse(sessionStorage.getItem('factory') || '{}').id;
-            return COMMON_API.DICTQUERY_API({
-                factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
-                dictType: 'ORDER_TYPE'
-            });
+            if (this.$refs.queryTable.activeName === '0') {
+                params.status = '';
+            } else if (this.$refs.queryTable.activeName === '1') {
+                params.status = '';
+            } else {
+                params.status = '';
+            }
+            return FER_API.FER_OPEN_POT_APPLY_LIST_API(params);
+        }
+
+        setData(datas, st) {
+            if (st) {
+                this.tabs.map((item, index) => {
+                    if (index !== Number(this.$refs.queryTable.activeName)) {
+                        const params = JSON.parse(JSON.stringify(this.$refs.queryTable.queryForm))
+                        params.factory = JSON.parse(sessionStorage.getItem('factory') || '{}').id;
+                        if (index === 0) {
+                            params.status = '';
+                        } else if (index === 1) {
+                            params.status = '';
+                        } else {
+                            params.status = '';
+                        }
+                        params.current = 1;
+                        params.size = this.$refs.queryTable.tabs[index].pages.pageSize;
+                        params.total = this.$refs.queryTable.tabs[index].pages.totalCount;
+                        FER_API.FER_OPEN_POT_APPLY_LIST_API(params).then(({ data }) => {
+                            this.tabs[index].tableData = data.data.records;
+                            this.$refs.queryTable.tabs[index].pages.currPage = data.data.current;
+                            this.$refs.queryTable.tabs[index].pages.pageSize = data.data.size;
+                            this.$refs.queryTable.tabs[index].pages.totalCount = data.data.total;
+                        });
+                    } else {
+                        this.tabs[this.$refs.queryTable.activeName].tableData = datas.data.records;
+                        this.$refs.queryTable.tabs[this.$refs.queryTable.activeName].pages.currPage = datas.data.current;
+                        this.$refs.queryTable.tabs[this.$refs.queryTable.activeName].pages.pageSize = datas.data.size;
+                        this.$refs.queryTable.tabs[this.$refs.queryTable.activeName].pages.totalCount = datas.data.total;
+                    }
+                })
+            } else {
+                this.tabs[this.$refs.queryTable.activeName].tableData = datas.data.records;
+                this.$refs.queryTable.tabs[this.$refs.queryTable.activeName].pages.currPage = datas.data.current;
+                this.$refs.queryTable.tabs[this.$refs.queryTable.activeName].pages.pageSize = datas.data.size;
+                this.$refs.queryTable.tabs[this.$refs.queryTable.activeName].pages.totalCount = datas.data.total;
+            }
         }
 
         del() {
@@ -176,7 +218,7 @@
         }
 
         goDetail(row) {
-            console.log(row);
+            this.$store.commit('fer/updateopenPotObj', row);
             this.$store.commit('common/updateMainTabs', this.$store.state.common.mainTabs.filter(subItem => subItem.name !== 'DFMDS-pages-Fermentation-OpenPot-OpenPotDedail'))
             setTimeout(() => {
                 this.$router.push({

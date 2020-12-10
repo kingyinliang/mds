@@ -35,7 +35,7 @@
                 </el-button>
             </template>
             <el-table header-row-class-name="tableHead" class="newTable" :data="craftTable" :row-class-name="RowDelFlag" border tooltip-effect="dark">
-                <el-table-column type="index" label="序号" width="50px" fixed />
+                <el-table-column type="index" :index="index => getIndexMethod(index, craftTable)" label="序号" width="55" fixed />
                 <el-table-column>
                     <template slot="header">
                         <span class="notNull">* </span>类型

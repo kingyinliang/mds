@@ -14,7 +14,8 @@ export default {
         // 盐水发料发酵罐讯息
         brineInfo: {},
         fermentBucketDetail: {},
-        applyForObj: {}
+        applyForObj: {},
+        openPotObj: {}
     },
     mutations: {
         updateBrineInfo(state, infoObj) {
@@ -25,6 +26,9 @@ export default {
         },
         updateapplyForObj(state, item) {
             state.applyForObj = item;
+        },
+        updateopenPotObj(state, item) {
+            state.openPotObj = item;
         }
     }
 };

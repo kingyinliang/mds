@@ -275,9 +275,7 @@
 
         setImpurityInfo(val, target, prop, who) {
             this.setObjectProp(val, target, prop, who)
-
             target.impurityInfo = ''
-
         }
 
         // 表格内下拉选项

@@ -16,7 +16,7 @@
                     <el-col :span="10">
                         <mds-card title="订单查询" name="ste" :pack-up="false" style="margin-bottom: 0; background: #fff;">
                             <el-table :data="queryResultList" header-row-class-name="tableHead" class="newTable" :height="mainClientHeight - 61 - 52 - 47" border tooltip-effect="dark" @row-dblclick="showSplitTable">
-                                <el-table-column type="index" width="55" label="序号" align="center" fixed />
+                                <el-table-column type="index" :index="index => getIndexMethod(index, splitTable)" label="序号" width="55" fixed />
                                 <el-table-column label="订单状态" width="80" :show-overflow-tooltip="true">
                                     <template slot-scope="scope">
                                         <label :style="{ color: scope.row.orderStatusName === '不通过' ? 'red' : scope.row.orderStatusName === '通过' ? 'rgb(103, 194, 58)' : '',}">{{ scope.row.orderStatusName }}</label>
@@ -47,7 +47,7 @@
                     <el-col :span="14">
                         <mds-card title="拆分管理" name="split" :pack-up="false" style="margin-bottom: 0; background: #fff;">
                             <el-table :data="splitTable" header-row-class-name="tableHead" class="newTable" :height="mainClientHeight - 61 - 62 - 47" border tooltip-effect="dark">
-                                <el-table-column type="index" width="55" label="序号" align="center" fixed />
+                                <el-table-column type="index" :index="index => getIndexMethod(index, splitTable)" label="序号" width="55" fixed />
                                 <el-table-column label="曲房状态" width="100" prop="statusName" :show-overflow-tooltip="true" />
                                 <el-table-column label="生产订单" min-width="120" prop="orderNo" :show-overflow-tooltip="true" />
                                 <el-table-column label="曲房号" min-width="100" prop="kojiHouseName" :show-overflow-tooltip="true" />

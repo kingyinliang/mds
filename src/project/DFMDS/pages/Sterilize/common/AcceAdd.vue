@@ -87,7 +87,7 @@
         </mds-card>
         <mds-card title="辅料领用" name="table1" icon-bg="#ffbf00">
             <el-table header-row-class-name="tableHead" class="newTable" :data="steAccessoriesConsume" :span-method="spanMethod" :row-class-name="rowDelFlag" border tooltip-effect="dark">
-                <el-table-column type="index" label="序号" width="50px" fixed />
+                <el-table-column type="index" :index="index => getIndexMethod(index, steAccessoriesConsume)" label="序号" width="55" fixed />
                 <el-table-column label="领用物料" min-width="160" :show-overflow-tooltip="true">
                     <template slot-scope="scope">
                         {{ scope.row.useMaterialName + ' ' + scope.row.useMaterialCode }}
@@ -163,7 +163,7 @@
                 </el-button>
             </template>
             <el-table header-row-class-name="tableHead" class="newTable" :data="newSteAccessoriesConsume" :span-method="spanTwoMethod" :row-class-name="rowDelFlag" border tooltip-effect="dark">
-                <el-table-column type="index" label="序号" width="50px" fixed />
+                <el-table-column type="index" :index="index => getIndexMethod(index, newSteAccessoriesConsume)" label="序号" width="55" fixed />
                 <el-table-column label="领用物料" width="140">
                     <template slot="header">
                         <span class="notNull">* </span>领用物料

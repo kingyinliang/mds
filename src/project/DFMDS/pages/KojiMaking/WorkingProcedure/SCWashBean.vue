@@ -164,8 +164,8 @@
         // 获取页签状态
         getHouseTag() {
             KOJI_API.KOJI_PAGE_TAG_STATUS_QUERY_API({
-                orderNo: this.formHeader.orderNo,
-                kojiOrderNo: this.formHeader.kojiOrderNo
+                orderNo: this.formHeader.orderNo
+                // kojiOrderNo: this.formHeader.kojiOrderNo
             }).then(({ data }) => {
                 this.$store.commit('koji/updateHouseTag', data.data);
                 this.tabs[0].status = data.data.washBeanMaterailName

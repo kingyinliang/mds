@@ -17,10 +17,10 @@
                 </el-button>
             </template>
             <template slot="operation_column" slot-scope="{ scope }">
-                <el-button v-if="scope.$index === 0" class="ra_btn" type="text" round size="mini" style="margin-left: 0;" @click="del(scope.row, true)">
+                <el-button v-if="scope.row.statusName === '已保存'" class="ra_btn" type="text" round size="mini" style="margin-left: 0;" @click="del(scope.row, true)">
                     删除
                 </el-button>
-                <el-button v-if="scope.$index === 1" class="ra_btn" type="text" round size="mini" style="margin-left: 0;" @click="withdraw(scope.row, true)">
+                <el-button v-if="scope.row.statusName === '待处理'" class="ra_btn" type="text" round size="mini" style="margin-left: 0;" @click="withdraw(scope.row, true)">
                     撤回
                 </el-button>
             </template>
@@ -181,18 +181,44 @@
             }, 100);
         }
 
+        AddDate() {
+            this.$store.commit('fer/updateapplyForObj', {});
+            this.$store.commit('common/updateMainTabs', this.$store.state.common.mainTabs.filter(subItem => subItem.name !== 'DFMDS-pages-Fermentation-OpenPot-applyDetail'))
+            setTimeout(() => {
+                this.$router.push({
+                    name: `DFMDS-pages-Fermentation-OpenPot-applyDetail`
+                });
+            }, 100);
+        }
+
         del(row) {
             this.$confirm('确认删除, 是否继续?', '删除', {
                 confirmButtonText: '确定',
                 cancelButtonText: '取消',
                 type: 'warning'
             }).then(() => {
-                console.log(row);
+                FER_API.FER_OPEN_POT_APPLY_DEL_API({
+                    id: row.id
+                }).then(() => {
+                    this.$successToast('删除成功!');
+                    this.$refs.queryTable.getDataList()
+                })
             })
         }
 
-        withdraw() {
-            //
+        withdraw(row) {
+            this.$confirm('确认撤回, 是否继续?', '撤回', {
+                confirmButtonText: '确定',
+                cancelButtonText: '取消',
+                type: 'warning'
+            }).then(() => {
+                FER_API.FER_OPEN_POT_APPLY_REVOCATION_API({
+                    id: row.id
+                }).then(() => {
+                    this.$successToast('撤回成功!');
+                    this.$refs.queryTable.getDataList()
+                })
+            })
         }
     }
 </script>

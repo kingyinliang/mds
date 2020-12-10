@@ -22,8 +22,8 @@
                                 <el-option v-for="(item, index) in productline" :key="index" :label="item.deptName" :value="item.deptId" />
                             </el-select>
                         </el-form-item>
-                        <el-form-item label="日期：">
-                            <el-date-picker v-model="plantList.setDate" type="date" placeholder="请选择" value-format="yyyy-MM-dd" style="width: 160px;" />
+                        <el-form-item label="日期：" label-width="50px">
+                            <el-date-picker v-model="plantList.startDate" type="date" placeholder="请选择" value-format="yyyy-MM-dd" style="width: 140px;" /> - <el-date-picker v-model="plantList.endDate" type="date" placeholder="请选择" value-format="yyyy-MM-dd" style="width: 140px;" />
                         </el-form-item>
                         <el-form-item label="考勤类型：">
                             <el-select v-model="plantList.kqlx" placeholder="请选择" size="small" style="width: 160px;">
@@ -126,12 +126,13 @@ export default {
                 factory: '',
                 workShop: '',
                 productLine: '',
-                setDate:
+                startDate:
                     new Date(new Date() - 24 * 60 * 60 * 1000).getFullYear().toString() +
                     '-' +
                     (new Date(new Date() - 24 * 60 * 60 * 1000).getMonth() + 1 >= 10 ? (new Date(new Date() - 24 * 60 * 60 * 1000).getMonth() + 1).toString() : '0' + (new Date(new Date() - 24 * 60 * 60 * 1000).getMonth() + 1)) +
                     '-' +
                     (new Date(new Date() - 24 * 60 * 60 * 1000).getDate() >= 10 ? new Date(new Date() - 24 * 60 * 60 * 1000).getDate().toString() : '0' + new Date(new Date() - 24 * 60 * 60 * 1000).getDate()),
+                endDate: '',
                 kqlx: '',
                 userId: '',
                 status: '',
