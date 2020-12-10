@@ -102,8 +102,6 @@
 
         // 提交保存时获取处理数据
         getSavedOrSubmitData(formHeader) {
-
-
             const tableDataDto: SendDataForm = {
                 deleteDto: [],
                 insertDto: [],
@@ -117,18 +115,22 @@
                     }
                 } else if (item.id) {
                     if (!_.isEqual(this.temTableData[index], item)) {
+                        item.kojiOrderNo = formHeader.kojiOrderNo
+                        item.orderNo = formHeader.orderNo
                         tableDataDto.updateDto.push(item)
                     }
-                } else {
-                    tableDataDto.insertDto.push(item)
-                }
+                } else if (!_.isEqual(this.temTableData[index], item)) {
+                        item.kojiOrderNo = formHeader.kojiOrderNo
+                        item.orderNo = formHeader.orderNo
+                        tableDataDto.insertDto.push(item)
+                    }
             })
 
             return {
-                inStorage: {
+                inStorage: tableDataDto.insertDto.length === 0 && tableDataDto.updateDto.length === 0 && tableDataDto.deleteDto.length === 0 ? null : {
                     insertDto: tableDataDto.insertDto,
                     updateDto: tableDataDto.updateDto,
-                    deleteDto: [],
+                    deleteDto: tableDataDto.deleteDto,
                     kojiOrderNo: formHeader.kojiOrderNo,
                     orderNo: formHeader.orderNo
                 }

@@ -377,6 +377,20 @@
             //     }
             // }
 
+            //  this.tableData.forEach((item: CraftList, index) => {
+            //     if (item.delFlag === 1) {
+            //         if (item.id) {
+            //             tableSeiveSaveDto.deleteDto.push(item.id)
+            //         }
+            //     } else if (item.id) {
+            //         if (!_.isEqual(this.temTableData[index], item)) {
+            //             tableSeiveSaveDto.updateDto.push(item)
+            //         }
+            //     } else {
+            //         tableSeiveSaveDto.insertDto.push(item)
+            //     }
+            // })
+
             return {
                 kojiBeanSieveSaveDto: {
                     ...this.craftSeiveBeanInfo,

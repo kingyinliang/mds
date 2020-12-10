@@ -34,7 +34,6 @@
 <script lang="ts">
     import { Vue, Component, Watch } from 'vue-property-decorator';
     import { COMMON_API, KOJI_API } from 'common/api/api';
-
     import SteamedBeanCraft from './common/SteamedBeanCraft.vue';
     import SteamedInStorage from './common/SteamedInStorage.vue';
     import KojiExcRecord from './common/KojiExcRecord.vue';
@@ -202,8 +201,6 @@
                 KOJI_API.KOJI_QUERY_STEAMBEAN_API({
                     orderNo: this.jumpFromAudit ? this.$route.params.order : this.$store.state.koji.orderScInfo.orderNo || ''
                 }).then(({ data: res }) => {
-                    console.log('888888888')
-                    console.log(res)
                     this.potNoNow = res.data.beanJarId
 
                     this.formHeader = {
@@ -258,6 +255,8 @@
                 factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
                 holderType: ['029']
             }).then(({ data }) => {
+                console.log('泡豆罐下拉')
+                console.log(data)
                 this.scanList = data.data || [];
             });
         }
