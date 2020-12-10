@@ -10,9 +10,11 @@
                 <mds-card title="申请基本信息" :name="'head'">
                     <el-form :inline="true" :model="formHeader" size="small" class="dataEntry-head-base__form" label-width="100px">
                         <el-row>
-                            <em style="padding-left: 40px;" />
-                            <el-form-item>
-                                <el-radio v-model="formHeader.openType" :disabled="!isRedact" label="1">
+                            <em style="padding-left: 30px;" />
+                            <span style="color: #f56c71; font-size: 12px; line-height: 32px;">*</span>
+                            <em style="padding-left: 10px;" />
+                            <el-form-item required>
+                                <el-radio v-model="formHeader.openType" :disabled="!isRedact" label="SINGLE">
                                     本罐单调
                                 </el-radio>
                                 <el-radio v-model="formHeader.openType" :disabled="!isRedact" label="MANY">
@@ -20,24 +22,24 @@
                                 </el-radio>
                             </el-form-item>
                         </el-row>
-                        <el-form-item label="生产车间：">
+                        <el-form-item label="生产车间：" required>
                             <el-select v-model="formHeader.workShop" :disabled="!isRedact" placeholder="请选择" style="width: 120px;" clearable>
                                 <el-option v-for="(item, index) in workShop" :key="index" :label="item.deptName" :value="item.id" />
                             </el-select>
                         </el-form-item>
-                        <el-form-item label="申请物料：">
-                            <el-select v-model="formHeader.applyMaterialCode" :disabled="!isRedact" placeholder="请选择" style="width: 120px;" clearable>
+                        <el-form-item label="申请物料：" required>
+                            <el-select v-model="formHeader.applyMaterialCode" :disabled="!isRedact" placeholder="请选择" style="width: 120px;" clearable @change="materialChange">
                                 <el-option v-for="(item, index) in material" :key="index" :label="item.materialName+' ' + item.materialCode" :value="item.materialCode" />
                             </el-select>
                         </el-form-item>
-                        <el-form-item label="使用日期：">
-                            <el-date-picker v-model="formHeader.useDate" type="datetime" value-format="yyyy-MM-dd HH:mm" format="yyyy-MM-dd HH:mm" placeholder="请选择" size="small" :disabled="!isRedact" style="width: 120px;" />
+                        <el-form-item label="使用日期：" required>
+                            <el-date-picker v-model="formHeader.useDate" type="date" value-format="yyyy-MM-dd" format="yyyy-MM-dd" placeholder="请选择" size="small" :disabled="!isRedact" style="width: 120px;" />
                         </el-form-item>
-                        <el-form-item label="申请数量：">
+                        <el-form-item label="申请数量：" required>
                             <el-input v-model="formHeader.applyAmount" :disabled="!isRedact" placeholder="手动输入" style="width: 120px;" />
                         </el-form-item>
                         <el-form-item label="调酱容器：">
-                            <el-select v-model="formHeader.mixPotNo" :disabled="!isRedact" placeholder="请选择" style="width: 120px;" clearable>
+                            <el-select v-model="formHeader.mixPotNo" :disabled="!isRedact" placeholder="请选择" style="width: 120px;" clearable @change="potChange">
                                 <el-option v-for="(item, index) in potArr" :key="index" :label="item.holderName" :value="item.holderNo" />
                             </el-select>
                         </el-form-item>
@@ -45,7 +47,7 @@
                             <p>{{ formHeader.openPotNo }}</p>
                         </el-form-item>
                         <el-form-item label="状态：">
-                            <p>{{ formHeader.openFlag }}</p>
+                            <p>{{ formHeader.statusName }}</p>
                         </el-form-item>
                         <el-form-item label="操作人：">
                             <p>{{ formHeader.changer }}</p>
@@ -112,14 +114,17 @@
                 </mds-card>
             </template>
             <template slot="custom_btn">
-                <el-button type="primary" size="small" @click="isRedact = !isRedact">
+                <el-button v-if="formHeader.statusName === '已保存' || !formHeader.statusName" type="primary" size="small" @click="isRedact = !isRedact">
                     {{ isRedact ? '取消' : '编辑' }}
                 </el-button>
                 <el-button v-if="isRedact" type="primary" size="small" @click="saved()">
                     保存
                 </el-button>
-                <el-button v-if="isRedact" type="primary" size="small" @click="submit()">
+                <el-button v-if="formHeader.statusName === '已保存' || !formHeader.statusName" type="primary" size="small" @click="submit()">
                     提交
+                </el-button>
+                <el-button v-if="formHeader.statusName === '待处理'" type="primary" size="small" @click="submit()">
+                    撤回
                 </el-button>
             </template>
         </data-entry>
@@ -178,31 +183,72 @@
             })
         }
 
+        materialChange() {
+            const filterArr: (any) = this.material.filter(it => it['materialCode'] === this.formHeader.applyMaterialCode);// eslint-disable-line
+            this.formHeader.applyMaterialName = filterArr[0].materialName
+        }
+
+        potChange() {
+            const filterArr: (any) = this.potArr.filter(it => it['holderNo'] === this.formHeader.mixPotNo);// eslint-disable-line
+            this.formHeader.mixPotId = filterArr[0].id
+            this.formHeader.mixPotName = filterArr[0].holderName
+        }
+
         saved() {
-            if (!this.formHeader.workShop && !this.formHeader.applyMaterialCode && !this.formHeader.useDate && !this.formHeader.applyAmount) {
+            if (!this.formHeader.openType && !this.formHeader.workShop && !this.formHeader.applyMaterialCode && !this.formHeader.useDate && !this.formHeader.applyAmount) {
                 this.$warningToast('请填写必填项')
                 return false
             }
-            FER_API.FER_OPEN_POT_APPLY_DETAIL_SAVE_API(this.formHeader).then(() => {
+            FER_API.FER_OPEN_POT_APPLY_DETAIL_SAVE_API(this.formHeader).then(({ data }) => {
                 this.$successToast('保存成功')
+                if (!this.$store.state.fer.applyForObj.id) {
+                    this.$store.state.fer.applyForObj = data.data
+                }
                 this.init()
             })
         }
 
         submit() {
-            if (!this.formHeader.workShop && !this.formHeader.applyMaterialCode && !this.formHeader.useDate && !this.formHeader.applyAmount) {
+            if (!this.formHeader.openType && !this.formHeader.workShop && !this.formHeader.applyMaterialCode && !this.formHeader.useDate && !this.formHeader.applyAmount) {
                 this.$warningToast('请填写必填项')
                 return false
             }
-            FER_API.FER_OPEN_POT_APPLY_DETAIL_SUBMIT_API(this.formHeader).then(() => {
-                this.$successToast('保存成功')
+            FER_API.FER_OPEN_POT_APPLY_DETAIL_SUBMIT_API(this.formHeader).then(({ data }) => {
+                this.$successToast('提交成功')
+                if (!this.$store.state.fer.applyForObj.id) {
+                    this.$store.state.fer.applyForObj = data.data
+                }
                 this.init()
+            })
+        }
+
+        withdraw() {
+            this.$confirm('确认撤回, 是否继续?', '撤回', {
+                confirmButtonText: '确定',
+                cancelButtonText: '取消',
+                type: 'warning'
+            }).then(() => {
+                FER_API.FER_OPEN_POT_APPLY_REVOCATION_API({
+                    id: this.formHeader.id
+                }).then(() => {
+                    this.$successToast('撤回成功!');
+                    this.init()
+                })
             })
         }
     }
     interface FormHeader{
+        id?: string;
         workShop?: string;
+        openPotNo?: string;
+        status?: string;
+        statusName?: string;
+        openType?: string;
         applyMaterialCode?: string;
+        applyMaterialName?: string;
+        mixPotId?: string;
+        mixPotName?: string;
+        mixPotNo?: string;
         useDate?: string;
         applyAmount?: string;
     }
