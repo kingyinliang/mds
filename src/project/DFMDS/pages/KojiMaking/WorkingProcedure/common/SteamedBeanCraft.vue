@@ -296,9 +296,13 @@
                     }
                 } else if (item.id) {
                     if (!_.isEqual(this.temCraftSteamBeanTable[index], item)) {
+                        item.kojiOrderNo = formHeader.kojiOrderNo
+                        item.orderNo = formHeader.orderNo
                         tableSaveDto.updateDto.push(item)
                     }
                 } else {
+                    item.kojiOrderNo = formHeader.kojiOrderNo
+                    item.orderNo = formHeader.orderNo
                     tableSaveDto.insertDto.push(item)
                 }
             })
@@ -310,9 +314,13 @@
                     }
                 } else if (item.id) {
                     if (!_.isEqual(this.temHardTable[index], item)) {
+                        item.kojiOrderNo = formHeader.kojiOrderNo
+                        item.orderNo = formHeader.orderNo
                         hardTableSaveDto.updateDto.push(item)
                     }
                 } else {
+                    item.kojiOrderNo = formHeader.kojiOrderNo
+                    item.orderNo = formHeader.orderNo
                     hardTableSaveDto.insertDto.push(item)
                 }
             })

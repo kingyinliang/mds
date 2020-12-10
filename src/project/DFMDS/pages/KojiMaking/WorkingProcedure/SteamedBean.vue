@@ -34,7 +34,6 @@
 <script lang="ts">
     import { Vue, Component, Watch } from 'vue-property-decorator';
     import { COMMON_API, KOJI_API } from 'common/api/api';
-
     import SteamedBeanCraft from './common/SteamedBeanCraft.vue';
     import SteamedInStorage from './common/SteamedInStorage.vue';
     import KojiExcRecord from './common/KojiExcRecord.vue';
