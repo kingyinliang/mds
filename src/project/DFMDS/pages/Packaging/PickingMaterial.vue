@@ -85,9 +85,6 @@
             {
                 prop: 'workShop',
                 text: '请选择生产车间'
-            }, {
-                prop: 'productStartDate',
-                text: '请选择日期'
             }
         ];
 
@@ -156,6 +153,12 @@
         ]
 
         listInterface(params) {
+            if ((params.productStartDate === '' || !params.productStartDate) && params.orderNo === '') {
+                this.$warningToast('日期或订单请选填一项');// eslint-disable-line
+                return new Promise((resolve, reject) => {
+                    reject('error') // eslint-disable-line
+                });
+            }
             return PKG_API.PKG_PICKING_MATERIAL_LIST_API(params);
         }
 

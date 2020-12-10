@@ -195,7 +195,7 @@ const FER_API = {
     /**
      * @property {string} FER_OPEN_POT_APPLY_DEL_API 发酵车间-开罐申请-删除
      */
-    FER_OPEN_POT_APPLY_DEL_API: params => httpProxy('/fer/open/delete', 'POST', params),
+    FER_OPEN_POT_APPLY_DEL_API: params => httpProxy('/fer/open/delete', 'GET', params),
     /**
      * @property {string} FER_OPEN_POT_APPLY_REVOCATION_API 发酵车间-开罐申请-撤回
      */

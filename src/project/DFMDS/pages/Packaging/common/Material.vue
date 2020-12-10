@@ -11,11 +11,6 @@
                 <el-table-column label="单位" prop="materialUnitName" width="50" :show-overflow-tooltip="true" />
                 <el-table-column label="需求用量" prop="needNum" width="80" :show-overflow-tooltip="true" />
                 <el-table-column label="订单领料" prop="receiveMaterial" width="80" :show-overflow-tooltip="true" />
-                <el-table-column label="结算库存" width="80" :show-overflow-tooltip="true">
-                    <template slot-scope="scope">
-                        {{ scope.row.endStocks = getEndStocks(scope.row) }}
-                    </template>
-                </el-table-column>
                 <el-table-column width="70">
                     <template slot-scope="scope">
                         <el-button v-if="isAuth('pkgPdInsert')" type="text" :disabled="!(isRedact && scope.row.checkStatus !== 'C' && scope.row.checkStatus !== 'D' && scope.row.checkStatus !== 'P' && scope.row.materialStatus !== '3') || scope.row.materialStatus === '3'" @click="SplitDate('currentDataTable', scope.row, scope.$index)">
@@ -26,7 +21,7 @@
                 <el-table-column label="批次" prop="batch" width="150">
                     <template slot-scope="scope">
                         <el-select v-model="scope.row.batch" :disabled="!(isRedact && scope.row.checkStatus !== 'C' && scope.row.checkStatus !== 'D' && scope.row.checkStatus !== 'P' && scope.row.materialStatus !== '3')" filterable placeholder="请选择" size="small" clearable @change="batchChange(scope.row)">
-                            <template v-for="(iteam, index) in scope.row.batchArr">
+                            <template v-for="(iteam, index) in scope.row.batchData">
                                 <el-option v-if="iteam.useMaterialAmount !== '0.0000'" :key="index" :label="iteam.batch" :value="iteam.batch" />
                             </template>
                         </el-select>
@@ -475,7 +470,7 @@
         }
 
         batchChange(row) {
-            const filterArr: (any) = row.batchArr.filter(it => it.batch === row.batch);// eslint-disable-line
+            const filterArr: (any) = row.batchData.filter(it => it.batch === row.batch);// eslint-disable-line
             row.startStocks = filterArr[0].storageAmount
             row.manufactor = filterArr[0].manufactor
         }
@@ -486,19 +481,12 @@
             for (let i = 0; i < data.length; i++) {
                 const item = data[i]
                 const index = i
-                let batchArr: BatchArr[] = []
-                const res = await PKG_API.PKG_BATCH_LIST_API({
-                    orderNo: this.formHeader.orderNo,
-                    materialCode: item.materialCode,
-                    productLine: this.formHeader.productLine
-                })
-                batchArr = res.data.data
                 item.item.forEach((listitem) => {
                     const materialMap: MaterialMap = {
-                        batchArr,
                         id: '',
                         merge: index,
                         mainId: item.id,
+                        batchData: item.batchData,
                         checkStatus: item.checkStatus,
                         orderId: item.orderId,
                         orderNo: item.orderNo,
@@ -513,7 +501,7 @@
                         materialType: dataGroup === 'currentDataTable' ? item.materialType : '',
                         startStocks: dataGroup === 'currentDataTable' ? item.startStocks : '',
                         endStocks: dataGroup === 'currentDataTable' ? item.endStocks : '',
-                        receiveMaterial: batchArr[0].useMaterialAmount,
+                        receiveMaterial: dataGroup === 'currentDataTable' ? item.receiveMaterial : '',
                         changer: item.changer,
                         changed: item.changed
                     };
@@ -531,73 +519,33 @@
         processData(data, dataGroup): MaterialMap[] {
             const finalData: MaterialMap[] = []
             data.forEach((item, index) => {
-                if (dataGroup === 'currentDataTable') {
-                    let batchArr: BatchArr[] = []
-                    PKG_API.PKG_BATCH_LIST_API({
-                        orderNo: this.formHeader.orderNo,
+                item.item.forEach((listitem) => {
+                    const materialMap: MaterialMap = {
+                        id: '',
+                        merge: index,
+                        mainId: item.id,
+                        checkStatus: item.checkStatus,
+                        orderId: item.orderId,
+                        orderNo: item.orderNo,
+                        posnr: item.posnr,
+                        bottleLine: dataGroup === 'currentDataTable' ? '' : item.bottleLine,
                         materialCode: item.materialCode,
-                        productLine: this.formHeader.productLine
-                    }).then((res) => {
-                        batchArr = res.data.data
-                        item.item.forEach((listitem) => {
-                            const materialMap: MaterialMap = {
-                                batchArr,
-                                id: '',
-                                merge: index,
-                                mainId: item.id,
-                                checkStatus: item.checkStatus,
-                                orderId: item.orderId,
-                                orderNo: item.orderNo,
-                                posnr: item.posnr,
-                                bottleLine: dataGroup === 'currentDataTable' ? '' : item.bottleLine,
-                                materialCode: item.materialCode,
-                                materialName: item.materialName,
-                                materialUnit: item.materialUnit,
-                                materialUnitName: dataGroup === 'currentDataTable' ? item.materialUnitName : '',
-                                needNum: item.needNum,
-                                materialStatus: dataGroup === 'currentDataTable' ? item.materialStatus : '',
-                                materialType: dataGroup === 'currentDataTable' ? item.materialType : '',
-                                startStocks: dataGroup === 'currentDataTable' ? item.startStocks : '',
-                                endStocks: dataGroup === 'currentDataTable' ? item.endStocks : '',
-                                receiveMaterial: dataGroup === 'currentDataTable' ? item.receiveMaterial : '',
-                                changer: item.changer,
-                                changed: item.changed
-                            };
-                            Object.assign(materialMap, listitem);
-                            materialMap.mainId = item.id;
-                            finalData.push(materialMap)
-                        })
-                    });
-                } else {
-                    item.item.forEach((listitem) => {
-                        const materialMap: MaterialMap = {
-                            id: '',
-                            merge: index,
-                            mainId: item.id,
-                            checkStatus: item.checkStatus,
-                            orderId: item.orderId,
-                            orderNo: item.orderNo,
-                            posnr: item.posnr,
-                            bottleLine: dataGroup === 'currentDataTable' ? '' : item.bottleLine,
-                            materialCode: item.materialCode,
-                            materialName: item.materialName,
-                            materialUnit: item.materialUnit,
-                            materialUnitName: dataGroup === 'currentDataTable' ? item.materialUnitName : '',
-                            needNum: item.needNum,
-                            materialStatus: dataGroup === 'currentDataTable' ? item.materialStatus : '',
-                            materialType: dataGroup === 'currentDataTable' ? item.materialType : '',
-                            startStocks: dataGroup === 'currentDataTable' ? item.startStocks : '',
-                            endStocks: dataGroup === 'currentDataTable' ? item.endStocks : '',
-                            receiveMaterial: dataGroup === 'currentDataTable' ? item.receiveMaterial : '',
-                            changer: item.changer,
-                            changed: item.changed
-                        };
-                        Object.assign(materialMap, listitem);
-                        materialMap.mainId = item.id;
-                        finalData.push(materialMap)
-                    })
-                }
-
+                        materialName: item.materialName,
+                        materialUnit: item.materialUnit,
+                        materialUnitName: dataGroup === 'currentDataTable' ? item.materialUnitName : '',
+                        needNum: item.needNum,
+                        materialStatus: dataGroup === 'currentDataTable' ? item.materialStatus : '',
+                        materialType: dataGroup === 'currentDataTable' ? item.materialType : '',
+                        startStocks: dataGroup === 'currentDataTable' ? item.startStocks : '',
+                        endStocks: dataGroup === 'currentDataTable' ? item.endStocks : '',
+                        receiveMaterial: dataGroup === 'currentDataTable' ? item.receiveMaterial : '',
+                        changer: item.changer,
+                        changed: item.changed
+                    };
+                    Object.assign(materialMap, listitem);
+                    materialMap.mainId = item.id;
+                    finalData.push(materialMap)
+                })
             });
             return finalData
         }
@@ -624,7 +572,7 @@
 
         // 合并行
         spanMethod({ rowIndex, columnIndex }) {
-            if (columnIndex <= 6) {
+            if (columnIndex <= 5) {
                 return {
                     rowspan: this.spanOneArr[rowIndex],
                     colspan: this.spanOneArr[rowIndex] > 0 ? 1 : 0
@@ -738,25 +686,25 @@
             });
         }
 
-        get getEndStocks() {
-            return (row) => {
-                const dataArr = this.currentDataTable.filter(it => it.merge === row.merge && it.delFlag !== 1);
-                const num = dataArr.reduce((total, currentValue: MaterialMap) => {
-                    return total + Number(currentValue.realUseAmount)
-                }, 0);
-                const realLossNum = dataArr.reduce((total, currentValue: MaterialMap) => {
-                    return total + (currentValue.realLoss ? Number(currentValue.realLoss) : 0)
-                }, 0);
-                const startStocksNum = dataArr.reduce((total, currentValue: MaterialMap) => {
-                    return total + (currentValue.startStocks ? Number(currentValue.startStocks) : 0)
-                }, 0);
-                const sumnum = Number(startStocksNum) - Number(num) - Number(realLossNum);
-                dataArr.forEach(item => {
-                    item.endStocks = sumnum
-                })
-                return sumnum
-            }
-        }
+        // get getEndStocks() {
+        //     return (row) => {
+        //         const dataArr = this.currentDataTable.filter(it => it.merge === row.merge && it.delFlag !== 1);
+        //         const num = dataArr.reduce((total, currentValue: MaterialMap) => {
+        //             return total + Number(currentValue.realUseAmount)
+        //         }, 0);
+        //         const realLossNum = dataArr.reduce((total, currentValue: MaterialMap) => {
+        //             return total + (currentValue.realLoss ? Number(currentValue.realLoss) : 0)
+        //         }, 0);
+        //         const startStocksNum = dataArr.reduce((total, currentValue: MaterialMap) => {
+        //             return total + (currentValue.startStocks ? Number(currentValue.startStocks) : 0)
+        //         }, 0);
+        //         const sumnum = Number(startStocksNum) - Number(num) - Number(realLossNum);
+        //         dataArr.forEach(item => {
+        //             item.endStocks = sumnum
+        //         })
+        //         return sumnum
+        //     }
+        // }
 
         materialCount(data) {
             let scrapNum = 0;
@@ -779,7 +727,7 @@ interface MaterialArr{
 }
 interface MaterialMap{
     merge?: number;
-    batchArr?: BatchArr[];
+    batchData?: BatchArr[];
     mainId: string;
     id: string;
     delFlag?: number;

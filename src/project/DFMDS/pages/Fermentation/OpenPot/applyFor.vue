@@ -104,17 +104,17 @@
             {
                 label: '车间',
                 prop: 'workShopName',
-                minwidth: '160'
+                minwidth: '120'
             },
             {
                 label: '开罐类型',
                 prop: 'openTypeName',
-                minwidth: '160'
+                minwidth: '100'
             },
             {
                 label: '开罐单号',
                 prop: 'openPotNo',
-                minwidth: '160',
+                minwidth: '140',
                 formatter: (row) => {
                     const h = this.$createElement; // eslint-disable-line
                     return h('div', {
@@ -133,12 +133,12 @@
             {
                 label: '状态',
                 prop: 'statusName',
-                minwidth: '160'
+                minwidth: '100'
             },
             {
                 label: '物料',
                 prop: 'applyMaterialCode',
-                minwidth: '160',
+                minwidth: '180',
                 formatter: (row) => {
                     return row.applyMaterialCode + ' ' + row.applyMaterialName;
                 }
@@ -146,22 +146,22 @@
             {
                 label: '申请数量',
                 prop: 'applyAmount',
-                minwidth: '160'
+                minwidth: '90'
             },
             {
                 label: '生产日期',
                 prop: 'useDate',
-                minwidth: '160'
+                minwidth: '140'
             },
             {
                 label: '申请人员',
                 prop: 'changer',
-                minwidth: '160'
+                minwidth: '140'
             },
             {
                 label: '申请时间',
                 prop: 'changed',
-                minwidth: '160'
+                minwidth: '140'
             }
         ];
 
