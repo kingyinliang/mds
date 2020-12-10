@@ -27,7 +27,7 @@
                         </el-select>
                     </template>
                 </el-table-column>
-                <el-table-column label="初始库存" prop="startStocks" width="80" :show-overflow-tooltip="true" />
+                <el-table-column label="当前库存" prop="startStocks" width="80" :show-overflow-tooltip="true" />
                 <el-table-column label="领用数量" prop="realUseAmount" width="120">
                     <template slot="header">
                         <span class="notNull">* </span>领用数量
