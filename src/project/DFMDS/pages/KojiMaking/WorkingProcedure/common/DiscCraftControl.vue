@@ -1146,13 +1146,13 @@
 
         ruleSubmit() {
             // 入曲情况
-            if (!this.kojiInformData.addKojiMans || !this.kojiInformData.addKojiTemp || !this.kojiInformData.addKojiStart || !this.kojiInformData.addKojiStart || !this.kojiInformData.addKojiEnd || !this.kojiInformData.addKojiDuration) {
+            if (!this.kojiInformData.addKojiMans || !this.kojiInformData.addKojiTemp || !this.kojiInformData.addKojiStart || !this.kojiInformData.addKojiEnd) {
                 this.$warningToast('请填写入曲情况必填栏位');
                 return false
             }
 
             for (const item of this.kojiGuardData.filter(it => it.delFlag !== 1)) {
-                if (!item.guardDate || !item.windTemp || !item.roomTemp || !item.windSpeed || !item.prodTemp || !item.outUpTemp || !item.outMidTemp || !item.testTempOne || !item.testTempTwo || !item.windDoor) {
+                if (!item.guardDate || !item.windTemp || !item.roomTemp || !item.windSpeed || !item.prodTemp || !item.outUpTemp || !item.outMidTemp || !item.outDownTemp || !item.testTempOne || !item.testTempTwo || !item.windDoor) {
                     this.$warningToast('请填写看曲记录必填项');
                     return false
                 }
@@ -1164,7 +1164,7 @@
                 }
             }
             for (const item of this.kojiEvaluateData) {
-                if (!item.kojiStage || !item.recordDate || !item.recordMans) {
+                if (!item.kojiStage || !item.recordDate || !item.growInfo) {
                     this.$warningToast('请填写曲料生长评价必填项');
                     return false
                 }
@@ -1176,7 +1176,7 @@
             }
 
 
-            if (!this.kojiOutCraftformData.outKojiStart || !this.kojiOutCraftformData.outKojiStart || !this.kojiOutCraftformData.outKojiEnd || !this.kojiOutCraftformData.outKojiMans || !this.kojiOutCraftformData.outKojiTemp) {
+            if (!this.kojiOutCraftformData.outKojiStart || !this.kojiOutCraftformData.outKojiEnd || !this.kojiOutCraftformData.outKojiMans || !this.kojiOutCraftformData.outKojiTemp) {
                 this.$warningToast('请填写出曲工艺必填项');
                 return false
             }
