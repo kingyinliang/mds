@@ -54,6 +54,7 @@
     import { Vue, Component, Prop, Watch } from 'vue-property-decorator';
     import { KOJI_API, AUDIT_API } from 'common/api/api';
     import { dateFormat, getUserNameNumber } from 'utils/utils';
+    import _ from 'lodash';
 
 
     @Component({
@@ -68,6 +69,7 @@
 
         // 蒸豆记录表格数据
         tableData: CraftList[] = [];
+        temTableData: CraftList[] = [];
 
         // 审核记录
         craftAuditList = [];
@@ -99,21 +101,36 @@
         }
 
         // 提交保存时获取处理数据
-        getSavedOrSubmitData() {
-            function filterTableData(whichTable, type) {
-                if (type === 'insert') {
-                    return whichTable.filter(item => !item.id && item.delFlag !== 1);
+        getSavedOrSubmitData(formHeader) {
+
+
+            const tableDataDto: SendDataForm = {
+                deleteDto: [],
+                insertDto: [],
+                updateDto: []
+            };
+
+            this.tableData.forEach((item: CraftList, index) => {
+                if (item.delFlag === 1) {
+                    if (item.id) {
+                        tableDataDto.deleteDto.push(item.id)
+                    }
+                } else if (item.id) {
+                    if (!_.isEqual(this.temTableData[index], item)) {
+                        tableDataDto.updateDto.push(item)
+                    }
+                } else {
+                    tableDataDto.insertDto.push(item)
                 }
-                if (type === 'update') {
-                    return whichTable.filter(item => item.id && item.delFlag !== 1);
-                }
-            }
+            })
 
             return {
                 inStorage: {
-                    insertDto: filterTableData(this.tableData, 'insert'),
-                    updateDto: filterTableData(this.tableData, 'update'),
-                    deleteDto: []
+                    insertDto: tableDataDto.insertDto,
+                    updateDto: tableDataDto.updateDto,
+                    deleteDto: [],
+                    kojiOrderNo: formHeader.kojiOrderNo,
+                    orderNo: formHeader.orderNo
                 }
             };
         }
@@ -121,6 +138,7 @@
 
         // 初始化数据
         init(formHeader) {
+
             this.formHeader = formHeader;
             const { kojiOrderNo, orderNo, workShop, orderType, planOutput } = formHeader;
             // 查询蒸面记录
@@ -191,6 +209,8 @@
                             orderType
                         }];
                     }
+
+                    this.temTableData = JSON.parse(JSON.stringify(this.tableData))
                 })
             });
         }
@@ -281,6 +301,12 @@
         sieveDeviceName?: string;
         deviceNo?: string;
         deviceName?: string;
+    }
+
+    interface SendDataForm{
+        deleteDto: string[];
+        insertDto: CraftList[];
+        updateDto: CraftList[];
     }
 </script>
 

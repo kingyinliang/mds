@@ -3,7 +3,7 @@
  * @Anthor: Telliex
  * @Date: 2020-11-24 11:10:26
  * @LastEditors: Telliex
- * @LastEditTime: 2020-11-30 18:27:04
+ * @LastEditTime: 2020-12-10 00:23:04
 -->
 <template>
     <el-dialog title="泡豆罐选择" :close-on-click-modal="false" :visible.sync="visible">
@@ -66,7 +66,7 @@
             this.visible = true;
             this.selectId = selectedIds;
             COMMON_API.HOLDER_DROPDOWN_API({
-                deptId,
+                // deptId, // 不分车间
                 factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
                 holderType: ['029']
             }).then(({ data }) => {

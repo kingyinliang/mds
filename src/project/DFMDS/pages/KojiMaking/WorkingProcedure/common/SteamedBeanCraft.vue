@@ -19,7 +19,7 @@
                 </el-form>
             </template>
             <el-table header-row-class-name="tableHead" class="newTable" :data="craftSteamBeanTable" :row-class-name="RowDelFlag" border tooltip-effect="dark" size="mini" style="min-height: 90px;">
-                <el-table-column type="index" :index="index => getIndexMethod(index, craftSteamBeanTable)" label="序号" width="50px" fixed />
+                <el-table-column type="index" :index="index => getIndexMethod(index, craftSteamBeanTable)" label="序号" width="55" fixed />
                 <el-table-column width="140" show-overflow-tooltip>
                     <template slot="header">
                         <span class="notNull">* </span>蒸球号
@@ -235,7 +235,8 @@
 <script lang="ts">
     import { Vue, Component, Prop } from 'vue-property-decorator';
     import { COMMON_API, KOJI_API, AUDIT_API } from 'common/api/api';
-    import { dateFormat, getUserNameNumber, getDateDiff, dataEntryData } from 'utils/utils';
+    import { dateFormat, getUserNameNumber, getDateDiff } from 'utils/utils';
+    import _ from 'lodash';
 
 
     @Component({
@@ -266,7 +267,7 @@
         craftAuditList = [];
 
         // 提交保存时获取处理数据
-        getSavedOrSubmitData(formHeader, isSubmit) {
+        getSavedOrSubmitData(formHeader) {
             const handleCraftSteamBeanTable = () => {
                 this.craftSteamBeanTable.map(item => {
                     item.steamBallPressure = this.steamBallPressure;
@@ -276,50 +277,82 @@
             this.steamBallPressure && handleCraftSteamBeanTable();
 
             // 蒸豆记录
-            const tableSaveDto = {
+            const tableSaveDto: SendDataForm = {
                 deleteDto: [],
                 insertDto: [],
                 updateDto: []
             };
             // 蒸豆硬度
-            const hardTableSaveDto = {
+            const hardTableSaveDto: SendDataForm = {
                 deleteDto: [],
                 insertDto: [],
                 updateDto: []
             };
 
-            dataEntryData(formHeader, this.craftSteamBeanTable, this.temCraftSteamBeanTable, tableSaveDto.deleteDto, tableSaveDto.insertDto, tableSaveDto.updateDto, (item) => {
-                item.kojiOrderNo = formHeader.kojiOrderNo;
-                item.orderNo = formHeader.orderNo;
-            });
-            dataEntryData(formHeader, this.hardTable, this.temHardTable, hardTableSaveDto.deleteDto, hardTableSaveDto.insertDto, hardTableSaveDto.updateDto, (item) => {
-                item.kojiOrderNo = formHeader.kojiOrderNo;
-                item.orderNo = formHeader.orderNo;
-            });
+            this.craftSteamBeanTable.forEach((item: CraftList, index) => {
+                if (item.delFlag === 1) {
+                    if (item.id) {
+                        tableSaveDto.deleteDto.push(item.id)
+                    }
+                } else if (item.id) {
+                    if (!_.isEqual(this.temCraftSteamBeanTable[index], item)) {
+                        tableSaveDto.updateDto.push(item)
+                    }
+                } else {
+                    tableSaveDto.insertDto.push(item)
+                }
+            })
 
-            function filterTableData(whichTable, type) {
-                if (type === 'insert') {
-                    return whichTable.filter(item => !item.id && item.delFlag !== 1);
+            this.hardTable.forEach((item: CraftList, index) => {
+                if (item.delFlag === 1) {
+                    if (item.id) {
+                        hardTableSaveDto.deleteDto.push(item.id)
+                    }
+                } else if (item.id) {
+                    if (!_.isEqual(this.temHardTable[index], item)) {
+                        hardTableSaveDto.updateDto.push(item)
+                    }
+                } else {
+                    hardTableSaveDto.insertDto.push(item)
                 }
-                if (type === 'update') {
-                    return whichTable.filter(item => item.id && item.delFlag !== 1);
-                }
-                if (type === 'del') {
-                    return whichTable.filter(item => item.id && item.delFlag === 0);
-                }
-            }
+            })
+
+            // dataEntryData(formHeader, this.craftSteamBeanTable, this.temCraftSteamBeanTable, tableSaveDto.deleteDto, tableSaveDto.insertDto, tableSaveDto.updateDto, (item) => {
+            //     item.kojiOrderNo = formHeader.kojiOrderNo;
+            //     item.orderNo = formHeader.orderNo;
+            // });
+            // dataEntryData(formHeader, this.hardTable, this.temHardTable, hardTableSaveDto.deleteDto, hardTableSaveDto.insertDto, hardTableSaveDto.updateDto, (item) => {
+            //     item.kojiOrderNo = formHeader.kojiOrderNo;
+            //     item.orderNo = formHeader.orderNo;
+            // });
+
+            // function filterTableData(whichTable, type) {
+            //     if (type === 'insert') {
+            //         return whichTable.filter(item => !item.id && item.delFlag !== 1);
+            //     }
+            //     if (type === 'update') {
+            //         return whichTable.filter(item => item.id && item.delFlag !== 1);
+            //     }
+            //     if (type === 'del') {
+            //         return whichTable.filter(item => item.id && item.delFlag === 0);
+            //     }
+            // }
 
             return {
-                steamBean: isSubmit === 'submit' ? {
-                    insertDto: filterTableData(this.craftSteamBeanTable, 'insert'),
-                    updateDto: filterTableData(this.craftSteamBeanTable, 'update'),
-                    deleteDto: filterTableData(this.craftSteamBeanTable, 'del')
-                } : tableSaveDto,
-                steamBeanHardness: isSubmit === 'submit' ? {
-                    insertDto: filterTableData(this.hardTable, 'insert'),
-                    updateDto: filterTableData(this.hardTable, 'update'),
-                    deleteDto: filterTableData(this.hardTable, 'del')
-                } : hardTableSaveDto
+                steamBean: {
+                    insertDto: tableSaveDto.insertDto,
+                    updateDto: tableSaveDto.updateDto,
+                    deleteDto: tableSaveDto.deleteDto,
+                    kojiOrderNo: formHeader.kojiOrderNo,
+                    orderNo: formHeader.orderNo
+                },
+                steamBeanHardness: {
+                    insertDto: hardTableSaveDto.insertDto,
+                    updateDto: hardTableSaveDto.updateDto,
+                    deleteDto: hardTableSaveDto.deleteDto,
+                    kojiOrderNo: formHeader.kojiOrderNo,
+                    orderNo: formHeader.orderNo
+                }
             };
         }
 
@@ -604,6 +637,12 @@
         sieveDeviceName?: string;
         deviceNo?: string;
         deviceName?: string;
+    }
+
+    interface SendDataForm{
+        deleteDto: string[];
+        insertDto: CraftList[];
+        updateDto: CraftList[];
     }
 </script>
 

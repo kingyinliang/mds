@@ -202,9 +202,10 @@
 <script lang="ts">
     import { Vue, Component, Prop } from 'vue-property-decorator';
     import { COMMON_API, KOJI_API, AUDIT_API } from 'common/api/api';
-    import { dateFormat, getUserNameNumber, getDateDiff, dataEntryData } from 'utils/utils';
+    import { dateFormat, getUserNameNumber, getDateDiff } from 'utils/utils';
 
     import LoanedPersonnel from 'components/LoanedPersonnel.vue';
+    import _ from 'lodash';
 
     @Component({
         name: 'WashBeanMaterialCraft',
@@ -231,6 +232,8 @@
             steamFlourMans: ''
         };
 
+        temCraftSteamFlourInfo: Craft ={};
+
         // 蒸豆记录表格数据
         craftSteamBeanTable: CraftList[] = [];
 
@@ -245,6 +248,8 @@
             mixtureStart: '',
             mixtrueEnd: ''
         };
+
+        temCraftControlInfo: CraftList ={};
 
         // 存储历史数据
         temCraftSteamBeanTable = [];
@@ -263,62 +268,76 @@
         rowField = ''
 
         // 提交保存时获取处理数据
-        getSavedOrSubmitData(formHeader, isSubmit) {
-            const tableSaveDto = {
+        getSavedOrSubmitData(formHeader) {
+            const tempSteamBean: SendDataForm = {
                 deleteDto: [],
                 insertDto: [],
                 updateDto: []
             };
 
-            dataEntryData(formHeader, this.craftSteamBeanTable, this.temCraftSteamBeanTable, tableSaveDto.deleteDto, tableSaveDto.insertDto, tableSaveDto.updateDto, (item) => {
-                item.kojiOrderNo = formHeader.kojiOrderNo;
-                item.orderNo = formHeader.orderNo;
-            });
+            // dataEntryData(formHeader, this.craftSteamBeanTable, this.temCraftSteamBeanTable, tableSaveDto.deleteDto, tableSaveDto.insertDto, tableSaveDto.updateDto, () => {
+            //     // item.kojiOrderNo = formHeader.kojiOrderNo;
+            //     // item.orderNo = formHeader.orderNo;
+            // });
 
 
-            function filterTableData(whichTable, type) {
-                if (type === 'insert') {
-                    return whichTable.filter(item => !item.id && item.delFlag !== 1);
+            // function filterTableData(whichTable, type) {
+            //     if (type === 'insert') {
+            //         return whichTable.filter(item => !item.id && item.delFlag !== 1);
+            //     }
+            //     if (type === 'update') {
+            //         return whichTable.filter(item => item.id && item.delFlag !== 1);
+            //     }
+            //     if (type === 'del') {
+            //         return whichTable.filter(item => item.id && item.delFlag === 0);
+            //     }
+            // }
+
+
+            this.craftSteamBeanTable.forEach((item: CraftList, index) => {
+                if (item.delFlag === 1) {
+                    if (item.id) {
+                        tempSteamBean.deleteDto.push(item.id)
+                    }
+                } else if (item.id) {
+                    if (!_.isEqual(this.temCraftSteamBeanTable[index], item)) {
+                        tempSteamBean.updateDto.push(item)
+                    }
+                } else {
+                    tempSteamBean.insertDto.push(item)
                 }
-                if (type === 'update') {
-                    return whichTable.filter(item => item.id && item.delFlag !== 1);
-                }
-                if (type === 'del') {
-                    return whichTable.filter(item => item.id && item.delFlag === 0);
-                }
+            })
+
+            let newCraftSteamFlourInfo = true
+            if (this.craftSteamFlourInfo.id) {
+                newCraftSteamFlourInfo = false
             }
 
+            let newCraftControlInfo = true
+            if (this.craftControlInfo.id) {
+                newCraftControlInfo = false
+            }
             return {
-                steamFlour: {
-                    insertDto: filterTableData([{
-                        ...this.craftSteamFlourInfo,
-                        kojiOrderNo: formHeader.kojiOrderNo,
-                        orderNo: formHeader.orderNo
-                    }], 'insert'),
-                    updateDto: filterTableData([{
-                        ...this.craftSteamFlourInfo,
-                        kojiOrderNo: formHeader.kojiOrderNo,
-                        orderNo: formHeader.orderNo
-                    }], 'update'),
-                    deleteDto: []
+                steamBean: {
+                    insertDto: tempSteamBean.insertDto,
+                    updateDto: tempSteamBean.updateDto,
+                    deleteDto: tempSteamBean.deleteDto,
+                    kojiOrderNo: formHeader.kojiOrderNo,
+                    orderNo: formHeader.orderNo
                 },
-                steamBean: isSubmit === 'submit' ? {
-                    insertDto: filterTableData(this.craftSteamBeanTable, 'insert'),
-                    updateDto: filterTableData(this.craftSteamBeanTable, 'update'),
-                    deleteDto: filterTableData(this.craftSteamBeanTable, 'del')
-                } : tableSaveDto,
+                steamFlour: {
+                    insertDto: newCraftSteamFlourInfo === true ? [this.craftSteamFlourInfo] : [],
+                    updateDto: newCraftSteamFlourInfo === false && !_.isEqual(this.craftSteamFlourInfo, this.temCraftSteamFlourInfo) ? [this.craftSteamFlourInfo] : [],
+                    deleteDto: [],
+                    kojiOrderNo: formHeader.kojiOrderNo,
+                    orderNo: formHeader.orderNo
+                },
                 steamControl: {
-                    insertDto: filterTableData([{
-                        ...this.craftControlInfo,
-                        kojiOrderNo: formHeader.kojiOrderNo,
-                        orderNo: formHeader.orderNo
-                    }], 'insert'),
-                    updateDto: filterTableData([{
-                        ...this.craftControlInfo,
-                        kojiOrderNo: formHeader.kojiOrderNo,
-                        orderNo: formHeader.orderNo
-                    }], 'update'),
-                    deleteDto: []
+                    insertDto: newCraftControlInfo === true ? [this.craftControlInfo] : [],
+                    updateDto: newCraftControlInfo === false && !_.isEqual(this.craftControlInfo, this.temCraftControlInfo) ? [this.craftControlInfo] : [],
+                    deleteDto: [],
+                    kojiOrderNo: formHeader.kojiOrderNo,
+                    orderNo: formHeader.orderNo
                 }
             };
         }
@@ -470,6 +489,7 @@
             }).then(({ data }) => {
                 if (data.data && data.data.length > 0) {
                     this.craftSteamFlourInfo = data.data[0];
+                    this.temCraftSteamFlourInfo = JSON.parse(JSON.stringify(data.data[0]));
                 }
             });
         }
@@ -493,6 +513,7 @@
             }).then(({ data }) => {
                 if (data.data && data.data.length > 0) {
                     this.craftControlInfo = data.data[0];
+                    this.temCraftControlInfo = JSON.parse(JSON.stringify(data.data[0]));
                 }
             });
         }
@@ -587,6 +608,14 @@
         deviceNo?: string;
         deviceName?: string;
     }
+
+    interface SendDataForm{
+        deleteDto: string[];
+        insertDto: CraftList[];
+        updateDto: CraftList[];
+    }
+
+
 </script>
 
 <style lang="scss" scoped>

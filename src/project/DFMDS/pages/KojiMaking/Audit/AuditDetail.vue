@@ -52,15 +52,15 @@
                     </el-table>
                 </mds-card>
                 <mds-card v-if="productLine === ''" title="看曲工艺" :name="'lookCraft'">
-                    <div class="mod-demo-echarts">
-                        <div id="J_chartLineBoxlookCraft0" style="height: 400px;" />
-                    </div>
-                    <div class="mod-demo-echarts">
+                    <!-- <div v-for="i in lookListCount" class="mod-demo-echarts">
                         <div id="J_chartLineBoxlookCraft1" style="height: 400px;" />
+                    </div> -->
+                    <div v-for="i in lookListCount" :key="i" class="mod-demo-echarts">
+                        <div :id="'J_chartLineBoxlookCraft'+ i" style="height: 400px;" />
                     </div>
-                    <div class="mod-demo-echarts">
+                    <!-- <div class="mod-demo-echarts">
                         <div id="J_chartLineBoxlookCraft2" style="height: 400px;" />
-                    </div>
+                    </div> -->
                 </mds-card>
                 <mds-card v-if="productLine === ''" title="入曲及出曲工艺" :name="' '">
                     <el-table class="newTable" :data="inOutCraftList" header-row-class-name="tableHead" border tooltip-effect="dark" style="margin-top: 5px;">
@@ -252,6 +252,7 @@
         turnList = [];
         exceptionList: ExceptionList[] = [];
         beanUsageList = [];
+        lookListCount = 10;
         materialList = [];
         currentAudit = [];
         productLine = '';
@@ -569,7 +570,8 @@
             KOJI_API.KOJI_AUDIT_LOOKCRAFTONE_API({
                 orderNo: orderNo
             }).then(({ data }) => {
-                let i = 0;
+                this.lookListCount = data.data.length;
+                let i = 1;
                 data.data.map(item => {
                     const chartId = 'J_chartLineBoxlookCraft' + i;
                     this.chartLine = echarts.init(document.getElementById(chartId));

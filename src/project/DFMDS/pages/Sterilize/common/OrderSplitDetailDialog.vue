@@ -1,7 +1,7 @@
 <template>
     <el-dialog title="拆分详情" :close-on-click-modal="false" :visible.sync="dialogFormVisible" width="1200px" custom-class="dialog__class">
         <el-table :data="splitTable" :row-class-name="rowDelFlag" header-row-class-name="tableHead" class="newTable" border tooltip-effect="dark">
-            <el-table-column type="index" width="55" label="序号" fixed />
+            <el-table-column type="index" :index="index => getIndexMethod(index, splitTable)" label="序号" width="55" fixed />
             <el-table-column label="状态" width="100" prop="statusName" :show-overflow-tooltip="true" />
             <el-table-column label="锅单号" width="100" prop="potOrderNo" :show-overflow-tooltip="true" />
             <el-table-column label="生产锅序" width="100" prop="potOrder" :show-overflow-tooltip="true">

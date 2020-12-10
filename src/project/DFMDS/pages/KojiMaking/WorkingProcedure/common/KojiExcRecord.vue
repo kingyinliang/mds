@@ -8,7 +8,7 @@
             </div>
         </template>
         <el-table header-row-class-name="tableHead" class="newTable" :data="excList" :row-class-name="RowDelFlag" border tooltip-effect="dark" style="min-height: 90px;">
-            <el-table-column type="index" label="序号" width="50px" fixed />
+            <el-table-column type="index" :index="index => getIndexMethod(index, excList)" label="序号" width="55" fixed />
             <el-table-column min-width="100">
                 <template slot="header">
                     <span class="notNull">* </span>班次
