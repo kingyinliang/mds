@@ -167,11 +167,11 @@
         listInterface(params) {
             params['factory'] = JSON.parse(sessionStorage.getItem('factory') || '{}').id;
             if (this.$refs.queryTable.activeName === '0') {
-                params.status = '';
+                params.status = 'D';
             } else if (this.$refs.queryTable.activeName === '1') {
-                params.status = '';
+                params.status = 'P';
             } else {
-                params.status = '';
+                params.status = 'R';
             }
             return FER_API.FER_OPEN_POT_APPLY_LIST_API(params);
         }
@@ -183,11 +183,11 @@
                         const params = JSON.parse(JSON.stringify(this.$refs.queryTable.queryForm))
                         params.factory = JSON.parse(sessionStorage.getItem('factory') || '{}').id;
                         if (index === 0) {
-                            params.status = '';
+                            params.status = 'D';
                         } else if (index === 1) {
-                            params.status = '';
+                            params.status = 'P';
                         } else {
-                            params.status = '';
+                            params.status = 'R';
                         }
                         params.current = 1;
                         params.size = this.$refs.queryTable.tabs[index].pages.pageSize;

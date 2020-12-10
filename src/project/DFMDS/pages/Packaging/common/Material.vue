@@ -46,7 +46,11 @@
                         <el-input v-model="scope.row.unqualified" :disabled="!(isRedact && scope.row.checkStatus !== 'C' && scope.row.checkStatus !== 'D' && scope.row.checkStatus !== 'P' && scope.row.materialStatus !== '3')" size="small" placeholder="请输入" />
                     </template>
                 </el-table-column>
-                <el-table-column label="厂家" prop="manufactor" width="120" :show-overflow-tooltip="true" />
+                <el-table-column label="厂家" prop="manufactor" width="120" :show-overflow-tooltip="true">
+                    <template slot-scope="scope">
+                        {{ scope.row.batchData.filter(it => it.manufactor === scope.row.manufactor).length? scope.row.batchData.filter(it => it.manufactor === scope.row.manufactor)[0].manufactorName: '' }}
+                    </template>
+                </el-table-column>
                 <el-table-column label="备注" prop="remark" min-width="140">
                     <template slot-scope="scope">
                         <el-input v-model="scope.row.remark" :disabled="!(isRedact && scope.row.checkStatus !== 'C' && scope.row.checkStatus !== 'D' && scope.row.checkStatus !== 'P' && scope.row.materialStatus !== '3')" size="small" placeholder="请输入" />
