@@ -29,7 +29,7 @@
                         </div>
                         <div class="dataEntry-head-leftRight-message__item">
                             <p class="dataEntry-head-leftRight-message__item_info">
-                                {{ totalNum }}<span>{{ stockUnit }}</span>
+                                {{ totalNum }}<span style="margin-left: 5px;">{{ stockUnit }}</span>
                             </p>
                             <p><em class="iconfont factory-cunchurongliang" />总库存</p>
                         </div>

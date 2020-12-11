@@ -413,7 +413,7 @@
                 <el-table-column prop="changed" min-width="180" label="操作时间" :show-overflow-tooltip="true" />
                 <el-table-column fixed="right" label="操作" width="80" :show-overflow-tooltip="true">
                     <template slot-scope="scope">
-                        <el-button class="delBtn" type="text" icon="el-icon-delete" size="mini" :disabled="!isRedact" @click="removeFirstDataRow(scope.row);">
+                        <el-button class="delBtn" type="text" icon="el-icon-delete" size="mini" :disabled="!isRedact" @click="removeFirstDataRow(scope.row,'kojiGuardData');">
                             删除
                         </el-button>
                     </template>
@@ -924,29 +924,21 @@
             if (val === null) {
                 target.turnStart = ''
             }
-            target.turnDuration = 0
-
-            const timeList: number[] = [];
-            this.kojiGuardData.forEach(item => {
-                if (item.guardDate) {
-                    timeList.push(new Date(item.guardDate).getTime())
-                }
-            })
-
-            if (target.turnStart !== '' && this.kojiGuardData.length !== 0 && Math.min(...timeList) !== Infinity) {
-                const timeTemp = new Date(val).getTime();
-                let result = 0
-                if (this.kojiGuardData.length !== 0) {
-                    const compareTimeList: number[] = []// 时间暂存容器
-                    this.kojiGuardData.forEach(item => {
-                        if (item.guardDate) {
-                            compareTimeList.push(new Date(item.guardDate).getTime())
-                        }
-                    })
-                    result = Math.min(...compareTimeList)
-                }
-                target.turnDuration = (timeTemp - result) / 3600000
-            }
+            this.runCount()
+            // if (target.turnStart !== '' && this.kojiGuardData.length !== 0 && Math.min(...timeList) !== Infinity) {
+            //     const timeTemp = new Date(val).getTime();
+            //     let result = 0
+            //     if (this.kojiGuardData.length !== 0) {
+            //         const compareTimeList: number[] = []// 时间暂存容器
+            //         this.kojiGuardData.forEach(item => {
+            //             if (item.guardDate) {
+            //                 compareTimeList.push(new Date(item.guardDate).getTime())
+            //             }
+            //         })
+            //         result = Math.min(...compareTimeList)
+            //     }
+            //     target.turnDuration = (timeTemp - result) / 3600000
+            // }
         }
 
         // 异常情况
@@ -1017,7 +1009,10 @@
                 this.kojiGuardData = []
                 if (data.data) {
                     this.kojiGuardData = JSON.parse(JSON.stringify(data.data))
-                    this.kojiGuardDataOrg = JSON.parse(JSON.stringify(data.data))
+                    this.kojiGuardData.forEach(item => {
+                        item.delFlag = 0
+                    })
+                    this.kojiGuardDataOrg = JSON.parse(JSON.stringify(this.kojiGuardData))
                 }
             })
         }
@@ -1025,17 +1020,28 @@
         // 看曲时间 change
         kojiStartTimeChange(val, target) {
 
+            // 点击栏位清除扭 vall 变 null
             if (val === null) {
                 target.guardDate = ''
             }
+            this.runCount();
+
+        }
+
+        runCount() {
+            // 将两翻清空，重新计算
             this.kojiDiscTurnData[0].turnDuration = 0
             this.kojiDiscTurnData[1].turnDuration = 0
+
             const timeList: number[] = [];
             this.kojiGuardData.forEach(item => {
                 if (item.guardDate && item.delFlag === 0) {
                     timeList.push(new Date(item.guardDate).getTime())
                 }
             })
+
+            console.log('timeList')
+            console.log(timeList)
 
             if (timeList.length !== 0) {
                 if (this.kojiDiscTurnData[0] && this.kojiDiscTurnData[0].turnStart !== '' && this.kojiDiscTurnData[0].turnStart !== null) {
@@ -1053,39 +1059,9 @@
                     turn2Result = (timeTemp2 - turn2Result) / 3600000
                     this.kojiDiscTurnData[1].turnDuration = turn2Result
                 }
+
             }
         }
-
-        kojiStartTimeDelet() {
-
-            this.kojiDiscTurnData[0].turnDuration = 0
-            this.kojiDiscTurnData[1].turnDuration = 0
-            const timeList: number[] = [];
-            this.kojiGuardData.forEach(item => {
-                if (item.guardDate && item.delFlag === 0) {
-                    timeList.push(new Date(item.guardDate).getTime())
-                }
-            })
-
-            if (timeList.length !== 0) {
-                if (this.kojiDiscTurnData[0] && this.kojiDiscTurnData[0].turnStart !== '' && this.kojiDiscTurnData[0].turnStart !== null) {
-                    const timeTemp1 = new Date(this.kojiDiscTurnData[0].turnStart).getTime();
-                    let turn1Result = 0
-                    turn1Result = Math.min(...timeList)
-                    turn1Result = (timeTemp1 - turn1Result) / 3600000
-                    this.kojiDiscTurnData[0].turnDuration = turn1Result
-                }
-
-                if (this.kojiDiscTurnData[1] && this.kojiDiscTurnData[1].turnStart !== '' && this.kojiDiscTurnData[1].turnStart !== null) {
-                    const timeTemp2 = new Date(this.kojiDiscTurnData[1].turnStart).getTime();
-                    let turn2Result = 0
-                    turn2Result = Math.min(...timeList)
-                    turn2Result = (timeTemp2 - turn2Result) / 3600000
-                    this.kojiDiscTurnData[1].turnDuration = turn2Result
-                }
-            }
-        }
-
 
         // [新增]曲料生长评价
         addNewKojiEvaluateRow() {
@@ -1275,17 +1251,17 @@
         }
 
         // 删除
-        removeFirstDataRow(row) {
+        removeFirstDataRow(row, who) {
             this.$confirm('是否删除?', '提示', {
                 confirmButtonText: '确定',
                 cancelButtonText: '取消',
                 type: 'warning'
             }).then(() => {
-                if (row.guardDate || row.guardDate === '') {
-                    this.kojiStartTimeDelet()
-                }
                 this.$set(row, 'delFlag', 1)
                 this.$successToast('删除成功');
+                if (who === 'kojiGuardData') {
+                    this.runCount()
+                }
 
             });
         }

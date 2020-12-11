@@ -20,7 +20,7 @@
                         </div>
                     </template>
                     <el-table class="newTable markStyle" :data="targetQueryTableListOfForiegnMatter" :row-class-name="rowDelFlag" header-row-class-name="tableHead" border style="width: 100%; min-height: 80px;">
-                        <el-table-column label="序号" type="index" width="50" fixed="left" align="center" />
+                        <el-table-column label="序号" type="index" :index="index => getIndexMethod(index, targetQueryTableListOfForiegnMatter)" width="55" fixed="left" align="center" />
                         <el-table-column width="150" :show-overflow-tooltip="true" class="star">
                             <template slot="header">
                                 <span class="notNull">设备名称</span>
@@ -266,10 +266,11 @@
             let amountTemp = 0;
             if (this.targetQueryTableListOfForiegnMatter.length !== 0) {
                 this.targetQueryTableListOfForiegnMatter.forEach(item => {
-                    amountTemp += Number(item.impurityAmount) as number
+                    if (item.delFlag === 0 && typeof item.impurityAmount === 'number') {
+                        amountTemp = amountTemp + item.impurityAmount
+                    }
                 })
             }
-
             return amountTemp
         }
 
@@ -354,8 +355,6 @@
 
         // [v]queryTable 回传 result
         returnDataFromQueryTableForm(data) {
-            console.log('queryTable Magnet查询结果回传')
-            console.log(data)
             this.targetQueryTableListOfMagnet = []
             if (data.data.length !== 0) {
                 this.targetQueryTableListOfMagnet = data.data
@@ -369,8 +368,6 @@
             }
 
             KOJI_API.KOJI_IMPURITY_FOREIGNMATTER_API(this.globalVal).then(({ data: target }) => {
-                console.log('queryTable foriegn matter查询结果回传')
-                console.log(target)
                 this.targetQueryTableListOfForiegnMatter = []
                 if (target.data.length !== 0) {
                     this.targetQueryTableListOfForiegnMatter = target.data
