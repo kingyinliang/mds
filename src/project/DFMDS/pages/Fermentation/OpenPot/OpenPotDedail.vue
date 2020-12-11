@@ -62,22 +62,22 @@
                         <el-form :model="searchForm" size="small" :inline="true" label-position="left" label-width="70px" class="sole_row">
                             <el-form-item label="生产车间：">
                                 <el-select v-model="searchForm.workShop" :disabled="!isRedact" placeholder="请选择" style="width: 120px;" clearable @change="getOpenPotList">
-                                    <el-option v-for="(item, index) in workShop" :key="index" :label="item.deptName" :value="item.id" />
+                                    <el-option v-for="(item, index) in workShop" :key="index" :label="item.split('&')[1]" :value="item.split('&')[0]" />
                                 </el-select>
                             </el-form-item>
                             <el-form-item label="容器号：">
                                 <el-select v-model="searchForm.holderId" :disabled="!isRedact" placeholder="请选择" style="width: 120px;" clearable @change="getOpenPotList">
-                                    <el-option v-for="(item, index) in potArr" :key="index" :label="item.holderName" :value="item.holderNo" />
+                                    <el-option v-for="(item, index) in potArr" :key="index" :label="item.split('&')[1]" :value="item.split('&')[0]" />
                                 </el-select>
                             </el-form-item>
                             <el-form-item label="物料：">
                                 <el-select v-model="searchForm.material" :disabled="!isRedact" placeholder="请选择" style="width: 120px;" filterable clearable @change="getOpenPotList">
-                                    <el-option v-for="(item, index) in material" :key="index" :label="item.materialName+' ' + item.materialCode" :value="item.materialCode" />
+                                    <el-option v-for="(item, index) in material" :key="index" :label="item.split('&')[0] + ' ' + item.split('&')[1]" :value="item.split('&')[0]" />
                                 </el-select>
                             </el-form-item>
                         </el-form>
                     </div>
-                    <el-table :data="openPotList" header-row-class-name="tableHead" class="newTable" border tooltip-effect="dark" @selection-change="handleSelectionChange">
+                    <el-table :data="openPotList" header-row-class-name="tableHead" class="newTable" border tooltip-effect="dark" @selection-change="handleSelectionChange" @row-dblclick="Dblckick">
                         <el-table-column type="selection" :selectable="checkboxT" width="50" />
                         <el-table-column type="index" label="序号" width="50px" />
                         <el-table-column label="状态" prop="openFlagName" min-width="50" :show-overflow-tooltip="true" />
@@ -120,9 +120,6 @@
                             </template>
                         </el-table-column>
                     </el-table>
-                    <el-row>
-                        <el-pagination :current-page="searchForm.current" :page-sizes="[10, 20, 50]" :page-size="searchForm.size" layout="total, sizes, prev, pager, next, jumper" :total="searchForm.total" @size-change="handleSizeChange" @current-change="handleCurrentChange" />
-                    </el-row>
                 </mds-card>
             </template>
             <template slot="1">
@@ -198,7 +195,7 @@
 
 <script lang="ts">
     import { Vue, Component } from 'vue-property-decorator';
-    import { COMMON_API, FER_API } from 'common/api/api';
+    import { FER_API } from 'common/api/api';
 
     @Component
     export default class OpenPotDedail extends Vue {
@@ -206,12 +203,10 @@
         formHeader = {}
 
         searchForm = {
+            openPotNo: this.$store.state.fer.openPotObj.openPotNo,// eslint-disable-line
             workShop: '',
             material: '',
-            holderId: '',
-            current: 1,
-            size: 10,
-            total: 0
+            holderId: ''
         }
 
         tabs = [
@@ -223,11 +218,13 @@
             }
         ]
 
-        workShop = []
-        material = []
-        potArr = []
+        workShop: string[] = []
+        material: string[] = []
+        potArr: string[] = []
+
         openPotList: PotObj[] = []
         multipleSelection: PotObj[] = []
+
         deployMaterial = []
         sauce = []
 
@@ -241,32 +238,34 @@
             }).then(({ data }) => {
                 this.formHeader = data.data
             })
-            this.getOpenPotList()
-            COMMON_API.ORG_QUERY_WORKSHOP_API({
-                factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
-                deptType: ['WORK_SHOP'],
-                deptName: '发酵'
-            }).then(({ data }) => {
-                this.workShop = data.data
-            })
-            COMMON_API.SEARCH_MATERIAL_API({
-                factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
-                materialType: 'ZHAL'
-            }).then(({ data }) => {
-                this.material = data.data
-            })
-            COMMON_API.HOLDER_DROPDOWN_API({
-                factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
-                holderType: ['001', '028']
-            }).then(({ data }) => {
-                this.potArr = data.data || [];
-            })
+            this.getSelect()
         }
 
         getOpenPotList() {
-            FER_API.FER_OPEN_POT_DETAIL_LIST_API(this.searchForm).then(({ data }) => {
+            FER_API.FER_OPEN_POT_APPLY_DETAIL_TABLE_API(this.searchForm).then(({ data }) => {
                 this.openPotList = data.data
             })
+        }
+
+        getSelect() {
+            FER_API.FER_OPEN_POT_APPLY_DETAIL_TABLE_API(this.searchForm).then(({ data }) => {
+                this.openPotList = data.data
+                const workShopArr: string[] = []
+                const materialArr: string[] = []
+                const potArrArr: string[] = []
+                this.openPotList.forEach(item => {
+                    item['workShop']? workShopArr.push(item['workShop'] + '&' + item['workShopName']) : ''// eslint-disable-line
+                    item['ferOrder']['productMaterialCode']? materialArr.push(item['ferOrder']['productMaterialCode'] + '&' + item['ferOrder']['productMaterialName']) : ''// eslint-disable-line
+                    item['holderNo']? potArrArr.push(item['holderNo'] + '&' + item['holderName']) : ''// eslint-disable-line
+                })
+                this.workShop = [...new Set(workShopArr)]
+                this.material = [...new Set(materialArr)]
+                this.potArr = [...new Set(potArrArr)]
+            })
+        }
+
+        Dblckick(row) {
+            console.log(row);
         }
 
         getDeployMaterialList() {
@@ -300,17 +299,6 @@
             });
         }
 
-        // 改变每页条数
-        handleSizeChange(val) {
-            this.searchForm.size = val;
-            this.getOpenPotList();
-        }
-
-        // 跳转页数
-        handleCurrentChange(val) {
-            this.searchForm.current = val;
-            this.getOpenPotList();
-        }
     }
     interface PotObj{
         id?: string;

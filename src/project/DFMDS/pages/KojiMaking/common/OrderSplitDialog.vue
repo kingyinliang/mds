@@ -5,8 +5,8 @@
                 新增
             </el-button>
         </div>
-        <el-table :data="splitTable" :row-class-name="rowDelFlag" header-row-class-name="tableHead" class="newTable" border tooltip-effect="dark">
-            <el-table-column type="index" :index="index => getIndexMethod(index, splitTable)" width="55" label="序号" fixed align="center" />
+        <el-table :data="splitTable.filter(item=>item.delFlag!==1)" :row-class-name="rowDelFlag" header-row-class-name="tableHead" class="newTable" border tooltip-effect="dark">
+            <el-table-column type="index" :index="index => getIndexMethod(index, splitTable.filter(item=>item.delFlag!==1))" width="55" label="序号" fixed align="center" />
             <el-table-column label="曲房状态" width="80" prop="statusName" :show-overflow-tooltip="true" />
             <el-table-column label="生产订单" width="120" prop="orderNo" :show-overflow-tooltip="true" />
             <el-table-column min-width="250" label="生产物料" :show-overflow-tooltip="true">
@@ -116,6 +116,7 @@
                 this.splitTable.forEach(item => {
                     this.$set(item, 'statusName', this.orderStatusMapping[item.status])
                     this.$set(item, 'isChangeAddKojiDate', true)
+                    this.$set(item, 'delFlag', 0)
                 })
                 this.orgSplitTable = JSON.parse(JSON.stringify(this.splitTable))
             })
