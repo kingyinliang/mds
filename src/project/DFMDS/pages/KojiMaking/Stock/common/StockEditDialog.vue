@@ -30,7 +30,8 @@
             </el-form-item>
             <el-form-item label="调整量：" prop="moveAmount">
                 <el-input v-model.number="dialogForm.moveAmount" class="stock-form_item_style" size="small" placeholder="请输入">
-                    <span slot="suffix" class="stock-form_item_input_suffix">KG</span>
+                    <span v-if="stockType==='Y158'" slot="suffix" class="stock-form_item_input_suffix">BOX</span>
+                    <span v-else slot="suffix" class="stock-form_item_input_suffix">KG</span>
                 </el-input>
             </el-form-item>
             <el-form-item label="调整说明：" prop="adjustInfo">
@@ -197,4 +198,3 @@
         padding: 0 16px 16px;
     }
 </style>
-
