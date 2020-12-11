@@ -19,7 +19,7 @@
                 <el-input v-model="dataForm.stockAmount" placeholder="NA" disabled />
             </el-form-item>
             <el-form-item label="领用数量：" prop="amount">
-                <el-input v-model.number="dataForm.amount" placeholder="手动输入" @blur="calcStockAmount" />
+                <el-input v-model.number="dataForm.amount" placeholder="手动输入" @input="calcStockAmount" />
             </el-form-item>
             <el-form-item label="小豆数量：" prop="smallBeanAmount">
                 <el-input v-model.number="dataForm.smallBeanAmount" placeholder="手动输入" />

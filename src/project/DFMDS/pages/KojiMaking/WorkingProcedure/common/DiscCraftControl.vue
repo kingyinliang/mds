@@ -1449,6 +1449,9 @@ interface DiscGuard {
         color: #f56c6c;
         content: "*";
     }
+    .other >>> .el-input__suffix {
+        line-height: 32px;
+    }
 
 
 </style>
