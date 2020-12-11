@@ -48,7 +48,7 @@
                 </el-table-column>
                 <el-table-column label="汽包压力" width="144">
                     <template slot-scope="scope">
-                        <el-input v-model="scope.row.steamPocketPressure" placeholder="请输入" :disabled="!isRedact" size="small" style="width: 120px;">
+                        <el-input v-model="scope.row.steamPocketPressure" placeholder="请输入" :disabled="!isRedact" size="small" style="width: 120px; line-height: 32px;">
                             <span slot="suffix" class="stock-form_item_input_suffix">Mpa</span>
                         </el-input>
                     </template>
@@ -65,7 +65,7 @@
                 </el-table-column>
                 <el-table-column label="保压时间" width="144">
                     <template slot-scope="scope">
-                        <el-input v-model="scope.row.pressureDuration" placeholder="请输入" :disabled="!isRedact" size="small" style="width: 120px;">
+                        <el-input v-model="scope.row.pressureDuration" placeholder="请输入" :disabled="!isRedact" size="small" style="width: 120px; line-height: 32px;">
                             <span slot="suffix" class="stock-form_item_input_suffix">min</span>
                         </el-input>
                     </template>

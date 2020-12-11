@@ -4,7 +4,7 @@
             <el-form ref="dataForm" :model="dataForm" status-icon :rules="dataRule" label-width="125px" size="small" @keyup.enter.native="dataFormSubmit()">
                 <el-form-item label="领用库位：">
                     <el-select v-model="dataForm.materialLocation" :disabled="type !== 'add'" placeholder="请选择" style="width: 100%;" @change="workShopChange">
-                        <el-option v-for="(item, index) in workShopList" :key="index" :label="item.materialLocation" :value="item.materialCode" />
+                        <el-option v-for="(item, index) in workShopList" :key="index" :label="item.materialLocation" :value="item.materialLocation" />
                     </el-select>
                 </el-form-item>
                 <el-form-item label="领用批次：" prop="batch">
@@ -19,7 +19,7 @@
                     <el-input v-model="dataForm.stockAmount" placeholder="手动输入" disabled />
                 </el-form-item>
                 <el-form-item label="领用数量：" prop="amount">
-                    <el-input v-model.number="dataForm.amount" placeholder="手动输入" @blur="calcStockAmount" />
+                    <el-input v-model.number="dataForm.amount" placeholder="手动输入" @input="calcStockAmount" />
                 </el-form-item>
                 <el-form-item label="单位：">
                     <el-input v-model="dataForm.unit" placeholder="手动输入" disabled />

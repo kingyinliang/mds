@@ -20,7 +20,7 @@
                     <el-input v-model="dataForm.stockAmount" placeholder="NA" disabled />
                 </el-form-item>
                 <el-form-item label="领用数量：" prop="amount">
-                    <el-input v-model.number="dataForm.amount" placeholder="手动输入" @blur="calcStockAmount" />
+                    <el-input v-model.number="dataForm.amount" placeholder="手动输入" @input="calcStockAmount" />
                 </el-form-item>
                 <el-form-item label="单位：">
                     <el-input v-model="dataForm.unit" placeholder="NA" disabled />
@@ -191,6 +191,8 @@
                     // this.dataForm.stockAmount = item.stockAmount;
                     this.dataForm.stockAmount = item.currentAmount
                     this.dataForm.supplier = item.supplier;
+                    this.STOCK_AMOUNT = Number(item.currentAmount);
+                    this.calcStockAmount();
                 }
             });
         }
