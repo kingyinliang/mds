@@ -208,6 +208,11 @@
 
         // 查询请求
         listInterface(params) {
+            if (this.$refs.queryTable.activeName === '0') {
+                params.mixSauceStatus = '';
+            } else {
+                params.mixSauceStatus = '已调酱';
+            }
             params.current = this.$refs.queryTable.tabs[this.$refs.queryTable.activeName].pages.currPage;// eslint-disable-line
             params.size = this.$refs.queryTable.tabs[this.$refs.queryTable.activeName].pages.pageSize;// eslint-disable-line
             params.total = this.$refs.queryTable.tabs[this.$refs.queryTable.activeName].pages.totalCount;// eslint-disable-line
@@ -216,15 +221,41 @@
 
         // 设置数据
         setData(datas, st) {
-            console.log(st);
-            this.tabs[this.$refs.queryTable.activeName].tableData = datas.data.records;
-            this.$refs.queryTable.tabs[this.$refs.queryTable.activeName].pages.currPage = datas.data.current;
-            this.$refs.queryTable.tabs[this.$refs.queryTable.activeName].pages.pageSize = datas.data.size;
-            this.$refs.queryTable.tabs[this.$refs.queryTable.activeName].pages.totalCount = datas.data.total;
+            if (st) {
+                this.tabs.map((item, index) => {
+                    if (index !== Number(this.$refs.queryTable.activeName)) {
+                        const params = JSON.parse(JSON.stringify(this.$refs.queryTable.queryForm))
+                        if (index === 0) {
+                            params.mixSauceStatus = '待调酱';
+                        } else {
+                            params.mixSauceStatus = '已调酱';
+                        }
+                        params.current = 1;
+                        params.size = this.$refs.queryTable.tabs[index].pages.pageSize;
+                        params.total = this.$refs.queryTable.tabs[index].pages.totalCount;
+                        FER_API.FER_DEPLOY_SAUCE_LIST_API(params).then(({ data }) => {
+                            this.tabs[index].tableData = data.data.records;
+                            this.$refs.queryTable.tabs[index].pages.currPage = data.data.current;
+                            this.$refs.queryTable.tabs[index].pages.pageSize = data.data.size;
+                            this.$refs.queryTable.tabs[index].pages.totalCount = data.data.total;
+                        });
+                    } else {
+                        this.tabs[this.$refs.queryTable.activeName].tableData = datas.data.records;
+                        this.$refs.queryTable.tabs[this.$refs.queryTable.activeName].pages.currPage = datas.data.current;
+                        this.$refs.queryTable.tabs[this.$refs.queryTable.activeName].pages.pageSize = datas.data.size;
+                        this.$refs.queryTable.tabs[this.$refs.queryTable.activeName].pages.totalCount = datas.data.total;
+                    }
+                })
+            } else {
+                this.tabs[this.$refs.queryTable.activeName].tableData = datas.data.records;
+                this.$refs.queryTable.tabs[this.$refs.queryTable.activeName].pages.currPage = datas.data.current;
+                this.$refs.queryTable.tabs[this.$refs.queryTable.activeName].pages.pageSize = datas.data.size;
+                this.$refs.queryTable.tabs[this.$refs.queryTable.activeName].pages.totalCount = datas.data.total;
+            }
         }
 
         goDetail(row) {
-            console.log(row);
+            this.$store.commit('fer/updatedeploySauceObjObj', row);
             this.$store.commit('common/updateMainTabs', this.$store.state.common.mainTabs.filter(subItem => subItem.name !== 'DFMDS-pages-Fermentation-DeploySauce-datail'))
             setTimeout(() => {
                 this.$router.push({

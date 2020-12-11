@@ -70,7 +70,7 @@
                         <el-table-column type="index" label="序号" width="50px" />
                         <el-table-column label="状态" prop="openFlagName" min-width="50" :show-overflow-tooltip="true" />
                         <el-table-column label="车间" prop="workShopName" min-width="100" :show-overflow-tooltip="true" />
-                        <el-table-column label="容器号" prop="holderNo" min-width="80" :show-overflow-tooltip="true" />
+                        <el-table-column label="容器号" prop="holderName" min-width="80" :show-overflow-tooltip="true" />
                         <el-table-column label="使用说明" prop="explain" min-width="100" :show-overflow-tooltip="true">
                             <template slot-scope="scope">
                                 {{ scope.row.ferOpenFermentor.explain }}
