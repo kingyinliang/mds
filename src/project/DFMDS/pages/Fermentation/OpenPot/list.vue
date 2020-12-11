@@ -104,44 +104,47 @@
             {
                 prop: 'workShopName',
                 label: '生产车间',
-                minwidth: '50'
+                minwidth: '100'
             },
             {
-                prop: 'productLineName',
+                prop: 'openTypeName',
                 label: '开罐类型',
-                minwidth: '90'
+                minwidth: '100'
             },
             {
                 type: 'clickSpan',
-                prop: 'orderNo',
+                prop: 'openPotNo',
                 label: '开罐单号',
                 onclick: (row)=> this.goDetail(row), // eslint-disable-line
-                minwidth: '70'
+                minwidth: '140'
             },
             {
-                prop: 'materialName',
                 label: '物料',
-                minwidth: '150'
+                prop: 'applyMaterialCode',
+                minwidth: '180',
+                formatter: (row) => {
+                    return row.applyMaterialCode + ' ' + row.applyMaterialName;
+                }
             },
             {
-                prop: 'planOutput',
                 label: '申请数量',
-                minwidth: '55'
+                prop: 'applyAmount',
+                minwidth: '90'
             },
             {
-                prop: 'productDate',
                 label: '生产日期',
-                minwidth: '60'
+                prop: 'useDate',
+                minwidth: '140'
             },
             {
-                prop: 'productDate',
                 label: '申请人员',
-                minwidth: '60'
+                prop: 'changer',
+                minwidth: '140'
             },
             {
-                prop: 'productDate',
                 label: '申请时间',
-                minwidth: '60'
+                prop: 'changed',
+                minwidth: '140'
             }
         ]
 
@@ -149,23 +152,37 @@
             {
                 label: '待处理',
                 tableData: [],
+                pages: {
+                    current: 1,
+                    pageSize: 10,
+                    totalCount: 0
+                },
                 column: this.Column // eslint-disable-line
             },
             {
                 label: '已处理',
                 tableData: [],
+                pages: {
+                    current: 1,
+                    pageSize: 10,
+                    totalCount: 0
+                },
                 column: this.Column // eslint-disable-line
             },
             {
                 label: '已退回',
                 tableData: [],
+                pages: {
+                    current: 1,
+                    pageSize: 10,
+                    totalCount: 0
+                },
                 column: this.Column // eslint-disable-line
             }
         ]
 
         // 查询
         listInterface(params) {
-            params['factory'] = JSON.parse(sessionStorage.getItem('factory') || '{}').id;
             if (this.$refs.queryTable.activeName === '0') {
                 params.status = 'D';
             } else if (this.$refs.queryTable.activeName === '1') {
@@ -173,6 +190,9 @@
             } else {
                 params.status = 'R';
             }
+            params.current = this.$refs.queryTable.tabs[this.$refs.queryTable.activeName].pages.currPage;// eslint-disable-line
+            params.size = this.$refs.queryTable.tabs[this.$refs.queryTable.activeName].pages.pageSize;// eslint-disable-line
+            params.total = this.$refs.queryTable.tabs[this.$refs.queryTable.activeName].pages.totalCount;// eslint-disable-line
             return FER_API.FER_OPEN_POT_APPLY_LIST_API(params);
         }
 
@@ -181,7 +201,6 @@
                 this.tabs.map((item, index) => {
                     if (index !== Number(this.$refs.queryTable.activeName)) {
                         const params = JSON.parse(JSON.stringify(this.$refs.queryTable.queryForm))
-                        params.factory = JSON.parse(sessionStorage.getItem('factory') || '{}').id;
                         if (index === 0) {
                             params.status = 'D';
                         } else if (index === 1) {

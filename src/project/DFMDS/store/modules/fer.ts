@@ -15,7 +15,8 @@ export default {
         brineInfo: {},
         fermentBucketDetail: {},
         applyForObj: {},
-        openPotObj: {}
+        openPotObj: {},
+        deploySauceObj: {}
     },
     mutations: {
         updateBrineInfo(state, infoObj) {
@@ -29,6 +30,9 @@ export default {
         },
         updateopenPotObj(state, item) {
             state.openPotObj = item;
+        },
+        updatedeploySauceObjObj(state, item) {
+            state.deploySauceObj = item;
         }
     }
 };

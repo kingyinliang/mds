@@ -215,7 +215,19 @@ const FER_API = {
     /**
      * @property {string} FER_OPEN_POT_APPLY_DETAIL_SUBMIT_API 发酵车间-开罐申请-详情页-提交
      */
-    FER_OPEN_POT_APPLY_DETAIL_SUBMIT_API: params => httpProxy('/fer/open/submit', 'POST', params)
+    FER_OPEN_POT_APPLY_DETAIL_SUBMIT_API: params => httpProxy('/fer/open/submit', 'POST', params),
+    /**
+     * @property {string} FER_OPEN_POT_DETAIL_LIST_API 发酵车间-开罐列表-详情页-查询入库
+     */
+    FER_OPEN_POT_DETAIL_LIST_API: params => httpProxy('/fer/open/pagingQueryOfFermentorOrderInStorage', 'POST', params),
+    /**
+     * @property {string} FER_OPEN_POT_DETAIL_DEPLOY_LIST_API 发酵车间-开罐列表-详情页-调配物料
+     */
+    FER_OPEN_POT_DETAIL_DEPLOY_LIST_API: params => httpProxy('/fer/open/queryOfMaterial', 'GET', params),
+    /**
+     * @property {string} FER_OPEN_POT_DETAIL_SAUCE_LIST_API 发酵车间-开罐列表-详情页-超期酱
+     */
+    FER_OPEN_POT_DETAIL_SAUCE_LIST_API: params => httpProxy('/fer/open/queryOfOverdueMaterial', 'GET', params)
 };
 
 export default FER_API;
