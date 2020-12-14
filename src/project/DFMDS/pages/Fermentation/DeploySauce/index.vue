@@ -209,9 +209,9 @@
         // 查询请求
         listInterface(params) {
             if (this.$refs.queryTable.activeName === '0') {
-                params.mixSauceStatus = '';
+                params.mixSauceStatus = 'N';
             } else {
-                params.mixSauceStatus = '已调酱';
+                params.mixSauceStatus = 'Y';
             }
             params.current = this.$refs.queryTable.tabs[this.$refs.queryTable.activeName].pages.currPage;// eslint-disable-line
             params.size = this.$refs.queryTable.tabs[this.$refs.queryTable.activeName].pages.pageSize;// eslint-disable-line
@@ -226,9 +226,9 @@
                     if (index !== Number(this.$refs.queryTable.activeName)) {
                         const params = JSON.parse(JSON.stringify(this.$refs.queryTable.queryForm))
                         if (index === 0) {
-                            params.mixSauceStatus = '待调酱';
+                            params.mixSauceStatus = 'N';
                         } else {
-                            params.mixSauceStatus = '已调酱';
+                            params.mixSauceStatus = 'Y';
                         }
                         params.current = 1;
                         params.size = this.$refs.queryTable.tabs[index].pages.pageSize;

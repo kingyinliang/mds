@@ -139,7 +139,7 @@
 </template>
 
 <script>
-    import { getDateDiff, dateFormat } from 'utils/utils';
+    import { getDateDiff, dateFormat, getObjPath } from 'utils/utils';
     import LoanedPersonnel from 'components/LoanedPersonnel.vue';
     export default {
         name: 'DataEntry',
@@ -148,11 +148,12 @@
                 if (Object.prototype.toString.call(value) === '[object Array]') {
                     let str = '';
                     value.forEach(it => {
-                        str = str + ' ' + (formHeader[it] || '');
+                        str = str + ' ' + (getObjPath(formHeader, it) || '');
                     });
                     return str;
                 }
-                return formHeader[value];
+                console.log(getObjPath(formHeader, value), '222222');
+                return getObjPath(formHeader, value);
             }
         },
         components: {

@@ -111,7 +111,7 @@
                 </el-table-column>
             </el-table>
         </mds-card>
-        <mds-card :title="'调配物料'" :name="'list4'">
+        <mds-card :title="'超期酱'" :name="'list4'">
             <el-table header-row-class-name="tableHead" class="newTable" :data="table4">
                 <el-table-column type="index" label="序号" width="50" fixed align="center" />
                 <el-table-column label="容器号" prop="receiveMaterial" min-width="120" :show-overflow-tooltip="true">
@@ -154,6 +154,7 @@
 
 <script lang="ts">
     import { Vue, Component, Prop } from 'vue-property-decorator';
+    import { FER_API } from 'common/api/api';
 
     @Component
     export default class DeploySauceTable extends Vue {
@@ -166,6 +167,27 @@
 
         mounted() {
         //
+        }
+
+        init(formHeader) {
+            this.getList('PICKLED', formHeader)
+            this.getList('RECEIVE', formHeader)
+            this.getList('SAUCE', formHeader)
+        }
+
+        getList(str, formHeader) {
+            FER_API.FER_DEPLOY_SAUCE_DETAIL_LIST_API({
+                mixMaterialType: str,
+                openPotNo: formHeader.openPotNo
+            }).then(({ data }) => {
+                if (str === 'PICKLED') {
+                    this.table2 = data.data
+                } else if (str === 'RECEIVE') {
+                    this.table3 = data.data
+                } else if (str === 'SAUCE') {
+                    this.table4 = data.data
+                }
+            })
         }
     }
 </script>
