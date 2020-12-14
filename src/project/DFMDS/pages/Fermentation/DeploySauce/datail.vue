@@ -6,7 +6,7 @@
             :form-header="formHeader"
         >
             <template slot="contentBox" slot-scope="data">
-                <deploy-sauce-table :is-redact="data.isRedact" />
+                <deploy-sauce-table ref="tables" :is-redact="data.isRedact" />
             </template>
         </data-entry>
     </div>
@@ -15,6 +15,7 @@
 <script lang="ts">
     import { Vue, Component } from 'vue-property-decorator';
     import DeploySauceTable from './DeploySauceTable.vue'
+    import { FER_API } from 'common/api/api';
 
     @Component({
         name: 'DeploySauceDedail',
@@ -23,24 +24,28 @@
         }
     })
     export default class DeploySauceDedail extends Vue {
+        $refs: {
+            tables: HTMLFormElement;
+        }
+
         headerBase = [
             {
                 type: 'p',
                 icon: 'factory-shengchanchejian',
                 label: '调酱单号',
-                value: 'workShopName'
+                value: 'mixSauceNo'
             },
             {
                 type: 'p',
                 icon: 'factory-shengchanchejian',
                 label: '开罐类型',
-                value: 'workShopName'
+                value: 'ferOpen.openTypeName'
             },
             {
                 type: 'select',
                 icon: 'factory-riqi',
                 label: '调酱容器',
-                value: 'inPotNo',
+                value: 'mixPotName',
                 disabled: true,
                 option: {
                     list: [],
@@ -58,7 +63,7 @@
                 type: 'tooltip',
                 icon: 'factory-pinleiguanli',
                 label: '发酵物料',
-                value: ['materialCode', 'materialName']
+                value: ['mixMaterialCode', 'mixMaterialName']
             },
             {
                 type: 'tooltip',
@@ -106,9 +111,36 @@
             }
         ]
 
-        formHeader = {
-            user: []
+        formHeader: HeadObj = {
+            user: [],
+            mixMans: '',
+            ferOpen: {
+                openTypeName: '11'
+            }
         }
+
+        mounted() {
+            this.init()
+        }
+
+        init() {
+            FER_API.FER_DEPLOY_SAUCE_GET_API({
+                id: this.$store.state.fer.deploySauceObj.id
+            }).then(({ data }) => {
+                this.formHeader = data.data
+                this.formHeader.user = this.formHeader.mixMans.split('.')
+                this.$refs.tables.init(this.formHeader)
+            })
+        }
+    }
+    interface HeadObj {
+        openPotNo?: string;
+        user?: string[];
+        mixMans: string;
+        ferOpen?: OpenObj;
+    }
+    interface OpenObj{
+        openTypeName?: string;
     }
 </script>
 

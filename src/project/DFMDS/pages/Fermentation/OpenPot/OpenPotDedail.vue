@@ -48,10 +48,10 @@
                         <el-form-item label="操作时间：">
                             <p>{{ formHeader.changed }}</p>
                         </el-form-item>
-                        <el-row style="display: flex;">
-                            <label class="el-form-item__label" style="width: 100px;">备注：</label>
+                        <el-row style="display: flex; margin-bottom: 10px;">
+                            <label class="el-form-item__label" style="width: 100px; line-height: 32px;">备注：</label>
                             <div style="flex: 1;">
-                                <p style="width: 100%;">
+                                <p style="width: 100%; line-height: 32px;">
                                     {{ formHeader.remark }}
                                 </p>
                             </div>
@@ -77,7 +77,7 @@
                             </el-form-item>
                         </el-form>
                     </div>
-                    <el-table :data="openPotList" header-row-class-name="tableHead" class="newTable" border tooltip-effect="dark" @selection-change="handleSelectionChange" @row-dblclick="Dblckick">
+                    <el-table :data="openPotList" height="400px" header-row-class-name="tableHead" class="newTable" border tooltip-effect="dark" @selection-change="handleSelectionChange" @row-dblclick="Dblckick">
                         <el-table-column type="selection" :selectable="checkboxT" width="50" />
                         <el-table-column type="index" label="序号" width="50px" />
                         <el-table-column label="状态" prop="openFlagName" min-width="50" :show-overflow-tooltip="true" />
@@ -123,6 +123,9 @@
                 </mds-card>
             </template>
             <template slot="1">
+                <el-button type="primary" size="small" :disabled="!isRedact" @click="addTable1()">
+                    新增
+                </el-button>
                 <el-table :data="deployMaterial" header-row-class-name="tableHead" class="newTable" border tooltip-effect="dark">
                     <el-table-column label="添加物料" prop="openFlagName" min-width="50" :show-overflow-tooltip="true">
                         <template slot-scope="scope">
@@ -151,6 +154,9 @@
                 </el-table>
             </template>
             <template slot="2">
+                <el-button type="primary" size="small" :disabled="!isRedact" @click="addTable2()">
+                    新增
+                </el-button>
                 <el-table :data="sauce" header-row-class-name="tableHead" class="newTable" border tooltip-effect="dark">
                     <el-table-column label="添加物料" prop="openFlagName" min-width="50" :show-overflow-tooltip="true">
                         <template slot-scope="scope">
@@ -200,10 +206,9 @@
     @Component
     export default class OpenPotDedail extends Vue {
         isRedact = false
-        formHeader = {}
+        formHeader: HeadObj = {}
 
         searchForm = {
-            openPotNo: this.$store.state.fer.openPotObj.openPotNo,// eslint-disable-line
             workShop: '',
             material: '',
             holderId: ''
@@ -225,8 +230,8 @@
         openPotList: PotObj[] = []
         multipleSelection: PotObj[] = []
 
-        deployMaterial = []
-        sauce = []
+        deployMaterial: ListObj[] = []
+        sauce: ListObj[] = []
 
         mounted() {
             this.init()
@@ -242,13 +247,13 @@
         }
 
         getOpenPotList() {
-            FER_API.FER_OPEN_POT_APPLY_DETAIL_TABLE_API(this.searchForm).then(({ data }) => {
+            FER_API.FER_OPEN_POT_DETAIL_LIST_API(this.searchForm).then(({ data }) => {
                 this.openPotList = data.data
             })
         }
 
         getSelect() {
-            FER_API.FER_OPEN_POT_APPLY_DETAIL_TABLE_API(this.searchForm).then(({ data }) => {
+            FER_API.FER_OPEN_POT_DETAIL_LIST_API(this.searchForm).then(({ data }) => {
                 this.openPotList = data.data
                 const workShopArr: string[] = []
                 const materialArr: string[] = []
@@ -265,27 +270,41 @@
         }
 
         Dblckick(row) {
-            console.log(row);
+            this.getDeployMaterialList(row)
+            this.getSauceList(row)
         }
 
-        getDeployMaterialList() {
+        getDeployMaterialList(row) {
             FER_API.FER_OPEN_POT_DETAIL_DEPLOY_LIST_API({
-                openPotNo: ''
+                openPotNo: this.formHeader.openPotNo,
+                fermentorId: row.id
             }).then(({ data }) => {
                 this.deployMaterial = data.data
             })
         }
 
-        getSauceList() {
+        getSauceList(row) {
             FER_API.FER_OPEN_POT_DETAIL_SAUCE_LIST_API({
-                openPotNo: ''
+                openPotNo: this.formHeader.openPotNo,
+                fermentorId: row.id
             }).then(({ data }) => {
                 this.sauce = data.data
             })
         }
 
-        checkboxT(row) {
-            console.log(row);
+        addTable1() {
+            this.deployMaterial.push({
+                id: ''
+            })
+        }
+
+        addTable2() {
+            this.sauce.push({
+                id: ''
+            })
+        }
+
+        checkboxT() {
             if (!this.isRedact) {
                 return 0;
             }
@@ -300,8 +319,15 @@
         }
 
     }
+    interface HeadObj{
+        openPotNo?: string;
+    }
+    interface ListObj{
+        id?: string;
+    }
     interface PotObj{
         id?: string;
+        openPotNo?: string;
     }
 </script>
 

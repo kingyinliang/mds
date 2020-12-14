@@ -20,7 +20,7 @@
                 <el-button v-if="scope.row.statusName === '已保存'" class="ra_btn" type="text" round size="mini" style="margin-left: 0;" @click="del(scope.row, true)">
                     删除
                 </el-button>
-                <el-button v-if="scope.row.statusName === '待处理'" class="ra_btn" type="text" round size="mini" style="margin-left: 0;" @click="withdraw(scope.row, true)">
+                <el-button v-if="scope.row.statusName === '待处理' || scope.row.statusName === '待审核'" class="ra_btn" type="text" round size="mini" style="margin-left: 0;" @click="withdraw(scope.row, true)">
                     撤回
                 </el-button>
             </template>

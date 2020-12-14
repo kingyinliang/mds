@@ -611,7 +611,7 @@
                 materialUnit: row.materialUnit,
                 needNum: row.needNum,
                 endStocks: row.endStocks,
-                startStocks: row.startStocks,
+                startStocks: '',
                 receiveMaterial: row.receiveMaterial,
                 splitFlag: 'Y',
                 delFlag: 0,
