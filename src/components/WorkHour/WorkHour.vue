@@ -8,8 +8,8 @@
                     </el-button>
                 </div>
             </template>
-            <el-table class="newTable" :data="currentFormDataGroup" :row-class-name="RowDelFlag" header-row-class-name="tableHead" border style="width: 100%;">
-                <el-table-column label="序号" type="index" :index="index => getIndexMethod(index, currentFormDataGroup)" width="60" fixed align="center" />
+            <el-table class="newTable" :data="currentFormDataGroup.filter(item=>item.delFlag!==1)" :row-class-name="RowDelFlag" header-row-class-name="tableHead" border style="width: 100%;">
+                <el-table-column label="序号" type="index" :index="index => getIndexMethod(index, currentFormDataGroup.filter(item=>item.delFlag!==1))" width="60" fixed align="center" />
                 <el-table-column prop="status" min-width="120" :show-overflow-tooltip="true">
                     <template slot="header">
                         <span class="notNull">*</span>班次
