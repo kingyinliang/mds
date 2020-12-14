@@ -354,6 +354,10 @@ const KOJI_API = {
      */
     KOJI_AUDIT_QUERY_MARTERIAL_API: params => httpProxy('/kojiVerify/detail/queryMaterial', 'GET', params),
     /**
+     * @property KOJI_AUDIT_QUERY_CHECKED_API 制曲车间-制曲审核-审核通过
+     */
+    KOJI_AUDIT_QUERY_CHECKED_API: params => httpProxy('/kojiVerify/checked', 'GET', params),
+    /**
      * @property KOJI_REFUSE_READY_API 制曲车间-制曲审核-准备工时退回
      */
     KOJI_REFUSE_READY_API: params => httpProxy('/kojiVerify/ready/refuse', 'POST', params),

@@ -154,10 +154,10 @@
                 <audit-log :table-data="currentAudit" :verify-man="'verifyMan'" :verify-date="'verifyDate'" :status="true" />
             </template>
             <template slot="custom_btn">
-                <el-button v-if="isAuth('steCkRefuse')" type="primary" size="small" @click="goDetail">
+                <el-button type="primary" size="small" @click="goDetail">
                     详情
                 </el-button>
-                <el-button type="primary" size="small" @click="pass()">
+                <el-button v-if="formHeader.orderStatusName === '待审核' && isAuth('kojiCkPass')" type="primary" size="small" @click="pass()">
                     审核通过
                 </el-button>
             </template>
@@ -1041,19 +1041,12 @@
                 cancelButtonText: '取消',
                 type: 'warning'
             }).then(() => {
-                // PKG_API.PKG_AUDIT_DETAIL_PASS_API({
-                //     factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
-                //     materialCode: this.formHeader.materialCode,
-                //     orderId: this.formHeader.id,
-                //     orderNo: this.formHeader.orderNo,
-                //     orderType: this.formHeader.orderType,
-                //     productDate: this.formHeader.productDate,
-                //     productLine: this.formHeader.productLine,
-                //     workShop: this.formHeader.workShop
-                // }).then(() => {
-                //     this.$successToast('操作成功');
-                //     // this.getOrderList();
-                // })
+                KOJI_API.KOJI_AUDIT_QUERY_CHECKED_API({
+                    orderNo: this.auditDetail['orderNo']
+                }).then(() => {
+                    this.$successToast('操作成功');
+                    this.getHeaderInfo(this.auditDetail['orderNo']);
+                })
             })
         }
 
