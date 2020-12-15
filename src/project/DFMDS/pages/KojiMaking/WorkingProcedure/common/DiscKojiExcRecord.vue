@@ -113,6 +113,7 @@ export default class ExcRecord extends Vue {
         });
         Promise.all([net1, net2]).then(() => {
             COMMON_API.DEVICE_LISTBYTYPE_API({ deptId: formHeader.workShop }).then(({ data }) => {
+                this.excReasonTotal.FAULTSHUTDOWN = []
                 data.data.map(item => {
                     this.excReasonTotal.FAULTSHUTDOWN.push({
                         dictValue: item.deviceName,
@@ -155,10 +156,7 @@ export default class ExcRecord extends Vue {
             orderNo: formHeader.orderNo,
             exceptionStage: tagName
         }).then(({ data }) => {
-            console.log('圆盘异常记录')
-            console.log(data)
             this.excList = JSON.parse(JSON.stringify(data.data));
-
             this.excList.map(item => {
                 if (item.exceptionSituation === 'FAULT' || item.exceptionSituation === 'SHUTDOWN') {
                     item.excReasonList = this.excReasonTotal.FAULTSHUTDOWN
