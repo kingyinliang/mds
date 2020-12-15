@@ -39,7 +39,7 @@
                     <el-table-column label="操作时间" prop="changed" width="180" />
                     <el-table-column width="70" label="操作" fixed="right">
                         <template slot-scope="scope">
-                            <el-button class="delBtn" type="text" icon="el-icon-delete" size="mini" :disabled="!isRedact" @click="removeDataRow(scope.row, scope.$index)">
+                            <el-button class="delBtn" type="text" icon="el-icon-delete" size="mini" :disabled="!(isRedact && scope.row.status !== 'C' && scope.row.status !== 'D' && scope.row.status !== 'P')" @click="removeDataRow(scope.row, scope.$index)">
                                 删除
                             </el-button>
                         </template>

@@ -413,7 +413,7 @@
                 <el-table-column prop="changed" min-width="180" label="操作时间" :show-overflow-tooltip="true" />
                 <el-table-column fixed="right" label="操作" width="80" :show-overflow-tooltip="true">
                     <template slot-scope="scope">
-                        <el-button class="delBtn" type="text" icon="el-icon-delete" size="mini" :disabled="!isRedact" @click="removeFirstDataRow(scope.row,'kojiGuardData');">
+                        <el-button class="delBtn" type="text" icon="el-icon-delete" size="mini" :disabled="!(isRedact && scope.row.status !== 'C' && scope.row.status !== 'D' && scope.row.status !== 'P')" @click="removeFirstDataRow(scope.row,'kojiGuardData');">
                             删除
                         </el-button>
                     </template>
@@ -617,7 +617,7 @@
                     <el-table-column prop="changed" min-width="180" label="操作时间" :show-overflow-tooltip="true" />
                     <el-table-column fixed="right" label="操作" width="80" :show-overflow-tooltip="true">
                         <template slot-scope="scope">
-                            <el-button class="delBtn" type="text" icon="el-icon-delete" size="mini" :disabled="!isRedact" @click="removeFirstDataRow(scope.row)">
+                            <el-button class="delBtn" type="text" icon="el-icon-delete" size="mini" :disabled="!(isRedact && scope.row.status !== 'C' && scope.row.status !== 'D' && scope.row.status !== 'P')" @click="removeFirstDataRow(scope.row)">
                                 删除
                             </el-button>
                         </template>

@@ -110,7 +110,7 @@
                 </el-table-column>
                 <el-table-column label="操作" width="70" fixed="right">
                     <template slot-scope="scope">
-                        <el-button class="delBtn" type="text" icon="el-icon-delete" size="mini" :disabled="!isRedact" @click="removeRow(scope.row)">
+                        <el-button class="delBtn" type="text" icon="el-icon-delete" size="mini" :disabled="!(isRedact && scope.row.status !== 'C' && scope.row.status !== 'D' && scope.row.status !== 'P')" @click="removeRow(scope.row)">
                             删除
                         </el-button>
                     </template>
@@ -263,7 +263,7 @@
                 </el-table-column>
                 <el-table-column label="操作" width="70" fixed="right">
                     <template slot-scope="scope">
-                        <el-button class="delBtn" type="text" icon="el-icon-delete" size="mini" :disabled="!isRedact" @click="removeRow(scope.row)">
+                        <el-button class="delBtn" type="text" icon="el-icon-delete" size="mini" :disabled="!(isRedact && scope.row.status !== 'C' && scope.row.status !== 'D' && scope.row.status !== 'P')" @click="removeRow(scope.row)">
                             删除
                         </el-button>
                     </template>

@@ -3,7 +3,7 @@
  * @Anthor: Telliex
  * @Date: 2020-08-27 14:28:27
  * @LastEditors: Telliex
- * @LastEditTime: 2020-12-08 16:06:03
+ * @LastEditTime: 2020-12-15 15:47:16
  */
 import httpProxy from 'utils/net/httpProxy';
 const KOJI_API = {
@@ -92,6 +92,10 @@ const KOJI_API = {
      */
     WORKPROCEDURE_QUERY_API: params => httpProxy('/koji/kojiWorkProcedure/query', 'POST', params),
 
+    /**
+     * @property WORKPROCEDURE_QUERY_NOPAGE_API 制曲车间-报工工序-根据高级查询条件查询报工中间表数据列表
+     */
+    WORKPROCEDURE_QUERY_NOPAGE_API: params => httpProxy('koji/kojiWorkProcedure/list/query', 'POST', params),
     /**
      * @property {string} KOJI_CRAFT_HEAD_INFO_QUERY_API 制曲车间-制曲头部信息查询(洗豆 蒸面 圆盘 头部信息)
      */
