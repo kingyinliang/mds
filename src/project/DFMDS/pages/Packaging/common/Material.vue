@@ -27,7 +27,11 @@
                         </el-select>
                     </template>
                 </el-table-column>
-                <el-table-column label="当前库存" prop="startStocks" width="80" :show-overflow-tooltip="true" />
+                <el-table-column label="当前库存" prop="startStocks" width="80" :show-overflow-tooltip="true">
+                    <template slot-scope="scope">
+                        {{ scope.row.batch && !scope.row.startStocks? 0 : scope.row.startStocks }}
+                    </template>
+                </el-table-column>
                 <el-table-column label="领用数量" prop="realUseAmount" width="120">
                     <template slot="header">
                         <span class="notNull">* </span>领用数量
@@ -48,7 +52,7 @@
                 </el-table-column>
                 <el-table-column label="厂家" prop="manufactor" width="120" :show-overflow-tooltip="true">
                     <template slot-scope="scope">
-                        {{ scope.row.batchData.filter(it => it.manufactor === scope.row.manufactor).length? scope.row.batchData.filter(it => it.manufactor === scope.row.manufactor)[0].manufactorName: '' }}
+                        {{ scope.row.manufactorName }}
                     </template>
                 </el-table-column>
                 <el-table-column label="备注" prop="remark" min-width="140">
@@ -477,6 +481,7 @@
             const filterArr: (any) = row.batchData.filter(it => it.batch === row.batch);// eslint-disable-line
             row.startStocks = filterArr[0].storageAmount
             row.manufactor = filterArr[0].manufactor
+            row.manufactorName = filterArr[0].manufactorName
         }
 
         // 处理数据1
