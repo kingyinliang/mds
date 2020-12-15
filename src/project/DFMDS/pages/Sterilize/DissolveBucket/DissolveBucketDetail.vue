@@ -152,7 +152,7 @@
                     </el-table-column>
                     <el-table-column label="移动数量" :show-overflow-tooltip="true" width="180">
                         <template slot-scope="scope">
-                            <span v-if="scope.row.moveType!=='R'">-</span>{{ scope.row.moveAmount.toFixed(3) }}
+                            <span v-if="scope.row.moveType!=='I'">-</span>{{ scope.row.moveAmount.toFixed(3) }}
                         </template>
                     </el-table-column>
                     <el-table-column label="单位" :show-overflow-tooltip="true" width="80">
