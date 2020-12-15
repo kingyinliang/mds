@@ -85,12 +85,14 @@
                         <el-table-column label="容器号" prop="holderName" min-width="80" :show-overflow-tooltip="true" />
                         <el-table-column label="使用说明" prop="explain" min-width="100" :show-overflow-tooltip="true">
                             <template slot-scope="scope">
-                                {{ scope.row.ferOpenFermentor.explain }}
+                                <el-input v-if="formHeader.openType === 'MANY'" v-model="scope.row.ferOpenFermentor.explain" :disabled="!(isRedact)" size="small" placeholder="请输入" />
                             </template>
                         </el-table-column>
                         <el-table-column label="订单类型" prop="materialUnit" min-width="100" :show-overflow-tooltip="true">
                             <template slot-scope="scope">
-                                {{ scope.row.ferOrder.orderType }}
+                                <el-select v-model="scope.row.ferOrder.orderType" :disabled="!(isRedact)" placeholder="请选择" size="small">
+                                    <el-option v-for="(item, index) in orderTypeList" :key="index" :label="item.dictValue" :value="item.dictCode" />
+                                </el-select>
                             </template>
                         </el-table-column>
                         <el-table-column label="发酵天数/天" prop="fermentDays" min-width="120" :show-overflow-tooltip="true" />
@@ -123,14 +125,14 @@
                 </mds-card>
             </template>
             <template slot="1">
-                <el-button type="primary" size="small" :disabled="!isRedact" @click="addTable1()">
+                <el-button type="primary" size="small" :disabled="!isRedact" style="float: right;" @click="addTable1()">
                     新增
                 </el-button>
                 <el-table :data="deployMaterial" header-row-class-name="tableHead" class="newTable" border tooltip-effect="dark">
                     <el-table-column label="添加物料" prop="openFlagName" min-width="50" :show-overflow-tooltip="true">
                         <template slot-scope="scope">
-                            <el-select v-model="scope.row.material" :disabled="!isRedact" placeholder="请选择" style="width: 120px;" filterable clearable @change="getOpenPotList">
-                                <el-option v-for="(item, index) in material" :key="index" :label="item.materialName+' ' + item.materialCode" :value="item.materialCode" />
+                            <el-select v-model="scope.row.material" :disabled="!isRedact" placeholder="请选择" style="width: 120px;" filterable clearable>
+                                <el-option v-for="(item, index) in deployMaterialSelect" :key="index" :label="item.dictValue" :value="item.dictCode" />
                             </el-select>
                         </template>
                     </el-table-column>
@@ -141,8 +143,8 @@
                     </el-table-column>
                     <el-table-column label="单位" prop="openFlagName" min-width="50" :show-overflow-tooltip="true">
                         <template slot-scope="scope">
-                            <el-select v-model="scope.row.material" :disabled="!isRedact" placeholder="请选择" style="width: 120px;" filterable clearable @change="getOpenPotList">
-                                <el-option v-for="(item, index) in material" :key="index" :label="item.materialName+' ' + item.materialCode" :value="item.materialCode" />
+                            <el-select v-model="scope.row.material" :disabled="!isRedact" placeholder="请选择" style="width: 120px;" filterable clearable>
+                                <el-option v-for="(item, index) in Unit" :key="index" :label="item.dictValue" :value="item.dictCode" />
                             </el-select>
                         </template>
                     </el-table-column>
@@ -151,10 +153,17 @@
                             <el-input v-model="scope.row.applyAmount" :disabled="!isRedact" placeholder="手动输入" style="width: 120px;" />
                         </template>
                     </el-table-column>
+                    <el-table-column label="操作" fixed="right" width="70">
+                        <template slot-scope="scope">
+                            <el-button :disabled="!(isRedact)" class="delBtn" type="text" icon="el-icon-delete" size="mini" @click="del(scope.row)">
+                                删除
+                            </el-button>
+                        </template>
+                    </el-table-column>
                 </el-table>
             </template>
             <template slot="2">
-                <el-button type="primary" size="small" :disabled="!isRedact" @click="addTable2()">
+                <el-button type="primary" size="small" :disabled="!isRedact" style="float: right;" @click="addTable2()">
                     新增
                 </el-button>
                 <el-table :data="sauce" header-row-class-name="tableHead" class="newTable" border tooltip-effect="dark">
@@ -201,12 +210,19 @@
 
 <script lang="ts">
     import { Vue, Component } from 'vue-property-decorator';
-    import { FER_API } from 'common/api/api';
+    import { COMMON_API, FER_API } from 'common/api/api';
 
     @Component
     export default class OpenPotDedail extends Vue {
         isRedact = false
         formHeader: HeadObj = {}
+
+        orderTypeList = []
+        deployMaterialSelect = []
+        Unit = []
+        workShop: string[] = []
+        material: string[] = []
+        potArr: string[] = []
 
         searchForm = {
             workShop: '',
@@ -223,10 +239,6 @@
             }
         ]
 
-        workShop: string[] = []
-        material: string[] = []
-        potArr: string[] = []
-
         openPotList: PotObj[] = []
         multipleSelection: PotObj[] = []
 
@@ -237,6 +249,7 @@
             this.init()
         }
 
+        // 初始化拿取表头数据和开罐列表
         init() {
             FER_API.FER_OPEN_POT_APPLY_DETAIL_API({
                 id: this.$store.state.fer.openPotObj.id
@@ -246,12 +259,14 @@
             this.getSelect()
         }
 
+        // 修改查询条件查询开罐列表
         getOpenPotList() {
             FER_API.FER_OPEN_POT_DETAIL_LIST_API(this.searchForm).then(({ data }) => {
                 this.openPotList = data.data
             })
         }
 
+        // 获取开罐列表组装下拉 调配物料下拉
         getSelect() {
             FER_API.FER_OPEN_POT_DETAIL_LIST_API(this.searchForm).then(({ data }) => {
                 this.openPotList = data.data
@@ -267,13 +282,32 @@
                 this.material = [...new Set(materialArr)]
                 this.potArr = [...new Set(potArrArr)]
             })
+            COMMON_API.DICTQUERY_API({
+                factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
+                dictType: 'FER_MIX_MAT_TYPE'
+            }).then(({ data }) => {
+                this.deployMaterialSelect = data.data
+            })
+            COMMON_API.DICTQUERY_API({
+                factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
+                dictType: 'ORDER_TYPE'
+            }).then(({ data }) => {
+                this.orderTypeList = data.data
+            })
+            COMMON_API.DICTQUERY_API({
+                dictType: 'COMMON_UNIT'
+            }).then(({ data }) => {
+                this.Unit = data.data;
+            });
         }
 
+        // 开罐列表双击
         Dblckick(row) {
             this.getDeployMaterialList(row)
             this.getSauceList(row)
         }
 
+        // 获取调配物料接口
         getDeployMaterialList(row) {
             FER_API.FER_OPEN_POT_DETAIL_DEPLOY_LIST_API({
                 openPotNo: this.formHeader.openPotNo,
@@ -283,6 +317,7 @@
             })
         }
 
+        // 获取超期酱
         getSauceList(row) {
             FER_API.FER_OPEN_POT_DETAIL_SAUCE_LIST_API({
                 openPotNo: this.formHeader.openPotNo,
@@ -292,18 +327,33 @@
             })
         }
 
+        // 调配物料新增
         addTable1() {
             this.deployMaterial.push({
                 id: ''
             })
         }
 
+        // 超期酱新增
         addTable2() {
             this.sauce.push({
                 id: ''
             })
         }
 
+        // 删除
+        del(row) {
+            this.$confirm('是否删除?', '提示', {
+                confirmButtonText: '确定',
+                cancelButtonText: '取消',
+                type: 'warning'
+            }).then(() => {
+                this.$set(row, 'delFlag', 1)
+                this.$successToast('删除成功');
+            });
+        }
+
+        // 开罐列表复选框
         checkboxT() {
             if (!this.isRedact) {
                 return 0;
@@ -311,6 +361,7 @@
             return 1;
         }
 
+        // 开罐列表选择数据
         handleSelectionChange(val) {
             this.multipleSelection = [];
             val.forEach((item) => {

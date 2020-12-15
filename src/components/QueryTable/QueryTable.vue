@@ -15,7 +15,7 @@
                             </el-select>
                         </el-form-item>
                         <el-form-item v-if="item.type === 'input'" :key="item.prop" :label="`${item.label}：` || ''" :prop="item.prop" :rules="item.rule" :label-width="`${item.labelWidth ? item.labelWidth : 70}px`">
-                            <el-input :ref="item.prop" v-model="queryForm[item.prop]" style="width: 170px;" clearable />
+                            <el-input :ref="item.prop" v-model.trim="queryForm[item.prop]" style="width: 170px;" clearable />
                         </el-form-item>
                         <el-form-item v-if="item.type === 'radio'" :key="item.prop" :label="item.label?`${item.label}：` : ''" :prop="item.prop" :rules="item.rule" :label-width="`${item.labelWidth ? item.labelWidth : 70}px`">
                             <el-radio v-for="(it, num) in item.radioArr" :key="num" v-model="queryForm[item.prop]" :label="it.val">
