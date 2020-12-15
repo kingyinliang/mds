@@ -19,7 +19,7 @@
                             </el-button>
                         </div>
                     </template>
-                    <el-table class="newTable markStyle" :data="targetQueryTableListOfForiegnMatter" :row-class-name="rowDelFlag" header-row-class-name="tableHead" border style="width: 100%; min-height: 80px;">
+                    <el-table class="newTable markStyle" :data="targetQueryTableListOfForiegnMatter" :row-class-name="rowDelFlag" header-row-class-name="tableHead" border style="width: 100%; min-height: 80px;" tooltip-effect="dark">
                         <el-table-column label="序号" type="index" :index="index => getIndexMethod(index, targetQueryTableListOfForiegnMatter)" width="55" fixed="left" align="center" />
                         <el-table-column width="150" :show-overflow-tooltip="true" class="star">
                             <template slot="header">
@@ -72,7 +72,9 @@
                                 <span>备注</span>
                             </template>
                             <template slot-scope="scope">
-                                <el-input v-model.trim="scope.row.remark" size="small" placeholder="请输入" :disabled="!isRedact" />
+                                <el-tooltip v-if="scope.row.remark !== ''" effect="dark" :content="scope.row.remark" placement="top">
+                                    <el-input v-model.trim="scope.row.remark" size="small" placeholder="请输入" :disabled="!isRedact" />
+                                </el-tooltip>
                             </template>
                         </el-table-column>
                         <el-table-column prop="changer" width="140" label="操作人" :show-overflow-tooltip="true" />
@@ -104,7 +106,7 @@
                             </el-button>
                         </div>
                     </template>
-                    <el-table class="newTable markStyle" :data="targetQueryTableListOfMagnet" :row-class-name="rowDelFlag" header-row-class-name="tableHead" border style="width: 100%; min-height: 80px;">
+                    <el-table class="newTable markStyle" :data="targetQueryTableListOfMagnet" :row-class-name="rowDelFlag" header-row-class-name="tableHead" border tooltip-effect="dark" style="width: 100%; min-height: 80px;">
                         <el-table-column label="序号" type="index" width="50" fixed="left" align="center" />
                         <el-table-column width="150" :show-overflow-tooltip="true">
                             <template slot="header">
@@ -142,7 +144,9 @@
                                 <span>异物描述</span>
                             </template>
                             <template slot-scope="scope">
-                                <el-input v-model.trim="scope.row.impurityInfo" :disabled="!(scope.row.impurityType==='OTHER'&&isRedact)" size="small" placeholder="请输入" />
+                                <el-tooltip v-if="scope.row.impurityInfo !== ''" effect="dark" :content="scope.row.impurityInfo" placement="top">
+                                    <el-input v-model.trim="scope.row.impurityInfo" :disabled="!(scope.row.impurityType==='OTHER'&&isRedact)" size="small" placeholder="请输入" />
+                                </el-tooltip>
                             </template>
                         </el-table-column>
                         <el-table-column :show-overflow-tooltip="true" min-width="200">
@@ -150,7 +154,9 @@
                                 <span>处理措施</span>
                             </template>
                             <template slot-scope="scope">
-                                <el-input v-model.trim="scope.row.measures" size="small" placeholder="请输入" :disabled="!isRedact" />
+                                <el-tooltip v-if="scope.row.measures !== ''" effect="dark" :content="scope.row.measures" placement="top">
+                                    <el-input v-model.trim="scope.row.measures" size="small" placeholder="请输入" :disabled="!isRedact" />
+                                </el-tooltip>
                             </template>
                         </el-table-column>
                         <el-table-column label="备注" :show-overflow-tooltip="true" min-width="200">
@@ -158,7 +164,9 @@
                                 <span>备注</span>
                             </template>
                             <template slot-scope="scope">
-                                <el-input v-model.trim="scope.row.remark" size="small" placeholder="请输入" :disabled="!isRedact" />
+                                <el-tooltip v-if="scope.row.remark !== ''" effect="dark" :content="scope.row.remark" placement="top">
+                                    <el-input v-model.trim="scope.row.remark" size="small" placeholder="请输入" :disabled="!isRedact" />
+                                </el-tooltip>
                             </template>
                         </el-table-column>
                         <el-table-column prop="changer" min-width="140" label="操作人" :show-overflow-tooltip="true" />
