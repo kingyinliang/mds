@@ -20,7 +20,7 @@
                         <el-table-column label="当前库存" prop="storage" width="100" :show-overflow-tooltip="true" />
                         <el-table-column width="70">
                             <template slot-scope="scope">
-                                <el-button v-if="isAuth('pkgPdInsert')" :disabled="!(isRedact)" type="text" @click="SplitDate(scope.row, scope.$index)">
+                                <el-button :disabled="!(isRedact)" type="text" @click="SplitDate(scope.row, scope.$index)">
                                     <em class="icons iconfont factory-chaifen" />拆分
                                 </el-button>
                             </template>
@@ -71,7 +71,7 @@
                         <el-table-column label="操作时间" prop="changed" width="100" :show-overflow-tooltip="true" />
                         <el-table-column label="操作" fixed="right" width="70">
                             <template slot-scope="scope">
-                                <el-button v-if="scope.row.splitFlag === 'Y' && isAuth('pkgPdDel')" :disabled="!(isRedact)" class="delBtn" type="text" icon="el-icon-delete" size="mini" @click="del(scope.row)">
+                                <el-button v-if="scope.row.splitFlag === 'Y'" :disabled="!(isRedact)" class="delBtn" type="text" icon="el-icon-delete" size="mini" @click="del(scope.row)">
                                     删除
                                 </el-button>
                             </template>
