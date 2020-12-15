@@ -122,6 +122,9 @@
                             </template>
                         </el-table-column>
                     </el-table>
+                    <el-row>
+                        <el-pagination :current-page="searchForm.current" :page-sizes="[10, 20, 50]" :page-size="searchForm.size" layout="total, sizes, prev, pager, next, jumper" :total="searchForm.total" @size-change="handleSizeChange" @current-change="handleCurrentChange" />
+                    </el-row>
                 </mds-card>
             </template>
             <template slot="1">
@@ -227,7 +230,10 @@
         searchForm = {
             workShop: '',
             material: '',
-            holderId: ''
+            holderId: '',
+            current: 1,
+            size: 10,
+            total: 0
         }
 
         tabs = [
@@ -276,7 +282,7 @@
                 this.openPotList.forEach(item => {
                     item['workShop']? workShopArr.push(item['workShop'] + '&' + item['workShopName']) : ''// eslint-disable-line
                     item['ferOrder']['productMaterialCode']? materialArr.push(item['ferOrder']['productMaterialCode'] + '&' + item['ferOrder']['productMaterialName']) : ''// eslint-disable-line
-                    item['holderNo']? potArrArr.push(item['holderNo'] + '&' + item['holderName']) : ''// eslint-disable-line
+                    item['holderId']? potArrArr.push(item['holderId'] + '&' + item['holderName']) : ''// eslint-disable-line
                 })
                 this.workShop = [...new Set(workShopArr)]
                 this.material = [...new Set(materialArr)]
@@ -369,6 +375,16 @@
             });
         }
 
+        saved() {
+            const savedData: SavedDataObj = this.formHeader
+            savedData.openFermentorList = this.multipleSelection
+            console.log(savedData);
+        }
+
+    }
+    interface SavedDataObj{
+        openPotNo?: string;
+        openFermentorList?: PotObj[];
     }
     interface HeadObj{
         openPotNo?: string;
@@ -379,6 +395,9 @@
     interface PotObj{
         id?: string;
         openPotNo?: string;
+        ferMaterialList?: ListObj[];
+        ferOverdueMaterialList?: ListObj[];
+        materialRemoveIds?: string[];
     }
 </script>
 
