@@ -3,6 +3,7 @@
         <query-table
             ref="queryTable"
             :column="column"
+            :rules="rules"
             :query-form-data="queryFormData"
             :list-interface="listInterface"
             get-list-field="data"
@@ -12,7 +13,7 @@
 
 <script lang="ts">
     import { Vue, Component } from 'vue-property-decorator';
-    import { COMMON_API } from 'common/api/api';
+    import { COMMON_API, PKG_API } from 'common/api/api';
     import { dateFormat } from 'utils/utils';
 
     @Component
@@ -56,10 +57,10 @@
             {
                 type: 'select',
                 label: '领料状态',
-                prop: 'type',
+                prop: 'status',
                 options: [
-                    { label: '已领料', value: '已领料' },
-                    { label: '未领料', value: '未领料' }
+                    { label: '已领料', value: '1' },
+                    { label: '未领料', value: '0' }
                 ],
                 resVal: {
                     label: ['label'],
@@ -75,31 +76,38 @@
                 type: 'date-interval',
                 label: '生产日期',
                 defaultValue: dateFormat(new Date(), 'yyyy-MM-dd'),
-                prop: 'produceStart',
-                propTwo: 'produceEnd'
+                prop: 'productStartDate',
+                propTwo: 'productEndDate'
             }
         ]
+
+        rules = [
+            {
+                prop: 'workShop',
+                text: '请选择生产车间'
+            }
+        ];
 
         column = [
             {
                 label: '订单状态',
-                prop: 'productLineName',
-                minwidth: '160'
+                prop: 'orderStatus',
+                minwidth: '80'
             },
             {
                 label: '领料状态',
-                prop: 'productLineName',
-                minwidth: '160'
+                prop: 'status',
+                minwidth: '80'
             },
             {
                 label: '生产日期',
-                prop: 'productLineName',
-                minwidth: '160'
+                prop: 'productDate',
+                minwidth: '100'
             },
             {
                 label: '生产产线',
                 prop: 'productLineName',
-                minwidth: '160'
+                minwidth: '80'
             },
             {
                 label: '生产订单',
@@ -116,42 +124,46 @@
                                 this.goDetail(row); // eslint-disable-line
                             }
                         }
-                    }, row.dictValue);
+                    }, row.orderNo);
                 },
-                minwidth: '160'
+                minwidth: '120'
             },
             {
                 label: '生产物料',
-                prop: 'productLineName',
-                minwidth: '160'
+                prop: 'materialCode;',
+                formatter: (row) => {
+                    return row.materialName + ' ' + row.materialCode;
+                }
             },
             {
                 label: '计划数量',
-                prop: 'productLineName',
-                minwidth: '160'
+                prop: 'planOutput',
+                minwidth: '80'
             },
             {
                 label: '入库数量',
-                prop: 'productLineName',
-                minwidth: '160'
+                prop: 'realOutput',
+                minwidth: '80'
             },
             {
                 label: '单位',
-                prop: 'productLineName',
-                minwidth: '160'
+                prop: 'outputUnit',
+                minwidth: '50'
             }
         ]
 
         listInterface(params) {
-            params['factory'] = JSON.parse(sessionStorage.getItem('factory') || '{}').id;
-            return COMMON_API.DICTQUERY_API({
-                factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
-                dictType: 'ORDER_TYPE'
-            });
+            if ((params.productStartDate === '' || !params.productStartDate) && params.orderNo === '') {
+                this.$warningToast('日期或订单请选填一项');// eslint-disable-line
+                return new Promise((resolve, reject) => {
+                    reject('error') // eslint-disable-line
+                });
+            }
+            return PKG_API.PKG_PICKING_MATERIAL_LIST_API(params);
         }
 
         goDetail(row) {
-            console.log(row);
+            this.$store.commit('packaging/updatePickingDetail', row);
             this.$store.commit('common/updateMainTabs', this.$store.state.common.mainTabs.filter(subItem => subItem.name !== 'DFMDS-pages-Packaging-PickingMaterialDetail'))
             setTimeout(() => {
                 this.$router.push({
