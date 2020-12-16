@@ -121,7 +121,7 @@
 
         // 查询最新审核记录
         getAuditList() {
-            AUDIT_API.AUDIT_LOG_LIST_API({ orderNo: this.formHeader.orderNo, verifyType: '' }).then(({ data }) => {
+            AUDIT_API.AUDIT_LOG_LIST_API({ orderNo: this.formHeader.orderNo, verifyType: 'MATERIAL' }).then(({ data }) => {
                 this.auditList = data.data;
             });
         }
