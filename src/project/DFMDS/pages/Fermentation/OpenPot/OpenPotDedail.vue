@@ -464,7 +464,7 @@
             }
             savedData.openFermentorList = openFermentorList
             console.log(savedData);
-            FER_API.FER_OPEN_POT_DETAIL_SAVE_API(savedData).then(({ data }) => {
+            FER_API.FER_OPEN_POT_DETAIL_SAVE_API(savedData).then(() => {
                 this.$successToast('保存成功')
             })
         }
