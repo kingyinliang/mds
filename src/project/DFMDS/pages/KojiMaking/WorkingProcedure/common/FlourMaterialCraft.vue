@@ -331,6 +331,8 @@
 
             this.craftSteamFlourInfo.kojiOrderNo = formHeader.kojiOrderNo
             this.craftSteamFlourInfo.orderNo = formHeader.orderNo
+            this.temCraftSteamFlourInfo.kojiOrderNo = formHeader.kojiOrderNo
+            this.temCraftSteamFlourInfo.orderNo = formHeader.orderNo
 
             let newCraftControlInfo = true
             if (this.craftControlInfo.id) {
@@ -338,6 +340,8 @@
             }
             this.craftControlInfo.kojiOrderNo = formHeader.kojiOrderNo
             this.craftControlInfo.orderNo = formHeader.orderNo
+            this.temCraftControlInfo.kojiOrderNo = formHeader.kojiOrderNo
+            this.temCraftControlInfo.orderNo = formHeader.orderNo
 
             return {
                 steamBean: tempSteamBean.insertDto.length === 0 && tempSteamBean.updateDto.length === 0 && tempSteamBean.deleteDto.length === 0 ? null : {
