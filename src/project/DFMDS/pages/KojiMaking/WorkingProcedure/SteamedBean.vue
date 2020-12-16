@@ -253,7 +253,7 @@
             COMMON_API.HOLDER_DROPDOWN_API({
                 // deptId: this.formHeader.workShop,
                 factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
-                holderType: ['029']
+                holderType: ['025']
             }).then(({ data }) => {
                 console.log('泡豆罐下拉')
                 console.log(data)
