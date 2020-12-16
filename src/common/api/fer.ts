@@ -142,6 +142,10 @@ const FER_API = {
      * @property {string} FER_INSTORAGE_SUBMIT_API 发酵车间-入库管理-提交
      */
     FER_INSTORAGE_SUBMIT_API: params => httpProxy('/fer/inStorage/submit', 'POST', params),
+    /**
+     * @property {string} FER_INSTORAGE_RETURN_API 发酵车间-入库管理-退回
+     */
+    FER_INSTORAGE_RETURN_API: params => httpProxy('/fer/inStorage/returnTo', 'POST', params),
     // ==================== 工时录入 ==================
     /**
      * @property {string} FER_TIME_SHEET_QUERY_API 发酵车间-准备工时-查询

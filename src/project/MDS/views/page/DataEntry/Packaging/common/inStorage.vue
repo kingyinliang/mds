@@ -210,6 +210,10 @@
                             </template>
                         </el-table-column>
                         <el-table-column label="赠品批次" min-width="120">
+                            <template slot="header">
+                                <em class="reqI">*</em>
+                                <span>赠品批次</span>
+                            </template>
                             <template slot-scope="scope">
                                 <el-input v-model="scope.row.attachBatch" maxlength="10" placeholder="手工录入" size="small" :disabled="!(isRedact && scope.row.status !== 'submit' && scope.row.status !== 'checked')" />
                             </template>
@@ -608,6 +612,11 @@ export default {
                     if (this.order.properties === '二合一&礼盒产线' && !item.mainBatch) {
                         ty = false;
                         this.$warningToast('生产入库主产品批次项未填');
+                        return false;
+                    }
+                    if (this.order.properties === '二合一&礼盒产线' && !item.attachBatch) {
+                        ty = false;
+                        this.$warningToast('生产入库赠品批次项未填');
                         return false;
                     }
                     if (item.aiShelves !== '' && item.aiShelves !== '0') {

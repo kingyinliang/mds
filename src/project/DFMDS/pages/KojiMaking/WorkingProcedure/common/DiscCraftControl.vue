@@ -10,8 +10,8 @@
                         placeholder="请输入入曲情况"
                         clearable
                         style="width: 180px;"
-                        :disabled="!isRedact"
                         maxlength="30"
+                        :disabled="!(isRedact && kojiInformData.status !== 'C' && kojiInformData.status !== 'D' && kojiInformData.status !== 'P')"
                     />
                 </el-form-item>
                 <el-form-item
@@ -27,7 +27,7 @@
                                     v-model="kojiInformData.addKojiMans"
                                     placeholder="请输入入曲人"
 
-                                    :disabled="!isRedact"
+                                    :disabled="!(isRedact && kojiInformData.status !== 'C' && kojiInformData.status !== 'D' && kojiInformData.status !== 'P')"
                                 />
                             </el-tooltip>
                             <em v-if="!kojiInformData.addKojiMans" :class="{'like-el-input__inner':isRedact,'input-in-form-disabled':!isRedact}">点击选择人员</em>
@@ -44,7 +44,7 @@
                         placeholder="请输入"
                         clearable
                         style="width: 180px;"
-                        :disabled="!isRedact"
+                        :disabled="!(isRedact && kojiInformData.status !== 'C' && kojiInformData.status !== 'D' && kojiInformData.status !== 'P')"
                         @input="(val)=>oninput(val,kojiInformData,'addKojiTemp')"
                     >
                         <span slot="suffix">°C</span>
@@ -73,7 +73,7 @@
                         placeholder="请选择"
                         clearable
                         style="width: 180px;"
-                        :disabled="!isRedact"
+                        :disabled="!(isRedact && kojiInformData.status !== 'C' && kojiInformData.status !== 'D' && kojiInformData.status !== 'P')"
                     />
                 </el-form-item>
                 <el-form-item
@@ -89,7 +89,7 @@
                         placeholder="请选择"
                         clearable
                         style="width: 180px;"
-                        :disabled="!isRedact"
+                        :disabled="!(isRedact && kojiInformData.status !== 'C' && kojiInformData.status !== 'D' && kojiInformData.status !== 'P')"
                     />
                 </el-form-item>
                 <el-form-item
@@ -118,7 +118,7 @@
                         <span class="notNull">* </span>看曲时间
                     </template>
                     <template slot-scope="scope">
-                        <el-date-picker v-model="scope.row.guardDate" type="datetime" size="small" value-format="yyyy-MM-dd HH:mm" format="yyyy-MM-dd HH:mm" placeholder="选择时间" style="width: 180px;" :disabled="!isRedact" @change="(val)=>kojiStartTimeChange(val,scope.row)" />
+                        <el-date-picker v-model="scope.row.guardDate" type="datetime" size="small" value-format="yyyy-MM-dd HH:mm" format="yyyy-MM-dd HH:mm" placeholder="选择时间" style="width: 180px;" :disabled="!(isRedact && scope.row.status !== 'C' && scope.row.status !== 'D' && scope.row.status !== 'P')" @change="(val)=>kojiStartTimeChange(val,scope.row)" />
                     </template>
                 </el-table-column>
                 <el-table-column label="实际风温" :show-overflow-tooltip="true" width="140">
@@ -130,7 +130,7 @@
                             v-model.trim="scope.row.windTemp"
                             size="small"
                             placeholder="请输入"
-                            :disabled="!isRedact"
+                            :disabled="!(isRedact && scope.row.status !== 'C' && scope.row.status !== 'D' && scope.row.status !== 'P')"
                             @input="(val)=>oninput(val,scope.row,'windTemp')"
                         >
                             <span slot="suffix">°C</span>
@@ -143,7 +143,7 @@
                             v-model.trim="scope.row.settingWindTemp"
                             size="small"
                             placeholder="请输入"
-                            :disabled="!isRedact"
+                            :disabled="!(isRedact && scope.row.status !== 'C' && scope.row.status !== 'D' && scope.row.status !== 'P')"
                             @input="(val)=>oninput(val,scope.row,'settingWindTemp')"
                         >
                             <span slot="suffix">°C</span>
@@ -159,7 +159,7 @@
                             v-model.trim="scope.row.roomTemp"
                             size="small"
                             placeholder="请输入"
-                            :disabled="!isRedact"
+                            :disabled="!(isRedact && scope.row.status !== 'C' && scope.row.status !== 'D' && scope.row.status !== 'P')"
                             @input="(val)=>oninput(val,scope.row,'roomTemp')"
                         >
                             <span slot="suffix">°C</span>
@@ -175,7 +175,7 @@
                             v-model.trim="scope.row.windSpeed"
                             size="small"
                             placeholder="请输入"
-                            :disabled="!isRedact"
+                            :disabled="!(isRedact && scope.row.status !== 'C' && scope.row.status !== 'D' && scope.row.status !== 'P')"
                             @input="(val)=>oninput(val,scope.row,'windSpeed')"
                         >
                             <span slot="suffix">m/s</span>
@@ -191,7 +191,7 @@
                             v-model.trim="scope.row.prodTemp"
                             size="small"
                             placeholder="请输入"
-                            :disabled="!isRedact"
+                            :disabled="!(isRedact && scope.row.status !== 'C' && scope.row.status !== 'D' && scope.row.status !== 'P')"
                             @input="(val)=>oninput(val,scope.row,'prodTemp')"
                         >
                             <span slot="suffix">°C</span>
@@ -204,7 +204,7 @@
                             v-model.trim="scope.row.settingProdTemp"
                             size="small"
                             placeholder="请输入"
-                            :disabled="!isRedact"
+                            :disabled="!(isRedact && scope.row.status !== 'C' && scope.row.status !== 'D' && scope.row.status !== 'P')"
                             @input="(val)=>oninput(val,scope.row,'settingProdTemp')"
                         >
                             <span slot="suffix">°C</span>
@@ -225,7 +225,7 @@
                                 v-model.trim="scope.row.outUpTemp"
                                 size="small"
                                 placeholder="请输入"
-                                :disabled="!isRedact"
+                                :disabled="!(isRedact && scope.row.status !== 'C' && scope.row.status !== 'D' && scope.row.status !== 'P')"
                                 @input="(val)=>oninput(val,scope.row,'outUpTemp')"
                             >
                                 <span slot="suffix">°C</span>
@@ -245,7 +245,7 @@
                                 v-model.trim="scope.row.outMidTemp"
                                 size="small"
                                 placeholder="请输入"
-                                :disabled="!isRedact"
+                                :disabled="!(isRedact && scope.row.status !== 'C' && scope.row.status !== 'D' && scope.row.status !== 'P')"
                                 @input="(val)=>oninput(val,scope.row,'outMidTemp')"
                             >
                                 <span slot="suffix">°C</span>
@@ -265,7 +265,7 @@
                                 v-model.trim="scope.row.outDownTemp"
                                 size="small"
                                 placeholder="请输入"
-                                :disabled="!isRedact"
+                                :disabled="!(isRedact && scope.row.status !== 'C' && scope.row.status !== 'D' && scope.row.status !== 'P')"
                                 @input="(val)=>oninput(val,scope.row,'outDownTemp')"
                             >
                                 <span slot="suffix">°C</span>
@@ -282,7 +282,7 @@
                                 v-model.trim="scope.row.innerUpTemp"
                                 size="small"
                                 placeholder="请输入"
-                                :disabled="!isRedact"
+                                :disabled="!(isRedact && scope.row.status !== 'C' && scope.row.status !== 'D' && scope.row.status !== 'P')"
                                 @input="(val)=>oninput(val,scope.row,'innerUpTemp')"
                             >
                                 <span slot="suffix">°C</span>
@@ -299,7 +299,7 @@
                                 v-model.trim="scope.row.innerMidTemp"
                                 size="small"
                                 placeholder="请输入"
-                                :disabled="!isRedact"
+                                :disabled="!(isRedact && scope.row.status !== 'C' && scope.row.status !== 'D' && scope.row.status !== 'P')"
                                 @input="(val)=>oninput(val,scope.row,'innerMidTemp')"
                             >
                                 <span slot="suffix">°C</span>
@@ -316,7 +316,7 @@
                                 v-model.trim="scope.row.innerDownTemp"
                                 size="small"
                                 placeholder="请输入"
-                                :disabled="!isRedact"
+                                :disabled="!(isRedact && scope.row.status !== 'C' && scope.row.status !== 'D' && scope.row.status !== 'P')"
                                 @input="(val)=>oninput(val,scope.row,'innerDownTemp')"
                             >
                                 <span slot="suffix">°C</span>
@@ -338,7 +338,7 @@
                                 v-model.trim="scope.row.testTempOne"
                                 size="small"
                                 placeholder="请输入"
-                                :disabled="!isRedact"
+                                :disabled="!(isRedact && scope.row.status !== 'C' && scope.row.status !== 'D' && scope.row.status !== 'P')"
                                 @input="(val)=>oninput(val,scope.row,'testTempOne')"
                             >
                                 <span slot="suffix">°C</span>
@@ -358,7 +358,7 @@
                                 v-model.trim="scope.row.testTempTwo"
                                 size="small"
                                 placeholder="请输入"
-                                :disabled="!isRedact"
+                                :disabled="!(isRedact && scope.row.status !== 'C' && scope.row.status !== 'D' && scope.row.status !== 'P')"
                                 @input="(val)=>oninput(val,scope.row,'testTempTwo')"
                             >
                                 <span slot="suffix">°C</span>
@@ -375,14 +375,14 @@
                             v-model.trim="scope.row.windDoor"
                             size="small"
                             placeholder="请输入"
-                            :disabled="!isRedact"
+                            :disabled="!(isRedact && scope.row.status !== 'C' && scope.row.status !== 'D' && scope.row.status !== 'P')"
                             @input="(val)=>oninput(val,scope.row,'windDoor')"
                         />
                     </template>
                 </el-table-column>
                 <el-table-column label="强排" :show-overflow-tooltip="true" width="130">
                     <template slot-scope="scope">
-                        <el-select v-model="scope.row.forceDrain" size="small" clearable style="width: 100%;" :disabled="!isRedact">
+                        <el-select v-model="scope.row.forceDrain" size="small" clearable style="width: 100%;" :disabled="!(isRedact && scope.row.status !== 'C' && scope.row.status !== 'D' && scope.row.status !== 'P')">
                             <el-option
                                 v-for="item in forceDrainOptions"
                                 :key="item.optValue"
@@ -394,7 +394,7 @@
                 </el-table-column>
                 <el-table-column label="换热" :show-overflow-tooltip="true" width="130">
                     <template slot-scope="scope">
-                        <el-select v-model="scope.row.changeHot" size="small" clearable style="width: 100%;" :disabled="!isRedact">
+                        <el-select v-model="scope.row.changeHot" size="small" clearable style="width: 100%;" :disabled="!(isRedact && scope.row.status !== 'C' && scope.row.status !== 'D' && scope.row.status !== 'P')">
                             <el-option
                                 v-for="item in changeHotOptions"
                                 :key="item.optValue"
@@ -406,14 +406,14 @@
                 </el-table-column>
                 <el-table-column label="备注" :show-overflow-tooltip="true" min-width="200">
                     <template slot-scope="scope">
-                        <el-input v-model.trim="scope.row.remark" size="small" placeholder="请输入备注" :disabled="!isRedact" />
+                        <el-input v-model.trim="scope.row.remark" size="small" placeholder="请输入备注" :disabled="!(isRedact && scope.row.status !== 'C' && scope.row.status !== 'D' && scope.row.status !== 'P')" />
                     </template>
                 </el-table-column>
                 <el-table-column prop="changer" min-width="140" label="操作人" :show-overflow-tooltip="true" />
                 <el-table-column prop="changed" min-width="180" label="操作时间" :show-overflow-tooltip="true" />
                 <el-table-column fixed="right" label="操作" width="80" :show-overflow-tooltip="true">
                     <template slot-scope="scope">
-                        <el-button class="delBtn" type="text" icon="el-icon-delete" size="mini" :disabled="!isRedact" @click="removeFirstDataRow(scope.row,'kojiGuardData');">
+                        <el-button class="delBtn" type="text" icon="el-icon-delete" size="mini" :disabled="!(isRedact && scope.row.status !== 'C' && scope.row.status !== 'D' && scope.row.status !== 'P')" @click="removeFirstDataRow(scope.row,'kojiGuardData');">
                             删除
                         </el-button>
                     </template>
@@ -445,7 +445,7 @@
                             value-format="yyyy-MM-dd HH:mm"
                             placeholder="请选择"
                             style="width: 200px;"
-                            :disabled="!isRedact"
+                            :disabled="!(isRedact && scope.row.status !== 'C' && scope.row.status !== 'D' && scope.row.status !== 'P')"
                             @change="(val)=>turnStartTimeChange(val,scope.row)"
                         />
                     </template>
@@ -463,7 +463,7 @@
                             value-format="yyyy-MM-dd HH:mm"
                             placeholder="请选择"
                             style="width: 200px;"
-                            :disabled="!isRedact"
+                            :disabled="!(isRedact && scope.row.status !== 'C' && scope.row.status !== 'D' && scope.row.status !== 'P')"
                         />
                     </template>
                 </el-table-column>
@@ -477,7 +477,7 @@
                         <el-input
                             v-model="scope.row.turnAddWaterAmount"
                             maxlength="30"
-                            :disabled="!isRedact"
+                            :disabled="!(isRedact && scope.row.status !== 'C' && scope.row.status !== 'D' && scope.row.status !== 'P')"
                             size="small"
                             placeholder="请输入"
                             @input="(val)=>oninput(val,scope.row,'turnAddWaterAmount')"
@@ -496,7 +496,7 @@
                                     v-model="scope.row.turnMans"
                                     placeholder="请输入翻曲人"
                                     style="width: 200px;"
-                                    :disabled="!isRedact"
+                                    :disabled="!(isRedact && scope.row.status !== 'C' && scope.row.status !== 'D' && scope.row.status !== 'P')"
                                 />
                             </el-tooltip>
                             <em v-if="!scope.row.turnMans" :class="{'like-el-input__inner':isRedact,'input-in-table-disabled':!isRedact}">点击选择人员</em>
@@ -505,7 +505,7 @@
                 </el-table-column>
                 <el-table-column label="备注" prop="remark" min-width="200">
                     <template slot-scope="scope">
-                        <el-input v-model="scope.row.remark" :disabled="!isRedact" size="small" placeholder="请输入" />
+                        <el-input v-model="scope.row.remark" :disabled="!(isRedact && scope.row.status !== 'C' && scope.row.status !== 'D' && scope.row.status !== 'P')" size="small" placeholder="请输入" />
                     </template>
                 </el-table-column>
                 <el-table-column label="操作人" prop="changer" width="180">
@@ -544,7 +544,7 @@
                         </template>
                         <template slot-scope="scope">
                             <el-form-item prop="kojiStage">
-                                <el-select v-model="scope.row.kojiStage" size="small" clearable style="width: 100%;" :disabled="!isRedact">
+                                <el-select v-model="scope.row.kojiStage" size="small" clearable style="width: 100%;" :disabled="!(isRedact && scope.row.status !== 'C' && scope.row.status !== 'D' && scope.row.status !== 'P')">
                                     <el-option
                                         v-for="item in kojiStageOptions"
                                         :key="item.optValue"
@@ -561,7 +561,7 @@
                         </template>
                         <template slot-scope="scope">
                             <el-form-item prop="recordDate">
-                                <el-date-picker v-model="scope.row.recordDate" type="datetime" size="small" value-format="yyyy-MM-dd HH:mm" format="yyyy-MM-dd HH:mm" :disabled="!isRedact" placeholder="选择时间" style="width: 180px;" />
+                                <el-date-picker v-model="scope.row.recordDate" type="datetime" size="small" value-format="yyyy-MM-dd HH:mm" format="yyyy-MM-dd HH:mm" :disabled="!(isRedact && scope.row.status !== 'C' && scope.row.status !== 'D' && scope.row.status !== 'P')" placeholder="选择时间" style="width: 180px;" />
                             </el-form-item>
                         </template>
                     </el-table-column>
@@ -571,7 +571,7 @@
                         </template>
                         <template slot-scope="scope">
                             <el-form-item prop="growInfo">
-                                <el-select v-model="scope.row.growInfo" size="small" clearable style="width: 100%;" :disabled="!isRedact" @change="val=>scope.row.exceptionInfo=''">
+                                <el-select v-model="scope.row.growInfo" size="small" clearable style="width: 100%;" :disabled="!(isRedact && scope.row.status !== 'C' && scope.row.status !== 'D' && scope.row.status !== 'P')" @change="val=>scope.row.exceptionInfo=''">
                                     <el-option
                                         v-for="item in kojiEvaluateGrowInfoOptions"
                                         :key="item.optValue"
@@ -601,7 +601,7 @@
                                         v-model="scope.row.recordMans"
                                         placeholder="请输入记录人"
                                         style="width: 200px;"
-                                        :disabled="!isRedact"
+                                        :disabled="!(isRedact && scope.row.status !== 'C' && scope.row.status !== 'D' && scope.row.status !== 'P')"
                                     />
                                 </el-tooltip>
                                 <em v-if="!scope.row.recordMans" :class="{'like-el-input__inner':isRedact,'input-in-table-disabled':!isRedact}">点击选择人员</em>
@@ -610,14 +610,14 @@
                     </el-table-column>
                     <el-table-column label="备注" :show-overflow-tooltip="true" min-width="200">
                         <template slot-scope="scope">
-                            <el-input v-model.trim="scope.row.remark" size="small" placeholder="请输入备注" :disabled="!isRedact" />
+                            <el-input v-model.trim="scope.row.remark" size="small" placeholder="请输入备注" :disabled="!(isRedact && scope.row.status !== 'C' && scope.row.status !== 'D' && scope.row.status !== 'P')" />
                         </template>
                     </el-table-column>
                     <el-table-column prop="changer" min-width="140" label="操作人" :show-overflow-tooltip="true" />
                     <el-table-column prop="changed" min-width="180" label="操作时间" :show-overflow-tooltip="true" />
                     <el-table-column fixed="right" label="操作" width="80" :show-overflow-tooltip="true">
                         <template slot-scope="scope">
-                            <el-button class="delBtn" type="text" icon="el-icon-delete" size="mini" :disabled="!isRedact" @click="removeFirstDataRow(scope.row)">
+                            <el-button class="delBtn" type="text" icon="el-icon-delete" size="mini" :disabled="!(isRedact && scope.row.status !== 'C' && scope.row.status !== 'D' && scope.row.status !== 'P')" @click="removeFirstDataRow(scope.row)">
                                 删除
                             </el-button>
                         </template>
@@ -641,7 +641,7 @@
                         placeholder="请选择"
                         clearable
                         style="width: 180px;"
-                        :disabled="!isRedact"
+                        :disabled="!(isRedact && kojiOutCraftformData.status !== 'C' && kojiOutCraftformData.status !== 'D' && kojiOutCraftformData.status !== 'P')"
                     />
                 </el-form-item>
                 <el-form-item
@@ -657,7 +657,7 @@
                         placeholder="请选择"
                         clearable
                         style="width: 180px;"
-                        :disabled="!isRedact"
+                        :disabled="!(isRedact && kojiOutCraftformData.status !== 'C' && kojiOutCraftformData.status !== 'D' && kojiOutCraftformData.status !== 'P')"
                     />
                 </el-form-item>
                 <el-form-item
@@ -680,7 +680,7 @@
                                     v-model="kojiOutCraftformData.outKojiMans"
                                     placeholder="请输入出曲操作人"
                                     style="width: 200px;"
-                                    :disabled="!isRedact"
+                                    :disabled="!(isRedact && kojiOutCraftformData.status !== 'C' && kojiOutCraftformData.status !== 'D' && kojiOutCraftformData.status !== 'P')"
                                 />
                             </el-tooltip>
                             <em v-if="!kojiOutCraftformData.outKojiMans" :class="{'like-el-input__inner':isRedact,'input-in-form-disabled':!isRedact}">点击选择人员</em>
@@ -697,7 +697,7 @@
                         placeholder="请输入"
                         clearable
                         style="width: 180px;"
-                        :disabled="!isRedact"
+                        :disabled="!(isRedact && kojiOutCraftformData.status !== 'C' && kojiOutCraftformData.status !== 'D' && kojiOutCraftformData.status !== 'P')"
                         @input="(val)=>oninput(val,kojiOutCraftformData,'outKojiTemp')"
                     >
                         <span slot="suffix">°C</span>
@@ -846,6 +846,8 @@
             }).then(({ data }) => {
                 this.kojiInformData = {}
                 if (data.data) {
+                    console.log('入曲情况')
+                    console.log(data.data)
                     this.kojiInformData = data.data
                 } else {
                     this.$set(this.kojiInformData, 'addKojiDuration', '')
@@ -977,6 +979,8 @@
             KOJI_API.KOJI_DISC_QUERY_EVALUATE_API({
                 kojiOrderNo: this.targetOrderObj.kojiOrderNo
             }).then(({ data }) => {
+                console.log('曲料生长情况')
+                console.log(data)
                 this.kojiEvaluateData = []
                 if (data.data) {
                     this.kojiEvaluateData = data.data
@@ -1008,6 +1012,8 @@
             }).then(({ data }) => {
                 this.kojiGuardData = []
                 if (data.data) {
+                    console.log('看曲情况')
+                    console.log(data)
                     this.kojiGuardData = JSON.parse(JSON.stringify(data.data))
                     this.kojiGuardData.forEach(item => {
                         item.delFlag = 0

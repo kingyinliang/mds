@@ -7,7 +7,7 @@
                         <template slot="label">
                             <span class="notNull">* </span>气泡压力：
                         </template>
-                        <el-input v-model="craftSteamFlourInfo.steamPacketPressure" placeholder="请输入" :disabled="!isRedact" size="small" style="width: 180px;">
+                        <el-input v-model="craftSteamFlourInfo.steamPacketPressure" placeholder="请输入" :disabled="!(isRedact && craftSteamFlourInfo.status !== 'C' && craftSteamFlourInfo.status !== 'D' && craftSteamFlourInfo.status !== 'P')" size="small" style="width: 180px;">
                             <span slot="suffix" class="stock-form_item_input_suffix">Mpa</span>
                         </el-input>
                     </el-form-item>
@@ -15,7 +15,7 @@
                         <template slot="label">
                             <span class="notNull">* </span>蒸面加水流速：
                         </template>
-                        <el-input v-model="craftSteamFlourInfo.steamFlourSpeed" placeholder="请输入" :disabled="!isRedact" size="small" style="width: 180px;">
+                        <el-input v-model="craftSteamFlourInfo.steamFlourSpeed" placeholder="请输入" :disabled="!(isRedact && craftSteamFlourInfo.status !== 'C' && craftSteamFlourInfo.status !== 'D' && craftSteamFlourInfo.status !== 'P')" size="small" style="width: 180px;">
                             <span slot="suffix" class="stock-form_item_input_suffix">L/H</span>
                         </el-input>
                     </el-form-item>
@@ -23,11 +23,28 @@
                         <template slot="label">
                             <span class="notNull">* </span>蒸面操作人：
                         </template>
+                        <!--
                         <el-tooltip class="item" effect="dark" :content="craftSteamFlourInfo.steamFlourMans + '点击选择人员'" placement="top">
-                            <div class="koji-control-form_select" @click="selectUser(craftSteamFlourInfo, '蒸面操作人', 'steamFlourMans')">
+                            <div class="koji-control-form_select" :style="{cursor: isRedact?'pointer':'default'}" @click="selectUser(craftSteamFlourInfo, '蒸面操作人', 'steamFlourMans')">
                                 {{ craftSteamFlourInfo.steamFlourMans }} 点击选择人员
                             </div>
                         </el-tooltip>
+                        -->
+
+                        <div style="width: 180px;">
+                            <span :style="{cursor:isRedact? 'pointer':'default',color:isRedact? '#333':'#aaa'}" @click="selectUser(craftSteamFlourInfo, '蒸面操作人', 'steamFlourMans')">
+                                <el-tooltip v-if="craftSteamFlourInfo.steamFlourMans&&craftSteamFlourInfo.steamFlourMans!==''" class="item" effect="dark" :content="craftSteamFlourInfo.steamFlourMans" placement="top">
+                                    <el-input
+                                        v-if="craftSteamFlourInfo.steamFlourMans&&craftSteamFlourInfo.steamFlourMans!==''"
+                                        v-model="craftSteamFlourInfo.steamFlourMans"
+                                        placeholder="请输入蒸面操作人"
+
+                                        :disabled="!(isRedact && craftSteamFlourInfo.status !== 'C' && craftSteamFlourInfo.status !== 'D' && craftSteamFlourInfo.status !== 'P')"
+                                    />
+                                </el-tooltip>
+                                <em v-if="!craftSteamFlourInfo.steamFlourMans" :class="{'like-el-input__inner':isRedact,'input-in-form-disabled':!isRedact}">点击选择人员</em>
+                            </span>
+                        </div>
                     </el-form-item>
                 </el-form>
             </div>
@@ -49,7 +66,7 @@
                         <span class="notNull">* </span>蒸球号
                     </template>
                     <template slot-scope="scope">
-                        <el-select v-model="scope.row.steamBallNo" placeholder="请选择" :disabled="!isRedact" size="small" style="width: 100%;">
+                        <el-select v-model="scope.row.steamBallNo" placeholder="请选择" :disabled="!(isRedact && scope.row.status !== 'C' && scope.row.status !== 'D' && scope.row.status !== 'P')" size="small" style="width: 100%;">
                             <el-option v-for="(subItem, index) in steamBallList" :key="index" :label="subItem.holderName" :value="subItem.holderNo" />
                         </el-select>
                     </template>
@@ -59,7 +76,7 @@
                         <span class="notNull">* </span>加汽开始时间
                     </template>
                     <template slot-scope="scope">
-                        <el-date-picker v-model="scope.row.addSteamStart" type="datetime" value-format="yyyy-MM-dd HH:mm" format="yyyy-MM-dd HH:mm" placeholder="请选择" :disabled="!isRedact" style="width: 186px;" size="small" />
+                        <el-date-picker v-model="scope.row.addSteamStart" type="datetime" value-format="yyyy-MM-dd HH:mm" format="yyyy-MM-dd HH:mm" placeholder="请选择" :disabled="!(isRedact && scope.row.status !== 'C' && scope.row.status !== 'D' && scope.row.status !== 'P')" style="width: 186px;" size="small" />
                     </template>
                 </el-table-column>
                 <el-table-column min-width="210">
@@ -67,19 +84,19 @@
                         <span class="notNull">* </span>加汽结束时间
                     </template>
                     <template slot-scope="scope">
-                        <el-date-picker v-model="scope.row.addSteamEnd" type="datetime" value-format="yyyy-MM-dd HH:mm" format="yyyy-MM-dd HH:mm" placeholder="请选择" :disabled="!isRedact" style="width: 186px;" size="small" />
+                        <el-date-picker v-model="scope.row.addSteamEnd" type="datetime" value-format="yyyy-MM-dd HH:mm" format="yyyy-MM-dd HH:mm" placeholder="请选择" :disabled="!(isRedact && scope.row.status !== 'C' && scope.row.status !== 'D' && scope.row.status !== 'P')" style="width: 186px;" size="small" />
                     </template>
                 </el-table-column>
                 <el-table-column label="汽包压力" width="144">
                     <template slot-scope="scope">
-                        <el-input v-model="scope.row.steamPocketPressure" placeholder="请输入" :disabled="!isRedact" size="small" style="width: 120px;">
+                        <el-input v-model="scope.row.steamPocketPressure" placeholder="请输入" :disabled="!(isRedact && scope.row.status !== 'C' && scope.row.status !== 'D' && scope.row.status !== 'P')" size="small" style="width: 120px;">
                             <span slot="suffix" class="stock-form_item_input_suffix">Mpa</span>
                         </el-input>
                     </template>
                 </el-table-column>
                 <el-table-column label="转动圈数" width="144">
                     <template slot-scope="scope">
-                        <el-input v-model="scope.row.turnCount" placeholder="请输入" :disabled="!isRedact" size="small" style="width: 120px;">
+                        <el-input v-model="scope.row.turnCount" placeholder="请输入" :disabled="!(isRedact && scope.row.status !== 'C' && scope.row.status !== 'D' && scope.row.status !== 'P')" size="small" style="width: 120px;">
                             <!-- <span slot="suffix" class="stock-form_item_input_suffix">Mpa</span> -->
                         </el-input>
                     </template>
@@ -91,7 +108,7 @@
                 </el-table-column>
                 <el-table-column label="保压时间" width="144">
                     <template slot-scope="scope">
-                        <el-input v-model="scope.row.pressureDuration" placeholder="请输入" :disabled="!isRedact" size="small" style="width: 120px;">
+                        <el-input v-model="scope.row.pressureDuration" placeholder="请输入" :disabled="!(isRedact && scope.row.status !== 'C' && scope.row.status !== 'D' && scope.row.status !== 'P')" size="small" style="width: 120px;">
                             <span slot="suffix" class="stock-form_item_input_suffix">min</span>
                         </el-input>
                     </template>
@@ -101,12 +118,12 @@
                         熟豆放豆时间
                     </template>
                     <template slot-scope="scope">
-                        <el-date-picker v-model="scope.row.addBeanDate" type="datetime" value-format="yyyy-MM-dd HH:mm" format="yyyy-MM-dd HH:mm" placeholder="请选择" :disabled="!isRedact" style="width: 186px;" size="small" />
+                        <el-date-picker v-model="scope.row.addBeanDate" type="datetime" value-format="yyyy-MM-dd HH:mm" format="yyyy-MM-dd HH:mm" placeholder="请选择" :disabled="!(isRedact && scope.row.status !== 'C' && scope.row.status !== 'D' && scope.row.status !== 'P')" style="width: 186px;" size="small" />
                     </template>
                 </el-table-column>
                 <el-table-column label="备注" width="170">
                     <template slot-scope="scope">
-                        <el-input v-model.trim="scope.row.remark" size="small" placeholder="请输入" :disabled="!isRedact" />
+                        <el-input v-model.trim="scope.row.remark" size="small" placeholder="请输入" :disabled="!(isRedact && scope.row.status !== 'C' && scope.row.status !== 'D' && scope.row.status !== 'P')" />
                     </template>
                 </el-table-column>
                 <el-table-column label="操作人" width="140">
@@ -121,7 +138,7 @@
                 </el-table-column>
                 <el-table-column label="操作" width="70" fixed="right">
                     <template slot-scope="scope">
-                        <el-button class="delBtn" type="text" icon="el-icon-delete" size="mini" :disabled="!isRedact" @click="removeRow(scope.row)">
+                        <el-button class="delBtn" type="text" icon="el-icon-delete" size="mini" :disabled="!(isRedact && scope.row.status !== 'C' && scope.row.status !== 'D' && scope.row.status !== 'P')" @click="removeRow(scope.row)">
                             删除
                         </el-button>
                     </template>
@@ -135,7 +152,7 @@
                         <template slot="label">
                             <span class="notNull">* </span>蒸面风冷温度：
                         </template>
-                        <el-input v-model="craftControlInfo.flourWindTemp" placeholder="请输入" :disabled="!isRedact" size="small" style="width: 180px;">
+                        <el-input v-model="craftControlInfo.flourWindTemp" placeholder="请输入" :disabled="!(isRedact && craftControlInfo.status !== 'C' && craftControlInfo.status !== 'D' && craftControlInfo.status !== 'P')" size="small" style="width: 180px;">
                             <span slot="suffix" class="stock-form_item_input_suffix">°C</span>
                         </el-input>
                     </el-form-item>
@@ -143,7 +160,7 @@
                         <template slot="label">
                             <span class="notNull">* </span>大豆风冷温度1：
                         </template>
-                        <el-input v-model="craftControlInfo.beanWindTempOne" placeholder="请输入" :disabled="!isRedact" size="small" style="width: 180px;">
+                        <el-input v-model="craftControlInfo.beanWindTempOne" placeholder="请输入" :disabled="!(isRedact && craftControlInfo.status !== 'C' && craftControlInfo.status !== 'D' && craftControlInfo.status !== 'P')" size="small" style="width: 180px;">
                             <span slot="suffix" class="stock-form_item_input_suffix">°C</span>
                         </el-input>
                     </el-form-item>
@@ -151,7 +168,7 @@
                         <template slot="label">
                             大豆风冷温度2：
                         </template>
-                        <el-input v-model="craftControlInfo.beanWindTempTwo" placeholder="请输入" :disabled="!isRedact" size="small" style="width: 180px;">
+                        <el-input v-model="craftControlInfo.beanWindTempTwo" placeholder="请输入" :disabled="!(isRedact && craftControlInfo.status !== 'C' && craftControlInfo.status !== 'D' && craftControlInfo.status !== 'P')" size="small" style="width: 180px;">
                             <span slot="suffix" class="stock-form_item_input_suffix">°C</span>
                         </el-input>
                     </el-form-item>
@@ -159,7 +176,7 @@
                         <template slot="label">
                             <span class="notNull">* </span>混合料温度1：
                         </template>
-                        <el-input v-model="craftControlInfo.mixtureTempOne" placeholder="请输入" :disabled="!isRedact" size="small" style="width: 180px;">
+                        <el-input v-model="craftControlInfo.mixtureTempOne" placeholder="请输入" :disabled="!(isRedact && craftControlInfo.status !== 'C' && craftControlInfo.status !== 'D' && craftControlInfo.status !== 'P')" size="small" style="width: 180px;">
                             <span slot="suffix" class="stock-form_item_input_suffix">°C</span>
                         </el-input>
                     </el-form-item>
@@ -167,7 +184,7 @@
                         <template slot="label">
                             混合料温度2：
                         </template>
-                        <el-input v-model="craftControlInfo.mixtureTempTwo" placeholder="请输入" :disabled="!isRedact" size="small" style="width: 180px;">
+                        <el-input v-model="craftControlInfo.mixtureTempTwo" placeholder="请输入" :disabled="!(isRedact && craftControlInfo.status !== 'C' && craftControlInfo.status !== 'D' && craftControlInfo.status !== 'P')" size="small" style="width: 180px;">
                             <span slot="suffix" class="stock-form_item_input_suffix">°C</span>
                         </el-input>
                     </el-form-item>
@@ -175,7 +192,7 @@
                         <template slot="label">
                             <span class="notNull">* </span>大豆风冷变频：
                         </template>
-                        <el-input v-model="craftControlInfo.beanWindFrequency" placeholder="请输入" :disabled="!isRedact" size="small" style="width: 180px;">
+                        <el-input v-model="craftControlInfo.beanWindFrequency" placeholder="请输入" :disabled="!(isRedact && craftControlInfo.status !== 'C' && craftControlInfo.status !== 'D' && craftControlInfo.status !== 'P')" size="small" style="width: 180px;">
                             <span slot="suffix" class="stock-form_item_input_suffix">Hz</span>
                         </el-input>
                     </el-form-item>
@@ -183,13 +200,13 @@
                         <template slot="label">
                             <span class="notNull">* </span>混合开始时间：
                         </template>
-                        <el-date-picker v-model="craftControlInfo.mixtureStart" type="datetime" value-format="yyyy-MM-dd HH:mm" format="yyyy-MM-dd HH:mm" placeholder="请选择" :disabled="!isRedact" size="small" style="width: 180px;" />
+                        <el-date-picker v-model="craftControlInfo.mixtureStart" type="datetime" value-format="yyyy-MM-dd HH:mm" format="yyyy-MM-dd HH:mm" placeholder="请选择" :disabled="!(isRedact && craftControlInfo.status !== 'C' && craftControlInfo.status !== 'D' && craftControlInfo.status !== 'P')" size="small" style="width: 180px;" />
                     </el-form-item>
                     <el-form-item class="cleanMarginBottom">
                         <template slot="label">
                             <span class="notNull">* </span>混合结束时间：
                         </template>
-                        <el-date-picker v-model="craftControlInfo.mixtrueEnd" type="datetime" value-format="yyyy-MM-dd HH:mm" format="yyyy-MM-dd HH:mm" placeholder="请选择" :disabled="!isRedact" size="small" style="width: 180px;" />
+                        <el-date-picker v-model="craftControlInfo.mixtrueEnd" type="datetime" value-format="yyyy-MM-dd HH:mm" format="yyyy-MM-dd HH:mm" placeholder="请选择" :disabled="!(isRedact && craftControlInfo.status !== 'C' && craftControlInfo.status !== 'D' && craftControlInfo.status !== 'P')" size="small" style="width: 180px;" />
                     </el-form-item>
                 </el-form>
             </div>
@@ -312,6 +329,10 @@
                 newCraftSteamFlourInfo = false
             }
 
+            this.craftSteamFlourInfo.kojiOrderNo = formHeader.kojiOrderNo
+            this.craftSteamFlourInfo.orderNo = formHeader.orderNo
+            this.temCraftSteamFlourInfo.kojiOrderNo = formHeader.kojiOrderNo
+            this.temCraftSteamFlourInfo.orderNo = formHeader.orderNo
 
             let newCraftControlInfo = true
             if (this.craftControlInfo.id) {
@@ -319,6 +340,8 @@
             }
             this.craftControlInfo.kojiOrderNo = formHeader.kojiOrderNo
             this.craftControlInfo.orderNo = formHeader.orderNo
+            this.temCraftControlInfo.kojiOrderNo = formHeader.kojiOrderNo
+            this.temCraftControlInfo.orderNo = formHeader.orderNo
 
             return {
                 steamBean: tempSteamBean.insertDto.length === 0 && tempSteamBean.updateDto.length === 0 && tempSteamBean.deleteDto.length === 0 ? null : {
@@ -491,6 +514,8 @@
                 orderNo
             }).then(({ data }) => {
                 if (data.data && data.data.length > 0) {
+                    console.log('蒸面记录')
+                    console.log(data)
                     this.craftSteamFlourInfo = data.data[0];
                     this.craftSteamFlourInfo.kojiOrderNo = this.formHeader.kojiOrderNo
                     this.craftSteamFlourInfo.orderNo = this.formHeader.orderNo
@@ -505,6 +530,8 @@
                 kojiOrderNo,
                 orderNo
             }).then(({ data }) => {
+                console.log('蒸豆记录')
+                console.log(data)
                 this.craftSteamBeanTable = data.data || [];
                 this.temCraftSteamBeanTable = JSON.parse(JSON.stringify(data.data || []));
             });
@@ -517,6 +544,8 @@
                 orderNo
             }).then(({ data }) => {
                 if (data.data && data.data.length > 0) {
+                    console.log('混合控制')
+                    console.log(data)
                     this.craftControlInfo = data.data[0];
                     this.craftControlInfo.kojiOrderNo = this.formHeader.kojiOrderNo
                     this.craftControlInfo.orderNo = this.formHeader.orderNo

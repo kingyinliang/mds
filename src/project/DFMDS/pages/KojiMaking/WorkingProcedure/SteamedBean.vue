@@ -253,7 +253,7 @@
             COMMON_API.HOLDER_DROPDOWN_API({
                 // deptId: this.formHeader.workShop,
                 factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
-                holderType: ['029']
+                holderType: ['025']
             }).then(({ data }) => {
                 console.log('泡豆罐下拉')
                 console.log(data)
@@ -263,10 +263,9 @@
 
         savedDatas() {
             const steSemi = this.$refs.steamedBeanCraft.getSavedOrSubmitData(this.formHeader);
-            const inStorage = this.$refs.steamedInStorage.getSavedOrSubmitData(this.formHeader, 'submit');
+            const inStorage = this.$refs.steamedInStorage.getSavedOrSubmitData(this.formHeader);
             const excRequest = this.$refs.excRecord.getSavedOrSubmitData(this.formHeader, 'ZD');
             const textRequest = this.$refs.textRecord.savedData(this.formHeader, 'koji');
-
             const tempScanList = this.scanList.filter(item => item.id === this.potNoNow)[0] || {}
             return KOJI_API.KOJI_STEAM_BEAN_SAVE_API({
                 ...steSemi,
@@ -287,10 +286,8 @@
         }
 
         submitDatas() {
-            const steSemi = this.$refs.steamedBeanCraft.getSavedOrSubmitData(this.formHeader, 'submit');
-
-            const inStorage = this.$refs.steamedInStorage.getSavedOrSubmitData(this.formHeader, 'submit');
-
+            const steSemi = this.$refs.steamedBeanCraft.getSavedOrSubmitData(this.formHeader);
+            const inStorage = this.$refs.steamedInStorage.getSavedOrSubmitData(this.formHeader);
             const excRequest = this.$refs.excRecord.getSavedOrSubmitData(this.formHeader, 'ZD');
             const textRequest = this.$refs.textRecord.savedData(this.formHeader, 'koji');
             const tempScanList = this.scanList.filter(item => item.id === this.potNoNow)[0] || {}

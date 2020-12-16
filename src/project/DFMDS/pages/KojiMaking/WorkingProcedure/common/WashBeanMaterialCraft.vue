@@ -110,7 +110,7 @@
                 </el-table-column>
                 <el-table-column label="操作" width="70" fixed="right">
                     <template slot-scope="scope">
-                        <el-button class="delBtn" type="text" icon="el-icon-delete" size="mini" :disabled="!isRedact" @click="removeRow(scope.row)">
+                        <el-button class="delBtn" type="text" icon="el-icon-delete" size="mini" :disabled="!(isRedact && scope.row.status !== 'C' && scope.row.status !== 'D' && scope.row.status !== 'P')" @click="removeRow(scope.row)">
                             删除
                         </el-button>
                     </template>
@@ -263,7 +263,7 @@
                 </el-table-column>
                 <el-table-column label="操作" width="70" fixed="right">
                     <template slot-scope="scope">
-                        <el-button class="delBtn" type="text" icon="el-icon-delete" size="mini" :disabled="!isRedact" @click="removeRow(scope.row)">
+                        <el-button class="delBtn" type="text" icon="el-icon-delete" size="mini" :disabled="!(isRedact && scope.row.status !== 'C' && scope.row.status !== 'D' && scope.row.status !== 'P')" @click="removeRow(scope.row)">
                             删除
                         </el-button>
                     </template>
@@ -365,39 +365,10 @@
                 item.orderNo = formHeader.orderNo;
             });
 
-            // function filterTableData(whichTable: CraftList[], type) {
-            //     if (type === 'insert') {
-            //         return whichTable.filter(item => !item.id && item.delFlag !== 1);
-            //     }
-            //     if (type === 'update') {
-            //         return whichTable.filter(item => item.id && item.delFlag !== 1);
-            //     }
-            //     if (type === 'del') {
-            //         return whichTable.filter(item => item.id && item.delFlag === 1);
-            //     }
-            // }
-
-            //  this.tableData.forEach((item: CraftList, index) => {
-            //     if (item.delFlag === 1) {
-            //         if (item.id) {
-            //             tableSeiveSaveDto.deleteDto.push(item.id)
-            //         }
-            //     } else if (item.id) {
-            //         if (!_.isEqual(this.temTableData[index], item)) {
-            //             tableSeiveSaveDto.updateDto.push(item)
-            //         }
-            //     } else {
-            //         tableSeiveSaveDto.insertDto.push(item)
-            //     }
-            // })
-
             return {
                 kojiBeanSieveSaveDto: {
                     ...this.craftSeiveBeanInfo,
                     items: {
-                        // insertDtos: filterTableData(this.craftSeiveBeanTable, 'insert'),
-                        // updateDtos: filterTableData(this.craftSeiveBeanTable, 'update'),
-                        // removeIds: filterTableData(this.craftSeiveBeanTable, 'del')
                         ...tableSeiveSaveDto
                     },
                     orderNo: this.formHeader.orderNo,
@@ -407,9 +378,6 @@
                 kojiBeanWashSaveDto: {
                     ...this.craftWashBeanInfo,
                     items: {
-                        // insertDatas: filterTableData(this.craftWashBeanTable, 'insert'),
-                        // updateDatas: filterTableData(this.craftWashBeanTable, 'update'),
-                        // removeIds: filterTableData(this.craftWashBeanTable, 'del')
                         ...tableWashSaveDto
                     },
                     orderNo: this.formHeader.orderNo,

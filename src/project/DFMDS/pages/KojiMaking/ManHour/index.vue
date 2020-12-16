@@ -151,13 +151,15 @@ export default class KojiManHour extends Vue {
     // 获取工序
     getProductProcess() {
         this.formHeader.productProcess = ''
-        KOJI_API.WORKPROCEDURE_QUERY_API({
-            workShop: this.formHeader.workShop,
-            current: 1,
-            size: 999999
+        KOJI_API.WORKPROCEDURE_QUERY_NOPAGE_API({
+            workShop: this.formHeader.workShop
         }).then(({ data }) => {
-            this.productProcessList = data.data.records
-
+            console.log('11111111data')
+            console.log(data)
+            this.productProcessList = []
+            if (data.data.length !== 0) {
+                this.productProcessList = data.data
+            }
         });
     }
 
