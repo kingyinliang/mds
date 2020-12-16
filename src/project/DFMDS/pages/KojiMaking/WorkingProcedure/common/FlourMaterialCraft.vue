@@ -556,7 +556,7 @@
 
         // 查询最新审核记录
         getAuditList(orderNo) {
-            AUDIT_API.AUDIT_LOG_LIST_API({ orderNo, verifyType: '' }).then(({ data }) => {
+            AUDIT_API.AUDIT_LOG_LIST_API({ orderNo, verifyType: 'CONTROL' }).then(({ data }) => {
                 this.craftAuditList = data.data;
             });
         }
