@@ -1,7 +1,7 @@
 <template>
     <div class="header_main">
         <el-card class="searchCard" style="margin-bottom: 5px;">
-            <el-form :inline="true" size="small" :model="formHeader" label-width="80px" class="topform sole_row">
+            <el-form :inline="true" size="small" :model="formHeader" label-width="70px" class="topform sole_row">
                 <el-form-item label="生产工厂：">
                     <el-select v-model="formHeader.factory" placeholder="请选择" style="width: 180px;">
                         <el-option label="请选择" value="" />
@@ -9,16 +9,25 @@
                     </el-select>
                 </el-form-item>
                 <el-form-item label="生产车间：">
-                    <el-select v-model="formHeader.workShop" placeholder="请选择" style="width: 180px;">
+                    <el-select v-model="formHeader.workShop" placeholder="请选择" style="width: 150px;">
                         <el-option label="请选择" value="" />
                         <el-option v-for="(item, index) in workshop" :key="index" :label="item.deptName" :value="item.deptId" />
                     </el-select>
                 </el-form-item>
                 <el-form-item label="生产日期：">
-                    <el-date-picker v-model="formHeader.productDate" type="date" placeholder="选择" value-format="yyyy-MM-dd" style="width: 180px;" />
+                    <el-date-picker v-model="formHeader.productDate" type="date" placeholder="选择" value-format="yyyy-MM-dd" style="width: 140px;" />
                 </el-form-item>
                 <el-form-item label="生产订单：">
                     <el-input v-model="formHeader.orderNo" type="text" clearable style="width: 140px;" />
+                </el-form-item>
+                <el-form-item label="订单状态：">
+                    <el-select v-model="formHeader.status" placeholder="请选择" style="width: 150px;">
+                        <el-option label="请选择" value="" />
+                        <el-option label="未审核" value="submit" />
+                        <el-option label="审核通过" value="checked" />
+                        <el-option label="审核不通过" value="noPass" />
+                        <el-option label="接口失败" value="0" />
+                    </el-select>
                 </el-form-item>
                 <el-form-item class="floatr">
                     <el-button type="primary" size="small" @click="GetDataList(true)">
@@ -48,7 +57,7 @@
                     </el-form>
                 </div>
             </template>
-            <el-table ref="table1" class="newTable" header-row-class-name="tableHead" :data="AuditList" border tooltip-effect="dark" style="width: 100%; margin-bottom: 20px;" @selection-change="handleSelectionChange">
+            <el-table ref="table1" class="newTable" header-row-class-name="tableHead" :data="AuditList" border tooltip-effect="dark" style="width: 100%;" @selection-change="handleSelectionChange">
                 <el-table-column type="selection" :selectable="checkboxT" width="50" />
                 <el-table-column type="index" label="序号" :index="indexMethod" width="55" fixed />
                 <el-table-column label="审核状态" width="100">
@@ -116,6 +125,9 @@
                     </template>
                 </el-table-column>
             </el-table>
+            <el-row style="width: 100%; margin-bottom: 20px;">
+                <el-pagination :current-page="formHeader.currPage" :page-sizes="[10, 20, 50]" :page-size="formHeader.pageSize" layout="total, sizes, prev, pager, next, jumper" :total="formHeader.totalCount" @size-change="handleSizeChange" @current-change="handleCurrentChange" />
+            </el-row>
         </mds-card>
         <el-dialog title="审核拒绝" :close-on-click-modal="false" :visible.sync="visible">
             <p style="line-height: 42px;">
@@ -386,6 +398,16 @@ export default {
         // 序号
         indexMethod(index) {
             return index + 1 + (Number(this.formHeader.currPage) - 1) * (Number(this.formHeader.pageSize));
+        },
+        // 改变每页条数
+        handleSizeChange(val) {
+            this.formHeader.pageSize = val;
+            this.GetDataList();
+        },
+        // 跳转页数
+        handleCurrentChange(val) {
+            this.formHeader.currPage = val;
+            this.GetDataList();
         }
     }
 };

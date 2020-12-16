@@ -13,19 +13,23 @@
                     <el-table v-if="order.properties && order.properties !== '二合一&礼盒产线'" ref="table1" class="newTable" header-row-class-name="tableHead" :data="InDate" :row-class-name="RowDelFlag" border tooltip-effect="dark" style="width: 100%; margin-bottom: 20px;">
                         <el-table-column type="index" width="55" label="序号" fixed />
                         <el-table-column label="白/中/夜班" min-width="120">
+                            <template slot="header">
+                                <em class="reqI">*</em>
+                                <span>白/中/夜班</span>
+                            </template>
                             <template slot-scope="scope">
-                                <div class="required">
-                                    <i class="reqI">*</i>
-                                    <el-select v-model="scope.row.classType" placeholder="请选择" :disabled="!(isRedact && scope.row.status !== 'submit' && scope.row.status !== 'checked')" size="small">
-                                        <el-option v-for="(iteam, index) in productShift" :key="index" :label="iteam.value" :value="iteam.code" />
-                                    </el-select>
-                                </div>
+                                <el-select v-model="scope.row.classType" placeholder="请选择" :disabled="!(isRedact && scope.row.status !== 'submit' && scope.row.status !== 'checked')" size="small">
+                                    <el-option v-for="(iteam, index) in productShift" :key="index" :label="iteam.value" :value="iteam.code" />
+                                </el-select>
                             </template>
                         </el-table-column>
                         <el-table-column label="生产批次" min-width="150">
+                            <template slot="header">
+                                <em class="reqI">*</em>
+                                <span>生产批次</span>
+                            </template>
                             <template slot-scope="scope">
                                 <div class="required">
-                                    <i class="reqI">*</i>
                                     <el-input v-model="scope.row.batch" placeholder="手工录入" size="small" :disabled="!(isRedact && scope.row.status !== 'submit' && scope.row.status !== 'checked')" maxlength="10" />
                                 </div>
                             </template>
@@ -136,16 +140,21 @@
                     <el-table v-if="order.properties && order.properties === '二合一&礼盒产线'" ref="table1" class="newTable" header-row-class-name="tableHead" :data="InDate" :row-class-name="RowDelFlag" border tooltip-effect="dark" style="width: 100%; margin-bottom: 20px;">
                         <el-table-column type="index" width="55" label="序号" fixed />
                         <el-table-column label="白/中/夜班" min-width="120">
+                            <template slot="header">
+                                <em class="reqI">*</em>
+                                <span>白/中/夜班</span>
+                            </template>
                             <template slot-scope="scope">
-                                <div class="required">
-                                    <i class="reqI">*</i>
-                                    <el-select v-model="scope.row.classType" placeholder="请选择" :disabled="!(isRedact && scope.row.status !== 'submit' && scope.row.status !== 'checked')" size="small">
-                                        <el-option v-for="(iteam, index) in productShift" :key="index" :label="iteam.value" :value="iteam.code" />
-                                    </el-select>
-                                </div>
+                                <el-select v-model="scope.row.classType" placeholder="请选择" :disabled="!(isRedact && scope.row.status !== 'submit' && scope.row.status !== 'checked')" size="small">
+                                    <el-option v-for="(iteam, index) in productShift" :key="index" :label="iteam.value" :value="iteam.code" />
+                                </el-select>
                             </template>
                         </el-table-column>
                         <el-table-column label="生产批次" min-width="150">
+                            <template slot="header">
+                                <em class="reqI">*</em>
+                                <span>生产批次</span>
+                            </template>
                             <template slot-scope="scope">
                                 <el-input v-if="isRedact && scope.row.status !== 'submit' && scope.row.status !== 'checked'" v-model="scope.row.batch" maxlength="10" placeholder="手工录入" size="small" />
                                 <el-input v-else v-model="scope.row.batch" placeholder="手工录入" size="small" disabled />
@@ -192,11 +201,19 @@
                             </template>
                         </el-table-column>
                         <el-table-column label="主产品批次" min-width="120">
+                            <template slot="header">
+                                <em class="reqI">*</em>
+                                <span>主产品批次</span>
+                            </template>
                             <template slot-scope="scope">
                                 <el-input v-model="scope.row.mainBatch" maxlength="10" placeholder="手工录入" size="small" :disabled="!(isRedact && scope.row.status !== 'submit' && scope.row.status !== 'checked')" />
                             </template>
                         </el-table-column>
                         <el-table-column label="赠品批次" min-width="120">
+                            <template slot="header">
+                                <em class="reqI">*</em>
+                                <span>赠品批次</span>
+                            </template>
                             <template slot-scope="scope">
                                 <el-input v-model="scope.row.attachBatch" maxlength="10" placeholder="手工录入" size="small" :disabled="!(isRedact && scope.row.status !== 'submit' && scope.row.status !== 'checked')" />
                             </template>
@@ -227,16 +244,21 @@
                 <el-table ref="table1" class="newTable" header-row-class-name="tableHead" :data="InDate" :row-class-name="RowDelFlag" border tooltip-effect="dark" style="width: 100%; margin-bottom: 20px;">
                     <el-table-column type="index" width="55" label="序号" fixed />
                     <el-table-column label="白/中/夜班" min-width="120">
+                        <template slot="header">
+                            <em class="reqI">*</em>
+                            <span>白/中/夜班</span>
+                        </template>
                         <template slot-scope="scope">
-                            <div class="required">
-                                <em class="reqI">*</em>
-                                <el-select v-model="scope.row.classType" placeholder="请选择" :disabled="!(isRedact && scope.row.status !== 'submit' && scope.row.status !== 'checked')" size="small">
-                                    <el-option v-for="(iteam, index) in productShift" :key="index" :label="iteam.value" :value="iteam.code" />
-                                </el-select>
-                            </div>
+                            <el-select v-model="scope.row.classType" placeholder="请选择" :disabled="!(isRedact && scope.row.status !== 'submit' && scope.row.status !== 'checked')" size="small">
+                                <el-option v-for="(iteam, index) in productShift" :key="index" :label="iteam.value" :value="iteam.code" />
+                            </el-select>
                         </template>
                     </el-table-column>
                     <el-table-column label="生产批次" min-width="150">
+                        <template slot="header">
+                            <em class="reqI">*</em>
+                            <span>生产批次</span>
+                        </template>
                         <template slot-scope="scope">
                             <el-input v-if="isRedact && scope.row.status !== 'submit' && scope.row.status !== 'checked'" v-model="scope.row.batch" maxlength="10" placeholder="手工录入" size="small" />
                             <el-input v-else v-model="scope.row.batch" placeholder="手工录入" size="small" disabled />
@@ -566,6 +588,17 @@ export default {
                     //   this.$message.error('生产入库单位未获取')
                     //   return false
                     // }
+                    if (item.batch) {
+                        // if (item.batch.length !== 10) {
+                        //   ty = false
+                        //   this.$warningToast('生产入库请录入10位批次号')
+                        //   return false
+                        // }
+                    } else {
+                        ty = false;
+                        this.$warningToast('生产入库批次项未填');
+                        return false;
+                    }
                     if (!item.output) {
                         ty = false;
                         this.$warningToast('生产入库产出数不能为空或0');
@@ -576,15 +609,14 @@ export default {
                         this.$warningToast('生产入库班次不能为空');
                         return false;
                     }
-                    if (item.batch) {
-                        // if (item.batch.length !== 10) {
-                        //   ty = false
-                        //   this.$warningToast('生产入库请录入10位批次号')
-                        //   return false
-                        // }
-                    } else {
+                    if (this.order.properties === '二合一&礼盒产线' && !item.mainBatch) {
                         ty = false;
-                        this.$warningToast('生产入库批次项未填');
+                        this.$warningToast('生产入库主产品批次项未填');
+                        return false;
+                    }
+                    if (this.order.properties === '二合一&礼盒产线' && !item.attachBatch) {
+                        ty = false;
+                        this.$warningToast('生产入库赠品批次项未填');
                         return false;
                     }
                     if (item.aiShelves !== '' && item.aiShelves !== '0') {
