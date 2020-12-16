@@ -72,7 +72,7 @@
                                 <span>备注</span>
                             </template>
                             <template slot-scope="scope">
-                                <el-tooltip v-if="scope.row.remark !== ''" effect="dark" :content="scope.row.remark" placement="top">
+                                <el-tooltip :disabled="scope.row.remark === ''" effect="dark" :content="scope.row.remark" placement="top">
                                     <el-input v-model.trim="scope.row.remark" size="small" placeholder="请输入" :disabled="!isRedact" />
                                 </el-tooltip>
                             </template>
@@ -144,7 +144,7 @@
                                 <span>异物描述</span>
                             </template>
                             <template slot-scope="scope">
-                                <el-tooltip v-if="scope.row.impurityInfo !== ''" effect="dark" :content="scope.row.impurityInfo" placement="top">
+                                <el-tooltip :disabled="scope.row.impurityInfo === ''" effect="dark" :content="scope.row.impurityInfo" placement="top">
                                     <el-input v-model.trim="scope.row.impurityInfo" :disabled="!(scope.row.impurityType==='OTHER'&&isRedact)" size="small" placeholder="请输入" />
                                 </el-tooltip>
                             </template>
@@ -154,7 +154,7 @@
                                 <span>处理措施</span>
                             </template>
                             <template slot-scope="scope">
-                                <el-tooltip v-if="scope.row.measures !== ''" effect="dark" :content="scope.row.measures" placement="top">
+                                <el-tooltip :disabled="scope.row.measures === ''" effect="dark" :content="scope.row.measures" placement="top">
                                     <el-input v-model.trim="scope.row.measures" size="small" placeholder="请输入" :disabled="!isRedact" />
                                 </el-tooltip>
                             </template>
@@ -164,7 +164,7 @@
                                 <span>备注</span>
                             </template>
                             <template slot-scope="scope">
-                                <el-tooltip v-if="scope.row.remark !== ''" effect="dark" :content="scope.row.remark" placement="top">
+                                <el-tooltip :disabled="scope.row.remark === ''" effect="dark" :content="scope.row.remark" placement="top">
                                     <el-input v-model.trim="scope.row.remark" size="small" placeholder="请输入" :disabled="!isRedact" />
                                 </el-tooltip>
                             </template>

@@ -113,8 +113,8 @@
         @Watch('potNoNow', { immediate: true, deep: true })
         onChangeValue(newVal: number| string) {
             if (newVal && this.currentFormDataGroup[0]) {
-                if (this.targetOrderObj.addKojiDate) {
-                    this.$set(this.currentFormDataGroup[0], 'inStorageBatch', this.targetOrderObj.addKojiDate.replace(/-/gi, '').slice(2) + '1' + newVal)
+                if (this.targetOrderObj.outKojiDate) {
+                    this.$set(this.currentFormDataGroup[0], 'inStorageBatch', this.targetOrderObj.outKojiDate.replace(/-/gi, '').slice(2) + '1' + newVal)
                     this.$infoToast('生产入库的入库批次自动生成')
                 }
                 KOJI_API.KOJI_DISC_QUERY_INSTORAGE_AMOUNT_API({
@@ -145,6 +145,8 @@
 
         init(formHeader) {
             this.targetOrderObj = formHeader
+            console.log('formHeader')
+            console.log(formHeader)
             // 生产入库
             this.getKojiStatus()
             // 审核日志
