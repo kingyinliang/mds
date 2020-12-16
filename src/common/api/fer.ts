@@ -235,7 +235,11 @@ const FER_API = {
     /**
      * @property {string} FER_OPEN_POT_DETAIL_SAUCE_LIST_API 发酵车间-开罐列表-详情页-超期酱
      */
-    FER_OPEN_POT_DETAIL_SAUCE_LIST_API: params => httpProxy('/fer/open/queryOfOverdueMaterial', 'GET', params)
+    FER_OPEN_POT_DETAIL_SAUCE_LIST_API: params => httpProxy('/fer/open/queryOfOverdueMaterial', 'GET', params),
+    /**
+     * @property {string} FER_OPEN_POT_DETAIL_SAVE_API 发酵车间-开罐列表-详情页-保存
+     */
+    FER_OPEN_POT_DETAIL_SAVE_API: params => httpProxy('/fer/open/save', 'POST', params)
 };
 
 export default FER_API;
