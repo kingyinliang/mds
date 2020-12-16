@@ -156,8 +156,10 @@ export default class KojiManHour extends Vue {
         }).then(({ data }) => {
             console.log('11111111data')
             console.log(data)
-            this.productProcessList = data.data.records
-
+            this.productProcessList = []
+            if (data.data.length !== 0) {
+                this.productProcessList = data.data
+            }
         });
     }
 

@@ -52,14 +52,14 @@
                     <template slot-scope="scope">
                         <div class="required" style="min-height: 32px; line-height: 32px;">
                             <span v-if="!isRedact" style="cursor: not-allowed;">
-                                <em v-for="(item, index) in scope.row.userList" :key="index">{{ item }}，</em>
+                                <em v-for="(item, index) in scope.row.userList" :key="index">{{ item }}{{ index | userListFilter(scope.row.userList.length) }}</em>
                             </span>
                             <span v-if="isRedact && scope.row.userType !== 'EXTERNAL' && scope.row.userType !== 'TEMP'" style="cursor: pointer;" :disabled="!(isRedact && status !== 'C' && status !== 'D' && status !== 'P' && status !=='M')" :style="{cursor:!(isRedact && status !== 'C' && status !== 'D' && status !== 'P' && status !=='M')?'not-allowed':'pointer'}" @click="selectUser(scope.row)">
-                                <em v-for="(item, index) in scope.row.userList" :key="index">{{ item }}，</em>
+                                <em v-for="(item, index) in scope.row.userList" :key="index">{{ item }}{{ index | userListFilter(scope.row.userList.length) }}</em>
                                 <em>点击选择人员</em>
                             </span>
                             <span v-if="isRedact && (scope.row.userType === 'EXTERNAL' || scope.row.userType === 'TEMP')" style="cursor: pointer;" :disabled="!(isRedact && status !== 'C' && status !== 'D' && status !== 'P' && status !=='M')" :style="{cursor:!(isRedact && status !== 'C' && status !== 'D' && status !== 'P' && status !=='M')?'not-allowed':'pointer'}" @click="dayLaborer(scope.row)">
-                                <em v-for="(item, index) in scope.row.userList" :key="index">{{ item }}，</em>
+                                <em v-for="(item, index) in scope.row.userList" :key="index">{{ item }}{{ index | userListFilter(scope.row.userList.length) }}</em>
                                 <em>点击输入人员</em>
                             </span>
                         </div>
@@ -149,6 +149,11 @@ import _ from 'lodash';
         OfficialWorker,
         LoanedPersonnel,
         TemporaryWorker
+    },
+    filters: {
+        userListFilter(index, len) {
+            return index < len - 1 ? '，' : '';
+        }
     }
 })
 
