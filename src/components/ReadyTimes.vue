@@ -113,7 +113,7 @@
                         </el-input>
                     </el-form-item>
                     <el-form-item label="品质保证：">
-                        <el-input v-model.number="currentFormDataGroup.midQualiry" placeholder="请输入" size="small" :disabled="!(isRedact && status !== 'C' && status !== 'D' && status !== 'P'&& status !=='M')" clearable oninput="value=value.replace(/\D*/g,'')">
+                        <el-input v-model.number="currentFormDataGroup.midQuality" placeholder="请输入" size="small" :disabled="!(isRedact && status !== 'C' && status !== 'D' && status !== 'P'&& status !=='M')" clearable oninput="value=value.replace(/\D*/g,'')">
                             <span slot="suffix">min</span>
                         </el-input>
                     </el-form-item>
@@ -213,7 +213,7 @@ export default class ReadyTimes extends Vue {
         classes: '',
         dayQuality: null,
         dayChange: null,
-        midQualiry: null,
+        midQuality: null,
         midChange: null,
         nightQuality: null,
         nightChange: null
@@ -236,8 +236,8 @@ export default class ReadyTimes extends Vue {
     //     if (!this.currentFormDataGroup.dayChange) {
     //         this.currentFormDataGroup.dayChange = 0;
     //     }
-    //     if (!this.currentFormDataGroup.midQualiry) {
-    //         this.currentFormDataGroup.midQualiry = 0;
+    //     if (!this.currentFormDataGroup.midQuality) {
+    //         this.currentFormDataGroup.midQuality = 0;
     //     }
     //     if (!this.currentFormDataGroup.midChange) {
     //         this.currentFormDataGroup.midChange = 0;
@@ -262,7 +262,7 @@ export default class ReadyTimes extends Vue {
                 classes: 'M',
                 dayQuality: null,
                 dayChange: null,
-                midQualiry: null,
+                midQuality: null,
                 midChange: null,
                 nightQuality: null,
                 nightChange: null
@@ -279,26 +279,37 @@ export default class ReadyTimes extends Vue {
 
     savedData(formHeader) {
         let pkgTimeSheetDto: ReadyTimesData = {};
+        const arr = ['day', 'mid', 'night'];
+        for (const key in this.currentFormDataGroup) {
+            if (Object.prototype.hasOwnProperty.call(this.currentFormDataGroup, key)) {
+                const element = this.currentFormDataGroup[key];
+                const boo = arr.some(str => key.includes(str));
+                if (element === '' && boo) {
+                    this.currentFormDataGroup[key] = 0;
+                }
+            }
+        }
         this.currentFormDataGroup.orderNo = formHeader.orderNo;
         this.currentFormDataGroup.orderId = formHeader.orderId;
-        if (!this.currentFormDataGroup.dayQuality) {
-            this.currentFormDataGroup.dayQuality = 0;
-        }
-        if (!this.currentFormDataGroup.dayChange) {
-            this.currentFormDataGroup.dayChange = 0;
-        }
-        if (!this.currentFormDataGroup.midQualiry) {
-            this.currentFormDataGroup.midQualiry = 0;
-        }
-        if (!this.currentFormDataGroup.midChange) {
-            this.currentFormDataGroup.midChange = 0;
-        }
-        if (!this.currentFormDataGroup.nightQuality) {
-            this.currentFormDataGroup.nightQuality = 0;
-        }
-        if (!this.currentFormDataGroup.nightChange) {
-            this.currentFormDataGroup.nightChange = 0;
-        }
+        // if (!this.currentFormDataGroup.dayQuality) {
+        //     this.currentFormDataGroup.dayQuality = 0;
+        // }
+        // if (!this.currentFormDataGroup.dayChange) {
+        //     this.currentFormDataGroup.dayChange = 0;
+        // }
+        // if (!this.currentFormDataGroup.midQuality) {
+        //     this.currentFormDataGroup.midQuality = 0;
+        // }
+        // if (!this.currentFormDataGroup.midChange) {
+        //     this.currentFormDataGroup.midChange = 0;
+        // }
+        // if (!this.currentFormDataGroup.nightQuality) {
+        //     this.currentFormDataGroup.nightQuality = 0;
+        // }
+        // if (!this.currentFormDataGroup.nightChange) {
+        //     this.currentFormDataGroup.nightChange = 0;
+        // }
+
         pkgTimeSheetDto = this.returnDataGroup()
         return pkgTimeSheetDto
     }
@@ -309,7 +320,7 @@ export default class ReadyTimes extends Vue {
             this.currentFormDataGroup.midClear = null
             this.currentFormDataGroup.midMeeting = null
             this.currentFormDataGroup.midPrepaired = null
-            this.currentFormDataGroup.midQualiry = null
+            this.currentFormDataGroup.midQuality = null
             this.currentFormDataGroup.midShift = null
             this.currentFormDataGroup.midUser = null
             this.currentFormDataGroup.nightChange = null
@@ -346,7 +357,7 @@ export default class ReadyTimes extends Vue {
             this.currentFormDataGroup.midClear = null
             this.currentFormDataGroup.midMeeting = null
             this.currentFormDataGroup.midPrepaired = null
-            this.currentFormDataGroup.midQualiry = null
+            this.currentFormDataGroup.midQuality = null
             this.currentFormDataGroup.midShift = null
             this.currentFormDataGroup.midUser = null
         } else {
@@ -398,7 +409,7 @@ interface ReadyTimesData {
     midClear?: number | null; // 生产后清场
     midMeeting?: number | null; // 班前会
     midPrepaired?: number | null; // 生产前准备
-    midQualiry?: number | null; // 中班品质保证
+    midQuality?: number | null; // 中班品质保证
     midShift?: number | null; // 交接班
     midUser?: number | null; // 中班参与人数
     nightChange?: number | null; // 夜班切换时间

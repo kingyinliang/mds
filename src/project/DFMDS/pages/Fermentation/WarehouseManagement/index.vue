@@ -60,7 +60,7 @@
                         <el-table-column label="操作时间" prop="changed" width="160px" />
                         <el-table-column label="操作" width="120px" fixed="right">
                             <template slot-scope="scope">
-                                <el-button type="text" size="small" :disabled="Number(scope.row.inStorageType) !== 531" @click="returnHandler(scope.row)">
+                                <el-button v-if="Number(scope.row.inStorageType) === 531" type="text" size="small" :disabled="!isRedact || (scope.row.checkStatus !== 'N' && scope.row.checkStatus !== 'R' && scope.row.checkStatus !== 'S' && scope.row.checkStatus !== '')" @click="returnHandler(scope.row)">
                                     退回
                                 </el-button>
                                 <el-button type="text" size="small" @click="showLogHandler(scope.row)">
@@ -497,7 +497,10 @@
                 cancelButtonText: '取消',
                 type: 'warning'
             }).then(() => {
-                this.$successToast('暂无退回接口');
+                FER_API.FER_INSTORAGE_RETURN_API([row.id]).then(res => {
+                    this.$successToast(res.data.msg);
+                    this.$refs.queryTable.getDataList();
+                })
             })
         }
 
