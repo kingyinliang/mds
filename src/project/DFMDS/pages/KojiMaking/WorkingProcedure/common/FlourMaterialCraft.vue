@@ -312,6 +312,8 @@
                 newCraftSteamFlourInfo = false
             }
 
+            this.craftSteamFlourInfo.kojiOrderNo = formHeader.kojiOrderNo
+            this.craftSteamFlourInfo.orderNo = formHeader.orderNo
 
             let newCraftControlInfo = true
             if (this.craftControlInfo.id) {
