@@ -2,6 +2,7 @@
     <div class="header_main">
         <query-table
             ref="queryTable"
+            :factory-type="1"
             :column="column"
             :rules="rules"
             :query-form-data="queryFormData"
@@ -57,7 +58,7 @@
             {
                 type: 'select',
                 label: '领料状态',
-                prop: 'status',
+                prop: 'useMaterialStatus',
                 options: [
                     { label: '已领料', value: '1' },
                     { label: '未领料', value: '0' }
@@ -131,6 +132,7 @@
             {
                 label: '生产物料',
                 prop: 'materialCode;',
+                minwidth: '180',
                 formatter: (row) => {
                     return row.materialName + ' ' + row.materialCode;
                 }

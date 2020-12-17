@@ -35,7 +35,7 @@
                     <el-table-column type="index" label="序号" width="55" align="center" fixed />
                     <el-table-column label="包材物料" show-overflow-tooltip>
                         <template slot-scope="scope">
-                            {{ scope.row.materialCode + ' ' + scope.row.materialName }}
+                            {{ scope.row.materialName + ' ' + scope.row.materialCode }}
                         </template>
                     </el-table-column>
                     <el-table-column label="单位" prop="moveUnit" width="60" />
@@ -239,7 +239,7 @@ export default class MaterialStock extends Vue {
             label: '包材物料',
             prop: 'materialName',
             formatter: (row) => {
-                return row.materialCode + ' ' + row.materialName;
+                return row.materialName + ' ' + row.materialCode;
             },
             minwidth: '330'
         },

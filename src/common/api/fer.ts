@@ -243,7 +243,11 @@ const FER_API = {
     /**
      * @property {string} FER_OPEN_POT_DETAIL_SAVE_API 发酵车间-开罐列表-详情页-保存
      */
-    FER_OPEN_POT_DETAIL_SAVE_API: params => httpProxy('/fer/open/save', 'POST', params)
+    FER_OPEN_POT_DETAIL_SAVE_API: params => httpProxy('/fer/open/save', 'POST', params),
+    /**
+     * @property {string} FER_OPEN_POT_DETAIL_PUSH_API 发酵车间-开罐列表-详情页-推送
+     */
+    FER_OPEN_POT_DETAIL_PUSH_API: params => httpProxy('/fer/open/push', 'POST', params)
 };
 
 export default FER_API;

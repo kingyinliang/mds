@@ -12,7 +12,7 @@
                     <el-table ref="materialS" header-row-class-name="tableHead" class="newTable" :data="tableData" :row-class-name="rowDelFlag" :span-method="spanMethod" border tooltip-effect="dark">
                         <el-table-column label="领用物料" prop="material" width="150" :show-overflow-tooltip="true">
                             <template slot-scope="scope">
-                                {{ scope.row.materialCode + ' ' + scope.row.materialName }}
+                                {{ scope.row.materialName + ' ' + scope.row.materialCode }}
                             </template>
                         </el-table-column>
                         <el-table-column label="单位" prop="unit" width="50" :show-overflow-tooltip="true" />
