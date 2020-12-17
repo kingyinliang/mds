@@ -11,10 +11,10 @@
                 <div class="stock-image_info stock-image_info_right">
                     <i class="iconfont factory-zongliangguanli" />
                     <div class="stock-image_info_num">
-                        <el-tooltip effect="dark" :content="totalNum&&totalNum > 999999? (totalNum+'').substr(0,6): totalNum +'kg'" placement="top">
+                        <el-tooltip effect="dark" :content="totalNum&&totalNum > 999999? (totalNum+'').substr(0,6): totalNum +'千克'" placement="top">
                             <span class="stock-image_info_num_toolTip">{{ totalNum&&totalNum > 999999? (totalNum+'').substr(0,6): totalNum }}</span>
                         </el-tooltip>
-                        <span class="stock-image_info_num_span">kg</span>
+                        <span class="stock-image_info_num_span">千克</span>
                     </div>
                     <div class="stock-image_info_title">
                         库存总量
@@ -151,4 +151,3 @@
     }
 }
 </style>
-

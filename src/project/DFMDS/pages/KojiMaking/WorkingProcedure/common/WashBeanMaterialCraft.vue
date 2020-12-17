@@ -95,7 +95,9 @@
                 </el-table-column>
                 <el-table-column label="备注" width="200">
                     <template slot-scope="scope">
-                        <el-input v-model.trim="scope.row.remark" size="small" placeholder="请输入" :disabled="!isRedact" />
+                        <el-tooltip :disabled="scope.row.remark === ''" effect="dark" :content="scope.row.remark" placement="top">
+                            <el-input v-model.trim="scope.row.remark" size="small" placeholder="请输入" :disabled="!isRedact" />
+                        </el-tooltip>
                     </template>
                 </el-table-column>
                 <el-table-column label="操作人" width="140">
@@ -118,7 +120,7 @@
             </el-table>
             <el-form :inline="true" style="margin-top: 5px;">
                 <el-form-item label="杂质数量合计：" style="margin-bottom: 5px;">
-                    <span>{{ totalSieveImpurityAmount }} KG</span>
+                    <span>{{ totalSieveImpurityAmount }} 千克</span>
                 </el-form-item>
             </el-form>
         </mds-card>
@@ -248,7 +250,9 @@
                 </el-table-column>
                 <el-table-column label="备注" width="150">
                     <template slot-scope="scope">
-                        <el-input v-model.trim="scope.row.remark" size="small" placeholder="请输入" :disabled="!isRedact" />
+                        <el-tooltip :disabled="scope.row.remark === ''" effect="dark" :content="scope.row.remark" placement="top">
+                            <el-input v-model.trim="scope.row.remark" size="small" placeholder="请输入" :disabled="!isRedact" />
+                        </el-tooltip>
                     </template>
                 </el-table-column>
                 <el-table-column label="操作人" width="140">
@@ -456,7 +460,7 @@
                 sieveImpurityAmount: '',
                 sieveImpurityType: '',
                 sieveMans: '',
-                unit: 'KG',
+                unit: '千克',
                 remark: '',
                 changed: dateFormat(new Date(), 'yyyy-MM-dd hh:mm:ss'),
                 changer: getUserNameNumber(),

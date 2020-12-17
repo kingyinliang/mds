@@ -76,7 +76,7 @@
                     <el-table-column prop="unit" label="单位" min-width="100" :show-overflow-tooltip="true" />
                     <el-table-column prop="supplier" label="面粉厂家" min-width="100" :show-overflow-tooltip="true" />
                     <el-table-column prop="operationMans" label="上面人" min-width="120" :show-overflow-tooltip="true" />
-                    <el-table-column prop="impurityAmount" label="杂质数量(KG)" min-width="120" :show-overflow-tooltip="true" />
+                    <el-table-column prop="impurityAmount" label="杂质数量(千克)" min-width="120" :show-overflow-tooltip="true" />
                     <el-table-column prop="remark" label="备注" min-width="100" :show-overflow-tooltip="true" />
                     <el-table-column label="操作人" prop="changer" width="140" />
                     <el-table-column label="操作时间" prop="changed" width="180" />
@@ -91,7 +91,7 @@
             </div>
             <div>
                 <div class="material-get-content_addTotal">
-                    面粉量合计：{{ getMaterialTotalNum }} KG
+                    面粉量合计：{{ getMaterialTotalNum }} 千克
                 </div>
             </div>
         </mds-card>

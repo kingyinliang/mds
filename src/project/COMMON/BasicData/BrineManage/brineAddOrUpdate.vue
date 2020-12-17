@@ -50,7 +50,9 @@
             </el-table-column>
             <el-table-column label="备注" :show-overflow-tooltip="true">
                 <template slot-scope="scope">
-                    <el-input v-model.trim="scope.row.remark" size="small" clearable />
+                    <el-tooltip :disabled="scope.row.remark === ''" effect="dark" :content="scope.row.remark" placement="top">
+                        <el-input v-model.trim="scope.row.remark" size="small" clearable />
+                    </el-tooltip>
                 </template>
             </el-table-column>
             <el-table-column fixed="right" label="操作" header-align="left" align="left" width="70">
