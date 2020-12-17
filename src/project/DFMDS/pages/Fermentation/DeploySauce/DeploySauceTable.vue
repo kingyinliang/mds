@@ -165,11 +165,8 @@
         table3 = []
         table4 = []
 
-        mounted() {
-        //
-        }
-
         init(formHeader) {
+            this.getSelect()
             this.getList('PICKLED', formHeader)
             this.getList('RECEIVE', formHeader)
             this.getList('SAUCE', formHeader)
@@ -188,6 +185,10 @@
                     this.table4 = data.data
                 }
             })
+        }
+
+        getSelect() {
+        //
         }
 
     }
