@@ -489,7 +489,7 @@
                     ['混合料温度1'],
                     ['混合料温度2']
                 ];
-                const series = [];
+                const series: object[] = [];
                 let i = 0;
                 data.data.map(item => {
                     datasetSource[0].push(item.kojiHouseName);
