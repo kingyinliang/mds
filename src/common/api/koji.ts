@@ -3,7 +3,7 @@
  * @Anthor: Telliex
  * @Date: 2020-08-27 14:28:27
  * @LastEditors: Telliex
- * @LastEditTime: 2020-12-16 14:13:54
+ * @LastEditTime: 2020-12-17 14:20:21
  */
 import httpProxy from 'utils/net/httpProxy';
 const KOJI_API = {
@@ -210,7 +210,7 @@ const KOJI_API = {
      */
     KOJI_DISC_QUERY_SUBMIT_API: params => httpProxy('/kojiDisc/submitKojiDisc', 'POST', params),
     /**
-     * @KOJI_DISC_QUERY_SUBMIT_API 制曲车间-圆盘-溶解罐统计
+     * @KOJI_DISC_QUERY_INSTORAGE_AMOUNT_API 制曲车间-圆盘-溶解罐统计
      */
     KOJI_DISC_QUERY_INSTORAGE_AMOUNT_API: params => httpProxy('/kojiDisc/calcInStorageAmount', 'GET', params),
     /**

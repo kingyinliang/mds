@@ -19,7 +19,7 @@
                 <steamed-bean-craft ref="steamedBeanCraft" :is-redact="data.isRedact" />
             </template>
             <template slot="2" slot-scope="data">
-                <steamed-in-storage ref="steamedInStorage" :pot-no-now="potNoNow" :is-redact="data.isRedact" />
+                <steamed-in-storage ref="steamedInStorage" :pot-no-now="potNodNow" :is-redact="data.isRedact" />
             </template>
             <template slot="3" slot-scope="data">
                 <koji-exc-record ref="excRecord" :is-redact="data.isRedact" :form-header="formHeader" />
@@ -65,12 +65,16 @@
         scanList: Holder[] = []
 
         // 当前罐号
-        potNoNow: string|number = '';
+        potIdNow: string|number = '';
+        potNodNow: string|number = '';
 
         @Watch('formHeader.potNo', { immediate: true, deep: true })
         onChangeValue(newVal: number| string) {
             if (newVal) {
-                this.potNoNow = newVal
+                console.log('newVal')
+                console.log(newVal)
+                this.potIdNow = newVal
+                this.potNodNow = this.scanList.filter(item => item.id === newVal)[0].holderNo as string
             }
         }
 
@@ -177,36 +181,15 @@
                 // orderNo: this.$store.state.koji.orderScInfo.orderNo || ''
                 orderNo: this.jumpFromAudit ? this.$route.params.order : this.$store.state.koji.orderScInfo.orderNo || ''
             }).then(({ data }) => {
-                // KOJI_API.KOJI_STEAM_INSTORAGE_LIST_API({
-                //     // kojiOrderNo: null,
-                //     orderNo: data.data.orderNo
-                // }).then(({ data: res }) => {
-                //     // const queryInStorageData = res.data;
-                //     this.formHeader = {
-                //         ...data.data,
-                //         // potNo: queryInStorageData && queryInStorageData[0] ? queryInStorageData[0].scPotNo : '',
-                //         potNo: this.potNoNow,
-                //         kojiOrderNo: null
-                //     };
-                //     // 获取页签状态
-                //     this.getHouseTag();
-                //     this.formHeader.textStage = 'ZD';
-                //     this.formHeader.factoryName = JSON.parse(sessionStorage.getItem('factory') || '{}').deptShort;
-                //     this.getScanList();
-                //     this.$refs.steamedBeanCraft.init(this.formHeader);
-                //     this.$refs.steamedInStorage.init(this.formHeader);
-                //     this.$refs.excRecord.init(this.formHeader, 'ZD');
-                //     this.$refs.textRecord.init(this.formHeader, 'koji');
-                // });
                 KOJI_API.KOJI_QUERY_STEAMBEAN_API({
                     orderNo: this.jumpFromAudit ? this.$route.params.order : this.$store.state.koji.orderScInfo.orderNo || ''
                 }).then(({ data: res }) => {
-                    this.potNoNow = res.data.beanJarId
+                    this.potIdNow = res.data.beanJarId
 
                     this.formHeader = {
                         ...data.data,
                         // potNo: queryInStorageData && queryInStorageData[0] ? queryInStorageData[0].scPotNo : '',
-                        potNo: this.potNoNow,
+                        potNo: this.potIdNow,
                         kojiOrderNo: null
                     };
                     // 获取页签状态
@@ -222,30 +205,6 @@
 
             })
 
-            // 获取泡豆罐栏位资讯
-            // KOJI_API.KOJI_QUERY_STEAMBEAN_API({
-            //     orderNo: this.jumpFromAudit ? this.$route.params.order : this.$store.state.koji.orderScInfo.orderNo || ''
-            // }).then(({ data: res }) => {
-            //     console.log('888888888')
-            //     console.log(data)
-            //     this.potNoNow = res.data.beanJarId
-
-            //         this.formHeader = {
-            //             ...data.data,
-            //             // potNo: queryInStorageData && queryInStorageData[0] ? queryInStorageData[0].scPotNo : '',
-            //             potNo: this.potNoNow,
-            //             kojiOrderNo: null
-            //         };
-            //         // 获取页签状态
-            //         this.getHouseTag();
-            //         this.formHeader.textStage = 'ZD';
-            //         this.formHeader.factoryName = JSON.parse(sessionStorage.getItem('factory') || '{}').deptShort;
-            //         this.getScanList();
-            //         this.$refs.steamedBeanCraft.init(this.formHeader);
-            //         this.$refs.steamedInStorage.init(this.formHeader);
-            //         this.$refs.excRecord.init(this.formHeader, 'ZD');
-            //         this.$refs.textRecord.init(this.formHeader, 'koji');
-            // });
         }
 
         // 获取泡豆罐
@@ -266,7 +225,7 @@
             const inStorage = this.$refs.steamedInStorage.getSavedOrSubmitData(this.formHeader);
             const excRequest = this.$refs.excRecord.getSavedOrSubmitData(this.formHeader, 'ZD');
             const textRequest = this.$refs.textRecord.savedData(this.formHeader, 'koji');
-            const tempScanList = this.scanList.filter(item => item.id === this.potNoNow)[0] || {}
+            const tempScanList = this.scanList.filter(item => item.id === this.potIdNow)[0] || {}
             return KOJI_API.KOJI_STEAM_BEAN_SAVE_API({
                 ...steSemi,
                 ...inStorage,
@@ -279,7 +238,7 @@
                 kojiOrderNo: this.formHeader.kojiOrderNo,
                 orderNo: this.formHeader.orderNo,
                 kojiHouseNo: this.formHeader.kojiHouseNo,
-                beanJarId: this.potNoNow,
+                beanJarId: this.potIdNow,
                 beanJarName: tempScanList.holderName || '',
                 beanJarNo: tempScanList.holderNo || ''
             })
@@ -288,9 +247,10 @@
         submitDatas() {
             const steSemi = this.$refs.steamedBeanCraft.getSavedOrSubmitData(this.formHeader);
             const inStorage = this.$refs.steamedInStorage.getSavedOrSubmitData(this.formHeader);
+
             const excRequest = this.$refs.excRecord.getSavedOrSubmitData(this.formHeader, 'ZD');
             const textRequest = this.$refs.textRecord.savedData(this.formHeader, 'koji');
-            const tempScanList = this.scanList.filter(item => item.id === this.potNoNow)[0] || {}
+            const tempScanList = this.scanList.filter(item => item.id === this.potIdNow)[0] || {}
 
             return KOJI_API.KOJI_STEAM_BEAN_SUBMIT_API({
                 ...steSemi,
@@ -304,7 +264,7 @@
                 kojiOrderNo: this.formHeader.kojiOrderNo,
                 orderNo: this.formHeader.orderNo,
                 kojiHouseNo: this.formHeader.kojiHouseNo,
-                beanJarId: this.potNoNow,
+                beanJarId: this.potIdNow,
                 beanJarName: tempScanList.holderName || '',
                 beanJarNo: tempScanList.holderNo || ''
             })
