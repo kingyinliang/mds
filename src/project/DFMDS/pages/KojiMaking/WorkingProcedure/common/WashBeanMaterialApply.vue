@@ -48,10 +48,10 @@
             </div>
             <div>
                 <div class="material-get-content_addTotal">
-                    大豆数量合计：{{ getMaterialTotalNum }} KG
+                    大豆数量合计：{{ getMaterialTotalNum }} 千克
                 </div>
                 <div class="material-get-content_addTotal">
-                    原豆数量合计：{{ getSmallTotalNum || 0 }} KG
+                    原豆数量合计：{{ getSmallTotalNum || 0 }} 千克
                 </div>
             </div>
         </mds-card>

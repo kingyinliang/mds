@@ -189,7 +189,7 @@
                         this.tableData = [{
                             ...queryInStorageData[0],
                             feBeanMount: totalNum,
-                            unit: 'KG',
+                            unit: '千克',
                             changed: dateFormat(new Date(), 'yyyy-MM-dd hh:mm:ss'),
                             changer: getUserNameNumber(),
                             kojiOrderNo,
@@ -202,7 +202,7 @@
                             feBeanMount: totalNum,
                             inStorageAmount: planOutput || '',
                             inStorageBatch: '',
-                            unit: 'KG',
+                            unit: '千克',
                             scPotNo: '',
                             remark: '',
                             changed: dateFormat(new Date(), 'yyyy-MM-dd hh:mm:ss'),

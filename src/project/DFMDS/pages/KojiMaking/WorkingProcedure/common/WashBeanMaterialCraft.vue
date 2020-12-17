@@ -120,7 +120,7 @@
             </el-table>
             <el-form :inline="true" style="margin-top: 5px;">
                 <el-form-item label="杂质数量合计：" style="margin-bottom: 5px;">
-                    <span>{{ totalSieveImpurityAmount }} KG</span>
+                    <span>{{ totalSieveImpurityAmount }} 千克</span>
                 </el-form-item>
             </el-form>
         </mds-card>
@@ -460,7 +460,7 @@
                 sieveImpurityAmount: '',
                 sieveImpurityType: '',
                 sieveMans: '',
-                unit: 'KG',
+                unit: '千克',
                 remark: '',
                 changed: dateFormat(new Date(), 'yyyy-MM-dd hh:mm:ss'),
                 changer: getUserNameNumber(),
