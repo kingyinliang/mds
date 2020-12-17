@@ -257,11 +257,19 @@
         }
 
         submitDatas() {
-            if (this.$refs.craftControl.ruleSubmit() && this.$refs.productInStorage.ruleSubmit() && this.$refs.excRecord.ruleSubmit()) {
+            // if (this.$refs.craftControl.ruleSubmit() && this.$refs.productInStorage.ruleSubmit() && this.$refs.excRecord.ruleSubmit()) {
                 const craftControlTemp = this.$refs.craftControl.savedData(this.formHeader);
                 const productInStorageTemp = this.$refs.productInStorage.savedData(this.formHeader);
                 const excRecordTemp = this.$refs.excRecord.getSavedOrSubmitData(this.formHeader, 'YP');
                 const textRecordTemp = this.$refs.textRecord.savedData(this.formHeader);
+                console.log('craftControlTemp')
+                console.log(craftControlTemp)
+                console.log('productInStorageTemp')
+                console.log(productInStorageTemp)
+                console.log('excRecordTemp')
+                console.log(excRecordTemp)
+                console.log('textRecordTemp')
+                console.log(textRecordTemp)
 
                 return KOJI_API.KOJI_DISC_QUERY_SUBMIT_API({
                     discEvaluate: craftControlTemp.discEvaluate,
@@ -273,9 +281,9 @@
                     discGuardException: craftControlTemp.discGuardException, // 看曲记录异常情况
                     discTurnException: craftControlTemp.discTurnException, // 翻曲记录异常情况
                     exception: { // 异常记录
-                        insertDatas: excRecordTemp.insertDto,
+                        insertDatas: excRecordTemp.InsertDto,
                         removeIds: excRecordTemp.ids,
-                        updateDatas: excRecordTemp.updateDto
+                        updateDatas: excRecordTemp.UpdateDto
                     }, // 异常记录
                     fermentPotId: this.formHeader.fermentPotId, // 发酵罐/池号Id
                     fermentPotNo: this.formHeader.fermentPotNo, // 发酵罐/池号
@@ -284,7 +292,7 @@
                     orderNo: this.formHeader.orderNo, // 订单号
                     text: textRecordTemp
                 })
-            }
+            // }
         }
     }
 

@@ -196,8 +196,6 @@ export default class ProductPeople extends Vue {
     }
 
     changeList(dataList) {
-        console.log('8888888')
-        console.log(dataList)
         this.currentFormDataGroup = JSON.parse(JSON.stringify(dataList));
         if (this.currentFormDataGroup.length !== 0) {
             this.currentFormDataGroup.forEach(item => {
@@ -260,8 +258,6 @@ export default class ProductPeople extends Vue {
             parentId: process,
             deptType: 'PRODUCT_TEAM'
         }).then(({ data }) => {
-            console.log('222222data')
-            console.log(data)
             this.teamList = []
             if (data.data.length !== 0) {
                 this.teamList = data.data
@@ -358,6 +354,8 @@ export default class ProductPeople extends Vue {
 
     // 选择人员 正式借调
     selectUser(row: CurrentDataTable) {
+        console.log('row')
+        console.log(row)
         if (this.isRedact && this.status !== 'C' && this.status !== 'D' && this.status !== 'P' && this.status !== 'M') {
             this.row = row;
         if (row.userType === 'FORMAL') { // 正式

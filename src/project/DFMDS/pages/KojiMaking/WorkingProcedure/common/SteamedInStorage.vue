@@ -34,7 +34,7 @@
                         <el-input v-model.trim="scope.row.remark" size="small" placeholder="请输入" :disabled="!isRedact" />
                     </template>
                 </el-table-column>
-                <el-table-column label="操作人" width="120">
+                <el-table-column label="操作人" width="140">
                     <template slot-scope="scope">
                         {{ scope.row.changer }}
                     </template>

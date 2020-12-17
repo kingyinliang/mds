@@ -257,6 +257,7 @@
         currentAudit = [];
         productLine = '';
         beanSteepAndMaterial: object[] = [];
+        colorList: string[] = ['#6C9AFC', '#EA6B5B', '#66779A', '#63DAAB'];
 
 
         mounted() {
@@ -270,10 +271,13 @@
             const net01 = new Promise(resolve => {
                 this.getDictionary('ENERGY', resolve);
             });
+            const net03 = new Promise(resolve => {
+                this.getDictionary('WAIT', resolve);
+            });
             const net02 = new Promise(resolve => {
                 this.getExcConitionList(this.auditDetail['workShop'], resolve);
             });
-            Promise.all([net01, net02]).then(() => {
+            Promise.all([net01, net02, net03]).then(() => {
                 this.getException(this.auditDetail['orderNo']);
             }).catch((reason) => {
                 this.$errorToast(reason);
@@ -401,6 +405,7 @@
                         trigger: 'axis'
                     },
                     dataset: {
+                        dimensions: ['product', '豆皮(KG)', '小豆(KG)', '废豆(KG)'],
                         source: datasetSource
                     },
                     xAxis: { type: 'category' },
@@ -484,13 +489,34 @@
                     ['混合料温度1'],
                     ['混合料温度2']
                 ];
+                const series = [];
+                let i = 0;
                 data.data.map(item => {
                     datasetSource[0].push(item.kojiHouseName);
-                    datasetSource[1].push(item.flourWindTemp);
-                    datasetSource[2].push(item.beanWindTempOne);
-                    datasetSource[3].push(item.beanWindTempTwo);
-                    datasetSource[4].push(item.mixtureTempOne);
-                    datasetSource[5].push(item.mixtureTempTwo);
+                    datasetSource[1].push(item.flourWindTemp === null ? '' : item.flourWindTemp);
+                    datasetSource[2].push(item.beanWindTempOne === null ? '' : item.beanWindTempOne);
+                    datasetSource[3].push(item.beanWindTempTwo === null ? '' : item.beanWindTempTwo);
+                    datasetSource[4].push(item.mixtureTempOne === null ? '' : item.mixtureTempOne);
+                    datasetSource[5].push(item.mixtureTempTwo === null ? '' : item.mixtureTempTwo);
+                    series.push({
+                        type: 'bar',
+                        barWidth: 30,
+                        itemStyle: {
+                            normal: {
+                                color: this.colorList[i],
+                                barBorderRadius: 15,
+                                label: {
+                                    show: true, //是否展示
+                                    textStyle: {
+                                        fontWeight: 'bolder',
+                                        fontSize: '12',
+                                        fontFamily: '微软雅黑'
+                                    }
+                                }
+                            }
+                        }
+                    })
+                    i++;
                 })
                 this.chartLine = echarts.init(document.getElementById('J_chartLineBoxMixedIntoMaterial'));
                 const optionMixedIntoMaterial = {
@@ -510,44 +536,7 @@
                     },
                     xAxis: { type: 'category' },
                     yAxis: {},
-                    series: [
-                        {
-                            type: 'bar',
-                            barWidth: 30,
-                            itemStyle: {
-                                normal: {
-                                    color: '#6C9AFC',
-                                    barBorderRadius: 15,
-                                    label: {
-                                        show: true, //是否展示
-                                        textStyle: {
-                                            fontWeight: 'bolder',
-                                            fontSize: '12',
-                                            fontFamily: '微软雅黑'
-                                        }
-                                    }
-                                }
-                            }
-                        },
-                        {
-                            type: 'bar',
-                            barWidth: 30,
-                            itemStyle: {
-                                normal: {
-                                    color: '#EA6B5B',
-                                    barBorderRadius: 15,
-                                    label: {
-                                        show: true, //是否展示
-                                        textStyle: {
-                                            fontWeight: 'bolder',
-                                            fontSize: '12',
-                                            fontFamily: '微软雅黑'
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    ]
+                    series: series
                 };
                 this.chartLine.setOption(optionMixedIntoMaterial);
                 window.addEventListener('resize', () => {
@@ -794,6 +783,7 @@
                     } else if (item.exceptionSituation === 'ENERGY') {
                         excReasonList = this.excReasonTotal.ENERGY
                     }
+                    console.log(excReasonList);
                     const exceptionReasonSole = excReasonList.find((it: Dictionary) => it.dictCode === item.exceptionReason);
                     if (exceptionReasonSole) {
                         item.exceptionReasonName = exceptionReasonSole['dictValue'];
@@ -989,6 +979,8 @@
                     this.excReasonTotal.POORPROCESSWAIT = data.data
                 } else if (dictType === 'ENERGY') {
                     this.excReasonTotal.ENERGY = data.data
+                } else if (dictType === 'WAIT') {
+                    this.excReasonTotal.POORPROCESSWAIT = data.data
                 }
                 if (resolve) {
                     resolve('resolve');

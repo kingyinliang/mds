@@ -495,6 +495,7 @@
                                     v-if="scope.row.turnMans&&scope.row.turnMans!==''"
                                     v-model="scope.row.turnMans"
                                     placeholder="请输入翻曲人"
+                                    size="small"
                                     style="width: 200px;"
                                     :disabled="!(isRedact && scope.row.status !== 'C' && scope.row.status !== 'D' && scope.row.status !== 'P')"
                                 />
