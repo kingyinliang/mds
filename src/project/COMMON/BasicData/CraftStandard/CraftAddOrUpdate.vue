@@ -25,7 +25,9 @@
                 <el-date-picker v-model="dataForm.endDate" type="date" style="width: 220px;" value-format="yyyy-MM-dd" clearable />
             </el-form-item>
             <el-form-item label="备注：">
-                <el-input v-model.trim="dataForm.remark" style="width: 220px;" clearable />
+                <el-tooltip :disabled="dataForm.remark === ''" effect="dark" :content="dataForm.remark" placement="top">
+                    <el-input v-model.trim="dataForm.remark" style="width: 220px;" clearable />
+                </el-tooltip>
             </el-form-item>
             <el-form-item label="操作人：">
                 {{ dataForm.changer }}

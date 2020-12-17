@@ -19,10 +19,10 @@
                 <el-input v-model="dataForm.stockAmount" placeholder="NA" disabled />
             </el-form-item>
             <el-form-item label="领用数量：" prop="amount">
-                <el-input v-model.number="dataForm.amount" placeholder="手动输入" @input="calcStockAmount" />
+                <el-input v-model.number="dataForm.amount" placeholder="请输入" @input="calcStockAmount" />
             </el-form-item>
             <el-form-item label="小豆数量：" prop="smallBeanAmount">
-                <el-input v-model.number="dataForm.smallBeanAmount" placeholder="手动输入" />
+                <el-input v-model.number="dataForm.smallBeanAmount" placeholder="请输入" />
             </el-form-item>
             <el-form-item label="单位：">
                 <el-input v-model="dataForm.unit" placeholder="NA" disabled />
@@ -31,7 +31,9 @@
                 <el-input v-model="dataForm.supplier" placeholder="NA" disabled />
             </el-form-item>
             <el-form-item label="备注：" prop="remark">
-                <el-input v-model="dataForm.remark" placeholder="手动输入" />
+                <el-tooltip :disabled="scope.row.remark === ''" effect="dark" :content="scope.row.remark" placement="top">
+                    <el-input v-model="dataForm.remark" placeholder="请输入" />
+                </el-tooltip>
             </el-form-item>
             <el-form-item label="操作人：">
                 <el-input v-model="dataForm.changer" placeholder="NA" disabled />
@@ -139,7 +141,7 @@
                 orderNo: this.formHeader.orderNo,
                 kojiOrderNo: this.formHeader.kojiOrderNo,
                 smallBeanAmount: Data.smallBeanAmount,
-                unit: 'KG',
+                unit: '千克',
                 remark: Data.remark,
                 changer: getUserNameNumber(),
                 changed: dateFormat(new Date(), 'yyyy-MM-dd hh:mm:ss')

@@ -80,7 +80,9 @@
                 </el-table-column>
                 <el-table-column label="备注" width="170">
                     <template slot-scope="scope">
-                        <el-input v-model.trim="scope.row.remark" size="small" placeholder="请输入" :disabled="!isRedact" />
+                        <el-tooltip :disabled="scope.row.remark === ''" effect="dark" :content="scope.row.remark" placement="top">
+                            <el-input v-model.trim="scope.row.remark" size="small" placeholder="请输入" :disabled="!isRedact" />
+                        </el-tooltip>
                     </template>
                 </el-table-column>
                 <el-table-column label="操作人" width="140">
@@ -206,7 +208,9 @@
                 </el-table-column>
                 <el-table-column label="备注" width="170">
                     <template slot-scope="scope">
-                        <el-input v-model.trim="scope.row.remark" size="small" placeholder="请输入" :disabled="!isRedact" />
+                        <el-tooltip :disabled="scope.row.remark === ''" effect="dark" :content="scope.row.remark" placement="top">
+                            <el-input v-model.trim="scope.row.remark" size="small" placeholder="请输入" :disabled="!isRedact" />
+                        </el-tooltip>
                     </template>
                 </el-table-column>
                 <el-table-column label="操作人" width="140">
@@ -526,7 +530,7 @@
 
         // 查询最新审核记录
         getAuditList(orderNo) {
-            AUDIT_API.AUDIT_LOG_LIST_API({ orderNo, verifyType: '' }).then(({ data }) => {
+            AUDIT_API.AUDIT_LOG_LIST_API({ orderNo, verifyType: 'INSTORAGE' }).then(({ data }) => {
                 this.craftAuditList = data.data;
             });
         }

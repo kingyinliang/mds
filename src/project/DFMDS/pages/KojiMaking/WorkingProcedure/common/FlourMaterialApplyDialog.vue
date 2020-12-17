@@ -39,7 +39,9 @@
                     <el-input v-model.number="dataForm.impurityAmount" placeholder="手动输入" />
                 </el-form-item>
                 <el-form-item label="备注：" prop="remark">
-                    <el-input v-model="dataForm.remark" placeholder="手动输入" />
+                    <el-tooltip :disabled="scope.row.remark === ''" effect="dark" :content="scope.row.remark" placement="top">
+                        <el-input v-model="dataForm.remark" placeholder="手动输入" />
+                    </el-tooltip>
                 </el-form-item>
                 <el-form-item label="操作人：">
                     <el-input v-model="dataForm.changer" placeholder="NA" disabled />
