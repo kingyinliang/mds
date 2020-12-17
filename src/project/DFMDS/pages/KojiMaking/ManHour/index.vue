@@ -20,7 +20,7 @@
                                 span(class="notNull") *
                                 span 生产工序：
                             el-select(v-model="formHeader.productProcess" placeholder="请选择" style="width: 180px;")
-                                el-option(v-for="(item, index) in productProcessList" :key="index" :label="item.productProcessName" :value="item.productProcess")
+                                el-option(v-for="(item, index) in productProcessList" :key="index" :label="item.deptName" :value="item.deptCode")
                         el-form-item(label="提交人员：")
                             p(class="input_border_bg" style="width: 180px;") {{ formHeader.changer }}
                         el-form-item(label="提交时间：")
@@ -47,6 +47,7 @@ import { COMMON_API, KOJI_API } from 'common/api/api';
 import { dateFormat } from 'utils/utils';
 import ReadyTime from 'components/ReadyTimes.vue';
 import OfficialWorker from 'components/OfficialWorker.vue';
+import WorkHour from '../common/WorkHour.vue';
 import LoanedPersonnel from 'components/LoanedPersonnel.vue';
 import TemporaryWorker from 'components/TemporaryWorker.vue';
 import RedactBox from 'components/RedactBox.vue' // 下方状态 bar
@@ -57,7 +58,8 @@ import RedactBox from 'components/RedactBox.vue' // 下方状态 bar
         OfficialWorker,
         LoanedPersonnel,
         TemporaryWorker,
-        RedactBox
+        RedactBox,
+        WorkHour
     }
 })
 export default class KojiManHour extends Vue {
@@ -125,6 +127,12 @@ export default class KojiManHour extends Vue {
 
         // this.$refs.readyTime.changeList({});
         // this.$refs.workHour.changeList({});
+        console.log('formHeader.productProcess改变了')
+        console.log(this.formHeader.productProcess)
+        if (this.formHeader.productProcess !== '') {
+            this.$refs.workHour.getTeamList(this.formHeader.productProcess);
+        }
+
     }
 
     changeIsRedact() {
@@ -151,8 +159,9 @@ export default class KojiManHour extends Vue {
     // 获取工序
     getProductProcess() {
         this.formHeader.productProcess = ''
-        KOJI_API.WORKPROCEDURE_QUERY_NOPAGE_API({
-            workShop: this.formHeader.workShop
+        COMMON_API.ORG_QUERY_CHILDREN_API({
+            parentId: this.formHeader.workShop,
+            deptType: 'PROCESS'
         }).then(({ data }) => {
             console.log('11111111data')
             console.log(data)
