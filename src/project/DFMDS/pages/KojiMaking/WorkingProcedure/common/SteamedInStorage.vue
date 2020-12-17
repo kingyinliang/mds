@@ -31,7 +31,9 @@
                 </el-table-column>
                 <el-table-column label="备注">
                     <template slot-scope="scope">
-                        <el-input v-model.trim="scope.row.remark" size="small" placeholder="请输入" :disabled="!isRedact" />
+                        <el-tooltip :disabled="scope.row.remark === ''" effect="dark" :content="scope.row.remark" placement="top">
+                            <el-input v-model.trim="scope.row.remark" size="small" placeholder="请输入" :disabled="!isRedact" />
+                        </el-tooltip>
                     </template>
                 </el-table-column>
                 <el-table-column label="操作人" width="140">
