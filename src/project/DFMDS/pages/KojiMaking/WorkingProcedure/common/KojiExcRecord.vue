@@ -68,7 +68,7 @@
                     </el-tooltip>
                 </template>
             </el-table-column>
-            <el-table-column label="备注" min-width="100">
+            <el-table-column label="备注" min-width="200">
                 <template slot-scope="scope">
                     <el-tooltip class="item" effect="dark" :disabled="scope.row.remark===''" :content="scope.row.remark" placement="top-start">
                         <el-input v-model.trim="scope.row.remark" size="small" placeholder="请输入" :disabled="!isRedact" />
@@ -198,6 +198,7 @@
                     } else if (item.exceptionSituation === 'ENERGY') {
                         item.excReasonList = this.excReasonTotal.ENERGY;
                     }
+                    item.delFlag = 0;
                 });
                 this.excListOrg = JSON.parse(JSON.stringify(this.excList));
             });
@@ -257,7 +258,7 @@
                 item.orderId = formHeader.orderId;
                 item.orderNo = formHeader.orderNo;
                 item.potOrderId = formHeader.id;
-                item.potOrderNo = formHeader.potOrderNo;
+                item.potOrderNo = formHeader.potOrderNo || '';
             });
             this.excList.forEach((item, index) => {
                 if (item.delFlag === 1) {
