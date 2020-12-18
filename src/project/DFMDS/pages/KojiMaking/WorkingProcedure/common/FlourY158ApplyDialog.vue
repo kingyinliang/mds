@@ -32,7 +32,7 @@
                     </el-tooltip>
                 </el-form-item>
                 <el-form-item label="备注：" prop="remark">
-                    <el-tooltip :disabled="scope.row.remark === ''" effect="dark" :content="scope.row.remark" placement="top">
+                    <el-tooltip :disabled="!dataForm.remark" effect="dark" :content="dataForm.remark" placement="top">
                         <el-input v-model="dataForm.remark" placeholder="请输入" />
                     </el-tooltip>
                 </el-form-item>
@@ -223,6 +223,7 @@
                     this.dataForm.stockAmount = item.currentAmount;
                     this.STOCK_AMOUNT = Number(item.currentAmount);
                     this.dataForm.amount = '';
+                    this.dataForm.storageId = item.id;
                 }
             })
         }
@@ -266,6 +267,7 @@
     }
 
     interface BatchList {
+        id?: string;
         batch?: string;
         materialName?: string;
         materialCode?: string;
@@ -297,6 +299,7 @@
         operationMans?: string;
         wareHouseNo?: string;
         workShop?: string;
+        storageId?: string;
     }
 </script>
 <style lang="scss" scoped>
