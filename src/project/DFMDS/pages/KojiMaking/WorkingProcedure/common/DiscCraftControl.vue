@@ -406,7 +406,7 @@
                 </el-table-column>
                 <el-table-column label="备注" :show-overflow-tooltip="true" min-width="200">
                     <template slot-scope="scope">
-                        <el-tooltip :disabled="scope.row.remark === ''" effect="dark" :content="scope.row.remark" placement="top">
+                        <el-tooltip :disabled="!scope.row.remark" effect="dark" :content="scope.row.remark" placement="top">
                             <el-input v-model.trim="scope.row.remark" size="small" placeholder="请输入" :disabled="!(isRedact && scope.row.status !== 'C' && scope.row.status !== 'D' && scope.row.status !== 'P')" />
                         </el-tooltip>
                     </template>
@@ -508,7 +508,7 @@
                 </el-table-column>
                 <el-table-column label="备注" prop="remark" min-width="200">
                     <template slot-scope="scope">
-                        <el-tooltip :disabled="scope.row.remark === ''" effect="dark" :content="scope.row.remark" placement="top">
+                        <el-tooltip :disabled="!scope.row.remark" effect="dark" :content="scope.row.remark" placement="top">
                             <el-input v-model="scope.row.remark" :disabled="!(isRedact && scope.row.status !== 'C' && scope.row.status !== 'D' && scope.row.status !== 'P')" size="small" placeholder="请输入" />
                         </el-tooltip>
                     </template>
@@ -615,7 +615,7 @@
                     </el-table-column>
                     <el-table-column label="备注" :show-overflow-tooltip="true" min-width="200">
                         <template slot-scope="scope">
-                            <el-tooltip :disabled="scope.row.remark === ''" effect="dark" :content="scope.row.remark" placement="top">
+                            <el-tooltip :disabled="!scope.row.remark" effect="dark" :content="scope.row.remark" placement="top">
                                 <el-input v-model.trim="scope.row.remark" size="small" placeholder="请输入" :disabled="!(isRedact && scope.row.status !== 'C' && scope.row.status !== 'D' && scope.row.status !== 'P')" />
                             </el-tooltip>
                         </template>

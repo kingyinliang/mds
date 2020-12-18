@@ -88,7 +88,8 @@
             adjustInfo: '',
             stockType: '',
             moveUnit: '',
-            id: ''
+            id: '',
+            storageId: ''
         };
 
         // 表单 data Rule
@@ -115,7 +116,8 @@
                 moveAmount: '',
                 adjustInfo: '',
                 stockType: this.stockType,
-                id: rowData.id
+                id: rowData.id,
+                storageId: rowData.id
             };
         }
 
@@ -166,6 +168,7 @@
         stockType?: string;
         id: number|string;
         moveUnit?: string;
+        storageId?: string;
     }
 </script>
 

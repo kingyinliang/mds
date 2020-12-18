@@ -98,7 +98,7 @@
                 </el-table-column>
                 <el-table-column prop="verify_date" min-width="140" label="备注" :show-overflow-tooltip="true">
                     <template slot-scope="scope">
-                        <el-tooltip :disabled="scope.row.remark === ''" effect="dark" :content="scope.row.remark" placement="top">
+                        <el-tooltip :disabled="!scope.row.remark" effect="dark" :content="scope.row.remark" placement="top">
                             <el-input v-model="scope.row.remark" size="small" :disabled="!(isRedact && status !== 'C' && status !== 'D' && status !== 'P' && status !=='M')" />
                         </el-tooltip>
                     </template>

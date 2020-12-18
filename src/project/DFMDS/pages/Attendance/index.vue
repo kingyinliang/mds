@@ -158,7 +158,7 @@
                     </el-table-column>
                     <el-table-column prop="remark" min-width="200" label="备注" :show-overflow-tooltip="true">
                         <template slot-scope="scope">
-                            <el-tooltip :disabled="scope.row.remark === ''" effect="dark" :content="scope.row.remark" placement="top">
+                            <el-tooltip :disabled="!scope.row.remark" effect="dark" :content="scope.row.remark" placement="top">
                                 <el-input v-model="scope.row.remark" size="small" :disabled="!scope.row.isRedact" />
                             </el-tooltip>
                         </template>

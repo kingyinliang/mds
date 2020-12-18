@@ -31,7 +31,7 @@
                 <el-input v-model="dataForm.supplier" placeholder="NA" disabled />
             </el-form-item>
             <el-form-item label="备注：" prop="remark">
-                <el-tooltip :disabled="scope.row.remark === ''" effect="dark" :content="scope.row.remark" placement="top">
+                <el-tooltip :disabled="!dataForm.remark" effect="dark" :content="dataForm.remark" placement="top">
                     <el-input v-model="dataForm.remark" placeholder="请输入" />
                 </el-tooltip>
             </el-form-item>
@@ -96,13 +96,16 @@
             this.visible = true;
             let Data: DataForm = {};
 
+            let storageId = '';
             if (type === 'add') {
                 this.batchList = infoData.detailsList || [];
                 Data = {
                     ...infoData,
                     ...infoData.detailsList[0]
                 }
+                storageId = infoData.detailsList[0].id;
             } else {
+                storageId = infoData.storageId;
                 // 查询
                 await KOJI_API.KOJI_STORAGE_BEAN_DROPDOWN_API({
                     workShop: formHeader.workShop,
@@ -144,7 +147,8 @@
                 unit: '千克',
                 remark: Data.remark,
                 changer: getUserNameNumber(),
-                changed: dateFormat(new Date(), 'yyyy-MM-dd hh:mm:ss')
+                changed: dateFormat(new Date(), 'yyyy-MM-dd hh:mm:ss'),
+                storageId: storageId
             }
         }
 
@@ -166,6 +170,7 @@
                     this.STOCK_AMOUNT = Number(item.stockAmount) || Number(item.currentAmount);
                     this.dataForm.amount = '';
                     this.dataForm.supplier = item.supplier;
+                    this.dataForm.storageId = item.id;
                 }
             })
         }
@@ -208,6 +213,7 @@
     }
 
     interface BatchList {
+        id?: string;
         batch?: string;
         materialName?: string;
         materialCode?: string;
@@ -238,6 +244,7 @@
         currentAmount?: string;
         wareHouseNo?: string;
         materialHL?: string;
+        storageId?: string;
     }
 
 </script>

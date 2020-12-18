@@ -39,7 +39,7 @@
                     <el-input v-model.number="dataForm.impurityAmount" placeholder="手动输入" />
                 </el-form-item>
                 <el-form-item label="备注：" prop="remark">
-                    <el-tooltip :disabled="scope.row.remark === ''" effect="dark" :content="scope.row.remark" placement="top">
+                    <el-tooltip :disabled="!dataForm.remark" effect="dark" :content="dataForm.remark" placement="top">
                         <el-input v-model="dataForm.remark" placeholder="手动输入" />
                     </el-tooltip>
                 </el-form-item>
@@ -121,6 +121,7 @@
             let Data: DataForm = {};
             console.log('infoData')
             console.log(infoData)
+            let storageId = '';
             if (type === 'add') {
                 this.batchList = infoData.detailsList || [];
                 Data = {
@@ -129,7 +130,9 @@
                     operationMans: Data.operationMans || ''
                 };
                 this.STOCK_AMOUNT = Data.stockAmount || Data.currentAmount ? Number(Data.stockAmount) || Number(Data.currentAmount) : 0;
+                storageId = infoData.detailsList[0].id;
             } else {
+                storageId = infoData.storageId;
                 // 查询
                 await KOJI_API.KOJI_STORAGE_WHEAT_DROPDOWN_API({
                     workShop: formHeader.workShop,
@@ -149,6 +152,8 @@
                     };
                 });
             }
+
+            console.log(Data, '==============')
 
             this.dataForm = {
                 id: Data.id,
@@ -172,7 +177,8 @@
                 changed: dateFormat(new Date(), 'yyyy-MM-dd hh:mm:ss'),
                 orderNo: this.formHeader.orderNo,
                 kojiOrderNo: this.formHeader.kojiOrderNo,
-                workShop: this.formHeader.workShop
+                workShop: this.formHeader.workShop,
+                storageId: storageId
             };
         }
 
@@ -194,6 +200,7 @@
                     this.dataForm.stockAmount = item.currentAmount
                     this.dataForm.supplier = item.supplier;
                     this.STOCK_AMOUNT = Number(item.currentAmount);
+                    this.dataForm.storageId = item.id;
                     this.calcStockAmount();
                 }
             });
@@ -270,6 +277,7 @@
     }
 
     interface BatchList {
+        id?: string;
         batch?: string;
         materialName?: string;
         materialCode?: string;
@@ -303,6 +311,7 @@
         wareHouseNo?: string;
         materialHL?: string;
         workShop?: string;
+        storageId?: string;
     }
 </script>
 <style lang="scss" scoped>
