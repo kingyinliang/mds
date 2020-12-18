@@ -113,12 +113,12 @@
                         </el-table-column>
                         <el-table-column label="入库日期" prop="materialUnit" min-width="100" :show-overflow-tooltip="true">
                             <template slot-scope="scope">
-                                {{ scope.row.ferInStorage.changed }}
+                                {{ scope.row.ferInStorageList > 0? scope.row.ferInStorageList[0].changed : '' }}
                             </template>
                         </el-table-column>
                         <el-table-column label="批次" prop="materialUnit" min-width="100" :show-overflow-tooltip="true">
                             <template slot-scope="scope">
-                                {{ scope.row.ferInStorage.inStorageBatch }}
+                                {{ scope.row.ferInStorageList > 0? scope.row.ferInStorageList[0].inStorageBatch : '' }}
                             </template>
                         </el-table-column>
                     </el-table>
@@ -172,23 +172,21 @@
                 <el-table :data="sauce" :row-class-name="rowDelFlag" header-row-class-name="tableHead" class="newTable" border tooltip-effect="dark">
                     <el-table-column label="容器号" prop="openFlagName" min-width="150" :show-overflow-tooltip="true">
                         <template slot-scope="scope">
-                            <el-select v-model="scope.row.fermentorNo" :disabled="!isRedact" placeholder="请选择" size="small" filterable clearable @change="getOpenPotList">
+                            <el-select v-model="scope.row.fermentorNo" :disabled="!isRedact" placeholder="请选择" size="small" filterable clearable @change="fermentorNoChange(scope.row)">
                                 <el-option v-for="(item, index) in holderArr" :key="index" :label="item.holderName" :value="item.holderId" />
                             </el-select>
                         </template>
                     </el-table-column>
                     <el-table-column label="添加物料" prop="addMaterialCode" min-width="150" :show-overflow-tooltip="true">
                         <template slot-scope="scope">
-                            <el-select v-model="scope.row.addMaterialCode" :disabled="!isRedact" placeholder="请选择" size="small" filterable clearable @change="getOpenPotList">
-                                <el-option v-for="(item, index) in material" :key="index" :label="item.materialName+' ' + item.materialCode" :value="item.materialCode" />
+                            <el-select v-model="scope.row.addMaterialCode" :disabled="!isRedact" placeholder="请选择" size="small" filterable clearable>
+                                <el-option v-for="(item, index) in scope.row.addMaterialArr" :key="index" :label="item.materialName+' ' + item.materialCode" :value="item.materialCode" />
                             </el-select>
                         </template>
                     </el-table-column>
                     <el-table-column label="单位" prop="openFlagName" min-width="50" :show-overflow-tooltip="true">
                         <template slot-scope="scope">
-                            <el-select v-model="scope.row.unit" :disabled="!isRedact" placeholder="请选择" size="small" filterable clearable @change="getOpenPotList">
-                                <el-option v-for="(item, index) in material" :key="index" :label="item.materialName+' ' + item.materialCode" :value="item.materialCode" />
-                            </el-select>
+                            {{ scope.row.unit }}}
                         </template>
                     </el-table-column>
                     <el-table-column label="库存数量" prop="stockAmount" min-width="100" :show-overflow-tooltip="true" />
@@ -267,7 +265,7 @@
 
         deployMaterial: ListObj[] = []
         sauce: ListObj[] = []
-        holderArr = []
+        holderArr: PotObj[] = []
 
         mounted() {
             this.init()
@@ -275,6 +273,7 @@
 
         filterData(data) {
             let tmp = data
+            // 添加排序
             if (this.searchForm.workShop) {
                 tmp = tmp.filter(item => item.workShop === this.searchForm.workShop)
             }
@@ -455,6 +454,13 @@
             })
         }
 
+        // 超期酱修改容器号
+        fermentorNoChange(row) {
+            const filterArr: (any) = this.holderArr.filter(item => item.holderId === row.fermentorNo)// eslint-disable-line
+            row.addMaterialCode = ''
+            row.addMaterialArr = filterArr[0].ferInStorageList
+        }
+
         // 删除
         del(row) {
             this.$confirm('是否删除?', '提示', {
@@ -591,6 +597,7 @@
     }
     interface PotObj{
         id?: string;
+        holderId?: string;
         openPotNo?: string;
         fermentorId?: string;
         mixSauceNo?: string;
