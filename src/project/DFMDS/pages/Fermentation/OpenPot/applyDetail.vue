@@ -39,7 +39,7 @@
                             <el-input v-model="formHeader.applyAmount" :disabled="!isRedact" placeholder="手动输入" style="width: 120px;" />
                         </el-form-item>
                         <el-form-item label="调酱容器：">
-                            <el-select v-model="formHeader.mixPotNo" :disabled="!isRedact" placeholder="请选择" style="width: 120px;" clearable @change="potChange">
+                            <el-select v-model="formHeader.mixPotNo" :disabled="!isRedact" placeholder="请选择" style="width: 120px;" clearable filterable @change="potChange">
                                 <el-option v-for="(item, index) in potArr" :key="index" :label="item.holderName" :value="item.holderNo" />
                             </el-select>
                         </el-form-item>
