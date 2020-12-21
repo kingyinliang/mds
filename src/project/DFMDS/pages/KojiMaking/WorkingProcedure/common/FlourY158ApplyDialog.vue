@@ -114,6 +114,7 @@
                 this.workShopList = data.data;
                 if (data.data.length !== 0 && type === 'add') {
                     this.dataForm.materialLocation = data.data[0]['materialLocation'];
+                    this.dataForm.unit = data.data[0]['unitName'];
                 }
                 // 默认选中第一个选项 库位详细信息查询
                 this.checkShopDetail()
@@ -189,7 +190,7 @@
                 amount: Data.amount,
                 operationMans: Data.operationMans || '',
                 stockAmount: Data.stockAmount || Data.currentAmount,
-                unit: '盒',
+                unit: Data.unitName,
                 remark: Data.remark,
                 changer: getUserNameNumber(),
                 changed: dateFormat(new Date(), 'yyyy-MM-dd hh:mm:ss'),
@@ -291,6 +292,7 @@
         kojiOrderNo?: string;
         smallBeanAmount?: string;
         unit?: string;
+        unitName?: string;
         remark?: string;
         changer?: string;
         changed?: string;

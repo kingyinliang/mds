@@ -119,8 +119,6 @@
             this.type = type;
             this.visible = true;
             let Data: DataForm = {};
-            console.log('infoData')
-            console.log(infoData)
             let storageId = '';
             if (type === 'add') {
                 this.batchList = infoData.detailsList || [];
@@ -171,7 +169,7 @@
                 supplier: Data.supplier,
                 stockAmount: Data.stockAmount || Data.currentAmount,
                 operationMans: Data.operationMans || '',
-                unit: Data.unit,
+                unit: Data.unitName,
                 remark: Data.remark,
                 changer: getUserNameNumber(),
                 changed: dateFormat(new Date(), 'yyyy-MM-dd hh:mm:ss'),
@@ -302,6 +300,7 @@
         kojiOrderNo?: string;
         smallBeanAmount?: string;
         unit?: string;
+        unitName?: string;
         remark?: string;
         changer?: string;
         changed?: string;

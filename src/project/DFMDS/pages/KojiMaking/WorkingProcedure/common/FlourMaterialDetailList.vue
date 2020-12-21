@@ -35,7 +35,7 @@
                     <el-table-column label="批次" prop="batch" align="center" min-width="100" />
                     <el-table-column label="数量" :show-overflow-tooltip="true" prop="currentAmount" width="100" align="right">
                         <template slot-scope="scope">
-                            {{ scope.row.currentAmount ? scope.row.currentAmount.toLocaleString()+' '+ scope.row.unit : '' }}
+                            {{ scope.row.currentAmount ? scope.row.currentAmount.toLocaleString()+' '+ scope.row.unitName : '' }}
                         </template>
                     </el-table-column>
                     <el-table-column label="生产日期" prop="productDate" align="center" :formatter="formatterProductDate" min-width="100" />
