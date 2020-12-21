@@ -3,7 +3,7 @@
  * @Anthor: Telliex
  * @Date: 2020-08-03 18:13:58
  * @LastEditors: Telliex
- * @LastEditTime: 2020-11-25 18:40:28
+ * @LastEditTime: 2020-12-21 10:57:40
 -->
 <template lang="pug">
     el-dialog(:title="title" :width="width" :close-on-click-modal="false" :visible.sync="isShowCurrentDialog")
@@ -11,8 +11,9 @@
             el-form-item(label="生产订单：")
                 span(class="default") {{ dialogForm.orderNo }}
             el-form-item(label="正常入库：")
-                el-radio(v-model="dialogForm.normalFlag" label="Y") 是
-                el-radio(v-model="dialogForm.normalFlag" label="N") 否
+                el-radio(v-model="dialogForm.normalFlag" label="Y") 包装领用
+                el-radio(v-model="dialogForm.normalFlag" label="N") 其他领用
+                el-radio(v-model="dialogForm.normalFlag" label="E") 异常
             el-form-item(label="包装产线：" prop="packageLine")
                 el-select(v-model="dialogForm.packageLine" placeholder="请选择" clearable @change="selectPackageLine")
                     el-option(v-for="(item, index) in pkgWorkShopList" :key="index" :label="item.targetName" :value="item.targetCode" )
