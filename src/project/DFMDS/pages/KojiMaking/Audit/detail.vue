@@ -238,22 +238,22 @@
         tabs = [
             {
                 label: '准备人工',
-                status: '未录入1',
+                status: '未录入',
                 isRedact: false
             },
             {
                 label: '机器工时',
-                status: '未录入1',
+                status: '未录入',
                 isRedact: false
             },
             {
                 label: '生产入库',
-                status: '未录入1',
+                status: '未录入',
                 isRedact: false
             },
             {
                 label: '物料领用',
-                status: '未录入1',
+                status: '未录入',
                 isRedact: false
             },
             {
@@ -272,6 +272,7 @@
         rejectText = '';
         rejectProcess='';
         rejectKojiHouseId='';
+        rejectMaterialStyleName=''; // 物料领用使用
 
         kojiHouseNoOptions: OptionObj[]=[]; // 曲房下拉
         manHourList: ManHourList[] = [];
@@ -295,14 +296,13 @@
             await this.getKojiHolder()
             await this.getProcessMapping()
 
-            // 5个 tab 加载
+            // 5 个 tab 加载
             this.getManHourList()
             this.getMachineHourList()
             this.getInStorageList()
             this.getMeterialList()
             this.getCraftList()
         }
-
 
         // 工艺列表 tab 工序详情
         goProcessDetail(item) {
@@ -313,13 +313,7 @@
 
         // 跳转工序页面
         goDetail(who, arg) {
-            console.log(who)
-            console.log(arg)
             let url = '';
-            // 曲房工序跳转
-            // if (this.isNormalPage) {
-                // this.$store.commit('koji/updateOrderKojiInfo', item);
-
                 switch (who) {
                     case 'XD':
                         url = 'DFMDS-pages-KojiMaking-WorkingProcedure-WashBean';
@@ -330,12 +324,6 @@
                     case 'YP':
                         url = 'DFMDS-pages-KojiMaking-WorkingProcedure-disc';
                         break;
-                    // default:
-                // }
-
-            // } else { // 蒸豆工序跳转
-                // this.$store.commit('koji/updateOrderScInfo', item);
-                // switch (who) {
                     case 'SC':
                         url = 'DFMDS-pages-KojiMaking-WorkingProcedure-SCWashBean';
                         break;
@@ -344,8 +332,6 @@
                         break;
                     default:
                 }
-
-            // }
 
             console.log(`url:${url}`)
 
@@ -359,7 +345,6 @@
                     name: url, params: { order: arg }
                 });
             }, 100);
-
         }
 
         get inStorageComputed() {
@@ -480,12 +465,6 @@
         }
 
         reject(who, item) {
-            // if (this.$refs.dataEntry.activeName === '6' || this.$refs.dataEntry.activeName === '7') {
-            //     return false
-            // }
-            // if (this.tabs[Number(this.$refs.dataEntry.activeName) - 1].status !== 'D') {
-            //     return false
-            // }
             this.visibleRefuse = true;
             this.rejectText = '';
             switch (who) {
@@ -501,24 +480,17 @@
                 break;
                 case '4':
                     this.rejectKojiHouseId = this.kojiHouseNoOptions.filter(element => element.optValue === item.kojiHouseNo)[0].optId
+                    this.rejectMaterialStyleName = item.materialTypeName
                 break;
                 default:
             }
         }
 
         auditLog() {
-
             AUDIT_API.AUDIT_LOG_LIST_API({ orderNo: this.currentOrderNo, verifyType: '' }).then(({ data }) => {
                     this.auditLogData = data.data
                     this.visibleAuditLog = true
             })
-            // AUDIT_API.AUDIT_DIALOG_LOG_LIST_API({
-            //     verifyId: row.id,
-            //     verifyType: 'TIMESHEET'
-            // }).then(({ data }) => {
-            //     this.auditLogData = data.data
-            //     this.visibleAuditLog = true
-            // })
         }
 
         // 获取曲房下拉选项
@@ -542,7 +514,6 @@
                 data.data.forEach(item => {
                     this.$set(this.processMapping, item.dictValue, item.dictCode)
                 })
-
             });
         }
 
@@ -597,6 +568,7 @@
                     KOJI_API.KOJI_REFUSE_MATERIAL_API({
                         kojiHouseId: this.rejectKojiHouseId,
                         orderNo: this.formHeader.orderNo,
+                        materialType: this.rejectMaterialStyleName,
                         productDate: this.formHeader.productDate,
                         refuseSeason: this.rejectText
                     }).then(() => {
@@ -624,6 +596,7 @@
         id?: string;
         materialCode?: string;
         materialName?: string;
+        materialTypeName?: string;
         operator?: string;
         operatorDate?: string;
         orderEndDate?: string;

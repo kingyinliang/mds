@@ -158,21 +158,11 @@
                     this.isDialogShow = true;
                 }
 
-                // COMMON_API.DICTQUERY_API({
-                //     dictType: 'COMMON_MATERIAL_TYPE'
-                // }).then(({ data }) => {
-                //     console.log('2222222')
-                //     console.log(data)
-                //     this.materialList = data.data
-                // });
-
                 COMMON_API.SEARCH_MATERIAL_API({ // /sysMaterial/queryListByType
                     factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
                     materialType: 'ZHAL'
                 }).then(({ data }) => {
                     this.materialList = data.data
-                    console.log('77777')
-                    console.log(data)
                 });
 
 

@@ -20,7 +20,7 @@
                                 span(class="notNull") *
                                 span 生产工序：
                             el-select(v-model="formHeader.productProcess" placeholder="请选择" style="width: 180px;")
-                                el-option(v-for="(item, index) in productProcessList" :key="index" :label="item.deptName" :value="item.deptCode")
+                                el-option(v-for="(item, index) in productProcessList" :key="index" :label="item.deptName" :value="item.id")
                         el-form-item(label="提交人员：")
                             p(class="input_border_bg" style="width: 180px;") {{ formHeader.changer }}
                         el-form-item(label="提交时间：")
@@ -45,7 +45,7 @@ import { Vue, Component, Watch } from 'vue-property-decorator';
 // import { COMMON_API, AUDIT_API, KOJI_API } from 'common/api/api';
 import { COMMON_API, KOJI_API } from 'common/api/api';
 import { dateFormat } from 'utils/utils';
-import ReadyTime from 'components/ReadyTimes.vue';
+import ReadyTime from '../common/ReadyTimes.vue';
 import OfficialWorker from 'components/OfficialWorker.vue';
 import WorkHour from '../common/WorkHour.vue';
 import LoanedPersonnel from 'components/LoanedPersonnel.vue';
@@ -105,6 +105,9 @@ export default class KojiManHour extends Vue {
     @Watch('formHeader.workShop')
     watchWorkShop() {
         this.getProductProcess()
+        this.isRedact = false;
+        // this.$refs.readyTime.changeList(null);
+        // this.$refs.workHour.changeList([]);
     }
 
     @Watch('formHeader.productDate')
@@ -125,12 +128,13 @@ export default class KojiManHour extends Vue {
         //     this.isRedact = false;
         // }
 
-        // this.$refs.readyTime.changeList({});
-        // this.$refs.workHour.changeList({});
         console.log('formHeader.productProcess改变了')
         console.log(this.formHeader.productProcess)
         if (this.formHeader.productProcess !== '') {
             this.$refs.workHour.getTeamList(this.formHeader.productProcess);
+            this.isRedact = false;
+            // this.$refs.readyTime.changeList(null);
+            this.$refs.workHour.changeList([]);
         }
 
     }
@@ -163,7 +167,7 @@ export default class KojiManHour extends Vue {
             parentId: this.formHeader.workShop,
             deptType: 'PROCESS'
         }).then(({ data }) => {
-            console.log('11111111data')
+            console.log('获取工序')
             console.log(data)
             this.productProcessList = []
             if (data.data.length !== 0) {
@@ -178,23 +182,6 @@ export default class KojiManHour extends Vue {
             this.checkStatus = data.data
         });
     }
-
-
-    // 订单拉取
-    // getOrderList() {
-    //     this.formHeader.productProcess = '';
-    //     KOJI_API.KOJI_TIMESHEET_QUERY_API({
-    //         workShop: this.formHeader.workShop,
-    //         productDate: this.formHeader.productDate
-    //     }).then(({ data }) => {
-    //         if (data.code === 200) {
-    //             this.productProcessList = data.data;
-    //             if (this.productProcessList.length !== 0) {
-    //                 this.formHeader.productProcess = this.productProcessList[0]['productProcess'];
-    //             }
-    //         }
-    //     })
-    // }
 
     // 查询
     getList() {
@@ -223,12 +210,12 @@ export default class KojiManHour extends Vue {
                     this.$refs.readyTime.changeList(data.data.kojiTimeSheetResponseDto);
                     this.$refs.workHour.changeList(data.data.kojiUserDtos);
                 }
-
-
         })
         this.redactBoxDisable = false
+
+        // 审核日志
         // AUDIT_API.AUDIT_LOG_LIST_API({
-        //     productProcess: this.formHeader.productProcess,
+        //     orderNo: this.formHeader.productProcess,
         //     verifyType: 'TIMESHEET'
         // }).then(({ data }) => {
         //     this.manHourAudit = data.data;
@@ -262,25 +249,17 @@ export default class KojiManHour extends Vue {
             })
         }
 
-
         return new Promise((resolve) => {
                 KOJI_API.KOJI_TIMESHEET_SAVE_API({
                     kojiTimeSheetInsertDto: timeSheetRequest,
                     userInsertDtos: userRequest.userInsertDto,
                     userRemoveIds: userRequest.ids,
                     userUpdateDtos: userRequest.userUpdateDto
-                }).then(() => {
+                }).then((res) => {
                     this.getList()
-                    resolve()
+                    resolve(res)
                 })
             })
-
-        // return KOJI_API.KOJI_TIMESHEET_SAVE_API({
-        //     kojiTimeSheetInsertDto: timeSheetRequest,
-        //     userInsertDtos: userRequest.userInsertDto,
-        //     userRemoveIds: userRequest.ids,
-        //     userUpdateDtos: userRequest.userUpdateDto
-        // })
     }
 
     // 提交
@@ -329,20 +308,13 @@ export default class KojiManHour extends Vue {
                     userInsertDtos: userRequest.userInsertDto,
                     userRemoveIds: userRequest.ids,
                     userUpdateDtos: userRequest.userUpdateDto
-                }).then(() => {
+                }).then((res) => {
                     this.getList()
-                    resolve()
+                    resolve(res)
                 })
             })
 
-            // KOJI_API.KOJI_TIMESHEET_SUBMIT_API({
-            //     kojiTimeSheetInsertDto: timeSheetRequest,
-            //     userInsertDtos: userRequest.userInsertDto,
-            //     userRemoveIds: userRequest.ids,
-            //     userUpdateDtos: userRequest.userUpdateDto
-            // }).then(() => {
-            //     this.getList()
-            // })
+
         }
     }
 
