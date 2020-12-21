@@ -20,7 +20,7 @@
                         <el-table-column label="当前库存" prop="storage" width="100" :show-overflow-tooltip="true" />
                         <el-table-column width="70">
                             <template slot-scope="scope">
-                                <el-button :disabled="!(isRedact)" type="text" @click="SplitDate(scope.row, scope.$index)">
+                                <el-button :disabled="!(isRedact && scope.row.status !== '3')" type="text" @click="SplitDate(scope.row, scope.$index)">
                                     <em class="icons iconfont factory-chaifen" />拆分
                                 </el-button>
                             </template>
@@ -71,7 +71,7 @@
                         <el-table-column label="操作时间" prop="changed" width="100" :show-overflow-tooltip="true" />
                         <el-table-column label="操作" fixed="right" width="70">
                             <template slot-scope="scope">
-                                <el-button v-if="scope.row.splitFlag === 'Y'" :disabled="!(isRedact)" class="delBtn" type="text" icon="el-icon-delete" size="mini" @click="del(scope.row)">
+                                <el-button v-if="scope.row.splitFlag === 'Y'" :disabled="!(isRedact && scope.row.status !== '3')" class="delBtn" type="text" icon="el-icon-delete" size="mini" @click="del(scope.row)">
                                     删除
                                 </el-button>
                             </template>
@@ -94,7 +94,7 @@
 <script lang="ts">
     import { Vue, Component } from 'vue-property-decorator';
     import { COMMON_API, PKG_API } from 'common/api/api';
-    import { dataEntryData } from 'utils/utils';
+    import _ from 'lodash';
 
     @Component
     export default class PickingMaterialDetail extends Vue {
@@ -286,7 +286,7 @@
                 }
             })
 
-            dataEntryData(this.formHeader, this.tableData, this.OrgTableData, delIds, insertDto, updateDto, (item) => {
+            this.dataEntryData(this.formHeader, this.tableData, this.OrgTableData, delIds, insertDto, updateDto, (item) => {
                 item.productLine = this.formHeader['productLine']
             });
 
@@ -300,6 +300,47 @@
                 this.int()
             })
         }
+
+        dataEntryData(formHeader, data: DataEntryDataObj[], orgData: DataEntryDataObj[], delArr: string[], insertArr: DataEntryDataObj[], updateArr: DataEntryDataObj[], processingData?) {
+            data.forEach(item => {
+                if (item.delFlag === 1) {
+                    if (item.id) {
+                        delArr.push(item.id);
+                    }
+                } if (item.status === '1') {
+                    insertArr.push(item);
+                } else if (item.id) {
+                    const orgObj = orgData.filter(it => it.id === item.id)[0];
+                    if (orgObj) {
+                        if (!_.isEqual(orgObj, item)) {
+                            item.orderId = formHeader.id;
+                            if (processingData) {
+                                processingData(item);
+                            }
+                            updateArr.push(item);
+                        }
+                    } else {
+                        insertArr.push(item);
+                    }
+                } else {
+                    item.factory = JSON.parse(sessionStorage.getItem('factory') || '{}').id;
+                    item.orderId = formHeader.id;
+                    item.orderNo = formHeader.orderNo;
+                    if (processingData) {
+                        processingData(item);
+                    }
+                    insertArr.push(item);
+                }
+            });
+        }
+    }
+    interface DataEntryDataObj {
+        delFlag?: number;
+        id?: string;
+        status?: string;
+        orderId?: string;
+        factory?: string;
+        orderNo?: string;
     }
     interface DataObj{
         delFlag?: number;
