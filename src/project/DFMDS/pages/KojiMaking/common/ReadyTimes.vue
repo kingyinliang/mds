@@ -7,7 +7,7 @@
                 </el-select>
             </div>
         </template>
-        <div v-if="currentFormDataGroup.classes === 'M' || currentFormDataGroup.classes === 'D'" class="marginL10px">
+        <div v-if="nowFormDataGroupString === 'M' || nowFormDataGroupString === 'D'" class="marginL10px">
             <div class="box-card-title clearfix">
                 <h3><em class="point-icon" />{{ classesOptions.length !== 0 ? classesOptions.find((item)=> item.dictCode === 'M').dictValue : '' }}</h3>
             </div>
@@ -66,7 +66,7 @@
                 </el-form>
             </el-row>
         </div>
-        <div v-if="currentFormDataGroup.classes === 'A' || currentFormDataGroup.classes === 'D'" class="marginL10px">
+        <div v-if="nowFormDataGroupString === 'A' || nowFormDataGroupString === 'D'" class="marginL10px">
             <div class="box-card-title clearfix">
                 <h3><em class="point-icon" />{{ classesOptions ? classesOptions.find((item)=> item.dictCode === 'A').dictValue : '' }}</h3>
             </div>
@@ -74,7 +74,7 @@
                 <el-form :inline="true" :model="currentFormDataGroup" size="small" label-width="100px" class="multi_row">
                     <el-form-item label="">
                         <template slot="label">
-                            <span v-if="currentFormDataGroup.classes === 'A'" class="notNull">*</span> 参与人数：
+                            <span v-if="nowFormDataGroupString === 'A'" class="notNull">*</span>参与人数：
                         </template>
                         <el-input v-model.number="currentFormDataGroup.midUser" placeholder="请输入" size="small" :disabled="!(isRedact && status !== 'C' && status !== 'D' && status !== 'P'&& status !=='M')" clearable oninput="value=value.replace(/\D*/g,'')">
                             <span slot="suffix">人</span>
@@ -82,7 +82,7 @@
                     </el-form-item>
                     <el-form-item label="">
                         <template slot="label">
-                            <span v-if="currentFormDataGroup.classes === 'A'" class="notNull">*</span> 交接班：
+                            <span v-if="nowFormDataGroupString === 'A'" class="notNull">*</span>交接班：
                         </template>
                         <el-input v-model.number="currentFormDataGroup.midShift" placeholder="请输入" size="small" :disabled="!(isRedact && status !== 'C' && status !== 'D' && status !== 'P'&& status !=='M')" clearable oninput="value=value.replace(/\D*/g,'')">
                             <span slot="suffix">min</span>
@@ -90,7 +90,7 @@
                     </el-form-item>
                     <el-form-item label="">
                         <template slot="label">
-                            <span v-if="currentFormDataGroup.classes === 'A'" class="notNull">*</span> 班前会：
+                            <span v-if="nowFormDataGroupString === 'A'" class="notNull">*</span>班前会：
                         </template>
                         <el-input v-model.number="currentFormDataGroup.midMeeting" placeholder="请输入" size="small" :disabled="!(isRedact && status !== 'C' && status !== 'D' && status !== 'P'&& status !=='M')" clearable oninput="value=value.replace(/\D*/g,'')">
                             <span slot="suffix">min</span>
@@ -98,7 +98,7 @@
                     </el-form-item>
                     <el-form-item label="">
                         <template slot="label">
-                            <span v-if="currentFormDataGroup.classes === 'A'" class="notNull">*</span> 生产前准备：
+                            <span v-if="nowFormDataGroupString === 'A'" class="notNull">*</span>生产前准备：
                         </template>
                         <el-input v-model.number="currentFormDataGroup.midPrepaired" placeholder="请输入" size="small" :disabled="!(isRedact && status !== 'C' && status !== 'D' && status !== 'P'&& status !=='M')" clearable oninput="value=value.replace(/\D*/g,'')">
                             <span slot="suffix">min</span>
@@ -106,7 +106,7 @@
                     </el-form-item>
                     <el-form-item label="">
                         <template slot="label">
-                            <span v-if="currentFormDataGroup.classes === 'A'" class="notNull">*</span> 生产后清场：
+                            <span v-if="nowFormDataGroupString === 'A'" class="notNull">*</span>生产后清场：
                         </template>
                         <el-input v-model.number="currentFormDataGroup.midClear" placeholder="请输入" size="small" :disabled="!(isRedact && status !== 'C' && status !== 'D' && status !== 'P'&& status !=='M')" clearable oninput="value=value.replace(/\D*/g,'')">
                             <span slot="suffix">min</span>
@@ -125,7 +125,7 @@
                 </el-form>
             </el-row>
         </div>
-        <div v-if="currentFormDataGroup.classes === 'N' || currentFormDataGroup.classes === 'D'" class="marginL10px">
+        <div v-if="nowFormDataGroupString === 'N' || nowFormDataGroupString === 'D'" class="marginL10px">
             <div class="box-card-title clearfix">
                 <h3><em class="point-icon" />{{ classesOptions ? classesOptions.find((item)=> item.dictCode === 'N').dictValue : '' }}</h3>
             </div>
@@ -209,92 +209,59 @@ export default class ReadyTimes extends Vue {
     @Prop({ type: Boolean, default: false }) isRedact;
     @Prop({ type: String, default: '' }) status;
 
-    currentFormDataGroup: ReadyTimesData = {}
-    currentFormDataGroupA: ReadyTimesData = {}
-    currentFormDataGroupM: ReadyTimesData = {}
-    currentFormDataGroupN: ReadyTimesData = {}
-    currentFormDataGroupD: ReadyTimesData = {}
+    nowFormDataGroupString='M'
 
+    currentFormDataGroup: ReadyTimesData = {
+                classes: '',
+                midChange: null,
+                midClear: null,
+                midMeeting: null,
+                midPrepaired: null,
+                midQuality: null,
+                midShift: null,
+                midUser: null,
+                nightChange: null,
+                nightClear: null,
+                nightMeeting: null,
+                nightPrepaired: null,
+                nightQuality: null,
+                nightShift: null,
+                nightUser: null,
+                dayChange: null,
+                dayClear: null,
+                dayMeeting: null,
+                dayPrepaired: null,
+                dayQuality: null,
+                dayShift: null,
+                dayUser: null
+            }
 
-    // orgFormDataGroup: ReadyTimesData= {} // 用于比对的原始 data object
-    // readAudit= []
-    // isChange=false // data 是否有异动
-    // isNewForm=false // 是否初次
-    // readyTimesAudit = [];
-    classesOptions: ClassesOptions[] = [];
+    currentFormDataGroupA: ReadyTimesData = {
+                classes: 'A',
+                midChange: null,
+                midClear: null,
+                midMeeting: null,
+                midPrepaired: null,
+                midQuality: null,
+                midShift: null,
+                midUser: null,
+                nightChange: null,
+                nightClear: null,
+                nightMeeting: null,
+                nightPrepaired: null,
+                nightQuality: null,
+                nightShift: null,
+                nightUser: null,
+                dayChange: null,
+                dayClear: null,
+                dayMeeting: null,
+                dayPrepaired: null,
+                dayQuality: null,
+                dayShift: null,
+                dayUser: null
+            }
 
-
-    // DFMDS-2571 需求
-    // @Watch('currentFormDataGroup.classes')
-    // WatchClass() {
-    //     if (!this.currentFormDataGroup.dayQuality) {
-    //         this.currentFormDataGroup.dayQuality = 0;
-    //     }
-    //     if (!this.currentFormDataGroup.dayChange) {
-    //         this.currentFormDataGroup.dayChange = 0;
-    //     }
-    //     if (!this.currentFormDataGroup.midQuality) {
-    //         this.currentFormDataGroup.midQuality = 0;
-    //     }
-    //     if (!this.currentFormDataGroup.midChange) {
-    //         this.currentFormDataGroup.midChange = 0;
-    //     }
-    //     if (!this.currentFormDataGroup.nightQuality) {
-    //         this.currentFormDataGroup.nightQuality = 0;
-    //     }
-    //     if (!this.currentFormDataGroup.nightChange) {
-    //         this.currentFormDataGroup.nightChange = 0;
-    //     }
-    // }
-
-    init() {
-        this.$set(this.currentFormDataGroup, 'classes', '')
-        this.getClassesList();
-        this.changeList(null);
-    }
-
-    resetValue(val) {
-        if (val === 'D') {
-            this.currentFormDataGroupD = JSON.parse(JSON.stringify(this.currentFormDataGroup))
-        }
-        if (val === 'A') {
-            this.currentFormDataGroupD = JSON.parse(JSON.stringify(this.currentFormDataGroup))
-        }
-        if (val === 'N') {
-            this.currentFormDataGroupD = JSON.parse(JSON.stringify(this.currentFormDataGroup))
-        }
-
-        if (val === 'M') {
-            this.currentFormDataGroupD = JSON.parse(JSON.stringify(this.currentFormDataGroup))
-        }
-
-            this.currentFormDataGroup.dayChange = null
-            this.currentFormDataGroup.dayClear = null
-            this.currentFormDataGroup.dayMeeting = null
-            this.currentFormDataGroup.dayPrepaired = null
-            this.currentFormDataGroup.dayQuality = null
-            this.currentFormDataGroup.dayShift = null
-            this.currentFormDataGroup.dayUser = null
-            this.currentFormDataGroup.midChange = null
-            this.currentFormDataGroup.midClear = null
-            this.currentFormDataGroup.midMeeting = null
-            this.currentFormDataGroup.midPrepaired = null
-            this.currentFormDataGroup.midQuality = null
-            this.currentFormDataGroup.midShift = null
-            this.currentFormDataGroup.midUser = null
-            this.currentFormDataGroup.nightChange = null
-            this.currentFormDataGroup.nightClear = null
-            this.currentFormDataGroup.nightMeeting = null
-            this.currentFormDataGroup.nightPrepaired = null
-            this.currentFormDataGroup.nightQuality = null
-            this.currentFormDataGroup.nightShift = null
-            this.currentFormDataGroup.nightUser = null
-    }
-
-    changeList(dataList) {
-        this.currentFormDataGroup = dataList || {};
-        if (dataList === null) {
-            this.currentFormDataGroup = {
+    currentFormDataGroupM: ReadyTimesData = {
                 classes: 'M',
                 midChange: null,
                 midClear: null,
@@ -318,7 +285,114 @@ export default class ReadyTimes extends Vue {
                 dayShift: null,
                 dayUser: null
             }
+
+    currentFormDataGroupN: ReadyTimesData = {
+                classes: 'N',
+                midChange: null,
+                midClear: null,
+                midMeeting: null,
+                midPrepaired: null,
+                midQuality: null,
+                midShift: null,
+                midUser: null,
+                nightChange: null,
+                nightClear: null,
+                nightMeeting: null,
+                nightPrepaired: null,
+                nightQuality: null,
+                nightShift: null,
+                nightUser: null,
+                dayChange: null,
+                dayClear: null,
+                dayMeeting: null,
+                dayPrepaired: null,
+                dayQuality: null,
+                dayShift: null,
+                dayUser: null
+            }
+
+    currentFormDataGroupD: ReadyTimesData = {
+                classes: 'D',
+                midChange: null,
+                midClear: null,
+                midMeeting: null,
+                midPrepaired: null,
+                midQuality: null,
+                midShift: null,
+                midUser: null,
+                nightChange: null,
+                nightClear: null,
+                nightMeeting: null,
+                nightPrepaired: null,
+                nightQuality: null,
+                nightShift: null,
+                nightUser: null,
+                dayChange: null,
+                dayClear: null,
+                dayMeeting: null,
+                dayPrepaired: null,
+                dayQuality: null,
+                dayShift: null,
+                dayUser: null
+            }
+
+    classesOptions: ClassesOptions[] = [];
+
+    async init() {
+        await this.getClassesList();
+        this.changeList(null);
+    }
+
+    resetValue(val) {
+        // 将各班次 data 存回专属容器
+        this.$set(this.currentFormDataGroup, 'classes', this.nowFormDataGroupString);
+        if (this.nowFormDataGroupString === 'M') {
+            this.currentFormDataGroupM = JSON.parse(JSON.stringify(this.currentFormDataGroup));
         }
+        if (this.nowFormDataGroupString === 'A') {
+            this.currentFormDataGroupA = JSON.parse(JSON.stringify(this.currentFormDataGroup));
+        }
+        if (this.nowFormDataGroupString === 'N') {
+            this.currentFormDataGroupN = JSON.parse(JSON.stringify(this.currentFormDataGroup));
+        }
+        if (this.nowFormDataGroupString === 'D') {
+            this.currentFormDataGroupD = JSON.parse(JSON.stringify(this.currentFormDataGroup));
+        }
+
+        setTimeout(() => {
+            // 将目标班次 data 提出
+            this.nowFormDataGroupString = val;
+            this.$set(this, 'currentFormDataGroup', JSON.parse(JSON.stringify(this['currentFormDataGroup' + this.nowFormDataGroupString])));
+            this.$set(this.currentFormDataGroup, 'classes', this.nowFormDataGroupString);
+        }, 200);
+    }
+
+    changeList(dataList) {
+
+        this.currentFormDataGroup = dataList !== null ? dataList : {
+                classes: 'M',
+                midChange: null,
+                midClear: null,
+                midMeeting: null,
+                midPrepaired: null,
+                midQuality: null,
+                midShift: null,
+                midUser: null,
+                nightChange: null,
+                nightClear: null,
+                nightMeeting: null,
+                nightPrepaired: null,
+                nightQuality: null,
+                nightShift: null,
+                nightUser: null,
+                dayChange: null,
+                dayClear: null,
+                dayMeeting: null,
+                dayPrepaired: null,
+                dayQuality: null,
+                dayShift: null,
+                dayUser: null
+            };
     }
 
     // 班次

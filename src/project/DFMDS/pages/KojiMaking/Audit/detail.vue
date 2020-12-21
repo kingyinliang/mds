@@ -104,7 +104,7 @@
                     <el-table-column type="index" label="序号" width="50" align="center" fixed />
                     <el-table-column v-if="isNormalPage" label="曲房" prop="kojiHouseName" width="120" />
                     <el-table-column v-if="isNormalPage" label="入曲日期" prop="addKojiDate" width="180" />
-                    <el-table-column label="物料" prop="material" min-width="120" />
+                    <el-table-column label="物料" prop="materialTypeName" min-width="120" />
                     <el-table-column label="批次" prop="batch" min-width="120" />
                     <el-table-column label="数量" prop="amount" width="120" />
                     <el-table-column label="单位" prop="unit" width="120" />
@@ -272,7 +272,8 @@
         rejectText = '';
         rejectProcess='';
         rejectKojiHouseId='';
-        rejectMaterialStyleName=''; // 物料领用使用
+        rejectMaterialStyle=''; // 物料领用使用
+        rejectBatch=''; // 物料领用使用
 
         kojiHouseNoOptions: OptionObj[]=[]; // 曲房下拉
         manHourList: ManHourList[] = [];
@@ -295,13 +296,6 @@
             await this.initData(this.currentOrderNo)
             await this.getKojiHolder()
             await this.getProcessMapping()
-
-            // 5 个 tab 加载
-            this.getManHourList()
-            this.getMachineHourList()
-            this.getInStorageList()
-            this.getMeterialList()
-            this.getCraftList()
         }
 
         // 工艺列表 tab 工序详情
@@ -462,11 +456,20 @@
                     this.$refs.dataEntry.updateTabs();
                 }
             });
+
+            // 5 个 tab 加载
+            this.getManHourList()
+            this.getMachineHourList()
+            this.getInStorageList()
+            this.getMeterialList()
+            this.getCraftList()
         }
 
         reject(who, item) {
             this.visibleRefuse = true;
             this.rejectText = '';
+            console.log('item')
+            console.log(item)
             switch (who) {
                 case '1':
                     this.rejectProcess = this.processMapping[item.process]
@@ -480,7 +483,8 @@
                 break;
                 case '4':
                     this.rejectKojiHouseId = this.kojiHouseNoOptions.filter(element => element.optValue === item.kojiHouseNo)[0].optId
-                    this.rejectMaterialStyleName = item.materialTypeName
+                    this.rejectMaterialStyle = item.materialType;
+                    this.rejectBatch = item.batch;
                 break;
                 default:
             }
@@ -566,9 +570,10 @@
                     break;
                 case '4':
                     KOJI_API.KOJI_REFUSE_MATERIAL_API({
+                        batch: this.rejectBatch,
                         kojiHouseId: this.rejectKojiHouseId,
                         orderNo: this.formHeader.orderNo,
-                        materialType: this.rejectMaterialStyleName,
+                        materialType: this.rejectMaterialStyle,
                         productDate: this.formHeader.productDate,
                         refuseSeason: this.rejectText
                     }).then(() => {
