@@ -82,7 +82,7 @@
         formHeader: SemiObj = {};
         visible = false;
         // 物料list
-        stockInfoList: object[] = [];
+        stockInfoList: StockInfoList[] = [];
         // 领用记录list
         materialTableList: SemiObj[] = [];
         // 审核记录list
@@ -90,7 +90,10 @@
 
         // 领用库位
         materialLocationOrhouseNo(row) {
-            return row.wareHouseNo || row.materialLocation;
+            if (!row.wareHouseNo) {
+                return this.formHeader.workShopName
+            }
+            return this.stockInfoList.filter(item => item.wareHouseNo === row.wareHouseNo)[0].wareHouseName
         }
 
         init(formHeader) {
@@ -232,6 +235,38 @@
         unit?: string;
         smallBeanAmount?: string;
         workShop?: string;
+        workShopName?: string;
+    }
+    interface DetailsList {
+        batch: string;
+        changed: string;
+        changer: string;
+        currentAmount: number;
+        id: string;
+        impurityRate: number;
+        inStorageAmount: number;
+        inStorageDate: string;
+        materialCode: string;
+        materialLocation: string;
+        materialName: string;
+        productDate: string;
+        remark: string;
+        supplier: string;
+        unit: string;
+        unitName: string;
+        wareHouseId: string;
+        wareHouseName: string;
+        wareHouseNo: string;
+    }
+
+    interface StockInfoList {
+        detailsList: DetailsList[];
+        materialLocation: string;
+        reduceCurrentAmount: number;
+        wareHouseName: string;
+        wareHouseNo: string;
+        workShop: string;
+        workShopName: string;
     }
 </script>
 
