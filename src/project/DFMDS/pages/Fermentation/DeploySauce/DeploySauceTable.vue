@@ -261,11 +261,26 @@
 
         saveData() {
             const materialRemoveIds = []
+            this.delId(this.table2, materialRemoveIds)
+            this.delId(this.table3, materialRemoveIds)
+            this.delId(this.table4, materialRemoveIds)
             return {
                 materialRemoveIds: materialRemoveIds,
                 pickledMixMaterialList: this.table2,
                 receiveMixMaterialList: this.table3,
                 sauceMixMaterialList: this.table4
+            }
+        }
+
+        delId(data, ids) {
+            for (let i = 0; i < data.length; i++) {
+                if (data[i].delFlag === 1 && data[i].id) {
+                    ids.push(data[i].id)
+                }
+                if (data[i].delFlag === 1 && !data[i].id) {
+                    data.splice(i, 1)
+                    i--
+                }
             }
         }
 
@@ -293,6 +308,18 @@
                     colspan: this.spanArr[rowIndex] > 0 ? 1 : 0
                 };
             }
+        }
+
+        del(row) {
+            this.$confirm('是否删除?', '提示', {
+                confirmButtonText: '确定',
+                cancelButtonText: '取消',
+                type: 'warning'
+            }).then(() => {
+                this.$set(row, 'delFlag', 1)
+                this.$successToast('删除成功');
+                this.spanArr = merge(this.table3, 'addMaterialCode')
+            });
         }
 
         rowDelFlag({ row }) {
