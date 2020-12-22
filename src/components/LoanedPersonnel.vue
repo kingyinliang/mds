@@ -52,7 +52,7 @@ export default {
         // orgTree: {
         //     type: Array,
         //     default: function() { return [[]] }
-        // },
+        // }
         // arrList: {
         //     type: Array,
         //     default: function() { return {} }
@@ -102,12 +102,14 @@ export default {
     methods: {
         init(userId, userTypeName) {
             this.userTypeName = userTypeName;
+            console.log('userId')
+            console.log(userId)
             this.visible = true;
             this.selctId = [];
             this.userlist = [];
             if (userId && userId.length > 0) {
                 userId.forEach((item) => {
-                    this.selctId.push({ label: item });
+                    this.selctId.push({ label: item, key: item });
                 });
             }
             if (this.orgTree.length !== 0) {
