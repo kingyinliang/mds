@@ -231,7 +231,9 @@
 
         // 查询最新审核记录
         getAuditList() {
-            AUDIT_API.AUDIT_LOG_LIST_API({ orderNo: this.formHeader.orderNo, verifyType: 'MATERIAL' }).then(({ data }) => {
+            AUDIT_API.AUDIT_LOG_LIST_API({ orderNo: this.formHeader.orderNo, verifyType: 'SF_MATERIAL' }).then(({ data }) => {
+                console.log('蒸面物料领用审核日志')
+                console.log(data)
                 this.auditList = data.data;
             });
         }

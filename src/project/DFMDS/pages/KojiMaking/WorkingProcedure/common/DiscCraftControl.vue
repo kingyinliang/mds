@@ -800,7 +800,7 @@
             // 看曲记录
             this.getKojiDiscGuard()
             // 审核日志
-            this.getAudit(this.targetOrderObj, 'CONTROL');
+            this.getAudit(this.targetOrderObj, 'KJ_CONTROL');
         }
 
 
@@ -1236,6 +1236,8 @@
         // 审核日志
         getAudit(formHeader, verifyType) {
             AUDIT_API.AUDIT_LOG_LIST_API({ orderNo: formHeader.orderNo, verifyType: verifyType }).then(({ data }) => {
+                console.log('圆盘工艺控制审核日志')
+                console.log(data)
                 this.currentAudit = data.data
             })
         }
