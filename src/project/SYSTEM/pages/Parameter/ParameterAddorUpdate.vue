@@ -22,6 +22,9 @@
                 <el-form-item v-if="!isParasType" label="参数名称：" prop="dictValue">
                     <el-input v-model.trim="dataForm.dictValue" placeholder="手动输入" clearable />
                 </el-form-item>
+                <el-form-item v-if="!isParasType" label="排序标识：">
+                    <el-input v-model.number="dataForm.dictOrder" placeholder="手动输入" clearable />
+                </el-form-item>
             </el-form>
         </div>
         <span slot="footer" class="dialog-footer">
@@ -55,6 +58,7 @@ export default class ParameterAddorUpdate extends Vue {
         dictName: '',
         dictCode: '',
         dictValue: '',
+        dictOrder: '',
         parentId: '',
         dictId: ''
     }
@@ -130,6 +134,7 @@ export default class ParameterAddorUpdate extends Vue {
                     dictName: '',
                     dictCode: '',
                     dictValue: '',
+                    dictOrder: '',
                     parentId: ''
                 }
             }
@@ -140,6 +145,7 @@ export default class ParameterAddorUpdate extends Vue {
                 this.dataForm = JSON.parse(JSON.stringify(targetItem));
                 this.dataForm.parentId = parentItem.id
                 this.dataForm.dictType = parentItem.dictType
+                this.dataForm.dictOrder = parentItem.dictOrder
                 this.dataForm.dictName = parentItem.dictName
             } else {
                 this.isAddParas = false;
@@ -149,6 +155,7 @@ export default class ParameterAddorUpdate extends Vue {
                     dictType: parentItem.dictType,
                     dictName: parentItem.dictName,
                     dictCode: '',
+                    dictOrder: '',
                     dictValue: '',
                     parentId: parentItem.id
                 }
@@ -193,6 +200,7 @@ export default class ParameterAddorUpdate extends Vue {
                         COMMON_API.DICTIONARY_ITEM_INSERT_API({
                             factory: this.factory,
                             dictCode: this.dataForm.dictCode,
+                            dictOrder: this.dataForm.dictOrder,
                             dictValue: this.dataForm.dictValue,
                             dictId: this.dataForm.parentId
                         }).then(() => {
@@ -207,6 +215,7 @@ export default class ParameterAddorUpdate extends Vue {
                             factory: this.factory,
                             dictCode: this.dataForm.dictCode,
                             dictValue: this.dataForm.dictValue,
+                            dictOrder: this.dataForm.dictOrder,
                             dictId: this.dataForm.dictId,
                             id: this.dataForm.id
                         }).then(() => {
@@ -246,6 +255,7 @@ interface FactoryListObject {
     deptName?: string;
     deptShort?: string;
     deptType?: string;
+    dictOrder?: string;
     id?: string;
 }
 
@@ -256,6 +266,7 @@ interface DataFormObject {
     dictCode?: string;
     dictValue?: string;
     parentId?: string;
+    dictOrder?: string;
     dictId?: string;
     id?: string;
     }
