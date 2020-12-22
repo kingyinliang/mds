@@ -1,6 +1,6 @@
 <template>
     <el-dialog :title="isParasType ? isAddParas ? '修改类型':'新增类型' : isAddParas ? '修改参数':'新增参数'" :close-on-click-modal="false" :visible.sync="isDialogShow" @close="closeDialog">
-        <div style="height: 330px; overflow: auto;">
+        <div style="height: 360px; overflow: auto;">
             <el-form ref="dataForm" :model="dataForm" label-width="125px" :rules="checkRules">
                 <el-form-item label="工厂：" prop="factory">
                     <span v-if="!isParasType">{{ dataForm.factoryName }}</span>
