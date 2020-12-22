@@ -175,7 +175,7 @@
 
         // Y158物料领用记录查询
         materialY158GetList() {
-            KOJI_API.KOJI_MATERIAL_GET_QUERY_API({
+            KOJI_API.KOJI_MATERIAL_GET_QUERY_API({ // /kojiMaterial/query
                 kojiOrderNo: this.formHeader.kojiOrderNo,
                 materialType: 'Y158'
             }).then(({ data }) => {
