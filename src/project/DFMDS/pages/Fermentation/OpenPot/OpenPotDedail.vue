@@ -179,8 +179,8 @@
                     </el-table-column>
                     <el-table-column label="添加物料" prop="addMaterialCode" min-width="150" :show-overflow-tooltip="true">
                         <template slot-scope="scope">
-                            <el-select v-model="scope.row.addMaterialCode" :disabled="!isRedact" placeholder="请选择" size="small" filterable clearable>
-                                <el-option v-for="(item, index) in scope.row.addMaterialArr" :key="index" :label="item.materialName+' ' + item.materialCode" :value="item.materialCode" />
+                            <el-select v-model="scope.row.addMaterialCode" :disabled="!isRedact" placeholder="请选择" size="small" filterable clearable @change="materialChange(scope.row)">
+                                <el-option v-for="(item, index) in scope.row.addMaterialArr" :key="index" :label="item.productMaterialName +' ' + item.productMaterialCode" :value="item.productMaterialCode" />
                             </el-select>
                         </template>
                     </el-table-column>
@@ -490,6 +490,13 @@
             const filterArr: (any) = this.holderArr.filter(item => item.holderId === row.fermentorNo)// eslint-disable-line
             row.addMaterialCode = ''
             row.addMaterialArr = filterArr[0].ferInStorageList
+        }
+
+        materialChange(row) {
+            const filterArr: (any) = row.ferInStorageList.filter(item => item.productMaterialCode === row.addMaterialCode)// eslint-disable-line
+            row.unit = filterArr[0].unit
+            // row.stockAmount = filterArr[0]
+            // row.batch = filterArr[0]
         }
 
         // 删除
