@@ -1013,7 +1013,7 @@
 
         goDetail() {
             this.$store.commit('sterilize/updateAuditDetailDetail', this.$store.state.sterilize.auditDetail);
-            this.$store.commit('common/updateMainTabs', this.$store.state.common.mainTabs.filter(subItem => subItem.name !== 'DFMDS-pages-Sterilize-Audit-'))
+            this.$store.commit('common/updateMainTabs', this.$store.state.common.mainTabs.filter(subItem => subItem.name !== 'DFMDS-pages-KojiMaking-Audit-detail'))
             setTimeout(() => {
                 this.$router.push({
                     name: `DFMDS-pages-KojiMaking-Audit-detail`
