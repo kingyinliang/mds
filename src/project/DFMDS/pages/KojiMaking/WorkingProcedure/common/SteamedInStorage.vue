@@ -221,7 +221,9 @@
 
         // 查询最新审核记录
         getAuditList(orderNo) {
-            AUDIT_API.AUDIT_LOG_LIST_API({ orderNo, verifyType: 'INSTORAGE' }).then(({ data }) => {
+            AUDIT_API.AUDIT_LOG_LIST_API({ orderNo, verifyType: 'SB_INSTORAGE' }).then(({ data }) => {
+                console.log('蒸豆生产入库审核日志')
+                console.log(data)
                 this.craftAuditList = data.data;
             });
         }

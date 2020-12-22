@@ -701,7 +701,9 @@
 
         // 查询最新审核记录
         getAuditList(orderNo) {
-            AUDIT_API.AUDIT_LOG_LIST_API({ orderNo, verifyType: 'INSTORAGE' }).then(({ data }) => {
+            AUDIT_API.AUDIT_LOG_LIST_API({ orderNo, verifyType: 'WB_CONTROL' }).then(({ data }) => {
+                console.log('洗豆工艺审核日志')
+                console.log(data)
                 this.craftAuditList = data.data;
             });
         }
