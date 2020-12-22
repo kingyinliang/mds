@@ -101,9 +101,13 @@
             </el-table>
         </mds-card>
         <mds-card :title="'调配物料'" :name="'list3'">
-            <el-table header-row-class-name="tableHead" class="newTable" :data="table3">
+            <el-table header-row-class-name="tableHead" class="newTable" :data="table3" :row-class-name="rowDelFlag" :span-method="spanMethod">
                 <el-table-column type="index" label="序号" width="50" fixed align="center" />
-                <el-table-column label="添加物料" prop="addMaterialCode" min-width="120" :show-overflow-tooltip="true" />
+                <el-table-column label="添加物料" prop="addMaterialCode" min-width="120" :show-overflow-tooltip="true">
+                    <template slot-scope="scope">
+                        {{ scope.row.addMaterialCode + ' ' + scope.row.addMaterialName }}
+                    </template>
+                </el-table-column>
                 <el-table-column label="计划添加数量" prop="planAddAmount" min-width="120" :show-overflow-tooltip="true" />
                 <el-table-column label="单位" prop="unitName" min-width="50" :show-overflow-tooltip="true" />
                 <el-table-column label="开罐备注" prop="remark" min-width="120" :show-overflow-tooltip="true" />
@@ -114,19 +118,19 @@
                         </el-button>
                     </template>
                 </el-table-column>
-                <el-table-column label="批次" prop="receiveMaterial" min-width="120" :show-overflow-tooltip="true">
+                <el-table-column label="批次" prop="batch" min-width="120" :show-overflow-tooltip="true">
                     <template slot-scope="scope">
-                        <el-input v-model="scope.row.receiveMaterial" :disabled="!(isRedact && scope.row.checkStatus !== 'C' && scope.row.checkStatus !== 'D' && scope.row.checkStatus !== 'P')" size="small" placeholder="请输入" />
+                        <el-input v-model="scope.row.batch" :disabled="!(isRedact)" size="small" placeholder="请输入" />
                     </template>
                 </el-table-column>
                 <el-table-column label="领用数量" prop="receiveMaterial" min-width="120" :show-overflow-tooltip="true">
                     <template slot-scope="scope">
-                        <el-input v-model="scope.row.receiveMaterial" :disabled="!(isRedact && scope.row.checkStatus !== 'C' && scope.row.checkStatus !== 'D' && scope.row.checkStatus !== 'P')" size="small" placeholder="请输入" />
+                        <el-input v-model="scope.row.realAddAmount" :disabled="!(isRedact)" size="small" placeholder="请输入" />
                     </template>
                 </el-table-column>
                 <el-table-column label="操作" fixed="right" width="70">
                     <template slot-scope="scope">
-                        <el-button :disabled="!(isRedact && scope.row.checkStatus !== 'C' && scope.row.checkStatus !== 'D' && scope.row.checkStatus !== 'P')" class="delBtn" type="text" icon="el-icon-delete" size="mini" @click="del(scope.row)">
+                        <el-button :disabled="!(isRedact)" class="delBtn" type="text" icon="el-icon-delete" size="mini" @click="del(scope.row)">
                             删除
                         </el-button>
                     </template>
@@ -134,37 +138,43 @@
             </el-table>
         </mds-card>
         <mds-card :title="'超期酱'" :name="'list4'">
-            <el-table header-row-class-name="tableHead" class="newTable" :data="table4">
+            <el-table header-row-class-name="tableHead" class="newTable" :data="table4" :row-class-name="rowDelFlag">
                 <el-table-column type="index" label="序号" width="50" fixed align="center" />
                 <el-table-column label="容器号" prop="receiveMaterial" min-width="120" :show-overflow-tooltip="true">
                     <template slot-scope="scope">
-                        <el-select v-model="scope.row.classes" placeholder="请选择" size="small" :disabled="!isRedact">
-                            <el-option v-for="item in classesOptions" :key="item.dictCode" :value="item.dictCode" :label="item.dictValue" />
+                        <el-select v-model="scope.row.fermentorNo" placeholder="请选择" size="small" :disabled="!isRedact" @change="fermentorNoChange(scope.row)">
+                            <el-option v-for="(item, index) in holderArr" :key="index" :label="item.holderName" :value="item.holderId" />
                         </el-select>
                     </template>
                 </el-table-column>
-                <el-table-column label="添加物料" prop="receiveMaterial" min-width="120" :show-overflow-tooltip="true" />
-                <el-table-column label="单位" prop="receiveMaterial" min-width="50" :show-overflow-tooltip="true" />
-                <el-table-column label="库存数量" prop="receiveMaterial" min-width="100" :show-overflow-tooltip="true" />
-                <el-table-column label="批次" prop="receiveMaterial" min-width="100" :show-overflow-tooltip="true" />
-                <el-table-column label="计划添加数量" prop="receiveMaterial" min-width="120" :show-overflow-tooltip="true">
+                <el-table-column label="添加物料" prop="addMaterialCode" min-width="120" :show-overflow-tooltip="true">
                     <template slot-scope="scope">
-                        <el-input v-model="scope.row.receiveMaterial" :disabled="!(isRedact && scope.row.checkStatus !== 'C' && scope.row.checkStatus !== 'D' && scope.row.checkStatus !== 'P')" size="small" placeholder="请输入" />
+                        <el-select v-model="scope.row.addMaterialCode" :disabled="!isRedact" placeholder="请选择" size="small" filterable clearable @change="materialChange(scope.row)">
+                            <el-option v-for="(item, index) in scope.row.addMaterialArr" :key="index" :label="item.productMaterialName + ' ' + item.productMaterialCode" :value="item.productMaterialCode" />
+                        </el-select>
                     </template>
                 </el-table-column>
-                <el-table-column label="领用数量" prop="receiveMaterial" min-width="120" :show-overflow-tooltip="true">
+                <el-table-column label="单位" prop="unit" min-width="50" :show-overflow-tooltip="true" />
+                <el-table-column label="库存数量" prop="stockAmount" min-width="100" :show-overflow-tooltip="true" />
+                <el-table-column label="批次" prop="batch" min-width="100" :show-overflow-tooltip="true" />
+                <el-table-column label="计划添加数量" prop="planAddAmount" min-width="120" :show-overflow-tooltip="true">
                     <template slot-scope="scope">
-                        <el-input v-model="scope.row.receiveMaterial" :disabled="!(isRedact && scope.row.checkStatus !== 'C' && scope.row.checkStatus !== 'D' && scope.row.checkStatus !== 'P')" size="small" placeholder="请输入" />
+                        <el-input v-model="scope.row.planAddAmount" :disabled="!(isRedact)" size="small" placeholder="请输入" />
                     </template>
                 </el-table-column>
-                <el-table-column label="备注" prop="receiveMaterial" min-width="80" :show-overflow-tooltip="true">
+                <el-table-column label="领用数量" prop="realAddAmount" min-width="120" :show-overflow-tooltip="true">
                     <template slot-scope="scope">
-                        <el-input v-model="scope.row.receiveMaterial" :disabled="!(isRedact && scope.row.checkStatus !== 'C' && scope.row.checkStatus !== 'D' && scope.row.checkStatus !== 'P')" size="small" placeholder="请输入" />
+                        <el-input v-model="scope.row.realAddAmount" :disabled="!(isRedact)" size="small" placeholder="请输入" />
+                    </template>
+                </el-table-column>
+                <el-table-column label="备注" prop="remark" min-width="80" :show-overflow-tooltip="true">
+                    <template slot-scope="scope">
+                        <el-input v-model="scope.row.remark" :disabled="!(isRedact)" size="small" placeholder="请输入" />
                     </template>
                 </el-table-column>
                 <el-table-column label="操作" fixed="right" width="70">
                     <template slot-scope="scope">
-                        <el-button :disabled="!(isRedact && scope.row.checkStatus !== 'C' && scope.row.checkStatus !== 'D' && scope.row.checkStatus !== 'P')" class="delBtn" type="text" icon="el-icon-delete" size="mini" @click="del(scope.row)">
+                        <el-button :disabled="!(isRedact)" class="delBtn" type="text" icon="el-icon-delete" size="mini" @click="del(scope.row)">
                             删除
                         </el-button>
                     </template>
@@ -177,6 +187,7 @@
 <script lang="ts">
     import { Vue, Component, Prop } from 'vue-property-decorator';
     import { FER_API } from 'common/api/api';
+    import { merge } from 'utils/utils';
 
     @Component
     export default class DeploySauceTable extends Vue {
@@ -184,8 +195,10 @@
 
         table1 = []
         table2 = []
-        table3 = []
+        table3: LisObj[] = []
         table4 = []
+
+        spanArr: number[] = []
 
         holderArr: PotObj[] = []
 
@@ -209,25 +222,84 @@
         // 获取鲜香泡豆、调配物料、超期酱
         getList(str, formHeader) {
             FER_API.FER_DEPLOY_SAUCE_DETAIL_LIST_API({
-                mixMaterialType: 'PICKLED',
+                mixMaterialType: str,
                 openPotNo: formHeader.openPotNo
             }).then(({ data }) => {
                 if (str === 'PICKLED') {
                     this.table2 = data.data
                 } else if (str === 'RECEIVE') {
                     this.table3 = data.data
+                    this.spanArr = merge(this.table3, 'addMaterialCode')
                 } else if (str === 'SAUCE') {
                     this.table4 = data.data
                 }
             })
         }
 
+        // 获取下拉
         getSelect() {
             FER_API.FER_OPEN_POT_DETAIL_LIST_API({
                 judgeResult: 'CQ'
             }).then(({ data }) => {
                 this.holderArr = data.data
             })
+        }
+
+        // 超期酱修改容器号
+        fermentorNoChange(row) {
+            const filterArr: (any) = this.holderArr.filter(item => item.holderId === row.fermentorNo)// eslint-disable-line
+            row.addMaterialCode = ''
+            row.addMaterialArr = filterArr[0].ferInStorageList
+        }
+
+        materialChange(row) {
+            const filterArr: (any) = row.ferInStorageList.filter(item => item.productMaterialCode === row.addMaterialCode)// eslint-disable-line
+            row.unit = filterArr[0].unit
+            // row.stockAmount = filterArr[0]
+            // row.batch = filterArr[0]
+        }
+
+        saveData() {
+            const materialRemoveIds = []
+            return {
+                materialRemoveIds: materialRemoveIds,
+                pickledMixMaterialList: this.table2,
+                receiveMixMaterialList: this.table3,
+                sauceMixMaterialList: this.table4
+            }
+        }
+
+        SplitDate(row, index) {
+            this.table3.splice(index + this.table3.filter(item => item.addMaterialCode === row.addMaterialCode).length, 0, {
+                id: '',
+                openPotNo: row.openPotNo,
+                addMaterialCode: row.addMaterialCode,
+                addMaterialName: row.addMaterialName,
+                planAddAmount: row.planAddAmount,
+                unit: row.unit,
+                unitName: row.unitName,
+                remark: row.remark,
+                batch: '',
+                realAddAmount: ''
+            })
+            this.spanArr = merge(this.table3, 'addMaterialCode')
+        }
+
+        // 合并行
+        spanMethod({ rowIndex, columnIndex }) {
+            if (columnIndex <= 5) {
+                return {
+                    rowspan: this.spanArr[rowIndex],
+                    colspan: this.spanArr[rowIndex] > 0 ? 1 : 0
+                };
+            }
+        }
+
+        rowDelFlag({ row }) {
+            if (row.delFlag === 1) {
+                return 'rowDel';
+            }
+            return '';
         }
 
     }
@@ -239,6 +311,18 @@
         mixSauceNo?: string;
         ferFermentor?: PotObj;
         materialRemoveIds?: string[];
+    }
+    interface LisObj {
+        id?: string;
+        openPotNo?: string;
+        addMaterialCode?: string;
+        addMaterialName?: string;
+        planAddAmount?: string;
+        unit?: string;
+        unitName?: string;
+        remark?: string;
+        batch?: string;
+        realAddAmount?: string;
     }
 </script>
 
