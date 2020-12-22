@@ -393,6 +393,106 @@ export default class ReadyTimes extends Vue {
                 dayShift: null,
                 dayUser: null
             };
+
+        this.currentFormDataGroupA = {
+                classes: 'A',
+                midChange: null,
+                midClear: null,
+                midMeeting: null,
+                midPrepaired: null,
+                midQuality: null,
+                midShift: null,
+                midUser: null,
+                nightChange: null,
+                nightClear: null,
+                nightMeeting: null,
+                nightPrepaired: null,
+                nightQuality: null,
+                nightShift: null,
+                nightUser: null,
+                dayChange: null,
+                dayClear: null,
+                dayMeeting: null,
+                dayPrepaired: null,
+                dayQuality: null,
+                dayShift: null,
+                dayUser: null
+            }
+
+        this.currentFormDataGroupM = {
+                classes: 'M',
+                midChange: null,
+                midClear: null,
+                midMeeting: null,
+                midPrepaired: null,
+                midQuality: null,
+                midShift: null,
+                midUser: null,
+                nightChange: null,
+                nightClear: null,
+                nightMeeting: null,
+                nightPrepaired: null,
+                nightQuality: null,
+                nightShift: null,
+                nightUser: null,
+                dayChange: null,
+                dayClear: null,
+                dayMeeting: null,
+                dayPrepaired: null,
+                dayQuality: null,
+                dayShift: null,
+                dayUser: null
+            }
+
+        this.currentFormDataGroupN = {
+                classes: 'N',
+                midChange: null,
+                midClear: null,
+                midMeeting: null,
+                midPrepaired: null,
+                midQuality: null,
+                midShift: null,
+                midUser: null,
+                nightChange: null,
+                nightClear: null,
+                nightMeeting: null,
+                nightPrepaired: null,
+                nightQuality: null,
+                nightShift: null,
+                nightUser: null,
+                dayChange: null,
+                dayClear: null,
+                dayMeeting: null,
+                dayPrepaired: null,
+                dayQuality: null,
+                dayShift: null,
+                dayUser: null
+            }
+
+        this.currentFormDataGroupD = {
+                classes: 'D',
+                midChange: null,
+                midClear: null,
+                midMeeting: null,
+                midPrepaired: null,
+                midQuality: null,
+                midShift: null,
+                midUser: null,
+                nightChange: null,
+                nightClear: null,
+                nightMeeting: null,
+                nightPrepaired: null,
+                nightQuality: null,
+                nightShift: null,
+                nightUser: null,
+                dayChange: null,
+                dayClear: null,
+                dayMeeting: null,
+                dayPrepaired: null,
+                dayQuality: null,
+                dayShift: null,
+                dayUser: null
+            }
     }
 
     // 班次
