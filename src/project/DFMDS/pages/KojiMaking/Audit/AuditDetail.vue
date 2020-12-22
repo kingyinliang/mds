@@ -29,7 +29,7 @@
                             <template slot="titleBtn">
                                 <el-form :inline="true" size="small" class="dataEntry-head-base__form" style="float: right; margin-top: 0;">
                                     <el-form-item label="杂质总数：">
-                                        <p>{{ soybeanImpuritiesTotal }}KG</p>
+                                        <p>{{ soybeanImpuritiesTotal }}千克</p>
                                     </el-form-item>
                                 </el-form>
                             </template>
@@ -399,7 +399,7 @@
                         trigger: 'axis'
                     },
                     dataset: {
-                        dimensions: ['product', '豆皮(KG)', '小豆(KG)', '废豆(KG)'],
+                        dimensions: ['product', '豆皮(千克)', '小豆(千克)', '废豆(千克)'],
                         source: datasetSource
                     },
                     xAxis: { type: 'category' },
