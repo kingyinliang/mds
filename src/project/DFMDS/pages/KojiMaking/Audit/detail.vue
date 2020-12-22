@@ -71,12 +71,12 @@
                     <el-table-column type="index" label="序号" width="50" align="center" fixed />
                     <el-table-column v-if="isNormalPage" label="曲房号" prop="kojiHouseName" min-width="120" />
                     <el-table-column v-if="isNormalPage" label="入曲日期" prop="addKojiDate" width="180" />
-                    <el-table-column label="大豆量(KG)" prop="beanAmount" width="120" />
-                    <el-table-column v-if="isNormalPage" label="麦粉量(KG)" prop="wheatAmount" width="120" />
+                    <el-table-column label="大豆量(千克)" prop="beanAmount" width="120" />
+                    <el-table-column v-if="isNormalPage" label="麦粉量(千克)" prop="wheatAmount" width="120" />
                     <el-table-column v-if="isNormalPage" label="菌种量" prop="strainAmount" width="120" />
                     <el-table-column label="入库量" prop="inStorageAmount" width="120" />
                     <el-table-column label="入库批次" prop="inStorageBatch" min-width="120" />
-                    <el-table-column label="单位" prop="unit" width="120" />
+                    <el-table-column label="单位" prop="unitName" width="120" />
                     <el-table-column label="操作人" prop="changer" width="180" />
                     <el-table-column label="操作时间" prop="changed" width="180" />
                     <el-table-column label="操作" prop="" width="120" fixed="right">
@@ -95,7 +95,7 @@
                         入库量：
                     </div>
                     <div class="input_bottom">
-                        {{ inStorageComputed }} KG
+                        {{ inStorageComputed }} 千克
                     </div>
                 </el-row>
             </template>
@@ -107,7 +107,7 @@
                     <el-table-column label="物料" prop="materialTypeName" min-width="120" />
                     <el-table-column label="批次" prop="batch" min-width="120" />
                     <el-table-column label="数量" prop="amount" width="120" />
-                    <el-table-column label="单位" prop="unit" width="120" />
+                    <el-table-column label="单位" prop="unitName" width="120" />
                     <el-table-column label="操作人员" prop="changer" width="180" />
                     <el-table-column label="操作时间" prop="changed" width="180" />
                     <el-table-column label="操作" prop="" width="120" fixed="right">
@@ -441,7 +441,7 @@
 
 
             // 页签状态
-            await KOJI_API.KOJI_VERIFY_TAB_STATUS_API({
+            await KOJI_API.KOJI_VERIFY_TAB_STATUS_API({ // /koji/houseTag/queryVerifyDetail
                 orderNo: this.formHeader.orderNo
             }).then(({ data }) => {
                 console.log('页签data')
