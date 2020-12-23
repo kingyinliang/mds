@@ -145,6 +145,9 @@
         @Watch('formHeader.fermentPotNo', { immediate: true, deep: true })
         onChangeValue(newVal: number| string) {
             if (newVal) {
+                const obj = this.potNoList.find(item => item.optValue === newVal);
+                // console.log(newVal, this.potNoList, obj, '===============')
+                this.formHeader.fermentPotId = obj?.optId;
                 this.potNoNow = newVal
             }
         }
