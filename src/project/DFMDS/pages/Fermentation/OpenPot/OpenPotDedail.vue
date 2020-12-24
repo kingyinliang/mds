@@ -134,7 +134,7 @@
                 <el-table :data="deployMaterial" :row-class-name="rowDelFlag" header-row-class-name="tableHead" class="newTable" border tooltip-effect="dark">
                     <el-table-column label="添加物料" prop="openFlagName" min-width="50" :show-overflow-tooltip="true">
                         <template slot-scope="scope">
-                            <el-select v-model="scope.row.addMaterialCode" :disabled="!isRedact" size="small" placeholder="请选择" filterable clearable>
+                            <el-select v-model="scope.row.addMaterialCode" :disabled="!isRedact" size="small" placeholder="请选择" filterable clearable @change="getName(scope.row)">
                                 <el-option v-for="(item, index) in deployMaterialSelect" :key="index" :label="item.dictValue" :value="item.dictCode" />
                             </el-select>
                         </template>
@@ -186,7 +186,7 @@
                     </el-table-column>
                     <el-table-column label="单位" prop="openFlagName" min-width="50" :show-overflow-tooltip="true">
                         <template slot-scope="scope">
-                            {{ scope.row.unit }}}
+                            {{ scope.row.unit }}
                         </template>
                     </el-table-column>
                     <el-table-column label="库存数量" prop="stockAmount" min-width="100" :show-overflow-tooltip="true" />
@@ -204,7 +204,7 @@
                 </el-table>
             </template>
             <template slot="custom_btn">
-                <el-button v-if="formHeader.statusName === '待处理' || formHeader.statusName === '已保存' ||formHeader.statusName === '已退回'" type="primary" size="small" @click="isRedact = !isRedact">
+                <el-button type="primary" size="small" @click="isRedact = !isRedact">
                     {{ isRedact ? '取消' : '编辑' }}
                 </el-button>
                 <el-button v-if="isRedact" type="primary" size="small" @click="saved()">
@@ -233,7 +233,7 @@
         formHeader: HeadObj = { ferOpenFermentorList: [], openPotNo: '' }
 
         orderTypeList = []
-        deployMaterialSelect = []
+        deployMaterialSelect: ListObj[] = []
         Unit = []
         workShop: string[] = []
         material: string[] = []
@@ -329,6 +329,7 @@
             this.sauce = []
             this.mixSauceNo = ''
             this.fermentorId = ''
+            this.searchForm.current = 1
             FER_API.FER_OPEN_POT_APPLY_DETAIL_API({
                 id: this.$store.state.fer.openPotObj.id
             }).then(({ data }) => {
@@ -485,6 +486,11 @@
             })
         }
 
+        getName(row) {
+            const filterArr: (any) = this.deployMaterialSelect.filter(item => item.dictCode === row.addMaterialCode)// eslint-disable-line
+            row.addMaterialName = filterArr[0].dictValue
+        }
+
         // 超期酱修改容器号
         fermentorNoChange(row) {
             const filterArr: (any) = this.holderArr.filter(item => item.holderId === row.fermentorNo)// eslint-disable-line
@@ -603,12 +609,14 @@
         handleSizeChange(val) {
             this.searchForm.size = val;
             this.openPotList = this.filterData(this.openPotListSum)
+            this.initMultiple()
         }
 
         // 跳转页数
         handleCurrentChange(val) {
             this.searchForm.current = val;
             this.openPotList = this.filterData(this.openPotListSum)
+            this.initMultiple()
         }
 
     }
@@ -627,6 +635,7 @@
         id?: string;
         remark?: string;
         mixSauceNo?: string;
+        dictCode?: string;
         fermentorId?: string;
         openPotNo?: string;
     }

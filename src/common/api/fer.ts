@@ -197,9 +197,17 @@ const FER_API = {
      */
     FER_DEPLOY_SAUCE_GET_API: params => httpProxy('/fer/mix/get', 'GET', params),
     /**
-     * @property {string} FER_JOB_BOOKING_SUBMIT_API 发酵车间-调酱详情-列表
+     * @property {string} FER_JOB_BOOKING_SUBMIT_API 发酵车间-调酱详情-鲜香泡豆-列表
      */
-    FER_DEPLOY_SAUCE_DETAIL_LIST_API: params => httpProxy('/fer/mix/queryOfMaterial', 'GET', params),
+    FER_DEPLOY_SAUCE_DETAIL_PICKLED_LIST_API: params => httpProxy('/fer/mix/queryOfPickledMaterial', 'GET', params),
+    /**
+     * @property {string} FER_JOB_BOOKING_SUBMIT_API 发酵车间-调酱详情-调配物料-列表
+     */
+    FER_DEPLOY_SAUCE_DETAIL_MATERIAL_LIST_API: params => httpProxy('/fer/mix/queryOfReceiveMaterial', 'GET', params),
+    /**
+     * @property {string} FER_JOB_BOOKING_SUBMIT_API 发酵车间-调酱详情-超期酱-列表
+     */
+    FER_DEPLOY_SAUCE_DETAIL_SAUCE_LIST_API: params => httpProxy('/fer/mix/queryOfSauceMaterial', 'GET', params),
     /**
      * @property {string} FER_JOB_BOOKING_SUBMIT_API 发酵车间-调酱详情-保存
      */
@@ -243,11 +251,11 @@ const FER_API = {
     /**
      * @property {string} FER_OPEN_POT_DETAIL_DEPLOY_LIST_API 发酵车间-开罐列表-详情页-调配物料
      */
-    FER_OPEN_POT_DETAIL_DEPLOY_LIST_API: params => httpProxy('/fer/open/queryOfMaterial', 'GET', params),
+    FER_OPEN_POT_DETAIL_DEPLOY_LIST_API: params => httpProxy('/fer/open/queryOfReceiveMaterial', 'GET', params),
     /**
      * @property {string} FER_OPEN_POT_DETAIL_SAUCE_LIST_API 发酵车间-开罐列表-详情页-超期酱
      */
-    FER_OPEN_POT_DETAIL_SAUCE_LIST_API: params => httpProxy('/fer/open/queryOfOverdueMaterial', 'GET', params),
+    FER_OPEN_POT_DETAIL_SAUCE_LIST_API: params => httpProxy('/fer/open/queryOfSauceMaterial', 'GET', params),
     /**
      * @property {string} FER_OPEN_POT_DETAIL_SAVE_API 发酵车间-开罐列表-详情页-保存
      */
