@@ -25,7 +25,7 @@
                 <el-input v-model.number="dataForm.smallBeanAmount" placeholder="请输入" />
             </el-form-item>
             <el-form-item label="单位：">
-                <el-input v-model="dataForm.unit" placeholder="NA" disabled />
+                <el-input v-model="dataForm.unitName" placeholder="NA" disabled />
             </el-form-item>
             <el-form-item label="大豆厂家：">
                 <el-input v-model="dataForm.supplier" placeholder="NA" disabled />
@@ -144,7 +144,8 @@
                 orderNo: this.formHeader.orderNo,
                 kojiOrderNo: this.formHeader.kojiOrderNo,
                 smallBeanAmount: Data.smallBeanAmount,
-                unit: '千克',
+                unit: 'KG',
+                unitName: '千克',
                 remark: Data.remark,
                 changer: getUserNameNumber(),
                 changed: dateFormat(new Date(), 'yyyy-MM-dd hh:mm:ss'),
@@ -237,6 +238,7 @@
         kojiOrderNo?: string;
         smallBeanAmount?: string;
         unit?: string;
+        unitName?: string;
         remark?: string;
         changer?: string;
         changed?: string;

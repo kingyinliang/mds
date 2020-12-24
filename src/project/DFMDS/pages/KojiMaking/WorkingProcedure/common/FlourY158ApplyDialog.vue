@@ -22,7 +22,7 @@
                     <el-input v-model.number="dataForm.amount" placeholder="请输入" @input="calcStockAmount" />
                 </el-form-item>
                 <el-form-item label="单位：">
-                    <el-input v-model="dataForm.unit" placeholder="请输入" disabled />
+                    <el-input v-model="dataForm.unitName" placeholder="请输入" disabled />
                 </el-form-item>
                 <el-form-item label="添加人：" prop="operationMans">
                     <el-tooltip class="item" effect="dark" :content="dataForm.operationMans + '点击选择人员'" placement="top">
@@ -190,7 +190,8 @@
                 amount: Data.amount,
                 operationMans: Data.operationMans || '',
                 stockAmount: Data.stockAmount || Data.currentAmount,
-                unit: Data.unitName,
+                unit: Data.unit,
+                unitName: Data.unitName,
                 remark: Data.remark,
                 changer: getUserNameNumber(),
                 changed: dateFormat(new Date(), 'yyyy-MM-dd hh:mm:ss'),

@@ -589,7 +589,7 @@
                     </el-table-column>
                     <el-table-column label="异常描述" :show-overflow-tooltip="true" min-width="200">
                         <template slot-scope="scope">
-                            <el-input v-model.trim="scope.row.exceptionInfo" size="small" placeholder="请输入异常描述" :disabled="!isRedact || scope.row.growInfo==='GOOD'" />
+                            <el-input v-model.trim="scope.row.exceptionInfo" size="small" placeholder="请输入异常描述" :disabled="!(isRedact && scope.row.status !== 'C' && scope.row.status !== 'D' && scope.row.status !== 'P') || scope.row.growInfo==='GOOD'" />
                         </template>
                     </el-table-column>
                     <el-table-column
