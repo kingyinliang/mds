@@ -57,8 +57,6 @@
             dataEntry: HTMLFormElement;
         }
 
-        orderIndex=['已同步', '已保存', '待审核', '已审核', '已过账', '已退回', '未录入']
-
         formHeader: OrderData = {};
         jumpFromAudit=false // is from audit ?
         // 泡豆罐list
@@ -159,8 +157,7 @@
                 this.tabs[0].status = data.data.steamBeanCraftName
                 this.tabs[1].status = data.data.steamBeanInStorageName
                 this.$refs.dataEntry.updateTabs();
-                this.$set(this.formHeader, 'statusName', this.orderIndex[Math.min(this.orderIndex.indexOf(data.data.steamBeanCraftName), this.orderIndex.indexOf(data.data.steamBeanInStorageName))])
-
+                this.$set(this.formHeader, 'statusName', data.data.steamBeanStatusName);
             })
         }
 
