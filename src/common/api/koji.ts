@@ -3,7 +3,7 @@
  * @Anthor: Telliex
  * @Date: 2020-08-27 14:28:27
  * @LastEditors: Telliex
- * @LastEditTime: 2020-12-17 14:20:21
+ * @LastEditTime: 2020-12-23 17:57:42
  */
 import httpProxy from 'utils/net/httpProxy';
 const KOJI_API = {
@@ -380,7 +380,31 @@ const KOJI_API = {
     /**
      * @property KOJI_VERIFY_TAB_STATUS_API 制曲车间-制曲审核-审核详情页签查询
      */
-    KOJI_VERIFY_TAB_STATUS_API: params => httpProxy('/koji/houseTag/queryVerifyDetail', 'GET', params)
+    KOJI_VERIFY_TAB_STATUS_API: params => httpProxy('/koji/houseTag/queryVerifyDetail', 'GET', params),
+    /**
+     * @property KOJI_VERIFY_RECORD_QUERY_BYID_API 制曲车间-制曲工时的审核日志查询
+     */
+    KOJI_VERIFY_RECORD_QUERY_BYID_API: params => httpProxy('/verifyRecord/koji/queryById', 'GET', params),
+    /**
+     * @property KOJI_FERMENTOR_ADJUST_API 发酵车间-发酵罐调整-调整
+     */
+    KOJI_FERMENTOR_ADJUST_MODIFY_API: params => httpProxy('/fer/fermentorAdjust/adjust', 'POST', params),
+    /**
+     * @property KKOJI_FERMENTO_GET_MATERIAL_BATCH_API 发酵车间-发酵罐调整-根据容器查询主物料批次
+     */
+    KOJI_FERMENTO_GET_MATERIAL_BATCH_API: params => httpProxy('/fer/fermentorAdjust/getMaterialBatch', 'GET', params),
+    /**
+     * @property KOJI_FERMENTO_GET_MATERIAL_BATCH_LIST_API 发酵车间-发酵罐调整-根据容器和物料编码查询物料批次列表
+     */
+    KOJI_FERMENTO_GET_MATERIAL_BATCH_LIST_API: params => httpProxy('/fer/fermentorAdjust/getMaterialBatchList', 'GET', params),
+    /**
+     * @property KOJI_FERMENTO_GET_MATERIAL_BATCH_LIST_API 发酵车间-发酵罐调整-根据容器查询物料列表
+     */
+    KOJI_FERMENTO_GET_MATERIAL_LIST_API: params => httpProxy('/fer/fermentorAdjust/getMaterialList', 'GET', params),
+    /**
+     * @property KOJI_FERMENTOR_ADJUST_API 发酵车间-发酵罐调整-挪罐
+     */
+    KOJI_FERMENTOR_ADJUST_CHANGE_API: params => httpProxy('/fer/fermentorAdjust/change', 'POST', params)
 };
 
 export default KOJI_API;

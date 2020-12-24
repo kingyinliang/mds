@@ -30,7 +30,7 @@
                                     <span class="default">{{ modifyDataGroup.fermentorStatusName }}</span>
                                 </el-form-item>
                                 <el-form-item label="物料：">
-                                    <el-select v-model="modifyDataGroup.a" placeholder="请选择" clearable style="width: 100%;">
+                                    <el-select v-model="modifyDataGroup.materialCode" placeholder="请选择" clearable style="width: 100%;">
                                         <el-option
                                             v-for="item in options"
                                             :key="item.dictCode"
@@ -40,7 +40,7 @@
                                     </el-select>
                                 </el-form-item>
                                 <el-form-item label="批次：">
-                                    <el-select v-model="modifyDataGroup.a" placeholder="请选择" clearable style="width: 100%;">
+                                    <el-select v-model="modifyDataGroup.batch" placeholder="请选择" clearable style="width: 100%;">
                                         <el-option
                                             v-for="item in options"
                                             :key="item.dictCode"
@@ -50,9 +50,9 @@
                                     </el-select>
                                 </el-form-item>
                                 <el-form-item label="出/入罐：" class="star">
-                                    <el-select v-model="modifyDataGroup.a" placeholder="请选择" clearable style="width: 100%;">
+                                    <el-select v-model="modifyDataGroup.inOutFlag" placeholder="请选择" clearable style="width: 100%;">
                                         <el-option
-                                            v-for="item in options"
+                                            v-for="item in inOutStatus"
                                             :key="item.dictCode"
                                             :label="item.dictValue"
                                             :value="item.dictCode"
@@ -77,7 +77,7 @@
                                 <el-form-item label="调整操作人：">
                                     <div class="required" style="min-height: 32px; line-height: 32px;">
                                         <span style="cursor: pointer;" @click="selectUser(modifyDataGroup)">
-                                            <em v-for="(item, index) in splitString(modifyDataGroup.mans)" :key="index">{{ item }}，</em>
+                                            <em v-for="(item, index) in splitString(modifyDataGroup.operators)" :key="index">{{ item }}，</em>
                                             <em>点击选择人员</em>
                                         </span>
                                     </div>
@@ -158,7 +158,7 @@
                                 <el-form-item label="转存操作人：">
                                     <div class="required" style="min-height: 32px; line-height: 32px;">
                                         <span style="cursor: pointer;" @click="selectUser(convertDataGroup)">
-                                            <em v-for="(item, index) in splitString(convertDataGroup.mans)" :key="index">{{ item }}，</em>
+                                            <em v-for="(item, index) in splitString(convertDataGroup.operators)" :key="index">{{ item }}，</em>
                                             <em>点击选择人员</em>
                                         </span>
                                     </div>
@@ -230,7 +230,7 @@
                                 <el-form-item label="挪罐操作人：">
                                     <div class="required" style="min-height: 32px; line-height: 32px;">
                                         <span style="cursor: pointer;" @click="selectUser(moveDataGroup)">
-                                            <em v-for="(item, index) in splitString(moveDataGroup.mans)" :key="index">{{ item }}，</em>
+                                            <em v-for="(item, index) in splitString(moveDataGroup.operators)" :key="index">{{ item }}，</em>
                                             <em>点击选择人员</em>
                                         </span>
                                     </div>
@@ -291,7 +291,9 @@
 
             currentTab='调整' // 当前 tab
             tabType='modify'
-
+            currentFermentorStatusName=''
+            currentItem: ItemObject={}
+            inOutStatus: Options[]=[]
 
             currentWorkShop=''
 
@@ -312,34 +314,15 @@
             // 当前 row
             currentRowIndex=0
 
-            modifyDataGroup={
-                holderName: '容器号A',
-                fermentorStatusName: '状态A',
-                a: '测试',
-                mans: '测试',
-                remark: '测试',
-                changed: dateFormat(new Date(), 'yyyy-MM-dd hh:mm:ss'),
-                changer: getUserNameNumber()
+            modifyDataGroup: ItemObject={
             } // modify data
 
-            convertDataGroup={
-                holderName: '容器号B',
-                fermentorStatusName: '状态B',
-                a: '测试',
-                mans: '测试',
-                remark: '测试',
-                changed: dateFormat(new Date(), 'yyyy-MM-dd hh:mm:ss'),
-                changer: getUserNameNumber()
+            convertDataGroup: ItemObject={
+
             } // convert data
 
-            moveDataGroup={
-                holderName: '容器号C',
-                fermentorStatusName: '状态C',
-                a: '测试',
-                mans: '测试',
-                remark: '测试',
-                changed: dateFormat(new Date(), 'yyyy-MM-dd hh:mm:ss'),
-                changer: getUserNameNumber()
+            moveDataGroup: ItemObject={
+
             } // move data
 
 
@@ -350,7 +333,23 @@
 
             mounted() {
                 // 获取组织树
-                this.getTree()
+                this.getTree();
+                // 数据字典出入罐
+                this.getInOutStatus();
+            }
+
+            // 数据字典出入罐
+            getInOutStatus() {
+                COMMON_API.DICTQUERY_API({ dictType: 'COMMON_CHECK_STATUS' }).then(({ data }) => {
+                    this.inOutStatus = data.data
+                });
+            }
+
+            // 获取物料
+            getMaterial() {
+                COMMON_API.DICTQUERY_API({ dictType: 'COMMON_CHECK_STATUS' }).then(({ data }) => {
+                    this.inOutStatus = data.data
+                });
             }
 
             changeTab(val) {
@@ -393,26 +392,88 @@
             async init(item) {
                 console.log('入罐')
                 console.log(item)
+                this.currentItem = item
 
                 this.isTableDialogVisible = true
                 this.currentWorkShop = item.workshop
                 this.currentCycle = item.cycle
-                this.currentHolderId = item.holderId
-                this.currentHolderName = item.holderName
-                this.dialogTitle = this.currentHolderName + this.currentTab
+                this.currentHolderId = item.holderId //
+                this.currentHolderName = item.holderName //
+                this.currentFermentorStatusName = item.fermentorStatusName //
 
+                this.dialogTitle = this.currentHolderName + this.currentTab
+                this.setData();
+            }
+
+            setData() {
+                this.modifyDataGroup = {
+                    holderName: this.currentHolderName,
+                    holderId: '',
+                    fermentorStatusName: this.currentFermentorStatusName,
+                    material: '',
+                    materialCode: '',
+                    materialName: '',
+                    batch: '',
+                    inOutFlag: '',
+                    moveAmount: null,
+                    moveType: '',
+                    operators: '',
+                    orderNo: '',
+                    remark: this.currentItem.remark,
+                    changed: dateFormat(new Date(), 'yyyy-MM-dd hh:mm:ss'),
+                    changer: getUserNameNumber()
+                } // modify data
+
+                this.convertDataGroup = {
+                    holderName: this.currentHolderName,
+                    fermentorStatusName: this.currentFermentorStatusName,
+                    material: '',
+                    materialCode: '',
+                    materialName: '',
+                    batch: '',
+                    operators: '',
+                    remark: this.currentItem.remark,
+                    changed: dateFormat(new Date(), 'yyyy-MM-dd hh:mm:ss'),
+                    changer: getUserNameNumber()
+                } // convert data
+
+                this.moveDataGroup = {
+                    holderName: this.currentHolderName,
+                    holderId: '',
+                    fermentorStatusName: this.currentFermentorStatusName,
+                    material: '',
+                    materialCode: '',
+                    materialName: '',
+                    batch: '',
+                    operators: '',
+                    orderNo: '',
+                    remark: this.currentItem.remark,
+                    sourceHolderId: '',
+                    targetHolderId: '',
+                    targetHolderType: '',
+                    changed: dateFormat(new Date(), 'yyyy-MM-dd hh:mm:ss'),
+                    changer: getUserNameNumber()
+                } // move data
             }
 
             getCyMatiral() {
-                COMMON_API.DICTQUERY_API({ dictType: 'DRUM_STAGE' }).then(({ data }) => {
-                    this.drumStageOptions = []
-                    if (data.data.length !== 0) {
-                        data.data.forEach(item => {
-                            this.drumStageOptions.push({ dictValue: item.dictValue, dictCode: item.dictCode })
-                        })
+                FER_API.FER_FERMENTOR_CY_SAVE_API({
+                            cycle: this.currentCycle,
+                            holderId: this.currentHolderId
+                        }).then(() => {
+                            this.$successToast('保存成功');
 
-                    }
-                })
+                        });
+            }
+
+            getBatch() {
+                FER_API.FER_FERMENTOR_CY_SAVE_API({
+                            cycle: this.currentCycle,
+                            holderId: this.currentHolderId
+                        }).then(() => {
+                            this.$successToast('保存成功');
+
+                        });
             }
 
             changeProdcutMaterialOption(val) {
@@ -426,12 +487,12 @@
             // 员工确认
             changeUser(item) {
                 if (this.tabType === 'modify') {
-                    this.modifyDataGroup.mans = item.join(',')
+                    this.modifyDataGroup.operators = item.join(',')
                 } else if (this.tabType === 'convert') {
-                    this.convertDataGroup.mans = item.join(',')
+                    this.convertDataGroup.operators = item.join(',')
 
                 } else if (this.tabType === 'move') {
-                    this.moveDataGroup.mans = item.join(',')
+                    this.moveDataGroup.operators = item.join(',')
                 }
                 this.isLoanedPersonnelStatusDialogVisible = false;
             }
@@ -442,11 +503,11 @@
                 // this.currentRowIndex = index
                 this.$nextTick(() => {
                     if (this.tabType === 'modify') {
-                        this.$refs.loanedPersonnel.init(row.mans, '调整操作人');
+                        this.$refs.loanedPersonnel.init(row.operators, '调整操作人');
                     } else if (this.tabType === 'convert') {
-                        this.$refs.loanedPersonnel.init(row.mans, '转存操作人');
+                        this.$refs.loanedPersonnel.init(row.operators, '转存操作人');
                     } else if (this.tabType === 'move') {
-                        this.$refs.loanedPersonnel.init(row.mans, '挪罐操作人');
+                        this.$refs.loanedPersonnel.init(row.operators, '挪罐操作人');
                     }
                 });
             }
@@ -614,6 +675,48 @@
         fermentorStatusName: string;
         holderId: string;
     }
+
+    interface ItemObject {
+        brineFlag?: string;
+        brineFlagName?: string;
+        changed?: string;
+        changer?: string;
+        batch?: string;
+        currentStock?: number;
+        cycle?: string;
+        moveAmount?: number|null;
+        material?: string;
+        sourceHolderId?: string;
+        operators?: string;
+        moveType?: string;
+        targetHolderId?: string;
+        inOutFlag?: string;
+        fermentDays?: number;
+        fermentorStatus?: string;
+        fermentorStatusName?: string;
+        targetHolderType?: string;
+        freezeFlag?: string;
+        fullDate?: string;
+        holderId?: string;
+        holderName?: string;
+        holderNo?: string;
+        holderType?: string;
+        holderTypeName?: string;
+        holderVolume?: number;
+        id?: string;
+        intoDate?: string;
+        judgeResult?: string;
+        judgeResultName?: string;
+        materialCode?: string;
+        materialName?: string;
+        matureFlag?: string;
+        openFlag?: string;
+        orderNo?: string;
+        remark?: string;
+        volumePercent?: number;
+        workShop?: string;
+    }
+
 </script>
 <style scoped>
 .markStyle >>> th .notNull::before {
