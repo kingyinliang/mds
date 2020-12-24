@@ -29,7 +29,7 @@
                             <template slot="titleBtn">
                                 <el-form :inline="true" size="small" class="dataEntry-head-base__form" style="float: right; margin-top: 0;">
                                     <el-form-item label="杂质总数：">
-                                        <p>{{ soybeanImpuritiesTotal }}KG</p>
+                                        <p>{{ soybeanImpuritiesTotal }}千克</p>
                                     </el-form-item>
                                 </el-form>
                             </template>
@@ -201,7 +201,7 @@
                 type: 'p',
                 icon: 'factory--meirijihuachanliangpeizhi',
                 label: '订单产量',
-                value: ['planOutput', 'outputUnit']
+                value: ['planOutput', 'outputUnitName']
             },
             {
                 type: 'p',
@@ -387,7 +387,7 @@
                     const itemSole = {};
                     itemSole['product'] = item.beanBatch;
                     item.impurityAmountList.map(items => {
-                        itemSole[items.impurityTypeName + '(' + items.impurityUnit + ')'] = items.impurityAmount;
+                        itemSole[items.impurityTypeName + '(' + items.impurityUnitName + ')'] = items.impurityAmount;
                     })
                     datasetSource.push(itemSole);
                 })
@@ -405,7 +405,7 @@
                         trigger: 'axis'
                     },
                     dataset: {
-                        dimensions: ['product', '豆皮(KG)', '小豆(KG)', '废豆(KG)'],
+                        dimensions: ['product', '豆皮(千克)', '小豆(千克)', '废豆(千克)'],
                         source: datasetSource
                     },
                     xAxis: { type: 'category' },
@@ -887,8 +887,8 @@
                 const seriesData: number[] = [];
                 data.data.map(item => {
                     yAxisData.push(item.materialName);
-                    seriesDataReal.push(item.materialAmount);
-                    seriesData.push(item.impurityAmount);
+                    seriesDataReal.push(item.materialAmount === 0 ? null : item.materialAmount);
+                    seriesData.push(item.impurityAmount === 0 ? null : item.impurityAmount);
                 })
                 this.chartLine = echarts.init(document.getElementById('J_chartLineBoxMaterial'));
                 const optionMaterial = {
