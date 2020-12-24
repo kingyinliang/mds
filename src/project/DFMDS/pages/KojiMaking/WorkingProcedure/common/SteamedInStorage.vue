@@ -31,7 +31,9 @@
                 </el-table-column>
                 <el-table-column label="备注">
                     <template slot-scope="scope">
-                        <el-input v-model.trim="scope.row.remark" size="small" placeholder="请输入" :disabled="!isRedact" />
+                        <el-tooltip :disabled="!scope.row.remark" effect="dark" :content="scope.row.remark" placement="top">
+                            <el-input v-model.trim="scope.row.remark" size="small" placeholder="请输入" :disabled="!isRedact" />
+                        </el-tooltip>
                     </template>
                 </el-table-column>
                 <el-table-column label="操作人" width="140">
@@ -187,7 +189,7 @@
                         this.tableData = [{
                             ...queryInStorageData[0],
                             feBeanMount: totalNum,
-                            unit: 'KG',
+                            unit: '千克',
                             changed: dateFormat(new Date(), 'yyyy-MM-dd hh:mm:ss'),
                             changer: getUserNameNumber(),
                             kojiOrderNo,
@@ -200,7 +202,7 @@
                             feBeanMount: totalNum,
                             inStorageAmount: planOutput || '',
                             inStorageBatch: '',
-                            unit: 'KG',
+                            unit: '千克',
                             scPotNo: '',
                             remark: '',
                             changed: dateFormat(new Date(), 'yyyy-MM-dd hh:mm:ss'),
@@ -219,7 +221,10 @@
 
         // 查询最新审核记录
         getAuditList(orderNo) {
-            AUDIT_API.AUDIT_LOG_LIST_API({ orderNo, verifyType: 'INSTORAGE' }).then(({ data }) => {
+            // AUDIT_API.AUDIT_LOG_LIST_API({ orderNo, verifyType: 'INSTORAGE' }).then(({ data }) => {
+            //     this.craftAuditList = data.data;
+            // });
+            AUDIT_API.STE_AUDIT_LOG_API({ orderNo, splitOrderNo: this.formHeader.kojiOrderNo, verifyType: ['SB_INSTORAGE', 'INSTORAGE'] }).then(({ data }) => {
                 this.craftAuditList = data.data;
             });
         }

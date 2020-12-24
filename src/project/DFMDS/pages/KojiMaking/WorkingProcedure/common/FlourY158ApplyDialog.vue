@@ -13,16 +13,16 @@
                     </el-select>
                 </el-form-item>
                 <el-form-item label="领用物料：">
-                    <el-input v-model="dataForm.materialLink" placeholder="手动输入" disabled />
+                    <el-input v-model="dataForm.materialLink" placeholder="请输入" disabled />
                 </el-form-item>
                 <el-form-item label="库存量：">
-                    <el-input v-model="dataForm.stockAmount" placeholder="手动输入" disabled />
+                    <el-input v-model="dataForm.stockAmount" placeholder="请输入" disabled />
                 </el-form-item>
                 <el-form-item label="领用数量：" prop="amount">
-                    <el-input v-model.number="dataForm.amount" placeholder="手动输入" @input="calcStockAmount" />
+                    <el-input v-model.number="dataForm.amount" placeholder="请输入" @input="calcStockAmount" />
                 </el-form-item>
                 <el-form-item label="单位：">
-                    <el-input v-model="dataForm.unit" placeholder="手动输入" disabled />
+                    <el-input v-model="dataForm.unit" placeholder="请输入" disabled />
                 </el-form-item>
                 <el-form-item label="添加人：" prop="operationMans">
                     <el-tooltip class="item" effect="dark" :content="dataForm.operationMans + '点击选择人员'" placement="top">
@@ -32,13 +32,15 @@
                     </el-tooltip>
                 </el-form-item>
                 <el-form-item label="备注：" prop="remark">
-                    <el-input v-model="dataForm.remark" placeholder="手动输入" />
+                    <el-tooltip :disabled="!dataForm.remark" effect="dark" :content="dataForm.remark" placement="top">
+                        <el-input v-model="dataForm.remark" placeholder="请输入" />
+                    </el-tooltip>
                 </el-form-item>
                 <el-form-item label="操作人：">
-                    <el-input v-model="dataForm.changer" placeholder="手动输入" disabled />
+                    <el-input v-model="dataForm.changer" disabled />
                 </el-form-item>
                 <el-form-item label="操作时间：">
-                    <el-input v-model="dataForm.changed" placeholder="手动输入" disabled />
+                    <el-input v-model="dataForm.changed" disabled />
                 </el-form-item>
             </el-form>
             <div slot="footer" class="dialog-footer">
@@ -112,6 +114,7 @@
                 this.workShopList = data.data;
                 if (data.data.length !== 0 && type === 'add') {
                     this.dataForm.materialLocation = data.data[0]['materialLocation'];
+                    this.dataForm.unit = data.data[0]['unitName'];
                 }
                 // 默认选中第一个选项 库位详细信息查询
                 this.checkShopDetail()
@@ -187,7 +190,7 @@
                 amount: Data.amount,
                 operationMans: Data.operationMans || '',
                 stockAmount: Data.stockAmount || Data.currentAmount,
-                unit: '盒',
+                unit: Data.unitName,
                 remark: Data.remark,
                 changer: getUserNameNumber(),
                 changed: dateFormat(new Date(), 'yyyy-MM-dd hh:mm:ss'),
@@ -221,6 +224,7 @@
                     this.dataForm.stockAmount = item.currentAmount;
                     this.STOCK_AMOUNT = Number(item.currentAmount);
                     this.dataForm.amount = '';
+                    this.dataForm.storageId = item.id;
                 }
             })
         }
@@ -264,6 +268,7 @@
     }
 
     interface BatchList {
+        id?: string;
         batch?: string;
         materialName?: string;
         materialCode?: string;
@@ -287,6 +292,7 @@
         kojiOrderNo?: string;
         smallBeanAmount?: string;
         unit?: string;
+        unitName?: string;
         remark?: string;
         changer?: string;
         changed?: string;
@@ -295,6 +301,7 @@
         operationMans?: string;
         wareHouseNo?: string;
         workShop?: string;
+        storageId?: string;
     }
 </script>
 <style lang="scss" scoped>

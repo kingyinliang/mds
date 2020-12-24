@@ -52,15 +52,9 @@
                     </el-table>
                 </mds-card>
                 <mds-card v-if="productLine === ''" title="看曲工艺" :name="'lookCraft'">
-                    <!-- <div v-for="i in lookListCount" class="mod-demo-echarts">
-                        <div id="J_chartLineBoxlookCraft1" style="height: 400px;" />
-                    </div> -->
                     <div v-for="i in lookListCount" :key="i" class="mod-demo-echarts">
                         <div :id="'J_chartLineBoxlookCraft'+ i" style="height: 400px;" />
                     </div>
-                    <!-- <div class="mod-demo-echarts">
-                        <div id="J_chartLineBoxlookCraft2" style="height: 400px;" />
-                    </div> -->
                 </mds-card>
                 <mds-card v-if="productLine === ''" title="入曲及出曲工艺" :name="' '">
                     <el-table class="newTable" :data="inOutCraftList" header-row-class-name="tableHead" border tooltip-effect="dark" style="margin-top: 5px;">
@@ -1019,7 +1013,7 @@
 
         goDetail() {
             this.$store.commit('sterilize/updateAuditDetailDetail', this.$store.state.sterilize.auditDetail);
-            this.$store.commit('common/updateMainTabs', this.$store.state.common.mainTabs.filter(subItem => subItem.name !== 'DFMDS-pages-Sterilize-Audit-'))
+            this.$store.commit('common/updateMainTabs', this.$store.state.common.mainTabs.filter(subItem => subItem.name !== 'DFMDS-pages-KojiMaking-Audit-detail'))
             setTimeout(() => {
                 this.$router.push({
                     name: `DFMDS-pages-KojiMaking-Audit-detail`

@@ -48,10 +48,10 @@
             </div>
             <div>
                 <div class="material-get-content_addTotal">
-                    大豆数量合计：{{ getMaterialTotalNum }} KG
+                    大豆数量合计：{{ getMaterialTotalNum }} 千克
                 </div>
                 <div class="material-get-content_addTotal">
-                    原豆数量合计：{{ getSmallTotalNum || 0 }} KG
+                    原豆数量合计：{{ getSmallTotalNum || 0 }} 千克
                 </div>
             </div>
         </mds-card>
@@ -82,7 +82,7 @@
         formHeader: SemiObj = {};
         visible = false;
         // 物料list
-        stockInfoList: object[] = [];
+        stockInfoList: StockInfoList[] = [];
         // 领用记录list
         materialTableList: SemiObj[] = [];
         // 审核记录list
@@ -90,7 +90,10 @@
 
         // 领用库位
         materialLocationOrhouseNo(row) {
-            return row.wareHouseNo || row.materialLocation;
+            if (!row.wareHouseNo) {
+                return this.formHeader.workShopName
+            }
+            return this.stockInfoList.filter(item => item.wareHouseNo === row.wareHouseNo)[0].wareHouseName
         }
 
         init(formHeader) {
@@ -121,7 +124,10 @@
 
         // 查询最新审核记录
         getAuditList() {
-            AUDIT_API.AUDIT_LOG_LIST_API({ orderNo: this.formHeader.orderNo, verifyType: 'MATERIAL' }).then(({ data }) => {
+            // AUDIT_API.AUDIT_LOG_LIST_API({ orderNo: this.formHeader.orderNo, verifyType: 'MATERIAL' }).then(({ data }) => {
+            //     this.auditList = data.data;
+            // });
+            AUDIT_API.STE_AUDIT_LOG_API({ orderNo: this.formHeader.orderNo, splitOrderNo: this.formHeader.kojiOrderNo, verifyType: ['WB_MATERIAL', 'MATERIAL'] }).then(({ data }) => {
                 this.auditList = data.data;
             });
         }
@@ -232,6 +238,38 @@
         unit?: string;
         smallBeanAmount?: string;
         workShop?: string;
+        workShopName?: string;
+    }
+    interface DetailsList {
+        batch: string;
+        changed: string;
+        changer: string;
+        currentAmount: number;
+        id: string;
+        impurityRate: number;
+        inStorageAmount: number;
+        inStorageDate: string;
+        materialCode: string;
+        materialLocation: string;
+        materialName: string;
+        productDate: string;
+        remark: string;
+        supplier: string;
+        unit: string;
+        unitName: string;
+        wareHouseId: string;
+        wareHouseName: string;
+        wareHouseNo: string;
+    }
+
+    interface StockInfoList {
+        detailsList: DetailsList[];
+        materialLocation: string;
+        reduceCurrentAmount: number;
+        wareHouseName: string;
+        wareHouseNo: string;
+        workShop: string;
+        workShopName: string;
     }
 </script>
 

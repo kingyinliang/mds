@@ -5,7 +5,7 @@
                 <el-table-column type="index" label="序号" width="50" fixed align="center" />
                 <el-table-column label="领用物料" prop="material" width="150" :show-overflow-tooltip="true">
                     <template slot-scope="scope">
-                        {{ scope.row.materialCode + ' ' + scope.row.materialName }}
+                        {{ scope.row.materialName + ' ' + scope.row.materialCode }}
                     </template>
                 </el-table-column>
                 <el-table-column label="单位" prop="materialUnitName" width="50" :show-overflow-tooltip="true" />
@@ -84,7 +84,7 @@
                 <el-table-column type="index" label="序号" width="50px" />
                 <el-table-column label="领用物料" prop="material" width="150" :show-overflow-tooltip="true">
                     <template slot-scope="scope">
-                        {{ scope.row.materialCode + ' ' + scope.row.materialName }}
+                        {{ scope.row.materialName + ' ' + scope.row.materialCode }}
                     </template>
                 </el-table-column>
                 <el-table-column label="单位" prop="materialUnit" width="50" :show-overflow-tooltip="true" />
@@ -266,6 +266,36 @@
                     }
                     if (item.id) {
                         pkgPackingMaterial.packingMaterialItemDelete.push(item.id)
+                    }
+                } else if (item.materialStatus === '1') {
+                    if (filterArr2 && filterArr2[0]) {
+                        item.factory = JSON.parse(sessionStorage.getItem('factory') || '{}').id;
+                        item.realLoss = (item.realLoss === '' || item.realLoss === null ? 0 : item.realLoss);
+                        filterArr2[0].item.push(item)
+                    } else {
+                        item.factory = JSON.parse(sessionStorage.getItem('factory') || '{}').id;
+                        item.realLoss = (item.realLoss === '' || item.realLoss === null ? 0 : item.realLoss);
+                        pkgPackingMaterial.packingMaterialInsert.push({
+                            factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
+                            merge: item.merge,
+                            mainId: item.mainId,
+                            id: item.mainId,
+                            checkStatus: item.checkStatus,
+                            delFlag: item.delFlag,
+                            endStocks: item.endStocks,
+                            materialType: item.materialType,
+                            materialCode: item.materialCode,
+                            materialName: item.materialName,
+                            materialStatus: item.materialStatus,
+                            materialUnit: item.materialUnit,
+                            needNum: item.needNum,
+                            orderId: item.orderId,
+                            orderNo: item.orderNo,
+                            posnr: item.posnr,
+                            receiveMaterial: item.receiveMaterial,
+                            startStocks: item.startStocks,
+                            item: [item]
+                        })
                     }
                 } else if (item.delFlag === 1) {
                     if (item.id) {

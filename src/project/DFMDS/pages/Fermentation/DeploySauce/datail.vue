@@ -4,6 +4,9 @@
             ref="dataEntry"
             :header-base="headerBase"
             :form-header="formHeader"
+            :saved-datas="savedDatas"
+            :submit-datas="submitDatas"
+            @success="getOrderList"
         >
             <template slot="contentBox" slot-scope="data">
                 <deploy-sauce-table ref="tables" :is-redact="data.isRedact" />
@@ -120,27 +123,54 @@
         }
 
         mounted() {
-            this.init()
+            this.getOrderList()
         }
 
-        init() {
+        getOrderList() {
             FER_API.FER_DEPLOY_SAUCE_GET_API({
                 id: this.$store.state.fer.deploySauceObj.id
             }).then(({ data }) => {
                 this.formHeader = data.data
-                this.formHeader.user = this.formHeader.mixMans.split('.')
+                this.formHeader.user = this.formHeader.mixMans.length > 0 ? this.formHeader.mixMans.split(',') : []
                 this.$refs.tables.init(this.formHeader)
             })
+        }
+
+        savedDatas() {
+            const { pickledMixMaterialList, receiveMixMaterialList, sauceMixMaterialList, materialRemoveIds } = this.$refs.tables.saveData()
+            this.formHeader.pickledMixMaterialList = pickledMixMaterialList
+            this.formHeader.receiveMixMaterialList = receiveMixMaterialList
+            this.formHeader.sauceMixMaterialList = sauceMixMaterialList
+            this.formHeader.materialRemoveIds = materialRemoveIds
+            this.formHeader.mixMans = this.formHeader.user.length ? this.formHeader.user.join(',') : ''
+            return FER_API.FER_DEPLOY_SAUCE_DETAIL_SAVE_API(this.formHeader)
+        }
+
+        submitDatas() {
+            const { pickledMixMaterialList, receiveMixMaterialList, sauceMixMaterialList, materialRemoveIds } = this.$refs.tables.saveData()
+            this.formHeader.pickledMixMaterialList = pickledMixMaterialList
+            this.formHeader.receiveMixMaterialList = receiveMixMaterialList
+            this.formHeader.sauceMixMaterialList = sauceMixMaterialList
+            this.formHeader.materialRemoveIds = materialRemoveIds
+            this.formHeader.mixMans = this.formHeader.user.length ? this.formHeader.user.join(',') : ''
+            return FER_API.FER_DEPLOY_SAUCE_DETAIL_SUBMIT_API(this.formHeader)
         }
     }
     interface HeadObj {
         openPotNo?: string;
-        user?: string[];
+        pickledMixMaterialList?: ListObj[];
+        receiveMixMaterialList?: ListObj[];
+        sauceMixMaterialList?: ListObj[];
+        materialRemoveIds?: string[];
+        user: string[];
         mixMans: string;
         ferOpen?: OpenObj;
     }
     interface OpenObj{
         openTypeName?: string;
+    }
+    interface ListObj {
+        id?: string;
     }
 </script>
 

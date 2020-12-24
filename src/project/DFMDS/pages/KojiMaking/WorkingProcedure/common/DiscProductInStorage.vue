@@ -59,7 +59,9 @@
                 </el-table-column>
                 <el-table-column label="备注" prop="remark" min-width="200">
                     <template slot-scope="scope">
-                        <el-input v-model.trim="scope.row.remark" size="small" placeholder="请输入" :disabled="!(isRedact && scope.row.checkStatus !== 'C' && scope.row.checkStatus !== 'D' && scope.row.checkStatus !== 'P')" />
+                        <el-tooltip :disabled="!scope.row.remark" effect="dark" :content="scope.row.remark" placement="top">
+                            <el-input v-model.trim="scope.row.remark" size="small" placeholder="请输入" :disabled="!(isRedact && scope.row.checkStatus !== 'C' && scope.row.checkStatus !== 'D' && scope.row.checkStatus !== 'P')" />
+                        </el-tooltip>
                     </template>
                 </el-table-column>
                 <el-table-column label="操作人" prop="changer" width="180">
@@ -150,7 +152,7 @@
             // 生产入库
             this.getKojiStatus()
             // 审核日志
-            this.getAudit(this.targetOrderObj, 'INSTORAGE');
+            this.getAudit(this.targetOrderObj, 'KJ_INSTORAGE');
         }
 
         // 生产入库
@@ -173,9 +175,13 @@
 
         // 审核日志
         getAudit(formHeader, verifyType) {
-            AUDIT_API.AUDIT_LOG_LIST_API({ orderNo: formHeader.orderNo, verifyType: verifyType }).then(({ data }) => {
-                this.currentAudit = data.data
-            })
+            console.log(verifyType);
+            // AUDIT_API.AUDIT_LOG_LIST_API({ orderNo: formHeader.orderNo, verifyType: verifyType }).then(({ data }) => {
+            //     this.currentAudit = data.data
+            // })
+            AUDIT_API.STE_AUDIT_LOG_API({ orderNo: formHeader.orderNo, splitOrderNo: formHeader.kojiOrderNo, verifyType: ['KJ_INSTORAGE', 'INSTORAGE'] }).then(({ data }) => {
+                this.currentAudit = data.data;
+            });
         }
 
         // 提交时跑校验

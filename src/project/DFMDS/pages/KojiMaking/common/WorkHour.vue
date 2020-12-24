@@ -31,7 +31,7 @@
                     </template>
                     <template slot-scope="scope">
                         <el-select v-model="scope.row.deptId" filterable placeholder="请选择" size="small" :disabled="!(isRedact && status !== 'C' && status !== 'D' && status !== 'P' && status !=='M')" clearable @change="selectDept(scope.row)">
-                            <el-option v-for="(iteam, index) in teamList" :key="index" :label="iteam.deptName" :value="iteam.deptCode" />
+                            <el-option v-for="(iteam, index) in teamList" :key="index" :label="iteam.deptName" :value="iteam.id" />
                         </el-select>
                     </template>
                 </el-table-column>
@@ -98,7 +98,9 @@
                 </el-table-column>
                 <el-table-column prop="verify_date" min-width="140" label="备注" :show-overflow-tooltip="true">
                     <template slot-scope="scope">
-                        <el-input v-model="scope.row.remark" size="small" :disabled="!(isRedact && status !== 'C' && status !== 'D' && status !== 'P' && status !=='M')" />
+                        <el-tooltip :disabled="!scope.row.remark" effect="dark" :content="scope.row.remark" placement="top">
+                            <el-input v-model="scope.row.remark" size="small" :disabled="!(isRedact && status !== 'C' && status !== 'D' && status !== 'P' && status !=='M')" />
+                        </el-tooltip>
                     </template>
                 </el-table-column>
                 <el-table-column prop="verify_date" min-width="150" label="操作人" :show-overflow-tooltip="true">
@@ -190,7 +192,6 @@ export default class ProductPeople extends Vue {
 
     init() {
         this.getClassesList();
-
         this.getUserTypeList()
         this.getTree()
     }
@@ -203,7 +204,6 @@ export default class ProductPeople extends Vue {
             })
         }
         this.orgFormDataGroup = JSON.parse(JSON.stringify(dataList));
-
     }
 
     // 班次
@@ -258,6 +258,8 @@ export default class ProductPeople extends Vue {
             parentId: process,
             deptType: 'PRODUCT_TEAM'
         }).then(({ data }) => {
+            console.log('获取工序组')
+            console.log(data)
             this.teamList = []
             if (data.data.length !== 0) {
                 this.teamList = data.data

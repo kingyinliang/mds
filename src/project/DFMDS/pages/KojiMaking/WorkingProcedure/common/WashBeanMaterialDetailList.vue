@@ -10,11 +10,11 @@
             <div class="stock-image_content stock-image_content_right">
                 <div class="stock-image_info stock-image_info_right">
                     <i class="iconfont factory-zongliangguanli" />
-                    <div class="stock-image_info_num">
-                        <el-tooltip effect="dark" :content="totalNum&&totalNum > 999999? (totalNum+'').substr(0,6): totalNum +'kg'" placement="top">
-                            <span class="stock-image_info_num_toolTip">{{ totalNum&&totalNum > 999999? (totalNum+'').substr(0,6): totalNum }}</span>
+                    <div class="stock-image_info_num" style="width: 100%; overflow: hidden; white-space: nowrap; text-overflow: ellipsis;">
+                        <el-tooltip effect="dark" :content="totalNum&&totalNum > 999999? (totalNum+'').substr(0,6): totalNum +'千克'" placement="top">
+                            <span class="stock-image_info_num_toolTip">{{ totalNum&&totalNum > 999999? (totalNum+'').substr(0,6)+'...': totalNum }}</span>
                         </el-tooltip>
-                        <span class="stock-image_info_num_span">kg</span>
+                        <span class="stock-image_info_num_span">千克</span>
                     </div>
                     <div class="stock-image_info_title">
                         库存总量
@@ -35,7 +35,7 @@
                     <el-table-column label="批次" prop="batch" align="center" min-width="100" />
                     <el-table-column label="数量" :show-overflow-tooltip="true" prop="currentAmount" width="100" align="right">
                         <template slot-scope="scope">
-                            {{ scope.row.currentAmount ? scope.row.currentAmount.toLocaleString()+' '+ scope.row.unit : '' }}
+                            {{ scope.row.currentAmount ? scope.row.currentAmount.toLocaleString()+' '+ scope.row.unitName : '' }}
                         </template>
                     </el-table-column>
                     <el-table-column label="日期" prop="productDate" align="center" :formatter="formatterProductDate" min-width="100" />
@@ -151,4 +151,3 @@
     }
 }
 </style>
-

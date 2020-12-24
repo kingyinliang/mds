@@ -33,7 +33,7 @@
             </el-table-column>
             <el-table-column label="发酵罐/池" width="160" prop="fermentPotNo" :show-overflow-tooltip="true">
                 <template slot-scope="scope">
-                    <el-select v-model="scope.row.fermentPotNo" size="small" :disabled="!['N','S','R'].includes(scope.row.status)" filterable clearable @change="val=>setTheSameFermentPot(val,scope.row)">
+                    <el-select v-model="scope.row.fermentPotNo" size="small" :disabled="!['N','S','R'].includes(scope.row.status) || unchangeableFermentPotNo" filterable clearable @change="val=>setTheSameFermentPot(val,scope.row)">
                         <el-option
                             v-for="item in fermentPotNoOptions"
                             :key="item.optValue"
@@ -121,6 +121,11 @@
                 this.orgSplitTable = JSON.parse(JSON.stringify(this.splitTable))
             })
 
+        }
+
+        // 只要有一个不是 ['N', 'S', 'R'] 三个可编辑状态，就都不可修改
+        get unchangeableFermentPotNo() {
+            return this.splitTable.some(item => !['N', 'S', 'R'].includes(item.status))
         }
 
         // 同步发酵罐值

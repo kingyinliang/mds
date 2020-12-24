@@ -71,12 +71,12 @@
                     <el-table-column type="index" label="序号" width="50" align="center" fixed />
                     <el-table-column v-if="isNormalPage" label="曲房号" prop="kojiHouseName" min-width="120" />
                     <el-table-column v-if="isNormalPage" label="入曲日期" prop="addKojiDate" width="180" />
-                    <el-table-column label="大豆量(KG)" prop="beanAmount" width="120" />
-                    <el-table-column v-if="isNormalPage" label="麦粉量(KG)" prop="wheatAmount" width="120" />
+                    <el-table-column label="大豆量(千克)" prop="beanAmount" width="120" />
+                    <el-table-column v-if="isNormalPage" label="麦粉量(千克)" prop="wheatAmount" width="120" />
                     <el-table-column v-if="isNormalPage" label="菌种量" prop="strainAmount" width="120" />
                     <el-table-column label="入库量" prop="inStorageAmount" width="120" />
                     <el-table-column label="入库批次" prop="inStorageBatch" min-width="120" />
-                    <el-table-column label="单位" prop="unit" width="120" />
+                    <el-table-column label="单位" prop="unitName" width="120" />
                     <el-table-column label="操作人" prop="changer" width="180" />
                     <el-table-column label="操作时间" prop="changed" width="180" />
                     <el-table-column label="操作" prop="" width="120" fixed="right">
@@ -95,7 +95,7 @@
                         入库量：
                     </div>
                     <div class="input_bottom">
-                        {{ inStorageComputed }} KG
+                        {{ inStorageComputed }} 千克
                     </div>
                 </el-row>
             </template>
@@ -104,10 +104,10 @@
                     <el-table-column type="index" label="序号" width="50" align="center" fixed />
                     <el-table-column v-if="isNormalPage" label="曲房" prop="kojiHouseName" width="120" />
                     <el-table-column v-if="isNormalPage" label="入曲日期" prop="addKojiDate" width="180" />
-                    <el-table-column label="物料" prop="material" min-width="120" />
+                    <el-table-column label="物料" prop="materialTypeName" min-width="120" />
                     <el-table-column label="批次" prop="batch" min-width="120" />
                     <el-table-column label="数量" prop="amount" width="120" />
-                    <el-table-column label="单位" prop="unit" width="120" />
+                    <el-table-column label="单位" prop="unitName" width="120" />
                     <el-table-column label="操作人员" prop="changer" width="180" />
                     <el-table-column label="操作时间" prop="changed" width="180" />
                     <el-table-column label="操作" prop="" width="120" fixed="right">
@@ -238,22 +238,22 @@
         tabs = [
             {
                 label: '准备人工',
-                status: '未录入1',
+                status: '未录入',
                 isRedact: false
             },
             {
                 label: '机器工时',
-                status: '未录入1',
+                status: '未录入',
                 isRedact: false
             },
             {
                 label: '生产入库',
-                status: '未录入1',
+                status: '未录入',
                 isRedact: false
             },
             {
                 label: '物料领用',
-                status: '未录入1',
+                status: '未录入',
                 isRedact: false
             },
             {
@@ -272,6 +272,8 @@
         rejectText = '';
         rejectProcess='';
         rejectKojiHouseId='';
+        rejectMaterialStyle=''; // 物料领用使用
+        rejectBatch=''; // 物料领用使用
 
         kojiHouseNoOptions: OptionObj[]=[]; // 曲房下拉
         manHourList: ManHourList[] = [];
@@ -294,15 +296,7 @@
             await this.initData(this.currentOrderNo)
             await this.getKojiHolder()
             await this.getProcessMapping()
-
-            // 5个 tab 加载
-            this.getManHourList()
-            this.getMachineHourList()
-            this.getInStorageList()
-            this.getMeterialList()
-            this.getCraftList()
         }
-
 
         // 工艺列表 tab 工序详情
         goProcessDetail(item) {
@@ -313,13 +307,7 @@
 
         // 跳转工序页面
         goDetail(who, arg) {
-            console.log(who)
-            console.log(arg)
             let url = '';
-            // 曲房工序跳转
-            // if (this.isNormalPage) {
-                // this.$store.commit('koji/updateOrderKojiInfo', item);
-
                 switch (who) {
                     case 'XD':
                         url = 'DFMDS-pages-KojiMaking-WorkingProcedure-WashBean';
@@ -330,12 +318,6 @@
                     case 'YP':
                         url = 'DFMDS-pages-KojiMaking-WorkingProcedure-disc';
                         break;
-                    // default:
-                // }
-
-            // } else { // 蒸豆工序跳转
-                // this.$store.commit('koji/updateOrderScInfo', item);
-                // switch (who) {
                     case 'SC':
                         url = 'DFMDS-pages-KojiMaking-WorkingProcedure-SCWashBean';
                         break;
@@ -344,8 +326,6 @@
                         break;
                     default:
                 }
-
-            // }
 
             console.log(`url:${url}`)
 
@@ -359,7 +339,6 @@
                     name: url, params: { order: arg }
                 });
             }, 100);
-
         }
 
         get inStorageComputed() {
@@ -462,7 +441,7 @@
 
 
             // 页签状态
-            await KOJI_API.KOJI_VERIFY_TAB_STATUS_API({
+            await KOJI_API.KOJI_VERIFY_TAB_STATUS_API({ // /koji/houseTag/queryVerifyDetail
                 orderNo: this.formHeader.orderNo
             }).then(({ data }) => {
                 console.log('页签data')
@@ -477,17 +456,20 @@
                     this.$refs.dataEntry.updateTabs();
                 }
             });
+
+            // 5 个 tab 加载
+            this.getManHourList()
+            this.getMachineHourList()
+            this.getInStorageList()
+            this.getMeterialList()
+            this.getCraftList()
         }
 
         reject(who, item) {
-            // if (this.$refs.dataEntry.activeName === '6' || this.$refs.dataEntry.activeName === '7') {
-            //     return false
-            // }
-            // if (this.tabs[Number(this.$refs.dataEntry.activeName) - 1].status !== 'D') {
-            //     return false
-            // }
             this.visibleRefuse = true;
             this.rejectText = '';
+            console.log('item')
+            console.log(item)
             switch (who) {
                 case '1':
                     this.rejectProcess = this.processMapping[item.process]
@@ -501,24 +483,18 @@
                 break;
                 case '4':
                     this.rejectKojiHouseId = this.kojiHouseNoOptions.filter(element => element.optValue === item.kojiHouseNo)[0].optId
+                    this.rejectMaterialStyle = item.materialType;
+                    this.rejectBatch = item.batch;
                 break;
                 default:
             }
         }
 
         auditLog() {
-
             AUDIT_API.AUDIT_LOG_LIST_API({ orderNo: this.currentOrderNo, verifyType: '' }).then(({ data }) => {
                     this.auditLogData = data.data
                     this.visibleAuditLog = true
             })
-            // AUDIT_API.AUDIT_DIALOG_LOG_LIST_API({
-            //     verifyId: row.id,
-            //     verifyType: 'TIMESHEET'
-            // }).then(({ data }) => {
-            //     this.auditLogData = data.data
-            //     this.visibleAuditLog = true
-            // })
         }
 
         // 获取曲房下拉选项
@@ -542,7 +518,6 @@
                 data.data.forEach(item => {
                     this.$set(this.processMapping, item.dictValue, item.dictCode)
                 })
-
             });
         }
 
@@ -595,8 +570,10 @@
                     break;
                 case '4':
                     KOJI_API.KOJI_REFUSE_MATERIAL_API({
+                        batch: this.rejectBatch,
                         kojiHouseId: this.rejectKojiHouseId,
                         orderNo: this.formHeader.orderNo,
+                        materialType: this.rejectMaterialStyle,
                         productDate: this.formHeader.productDate,
                         refuseSeason: this.rejectText
                     }).then(() => {
@@ -624,6 +601,7 @@
         id?: string;
         materialCode?: string;
         materialName?: string;
+        materialTypeName?: string;
         operator?: string;
         operatorDate?: string;
         orderEndDate?: string;

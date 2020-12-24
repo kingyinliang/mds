@@ -152,7 +152,6 @@
                     });
                     return str;
                 }
-                console.log(getObjPath(formHeader, value), '222222');
                 return getObjPath(formHeader, value);
             }
         },
@@ -286,7 +285,7 @@
         computed: {
             getTagStatus: () => {
                 return (status) => {
-                    let res = '';
+                    let res;
                     switch (status) {
                         case 'noPass':
                             res = '不通过';

@@ -90,9 +90,13 @@ const AUDIT_API = {
      */
     ACCESSORIES_LIST_API: params => httpProxy('/verifyAccessoriesAdjust/query', 'POST', params),
     /**
-     * @property {string} STE_AUDIT_LOG_API 杀菌车间 - 审核日志
+     * @property {string} STE_AUDIT_LOG_API 杀菌、制曲车间 - 审核日志
      */
-    STE_AUDIT_LOG_API: params => httpProxy('/verifyRecord/queryByNoAndType', 'POST', params)
+    STE_AUDIT_LOG_API: params => httpProxy('/verifyRecord/queryByNoAndType', 'POST', params),
+    /**
+     * @property {string} STE_AUDIT_QUERY_BY_ID 制曲车间 - 工时录入 - 审核日志
+     */
+    STE_AUDIT_QUERY_BY_ID: params => httpProxy('/verifyRecord/koji/queryById', 'GET', params)
 };
 
 export default AUDIT_API;
