@@ -558,9 +558,7 @@
 
         // 查询最新审核记录
         getAuditList(orderNo) {
-            AUDIT_API.AUDIT_LOG_LIST_API({ orderNo, verifyType: 'SF_CONTROL' }).then(({ data }) => {
-                console.log('蒸面工艺控制审核日志')
-                console.log(data)
+            AUDIT_API.STE_AUDIT_LOG_API({ orderNo, splitOrderNo: this.formHeader.kojiOrderNo, verifyType: ['SF_CONTROL', 'TIMESHEET'] }).then(({ data }) => {
                 this.craftAuditList = data.data;
             });
         }

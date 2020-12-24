@@ -589,7 +589,7 @@
                     </el-table-column>
                     <el-table-column label="异常描述" :show-overflow-tooltip="true" min-width="200">
                         <template slot-scope="scope">
-                            <el-input v-model.trim="scope.row.exceptionInfo" size="small" placeholder="请输入异常描述" :disabled="!isRedact || scope.row.growInfo==='GOOD'" />
+                            <el-input v-model.trim="scope.row.exceptionInfo" size="small" placeholder="请输入异常描述" :disabled="!(isRedact && scope.row.status !== 'C' && scope.row.status !== 'D' && scope.row.status !== 'P') || scope.row.growInfo==='GOOD'" />
                         </template>
                     </el-table-column>
                     <el-table-column
@@ -800,7 +800,7 @@
             // 看曲记录
             this.getKojiDiscGuard()
             // 审核日志
-            this.getAudit(this.targetOrderObj, 'KJ_CONTROL');
+            this.getAudit(this.targetOrderObj);
         }
 
 
@@ -1234,12 +1234,10 @@
         }
 
         // 审核日志
-        getAudit(formHeader, verifyType) {
-            AUDIT_API.AUDIT_LOG_LIST_API({ orderNo: formHeader.orderNo, verifyType: verifyType }).then(({ data }) => {
-                console.log('圆盘工艺控制审核日志')
-                console.log(data)
-                this.currentAudit = data.data
-            })
+        getAudit(formHeader) {
+            AUDIT_API.STE_AUDIT_LOG_API({ orderNo: formHeader.orderNo, splitOrderNo: formHeader.kojiOrderNo, verifyType: ['KJ_CONTROL', 'TIMESHEET'] }).then(({ data }) => {
+                this.currentAudit = data.data;
+            });
         }
 
         // 处理小数点后两位

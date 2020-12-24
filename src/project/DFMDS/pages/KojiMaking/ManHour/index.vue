@@ -43,7 +43,7 @@
 <script lang="ts">
 import { Vue, Component, Watch } from 'vue-property-decorator';
 // import { COMMON_API, AUDIT_API, KOJI_API } from 'common/api/api';
-import { COMMON_API, KOJI_API } from 'common/api/api';
+import { COMMON_API, KOJI_API, AUDIT_API } from 'common/api/api';
 import { dateFormat } from 'utils/utils';
 import ReadyTime from '../common/ReadyTimes.vue';
 import OfficialWorker from 'components/OfficialWorker.vue';
@@ -80,7 +80,8 @@ export default class KojiManHour extends Vue {
         materialCode: '',
         materialName: '',
         changer: '',
-        changed: ''
+        changed: '',
+        id: ''
     }
 
     redactBoxDisable=true
@@ -207,8 +208,16 @@ export default class KojiManHour extends Vue {
                     this.formHeader.checkStatusName = this.checkStatus.filter(item => item.dictCode === this.formHeader.checkStatus)[0].dictValue
                     this.formHeader.changed = data.data.changed;
                     this.formHeader.changer = data.data.changer;
+                    this.formHeader.id = data.data.kojiTimeSheetResponseDto.id;
                     this.$refs.readyTime.changeList(data.data.kojiTimeSheetResponseDto);
                     this.$refs.workHour.changeList(data.data.kojiUserDtos);
+                    // 审核日志
+                    AUDIT_API.STE_AUDIT_QUERY_BY_ID({
+                        id: this.formHeader.id
+                    }).then(result => {
+                        this.manHourAudit = result.data.data;
+                        this.redactBoxDisable = false
+                    })
                 }
         })
         this.redactBoxDisable = false
