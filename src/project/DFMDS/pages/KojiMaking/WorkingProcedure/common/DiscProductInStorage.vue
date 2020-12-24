@@ -152,7 +152,7 @@
             // 生产入库
             this.getKojiStatus()
             // 审核日志
-            this.getAudit(this.targetOrderObj, 'KJ_INSTORAGE');
+            this.getAudit(this.targetOrderObj);
         }
 
         // 生产入库
@@ -174,11 +174,7 @@
         }
 
         // 审核日志
-        getAudit(formHeader, verifyType) {
-            console.log(verifyType);
-            // AUDIT_API.AUDIT_LOG_LIST_API({ orderNo: formHeader.orderNo, verifyType: verifyType }).then(({ data }) => {
-            //     this.currentAudit = data.data
-            // })
+        getAudit(formHeader) {
             AUDIT_API.STE_AUDIT_LOG_API({ orderNo: formHeader.orderNo, splitOrderNo: formHeader.kojiOrderNo, verifyType: ['KJ_INSTORAGE', 'INSTORAGE'] }).then(({ data }) => {
                 this.currentAudit = data.data;
             });

@@ -558,9 +558,6 @@
 
         // 查询最新审核记录
         getAuditList(orderNo) {
-            // AUDIT_API.AUDIT_LOG_LIST_API({ orderNo, verifyType: 'CONTROL' }).then(({ data }) => {
-            //     this.craftAuditList = data.data;
-            // });
             AUDIT_API.STE_AUDIT_LOG_API({ orderNo, splitOrderNo: this.formHeader.kojiOrderNo, verifyType: ['SF_CONTROL', 'TIMESHEET'] }).then(({ data }) => {
                 this.craftAuditList = data.data;
             });
