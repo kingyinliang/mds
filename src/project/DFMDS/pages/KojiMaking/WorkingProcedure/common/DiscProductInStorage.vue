@@ -175,11 +175,13 @@
 
         // 审核日志
         getAudit(formHeader, verifyType) {
-            AUDIT_API.AUDIT_LOG_LIST_API({ orderNo: formHeader.orderNo, verifyType: verifyType }).then(({ data }) => {
-                console.log('圆盘生产入库审核日志')
-                console.log(data)
-                this.currentAudit = data.data
-            })
+            console.log(verifyType);
+            // AUDIT_API.AUDIT_LOG_LIST_API({ orderNo: formHeader.orderNo, verifyType: verifyType }).then(({ data }) => {
+            //     this.currentAudit = data.data
+            // })
+            AUDIT_API.STE_AUDIT_LOG_API({ orderNo: formHeader.orderNo, splitOrderNo: formHeader.kojiOrderNo, verifyType: ['KJ_INSTORAGE', 'INSTORAGE'] }).then(({ data }) => {
+                this.currentAudit = data.data;
+            });
         }
 
         // 提交时跑校验

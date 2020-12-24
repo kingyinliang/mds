@@ -51,7 +51,7 @@
                         <span class="notNull">* </span>阶段
                     </template>
                     <template slot-scope="scope">
-                        <el-select v-model="scope.row.controlStage" placeholder="请选择" :disabled="!isRedact" size="small" style="width: 100%;">
+                        <el-select v-model="scope.row.controlStage" placeholder="请选择" :disabled="!isRedact" size="small" style="width: 100%;" @change="changeStage($event, scope.row)">
                             <el-option v-for="(subItem, index) in scope.row.controlStageList" :key="index" :label="subItem.dictValue" :value="subItem.dictCode" />
                         </el-select>
                     </template>
@@ -236,6 +236,79 @@ export default class Crafts extends Vue {
             verifyType: verifyType
         })
         return a.data.data
+    }
+
+    changeStage(val, row) {
+        console.log(val);
+        console.log('记录时间');
+        console.log(row.recordDate);
+        if (row.controlType === 'HEAT') { // 保温
+            if (val === 'HEAT_START') { // 保温开始 默认 = 升温结束
+                if (!row.recordDate && this.craftInfo.riseEndDate) {
+                    row.recordDate = this.craftInfo.riseEndDate;
+                }
+            } else if (val !== 'HEAT_TWO' && val !== 'HEAT_END') {
+                let sole: CraftList[] = [];
+                sole = this.craftTable.filter(item => item.controlStage === 'HEAT_TWO' && item.recordDate !== '' && item.delFlag !== 1);
+                if (sole.length === 0) {
+                    sole = this.craftTable.filter(item => item.controlStage === 'HEAT_START' && item.recordDate !== '' && item.delFlag !== 1);
+                }
+                if (sole.length !== 0) {
+                    let number = 0;
+                    number = sole.length - 1;
+                    let test: string | undefined = '';
+                    test = sole[number]['recordDate'];
+                    // eslint-disable-next-line
+                    if (sole[number]['recordDate'] && test !== undefined) {
+                        const finalTimes = new Date(test).getTime();
+                        if (val === 'HEAT_10MIN' && !row.recordDate) { // 保温10分钟
+                            const newTime = new Date(finalTimes + 1000 * 60 * 10);
+                            row.recordDate = dateFormat(newTime, 'yyyy-MM-dd hh:mm');
+                        } else if (val === 'HEAT_15MIN' && !row.recordDate) {
+                            const newTime = new Date(finalTimes + 1000 * 60 * 15);
+                            row.recordDate = dateFormat(newTime, 'yyyy-MM-dd hh:mm');
+                        } else if (val === 'HEAT_20MIN' && !row.recordDate) {
+                            const newTime = new Date(finalTimes + 1000 * 60 * 20);
+                            row.recordDate = dateFormat(newTime, 'yyyy-MM-dd hh:mm');
+                        } else if (val === 'HEAT_30MIN' && !row.recordDate) {
+                            const newTime = new Date(finalTimes + 1000 * 60 * 30);
+                            row.recordDate = dateFormat(newTime, 'yyyy-MM-dd hh:mm');
+                        } else if (val === 'HEAT_35MIN' && !row.recordDate) {
+                            const newTime = new Date(finalTimes + 1000 * 60 * 35);
+                            row.recordDate = dateFormat(newTime, 'yyyy-MM-dd hh:mm');
+                        }
+                    }
+                }
+            }
+        } else if (row.controlType === 'DISCHARGE' || row.controlType === 'COOL') { // 降温 & 出料
+            if (val === 'COOL_START' && !row.recordDate) { // 降温开始 = 保温结束
+                let sole: CraftList[] = [];
+                sole = this.craftTable.filter(item => item.controlStage === 'HEAT_END' && item.recordDate !== '' && item.delFlag !== 1);
+                if (sole.length !== 0) {
+                    let number = 0;
+                    number = sole.length - 1;
+                    let finalTimes: string | undefined = '';
+                    finalTimes = sole[number]['recordDate'];
+                    // eslint-disable-next-line
+                    if (finalTimes && finalTimes !== undefined) {
+                        row.recordDate = finalTimes;
+                    }
+                }
+            } else if (val === 'DISCHARGE_START') { // 出料开始 = 降温结束
+                let sole: CraftList[] = [];
+                sole = this.craftTable.filter(item => item.controlStage === 'COOL_END' && item.recordDate !== '' && item.delFlag !== 1);
+                if (sole.length !== 0) {
+                    let number = 0;
+                    number = sole.length - 1;
+                    let finalTimes: string | undefined = '';
+                    finalTimes = sole[number]['recordDate'];
+                    // eslint-disable-next-line
+                    if (finalTimes && finalTimes !== undefined) {
+                        row.recordDate = finalTimes;
+                    }
+                }
+            }
+        }
     }
 
     ruleSubmit() {

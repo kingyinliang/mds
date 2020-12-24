@@ -195,7 +195,7 @@
                 type: 'p',
                 icon: 'factory--meirijihuachanliangpeizhi',
                 label: '订单产量',
-                value: ['planOutput', 'outputUnit']
+                value: ['planOutput', 'outputUnitName']
             },
             {
                 type: 'p',
@@ -381,7 +381,7 @@
                     const itemSole = {};
                     itemSole['product'] = item.beanBatch;
                     item.impurityAmountList.map(items => {
-                        itemSole[items.impurityTypeName + '(' + items.impurityUnit + ')'] = items.impurityAmount;
+                        itemSole[items.impurityTypeName + '(' + items.impurityUnitName + ')'] = items.impurityAmount;
                     })
                     datasetSource.push(itemSole);
                 })
@@ -881,8 +881,8 @@
                 const seriesData: number[] = [];
                 data.data.map(item => {
                     yAxisData.push(item.materialName);
-                    seriesDataReal.push(item.materialAmount);
-                    seriesData.push(item.impurityAmount);
+                    seriesDataReal.push(item.materialAmount === 0 ? null : item.materialAmount);
+                    seriesData.push(item.impurityAmount === 0 ? null : item.impurityAmount);
                 })
                 this.chartLine = echarts.init(document.getElementById('J_chartLineBoxMaterial'));
                 const optionMaterial = {

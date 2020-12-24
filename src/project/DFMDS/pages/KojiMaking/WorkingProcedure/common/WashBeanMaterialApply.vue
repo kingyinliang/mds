@@ -124,9 +124,10 @@
 
         // 查询最新审核记录
         getAuditList() {
-            AUDIT_API.AUDIT_LOG_LIST_API({ orderNo: this.formHeader.orderNo, verifyType: 'WB_MATERIAL' }).then(({ data }) => {
-                console.log('洗豆物料领用审核日志')
-                console.log(data)
+            // AUDIT_API.AUDIT_LOG_LIST_API({ orderNo: this.formHeader.orderNo, verifyType: 'MATERIAL' }).then(({ data }) => {
+            //     this.auditList = data.data;
+            // });
+            AUDIT_API.STE_AUDIT_LOG_API({ orderNo: this.formHeader.orderNo, splitOrderNo: this.formHeader.kojiOrderNo, verifyType: ['WB_MATERIAL', 'MATERIAL'] }).then(({ data }) => {
                 this.auditList = data.data;
             });
         }
