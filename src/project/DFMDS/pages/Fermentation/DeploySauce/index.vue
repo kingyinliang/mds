@@ -3,6 +3,7 @@
         <query-table
             ref="queryTable"
             :tabs="tabs"
+            :factory-type="1"
             :query-form-data="queryFormData"
             :custom-data="true"
             :list-interface="listInterface"

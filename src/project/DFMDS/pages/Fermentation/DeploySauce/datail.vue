@@ -60,7 +60,7 @@
                 type: 'p',
                 icon: 'factory-shengchanchejian',
                 label: '状态',
-                value: 'workShopName'
+                value: 'status'
             },
             {
                 type: 'tooltip',
@@ -72,7 +72,7 @@
                 type: 'tooltip',
                 icon: 'factory-pinleiguanli',
                 label: '调后物料',
-                value: ['materialCode', 'materialName']
+                value: ['mixMaterialCode', 'mixMaterialName']
             },
             {
                 type: 'orgSelectUser',
@@ -81,10 +81,10 @@
                 value: 'user'
             },
             {
-                type: 'date-picker',
+                type: 'date-time',
                 icon: 'factory-riqi1',
                 label: '调酱时间',
-                value: 'productDate'
+                value: 'mixDate'
             },
             {
                 type: 'tooltip',
@@ -102,11 +102,11 @@
                 type: 'radio',
                 icon: 'factory-bianhao',
                 label: '生产订单',
-                value: 'order',
+                value: 'orderFlag',
                 option: {
                     list: [
-                        { label: '是', value: 1 },
-                        { label: '否', value: 2 }
+                        { label: '是', value: 'Y' },
+                        { label: '否', value: 'N' }
                     ],
                     label: 'label',
                     value: 'value'
