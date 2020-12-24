@@ -178,6 +178,8 @@
             if (type !== 'add') {
                 Data = infoData;
             }
+            console.log('infoData1111111')
+            console.log(infoData)
 
             this.dataForm = {
                 id: Data.id,
@@ -192,6 +194,7 @@
                 stockAmount: Data.stockAmount || Data.currentAmount,
                 unit: Data.unit,
                 unitName: Data.unitName,
+                storageId: Data.storageId,
                 remark: Data.remark,
                 changer: getUserNameNumber(),
                 changed: dateFormat(new Date(), 'yyyy-MM-dd hh:mm:ss'),
@@ -217,6 +220,7 @@
         }
 
         batchChange() {
+            console.log(this.batchList)
             this.batchList.map(item => {
                 if (item.batch === this.dataForm.batch) {
                     this.dataForm.materialLink = String(item.materialName) + String(item.materialCode);
