@@ -916,6 +916,11 @@
                         this.$set(this.kojiDiscTurnData[0], 'turnEnd', '')
                     }
 
+                    if (!this.kojiDiscTurnData[0].id) {
+                        this.$set(this.kojiDiscTurnData[0], 'changer', getUserNameNumber())
+                        this.$set(this.kojiDiscTurnData[0], 'changed', dateFormat(new Date(), 'yyyy-MM-dd hh:mm:ss'))
+                    }
+
                     this.$set(this.kojiDiscTurnData[1], 'orderNo', this.targetOrderObj.orderNo)
                     this.$set(this.kojiDiscTurnData[1], 'kojiOrderNo', this.targetOrderObj.kojiOrderNo)
                     if (this.kojiDiscTurnData[1].turnStart === null) {
@@ -923,6 +928,10 @@
                     }
                     if (this.kojiDiscTurnData[1].turnEnd === null) {
                         this.$set(this.kojiDiscTurnData[1], 'turnEnd', '')
+                    }
+                    if (!this.kojiDiscTurnData[1].id) {
+                        this.$set(this.kojiDiscTurnData[1], 'changer', getUserNameNumber())
+                        this.$set(this.kojiDiscTurnData[1], 'changed', dateFormat(new Date(), 'yyyy-MM-dd hh:mm:ss'))
                     }
                 }
             })
