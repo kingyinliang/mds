@@ -12,23 +12,23 @@
             <el-col style="width: 250px;">
                 <el-card style="height: 303px; overflow-y: scroll;">
                     <el-row style=" margin-bottom: 10px; padding: 0 20px; line-height: 40px; background: #f5f7fa;">
-                        <el-checkbox v-model="checkedLeft" @change="checkedAll('userlistTree')" /> 未分配人员
+                        <el-checkbox v-model="checkedOfUser" @change="checkedAll('userListTree')" /> 未分配人员
                     </el-row>
                     <el-input v-model="filterText" size="small" placeholder="搜索人员" style="padding-bottom: 10px;" />
-                    <el-tree ref="userlistTree" :filter-node-method="filterNode1" node-key="label" :data="userlist" show-checkbox :props="userListTreeProps" :expand-on-click-node="false" @node-click="treeNodeClick" @check-change="userTree" />
+                    <el-tree ref="userListTree" :filter-node-method="filterNode1" node-key="label" :data="userList" show-checkbox :props="userListTreeProps" :expand-on-click-node="false" @node-click="treeNodeClick" @check-change="userTree" />
                 </el-card>
             </el-col>
             <el-col style="width: 50px; padding: 70px 5px;">
-                <el-button type="primary" icon="el-icon-arrow-left" circle style="margin-bottom: 50px;" :disabled="!tree2Status" @click="delSelcted()" />
-                <el-button type="primary" icon="el-icon-arrow-right" circle style="margin-left: 0;" :disabled="!tree1Status" @click="addSelcted()" />
+                <el-button type="primary" icon="el-icon-arrow-left" circle style="margin-bottom: 50px;" :disabled="!isItemToLeft" @click="delSelcted()" />
+                <el-button type="primary" icon="el-icon-arrow-right" circle style="margin-left: 0;" :disabled="!isItemToRight" @click="addSelcted()" />
             </el-col>
             <el-col style="width: 250px;">
                 <el-card style="height: 303px; overflow-y: scroll;">
                     <el-row style=" margin-bottom: 10px; padding: 0 20px; line-height: 40px; background: #f5f7fa;">
-                        <el-checkbox v-model="checkedRight" @change="checkedAll('userlistTree1')" /> 已分配人员
+                        <el-checkbox v-model="checkedOfSelected" @change="checkedAll('userListTree1')" /> 已分配人员
                     </el-row>
-                    <el-input v-model="filterText1" size="small" placeholder="搜索人员" style="padding-bottom: 10px;" />
-                    <el-tree ref="userlistTree1" :filter-node-method="filterNode1" node-key="label" :data="selctId" show-checkbox :props="selctListTreeProps" :expand-on-click-node="false" @node-click="treeNodeClick1" @check-change="userTree1" />
+                    <el-input v-model="filterTextOfSelected" size="small" placeholder="搜索人员" style="padding-bottom: 10px;" />
+                    <el-tree ref="userListTree1" :filter-node-method="filterNode1" node-key="label" :data="selectIdList" show-checkbox :props="selectListTreeProps" :expand-on-click-node="false" @node-click="treeNodeClick1" @check-change="userTree1" />
                 </el-card>
             </el-col>
         </el-row>
@@ -49,25 +49,17 @@ export default {
     name: 'LoanedPersonnel',
     components: {},
     props: {
-        // orgTree: {
-        //     type: Array,
-        //     default: function() { return [[]] }
-        // }
-        // arrList: {
-        //     type: Array,
-        //     default: function() { return {} }
-        // }
     },
     data() {
         return {
-            userTypeName: '',
-            visible: false,
+            userTypeName: '', // 此弹窗 title
+            visible: false, // 此弹窗显示
             filterText: '',
-            userlist: [],
-            tree1Status: false,
-            filterText1: '',
-            selctId: [],
-            tree2Status: false,
+            filterTextOfSelected: '',
+            userList: [], // 可选
+            selectIdList: [], // 已选
+            isItemToRight: false,
+            isItemToLeft: false,
             userListTreeProps: {
                 label: function(data) {
                     // return data.realName + '（' + (data.workNum !== null && data.workNum !== '' ? data.workNum : data.workNumTemp) + '）';
@@ -75,7 +67,7 @@ export default {
                 },
                 children: ''
             },
-            selctListTreeProps: {
+            selectListTreeProps: {
                 label: function(data) {
                     return data.label;
                 },
@@ -83,17 +75,17 @@ export default {
             },
             orgTree: [],
             arrList: [],
-            checkedLeft: false,
-            checkedRight: false
+            checkedOfUser: false,
+            checkedOfSelected: false
         };
     },
     computed: {},
     watch: {
         filterText(val) {
-            this.$refs.userlistTree.filter(val);
+            this.$refs.userListTree.filter(val);
         },
-        filterText1(val) {
-            this.$refs.userlistTree1.filter(val);
+        filterTextOfSelected(val) {
+            this.$refs.userListTree1.filter(val);
         }
     },
     mounted() {
@@ -102,14 +94,12 @@ export default {
     methods: {
         init(userId, userTypeName) {
             this.userTypeName = userTypeName;
-            console.log('userId')
-            console.log(userId)
             this.visible = true;
-            this.selctId = [];
-            this.userlist = [];
+            this.selectIdList = [];
+            this.userList = [];
             if (userId && userId.length > 0) {
                 userId.forEach((item) => {
-                    this.selctId.push({ label: item, key: item });
+                    this.selectIdList.push({ label: item });
                 });
             }
             if (this.orgTree.length !== 0) {
@@ -140,66 +130,62 @@ export default {
                 factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
                 deptId: dataObj.id
             }).then(({ data }) => {
-                this.userlist = data.data;
-                if (this.userlist) {
-                    this.userlist.map(item => {
+                this.userList = data.data;
+                if (this.userList) {
+                    this.userList.map(item => {
                         item.label = item.realName + '（' + (item.workNum !== null && item.workNum !== '' ? item.workNum : item.workNumTemp) + '）';
                     })
                 }
-                this.tree1Status = false;
+                this.userList = this.userListFilter(this.userList, this.selectIdList)
+                this.isItemToRight = false;
             });
-            // this.$http(`${SYSTEMSETUP_API.USERLIST_API}`, 'POST', {
-            //     deptId: dataObj.deptId,
-            //     param: '',
-            //     currPage: '1',
-            //     pageSize: '1000'
-            // }).then(({ data }) => {
-            //     if (data.code === 0) {
-            //         this.userlist = data.page.list;
-            //         this.tree1Status = false;
-            //     } else {
-            //         this.$notify.error({ title: '错误', message: data.msg });
-            //     }
-            // });
         },
+        // 过滤掉已选人员
+        userListFilter(userList, selectList) {
+            return selectList.length !== 0 ? userList.filter(item => !selectList.some(element => element.label === item.label)) : userList;
+        },
+
         // 部门下树节点点击
         treeNodeClick(data) {
-            if (JSON.stringify(this.$refs.userlistTree.getCheckedNodes()).indexOf(JSON.stringify(data)) === -1) {
-                const arr = this.$refs.userlistTree.getCheckedNodes();
+            if (JSON.stringify(this.$refs.userListTree.getCheckedNodes()).indexOf(JSON.stringify(data)) === -1) {
+                const arr = this.$refs.userListTree.getCheckedNodes();
                 arr.push(data);
-                this.$refs.userlistTree.setCheckedNodes(arr);
+                this.$refs.userListTree.setCheckedNodes(arr);
             }
         },
         // 选中树节点点击
         treeNodeClick1(data) {
-            if (JSON.stringify(this.$refs.userlistTree1.getCheckedNodes()).indexOf(JSON.stringify(data)) === -1) {
-                const arr = this.$refs.userlistTree1.getCheckedNodes();
+            if (JSON.stringify(this.$refs.userListTree1.getCheckedNodes()).indexOf(JSON.stringify(data)) === -1) {
+                const arr = this.$refs.userListTree1.getCheckedNodes();
                 arr.push(data);
-                this.$refs.userlistTree1.setCheckedNodes(arr);
+                this.$refs.userListTree1.setCheckedNodes(arr);
             }
         },
         // 往左
         delSelcted() {
-            this.$refs.userlistTree1.getCheckedNodes().forEach((item) => {
-                this.selctId.splice(this.selctId.indexOf(item), 1);
-                if (this.userlist.findIndex(items => items.label === item.label) === -1) {
-                    this.userlist.push({
+            this.$refs.userListTree1.getCheckedNodes().forEach((item) => {
+                this.selectIdList.splice(this.selectIdList.indexOf(item), 1);
+                if (this.userList.findIndex(items => items.label === item.label) === -1) {
+                    this.userList.push({
                         label: item.label
                     })
                 }
             });
-            this.tree2Status = false;
+            // this.userList.sort((a, b) => {
+            //     return Number(a.label.split('（')[1].slice(0, -1)) - Number(b.label.split('（')[1].slice(0, -1));
+            // });
+            this.isItemToLeft = false;
         },
         // 往右
         addSelcted() {
-            this.$refs.userlistTree.getCheckedNodes().forEach((item) => {
+            this.$refs.userListTree.getCheckedNodes().forEach((item) => {
                 const obj = {};
                 obj.label = item.label;
                 // obj.label = item.realName + '（' + (item.workNum !== null && item.workNum !== '' ? item.workNum : item.workNumTemp) + '）';
-                if (JSON.stringify(this.selctId).indexOf(JSON.stringify(obj)) === -1) {
-                    this.selctId.push(obj);
+                if (JSON.stringify(this.selectIdList).indexOf(JSON.stringify(obj)) === -1) {
+                    this.selectIdList.push(obj);
                 }
-                this.userlist.splice(this.userlist.findIndex(items => items.label === item.label), 1);
+                this.userList.splice(this.userList.findIndex(items => items.label === item.label), 1);
             });
         },
         // 部门搜索人员
@@ -216,42 +202,42 @@ export default {
         },
         // 部门下树节点选中状态监听
         userTree() {
-            if (this.$refs.userlistTree.getCheckedNodes().length > 0) {
-                this.tree1Status = true;
+            if (this.$refs.userListTree.getCheckedNodes().length > 0) {
+                this.isItemToRight = true;
             } else {
-                this.tree1Status = false;
+                this.isItemToRight = false;
             }
         },
         // 选中树节点选中状态监听
         userTree1() {
-            if (this.$refs.userlistTree1.getCheckedNodes().length > 0) {
-                this.tree2Status = true;
+            if (this.$refs.userListTree1.getCheckedNodes().length > 0) {
+                this.isItemToLeft = true;
             } else {
-                this.tree2Status = false;
+                this.isItemToLeft = false;
             }
         },
         // 确定人员
         updateUser() {
             this.visible = false;
             const row = [];
-            this.selctId.forEach(item => {
+            this.selectIdList.forEach(item => {
                 row.push(item.label);
             });
             this.$emit('changeUser', row);
         },
         checkedAll(node) {
-            if (node === 'userlistTree') {
-                if (this.checkedLeft) {
-                    this.$refs.userlistTree.setCheckedNodes(this.userlist);
+            if (node === 'userListTree') {
+                if (this.checkedOfUser) {
+                    this.$refs.userListTree.setCheckedNodes(this.userList);
                 } else {
-                    this.$refs.userlistTree.setCheckedKeys([]);
+                    this.$refs.userListTree.setCheckedKeys([]);
                 }
             } else {
                 // eslint-disable-next-line
-                if (this.checkedRight) {
-                    this.$refs.userlistTree1.setCheckedNodes(this.selctId);
+                if (this.checkedOfSelected) {
+                    this.$refs.userListTree1.setCheckedNodes(this.selectIdList);
                 } else {
-                    this.$refs.userlistTree1.setCheckedKeys([]);
+                    this.$refs.userListTree1.setCheckedKeys([]);
                 }
             }
         }
