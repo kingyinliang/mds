@@ -183,10 +183,12 @@
                 KOJI_API.KOJI_QUERY_STEAMBEAN_API({
                     orderNo: this.jumpFromAudit ? this.$route.params.order : this.$store.state.koji.orderScInfo.orderNo || ''
                 }).then(({ data: res }) => {
-
                     this.potIdNow = res.data.beanJarId
-                    this.potNoNow = this.scanList.filter(item => item.id === res.data.beanJarId)[0].holderNo as string
-
+                    console.log(res)
+                    // this.potNoNow = this.scanList.filter(item => item.id === res.data.beanJarId)[0].holderNo as string
+                    if (this.scanList.length !== 0 && res.data.beanJarId !== '') {
+                            this.potNoNow = this.scanList.filter(item => item.id === res.data.beanJarId)[0].holderNo as string
+                    }
                     this.formHeader = {
                         ...data.data,
                         // potNo: queryInStorageData && queryInStorageData[0] ? queryInStorageData[0].scPotNo : '',
