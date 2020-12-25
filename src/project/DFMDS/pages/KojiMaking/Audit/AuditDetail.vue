@@ -145,7 +145,7 @@
                         </el-col>
                     </el-row>
                 </mds-card>
-                <audit-log :table-data="currentAudit" :verify-man="'verifyMan'" :verify-date="'verifyDate'" :status="true" />
+                <audit-log :table-data="currentAudit" :verify-man="'verifyMan'" :verify-date="'verifyDate'" :status="true" :height="400" />
             </template>
             <template slot="custom_btn">
                 <el-button type="primary" size="small" @click="goDetail">

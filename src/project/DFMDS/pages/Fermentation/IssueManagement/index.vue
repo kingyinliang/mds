@@ -157,7 +157,8 @@
                     resData: 'data',
                     label: ['deptName'],
                     value: 'id'
-                }
+                },
+                linkageProp: ['holderNo']
             },
             {
                 type: 'input',
@@ -246,9 +247,10 @@
                 rule: [{ required: false, message: ' ', trigger: 'change' }],
                 defaultValue: '',
                 filterable: true,
-                defaultOptionsFn: () => {
+                optionsFn: val => {
                     return new Promise((resolve) => {
                         COMMON_API.HOLDER_DROPDOWN_API({ // /sysHolder/query
+                            deptId: val,
                             factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
                             holderType: ['001', '029', '028'] // 发酵罐/池、泡豆罐、调酱罐/池 参数编码
                         }).then((res) => {

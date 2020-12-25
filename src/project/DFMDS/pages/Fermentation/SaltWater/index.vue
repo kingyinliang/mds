@@ -110,7 +110,8 @@
                     resData: 'data',
                     label: ['deptName'],
                     value: 'id'
-                }
+                },
+                linkageProp: ['holderId']
             },
             {
                 type: 'select',
@@ -120,9 +121,10 @@
                 filterable: true,
                 rule: [{ required: false, message: ' ', trigger: 'change' }],
                 defaultValue: '',
-                defaultOptionsFn: () => {
+                optionsFn: val => {
                     return new Promise((resolve) => {
                         COMMON_API.HOLDER_DROPDOWN_API({ // /sysHolder/query
+                            deptId: val,
                             factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
                             holderType: ['001'] // 发酵罐/池 参数编码
                         }).then((res) => {

@@ -34,7 +34,7 @@
                             <el-button type="text" size="small" :disabled="scope.row.enableBack!==1" @click="reject('1',scope.row)">
                                 退回
                             </el-button>
-                            <el-button type="text" size="small" @click="auditLog(scope.row)">
+                            <el-button type="text" size="small" @click="auditLog(scope.row,tabs[0].label)">
                                 审核日志
                             </el-button>
                         </template>
@@ -59,7 +59,7 @@
                             <el-button type="text" size="small" :disabled="scope.row.enableBack!==1" @click="reject('2',scope.row)">
                                 退回
                             </el-button>
-                            <el-button type="text" size="small" @click="auditLog(scope.row)">
+                            <el-button type="text" size="small" @click="auditLog(scope.row,tabs[1].label)">
                                 审核日志
                             </el-button>
                         </template>
@@ -84,7 +84,7 @@
                             <el-button type="text" size="small" :disabled="scope.row.enableBack!==1" @click="reject('3',scope.row)">
                                 退回
                             </el-button>
-                            <el-button type="text" size="small" @click="auditLog(scope.row)">
+                            <el-button type="text" size="small" @click="auditLog(scope.row,tabs[2].label)">
                                 审核日志
                             </el-button>
                         </template>
@@ -115,7 +115,7 @@
                             <el-button type="text" size="small" :disabled="scope.row.enableBack!==1" @click="reject('4',scope.row)">
                                 退回
                             </el-button>
-                            <el-button type="text" size="small" @click="auditLog(scope.row)">
+                            <el-button type="text" size="small" @click="auditLog(scope.row,tabs[3].label)">
                                 审核日志
                             </el-button>
                         </template>
@@ -144,7 +144,7 @@
             </template>
         </data-entry>
         <el-dialog title="审核日志" width="900px" :close-on-click-modal="false" :visible.sync="visibleAuditLog">
-            <audit-log :table-data="auditLogData" :verify-man="'verifyMan'" :verify-date="'verifyDate'" :pack-up="false" :status="true" :show-title="false" />
+            <audit-log :table-data="auditLogData" :verify-man="'verifyMan'" :verify-date="'verifyDate'" :pack-up="false" :status="true" :show-title="false" :height="400" />
             <div slot="footer" class="dialog-footer" />
         </el-dialog>
         <el-dialog title="退回原因" :close-on-click-modal="false" :visible.sync="visibleRefuse">
@@ -490,11 +490,73 @@
             }
         }
 
-        auditLog() {
-            AUDIT_API.AUDIT_LOG_LIST_API({ orderNo: this.currentOrderNo, verifyType: '' }).then(({ data }) => {
-                    this.auditLogData = data.data
-                    this.visibleAuditLog = true
-            })
+        auditLog(row, tab) {
+            console.log('row')
+            console.log(row)
+            // ['WB_MATERIAL', 'MATERIAL']
+            let verifyTypeTemp: string[] = []
+            switch (tab) {
+                case '准备工时':
+                    if (row.process === '洗豆') {
+                        verifyTypeTemp = ['WB_CONTROL', 'TIMESHEET']
+                    }
+                    if (row.process === '蒸面') {
+                        verifyTypeTemp = ['SB_CONTROL', 'TIMESHEET']
+                    }
+                    if (row.process === '圆盘') {
+                        verifyTypeTemp = ['KJ_CONTROL', 'TIMESHEET']
+                    }
+                    if (row.process === 'SC洗豆') {
+                        verifyTypeTemp = ['WB_CONTROL', 'TIMESHEET']
+                    }
+                    if (row.process === '篜豆') {
+                        verifyTypeTemp = ['SB_CONTROL', 'TIMESHEET']
+                    }
+                    AUDIT_API.STE_AUDIT_QUERY_BY_ID({
+                        id: row.id
+                    }).then(({ data }) => {
+                        this.auditLogData = data.data;
+                    })
+                    break;
+                case '机器工时':
+                    if (row.process === '洗豆') {
+                        verifyTypeTemp = ['WB_CONTROL', 'TIMESHEET']
+                    }
+                    if (row.process === '蒸面') {
+                        verifyTypeTemp = ['SB_CONTROL', 'TIMESHEET']
+                    }
+                    if (row.process === '圆盘') {
+                        verifyTypeTemp = ['KJ_CONTROL', 'TIMESHEET']
+                    }
+                    if (row.process === 'SC洗豆') {
+                        verifyTypeTemp = ['WB_CONTROL', 'TIMESHEET']
+                    }
+                    if (row.process === '篜豆') {
+                        verifyTypeTemp = ['SB_CONTROL', 'TIMESHEET']
+                    }
+                    AUDIT_API.STE_AUDIT_LOG_API({ orderNo: this.currentOrderNo, splitOrderNo: row.kojiOrderNo, verifyType: verifyTypeTemp }).then(({ data }) => {
+                        this.auditLogData = data.data
+                        this.visibleAuditLog = true
+                    })
+                    break;
+                case '生产入库':
+                    AUDIT_API.STE_AUDIT_LOG_API({ orderNo: this.currentOrderNo, splitOrderNo: row.kojiOrderNo, verifyType: verifyTypeTemp }).then(({ data }) => {
+                        this.auditLogData = data.data
+                        this.visibleAuditLog = true
+                    })
+                    break;
+                case '物料领用':
+                    AUDIT_API.STE_AUDIT_LOG_API({ orderNo: this.currentOrderNo, splitOrderNo: row.kojiOrderNo, verifyType: verifyTypeTemp }).then(({ data }) => {
+                        this.auditLogData = data.data
+                        this.visibleAuditLog = true
+                    })
+                    break;
+                default:
+                    break;
+            }
+
+            // AUDIT_API.STE_AUDIT_LOG_API({ orderNo: this.formHeader.orderNo, splitOrderNo: this.formHeader.kojiOrderNo, verifyType: ['WB_MATERIAL', 'MATERIAL'] }).then(({ data }) => {
+
         }
 
         // 获取曲房下拉选项
