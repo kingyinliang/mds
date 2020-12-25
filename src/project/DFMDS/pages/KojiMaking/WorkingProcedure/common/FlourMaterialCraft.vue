@@ -441,7 +441,8 @@
 
         // 内部借调弹窗选择
         selectUser(row, typeName, field) {
-            if (!this.isRedact) return;
+
+            if (!(this.isRedact && this.craftSteamFlourInfo.status !== 'C' && this.craftSteamFlourInfo.status !== 'D' && this.craftSteamFlourInfo.status !== 'P')) return;
             this.row = row;
             this.rowField = field
             this.loanedPersonnelStatus = true;
@@ -579,6 +580,7 @@
         id?: string;
         items?: CraftList[];
         kojiOrderNo?: string;
+        status?: string;
         orderNo?: string;
         workShop?: string;
         potSaveDto?: object[];
