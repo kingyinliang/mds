@@ -22,7 +22,7 @@
                     <el-input v-model.number="dataForm.amount" placeholder="请输入" @input="calcStockAmount" />
                 </el-form-item>
                 <el-form-item label="单位：">
-                    <el-input v-model="dataForm.unit" placeholder="请输入" disabled />
+                    <el-input v-model="dataForm.unitName" placeholder="请输入" disabled />
                 </el-form-item>
                 <el-form-item label="添加人：" prop="operationMans">
                     <el-tooltip class="item" effect="dark" :content="dataForm.operationMans + '点击选择人员'" placement="top">
@@ -178,6 +178,8 @@
             if (type !== 'add') {
                 Data = infoData;
             }
+            console.log('infoData1111111')
+            console.log(infoData)
 
             this.dataForm = {
                 id: Data.id,
@@ -190,7 +192,9 @@
                 amount: Data.amount,
                 operationMans: Data.operationMans || '',
                 stockAmount: Data.stockAmount || Data.currentAmount,
-                unit: Data.unitName,
+                unit: Data.unit,
+                unitName: Data.unitName,
+                storageId: Data.storageId,
                 remark: Data.remark,
                 changer: getUserNameNumber(),
                 changed: dateFormat(new Date(), 'yyyy-MM-dd hh:mm:ss'),
@@ -216,6 +220,7 @@
         }
 
         batchChange() {
+            console.log(this.batchList)
             this.batchList.map(item => {
                 if (item.batch === this.dataForm.batch) {
                     this.dataForm.materialLink = String(item.materialName) + String(item.materialCode);

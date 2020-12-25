@@ -23,7 +23,7 @@
                     <el-input v-model.number="dataForm.amount" placeholder="手动输入" @input="calcStockAmount" />
                 </el-form-item>
                 <el-form-item label="单位：">
-                    <el-input v-model="dataForm.unit" placeholder="NA" disabled />
+                    <el-input v-model="dataForm.unitName" placeholder="NA" disabled />
                 </el-form-item>
                 <el-form-item label="面粉厂家：">
                     <el-input v-model="dataForm.supplier" placeholder="NA" disabled />
@@ -169,7 +169,8 @@
                 supplier: Data.supplier,
                 stockAmount: Data.stockAmount || Data.currentAmount,
                 operationMans: Data.operationMans || '',
-                unit: Data.unitName,
+                unit: Data.unit,
+                unitName: Data.unitName,
                 remark: Data.remark,
                 changer: getUserNameNumber(),
                 changed: dateFormat(new Date(), 'yyyy-MM-dd hh:mm:ss'),

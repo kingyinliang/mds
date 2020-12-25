@@ -20,7 +20,7 @@
                     class="star"
                 >
                     <div style="width: 180px;">
-                        <span :style="{cursor:isRedact? 'pointer':'default',color:isRedact? '#333':'#aaa'}" @click="selectUser(kojiInformData,'addKojiMans','内部调借')">
+                        <span :style="{cursor:isRedact? 'pointer':'default',color:isRedact? '#333':'#aaa'}" @click="selectUser(kojiInformData,'addKojiMans','入曲人')">
                             <el-tooltip v-if="kojiInformData.addKojiMans&&kojiInformData.addKojiMans!==''" class="item" effect="dark" :content="kojiInformData.addKojiMans" placement="top">
                                 <el-input
                                     v-if="kojiInformData.addKojiMans&&kojiInformData.addKojiMans!==''"
@@ -491,7 +491,7 @@
                         <span class="notNull">* </span>翻曲人
                     </template>
                     <template slot-scope="scope">
-                        <span :style="{cursor:isRedact? 'pointer':'default',color:isRedact? '#333':'#aaa'}" @click="selectUser(scope.row,'turnMans','内部调借')">
+                        <span :style="{cursor:isRedact? 'pointer':'default',color:isRedact? '#333':'#aaa'}" @click="selectUser(scope.row,'turnMans','翻曲人')">
                             <el-tooltip v-if="scope.row.turnMans&&scope.row.turnMans!==''" class="item" effect="dark" :content="scope.row.turnMans" placement="top">
                                 <el-input
                                     v-if="scope.row.turnMans&&scope.row.turnMans!==''"
@@ -589,7 +589,7 @@
                     </el-table-column>
                     <el-table-column label="异常描述" :show-overflow-tooltip="true" min-width="200">
                         <template slot-scope="scope">
-                            <el-input v-model.trim="scope.row.exceptionInfo" size="small" placeholder="请输入异常描述" :disabled="!isRedact || scope.row.growInfo==='GOOD'" />
+                            <el-input v-model.trim="scope.row.exceptionInfo" size="small" placeholder="请输入异常描述" :disabled="!(isRedact && scope.row.status !== 'C' && scope.row.status !== 'D' && scope.row.status !== 'P') || scope.row.growInfo==='GOOD'" />
                         </template>
                     </el-table-column>
                     <el-table-column
@@ -599,7 +599,7 @@
                         class="star"
                     >
                         <template slot-scope="scope">
-                            <span :style="{cursor:isRedact? 'pointer':'default',color:isRedact? '#333':'#aaa'}" @click="selectUser(scope.row,'recordMans','内部调借')">
+                            <span :style="{cursor:isRedact? 'pointer':'default',color:isRedact? '#333':'#aaa'}" @click="selectUser(scope.row,'recordMans','记录人')">
                                 <el-tooltip v-if="scope.row.recordMans&&scope.row.recordMans!==''" class="item" effect="dark" :content="scope.row.recordMans" placement="top">
                                     <el-input
                                         v-if="scope.row.recordMans&&scope.row.recordMans!==''"
@@ -680,7 +680,7 @@
                     class="star"
                 >
                     <div style="width: 180px;">
-                        <span :style="{cursor:isRedact? 'pointer':'default',color:isRedact? '#333':'#aaa'}" @click="selectUser(kojiOutCraftformData,'outKojiMans','内部调借')">
+                        <span :style="{cursor:isRedact? 'pointer':'default',color:isRedact? '#333':'#aaa'}" @click="selectUser(kojiOutCraftformData,'outKojiMans','出曲操作人')">
                             <el-tooltip v-if="kojiOutCraftformData.outKojiMans&&kojiOutCraftformData.outKojiMans!==''" class="item" effect="dark" :content="kojiOutCraftformData.outKojiMans" placement="top">
                                 <el-input
                                     v-if="kojiOutCraftformData.outKojiMans&&kojiOutCraftformData.outKojiMans!==''"

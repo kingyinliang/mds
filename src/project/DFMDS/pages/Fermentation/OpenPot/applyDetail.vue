@@ -99,12 +99,12 @@
                         </el-table-column>
                         <el-table-column label="入库日期" prop="materialUnit" min-width="100" :show-overflow-tooltip="true">
                             <template slot-scope="scope">
-                                {{ scope.row.ferInStorage.changed }}
+                                {{ scope.row.ferInStorage? scope.row.ferInStorage.changed : '' }}
                             </template>
                         </el-table-column>
                         <el-table-column label="批次" prop="materialUnit" min-width="100" :show-overflow-tooltip="true">
                             <template slot-scope="scope">
-                                {{ scope.row.ferInStorage.inStorageBatch }}
+                                {{ scope.row.ferInStorage? scope.row.ferInStorage.inStorageBatch : '' }}
                             </template>
                         </el-table-column>
                         <el-table-column label="备注" prop="remark" min-width="100" :show-overflow-tooltip="true" />
