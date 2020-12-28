@@ -155,6 +155,11 @@
             },
             {
                 type: 'input',
+                label: '开罐单号',
+                prop: 'openPotNo'
+            },
+            {
+                type: 'input',
                 label: '调酱单号',
                 prop: 'mixSauceNo'
             },
