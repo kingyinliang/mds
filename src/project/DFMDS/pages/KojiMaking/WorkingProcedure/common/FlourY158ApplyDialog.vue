@@ -114,7 +114,8 @@
                 this.workShopList = data.data;
                 if (data.data.length !== 0 && type === 'add') {
                     this.dataForm.materialLocation = data.data[0]['materialLocation'];
-                    this.dataForm.unit = data.data[0]['unitName'];
+                    this.dataForm.unit = data.data[0]['unit'];
+                    this.dataForm.unitName = data.data[0]['unitName'];
                 }
                 // 默认选中第一个选项 库位详细信息查询
                 this.checkShopDetail()
@@ -230,6 +231,8 @@
                     this.STOCK_AMOUNT = Number(item.currentAmount);
                     this.dataForm.amount = '';
                     this.dataForm.storageId = item.id;
+                    this.dataForm.unitName = item.unitName;
+                    this.dataForm.unit = item.unit;
                 }
             })
         }
@@ -280,6 +283,8 @@
         stockAmount?: string;
         supplier?: string;
         currentAmount?: string;
+        unitName?: string;
+        unit?: string;
     }
 
     interface DataForm {
