@@ -203,6 +203,7 @@ export default class KojiManHour extends Vue {
                     this.formHeader.changer = '';
                     this.$refs.readyTime.changeList(null);
                     this.$refs.workHour.changeList([]);
+                    this.$refs.readyTime.nowFormDataGroupString = 'M';
                 } else {
                     this.formHeader.checkStatus = data.data.kojiTimeSheetResponseDto.status;
                     this.formHeader.checkStatusName = this.checkStatus.filter(item => item.dictCode === this.formHeader.checkStatus)[0].dictValue
@@ -211,6 +212,7 @@ export default class KojiManHour extends Vue {
                     this.formHeader.id = data.data.kojiTimeSheetResponseDto.id;
                     this.$refs.readyTime.changeList(data.data.kojiTimeSheetResponseDto);
                     this.$refs.workHour.changeList(data.data.kojiUserDtos);
+                    this.$refs.readyTime.nowFormDataGroupString = data.data.kojiTimeSheetResponseDto.classes;
                     // 审核日志
                     AUDIT_API.STE_AUDIT_QUERY_BY_ID({
                         id: this.formHeader.id

@@ -7,7 +7,7 @@
 -->
 <template>
     <mds-card :title="showTitle?'审核日志':''" :name="name" :icon-bg="'#f05c4a'" :pack-up="packUp">
-        <el-table class="newTable" :data="tableData" header-row-class-name="tableHead" border style="width: 100%;">
+        <el-table class="newTable" :data="tableData" header-row-class-name="tableHead" border style="width: 100%;" :max-height="height">
             <el-table-column label="序号" type="index" width="60" fixed />
             <el-table-column prop="status" label="审核动作" width="100" :show-overflow-tooltip="true">
                 <template slot-scope="scope">
@@ -51,6 +51,7 @@
         @Prop({ default: 'memo' }) memo: string;
         @Prop({ default: 'verify_man' }) verifyMan: string;
         @Prop({ default: 'verify_date' }) verifyDate: string;
+        @Prop({ default: null }) height: number | null;
 
     }
     interface AuditData {

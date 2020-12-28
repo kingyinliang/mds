@@ -145,7 +145,7 @@
                         </el-col>
                     </el-row>
                 </mds-card>
-                <audit-log :table-data="currentAudit" :verify-man="'verifyMan'" :verify-date="'verifyDate'" :status="true" />
+                <audit-log :table-data="currentAudit" :verify-man="'verifyMan'" :verify-date="'verifyDate'" :status="true" :height="400" />
             </template>
             <template slot="custom_btn">
                 <el-button type="primary" size="small" @click="goDetail">
@@ -161,7 +161,7 @@
 
 <script lang="ts">
     import { Vue, Component } from 'vue-property-decorator';
-    import { KOJI_API, COMMON_API } from 'common/api/api';
+    import { KOJI_API, COMMON_API, AUDIT_API } from 'common/api/api';
     import echarts from 'echarts';
 
     @Component({
@@ -1000,7 +1000,13 @@
 
         // 审核日志
         getAudit(orderNo) {
-            COMMON_API.COMMON_LOG_LIST_API({ orderNo: orderNo, verifyType: '' }).then(({ data }) => {
+            // COMMON_API.COMMON_LOG_LIST_API({ orderNo: orderNo, verifyType: '' }).then(({ data }) => {
+            //     this.currentAudit = data.data
+            // })
+            AUDIT_API.STE_AUDIT_LOG_API({
+                orderNo,
+                verifyType: ['MATERIAL', 'TIMESHEET', 'INSTORAGE', 'WB_MATERIAL', 'WB_CONTROL', 'SF_MATERIAL', 'SF_CONTROL', 'KJ_CONTROL', 'KJ_INSTORAGE', 'SB_CONTROL', 'SB_INSTORAGE'] // '审核类型'
+            }).then(({ data }) => {
                 this.currentAudit = data.data
             })
         }
