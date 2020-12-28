@@ -3,7 +3,11 @@
         <mds-card :title="'调酱列表'" :name="'list1'">
             <el-table header-row-class-name="tableHead" class="newTable" :data="table1">
                 <el-table-column type="index" label="序号" width="50" fixed align="center" />
-                <el-table-column label="状态" prop="openFlagName" min-width="50" :show-overflow-tooltip="true" />
+                <el-table-column label="状态" prop="openFlagName" min-width="80" :show-overflow-tooltip="true">
+                    <template slot-scope="scope">
+                        {{ scope.row.openFlagName === '否'? '未开罐' : '已开罐' }}
+                    </template>
+                </el-table-column>
                 <el-table-column label="车间" prop="workShopName" min-width="100" :show-overflow-tooltip="true" />
                 <el-table-column label="容器号" prop="holderName" min-width="80" :show-overflow-tooltip="true" />
                 <el-table-column label="领用说明" prop="receiveMaterial" min-width="120" :show-overflow-tooltip="true">

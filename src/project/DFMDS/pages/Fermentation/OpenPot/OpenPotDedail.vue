@@ -79,13 +79,17 @@
                     </div>
                     <el-table ref="multipleTable" :data="openPotList" height="400px" :header-cell-class-name="tableHeaderClass" header-row-class-name="tableHead" class="newTable" border tooltip-effect="dark" @selection-change="handleSelectionChange" @row-dblclick="Dblckick">
                         <el-table-column type="selection" :selectable="checkboxT" width="50" />
-                        <el-table-column type="index" label="序号" width="50px" />
-                        <el-table-column label="状态" prop="openFlagName" min-width="50" :show-overflow-tooltip="true" />
+                        <el-table-column type="index" :index="index => index + 1 + (Number(searchForm.current) - 1) * (Number(searchForm.size))" label="序号" width="50px" />
+                        <el-table-column label="状态" prop="openFlagName" min-width="80" :show-overflow-tooltip="true">
+                            <template slot-scope="scope">
+                                {{ scope.row.openFlagName === '否'? '未开罐' : '已开罐' }}
+                            </template>
+                        </el-table-column>
                         <el-table-column label="车间" prop="workShopName" min-width="100" :show-overflow-tooltip="true" />
                         <el-table-column label="容器号" prop="holderName" min-width="80" :show-overflow-tooltip="true" />
                         <el-table-column label="使用说明" prop="explain" min-width="100" :show-overflow-tooltip="true">
                             <template slot-scope="scope">
-                                <el-input v-if="formHeader.openType === 'MANY'" v-model="scope.row.ferOpenFermentor.explain" disabled size="small" placeholder="请输入" />
+                                {{ scope.row.ferOpenFermentor.explain }}
                             </template>
                         </el-table-column>
                         <el-table-column label="订单类型" prop="materialUnit" min-width="100" :show-overflow-tooltip="true">
@@ -304,6 +308,7 @@
             return tmp
         }
 
+        // 反选中
         initMultiple() {
             setTimeout(() => {
                 this.formHeader.ferOpenFermentorList.forEach(item => {
@@ -398,24 +403,24 @@
             if (!this.multipleSelection.find(item => item.id === row.id)) {
                 this.$refs.multipleTable.toggleRowSelection(row)
             } else if (this.formHeader.openType === 'SINGLE') {
-                    if (row.ferOpenFermentor.mixSauceNo) {
-                        this.mixSauceNo = row.ferOpenFermentor.mixSauceNo
-                        this.fermentorId = row.id
-                        this.getDeployMaterialList(row)
-                        this.getSauceList(row)
-                    } else {
-                        const hang = this.openPotListSum.findIndex(item => item.id === row.id)
-                        row.ferOpenFermentor.mixSauceNo = this.formHeader.openPotNo + hang
-                        this.mixSauceNo = row.ferOpenFermentor.mixSauceNo
-                        this.fermentorId = row.id
-                        this.deployMaterial = row.ferMaterialList = []
-                        this.sauce = row.ferOverdueMaterialList = []
-                    }
-                } else if (this.formHeader.openType === 'MANY') {
-                    this.mixSauceNo = this.formHeader.openPotNo + '01'
+                if (row.ferOpenFermentor.mixSauceNo) {
+                    this.mixSauceNo = row.ferOpenFermentor.mixSauceNo
+                    this.fermentorId = row.id
                     this.getDeployMaterialList(row)
                     this.getSauceList(row)
+                } else {
+                    const hang = this.openPotListSum.findIndex(item => item.id === row.id)
+                    row.ferOpenFermentor.mixSauceNo = this.formHeader.openPotNo + hang
+                    this.mixSauceNo = row.ferOpenFermentor.mixSauceNo
+                    this.fermentorId = row.id
+                    this.deployMaterial = row.ferMaterialList = []
+                    this.sauce = row.ferOverdueMaterialList = []
                 }
+            } else if (this.formHeader.openType === 'MANY') {
+                this.mixSauceNo = this.formHeader.openPotNo + '01'
+                this.getDeployMaterialList(row)
+                this.getSauceList(row)
+            }
         }
 
         // 获取调配物料接口
@@ -567,6 +572,17 @@
             if (this.formHeader.openType === 'MANY') {
                 savedData.ferMaterialList = this.deployMaterial
                 savedData.ferOverdueMaterialList = this.sauce
+                const openFermentorList: PotObj[] = []
+                this.multipleSelection.forEach(item => {
+                    openFermentorList.push({
+                        ferFermentor: item,
+                        ferOpenFermentor: {},
+                        fermentorId: item.id,
+                        id: this.formHeader.ferOpenFermentorList?.find(it => it.fermentorId === item.id)?.id || '',
+                        mixSauceNo: item.ferOpenFermentor.mixSauceNo
+                    })
+                })
+                savedData.openFermentorList = openFermentorList
             } else {
                 const openFermentorList: PotObj[] = []
                 this.multipleSelection.forEach(item => {
