@@ -22,7 +22,7 @@
                     <el-table-column prop="batch" label="领用批次" min-width="110" :show-overflow-tooltip="true" />
                     <el-table-column prop="stockAmount" label="库存数量" width="90" :show-overflow-tooltip="true" />
                     <el-table-column prop="amount" label="领用数量" min-width="100" :show-overflow-tooltip="true" />
-                    <el-table-column prop="unit" label="单位" min-width="100" :show-overflow-tooltip="true" />
+                    <el-table-column prop="unitName" label="单位" min-width="100" :show-overflow-tooltip="true" />
                     <el-table-column prop="operationMans" label="添加人" min-width="100" :show-overflow-tooltip="true" />
                     <el-table-column prop="remark" label="备注" min-width="100" :show-overflow-tooltip="true" />
                     <el-table-column label="操作人" prop="changer" width="140" />
