@@ -172,7 +172,7 @@
                 this.jumpFromAudit = true;
                 setTimeout(() => {
                     this.$refs.dataEntry.activeName = this.$route.params.activeName;
-                }, 1000);
+                }, 2000);
             }
             await this.getScanList();
             await this.getOrderList()
