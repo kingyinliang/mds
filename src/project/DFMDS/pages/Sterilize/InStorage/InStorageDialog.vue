@@ -25,7 +25,7 @@
             el-form-item(label="单位：")
                 span(class="default") {{ dialogForm.materialUnit }}
             el-form-item(label="入库锅数：" prop="inStoragePot")
-                el-input(v-model.number="dialogForm.inStoragePot" size="small" placeholder="请输入" clearable)
+                el-input(v-model="dialogForm.inStoragePot" size="small" placeholder="请输入" clearable)
             el-form-item(label="入库数量：" prop="inStorageAmount")
                 el-input(v-model.number="dialogForm.inStorageAmount" size="small" placeholder="请输入" clearable)
             el-form-item(label="入库批次：" prop="inStorageBatch")

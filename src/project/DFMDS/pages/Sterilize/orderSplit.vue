@@ -29,7 +29,8 @@
                                         {{ scope.row.materialName + ' ' + scope.row.materialCode }}
                                     </template>
                                 </el-table-column>
-                                <el-table-column label="计划数量" width="120" prop="planOutput" />
+                                <el-table-column label="订单计划" width="120" prop="planOutput" />
+                                <el-table-column label="车间计划" width="120" prop="workShopPlanOutput" />
                                 <el-table-column label="单位" width="70" prop="outputUnit" />
                                 <el-table-column label="备注" width="70" prop="remark" />
                                 <el-table-column label="操作" fixed="right" align="center" width="80">
@@ -70,7 +71,8 @@
                                         {{ scope.row.materialName + ' ' + scope.row.materialCode }}
                                     </template>
                                 </el-table-column>
-                                <el-table-column label="计划数量" width="120" prop="planOutput" :show-overflow-tooltip="true" />
+                                <el-table-column label="订单计划" width="120" prop="planOutput" :show-overflow-tooltip="true" />
+                                <el-table-column label="杀菌锅计划" width="120" prop="potPlanOutput" :show-overflow-tooltip="true" />
                                 <el-table-column label="单位" width="70" prop="outputUnit" :show-overflow-tooltip="true" />
                                 <el-table-column label="生产日期" width="100" prop="productDate" :show-overflow-tooltip="true" />
                                 <el-table-column label="锅号" width="100" prop="potName" :show-overflow-tooltip="true" />
