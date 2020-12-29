@@ -132,6 +132,11 @@ export default {
                     minwidth: '100'
                 },
                 {
+                    prop: 'beanMaterialName',
+                    label: '豆粕物料',
+                    minwidth: '100'
+                },
+                {
                     prop: 'pulpWeight',
                     label: '豆粕量',
                     minwidth: '100'
