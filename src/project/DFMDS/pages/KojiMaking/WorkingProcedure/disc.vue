@@ -176,7 +176,7 @@
                 this.jumpFromAudit = true
                 setTimeout(() => {
                     this.$refs.dataEntry.activeName = this.$route.params.activeName;
-                }, 1000);
+                }, 2000);
             }
 
             // [下拉]获取溶解罐选项
