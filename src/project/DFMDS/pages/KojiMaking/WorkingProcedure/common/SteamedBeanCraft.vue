@@ -25,7 +25,7 @@
                         <span class="notNull">* </span>蒸球号
                     </template>
                     <template slot-scope="scope">
-                        <el-select v-model="scope.row.steamBallNo" placeholder="请选择" :disabled="!isRedact" size="small" style="width: 100%;">
+                        <el-select v-model="scope.row.steamBallNo" placeholder="请选择" :disabled="!(isRedact && scope.row.status !== 'C' && scope.row.status !== 'D' && scope.row.status !== 'P')" size="small" style="width: 100%;">
                             <el-option v-for="(subItem, index) in steamBallList" :key="index" :label="subItem.holderName" :value="subItem.holderNo" />
                         </el-select>
                     </template>
@@ -35,7 +35,7 @@
                         <span class="notNull">* </span>加汽开始时间
                     </template>
                     <template slot-scope="scope">
-                        <el-date-picker v-model="scope.row.addSteamStart" type="datetime" value-format="yyyy-MM-dd HH:mm" format="yyyy-MM-dd HH:mm" placeholder="请选择" :disabled="!isRedact" style="width: 170px;" size="small" />
+                        <el-date-picker v-model="scope.row.addSteamStart" type="datetime" value-format="yyyy-MM-dd HH:mm" format="yyyy-MM-dd HH:mm" placeholder="请选择" :disabled="!(isRedact && scope.row.status !== 'C' && scope.row.status !== 'D' && scope.row.status !== 'P')" style="width: 170px;" size="small" />
                     </template>
                 </el-table-column>
                 <el-table-column min-width="192">
@@ -43,19 +43,19 @@
                         <span class="notNull">* </span>加汽结束时间
                     </template>
                     <template slot-scope="scope">
-                        <el-date-picker v-model="scope.row.addSteamEnd" type="datetime" value-format="yyyy-MM-dd HH:mm" format="yyyy-MM-dd HH:mm" placeholder="请选择" :disabled="!isRedact" style="width: 170px;" size="small" />
+                        <el-date-picker v-model="scope.row.addSteamEnd" type="datetime" value-format="yyyy-MM-dd HH:mm" format="yyyy-MM-dd HH:mm" placeholder="请选择" :disabled="!(isRedact && scope.row.status !== 'C' && scope.row.status !== 'D' && scope.row.status !== 'P')" style="width: 170px;" size="small" />
                     </template>
                 </el-table-column>
                 <el-table-column label="汽包压力" width="144">
                     <template slot-scope="scope">
-                        <el-input v-model="scope.row.steamPocketPressure" placeholder="请输入" :disabled="!isRedact" size="small" style="width: 120px; line-height: 32px;">
+                        <el-input v-model="scope.row.steamPocketPressure" placeholder="请输入" :disabled="!(isRedact && scope.row.status !== 'C' && scope.row.status !== 'D' && scope.row.status !== 'P')" size="small" style="width: 120px; line-height: 32px;">
                             <span slot="suffix" class="stock-form_item_input_suffix">Mpa</span>
                         </el-input>
                     </template>
                 </el-table-column>
                 <el-table-column label="转动圈数" width="144">
                     <template slot-scope="scope">
-                        <el-input v-model="scope.row.turnCount" placeholder="请输入" :disabled="!isRedact" size="small" style="width: 120px;" />
+                        <el-input v-model="scope.row.turnCount" placeholder="请输入" :disabled="!(isRedact && scope.row.status !== 'C' && scope.row.status !== 'D' && scope.row.status !== 'P')" size="small" style="width: 120px;" />
                     </template>
                 </el-table-column>
                 <el-table-column label="蒸煮时间" width="80">
@@ -65,7 +65,7 @@
                 </el-table-column>
                 <el-table-column label="保压时间" width="144">
                     <template slot-scope="scope">
-                        <el-input v-model="scope.row.pressureDuration" placeholder="请输入" :disabled="!isRedact" size="small" style="width: 120px; line-height: 32px;">
+                        <el-input v-model="scope.row.pressureDuration" placeholder="请输入" :disabled="!(isRedact && scope.row.status !== 'C' && scope.row.status !== 'D' && scope.row.status !== 'P')" size="small" style="width: 120px; line-height: 32px;">
                             <span slot="suffix" class="stock-form_item_input_suffix">min</span>
                         </el-input>
                     </template>
@@ -75,13 +75,13 @@
                         熟豆放豆时间
                     </template>
                     <template slot-scope="scope">
-                        <el-date-picker v-model="scope.row.addBeanDate" type="datetime" value-format="yyyy-MM-dd HH:mm" format="yyyy-MM-dd HH:mm" placeholder="请选择" :disabled="!isRedact" style="width: 170px;" size="small" />
+                        <el-date-picker v-model="scope.row.addBeanDate" type="datetime" value-format="yyyy-MM-dd HH:mm" format="yyyy-MM-dd HH:mm" placeholder="请选择" :disabled="!(isRedact && scope.row.status !== 'C' && scope.row.status !== 'D' && scope.row.status !== 'P')" style="width: 170px;" size="small" />
                     </template>
                 </el-table-column>
                 <el-table-column label="备注" width="170">
                     <template slot-scope="scope">
                         <el-tooltip :disabled="!scope.row.remark" effect="dark" :content="scope.row.remark" placement="top">
-                            <el-input v-model.trim="scope.row.remark" size="small" placeholder="请输入" :disabled="!isRedact" />
+                            <el-input v-model.trim="scope.row.remark" size="small" placeholder="请输入" :disabled="!(isRedact && scope.row.status !== 'C' && scope.row.status !== 'D' && scope.row.status !== 'P')" />
                         </el-tooltip>
                     </template>
                 </el-table-column>
@@ -121,7 +121,7 @@
                         <span class="notNull">* </span>蒸球号
                     </template>
                     <template slot-scope="scope">
-                        <el-select v-model="scope.row.steamBallNo" placeholder="请选择" :disabled="!isRedact" size="small" style="width: 100%;">
+                        <el-select v-model="scope.row.steamBallNo" placeholder="请选择" :disabled="!(isRedact && scope.row.status !== 'C' && scope.row.status !== 'D' && scope.row.status !== 'P')" size="small" style="width: 100%;">
                             <el-option v-for="(subItem, index) in steamBallList" :key="index" :label="subItem.holderName" :value="subItem.holderNo" />
                         </el-select>
                     </template>
@@ -131,7 +131,7 @@
                         <span class="notNull">* </span>蒸豆硬度1
                     </template>
                     <template slot-scope="scope">
-                        <el-input v-model="scope.row.hardnessOne" placeholder="请输入" :disabled="!isRedact" size="small" style="width: 120px;" />
+                        <el-input v-model="scope.row.hardnessOne" placeholder="请输入" :disabled="!(isRedact && scope.row.status !== 'C' && scope.row.status !== 'D' && scope.row.status !== 'P')" size="small" style="width: 120px;" />
                     </template>
                 </el-table-column>
                 <el-table-column min-width="146">
@@ -139,7 +139,7 @@
                         <span class="notNull">* </span>蒸豆硬度2
                     </template>
                     <template slot-scope="scope">
-                        <el-input v-model="scope.row.hardnessTwo" placeholder="请输入" :disabled="!isRedact" size="small" style="width: 120px;" />
+                        <el-input v-model="scope.row.hardnessTwo" placeholder="请输入" :disabled="!(isRedact && scope.row.status !== 'C' && scope.row.status !== 'D' && scope.row.status !== 'P')" size="small" style="width: 120px;" />
                     </template>
                 </el-table-column>
                 <el-table-column min-width="146">
@@ -147,7 +147,7 @@
                         <span class="notNull">* </span>蒸豆硬度3
                     </template>
                     <template slot-scope="scope">
-                        <el-input v-model="scope.row.hardnessThree" placeholder="请输入" :disabled="!isRedact" size="small" style="width: 120px;" />
+                        <el-input v-model="scope.row.hardnessThree" placeholder="请输入" :disabled="!(isRedact && scope.row.status !== 'C' && scope.row.status !== 'D' && scope.row.status !== 'P')" size="small" style="width: 120px;" />
                     </template>
                 </el-table-column>
                 <el-table-column min-width="146">
@@ -155,7 +155,7 @@
                         <span class="notNull">* </span>蒸豆硬度4
                     </template>
                     <template slot-scope="scope">
-                        <el-input v-model="scope.row.hardnessFour" placeholder="请输入" :disabled="!isRedact" size="small" style="width: 120px;" />
+                        <el-input v-model="scope.row.hardnessFour" placeholder="请输入" :disabled="!(isRedact && scope.row.status !== 'C' && scope.row.status !== 'D' && scope.row.status !== 'P')" size="small" style="width: 120px;" />
                     </template>
                 </el-table-column>
                 <el-table-column min-width="146">
@@ -163,7 +163,7 @@
                         <span class="notNull">* </span>蒸豆硬度5
                     </template>
                     <template slot-scope="scope">
-                        <el-input v-model="scope.row.hardnessFive" placeholder="请输入" :disabled="!isRedact" size="small" style="width: 120px;" />
+                        <el-input v-model="scope.row.hardnessFive" placeholder="请输入" :disabled="!(isRedact && scope.row.status !== 'C' && scope.row.status !== 'D' && scope.row.status !== 'P')" size="small" style="width: 120px;" />
                     </template>
                 </el-table-column>
                 <el-table-column min-width="146">
@@ -171,7 +171,7 @@
                         <span class="notNull">* </span>蒸豆硬度6
                     </template>
                     <template slot-scope="scope">
-                        <el-input v-model="scope.row.hardnessSix" placeholder="请输入" :disabled="!isRedact" size="small" style="width: 120px;" />
+                        <el-input v-model="scope.row.hardnessSix" placeholder="请输入" :disabled="!(isRedact && scope.row.status !== 'C' && scope.row.status !== 'D' && scope.row.status !== 'P')" size="small" style="width: 120px;" />
                     </template>
                 </el-table-column>
                 <el-table-column min-width="146">
@@ -179,7 +179,7 @@
                         <span class="notNull">* </span>蒸豆硬度7
                     </template>
                     <template slot-scope="scope">
-                        <el-input v-model="scope.row.hardnessSeven" placeholder="请输入" :disabled="!isRedact" size="small" style="width: 120px;" />
+                        <el-input v-model="scope.row.hardnessSeven" placeholder="请输入" :disabled="!(isRedact && scope.row.status !== 'C' && scope.row.status !== 'D' && scope.row.status !== 'P')" size="small" style="width: 120px;" />
                     </template>
                 </el-table-column>
                 <el-table-column min-width="146">
@@ -187,7 +187,7 @@
                         <span class="notNull">* </span>蒸豆硬度8
                     </template>
                     <template slot-scope="scope">
-                        <el-input v-model="scope.row.hardnessEight" placeholder="请输入" :disabled="!isRedact" size="small" style="width: 120px;" />
+                        <el-input v-model="scope.row.hardnessEight" placeholder="请输入" :disabled="!(isRedact && scope.row.status !== 'C' && scope.row.status !== 'D' && scope.row.status !== 'P')" size="small" style="width: 120px;" />
                     </template>
                 </el-table-column>
                 <el-table-column min-width="146">
@@ -195,7 +195,7 @@
                         <span class="notNull">* </span>蒸豆硬度9
                     </template>
                     <template slot-scope="scope">
-                        <el-input v-model="scope.row.hardnessNine" placeholder="请输入" :disabled="!isRedact" size="small" style="width: 120px;" />
+                        <el-input v-model="scope.row.hardnessNine" placeholder="请输入" :disabled="!(isRedact && scope.row.status !== 'C' && scope.row.status !== 'D' && scope.row.status !== 'P')" size="small" style="width: 120px;" />
                     </template>
                 </el-table-column>
                 <el-table-column min-width="146">
@@ -203,13 +203,13 @@
                         <span class="notNull">* </span>蒸豆硬度10
                     </template>
                     <template slot-scope="scope">
-                        <el-input v-model="scope.row.hardnessTen" placeholder="请输入" :disabled="!isRedact" size="small" style="width: 120px;" />
+                        <el-input v-model="scope.row.hardnessTen" placeholder="请输入" :disabled="!(isRedact && scope.row.status !== 'C' && scope.row.status !== 'D' && scope.row.status !== 'P')" size="small" style="width: 120px;" />
                     </template>
                 </el-table-column>
                 <el-table-column label="备注" width="170">
                     <template slot-scope="scope">
                         <el-tooltip :disabled="!scope.row.remark" effect="dark" :content="scope.row.remark" placement="top">
-                            <el-input v-model.trim="scope.row.remark" size="small" placeholder="请输入" :disabled="!isRedact" />
+                            <el-input v-model.trim="scope.row.remark" size="small" placeholder="请输入" :disabled="!(isRedact && scope.row.status !== 'C' && scope.row.status !== 'D' && scope.row.status !== 'P')" />
                         </el-tooltip>
                     </template>
                 </el-table-column>
