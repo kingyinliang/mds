@@ -598,6 +598,9 @@
                         width="230"
                         class="star"
                     >
+                        <template slot="header">
+                            <span class="notNull">* </span>记录人
+                        </template>
                         <template slot-scope="scope">
                             <span :style="{cursor:isRedact? 'pointer':'default',color:isRedact? '#333':'#aaa'}" @click="selectUser(scope.row,'recordMans','记录人')">
                                 <el-tooltip v-if="scope.row.recordMans&&scope.row.recordMans!==''" class="item" effect="dark" :content="scope.row.recordMans" placement="top">
@@ -824,7 +827,7 @@
 
         // 选择人员 内部借调
         selectUser(target, prop, who) {
-            if (this.isRedact) {
+            if (!(this.isRedact && target['status'] !== 'C' && target['status'] !== 'D' && target['status'] !== 'P')) return;
                 this.targetUserList = target
                 this.targetUserProp = prop
                 this.isLoanedPersonnelStatusDialogShow = true;
@@ -835,7 +838,7 @@
                 this.$nextTick(() => {
                     this.$refs.loanedPersonnel.init(tempUserList, who);
                 });
-            }
+
         }
 
         // 员工确认
@@ -1162,7 +1165,7 @@
                 }
             }
             for (const item of this.kojiEvaluateData) {
-                if (!item.kojiStage || !item.recordDate || !item.growInfo) {
+                if (!item.kojiStage || !item.recordDate || !item.growInfo || !item.recordMans) {
                     this.$warningToast('请填写曲料生长评价必填项');
                     return false
                 }

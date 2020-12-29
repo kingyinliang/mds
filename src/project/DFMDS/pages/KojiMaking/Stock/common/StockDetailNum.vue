@@ -45,7 +45,7 @@
 
         get stockUnit() {
             if (this.currentData.detailsList && this.currentData.detailsList.length) {
-                return this.currentData.detailsList[0].unit
+                return this.currentData.detailsList[0].unitName
             }
             return 'KG'
         }

@@ -14,7 +14,7 @@
                     <span class="notNull">* </span>班次
                 </template>
                 <template slot-scope="scope">
-                    <el-select v-model="scope.row.classes" size="small" :disabled="!isRedact" clearable>
+                    <el-select v-model="scope.row.classes" size="small" :disabled="!(isRedact && craftSteamBeanTable[0].status !== 'C' && craftSteamBeanTable[0].status !== 'D' && craftSteamBeanTable[0].status !== 'P')" clearable>
                         <el-option v-for="item in classesOptions" :key="item.dictCode" :label="item.dictValue" :value="item.dictCode" />
                     </el-select>
                 </template>
@@ -24,7 +24,7 @@
                     <span class="notNull">* </span>异常情况
                 </template>
                 <template slot-scope="scope">
-                    <el-select v-model="scope.row.exceptionSituation" size="small" :disabled="!isRedact" @change="changeExc($event, scope.row)">
+                    <el-select v-model="scope.row.exceptionSituation" size="small" :disabled="!(isRedact && craftSteamBeanTable[0].status !== 'C' && craftSteamBeanTable[0].status !== 'D' && craftSteamBeanTable[0].status !== 'P')" @change="changeExc($event, scope.row)">
                         <el-option v-for="item in abnormalList" :key="item.dictCode" :label="item.dictValue" :value="item.dictCode" />
                     </el-select>
                 </template>
@@ -34,7 +34,7 @@
                     <span class="notNull">* </span>开始时间
                 </template>
                 <template slot-scope="scope">
-                    <el-date-picker v-model="scope.row.startDate" type="datetime" value-format="yyyy-MM-dd HH:mm" format="yyyy-MM-dd HH:mm" placeholder="请选择" :disabled="!isRedact" size="small" style="width: 170px;" />
+                    <el-date-picker v-model="scope.row.startDate" type="datetime" value-format="yyyy-MM-dd HH:mm" format="yyyy-MM-dd HH:mm" placeholder="请选择" :disabled="!(isRedact && craftSteamBeanTable[0].status !== 'C' && craftSteamBeanTable[0].status !== 'D' && craftSteamBeanTable[0].status !== 'P')" size="small" style="width: 170px;" />
                 </template>
             </el-table-column>
             <el-table-column min-width="200">
@@ -42,7 +42,7 @@
                     <span class="notNull">* </span>结束时间
                 </template>
                 <template slot-scope="scope">
-                    <el-date-picker v-model="scope.row.endDate" type="datetime" value-format="yyyy-MM-dd HH:mm" format="yyyy-MM-dd HH:mm" placeholder="请选择" :disabled="!isRedact" size="small" style="width: 170px;" />
+                    <el-date-picker v-model="scope.row.endDate" type="datetime" value-format="yyyy-MM-dd HH:mm" format="yyyy-MM-dd HH:mm" placeholder="请选择" :disabled="!(isRedact && craftSteamBeanTable[0].status !== 'C' && craftSteamBeanTable[0].status !== 'D' && craftSteamBeanTable[0].status !== 'P')" size="small" style="width: 170px;" />
                 </template>
             </el-table-column>
             <el-table-column label="时长" min-width="100">
@@ -56,7 +56,7 @@
                     <span class="notNull">* </span>异常原因
                 </template>
                 <template slot-scope="scope">
-                    <el-select v-model="scope.row.exceptionReason" filterable size="small" :disabled="!isRedact || scope.row.exceptionSituation === 'AB_OTHERS'">
+                    <el-select v-model="scope.row.exceptionReason" filterable size="small" :disabled="!(isRedact && craftSteamBeanTable[0].status !== 'C' && craftSteamBeanTable[0].status !== 'D' && craftSteamBeanTable[0].status !== 'P') || scope.row.exceptionSituation === 'AB_OTHERS'">
                         <el-option v-for="(item, index) in scope.row.excReasonList" :key="index" :label="item.dictValue" :value="item.dictCode" />
                     </el-select>
                 </template>
@@ -64,14 +64,14 @@
             <el-table-column label="异常描述" min-width="220">
                 <template slot-scope="scope">
                     <el-tooltip class="item" effect="dark" :disabled="scope.row.exceptionInfo===''" :content="scope.row.exceptionInfo" placement="top-start">
-                        <el-input v-model.trim="scope.row.exceptionInfo" size="small" placeholder="请输入" :disabled="!isRedact" />
+                        <el-input v-model.trim="scope.row.exceptionInfo" size="small" placeholder="请输入" :disabled="!(isRedact && craftSteamBeanTable[0].status !== 'C' && craftSteamBeanTable[0].status !== 'D' && craftSteamBeanTable[0].status !== 'P')" />
                     </el-tooltip>
                 </template>
             </el-table-column>
             <el-table-column label="备注" min-width="200">
                 <template slot-scope="scope">
                     <el-tooltip class="item" effect="dark" :disabled="scope.row.remark===''" :content="scope.row.remark" placement="top-start">
-                        <el-input v-model.trim="scope.row.remark" size="small" placeholder="请输入" :disabled="!isRedact" />
+                        <el-input v-model.trim="scope.row.remark" size="small" placeholder="请输入" :disabled="!(isRedact && craftSteamBeanTable[0].status !== 'C' && craftSteamBeanTable[0].status !== 'D' && craftSteamBeanTable[0].status !== 'P')" />
                     </el-tooltip>
                 </template>
             </el-table-column>
@@ -87,7 +87,7 @@
             </el-table-column>
             <el-table-column width="70" fixed="right">
                 <template slot-scope="scope">
-                    <el-button class="delBtn" type="text" icon="el-icon-delete" size="mini" :disabled="!isRedact" @click="removeRow(scope.row)">
+                    <el-button class="delBtn" type="text" icon="el-icon-delete" size="mini" :disabled="!(isRedact && craftSteamBeanTable[0].status !== 'C' && craftSteamBeanTable[0].status !== 'D' && craftSteamBeanTable[0].status !== 'P')" @click="removeRow(scope.row)">
                         删除
                     </el-button>
                 </template>

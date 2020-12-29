@@ -15,7 +15,7 @@
                 </template>
             </el-table-column>
             <el-table-column label="计划数量" width="100" prop="planOutput" />
-            <el-table-column label="单位" width="70" prop="outputUnit" />
+            <el-table-column label="单位" width="70" prop="outputUnitName" />
             <el-table-column label="曲房号" width="160" prop="kojiHouseNo" :show-overflow-tooltip="true">
                 <template slot="header">
                     <span class="notNull">* </span>曲房号

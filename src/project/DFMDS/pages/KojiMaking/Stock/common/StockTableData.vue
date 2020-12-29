@@ -12,12 +12,12 @@
             <el-table-column label="入库日期" width="160" :show-overflow-tooltip="true" prop="inStorageDate" :formatter="formatterProductDate" />
             <el-table-column label="生产日期" width="160" :show-overflow-tooltip="true" prop="productDate" :formatter="formatterProductDate" />
             <el-table-column v-if="!isHistoryPage" label="存储天数" :show-overflow-tooltip="true" prop="days" :formatter="formatterSaveDays" />
-            <el-table-column :label="stockType==='Y158'?'入库数量(BOX)':'入库数量(KG)'" width="140" :show-overflow-tooltip="true" prop="inStorageAmount" align="right">
+            <el-table-column :label="stockType==='Y158'?'入库数量(盒)':'入库数量(千克)'" width="140" :show-overflow-tooltip="true" prop="inStorageAmount" align="right">
                 <template slot-scope="scope">
                     {{ scope.row.inStorageAmount ? scope.row.inStorageAmount.toLocaleString() : '' }}
                 </template>
             </el-table-column>
-            <el-table-column :label="stockType==='Y158'?'当前数量(BOX)':'当前数量(KG)'" width="140" :show-overflow-tooltip="true" prop="currentAmount" align="right">
+            <el-table-column :label="stockType==='Y158'?'当前数量(盒)':'当前数量(千克)'" width="140" :show-overflow-tooltip="true" prop="currentAmount" align="right">
                 <template slot-scope="scope">
                     {{ scope.row.currentAmount ? scope.row.currentAmount.toLocaleString(): '' }}
                 </template>

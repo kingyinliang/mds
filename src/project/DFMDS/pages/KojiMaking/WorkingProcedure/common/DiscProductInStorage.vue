@@ -54,7 +54,7 @@
                         <span class="notNull">* </span>单位
                     </template>
                     <template slot-scope="scope">
-                        {{ scope.row.unit }}
+                        {{ scope.row.unitName }}
                     </template>
                 </el-table-column>
                 <el-table-column label="备注" prop="remark" min-width="200">

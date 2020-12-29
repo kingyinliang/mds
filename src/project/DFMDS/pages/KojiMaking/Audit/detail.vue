@@ -308,23 +308,31 @@
         // 跳转工序页面
         goDetail(who, arg) {
             let url = '';
+            let whichTab = '';
                 switch (who) {
                     case 'XD':
                         url = 'DFMDS-pages-KojiMaking-WorkingProcedure-WashBean';
+                        whichTab = '2';
                         break;
                     case 'ZM':
                         url = 'DFMDS-pages-KojiMaking-WorkingProcedure-SteamedFlour';
+                        whichTab = '2';
                         break;
                     case 'YP':
                         url = 'DFMDS-pages-KojiMaking-WorkingProcedure-disc';
+                        whichTab = '1';
                         break;
                     case 'SC':
                         url = 'DFMDS-pages-KojiMaking-WorkingProcedure-SCWashBean';
+                        whichTab = '2';
                         break;
                     case 'ZD':
                         url = 'DFMDS-pages-KojiMaking-WorkingProcedure-SteamedBean';
+                        whichTab = '1';
                         break;
                     default:
+                        url = 'DFMDS-pages-KojiMaking-WorkingProcedure-SteamedBean'; // 防呆 SC 蒸豆命名
+                        whichTab = '1';
                 }
 
             console.log(`url:${url}`)
@@ -336,7 +344,7 @@
 
             setTimeout(() => {
                 this.$router.push({
-                    name: url, params: { order: arg }
+                    name: url, params: { order: arg, activeName: whichTab }
                 });
             }, 100);
         }
@@ -496,26 +504,27 @@
             // ['WB_MATERIAL', 'MATERIAL']
             let verifyTypeTemp: string[] = []
             switch (tab) {
-                case '准备工时':
-                    if (row.process === '洗豆') {
-                        verifyTypeTemp = ['WB_CONTROL', 'TIMESHEET']
-                    }
-                    if (row.process === '蒸面') {
-                        verifyTypeTemp = ['SB_CONTROL', 'TIMESHEET']
-                    }
-                    if (row.process === '圆盘') {
-                        verifyTypeTemp = ['KJ_CONTROL', 'TIMESHEET']
-                    }
-                    if (row.process === 'SC洗豆') {
-                        verifyTypeTemp = ['WB_CONTROL', 'TIMESHEET']
-                    }
-                    if (row.process === '篜豆') {
-                        verifyTypeTemp = ['SB_CONTROL', 'TIMESHEET']
-                    }
+                case '准备人工':
+                    // if (row.process === '洗豆') {
+                    //     verifyTypeTemp = ['WB_CONTROL', 'TIMESHEET']
+                    // }
+                    // if (row.process === '蒸面') {
+                    //     verifyTypeTemp = ['SB_CONTROL', 'TIMESHEET']
+                    // }
+                    // if (row.process === '圆盘') {
+                    //     verifyTypeTemp = ['KJ_CONTROL', 'TIMESHEET']
+                    // }
+                    // if (row.process === 'SC洗豆') {
+                    //     verifyTypeTemp = ['WB_CONTROL', 'TIMESHEET']
+                    // }
+                    // if (row.process === '篜豆') {
+                    //     verifyTypeTemp = ['SB_CONTROL', 'TIMESHEET']
+                    // }
                     AUDIT_API.STE_AUDIT_QUERY_BY_ID({
-                        id: row.id
+                        id: row.timeSheetId
                     }).then(({ data }) => {
                         this.auditLogData = data.data;
+                        this.visibleAuditLog = true
                     })
                     break;
                 case '机器工时':
@@ -531,7 +540,7 @@
                     if (row.process === 'SC洗豆') {
                         verifyTypeTemp = ['WB_CONTROL', 'TIMESHEET']
                     }
-                    if (row.process === '篜豆') {
+                    if (row.process === 'SC篜豆') {
                         verifyTypeTemp = ['SB_CONTROL', 'TIMESHEET']
                     }
                     AUDIT_API.STE_AUDIT_LOG_API({ orderNo: this.currentOrderNo, splitOrderNo: row.kojiOrderNo, verifyType: verifyTypeTemp }).then(({ data }) => {
@@ -540,12 +549,42 @@
                     })
                     break;
                 case '生产入库':
+                    // if (row.process === '洗豆') {
+                    //     verifyTypeTemp = []
+                    // }
+                    // if (row.process === '蒸面') {
+                    //     verifyTypeTemp = []
+                    // }
+                    // if (row.process === '圆盘') {
+                    //     verifyTypeTemp = ['KJ_INSTORAGE', 'INSTORAGE']
+                    // }
+                    // if (row.process === 'SC洗豆') {
+                    //     verifyTypeTemp = []
+                    // }
+                    // if (row.process === 'SC篜豆') {
+                    //     verifyTypeTemp = ['SB_INSTORAGE', 'INSTORAGE']
+                    // }
                     AUDIT_API.STE_AUDIT_LOG_API({ orderNo: this.currentOrderNo, splitOrderNo: row.kojiOrderNo, verifyType: verifyTypeTemp }).then(({ data }) => {
                         this.auditLogData = data.data
                         this.visibleAuditLog = true
                     })
                     break;
                 case '物料领用':
+                    // if (row.process === '洗豆') {
+                    //     verifyTypeTemp = ['WB_MATERIAL', 'MATERIAL']
+                    // }
+                    // if (row.process === '蒸面') {
+                    //     verifyTypeTemp = ['SF_MATERIAL', 'MATERIAL']
+                    // }
+                    // if (row.process === '圆盘') {
+                    //     verifyTypeTemp = []
+                    // }
+                    // if (row.process === 'SC洗豆') {
+                    //     verifyTypeTemp = ['WB_MATERIAL', 'MATERIAL']
+                    // }
+                    // if (row.process === 'SC篜豆') {
+                    //     verifyTypeTemp = []
+                    // }
                     AUDIT_API.STE_AUDIT_LOG_API({ orderNo: this.currentOrderNo, splitOrderNo: row.kojiOrderNo, verifyType: verifyTypeTemp }).then(({ data }) => {
                         this.auditLogData = data.data
                         this.visibleAuditLog = true

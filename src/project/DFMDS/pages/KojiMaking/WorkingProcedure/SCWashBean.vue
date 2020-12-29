@@ -135,8 +135,12 @@
         }
 
         mounted() {
+            // 跳转用
             if (typeof this.$route.params.order !== 'undefined') {
-                this.jumpFromAudit = true
+                this.jumpFromAudit = true;
+                setTimeout(() => {
+                    this.$refs.dataEntry.activeName = this.$route.params.activeName;
+                }, 2000);
             }
             this.getOrderList();
         }
