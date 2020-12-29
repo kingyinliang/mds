@@ -308,23 +308,31 @@
         // 跳转工序页面
         goDetail(who, arg) {
             let url = '';
+            let whichTab = '';
                 switch (who) {
                     case 'XD':
                         url = 'DFMDS-pages-KojiMaking-WorkingProcedure-WashBean';
+                        whichTab = '2';
                         break;
                     case 'ZM':
                         url = 'DFMDS-pages-KojiMaking-WorkingProcedure-SteamedFlour';
+                        whichTab = '2';
                         break;
                     case 'YP':
                         url = 'DFMDS-pages-KojiMaking-WorkingProcedure-disc';
+                        whichTab = '1';
                         break;
                     case 'SC':
                         url = 'DFMDS-pages-KojiMaking-WorkingProcedure-SCWashBean';
+                        whichTab = '2';
                         break;
                     case 'ZD':
                         url = 'DFMDS-pages-KojiMaking-WorkingProcedure-SteamedBean';
+                        whichTab = '1';
                         break;
                     default:
+                        url = 'DFMDS-pages-KojiMaking-WorkingProcedure-SteamedBean'; // 防呆 SC 蒸豆命名
+                        whichTab = '1';
                 }
 
             console.log(`url:${url}`)
@@ -336,7 +344,7 @@
 
             setTimeout(() => {
                 this.$router.push({
-                    name: url, params: { order: arg }
+                    name: url, params: { order: arg, activeName: whichTab }
                 });
             }, 100);
         }
