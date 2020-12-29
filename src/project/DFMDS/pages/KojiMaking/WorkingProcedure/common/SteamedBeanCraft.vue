@@ -7,7 +7,7 @@
                         <template slot="label">
                             蒸球压力(Mpa)：
                         </template>
-                        <el-input v-model="steamBallPressure" placeholder="" :disabled="!isRedact" size="small" style="width: 175px;">
+                        <el-input v-model="steamBallPressure" placeholder="" :disabled="!(isRedact && craftSteamBeanTable[0].status !== 'C' && craftSteamBeanTable[0].status !== 'D' && craftSteamBeanTable[0].status !== 'P')" size="small" style="width: 175px;">
                             <span slot="suffix" class="stock-form_item_input_suffix">Mpa</span>
                         </el-input>
                     </el-form-item>
