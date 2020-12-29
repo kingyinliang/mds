@@ -138,7 +138,7 @@
                                             </el-tooltip>
                                         </li>
                                         <li class="lines">
-                                            <span>订单产量：</span><span>{{ querySecondResultList[secondObjIndex].planOutput }} {{ querySecondResultList[secondObjIndex].outputUnit }}</span>
+                                            <span>订单产量：</span><span>{{ querySecondResultList[secondObjIndex].planOutput }} {{ querySecondResultList[secondObjIndex].outputUnitName }}</span>
                                         </li>
                                         <li class="lines">
                                             <span>实际产量：</span><span>{{ querySecondResultList[secondObjIndex].realOutput }}</span>
