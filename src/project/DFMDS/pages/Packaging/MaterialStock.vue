@@ -314,9 +314,9 @@ export default class MaterialStock extends Vue {
         // })
     }
 
-    updated() {
-        this.$refs.queryTable.getDataList(true)
-    }
+    // updated() {
+    //     this.$refs.queryTable.getDataList(true)
+    // }
     // createdEnd() {
     // }
 

@@ -132,7 +132,8 @@
                     resData: 'data',
                     label: ['deptName'],
                     value: 'id'
-                }
+                },
+                linkageProp: ['productLine']
             },
             {
                 type: 'date-picker',
@@ -147,6 +148,23 @@
                 label: '生产订单',
                 labelWidth: 90,
                 prop: 'orderNo'
+            },
+            {
+                type: 'select',
+                label: '包装产线',
+                prop: 'productLine',
+                optionsFn: val => {
+                    return COMMON_API.ORG_QUERY_CHILDREN_API({
+                        parentId: val || '',
+                        deptType: 'PRODUCT_LINE'
+                    })
+                },
+                defaultValue: '',
+                resVal: {
+                    resData: 'data',
+                    label: ['deptName'],
+                    value: 'id'
+                }
             },
             {
                 type: 'input',
@@ -182,10 +200,10 @@
             if (data.data) {
                 this.queryResultList = data.data
                 this.queryResultList.forEach(item => {
-                    if (item.splitOrders.length === 1) {
-                        item.orderNo = item.splitOrders[0].id;
-                        this.orderchange(item);
-                    }
+                    // if (item.splitOrders.length === 1) {
+                    item.orderNo = item.splitOrders[0].id;
+                    this.orderchange(item);
+                    // }
                 })
             } else {
                 this.queryResultList = []
@@ -196,13 +214,13 @@
         orderchange(item) {
             const filterArr: (any) = item.splitOrders.filter(it => it.id === item.orderNo);// eslint-disable-line
             item.orderNoMap = filterArr[0];
-            if (item.orderNoMap['potOrders'].length === 1) {
-                item.potOrder = item.orderNoMap['potOrders'][0].id;
-                item.potOrderMap = item.orderNoMap['potOrders'][0];
-            } else {
-                item.potOrder = '';
-                item.potOrderMap = '';
-            }
+            // if (item.orderNoMap['potOrders'].length === 1) {
+            item.potOrder = item.orderNoMap['potOrders'][0].id;
+            item.potOrderMap = item.orderNoMap['potOrders'][0];
+            // } else {
+            //     item.potOrder = '';
+            //     item.potOrderMap = '';
+            // }
         }
 
         potOrderChange(item) {
