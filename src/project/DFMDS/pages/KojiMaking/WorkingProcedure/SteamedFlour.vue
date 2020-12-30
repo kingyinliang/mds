@@ -16,10 +16,10 @@
             @success="getOrderList"
         >
             <template slot="1" slot-scope="data">
-                <flour-material-apply ref="flourMaterialApply" :is-redact="data.isRedact" :sieve-total-num="sieveTotalNum" @setMaterialTable="setMaterialTable" />
+                <flour-material-apply ref="flourMaterialApply" :is-status="flourMaterialApplyStatus" :is-redact="data.isRedact" :sieve-total-num="sieveTotalNum" @setMaterialTable="setMaterialTable" />
             </template>
             <template slot="2" slot-scope="data">
-                <flour-material-craft ref="flourMaterialCraft" :is-redact="data.isRedact" :set-material-table-data="setMaterialTableData" @changeSieveTotalNum="changeSieveTotalNum" />
+                <flour-material-craft ref="flourMaterialCraft" :is-status="flourMaterialCraftStatus" :is-redact="data.isRedact" :set-material-table-data="setMaterialTableData" @changeSieveTotalNum="changeSieveTotalNum" />
             </template>
             <template slot="3" slot-scope="data">
                 <koji-exc-record ref="excRecord" :is-redact="data.isRedact" :form-header="formHeader" />
@@ -65,6 +65,8 @@
         sieveTotalNum = 0;
         // 物料领用记录 == 批次信息
         setMaterialTableData = [];
+        flourMaterialApplyStatus='';
+        flourMaterialCraftStatus='';
 
         changeSieveTotalNum(num) {
             this.sieveTotalNum = num;
@@ -152,6 +154,9 @@
                 this.$store.commit('koji/updateHouseTag', data.data);
                 this.tabs[0].status = data.data.steamFlourMaterialName
                 this.tabs[1].status = data.data.steamFlourCraftName
+
+                this.flourMaterialApplyStatus = data.data.steamFlourMaterial;
+                this.flourMaterialCraftStatus = data.data.steamFlourCraft;
                 this.$refs.dataEntry.updateTabs()
                 this.$set(this.formHeader, 'statusName', data.data.steamFlourStatusName);
             })

@@ -4,7 +4,7 @@
             <template slot="titleBtn">
                 <el-form :inline="true" label-width="115px">
                     <el-form-item class="cleanMarginBottom floatr">
-                        <el-button type="primary" size="small" :disabled="!isRedact" @click="addY158DataRow()">
+                        <el-button type="primary" size="small" :disabled="!(isRedact && isStatus !== 'C' && isStatus !== 'D' && isStatus !== 'P')" @click="addY158DataRow()">
                             新增
                         </el-button>
                     </el-form-item>
@@ -48,7 +48,7 @@
                     <div class="card-stock">
                         <div class="card-stock__head">
                             <span>{{ `${item.workShopName}${item.wareHouseName ? '：'+ item.wareHouseName : ''}` }}</span>
-                            <el-button class="floatr" type="text" :disabled="!isRedact" @click="addRow(item)">
+                            <el-button class="floatr" type="text" :disabled="!(isRedact && isStatus !== 'C' && isStatus !== 'D' && isStatus !== 'P')" @click="addRow(item)">
                                 领用
                             </el-button>
                         </div>
@@ -122,6 +122,7 @@
     })
     export default class FlourMaterialApply extends Vue {
         @Prop({ default: false }) isRedact: boolean;
+        @Prop({ default: 'N' }) isStatus: string;
         @Prop({ default: 0 }) sieveTotalNum: number | string;
 
         $refs: {
@@ -264,7 +265,7 @@
         }
 
         EditY158Row(row) {
-            if (!this.isRedact) {
+            if (!(this.isRedact && this.isStatus !== 'C' && this.isStatus !== 'D' && this.isStatus !== 'P')) {
                 return false;
             }
             this.Y158Visible = true;
@@ -285,7 +286,7 @@
         }
 
         EditRow(row) {
-            if (!this.isRedact) {
+            if (!(this.isRedact && this.isStatus !== 'C' && this.isStatus !== 'D' && this.isStatus !== 'P')) {
                 return false;
             }
             this.visible = true;

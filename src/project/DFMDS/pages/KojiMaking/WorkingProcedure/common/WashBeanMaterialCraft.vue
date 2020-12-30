@@ -7,24 +7,24 @@
                         <template slot="label">
                             <span class="notNull">* </span>筛豆开始时间：
                         </template>
-                        <el-date-picker v-model="craftSeiveBeanInfo.sieveStartDate" type="datetime" value-format="yyyy-MM-dd HH:mm" format="yyyy-MM-dd HH:mm" placeholder="请选择" :disabled="!isRedact" size="small" style="width: 175px;" />
+                        <el-date-picker v-model="craftSeiveBeanInfo.sieveStartDate" type="datetime" value-format="yyyy-MM-dd HH:mm" format="yyyy-MM-dd HH:mm" placeholder="请选择" :disabled="!(isRedact && isStatus !== 'C' && isStatus !== 'D' && isStatus !== 'P')" size="small" style="width: 175px;" />
                     </el-form-item>
                     <el-form-item class="cleanMarginBottom">
                         <template slot="label">
                             <span class="notNull">* </span>筛豆结束时间：
                         </template>
-                        <el-date-picker v-model="craftSeiveBeanInfo.sieveEndDate" type="datetime" value-format="yyyy-MM-dd HH:mm" format="yyyy-MM-dd HH:mm" placeholder="请选择" :disabled="!isRedact" size="small" style="width: 175px;" />
+                        <el-date-picker v-model="craftSeiveBeanInfo.sieveEndDate" type="datetime" value-format="yyyy-MM-dd HH:mm" format="yyyy-MM-dd HH:mm" placeholder="请选择" :disabled="!(isRedact && isStatus !== 'C' && isStatus !== 'D' && isStatus !== 'P')" size="small" style="width: 175px;" />
                     </el-form-item>
                     <el-form-item class="cleanMarginBottom">
                         <template slot="label">
                             停机时长：
                         </template>
-                        <el-input v-model="craftSeiveBeanInfo.sieveStopDuration" placeholder="" :disabled="!isRedact" size="small" style="width: 175px;">
+                        <el-input v-model="craftSeiveBeanInfo.sieveStopDuration" placeholder="" :disabled="!(isRedact && isStatus !== 'C' && isStatus !== 'D' && isStatus !== 'P')" size="small" style="width: 175px;">
                             <span slot="suffix" class="stock-form_item_input_suffix">min</span>
                         </el-input>
                     </el-form-item>
                     <el-form-item class="cleanMarginBottom floatr">
-                        <el-button type="primary" size="small" :disabled="!isRedact" @click="addSeiveBeanDataRow()">
+                        <el-button type="primary" size="small" :disabled="!(isRedact && isStatus !== 'C' && isStatus !== 'D' && isStatus !== 'P')" @click="addSeiveBeanDataRow()">
                             新增
                         </el-button>
                     </el-form-item>
@@ -164,7 +164,7 @@
             <template slot="titleBtn">
                 <el-form :inline="true" label-width="115px">
                     <el-form-item class="cleanMarginBottom floatr">
-                        <el-button type="primary" size="small" :disabled="!isRedact" @click="addWashBeanDataRow()">
+                        <el-button type="primary" size="small" :disabled="!(isRedact && isStatus !== 'C' && isStatus !== 'D' && isStatus !== 'P')" @click="addWashBeanDataRow()">
                             新增
                         </el-button>
                     </el-form-item>
@@ -297,6 +297,7 @@
     })
     export default class WashBeanMaterialCraft extends Vue {
         @Prop({ default: false }) isRedact: boolean;
+        @Prop({ default: 'N' }) isStatus: string;
         @Prop({ default: [] }) setMaterialTableData;
 
         $refs: {
