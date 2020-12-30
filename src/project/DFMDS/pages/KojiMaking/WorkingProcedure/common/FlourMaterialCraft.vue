@@ -53,7 +53,7 @@
             <template slot="titleBtn">
                 <el-form :inline="true" label-width="115px">
                     <el-form-item class="cleanMarginBottom floatr">
-                        <el-button type="primary" size="small" :disabled="!isRedact" @click="addDataRow()">
+                        <el-button type="primary" size="small" :disabled="!(isRedact && isStatus !== 'C' && isStatus !== 'D' && isStatus !== 'P')" @click="addDataRow()">
                             新增
                         </el-button>
                     </el-form-item>
@@ -234,6 +234,7 @@
     })
     export default class WashBeanMaterialCraft extends Vue {
         @Prop({ default: false }) isRedact: boolean;
+        @Prop({ default: 'N' }) isStatus: string;
         @Prop({ default: [] }) setMaterialTableData: CraftList[];
 
         $refs: {

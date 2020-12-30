@@ -16,10 +16,10 @@
             @success="getOrderList"
         >
             <template slot="1" slot-scope="data">
-                <wash-bean-material-apply ref="washBeanMaterialApply" :is-redact="data.isRedact" :sieve-total-num="sieveTotalNum" @setMaterialTable="setMaterialTable" />
+                <wash-bean-material-apply ref="washBeanMaterialApply" :is-status="washBeanMaterialApplyStatus" :is-redact="data.isRedact" :sieve-total-num="sieveTotalNum" @setMaterialTable="setMaterialTable" />
             </template>
             <template slot="2" slot-scope="data">
-                <wash-bean-material-craft ref="washBeanMaterialCraft" :is-redact="data.isRedact" :set-material-table-data="setMaterialTableData" @changeSieveTotalNum="changeSieveTotalNum" />
+                <wash-bean-material-craft ref="washBeanMaterialCraft" :is-status="washBeanMaterialCraftStatus" :is-redact="data.isRedact" :set-material-table-data="setMaterialTableData" @changeSieveTotalNum="changeSieveTotalNum" />
             </template>
             <template slot="3" slot-scope="data">
                 <koji-exc-record ref="excRecord" :is-redact="data.isRedact" :form-header="formHeader" />
@@ -65,6 +65,10 @@
         sieveTotalNum = 0;
         // 物料领用记录 == 批次信息
         setMaterialTableData = [];
+
+        // 物料领用,工艺控制页签状态
+        washBeanMaterialApplyStatus=''
+        washBeanMaterialCraftStatus=''
 
         changeSieveTotalNum(num) {
             this.sieveTotalNum = num;
@@ -184,6 +188,9 @@
                 this.$store.commit('koji/updateHouseTag', data.data);
                 this.tabs[0].status = data.data.washBeanMaterailName
                 this.tabs[1].status = data.data.washBeanCraftName
+
+                this.washBeanMaterialApplyStatus = data.data.washBeanMaterail
+                this.washBeanMaterialCraftStatus = data.data.washBeanCraft
                 this.$refs.dataEntry.updateTabs();
                 this.$set(this.formHeader, 'statusName', data.data.washBeanStatusName);
             })

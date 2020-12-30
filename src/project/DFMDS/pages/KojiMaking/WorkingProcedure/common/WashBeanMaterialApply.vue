@@ -6,7 +6,7 @@
                     <div class="card-stock">
                         <div class="card-stock__head">
                             <span>{{ `${item.workShopName}${item.wareHouseName? '：' + item.wareHouseName: ''}` }}</span>
-                            <el-button class="floatr" type="text" :disabled="!isRedact" @click="addRow(item)">
+                            <el-button class="floatr" type="text" :disabled="!(isRedact && isStatus !== 'C' && isStatus !== 'D' && isStatus !== 'P')" @click="addRow(item)">
                                 领用
                             </el-button>
                         </div>
@@ -75,6 +75,7 @@
     })
     export default class WashBeanMaterialApply extends Vue {
         @Prop({ default: false }) isRedact: boolean;
+        @Prop({ default: 'N' }) isStatus: string;
         @Prop({ default: 0 }) sieveTotalNum: number | string;
 
         $refs: { washBeanMaterialApplyDialog: HTMLFormElement };
@@ -141,7 +142,7 @@
         }
 
         EditRow(row) {
-            if (!this.isRedact) {
+            if (!(this.isRedact && this.isStatus !== 'C' && this.isStatus !== 'D' && this.isStatus !== 'P')) {
                 return false;
             }
             this.visible = true;
