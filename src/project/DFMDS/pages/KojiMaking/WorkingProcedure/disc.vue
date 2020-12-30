@@ -15,10 +15,10 @@
         @success="getOrderList"
     >
         <template slot="1" slot-scope="data">
-            <craft-control ref="craftControl" :is-redact="data.isRedact" :form-header="formHeader" />
+            <craft-control ref="craftControl" :is-status="craftControlStatus" :is-redact="data.isRedact" :form-header="formHeader" />
         </template>
         <template slot="2" slot-scope="data">
-            <product-in-storage ref="productInStorage" :pot-no-now="potNoNow" :pot-no-list="potNoList" :is-redact="data.isRedact" :form-header="formHeader" />
+            <product-in-storage ref="productInStorage" :is-status="productInStorageStatus" :pot-no-now="potNoNow" :pot-no-list="potNoList" :is-redact="data.isRedact" :form-header="formHeader" />
         </template>
         <template slot="3" slot-scope="data">
             <koji-exc-record ref="excRecord" :is-redact="data.isRedact" :form-header="formHeader" />
@@ -62,6 +62,8 @@
 
         jumpFromAudit=false // is from audit ?
 
+        craftControlStatus='N';
+        productInStorageStatus='N';
         headerBase: HeaderBase[] = [
             {
                 type: 'p',
@@ -160,6 +162,9 @@
                 this.$store.commit('koji/updateHouseTag', data.data);
                 this.tabs[0].status = data.data.discCraftName
                 this.tabs[1].status = data.data.discInStorageName
+
+                this.craftControlStatus = data.data.discCraft;
+                this.productInStorageStatus = data.data.discInStorage;
                 this.$refs.dataEntry.updateTabs();
                 this.$set(this.formHeader, 'statusName', data.data.discStatusName);
             })

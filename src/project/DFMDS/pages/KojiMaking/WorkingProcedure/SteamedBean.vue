@@ -16,10 +16,10 @@
             @success="getOrderList"
         >
             <template slot="1" slot-scope="data">
-                <steamed-bean-craft ref="steamedBeanCraft" :is-redact="data.isRedact" />
+                <steamed-bean-craft ref="steamedBeanCraft" :is-status="steamedBeanCraftStatus" :is-redact="data.isRedact" />
             </template>
             <template slot="2" slot-scope="data">
-                <steamed-in-storage ref="steamedInStorage" :pot-no-now.sync="potNoNow" :is-redact="data.isRedact" />
+                <steamed-in-storage ref="steamedInStorage" :is-status="steamedInStorageStatus" :pot-no-now.sync="potNoNow" :is-redact="data.isRedact" />
             </template>
             <template slot="3" slot-scope="data">
                 <koji-exc-record ref="excRecord" :is-redact="data.isRedact" :form-header="formHeader" />
@@ -65,6 +65,9 @@
         // 当前罐号
         potIdNow: string|number = '';
         potNoNow: string|number = '';
+
+        steamedBeanCraftStatus='N';
+        steamedInStorageStatus='N';
 
         @Watch('formHeader.potNo', { immediate: true, deep: true })
         onChangeValue(newVal: number| string) {
@@ -157,6 +160,10 @@
                 this.$store.commit('koji/updateHouseTag', data.data);
                 this.tabs[0].status = data.data.steamBeanCraftName
                 this.tabs[1].status = data.data.steamBeanInStorageName
+
+                this.steamedBeanCraftStatus = data.data.steamBeanCraft;
+                this.steamedInStorageStatus = data.data.steamBeanInStorage;
+
                 this.$refs.dataEntry.updateTabs();
                 this.$set(this.formHeader, 'statusName', data.data.steamBeanStatusName);
             })

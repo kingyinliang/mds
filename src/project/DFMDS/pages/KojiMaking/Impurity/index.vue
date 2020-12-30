@@ -64,7 +64,7 @@
                                 <span>单位</span>
                             </template>
                             <template slot-scope="scope">
-                                <el-input v-model="scope.row.unit" size="small" placeholder="" :disabled="true" />
+                                <el-input v-model="scope.row.unitName" size="small" placeholder="" :disabled="true" />
                             </template>
                         </el-table-column>
                         <el-table-column :show-overflow-tooltip="true" min-width="200">
@@ -408,7 +408,8 @@
                 impurityName: '',
                 impurityType: '',
                 remark: '',
-                unit: '个',
+                unit: 'EA',
+                unitName: '个',
                 workShop: this.globalVal.workShop,
                 delFlag: 0
             }
@@ -584,6 +585,7 @@ interface ForiegnMatterDataListObj{
     impurityType: string;
     remark: string;
     unit: string;
+    unitName: string;
     workShop: string;
     delFlag: number;
 }
