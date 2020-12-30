@@ -36,7 +36,7 @@
                             v-model.number="scope.row.inStorageAmount"
                             size="small"
                             placeholder="请输入"
-                            :disabled="!isRedact"
+                            :disabled="!(isRedact && isStatus !== 'C' && isStatus !== 'D' && isStatus !== 'P')"
                         />
                     </template>
                 </el-table-column>
