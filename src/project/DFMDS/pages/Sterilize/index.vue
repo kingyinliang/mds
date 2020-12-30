@@ -154,16 +154,15 @@
                 label: '包装产线',
                 prop: 'productLine',
                 optionsFn: val => {
-                    return COMMON_API.ORG_QUERY_CHILDREN_API({
-                        parentId: val || '',
-                        deptType: 'PRODUCT_LINE'
+                    return STE_API.STE_LINE_API({
+                        workShop: val || ''
                     })
                 },
                 defaultValue: '',
                 resVal: {
                     resData: 'data',
-                    label: ['deptName'],
-                    value: 'id'
+                    label: ['pkgLineName'],
+                    value: 'pkgLine'
                 }
             },
             {
