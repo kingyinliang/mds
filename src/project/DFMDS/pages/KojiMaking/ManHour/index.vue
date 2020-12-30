@@ -42,7 +42,6 @@
 
 <script lang="ts">
 import { Vue, Component, Watch } from 'vue-property-decorator';
-// import { COMMON_API, AUDIT_API, KOJI_API } from 'common/api/api';
 import { COMMON_API, KOJI_API, AUDIT_API } from 'common/api/api';
 import { dateFormat } from 'utils/utils';
 import ReadyTime from '../common/ReadyTimes.vue';
@@ -105,39 +104,19 @@ export default class KojiManHour extends Vue {
 
     @Watch('formHeader.workShop')
     watchWorkShop() {
-        this.getProductProcess()
+        this.getProductProcess();
         this.isRedact = false;
-        // this.$refs.readyTime.changeList(null);
-        // this.$refs.workHour.changeList([]);
     }
 
-    @Watch('formHeader.productDate')
-    watchProductDate() {
-        // this.getOrderList();
-    }
 
     @Watch('formHeader.productProcess')
     watchProcess() {
-
-        // const productProcessSole = this.productProcessList.find((item: OrderList) => item.productProcess === this.formHeader.productProcess)
-        // if (productProcessSole) {
-        //     // this.formHeader['orderId'] = this.productProcessList.find((item: OrderList) => item.productProcess === this.formHeader.productProcess)['id'];
-        //     this.formHeader.orderId = productProcessSole.id;
-        //     this.formHeader.materialCode = productProcessSole.materialCode;
-        //     this.formHeader.materialName = productProcessSole.materialName;
-        //     // this.searchCard = false;
-        //     this.isRedact = false;
-        // }
-
-        console.log('formHeader.productProcess改变了')
-        console.log(this.formHeader.productProcess)
         if (this.formHeader.productProcess !== '') {
             this.$refs.workHour.getTeamList(this.formHeader.productProcess);
             this.isRedact = false;
             // this.$refs.readyTime.changeList(null);
             this.$refs.workHour.changeList([]);
         }
-
     }
 
     changeIsRedact() {
@@ -223,15 +202,6 @@ export default class KojiManHour extends Vue {
                 }
         })
         this.redactBoxDisable = false
-
-        // 审核日志
-        // AUDIT_API.AUDIT_LOG_LIST_API({
-        //     orderNo: this.formHeader.productProcess,
-        //     verifyType: 'TIMESHEET'
-        // }).then(({ data }) => {
-        //     this.manHourAudit = data.data;
-        //     this.redactBoxDisable = false
-        // })
     }
 
     // 保存

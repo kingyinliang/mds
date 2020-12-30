@@ -26,7 +26,7 @@
                                     v-if="kojiInformData.addKojiMans&&kojiInformData.addKojiMans!==''"
                                     v-model="kojiInformData.addKojiMans"
                                     placeholder="请输入入曲人"
-
+                                    size="small"
                                     :disabled="!(isRedact && isStatus !== 'C' && isStatus !== 'D' && isStatus !== 'P'&& kojiInformData.status !== 'C' && kojiInformData.status !== 'D' && kojiInformData.status !== 'P')"
                                 />
                             </el-tooltip>
@@ -609,6 +609,7 @@
                                         v-model="scope.row.recordMans"
                                         placeholder="请输入记录人"
                                         style="width: 200px;"
+                                        size="small"
                                         :disabled="!(isRedact&& isStatus !== 'C' && isStatus !== 'D' && isStatus !== 'P' && scope.row.status !== 'C' && scope.row.status !== 'D' && scope.row.status !== 'P')"
                                     />
                                 </el-tooltip>
@@ -689,6 +690,7 @@
                                     v-if="kojiOutCraftformData.outKojiMans&&kojiOutCraftformData.outKojiMans!==''"
                                     v-model="kojiOutCraftformData.outKojiMans"
                                     placeholder="请输入出曲操作人"
+                                    size="small"
                                     style="width: 200px;"
                                     :disabled="!(isRedact&& isStatus !== 'C' && isStatus !== 'D' && isStatus !== 'P' && kojiOutCraftformData.status !== 'C' && kojiOutCraftformData.status !== 'D' && kojiOutCraftformData.status !== 'P')"
                                 />

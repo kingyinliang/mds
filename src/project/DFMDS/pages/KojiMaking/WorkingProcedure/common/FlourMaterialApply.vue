@@ -265,7 +265,7 @@
         }
 
         EditY158Row(row) {
-            if (!(this.isRedact && this.isStatus !== 'C' && this.isStatus !== 'D' && this.isStatus !== 'P' && this.isStatus !== 'C' && this.isStatus !== 'D' && this.isStatus !== 'P')) {
+            if (!(this.isRedact && this.isStatus !== 'C' && this.isStatus !== 'D' && this.isStatus !== 'P' && row.status !== 'C' && row.status !== 'D' && row.status !== 'P')) {
                 return false;
             }
             this.Y158Visible = true;
@@ -286,7 +286,7 @@
         }
 
         EditRow(row) {
-            if (!(this.isRedact && this.isStatus !== 'C' && this.isStatus !== 'D' && this.isStatus !== 'P' && this.isStatus !== 'C' && this.isStatus !== 'D' && this.isStatus !== 'P')) {
+            if (!(this.isRedact && this.isStatus !== 'C' && this.isStatus !== 'D' && this.isStatus !== 'P' && row.status !== 'C' && row.status !== 'D' && row.status !== 'P')) {
                 return false;
             }
             this.visible = true;

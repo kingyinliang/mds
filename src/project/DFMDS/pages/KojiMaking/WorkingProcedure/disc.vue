@@ -165,6 +165,10 @@
 
                 this.craftControlStatus = data.data.discCraft;
                 this.productInStorageStatus = data.data.discInStorage;
+                console.log('this.craftControlStatus')
+                console.log(this.craftControlStatus)
+                console.log('this.productInStorageStatus')
+                console.log(this.productInStorageStatus)
                 this.$refs.dataEntry.updateTabs();
                 this.$set(this.formHeader, 'statusName', data.data.discStatusName);
             })
