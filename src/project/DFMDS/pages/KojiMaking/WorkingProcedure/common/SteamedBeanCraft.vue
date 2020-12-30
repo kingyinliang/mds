@@ -7,7 +7,7 @@
                         <template slot="label">
                             蒸球压力(Mpa)：
                         </template>
-                        <el-input v-model="steamBallPressure" placeholder="" :disabled="!(isRedact&& isStatus !== 'C' && isStatus !== 'D' && isStatus !== 'P' && craftSteamBeanTable[0].status !== 'C' && craftSteamBeanTable[0].status !== 'D' && craftSteamBeanTable[0].status !== 'P')" size="small" style="width: 175px;">
+                        <el-input v-model="steamBallPressure" placeholder="" :disabled="!(isRedact&& isStatus !== 'C' && isStatus !== 'D' && isStatus !== 'P')" size="small" style="width: 175px;">
                             <span slot="suffix" class="stock-form_item_input_suffix">Mpa</span>
                         </el-input>
                     </el-form-item>
@@ -257,7 +257,7 @@
         craftSteamBeanTable: CraftList[] = [];
         // 蒸球压力
         steamBallPressure = '';
-
+        orgSteamBallPressure = '';
         // 硬度数据
         hardTable: CraftList[] = [];
 
