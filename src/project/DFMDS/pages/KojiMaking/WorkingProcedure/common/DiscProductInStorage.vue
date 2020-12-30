@@ -45,7 +45,7 @@
                         <span class="notNull">* </span>入库批次
                     </template>
                     <template slot-scope="scope">
-                        <el-input v-model.trim="scope.row.inStorageBatch" maxlength="10" size="small" placeholder="请输入" :disabled="!isRedact" />
+                        <el-input v-model.trim="scope.row.inStorageBatch" maxlength="10" size="small" placeholder="请输入" :disabled="!(isRedact && isStatus !== 'C' && isStatus !== 'D' && isStatus !== 'P')" />
                     </template>
                 </el-table-column>
 
@@ -60,7 +60,7 @@
                 <el-table-column label="备注" prop="remark" min-width="200">
                     <template slot-scope="scope">
                         <el-tooltip :disabled="!scope.row.remark" effect="dark" :content="scope.row.remark" placement="top">
-                            <el-input v-model.trim="scope.row.remark" size="small" placeholder="请输入" :disabled="!(isRedact && scope.row.checkStatus !== 'C' && scope.row.checkStatus !== 'D' && scope.row.checkStatus !== 'P')" />
+                            <el-input v-model.trim="scope.row.remark" size="small" placeholder="请输入" :disabled="!(isRedact && isStatus !== 'C' && isStatus !== 'D' && isStatus !== 'P')" />
                         </el-tooltip>
                     </template>
                 </el-table-column>
@@ -100,6 +100,7 @@
         @Prop({ type: Array, default: () => { return [] } }) potNoList: OptionPotNoList[];
 
         @Prop({ type: Boolean, default: false }) isRedact;
+        @Prop({ default: 'N' }) isStatus: string;
         @Prop({ type: String, default: '' }) status;
         @Prop({ default: '' }) potNoNow: number|string; // 发酵罐/池号
 

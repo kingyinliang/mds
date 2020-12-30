@@ -37,7 +37,7 @@
                         <span class="notNull">* </span>大豆批次
                     </template>
                     <template slot-scope="scope">
-                        <el-select v-model="scope.row.sieveBeanBatch" placeholder="请选择" :disabled="!(isRedact && scope.row.status !== 'C' && scope.row.status !== 'D' && scope.row.status !== 'P')" size="small" style="width: 100%;" @change="controlTypeChange($event, scope.row)">
+                        <el-select v-model="scope.row.sieveBeanBatch" placeholder="请选择" :disabled="!(isRedact && isStatus !== 'C' && isStatus !== 'D' && isStatus !== 'P'&& scope.row.status !== 'C' && scope.row.status !== 'D' && scope.row.status !== 'P')" size="small" style="width: 100%;" @change="controlTypeChange($event, scope.row)">
                             <el-option v-for="(subItem, index) in filterMaterialTableData" :key="index" :label="subItem.batch" :value="subItem.batch" />
                         </el-select>
                     </template>
@@ -52,7 +52,7 @@
                         <span class="notNull">* </span>设备
                     </template>
                     <template slot-scope="scope">
-                        <el-select v-model="scope.row.sieveDeviceId" placeholder="请选择" :disabled="!(isRedact && scope.row.status !== 'C' && scope.row.status !== 'D' && scope.row.status !== 'P')" size="small" style="width: 100%;" @change="setSieveDeviceName(scope.row)">
+                        <el-select v-model="scope.row.sieveDeviceId" placeholder="请选择" :disabled="!(isRedact&& isStatus !== 'C' && isStatus !== 'D' && isStatus !== 'P' && scope.row.status !== 'C' && scope.row.status !== 'D' && scope.row.status !== 'P')" size="small" style="width: 100%;" @change="setSieveDeviceName(scope.row)">
                             <el-option v-for="(subItem, index) in sieveDeviceList" :key="index" :label="subItem.deviceName" :value="subItem.deviceNo" />
                         </el-select>
                     </template>
@@ -62,7 +62,7 @@
                         <span class="notNull">* </span>杂质类
                     </template>
                     <template slot-scope="scope">
-                        <el-select v-model="scope.row.sieveImpurityType" placeholder="请选择" :disabled="!(isRedact && scope.row.status !== 'C' && scope.row.status !== 'D' && scope.row.status !== 'P')" size="small" style="width: 100%;">
+                        <el-select v-model="scope.row.sieveImpurityType" placeholder="请选择" :disabled="!(isRedact&& isStatus !== 'C' && isStatus !== 'D' && isStatus !== 'P' && scope.row.status !== 'C' && scope.row.status !== 'D' && scope.row.status !== 'P')" size="small" style="width: 100%;">
                             <el-option v-for="(subItem, index) in sieveImpurityTypeList" :key="index" :label="subItem.label" :value="subItem.value" />
                         </el-select>
                     </template>
@@ -72,7 +72,7 @@
                         <span class="notNull">* </span>杂质数量
                     </template>
                     <template slot-scope="scope">
-                        <el-input v-model.trim="scope.row.sieveImpurityAmount" size="small" placeholder="请输入" :disabled="!(isRedact && scope.row.status !== 'C' && scope.row.status !== 'D' && scope.row.status !== 'P')" />
+                        <el-input v-model.trim="scope.row.sieveImpurityAmount" size="small" placeholder="请输入" :disabled="!(isRedact&& isStatus !== 'C' && isStatus !== 'D' && isStatus !== 'P' && scope.row.status !== 'C' && scope.row.status !== 'D' && scope.row.status !== 'P')" />
                     </template>
                 </el-table-column>
                 <el-table-column label="单位">
@@ -96,7 +96,7 @@
                 <el-table-column label="备注" width="200">
                     <template slot-scope="scope">
                         <el-tooltip :disabled="!scope.row.remark" effect="dark" :content="scope.row.remark" placement="top">
-                            <el-input v-model.trim="scope.row.remark" size="small" placeholder="请输入" :disabled="!(isRedact && scope.row.status !== 'C' && scope.row.status !== 'D' && scope.row.status !== 'P')" />
+                            <el-input v-model.trim="scope.row.remark" size="small" placeholder="请输入" :disabled="!(isRedact&& isStatus !== 'C' && isStatus !== 'D' && isStatus !== 'P' && scope.row.status !== 'C' && scope.row.status !== 'D' && scope.row.status !== 'P')" />
                         </el-tooltip>
                     </template>
                 </el-table-column>
@@ -112,7 +112,7 @@
                 </el-table-column>
                 <el-table-column label="操作" width="70" fixed="right">
                     <template slot-scope="scope">
-                        <el-button class="delBtn" type="text" icon="el-icon-delete" size="mini" :disabled="!(isRedact && scope.row.status !== 'C' && scope.row.status !== 'D' && scope.row.status !== 'P')" @click="removeRow(scope.row)">
+                        <el-button class="delBtn" type="text" icon="el-icon-delete" size="mini" :disabled="!(isRedact&& isStatus !== 'C' && isStatus !== 'D' && isStatus !== 'P' && scope.row.status !== 'C' && scope.row.status !== 'D' && scope.row.status !== 'P')" @click="removeRow(scope.row)">
                             删除
                         </el-button>
                     </template>
@@ -131,7 +131,7 @@
                         <template slot="label">
                             <span class="notNull">* </span>泡豆水洁净度：
                         </template>
-                        <el-select v-model="craftWashBeanInfo.cleanliness" class="stock-form_item_style" size="small" placeholder="请选择" clearable :disabled="!(isRedact && craftWashBeanInfo.status !== 'C' && craftWashBeanInfo.status !== 'D' && craftWashBeanInfo.status !== 'P')" style="width: 175px;">
+                        <el-select v-model="craftWashBeanInfo.cleanliness" class="stock-form_item_style" size="small" placeholder="请选择" clearable :disabled="!(isRedact&& isStatus !== 'C' && isStatus !== 'D' && isStatus !== 'P' && craftWashBeanInfo.status !== 'C' && craftWashBeanInfo.status !== 'D' && craftWashBeanInfo.status !== 'P')" style="width: 175px;">
                             <el-option v-for="(item, index) in cleanlinessList" :key="index" :label="item.label" :value="item.value" />
                         </el-select>
                     </el-form-item>
@@ -149,13 +149,13 @@
                         <template slot="label">
                             <span class="notNull">* </span>洗豆开始时间：
                         </template>
-                        <el-date-picker v-model="craftWashBeanInfo.washStartDate" type="datetime" value-format="yyyy-MM-dd HH:mm" format="yyyy-MM-dd HH:mm" placeholder="请选择" :disabled="!(isRedact && craftWashBeanInfo.status !== 'C' && craftWashBeanInfo.status !== 'D' && craftWashBeanInfo.status !== 'P')" size="small" style="width: 175px;" />
+                        <el-date-picker v-model="craftWashBeanInfo.washStartDate" type="datetime" value-format="yyyy-MM-dd HH:mm" format="yyyy-MM-dd HH:mm" placeholder="请选择" :disabled="!(isRedact && isStatus !== 'C' && isStatus !== 'D' && isStatus !== 'P'&& craftWashBeanInfo.status !== 'C' && craftWashBeanInfo.status !== 'D' && craftWashBeanInfo.status !== 'P')" size="small" style="width: 175px;" />
                     </el-form-item>
                     <el-form-item class="cleanMarginBottom">
                         <template slot="label">
                             <span class="notNull">* </span>洗豆结束时间：
                         </template>
-                        <el-date-picker v-model="craftWashBeanInfo.washEndDate" type="datetime" value-format="yyyy-MM-dd HH:mm" format="yyyy-MM-dd HH:mm" placeholder="请选择" :disabled="!(isRedact && craftWashBeanInfo.status !== 'C' && craftWashBeanInfo.status !== 'D' && craftWashBeanInfo.status !== 'P')" size="small" style="width: 175px;" />
+                        <el-date-picker v-model="craftWashBeanInfo.washEndDate" type="datetime" value-format="yyyy-MM-dd HH:mm" format="yyyy-MM-dd HH:mm" placeholder="请选择" :disabled="!(isRedact && isStatus !== 'C' && isStatus !== 'D' && isStatus !== 'P'&& craftWashBeanInfo.status !== 'C' && craftWashBeanInfo.status !== 'D' && craftWashBeanInfo.status !== 'P')" size="small" style="width: 175px;" />
                     </el-form-item>
                 </el-form>
             </div>
@@ -164,7 +164,7 @@
             <template slot="titleBtn">
                 <el-form :inline="true" label-width="115px">
                     <el-form-item class="cleanMarginBottom floatr">
-                        <el-button type="primary" size="small" :disabled="!(isRedact && isStatus !== 'C' && isStatus !== 'D' && isStatus !== 'P')" @click="addWashBeanDataRow()">
+                        <el-button type="primary" size="small" :disabled="!(isRedact && isStatus !== 'C' && isStatus !== 'D' && isStatus !== 'P'&& isStatus !== 'C' && isStatus !== 'D' && isStatus !== 'P')" @click="addWashBeanDataRow()">
                             新增
                         </el-button>
                     </el-form-item>
@@ -190,7 +190,7 @@
                         <span class="notNull">* </span>加水开始时间
                     </template>
                     <template slot-scope="scope">
-                        <el-date-picker v-model="scope.row.waterStartDate" type="datetime" value-format="yyyy-MM-dd HH:mm" format="yyyy-MM-dd HH:mm" placeholder="请选择" :disabled="!(isRedact && scope.row.status !== 'C' && scope.row.status !== 'D' && scope.row.status !== 'P')" style="width: 187px;" size="small" />
+                        <el-date-picker v-model="scope.row.waterStartDate" type="datetime" value-format="yyyy-MM-dd HH:mm" format="yyyy-MM-dd HH:mm" placeholder="请选择" :disabled="!(isRedact&& isStatus !== 'C' && isStatus !== 'D' && isStatus !== 'P' && scope.row.status !== 'C' && scope.row.status !== 'D' && scope.row.status !== 'P')" style="width: 187px;" size="small" />
                     </template>
                 </el-table-column>
                 <el-table-column min-width="210">
@@ -198,7 +198,7 @@
                         <span class="notNull">* </span>加水结束时间
                     </template>
                     <template slot-scope="scope">
-                        <el-date-picker v-model="scope.row.waterEndDate" type="datetime" value-format="yyyy-MM-dd HH:mm" format="yyyy-MM-dd HH:mm" placeholder="请选择" :disabled="!(isRedact && scope.row.status !== 'C' && scope.row.status !== 'D' && scope.row.status !== 'P')" style="width: 187px;" size="small" />
+                        <el-date-picker v-model="scope.row.waterEndDate" type="datetime" value-format="yyyy-MM-dd HH:mm" format="yyyy-MM-dd HH:mm" placeholder="请选择" :disabled="!(isRedact && isStatus !== 'C' && isStatus !== 'D' && isStatus !== 'P'&& scope.row.status !== 'C' && scope.row.status !== 'D' && scope.row.status !== 'P')" style="width: 187px;" size="small" />
                     </template>
                 </el-table-column>
                 <el-table-column width="140" show-overflow-tooltip>
@@ -219,7 +219,7 @@
                         <span class="notNull">* </span>排水开始时间
                     </template>
                     <template slot-scope="scope">
-                        <el-date-picker v-model="scope.row.drainStartDate" type="datetime" value-format="yyyy-MM-dd HH:mm" format="yyyy-MM-dd HH:mm" placeholder="请选择" :disabled="!(isRedact && scope.row.status !== 'C' && scope.row.status !== 'D' && scope.row.status !== 'P')" style="width: 187px;" size="small" />
+                        <el-date-picker v-model="scope.row.drainStartDate" type="datetime" value-format="yyyy-MM-dd HH:mm" format="yyyy-MM-dd HH:mm" placeholder="请选择" :disabled="!(isRedact && isStatus !== 'C' && isStatus !== 'D' && isStatus !== 'P' && scope.row.status !== 'C' && scope.row.status !== 'D' && scope.row.status !== 'P')" style="width: 187px;" size="small" />
                     </template>
                 </el-table-column>
                 <el-table-column min-width="210">
@@ -227,7 +227,7 @@
                         <span class="notNull">* </span>排水结束时间
                     </template>
                     <template slot-scope="scope">
-                        <el-date-picker v-model="scope.row.drainEndDate" type="datetime" value-format="yyyy-MM-dd HH:mm" format="yyyy-MM-dd HH:mm" placeholder="请选择" :disabled="!(isRedact && scope.row.status !== 'C' && scope.row.status !== 'D' && scope.row.status !== 'P')" style="width: 187px;" size="small" />
+                        <el-date-picker v-model="scope.row.drainEndDate" type="datetime" value-format="yyyy-MM-dd HH:mm" format="yyyy-MM-dd HH:mm" placeholder="请选择" :disabled="!(isRedact && isStatus !== 'C' && isStatus !== 'D' && isStatus !== 'P'&& scope.row.status !== 'C' && scope.row.status !== 'D' && scope.row.status !== 'P')" style="width: 187px;" size="small" />
                     </template>
                 </el-table-column>
                 <el-table-column width="140" show-overflow-tooltip>
@@ -251,7 +251,7 @@
                 <el-table-column label="备注" width="150">
                     <template slot-scope="scope">
                         <el-tooltip :disabled="!scope.row.remark" effect="dark" :content="scope.row.remark" placement="top">
-                            <el-input v-model.trim="scope.row.remark" size="small" placeholder="请输入" :disabled="!(isRedact && scope.row.status !== 'C' && scope.row.status !== 'D' && scope.row.status !== 'P')" />
+                            <el-input v-model.trim="scope.row.remark" size="small" placeholder="请输入" :disabled="!(isRedact&& isStatus !== 'C' && isStatus !== 'D' && isStatus !== 'P' && scope.row.status !== 'C' && scope.row.status !== 'D' && scope.row.status !== 'P')" />
                         </el-tooltip>
                     </template>
                 </el-table-column>
@@ -267,7 +267,7 @@
                 </el-table-column>
                 <el-table-column label="操作" width="70" fixed="right">
                     <template slot-scope="scope">
-                        <el-button class="delBtn" type="text" icon="el-icon-delete" size="mini" :disabled="!(isRedact && scope.row.status !== 'C' && scope.row.status !== 'D' && scope.row.status !== 'P')" @click="removeRow(scope.row)">
+                        <el-button class="delBtn" type="text" icon="el-icon-delete" size="mini" :disabled="!(isRedact && isStatus !== 'C' && isStatus !== 'D' && isStatus !== 'P'&& scope.row.status !== 'C' && scope.row.status !== 'D' && scope.row.status !== 'P')" @click="removeRow(scope.row)">
                             删除
                         </el-button>
                     </template>
@@ -546,7 +546,7 @@
 
         // 内部借调弹窗选择
         selectUser(row, typeName, field) {
-            if (!(this.isRedact && row.status !== 'C' && row.status !== 'D' && row.status !== 'P')) return;
+            if (!(this.isRedact && this.isStatus !== 'C' && this.isStatus !== 'D' && this.isStatus !== 'P' && row.status !== 'C' && row.status !== 'D' && row.status !== 'P')) return;
             this.row = row;
             this.rowField = field;
             this.loanedPersonnelStatus = true;

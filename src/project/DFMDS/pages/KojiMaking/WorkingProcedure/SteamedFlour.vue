@@ -65,8 +65,8 @@
         sieveTotalNum = 0;
         // 物料领用记录 == 批次信息
         setMaterialTableData = [];
-        flourMaterialApplyStatus='';
-        flourMaterialCraftStatus='';
+        flourMaterialApplyStatus='N';
+        flourMaterialCraftStatus='N';
 
         changeSieveTotalNum(num) {
             this.sieveTotalNum = num;

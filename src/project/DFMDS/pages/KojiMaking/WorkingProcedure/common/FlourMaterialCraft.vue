@@ -7,7 +7,7 @@
                         <template slot="label">
                             <span class="notNull">* </span>气泡压力：
                         </template>
-                        <el-input v-model="craftSteamFlourInfo.steamPacketPressure" placeholder="请输入" :disabled="!(isRedact && craftSteamFlourInfo.status !== 'C' && craftSteamFlourInfo.status !== 'D' && craftSteamFlourInfo.status !== 'P')" size="small" style="width: 180px;">
+                        <el-input v-model="craftSteamFlourInfo.steamPacketPressure" placeholder="请输入" :disabled="!(isRedact && isStatus !== 'C' && isStatus !== 'D' && isStatus !== 'P' &&craftSteamFlourInfo.status !== 'C' && craftSteamFlourInfo.status !== 'D' && craftSteamFlourInfo.status !== 'P')" size="small" style="width: 180px;">
                             <span slot="suffix" class="stock-form_item_input_suffix">Mpa</span>
                         </el-input>
                     </el-form-item>
@@ -15,7 +15,7 @@
                         <template slot="label">
                             <span class="notNull">* </span>蒸面加水流速：
                         </template>
-                        <el-input v-model="craftSteamFlourInfo.steamFlourSpeed" placeholder="请输入" :disabled="!(isRedact && craftSteamFlourInfo.status !== 'C' && craftSteamFlourInfo.status !== 'D' && craftSteamFlourInfo.status !== 'P')" size="small" style="width: 180px;">
+                        <el-input v-model="craftSteamFlourInfo.steamFlourSpeed" placeholder="请输入" :disabled="!(isRedact && isStatus !== 'C' && isStatus !== 'D' && isStatus !== 'P' &&craftSteamFlourInfo.status !== 'C' && craftSteamFlourInfo.status !== 'D' && craftSteamFlourInfo.status !== 'P')" size="small" style="width: 180px;">
                             <span slot="suffix" class="stock-form_item_input_suffix">L/H</span>
                         </el-input>
                     </el-form-item>
@@ -39,7 +39,7 @@
                                         v-model="craftSteamFlourInfo.steamFlourMans"
                                         placeholder="请输入蒸面操作人"
 
-                                        :disabled="!(isRedact && craftSteamFlourInfo.status !== 'C' && craftSteamFlourInfo.status !== 'D' && craftSteamFlourInfo.status !== 'P')"
+                                        :disabled="!(isRedact && isStatus !== 'C' && isStatus !== 'D' && isStatus !== 'P' &&craftSteamFlourInfo.status !== 'C' && craftSteamFlourInfo.status !== 'D' && craftSteamFlourInfo.status !== 'P')"
                                     />
                                 </el-tooltip>
                                 <em v-if="!craftSteamFlourInfo.steamFlourMans" :class="{'like-el-input__inner':isRedact,'input-in-form-disabled':!isRedact}">点击选择人员</em>
@@ -66,7 +66,7 @@
                         <span class="notNull">* </span>蒸球号
                     </template>
                     <template slot-scope="scope">
-                        <el-select v-model="scope.row.steamBallNo" placeholder="请选择" :disabled="!(isRedact && scope.row.status !== 'C' && scope.row.status !== 'D' && scope.row.status !== 'P')" size="small" style="width: 100%;">
+                        <el-select v-model="scope.row.steamBallNo" placeholder="请选择" :disabled="!(isRedact && isStatus !== 'C' && isStatus !== 'D' && isStatus !== 'P' && scope.row.status !== 'C' && scope.row.status !== 'D' && scope.row.status !== 'P')" size="small" style="width: 100%;">
                             <el-option v-for="(subItem, index) in steamBallList" :key="index" :label="subItem.holderName" :value="subItem.holderNo" />
                         </el-select>
                     </template>
@@ -76,7 +76,7 @@
                         <span class="notNull">* </span>加汽开始时间
                     </template>
                     <template slot-scope="scope">
-                        <el-date-picker v-model="scope.row.addSteamStart" type="datetime" value-format="yyyy-MM-dd HH:mm" format="yyyy-MM-dd HH:mm" placeholder="请选择" :disabled="!(isRedact && scope.row.status !== 'C' && scope.row.status !== 'D' && scope.row.status !== 'P')" style="width: 186px;" size="small" />
+                        <el-date-picker v-model="scope.row.addSteamStart" type="datetime" value-format="yyyy-MM-dd HH:mm" format="yyyy-MM-dd HH:mm" placeholder="请选择" :disabled="!(isRedact && isStatus !== 'C' && isStatus !== 'D' && isStatus !== 'P' && scope.row.status !== 'C' && scope.row.status !== 'D' && scope.row.status !== 'P')" style="width: 186px;" size="small" />
                     </template>
                 </el-table-column>
                 <el-table-column min-width="210">
@@ -84,19 +84,19 @@
                         <span class="notNull">* </span>加汽结束时间
                     </template>
                     <template slot-scope="scope">
-                        <el-date-picker v-model="scope.row.addSteamEnd" type="datetime" value-format="yyyy-MM-dd HH:mm" format="yyyy-MM-dd HH:mm" placeholder="请选择" :disabled="!(isRedact && scope.row.status !== 'C' && scope.row.status !== 'D' && scope.row.status !== 'P')" style="width: 186px;" size="small" />
+                        <el-date-picker v-model="scope.row.addSteamEnd" type="datetime" value-format="yyyy-MM-dd HH:mm" format="yyyy-MM-dd HH:mm" placeholder="请选择" :disabled="!(isRedact && isStatus !== 'C' && isStatus !== 'D' && isStatus !== 'P' && scope.row.status !== 'C' && scope.row.status !== 'D' && scope.row.status !== 'P')" style="width: 186px;" size="small" />
                     </template>
                 </el-table-column>
                 <el-table-column label="汽包压力" width="144">
                     <template slot-scope="scope">
-                        <el-input v-model="scope.row.steamPocketPressure" placeholder="请输入" :disabled="!(isRedact && scope.row.status !== 'C' && scope.row.status !== 'D' && scope.row.status !== 'P')" size="small" style="width: 120px;">
+                        <el-input v-model="scope.row.steamPocketPressure" placeholder="请输入" :disabled="!(isRedact && isStatus !== 'C' && isStatus !== 'D' && isStatus !== 'P' && scope.row.status !== 'C' && scope.row.status !== 'D' && scope.row.status !== 'P')" size="small" style="width: 120px;">
                             <span slot="suffix" class="stock-form_item_input_suffix">Mpa</span>
                         </el-input>
                     </template>
                 </el-table-column>
                 <el-table-column label="转动圈数" width="144">
                     <template slot-scope="scope">
-                        <el-input v-model="scope.row.turnCount" placeholder="请输入" :disabled="!(isRedact && scope.row.status !== 'C' && scope.row.status !== 'D' && scope.row.status !== 'P')" size="small" style="width: 120px;">
+                        <el-input v-model="scope.row.turnCount" placeholder="请输入" :disabled="!(isRedact && isStatus !== 'C' && isStatus !== 'D' && isStatus !== 'P' && scope.row.status !== 'C' && scope.row.status !== 'D' && scope.row.status !== 'P')" size="small" style="width: 120px;">
                             <!-- <span slot="suffix" class="stock-form_item_input_suffix">Mpa</span> -->
                         </el-input>
                     </template>
@@ -108,7 +108,7 @@
                 </el-table-column>
                 <el-table-column label="保压时间" width="144">
                     <template slot-scope="scope">
-                        <el-input v-model="scope.row.pressureDuration" placeholder="请输入" :disabled="!(isRedact && scope.row.status !== 'C' && scope.row.status !== 'D' && scope.row.status !== 'P')" size="small" style="width: 120px;">
+                        <el-input v-model="scope.row.pressureDuration" placeholder="请输入" :disabled="!(isRedact && isStatus !== 'C' && isStatus !== 'D' && isStatus !== 'P' && scope.row.status !== 'C' && scope.row.status !== 'D' && scope.row.status !== 'P')" size="small" style="width: 120px;">
                             <span slot="suffix" class="stock-form_item_input_suffix">min</span>
                         </el-input>
                     </template>
@@ -118,13 +118,13 @@
                         熟豆放豆时间
                     </template>
                     <template slot-scope="scope">
-                        <el-date-picker v-model="scope.row.addBeanDate" type="datetime" value-format="yyyy-MM-dd HH:mm" format="yyyy-MM-dd HH:mm" placeholder="请选择" :disabled="!(isRedact && scope.row.status !== 'C' && scope.row.status !== 'D' && scope.row.status !== 'P')" style="width: 186px;" size="small" />
+                        <el-date-picker v-model="scope.row.addBeanDate" type="datetime" value-format="yyyy-MM-dd HH:mm" format="yyyy-MM-dd HH:mm" placeholder="请选择" :disabled="!(isRedact && isStatus !== 'C' && isStatus !== 'D' && isStatus !== 'P' && scope.row.status !== 'C' && scope.row.status !== 'D' && scope.row.status !== 'P')" style="width: 186px;" size="small" />
                     </template>
                 </el-table-column>
                 <el-table-column label="备注" width="170">
                     <template slot-scope="scope">
                         <el-tooltip :disabled="!scope.row.remark" effect="dark" :content="scope.row.remark" placement="top">
-                            <el-input v-model.trim="scope.row.remark" size="small" placeholder="请输入" :disabled="!(isRedact && scope.row.status !== 'C' && scope.row.status !== 'D' && scope.row.status !== 'P')" />
+                            <el-input v-model.trim="scope.row.remark" size="small" placeholder="请输入" :disabled="!(isRedact && isStatus !== 'C' && isStatus !== 'D' && isStatus !== 'P' && scope.row.status !== 'C' && scope.row.status !== 'D' && scope.row.status !== 'P')" />
                         </el-tooltip>
                     </template>
                 </el-table-column>
@@ -140,7 +140,7 @@
                 </el-table-column>
                 <el-table-column label="操作" width="70" fixed="right">
                     <template slot-scope="scope">
-                        <el-button class="delBtn" type="text" icon="el-icon-delete" size="mini" :disabled="!(isRedact && scope.row.status !== 'C' && scope.row.status !== 'D' && scope.row.status !== 'P')" @click="removeRow(scope.row)">
+                        <el-button class="delBtn" type="text" icon="el-icon-delete" size="mini" :disabled="!(isRedact && isStatus !== 'C' && isStatus !== 'D' && isStatus !== 'P' && scope.row.status !== 'C' && scope.row.status !== 'D' && scope.row.status !== 'P')" @click="removeRow(scope.row)">
                             删除
                         </el-button>
                     </template>
@@ -154,7 +154,7 @@
                         <template slot="label">
                             <span class="notNull">* </span>蒸面风冷温度：
                         </template>
-                        <el-input v-model="craftControlInfo.flourWindTemp" placeholder="请输入" :disabled="!(isRedact && craftControlInfo.status !== 'C' && craftControlInfo.status !== 'D' && craftControlInfo.status !== 'P')" size="small" style="width: 180px;">
+                        <el-input v-model="craftControlInfo.flourWindTemp" placeholder="请输入" :disabled="!(isRedact && isStatus !== 'C' && isStatus !== 'D' && isStatus !== 'P' && craftControlInfo.status !== 'C' && craftControlInfo.status !== 'D' && craftControlInfo.status !== 'P')" size="small" style="width: 180px;">
                             <span slot="suffix" class="stock-form_item_input_suffix">°C</span>
                         </el-input>
                     </el-form-item>
@@ -162,7 +162,7 @@
                         <template slot="label">
                             <span class="notNull">* </span>大豆风冷温度1：
                         </template>
-                        <el-input v-model="craftControlInfo.beanWindTempOne" placeholder="请输入" :disabled="!(isRedact && craftControlInfo.status !== 'C' && craftControlInfo.status !== 'D' && craftControlInfo.status !== 'P')" size="small" style="width: 180px;">
+                        <el-input v-model="craftControlInfo.beanWindTempOne" placeholder="请输入" :disabled="!(isRedact && isStatus !== 'C' && isStatus !== 'D' && isStatus !== 'P' && craftControlInfo.status !== 'C' && craftControlInfo.status !== 'D' && craftControlInfo.status !== 'P')" size="small" style="width: 180px;">
                             <span slot="suffix" class="stock-form_item_input_suffix">°C</span>
                         </el-input>
                     </el-form-item>
@@ -170,7 +170,7 @@
                         <template slot="label">
                             大豆风冷温度2：
                         </template>
-                        <el-input v-model="craftControlInfo.beanWindTempTwo" placeholder="请输入" :disabled="!(isRedact && craftControlInfo.status !== 'C' && craftControlInfo.status !== 'D' && craftControlInfo.status !== 'P')" size="small" style="width: 180px;">
+                        <el-input v-model="craftControlInfo.beanWindTempTwo" placeholder="请输入" :disabled="!(isRedact && isStatus !== 'C' && isStatus !== 'D' && isStatus !== 'P' && craftControlInfo.status !== 'C' && craftControlInfo.status !== 'D' && craftControlInfo.status !== 'P')" size="small" style="width: 180px;">
                             <span slot="suffix" class="stock-form_item_input_suffix">°C</span>
                         </el-input>
                     </el-form-item>
@@ -178,7 +178,7 @@
                         <template slot="label">
                             <span class="notNull">* </span>混合料温度1：
                         </template>
-                        <el-input v-model="craftControlInfo.mixtureTempOne" placeholder="请输入" :disabled="!(isRedact && craftControlInfo.status !== 'C' && craftControlInfo.status !== 'D' && craftControlInfo.status !== 'P')" size="small" style="width: 180px;">
+                        <el-input v-model="craftControlInfo.mixtureTempOne" placeholder="请输入" :disabled="!(isRedact && isStatus !== 'C' && isStatus !== 'D' && isStatus !== 'P' && craftControlInfo.status !== 'C' && craftControlInfo.status !== 'D' && craftControlInfo.status !== 'P')" size="small" style="width: 180px;">
                             <span slot="suffix" class="stock-form_item_input_suffix">°C</span>
                         </el-input>
                     </el-form-item>
@@ -186,7 +186,7 @@
                         <template slot="label">
                             混合料温度2：
                         </template>
-                        <el-input v-model="craftControlInfo.mixtureTempTwo" placeholder="请输入" :disabled="!(isRedact && craftControlInfo.status !== 'C' && craftControlInfo.status !== 'D' && craftControlInfo.status !== 'P')" size="small" style="width: 180px;">
+                        <el-input v-model="craftControlInfo.mixtureTempTwo" placeholder="请输入" :disabled="!(isRedact && isStatus !== 'C' && isStatus !== 'D' && isStatus !== 'P' && craftControlInfo.status !== 'C' && craftControlInfo.status !== 'D' && craftControlInfo.status !== 'P')" size="small" style="width: 180px;">
                             <span slot="suffix" class="stock-form_item_input_suffix">°C</span>
                         </el-input>
                     </el-form-item>
@@ -194,7 +194,7 @@
                         <template slot="label">
                             <span class="notNull">* </span>大豆风冷变频：
                         </template>
-                        <el-input v-model="craftControlInfo.beanWindFrequency" placeholder="请输入" :disabled="!(isRedact && craftControlInfo.status !== 'C' && craftControlInfo.status !== 'D' && craftControlInfo.status !== 'P')" size="small" style="width: 180px;">
+                        <el-input v-model="craftControlInfo.beanWindFrequency" placeholder="请输入" :disabled="!(isRedact && isStatus !== 'C' && isStatus !== 'D' && isStatus !== 'P' && craftControlInfo.status !== 'C' && craftControlInfo.status !== 'D' && craftControlInfo.status !== 'P')" size="small" style="width: 180px;">
                             <span slot="suffix" class="stock-form_item_input_suffix">Hz</span>
                         </el-input>
                     </el-form-item>
@@ -202,13 +202,13 @@
                         <template slot="label">
                             <span class="notNull">* </span>混合开始时间：
                         </template>
-                        <el-date-picker v-model="craftControlInfo.mixtureStart" type="datetime" value-format="yyyy-MM-dd HH:mm" format="yyyy-MM-dd HH:mm" placeholder="请选择" :disabled="!(isRedact && craftControlInfo.status !== 'C' && craftControlInfo.status !== 'D' && craftControlInfo.status !== 'P')" size="small" style="width: 180px;" />
+                        <el-date-picker v-model="craftControlInfo.mixtureStart" type="datetime" value-format="yyyy-MM-dd HH:mm" format="yyyy-MM-dd HH:mm" placeholder="请选择" :disabled="!(isRedact && isStatus !== 'C' && isStatus !== 'D' && isStatus !== 'P' && craftControlInfo.status !== 'C' && craftControlInfo.status !== 'D' && craftControlInfo.status !== 'P')" size="small" style="width: 180px;" />
                     </el-form-item>
                     <el-form-item class="cleanMarginBottom">
                         <template slot="label">
                             <span class="notNull">* </span>混合结束时间：
                         </template>
-                        <el-date-picker v-model="craftControlInfo.mixtrueEnd" type="datetime" value-format="yyyy-MM-dd HH:mm" format="yyyy-MM-dd HH:mm" placeholder="请选择" :disabled="!(isRedact && craftControlInfo.status !== 'C' && craftControlInfo.status !== 'D' && craftControlInfo.status !== 'P')" size="small" style="width: 180px;" />
+                        <el-date-picker v-model="craftControlInfo.mixtrueEnd" type="datetime" value-format="yyyy-MM-dd HH:mm" format="yyyy-MM-dd HH:mm" placeholder="请选择" :disabled="!(isRedact && isStatus !== 'C' && isStatus !== 'D' && isStatus !== 'P' && craftControlInfo.status !== 'C' && craftControlInfo.status !== 'D' && craftControlInfo.status !== 'P')" size="small" style="width: 180px;" />
                     </el-form-item>
                 </el-form>
             </div>
@@ -443,7 +443,7 @@
         // 内部借调弹窗选择
         selectUser(row, typeName, field) {
 
-            if (!(this.isRedact && this.craftSteamFlourInfo.status !== 'C' && this.craftSteamFlourInfo.status !== 'D' && this.craftSteamFlourInfo.status !== 'P')) return;
+            if (!(this.isRedact && this.isStatus !== 'C' && this.isStatus !== 'D' && this.isStatus !== 'P' && this.craftSteamFlourInfo.status !== 'C' && this.craftSteamFlourInfo.status !== 'D' && this.craftSteamFlourInfo.status !== 'P')) return;
             this.row = row;
             this.rowField = field
             this.loanedPersonnelStatus = true;

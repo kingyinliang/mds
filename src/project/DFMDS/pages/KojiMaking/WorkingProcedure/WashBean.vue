@@ -67,8 +67,8 @@
         setMaterialTableData = [];
 
         // 物料领用,工艺控制页签状态
-        washBeanMaterialApplyStatus=''
-        washBeanMaterialCraftStatus=''
+        washBeanMaterialApplyStatus='N'
+        washBeanMaterialCraftStatus='N'
 
         changeSieveTotalNum(num) {
             this.sieveTotalNum = num;

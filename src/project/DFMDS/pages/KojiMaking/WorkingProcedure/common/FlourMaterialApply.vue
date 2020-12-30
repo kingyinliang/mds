@@ -4,7 +4,7 @@
             <template slot="titleBtn">
                 <el-form :inline="true" label-width="115px">
                     <el-form-item class="cleanMarginBottom floatr">
-                        <el-button type="primary" size="small" :disabled="!(isRedact && isStatus !== 'C' && isStatus !== 'D' && isStatus !== 'P')" @click="addY158DataRow()">
+                        <el-button type="primary" size="small" :disabled="!(isRedact &&isStatus !== 'C' && isStatus !== 'D' && isStatus !== 'P' && isStatus !== 'C' && isStatus !== 'D' && isStatus !== 'P')" @click="addY158DataRow()">
                             新增
                         </el-button>
                     </el-form-item>
@@ -29,7 +29,7 @@
                     <el-table-column label="操作时间" prop="changed" width="180" />
                     <el-table-column width="70" label="操作" fixed="right">
                         <template slot-scope="scope">
-                            <el-button class="delBtn" type="text" icon="el-icon-delete" size="mini" :disabled="!(isRedact && scope.row.status !== 'C' && scope.row.status !== 'D' && scope.row.status !== 'P')" @click="removeDataRow(scope.row, 'Y158')">
+                            <el-button class="delBtn" type="text" icon="el-icon-delete" size="mini" :disabled="!(isRedact && isStatus !== 'C' && isStatus !== 'D' && isStatus !== 'P' &&scope.row.status !== 'C' && scope.row.status !== 'D' && scope.row.status !== 'P')" @click="removeDataRow(scope.row, 'Y158')">
                                 删除
                             </el-button>
                         </template>
@@ -86,7 +86,7 @@
                     <el-table-column label="操作时间" prop="changed" width="180" />
                     <el-table-column width="70" label="操作" fixed="right">
                         <template slot-scope="scope">
-                            <el-button class="delBtn" type="text" icon="el-icon-delete" size="mini" :disabled="!(isRedact && scope.row.status !== 'C' && scope.row.status !== 'D' && scope.row.status !== 'P')" @click="removeDataRow(scope.row)">
+                            <el-button class="delBtn" type="text" icon="el-icon-delete" size="mini" :disabled="!(isRedact && isStatus !== 'C' && isStatus !== 'D' && isStatus !== 'P' && scope.row.status !== 'C' && scope.row.status !== 'D' && scope.row.status !== 'P')" @click="removeDataRow(scope.row)">
                                 删除
                             </el-button>
                         </template>
@@ -265,7 +265,7 @@
         }
 
         EditY158Row(row) {
-            if (!(this.isRedact && this.isStatus !== 'C' && this.isStatus !== 'D' && this.isStatus !== 'P')) {
+            if (!(this.isRedact && this.isStatus !== 'C' && this.isStatus !== 'D' && this.isStatus !== 'P' && this.isStatus !== 'C' && this.isStatus !== 'D' && this.isStatus !== 'P')) {
                 return false;
             }
             this.Y158Visible = true;
@@ -286,7 +286,7 @@
         }
 
         EditRow(row) {
-            if (!(this.isRedact && this.isStatus !== 'C' && this.isStatus !== 'D' && this.isStatus !== 'P')) {
+            if (!(this.isRedact && this.isStatus !== 'C' && this.isStatus !== 'D' && this.isStatus !== 'P' && this.isStatus !== 'C' && this.isStatus !== 'D' && this.isStatus !== 'P')) {
                 return false;
             }
             this.visible = true;
