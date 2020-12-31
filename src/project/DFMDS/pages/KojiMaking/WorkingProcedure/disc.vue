@@ -160,8 +160,8 @@
                 kojiOrderNo: this.formHeader.kojiOrderNo
             }).then(({ data }) => {
                 this.$store.commit('koji/updateHouseTag', data.data);
-                this.tabs[0].status = data.data.discCraftName
-                this.tabs[1].status = data.data.discInStorageName
+                this.tabs[0].status = data.data.discCraft
+                this.tabs[1].status = data.data.discInStorage
 
                 this.craftControlStatus = data.data.discCraft;
                 this.productInStorageStatus = data.data.discInStorage;

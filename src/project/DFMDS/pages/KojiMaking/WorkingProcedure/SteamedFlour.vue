@@ -152,8 +152,8 @@
                 kojiOrderNo: this.formHeader.kojiOrderNo
             }).then(({ data }) => {
                 this.$store.commit('koji/updateHouseTag', data.data);
-                this.tabs[0].status = data.data.steamFlourMaterialName
-                this.tabs[1].status = data.data.steamFlourCraftName
+                this.tabs[0].status = data.data.steamFlourMaterial
+                this.tabs[1].status = data.data.steamFlourCraft
 
                 this.flourMaterialApplyStatus = data.data.steamFlourMaterial;
                 this.flourMaterialCraftStatus = data.data.steamFlourCraft;

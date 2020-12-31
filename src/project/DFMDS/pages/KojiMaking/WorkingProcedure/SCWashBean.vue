@@ -172,8 +172,8 @@
                 // kojiOrderNo: this.formHeader.kojiOrderNo
             }).then(({ data }) => {
                 this.$store.commit('koji/updateHouseTag', data.data);
-                this.tabs[0].status = data.data.washBeanMaterailName
-                this.tabs[1].status = data.data.washBeanCraftName
+                this.tabs[0].status = data.data.washBeanMaterail
+                this.tabs[1].status = data.data.washBeanCraft
                 this.washBeanMaterialApplyStatus = data.data.washBeanMaterail;
                 this.washBeanMaterialCraftStatus = data.data.washBeanCraft;
                 this.$refs.dataEntry.updateTabs();
