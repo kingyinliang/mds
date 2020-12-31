@@ -760,20 +760,25 @@
 
         // 入曲情況
         kojiInformData: KojiInObject= {}
+        kojiInformDataOrg: KojiInObject={}
         isLoanedPersonnelStatusDialogShow=false // 入曲人选择弹窗
         orgTree: object[] = [];
         arrList: string[] = [];
         // 出曲工艺
         kojiOutCraftformData: KojiOutCraftObject= {}
+        kojiOutCraftformDataOrg: KojiOutCraftObject={}
 
         // 翻曲记录
         kojiDiscTurnData: KojiDiscTurn[]=[]
+        kojiDiscTurnDataOrg: KojiDiscTurn[]=[]
 
         // 异常情况
         kojiDiscExceptionInfo: KojiDiscExceptionInfo={}
+        kojiDiscExceptionInfoOrg: KojiDiscExceptionInfo={}
 
         // 曲料生产评价
         kojiEvaluateData: KojiEvaluate[]=[]
+        kojiEvaluateDataOrg: KojiEvaluate[]=[]
         ruleKojiEvaluateForm= {}
         kojiEvaluateGrowInfoOptions: OptionObj[]=[]
         kojiStageOptions: OptionObj[]=[]
@@ -873,6 +878,7 @@
                 }
                 this.$set(this.kojiInformData, 'orderNo', this.targetOrderObj.orderNo)
                 this.$set(this.kojiInformData, 'kojiOrderNo', this.targetOrderObj.kojiOrderNo)
+                this.kojiInformDataOrg = JSON.parse(JSON.stringify(this.kojiInformData))
             })
         }
 
@@ -897,6 +903,8 @@
                 }
                 this.$set(this.kojiOutCraftformData, 'orderNo', this.targetOrderObj.orderNo)
                 this.$set(this.kojiOutCraftformData, 'kojiOrderNo', this.targetOrderObj.kojiOrderNo)
+
+                this.kojiOutCraftformDataOrg = JSON.parse(JSON.stringify(this.kojiOutCraftformData))
             })
         }
 
@@ -939,6 +947,7 @@
                         this.$set(this.kojiDiscTurnData[1], 'changer', getUserNameNumber())
                         this.$set(this.kojiDiscTurnData[1], 'changed', dateFormat(new Date(), 'yyyy-MM-dd hh:mm:ss'))
                     }
+                    this.kojiDiscTurnDataOrg = JSON.parse(JSON.stringify(this.kojiDiscTurnData))
                 }
             })
         }
@@ -975,6 +984,7 @@
                 this.kojiDiscExceptionInfo = {}
                 if (data.data) {
                     this.kojiDiscExceptionInfo = data.data
+                    this.kojiDiscExceptionInfoOrg = JSON.parse(JSON.stringify(data.data))
                 }
             })
         }
@@ -1006,6 +1016,7 @@
                 this.kojiEvaluateData = []
                 if (data.data) {
                     this.kojiEvaluateData = data.data
+                    this.kojiEvaluateDataOrg = JSON.parse(JSON.stringify(data.data))
                 }
             })
         }
@@ -1203,7 +1214,7 @@
                         discEvaluate.deleteIds.push(item.id)
                     }
                 } else if (item.id) {
-                    if (!_.isEqual(this.kojiGuardDataOrg[index], item)) {
+                    if (!_.isEqual(this.kojiEvaluateDataOrg[index], item)) {
                         discEvaluate.updateList.push(item)
                     }
                 } else {
@@ -1230,12 +1241,12 @@
                 }
             })
 
-            const discTurn1 = this.kojiDiscTurnData[0]
-            const discTurn2 = this.kojiDiscTurnData[1]
-            const discIn = this.kojiInformData
-            const discOut = this.kojiOutCraftformData
-            const discGuardException = this.kojiDiscExceptionInfo.discGuardExceptionInfo
-            const discTurnException = this.kojiDiscExceptionInfo.discTurnExceptionInfo
+            const discTurn1 = !_.isEqual(this.kojiDiscTurnDataOrg[0], this.kojiDiscTurnData[0]) ? this.kojiDiscTurnData[0] : null
+            const discTurn2 = !_.isEqual(this.kojiDiscTurnDataOrg[1], this.kojiDiscTurnData[1]) ? this.kojiDiscTurnData[1] : null
+            const discIn = !_.isEqual(this.kojiInformDataOrg, this.kojiInformData) ? this.kojiInformData : null
+            const discOut = !_.isEqual(this.kojiOutCraftformDataOrg, this.kojiOutCraftformData) ? this.kojiOutCraftformData : null
+            const discGuardException = this.kojiDiscExceptionInfoOrg.discGuardExceptionInfo !== this.kojiDiscExceptionInfo.discGuardExceptionInfo ? this.kojiDiscExceptionInfo.discGuardExceptionInfo : null
+            const discTurnException = this.kojiDiscExceptionInfoOrg.discTurnExceptionInfo !== this.kojiDiscExceptionInfo.discTurnExceptionInfo ? this.kojiDiscExceptionInfo.discTurnExceptionInfo : null
             return {
                 discEvaluate,
                 discGuard,

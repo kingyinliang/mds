@@ -77,7 +77,7 @@
                 </el-table-column>
                 <el-table-column label="单位">
                     <template slot-scope="scope">
-                        {{ scope.row.unit }}
+                        {{ scope.row.unitName }}
                     </template>
                 </el-table-column>
                 <el-table-column width="140" show-overflow-tooltip>
@@ -369,6 +369,11 @@
                 item.kojiOrderNo = formHeader.kojiOrderNo;
                 item.orderNo = formHeader.orderNo;
             });
+            console.log(1111111);
+
+            console.log(this.temCraftWashBeanTable)
+            console.log(this.craftWashBeanTable);
+
 
             return {
                 kojiBeanSieveSaveDto: {
@@ -461,7 +466,7 @@
                 sieveImpurityAmount: '',
                 sieveImpurityType: '',
                 sieveMans: '',
-                unit: '千克',
+                unit: 'KG',
                 remark: '',
                 changed: dateFormat(new Date(), 'yyyy-MM-dd hh:mm:ss'),
                 changer: getUserNameNumber(),
@@ -676,7 +681,7 @@
 
         // 查询最新筛豆记录
         getSeiveBeanLogList(formHeader) {
-            KOJI_API.KOJI_SBEAN_SIEVE_QUERY_API({
+            KOJI_API.KOJI_SBEAN_SIEVE_QUERY_API({ // /koji/kojiBeanSieve/query
                 kojiOrderNo: formHeader.kojiOrderNo,
                 orderNo: formHeader.orderNo
             }).then(({ data }) => {
@@ -694,9 +699,9 @@
             }).then(({ data }) => {
                 this.craftWashBeanInfo = data.data;
                 this.craftWashBeanTable = data.data.items || [];
-                this.temCraftWashBeanTable = JSON.parse(JSON.stringify(data.data.items || []));
                 // 泡豆罐显示处理
                 this.setRelStrScanShow();
+                this.temCraftWashBeanTable = JSON.parse(JSON.stringify(this.craftWashBeanTable));
             });
         }
 
@@ -742,6 +747,7 @@
         sieveImpurityType?: string;
         sieveMans?: string;
         unit?: string;
+        unitName?: string;
         remark?: string;
         changer?: string;
         changed?: string;

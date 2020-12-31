@@ -242,8 +242,10 @@
             this.$refs.dataForm.validate(valid => {
                 if (valid) {
                     if (this.type === 'add') {
+                        const params = JSON.parse(JSON.stringify(this.dataForm))
+                        delete params.id;
                         KOJI_API.KOJI_MATERIAL_GET_ADD_QUERY_API({
-                            insertDto: [this.dataForm]
+                            insertDto: [params]
                         }).then(() => {
                             this.visible = false;
                             this.$emit('success', this.dataForm);
