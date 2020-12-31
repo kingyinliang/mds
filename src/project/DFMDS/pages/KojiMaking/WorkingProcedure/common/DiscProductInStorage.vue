@@ -83,7 +83,7 @@
 <script lang="ts">
     import { Vue, Component, Prop, Watch } from 'vue-property-decorator';
     import { KOJI_API, AUDIT_API } from 'common/api/api';
-    import { dateFormat, getUserNameNumber } from 'utils/utils';
+    import { dataEntryData } from 'utils/utils';
     // import _ from 'lodash';
 
     @Component({
@@ -109,7 +109,7 @@
 
         // 常有变数
         currentFormDataGroup: CurrentDataTable[] = [] // 主 data
-        // orgFormDataGroup: CurrentDataTable[] = [] // 主 data 复制
+        orgFormDataGroup: CurrentDataTable[] = [] // 主 data 复制
 
 
         // 发酵罐选择改变 触发字段变更值
@@ -167,6 +167,7 @@
                 if (data.data) {
                     this.currentFormDataGroup[0] = data.data
                     this.$set(this.currentFormDataGroup, 0, data.data)
+                    this.$set(this.orgFormDataGroup, 0, data.data)
 
                     this.$set(this.currentFormDataGroup[0], 'orderNo', this.targetOrderObj.orderNo)
                     this.$set(this.currentFormDataGroup[0], 'kojiOrderNo', this.targetOrderObj.kojiOrderNo)
@@ -194,17 +195,32 @@
 
 
         savedData() {
-            // const instorageDelete = [];
-            // const instorageInsert = [];
-            // const instorageUpdate = [];
-            // dataEntryData(formHeader, this.currentFormDataGroup, this.orgFormDataGroup, instorageDelete, instorageInsert, instorageUpdate);
-            if (this.currentFormDataGroup[0]) {
-                this.$set(this.currentFormDataGroup[0], 'changed', dateFormat(new Date(), 'yyyy-MM-dd hh:mm'))
-                this.$set(this.currentFormDataGroup[0], 'changer', getUserNameNumber())
-            }
+            // console.log(this.isStatus, '[][][[][')
+            // let isStatus = false;
+            // switch (this.isStatus) {
+            //     case 'N':
+            //     case 'S':
+            //     case 'R':
+            //         isStatus = false;
+            //         break;
+            //     default:
+            //         isStatus = true;
+            //         break;
+            // }
+            // if (isStatus) {
+            //     return {};
+            // }
+            const instorageDelete = [];
+            const instorageInsert = [];
+            const instorageUpdate = [];
+            dataEntryData(this.formHeader, this.currentFormDataGroup, this.orgFormDataGroup, instorageDelete, instorageInsert, instorageUpdate);
+            // if (this.currentFormDataGroup[0]) {
+            //     this.$set(this.currentFormDataGroup[0], 'changed', dateFormat(new Date(), 'yyyy-MM-dd hh:mm'))
+            //     this.$set(this.currentFormDataGroup[0], 'changer', getUserNameNumber())
+            // }
 
 
-            return this.currentFormDataGroup[0]
+            return instorageInsert[0] ? instorageInsert[0] : instorageUpdate[0] ? instorageUpdate[0] : null
         }
 
         //  rowDelFlag

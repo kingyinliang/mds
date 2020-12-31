@@ -94,7 +94,7 @@
             if (!row.wareHouseNo) {
                 return this.formHeader.workShopName
             }
-            return this.stockInfoList.filter(item => item.wareHouseNo === row.wareHouseNo)[0].wareHouseName
+            return this.stockInfoList.filter(item => item.wareHouseNo === row.wareHouseNo)[0]?.wareHouseName
         }
 
         init(formHeader) {

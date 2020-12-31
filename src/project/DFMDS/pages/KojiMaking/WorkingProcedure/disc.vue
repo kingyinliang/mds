@@ -160,8 +160,8 @@
                 kojiOrderNo: this.formHeader.kojiOrderNo
             }).then(({ data }) => {
                 this.$store.commit('koji/updateHouseTag', data.data);
-                this.tabs[0].status = data.data.discCraftName
-                this.tabs[1].status = data.data.discInStorageName
+                this.tabs[0].status = data.data.discCraft
+                this.tabs[1].status = data.data.discInStorage
 
                 this.craftControlStatus = data.data.discCraft;
                 this.productInStorageStatus = data.data.discInStorage;
@@ -247,6 +247,28 @@
             const productInStorageTemp = this.$refs.productInStorage.savedData(this.formHeader);
             const excRecordTemp = this.$refs.excRecord.getSavedOrSubmitData(this.formHeader, 'YP');
             const textRecordTemp = this.$refs.textRecord.savedData(this.formHeader);
+
+            console.log({
+                discEvaluate: craftControlTemp.discEvaluate,
+                discGuard: craftControlTemp.discGuard,
+                discIn: craftControlTemp.discIn,
+                discOut: craftControlTemp.discOut,
+                discTurn1: craftControlTemp.discTurn1,
+                discTurn2: craftControlTemp.discTurn2,
+                discGuardException: craftControlTemp.discGuardException, // 看曲记录异常情况
+                discTurnException: craftControlTemp.discTurnException, // 翻曲记录异常情况
+                exception: { // 异常记录
+                    insertDatas: excRecordTemp.InsertDto,
+                    removeIds: excRecordTemp.ids,
+                    updateDatas: excRecordTemp.UpdateDto
+                }, // 异常记录
+                fermentPotId: this.formHeader.fermentPotId, // 发酵罐Id
+                fermentPotNo: this.formHeader.fermentPotNo, // 发酵罐号
+                inStorage: productInStorageTemp,
+                kojiOrderNo: this.formHeader.kojiOrderNo, // 曲房单号
+                orderNo: this.formHeader.orderNo, // 订单号
+                text: textRecordTemp
+            })
 
             return KOJI_API.KOJI_DISC_QUERY_SAVE_API({
                 discEvaluate: craftControlTemp.discEvaluate,

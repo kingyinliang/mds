@@ -158,8 +158,8 @@
             }).then(({ data }) => {
 
                 this.$store.commit('koji/updateHouseTag', data.data);
-                this.tabs[0].status = data.data.steamBeanCraftName
-                this.tabs[1].status = data.data.steamBeanInStorageName
+                this.tabs[0].status = data.data.steamBeanCraft
+                this.tabs[1].status = data.data.steamBeanInStorage
 
                 this.steamedBeanCraftStatus = data.data.steamBeanCraft;
                 this.steamedInStorageStatus = data.data.steamBeanInStorage;
