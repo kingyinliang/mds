@@ -38,7 +38,7 @@
                                         v-if="craftSteamFlourInfo.steamFlourMans&&craftSteamFlourInfo.steamFlourMans!==''"
                                         v-model="craftSteamFlourInfo.steamFlourMans"
                                         placeholder="请输入蒸面操作人"
-
+                                        size="small"
                                         :disabled="!(isRedact && isStatus !== 'C' && isStatus !== 'D' && isStatus !== 'P' &&craftSteamFlourInfo.status !== 'C' && craftSteamFlourInfo.status !== 'D' && craftSteamFlourInfo.status !== 'P')"
                                     />
                                 </el-tooltip>

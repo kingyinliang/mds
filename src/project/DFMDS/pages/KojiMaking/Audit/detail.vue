@@ -509,7 +509,7 @@
                     //     verifyTypeTemp = ['WB_CONTROL', 'TIMESHEET']
                     // }
                     // if (row.process === '蒸面') {
-                    //     verifyTypeTemp = ['SB_CONTROL', 'TIMESHEET']
+                    //     verifyTypeTemp = ['SF_CONTROL', 'TIMESHEET']
                     // }
                     // if (row.process === '圆盘') {
                     //     verifyTypeTemp = ['KJ_CONTROL', 'TIMESHEET']
@@ -532,7 +532,7 @@
                         verifyTypeTemp = ['WB_CONTROL', 'TIMESHEET']
                     }
                     if (row.process === '蒸面') {
-                        verifyTypeTemp = ['SB_CONTROL', 'TIMESHEET']
+                        verifyTypeTemp = ['SF_CONTROL', 'TIMESHEET']
                     }
                     if (row.process === '圆盘') {
                         verifyTypeTemp = ['KJ_CONTROL', 'TIMESHEET']
