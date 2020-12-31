@@ -133,7 +133,7 @@
                     label: ['deptName'],
                     value: 'id'
                 },
-                linkageProp: ['productLine']
+                linkageProp: ['pkgLine']
             },
             {
                 type: 'date-picker',
@@ -152,7 +152,7 @@
             {
                 type: 'select',
                 label: '包装产线',
-                prop: 'productLine',
+                prop: 'pkgLine',
                 optionsFn: val => {
                     return STE_API.STE_LINE_API({
                         workShop: val || ''
