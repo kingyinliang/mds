@@ -175,7 +175,7 @@
                 row.tempLocation = this.formHeader.workShopName
                 return row.tempLocation
             }
-            row.tempLocation = this.stockY158InfoList.filter(item => item.wareHouseNo === row.wareHouseNo)[0].wareHouseName
+            row.tempLocation = this.stockY158InfoList.filter(item => item.wareHouseNo === row.wareHouseNo)[0]?.wareHouseName
             return row.tempLocation
         }
 
@@ -185,7 +185,7 @@
             if (!row.wareHouseNo) {
                 return this.formHeader.workShopName
             }
-            return this.stockInfoList.filter(item => item.wareHouseNo === row.wareHouseNo)[0].wareHouseName
+            return this.stockInfoList.filter(item => item.wareHouseNo === row.wareHouseNo)[0]?.wareHouseName
         }
 
         // 查询领用Y158仓库list
