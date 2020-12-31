@@ -369,6 +369,11 @@
                 item.kojiOrderNo = formHeader.kojiOrderNo;
                 item.orderNo = formHeader.orderNo;
             });
+            console.log(1111111);
+
+            console.log(this.temCraftWashBeanTable)
+            console.log(this.craftWashBeanTable);
+
 
             return {
                 kojiBeanSieveSaveDto: {
@@ -694,9 +699,9 @@
             }).then(({ data }) => {
                 this.craftWashBeanInfo = data.data;
                 this.craftWashBeanTable = data.data.items || [];
-                this.temCraftWashBeanTable = JSON.parse(JSON.stringify(data.data.items || []));
                 // 泡豆罐显示处理
                 this.setRelStrScanShow();
+                this.temCraftWashBeanTable = JSON.parse(JSON.stringify(this.craftWashBeanTable));
             });
         }
 
