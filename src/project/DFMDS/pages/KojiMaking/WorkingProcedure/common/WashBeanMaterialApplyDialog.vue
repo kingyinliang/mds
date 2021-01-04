@@ -135,6 +135,7 @@
 
             this.dataForm = {
                 id: Data.id,
+                processCode: formHeader.textStage,
                 materialHL: Data.wareHouseNo || Data.materialLocation,
                 materialLocation: Data.materialLocation,
                 batch: Data.batch,
@@ -149,6 +150,7 @@
                 materialName: result.materialName,
                 materialLink: result.materialCode ? result.materialName + result.materialCode : '',
                 materialType: result.materialType,
+                storageType: 'BEAN', // 写死
                 amount: Data.amount,
                 supplier: Data.supplier,
                 stockAmount: Data.stockAmount || Data.currentAmount,
@@ -245,6 +247,8 @@
         materialName?: string;
         materialLink?: string;
         materialType?: string;
+        storageType?: string;
+        processCode?: string;
         amount?: string;
         supplier?: string;
         orderNo?: string;

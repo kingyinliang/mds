@@ -491,7 +491,7 @@
                 break;
                 case '4':
                     this.rejectKojiHouseId = this.kojiHouseNoOptions.filter(element => element.optValue === item.kojiHouseNo)[0].optId
-                    this.rejectMaterialStyle = item.materialType;
+                    this.rejectMaterialStyle = item.storageType;
                     this.rejectBatch = item.batch;
                 break;
                 default:
@@ -549,42 +549,42 @@
                     })
                     break;
                 case '生产入库':
-                    // if (row.process === '洗豆') {
-                    //     verifyTypeTemp = []
-                    // }
-                    // if (row.process === '蒸面') {
-                    //     verifyTypeTemp = []
-                    // }
-                    // if (row.process === '圆盘') {
-                    //     verifyTypeTemp = ['KJ_INSTORAGE', 'INSTORAGE']
-                    // }
-                    // if (row.process === 'SC洗豆') {
-                    //     verifyTypeTemp = []
-                    // }
-                    // if (row.process === 'SC篜豆') {
-                    //     verifyTypeTemp = ['SB_INSTORAGE', 'INSTORAGE']
-                    // }
+                    if (row.process === 'XD') { // 洗豆
+                        verifyTypeTemp = []
+                    }
+                    if (row.process === 'ZM') { // 蒸面
+                        verifyTypeTemp = []
+                    }
+                    if (row.process === 'YP') { // 圆盘
+                        verifyTypeTemp = ['KJ_INSTORAGE', 'INSTORAGE']
+                    }
+                    if (row.process === 'SC') { // SC洗豆
+                        verifyTypeTemp = []
+                    }
+                    if (row.process === 'ZD') { // SC篜豆
+                        verifyTypeTemp = ['SB_INSTORAGE', 'INSTORAGE']
+                    }
                     AUDIT_API.STE_AUDIT_LOG_API({ orderNo: this.currentOrderNo, splitOrderNo: row.kojiOrderNo, verifyType: verifyTypeTemp }).then(({ data }) => {
                         this.auditLogData = data.data
                         this.visibleAuditLog = true
                     })
                     break;
                 case '物料领用':
-                    // if (row.process === '洗豆') {
-                    //     verifyTypeTemp = ['WB_MATERIAL', 'MATERIAL']
-                    // }
-                    // if (row.process === '蒸面') {
-                    //     verifyTypeTemp = ['SF_MATERIAL', 'MATERIAL']
-                    // }
-                    // if (row.process === '圆盘') {
-                    //     verifyTypeTemp = []
-                    // }
-                    // if (row.process === 'SC洗豆') {
-                    //     verifyTypeTemp = ['WB_MATERIAL', 'MATERIAL']
-                    // }
-                    // if (row.process === 'SC篜豆') {
-                    //     verifyTypeTemp = []
-                    // }
+                    if (row.process === 'XD') { // 洗豆
+                        verifyTypeTemp = ['WB_MATERIAL', 'MATERIAL']
+                    }
+                    if (row.process === 'ZM') { // 蒸面
+                        verifyTypeTemp = ['SF_MATERIAL', 'MATERIAL']
+                    }
+                    if (row.process === 'YP') { // 圆盘
+                        verifyTypeTemp = []
+                    }
+                    if (row.process === 'SC') { // SC洗豆
+                        verifyTypeTemp = ['WB_MATERIAL', 'MATERIAL']
+                    }
+                    if (row.process === 'ZD') { // SC篜豆
+                        verifyTypeTemp = []
+                    }
                     AUDIT_API.STE_AUDIT_LOG_API({ orderNo: this.currentOrderNo, splitOrderNo: row.kojiOrderNo, verifyType: verifyTypeTemp }).then(({ data }) => {
                         this.auditLogData = data.data
                         this.visibleAuditLog = true
@@ -674,7 +674,7 @@
                         batch: this.rejectBatch,
                         kojiHouseId: this.rejectKojiHouseId,
                         orderNo: this.formHeader.orderNo,
-                        materialType: this.rejectMaterialStyle,
+                        storageType: this.rejectMaterialStyle,
                         productDate: this.formHeader.productDate,
                         refuseSeason: this.rejectText
                     }).then(() => {

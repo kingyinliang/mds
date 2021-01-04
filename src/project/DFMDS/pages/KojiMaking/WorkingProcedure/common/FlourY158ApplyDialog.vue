@@ -186,10 +186,13 @@
                 id: Data.id,
                 materialLocation: Data.materialLocation,
                 batch: Data.batch,
+                // processCode: this.formHeader.textStage,
+                processCode: 'ZM', // 写死
                 materialCode: Data.materialCode,
                 materialName: Data.materialName,
                 materialLink: Data.materialCode ? String(Data.materialName) + String(Data.materialCode) : '',
-                materialType: 'Y158',
+                materialType: 'ZHZC', // 写死
+                storageType: 'Y158', // 写死
                 amount: Data.amount,
                 operationMans: Data.operationMans || '',
                 stockAmount: Data.stockAmount || Data.currentAmount,
@@ -294,10 +297,12 @@
         materialLocation?: string;
         batch?: string;
         material?: string;
+        processCode?: string;
         materialCode?: string;
         materialName?: string;
         materialLink?: string;
         materialType?: string;
+        storageType?: string;
         amount?: string;
         supplier?: string;
         orderNo?: string;
