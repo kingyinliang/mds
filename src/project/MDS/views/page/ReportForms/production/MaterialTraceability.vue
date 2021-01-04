@@ -26,6 +26,7 @@
             <el-table-column label="批次" prop="batch" width="220" show-overflow-tooltip />
             <el-table-column label="数量" prop="entryQnt" width="90" show-overflow-tooltip />
             <el-table-column label="单位" prop="entryUom" width="70" />
+            <el-table-column label="生产日期" prop="productDate" width="175" />
         </el-table>
     </div>
 </template>
