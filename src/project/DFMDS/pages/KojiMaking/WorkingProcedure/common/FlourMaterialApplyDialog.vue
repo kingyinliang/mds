@@ -172,7 +172,7 @@
                 material: `${String(result.materialName)} ${String(result.materialCode)}`,
                 materialCode: result.materialCode,
                 materialName: result.materialName,
-                materialLink: result.materialCode ? result.materialName + result.materialCode : '',
+                materialLink: result.materialCode ? `${String(result.materialName)} ${String(result.materialCode)}` : '',
                 materialType: result.materialType,
                 storageType: 'FLOUR', // 写死
                 amount: Data.amount,

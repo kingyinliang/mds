@@ -190,7 +190,7 @@
                 processCode: 'ZM', // 写死
                 materialCode: Data.materialCode,
                 materialName: Data.materialName,
-                materialLink: Data.materialCode ? String(Data.materialName) + String(Data.materialCode) : '',
+                materialLink: Data.materialCode ? `${String(Data.materialName)} ${String(Data.materialCode)}` : '',
                 materialType: 'ZHZC', // 写死
                 storageType: 'Y158', // 写死
                 amount: Data.amount,
