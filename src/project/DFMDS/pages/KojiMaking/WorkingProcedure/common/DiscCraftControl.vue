@@ -1200,6 +1200,34 @@
             return true
         }
 
+        /**
+         * 数据对比：针对特殊字段 addKojiDuration '.00' '0.00'，addKojiTemp, outKojiDuration, outKojiTemp
+         * @param data 新数据
+         * @param oldData 旧数据
+         * @param specialNames 特殊字段名
+         */
+        chargeSameData<T>(data: T, oldData: T, specialNames: string[]): (T | null) {
+            let isSame = true;
+            for (const key in data) {
+                if (Object.prototype.hasOwnProperty.call(data, key)) {
+                    const element = data[key];
+                    const element1 = oldData[key];
+                    if (specialNames.includes(key)) {
+                        if (Number(element) !== Number(element1)) {
+                            isSame = false;
+                            break;
+                        }
+                        continue;
+                    }
+                    if (element1 !== element) {
+                        isSame = false;
+                        break;
+                    }
+                }
+            }
+            return isSame ? null : data;
+        }
+
         savedData() {
             const discEvaluate: DiscEvaluate = {
                     deleteIds: [], // 曲料生长评价待删除id列表
@@ -1243,8 +1271,10 @@
 
             const discTurn1 = !_.isEqual(this.kojiDiscTurnDataOrg[0], this.kojiDiscTurnData[0]) ? this.kojiDiscTurnData[0] : null
             const discTurn2 = !_.isEqual(this.kojiDiscTurnDataOrg[1], this.kojiDiscTurnData[1]) ? this.kojiDiscTurnData[1] : null
-            const discIn = !_.isEqual(this.kojiInformDataOrg, this.kojiInformData) ? this.kojiInformData : null
-            const discOut = !_.isEqual(this.kojiOutCraftformDataOrg, this.kojiOutCraftformData) ? this.kojiOutCraftformData : null
+            // const discIn = !_.isEqual(this.kojiInformDataOrg, this.kojiInformData) ? this.kojiInformData : null
+            // const discOut = !_.isEqual(this.kojiOutCraftformDataOrg, this.kojiOutCraftformData) ? this.kojiOutCraftformData : null
+            const discIn = this.chargeSameData(this.kojiInformData, this.kojiInformDataOrg, ['addKojiDuration', 'addKojiTemp'])
+            const discOut = this.chargeSameData(this.kojiOutCraftformData, this.kojiOutCraftformDataOrg, ['outKojiDuration', 'outKojiTemp'])
             const discGuardException = this.kojiDiscExceptionInfoOrg.discGuardExceptionInfo !== this.kojiDiscExceptionInfo.discGuardExceptionInfo ? this.kojiDiscExceptionInfo.discGuardExceptionInfo : null
             const discTurnException = this.kojiDiscExceptionInfoOrg.discTurnExceptionInfo !== this.kojiDiscExceptionInfo.discTurnExceptionInfo ? this.kojiDiscExceptionInfo.discTurnExceptionInfo : null
             return {
