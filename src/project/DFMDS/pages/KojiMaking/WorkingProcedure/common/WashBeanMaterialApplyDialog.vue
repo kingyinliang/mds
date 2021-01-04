@@ -124,20 +124,33 @@
                 });
             }
 
+            const { data: { data: result } } = await KOJI_API.KOJI_MATERIAL_GET_BOM_API({
+                orderNo: this.formHeader.orderNo,
+                dictType: 'KOJI_BEAN_MATERIAL'
+            });
+            console.log(result, 'result=-=-========================================')
+
             this.STOCK_AMOUNT = (Data.stockAmount || Data.currentAmount) ? Number(Data.stockAmount) || Number(Data.currentAmount) : 0;
             if (Data.amount) { this.STOCK_AMOUNT += Number(Data.amount); }
 
             this.dataForm = {
                 id: Data.id,
+                processCode: formHeader.textStage,
                 materialHL: Data.wareHouseNo || Data.materialLocation,
                 materialLocation: Data.materialLocation,
                 batch: Data.batch,
                 wareHouseNo: Data.wareHouseNo,
-                material: `${String(Data.materialName)} ${String(Data.materialCode)}`,
-                materialCode: Data.materialCode,
-                materialName: Data.materialName,
-                materialLink: Data.materialCode ? Data.materialName + Data.materialCode : '',
-                materialType: 'BEAN',
+                // material: `${String(Data.materialName)} ${String(Data.materialCode)}`,
+                // materialCode: Data.materialCode,
+                // materialName: Data.materialName,
+                // materialLink: Data.materialCode ? Data.materialName + Data.materialCode : '',
+                // materialType: 'BEAN',
+                material: `${String(result.materialName)} ${String(result.materialCode)}`,
+                materialCode: result.materialCode,
+                materialName: result.materialName,
+                materialLink: result.materialCode ? `${String(result.materialName)} ${String(result.materialCode)}` : '',
+                materialType: result.materialType,
+                storageType: 'BEAN', // 写死
                 amount: Data.amount,
                 supplier: Data.supplier,
                 stockAmount: Data.stockAmount || Data.currentAmount,
@@ -234,6 +247,8 @@
         materialName?: string;
         materialLink?: string;
         materialType?: string;
+        storageType?: string;
+        processCode?: string;
         amount?: string;
         supplier?: string;
         orderNo?: string;

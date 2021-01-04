@@ -115,7 +115,7 @@
         materialGetList() {
             KOJI_API.KOJI_MATERIAL_GET_QUERY_API({
                 kojiOrderNo: this.formHeader.kojiOrderNo,
-                materialType: 'BEAN',
+                storageType: 'BEAN',
                 orderNo: this.formHeader.orderNo
             }).then(({ data }) => {
                 this.$emit('setMaterialTable', data.data || [])

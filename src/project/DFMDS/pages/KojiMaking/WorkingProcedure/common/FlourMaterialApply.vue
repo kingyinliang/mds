@@ -210,7 +210,8 @@
         materialY158GetList() {
             KOJI_API.KOJI_MATERIAL_GET_QUERY_API({ // /kojiMaterial/query
                 kojiOrderNo: this.formHeader.kojiOrderNo,
-                materialType: 'Y158'
+                // materialType: 'Y158',
+                storageType: 'Y158'
             }).then(({ data }) => {
                 console.log('Y158物料领用记录查询')
                 console.log(data)
@@ -222,7 +223,8 @@
         materialGetList() {
             KOJI_API.KOJI_MATERIAL_GET_QUERY_API({
                 kojiOrderNo: this.formHeader.kojiOrderNo,
-                materialType: 'FLOUR'
+                // materialType: 'FLOUR'
+                storageType: 'FLOUR'
             }).then(({ data }) => {
                 console.log('物料领用记录查询')
                 console.log(data)
