@@ -151,7 +151,11 @@
                 });
             }
 
-            console.log(Data, '==============')
+            const { data: { data: result } } = await KOJI_API.KOJI_MATERIAL_GET_BOM_API({
+                orderNo: this.formHeader.orderNo,
+                dictType: 'KOJI_WHEAT_MATERIAL'
+            });
+            console.log(result, 'result=-=-========================================')
 
             this.dataForm = {
                 id: Data.id,
@@ -159,11 +163,16 @@
                 wareHouseNo: Data.wareHouseNo,
                 materialLocation: Data.materialLocation,
                 batch: Data.batch,
-                material: `${String(Data.materialName)} ${String(Data.materialCode)}`,
-                materialCode: Data.materialCode,
-                materialName: Data.materialName,
-                materialLink: Data.materialCode ? Data.materialName + Data.materialCode : '',
-                materialType: 'FLOUR',
+                // material: `${String(Data.materialName)} ${String(Data.materialCode)}`,
+                // materialCode: Data.materialCode,
+                // materialName: Data.materialName,
+                // materialLink: Data.materialCode ? Data.materialName + Data.materialCode : '',
+                // materialType: 'FLOUR',
+                material: `${String(result.materialName)} ${String(result.materialCode)}`,
+                materialCode: result.materialCode,
+                materialName: result.materialName,
+                materialLink: result.materialCode ? result.materialName + result.materialCode : '',
+                materialType: result.materialType,
                 amount: Data.amount,
                 impurityAmount: Data.impurityAmount || 0,
                 supplier: Data.supplier,
