@@ -257,7 +257,7 @@
 
         // 查询请求
         async listInterface(params) {
-
+            this.secondObjIndex = 0;
             const paramsTemp = {
                 factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
                 orderNo: params.orderNo,
