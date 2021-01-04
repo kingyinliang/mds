@@ -365,6 +365,7 @@ export default class MaterialStock extends Vue {
         PKG_API.PKG_MATERIALSTOCK_STORAGEITEM_API({
             factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
             pkgPackageStorageId: row['id'],
+            batch: row['batch'],
             current: this.current,
             size: this.size
         }).then(({ data }) => {
