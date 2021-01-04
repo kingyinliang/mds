@@ -14,10 +14,10 @@
                 el-radio(v-model="dialogForm.normalFlag" label="Y") 包装领用
                 el-radio(v-model="dialogForm.normalFlag" label="N") 其他领用
                 el-radio(v-model="dialogForm.normalFlag" label="E") 异常
-            el-form-item(label="包装产线：" prop="packageLine")
+            el-form-item(v-if="dialogForm.normalFlag==='Y'" label="包装产线：" prop="packageLine")
                 el-select(v-model="dialogForm.packageLine" placeholder="请选择" clearable @change="selectPackageLine")
                     el-option(v-for="(item, index) in pkgWorkShopList" :key="index" :label="item.targetName" :value="item.targetCode" )
-            el-form-item(label="包装订单：" prop="packageOrderNo")
+            el-form-item(v-if="dialogForm.normalFlag==='Y'" label="包装订单：" prop="packageOrderNo")
                 el-select(v-model="dialogForm.packageOrderNo" placeholder="请选择" clearable )
                     el-option(v-for="(item, index) in packageOrderNoList" :key="index" :label="item.targetName" :value="item.targetCode")
             el-form-item(label="入库物料：")
@@ -166,6 +166,11 @@
 
         btnComfirmBucketStatus() {
             this.$refs.dialogForm.validate((valid) => {
+                if (this.dialogForm.normalFlag !== 'Y') {
+                    this.dialogForm.packageLine = ''
+                    this.dialogForm.packageLineName = ''
+                    this.dialogForm.packageOrderNo = ''
+                }
                 if (valid) {
                     this.$emit('conformData', JSON.parse(JSON.stringify(this.dialogForm)))
                     this.isShowCurrentDialog = false
