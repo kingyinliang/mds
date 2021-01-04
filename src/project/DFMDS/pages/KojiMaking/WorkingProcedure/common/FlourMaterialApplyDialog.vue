@@ -151,19 +151,30 @@
                 });
             }
 
-            console.log(Data, '==============')
+            const { data: { data: result } } = await KOJI_API.KOJI_MATERIAL_GET_BOM_API({
+                orderNo: this.formHeader.orderNo,
+                dictType: 'KOJI_WHEAT_MATERIAL'
+            });
+            console.log(result, 'result=-=-========================================')
 
             this.dataForm = {
                 id: Data.id,
                 materialHL: Data.wareHouseNo || Data.materialLocation,
                 wareHouseNo: Data.wareHouseNo,
+                processCode: formHeader.textStage,
                 materialLocation: Data.materialLocation,
                 batch: Data.batch,
-                material: `${String(Data.materialName)} ${String(Data.materialCode)}`,
-                materialCode: Data.materialCode,
-                materialName: Data.materialName,
-                materialLink: Data.materialCode ? Data.materialName + Data.materialCode : '',
-                materialType: 'FLOUR',
+                // material: `${String(Data.materialName)} ${String(Data.materialCode)}`,
+                // materialCode: Data.materialCode,
+                // materialName: Data.materialName,
+                // materialLink: Data.materialCode ? Data.materialName + Data.materialCode : '',
+                // materialType: 'FLOUR',
+                material: `${String(result.materialName)} ${String(result.materialCode)}`,
+                materialCode: result.materialCode,
+                materialName: result.materialName,
+                materialLink: result.materialCode ? `${String(result.materialName)} ${String(result.materialCode)}` : '',
+                materialType: result.materialType,
+                storageType: 'FLOUR', // 写死
                 amount: Data.amount,
                 impurityAmount: Data.impurityAmount || 0,
                 supplier: Data.supplier,
@@ -296,6 +307,8 @@
         materialName?: string;
         materialLink?: string;
         materialType?: string;
+        storageType?: string;
+        processCode?: string;
         amount?: string;
         impurityAmount?: string|number;
         supplier?: string;

@@ -83,7 +83,8 @@
 <script lang="ts">
     import { Vue, Component, Prop, Watch } from 'vue-property-decorator';
     import { KOJI_API, AUDIT_API } from 'common/api/api';
-    import { dataEntryData } from 'utils/utils';
+    // import { dataEntryData } from 'utils/utils';
+    import _ from 'lodash';
     // import _ from 'lodash';
 
     @Component({
@@ -163,14 +164,13 @@
             }).then(({ data }) => {
                 console.log('生产入库')
                 console.log(data)
+                this.currentFormDataGroup = [];
+                this.orgFormDataGroup = [];
                 this.$set(this.currentFormDataGroup, 0, [])
+                this.$set(this.orgFormDataGroup, 0, [])
                 if (data.data) {
-                    this.currentFormDataGroup[0] = data.data
                     this.$set(this.currentFormDataGroup, 0, data.data)
-                    this.$set(this.orgFormDataGroup, 0, data.data)
-
-                    this.$set(this.currentFormDataGroup[0], 'orderNo', this.targetOrderObj.orderNo)
-                    this.$set(this.currentFormDataGroup[0], 'kojiOrderNo', this.targetOrderObj.kojiOrderNo)
+                    this.$set(this.orgFormDataGroup, 0, JSON.parse(JSON.stringify(this.currentFormDataGroup[0])))
                 }
             });
         }
@@ -195,30 +195,14 @@
 
 
         savedData() {
-            // console.log(this.isStatus, '[][][[][')
-            // let isStatus = false;
-            // switch (this.isStatus) {
-            //     case 'N':
-            //     case 'S':
-            //     case 'R':
-            //         isStatus = false;
-            //         break;
-            //     default:
-            //         isStatus = true;
-            //         break;
-            // }
-            // if (isStatus) {
-            //     return {};
-            // }
-            const instorageDelete = [];
-            const instorageInsert = [];
-            const instorageUpdate = [];
-            dataEntryData(this.formHeader, this.currentFormDataGroup, this.orgFormDataGroup, instorageDelete, instorageInsert, instorageUpdate);
-            // if (this.currentFormDataGroup[0]) {
-            //     this.$set(this.currentFormDataGroup[0], 'changed', dateFormat(new Date(), 'yyyy-MM-dd hh:mm'))
-            //     this.$set(this.currentFormDataGroup[0], 'changer', getUserNameNumber())
-            // }
-
+            // const instorageDelete = [];
+            const instorageInsert: CurrentDataTable[] = [];
+            const instorageUpdate: CurrentDataTable[] = [];
+            if (!_.isEqual(this.currentFormDataGroup[0], this.orgFormDataGroup[0])) {
+                this.$set(this.currentFormDataGroup[0], 'orderNo', this.targetOrderObj.orderNo)
+                this.$set(this.currentFormDataGroup[0], 'kojiOrderNo', this.targetOrderObj.kojiOrderNo)
+                instorageUpdate.push(this.currentFormDataGroup[0]);
+            }
 
             return instorageInsert[0] ? instorageInsert[0] : instorageUpdate[0] ? instorageUpdate[0] : null
         }
@@ -247,6 +231,7 @@ interface CurrentDataTable{
     strainAmount?: string;
     unit?: string;
     unitName?: string;
+    delFlag?: number;
 }
 
 interface OrderObject{
@@ -277,6 +262,7 @@ interface OrderObject{
     status?: string;
     workShop?: string;
     workShopName?: string;
+
 }
     interface StatusObj {
         semiMaterialStatus?: string;
