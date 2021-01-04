@@ -2,7 +2,7 @@
     <div class="KojiMaking-Out-index">
         <mds-card :title="'原料领用'" :name="'material'">
             <template slot="titleBtn">
-                <el-button type="primary" size="small" :disabled="formHeader.materialCode !== 'SS02010001' && formHeader.materialCode !== 'SS02060001' ? true : !isRedact" style="float: right;" @click="AddMateriel(MaterielDate)">
+                <el-button type="primary" size="small" :disabled="materialList.every((item) => { return item.code !== formHeader.materialCode }) ? true : !isRedact" style="float: right;" @click="AddMateriel(MaterielDate)">
                     新增
                 </el-button>
             </template>
@@ -41,7 +41,7 @@
                         <span>起始值</span>
                     </template>
                     <template slot-scope="scope">
-                        <el-input v-model="scope.row.startValue" type="number" :disabled="!(isRedact && scope.row.status !== 'submit' && scope.row.status !== 'checked' && scope.row.delFlag !== '1') || !(formHeader.materialCode === 'SS02010001' || formHeader.materialCode === 'SS02060001')" size="small" placeholder="手工录入" />
+                        <el-input v-model="scope.row.startValue" type="number" :disabled="!(isRedact && scope.row.status !== 'submit' && scope.row.status !== 'checked' && scope.row.delFlag !== '1') || !(materialList.some((item) => { return item.code === formHeader.materialCode }))" size="small" placeholder="手工录入" />
                     </template>
                 </el-table-column>
                 <el-table-column label="结束值" width="140">
@@ -50,7 +50,7 @@
                         <span>结束值</span>
                     </template>
                     <template slot-scope="scope">
-                        <el-input v-model="scope.row.endValue" type="number" :disabled="!(isRedact && scope.row.status !== 'submit' && scope.row.status !== 'checked' && scope.row.delFlag !== '1') || !(formHeader.materialCode === 'SS02010001' || formHeader.materialCode === 'SS02060001')" size="small" placeholder="手工录入" />
+                        <el-input v-model="scope.row.endValue" type="number" :disabled="!(isRedact && scope.row.status !== 'submit' && scope.row.status !== 'checked' && scope.row.delFlag !== '1') || !(materialList.some((item) => { return item.code === formHeader.materialCode }))" size="small" placeholder="手工录入" />
                     </template>
                 </el-table-column>
                 <el-table-column label="数量" width="90" show-overflow-tooltip>
@@ -64,7 +64,7 @@
                 <el-table-column label="操作时间" prop="created" show-overflow-tooltip />
                 <el-table-column label="操作" width="70" fixed="right">
                     <template slot-scope="scope">
-                        <el-button class="delBtn" type="text" icon="el-icon-delete" size="small" :disabled="formHeader.materialCode !== 'SS02010001' && formHeader.materialCode !== 'SS02060001' ? true : !(isRedact && scope.row.status !== 'submit' && scope.row.status !== 'checked' && scope.row.delFlag !== '1')" @click="delMateriel(scope.row)">
+                        <el-button class="delBtn" type="text" icon="el-icon-delete" size="small" :disabled="materialList.every((item) => { return item.code !== formHeader.materialCode }) ? true : !(isRedact && scope.row.status !== 'submit' && scope.row.status !== 'checked' && scope.row.delFlag !== '1')" @click="delMateriel(scope.row)">
                             删除
                         </el-button>
                     </template>
@@ -104,7 +104,8 @@
                 Materielstatus: '',
                 brine: [],
                 brineTankNo: [],
-                batchList: []
+                batchList: [],
+                materialList: []
             };
         },
         computed: {
@@ -128,6 +129,17 @@
             // this.GetBrine()
         },
         methods: {
+            GetMaterialList(formHeader) {
+                this.$http(`${SYSTEMSETUP_API.PARAMETERSLIST_API}`, 'POST', { types: ['zq_call_bom'], factory: formHeader['factory'] }).then(({ data }) => {
+                    if (data.code === 0) {
+                        this.materialList = data.dicList[0].prolist;
+                    } else {
+                        this.$errorToast(data.msg);
+                    }
+                }).catch(error => {
+                    console.log('catch data::', error);
+                });
+            },
             saveRul2() {
                 let ty = true;
                 if (this.MaterielDate.length !== 0) {
