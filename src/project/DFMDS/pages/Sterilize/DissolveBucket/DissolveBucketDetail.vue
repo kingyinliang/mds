@@ -259,10 +259,10 @@ export default class DissolveBucketDetail extends Vue {
                 })
                 this.historyInventoryDataGroup = data.data.historyItem
                 this.historyInventoryDataGroup.forEach(item => {
-                    if (item.moveType !== 'I') {
-                        this.$set(item, 'feedMaterial', this.importData.prodcutMaterial)
-                        this.$set(item, 'feedMaterialName', this.importData.prodcutMaterialName)
-                    }
+                    // if (item.moveType !== 'I') {
+                    //     this.$set(item, 'feedMaterial', this.importData.prodcutMaterial)
+                    //     this.$set(item, 'feedMaterialName', this.importData.prodcutMaterialName)
+                    // }
 
                     this.$set(item, 'potName', this.importData.potName)
                 })
