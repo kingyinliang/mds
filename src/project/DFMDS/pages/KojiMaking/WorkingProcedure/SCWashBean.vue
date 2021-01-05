@@ -2,9 +2,9 @@
     <div>
         <data-entry
             ref="dataEntry"
-            redact-auth="steSemiEdit"
-            save-auth="steSemiEdit"
-            submit-auth="steSemiSubmit"
+            redact-auth="kjSCWBEdit"
+            save-auth="kjSCWBSave"
+            submit-auth="kjSCWBSubmit"
             :order-status="formHeader.statusName"
             :status-title="'工序状态'"
             :header-base="headerBase"
@@ -19,10 +19,10 @@
                 <wash-bean-material-apply ref="washBeanMaterialApply" :is-status="washBeanMaterialApplyStatus" :is-redact="data.isRedact" :sieve-total-num="sieveTotalNum" @setMaterialTable="setMaterialTable" />
             </template>
             <template slot="2" slot-scope="data">
-                <wash-bean-material-craft ref="washBeanMaterialCraft" :is-status="washBeanMaterialCraftStatus" :is-redact="data.isRedact" :set-material-table-data="setMaterialTableData" @changeSieveTotalNum="changeSieveTotalNum" />
+                <wash-bean-material-craft ref="washBeanMaterialCraft" craft-add="kjSCWBControlAdd" :is-status="washBeanMaterialCraftStatus" :is-redact="data.isRedact" :set-material-table-data="setMaterialTableData" @changeSieveTotalNum="changeSieveTotalNum" />
             </template>
             <template slot="3" slot-scope="data">
-                <koji-exc-record ref="excRecord" :is-redact="data.isRedact" :form-header="formHeader" />
+                <koji-exc-record ref="excRecord" :is-redact="data.isRedact" exp-add="kjSCWBExpAdd" :form-header="formHeader" />
             </template>
             <template slot="4" slot-scope="data">
                 <koji-text-record ref="textRecord" :is-redact="data.isRedact" />

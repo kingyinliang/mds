@@ -3,7 +3,7 @@
         <mds-card title="人员统计" :name="'productPeople'">
             <template slot="titleBtn">
                 <div style="float: right;">
-                    <el-button type="primary" size="small" :disabled="!isRedact" @click="addNewDataRow()">
+                    <el-button v-if="isAuth('kjUserAdd')" type="primary" size="small" :disabled="!isRedact" @click="addNewDataRow()">
                         新增
                     </el-button>
                 </div>
@@ -56,11 +56,11 @@
                             </span>
                             <span v-if="isRedact && scope.row.userType !== 'EXTERNAL' && scope.row.userType !== 'TEMP'" style="cursor: pointer;" :disabled="!(isRedact && status !== 'C' && status !== 'D' && status !== 'P' && status !=='M')" :style="{cursor:!(isRedact && status !== 'C' && status !== 'D' && status !== 'P' && status !=='M')?'not-allowed':'pointer'}" @click="selectUser(scope.row)">
                                 <em v-for="(item, index) in scope.row.userList" :key="index">{{ item }}{{ index | userListFilter(scope.row.userList.length) }}</em>
-                                <em>点击选择人员</em>
+                                <em>{{ scope.row.userList.length!==0?`，`:`` }}点击选择人员</em>
                             </span>
                             <span v-if="isRedact && (scope.row.userType === 'EXTERNAL' || scope.row.userType === 'TEMP')" style="cursor: pointer;" :disabled="!(isRedact && status !== 'C' && status !== 'D' && status !== 'P' && status !=='M')" :style="{cursor:!(isRedact && status !== 'C' && status !== 'D' && status !== 'P' && status !=='M')?'not-allowed':'pointer'}" @click="dayLaborer(scope.row)">
                                 <em v-for="(item, index) in scope.row.userList" :key="index">{{ item }}{{ index | userListFilter(scope.row.userList.length) }}</em>
-                                <em>点击输入人员</em>
+                                <em>{{ scope.row.userList.length!==0?`，`:`` }}点击选择人员</em>
                             </span>
                         </div>
                     </template>
@@ -154,7 +154,7 @@ import _ from 'lodash';
     },
     filters: {
         userListFilter(index, len) {
-            return index < len - 1 ? '，' : '';
+            return index < len - 1 ? '、' : '';
         }
     }
 })

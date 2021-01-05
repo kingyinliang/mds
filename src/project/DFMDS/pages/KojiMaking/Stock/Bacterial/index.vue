@@ -3,7 +3,7 @@
         <query-table
             ref="queryTable"
             :is-query-form-show="false"
-            query-auth="steSplitQuery"
+            query-auth="strainQuery"
             :type="'home'"
             :query-form-data="queryFormData"
             :list-interface="getDataList"
@@ -16,7 +16,7 @@
                             <div class="card-stock">
                                 <div class="card-stock__head">
                                     <span>{{ item.workShopName?`&{item.workShopName}:`:'' }} {{ `${item.wareHouseName || item.materialLocation? (item.wareHouseName || item.materialLocation) : ''}` }}</span>
-                                    <el-button class="floatr" type="text" @click="goDetail(item)">
+                                    <el-button v-if="isAuth('strainMxQuery')" class="floatr" type="text" @click="goDetail(item)">
                                         详情
                                     </el-button>
                                 </div>

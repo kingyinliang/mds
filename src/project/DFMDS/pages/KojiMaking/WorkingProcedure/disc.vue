@@ -1,9 +1,9 @@
 <template>
     <data-entry
         ref="dataEntry"
-        redact-auth="steSemiEdit"
-        save-auth="steSemiEdit"
-        submit-auth="steSemiSubmit"
+        redact-auth="kjYPEdit"
+        save-auth="kjYPSave"
+        submit-auth="kjYPSubmit"
         :status-title="'工序状态'"
         :order-status="formHeader.statusName"
         :header-base="headerBase"
@@ -21,7 +21,7 @@
             <product-in-storage ref="productInStorage" :is-status="productInStorageStatus" :pot-no-now="potNoNow" :pot-no-list="potNoList" :is-redact="data.isRedact" :form-header="formHeader" />
         </template>
         <template slot="3" slot-scope="data">
-            <koji-exc-record ref="excRecord" :is-redact="data.isRedact" :form-header="formHeader" />
+            <koji-exc-record ref="excRecord" :is-redact="data.isRedact" exp-add="kjYPExpAdd" :form-header="formHeader" />
         </template>
         <template slot="4" slot-scope="data">
             <koji-text-record ref="textRecord" :is-redact="data.isRedact" />

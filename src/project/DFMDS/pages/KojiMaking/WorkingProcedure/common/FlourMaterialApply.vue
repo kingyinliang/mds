@@ -4,7 +4,7 @@
             <template slot="titleBtn">
                 <el-form :inline="true" label-width="115px">
                     <el-form-item class="cleanMarginBottom floatr">
-                        <el-button type="primary" size="small" :disabled="!(isRedact &&isStatus !== 'C' && isStatus !== 'D' && isStatus !== 'P' && isStatus !== 'C' && isStatus !== 'D' && isStatus !== 'P')" @click="addY158DataRow()">
+                        <el-button v-if="isAuth('kjSFMaterialAdd')" type="primary" size="small" :disabled="!(isRedact &&isStatus !== 'C' && isStatus !== 'D' && isStatus !== 'P' && isStatus !== 'C' && isStatus !== 'D' && isStatus !== 'P')" @click="addY158DataRow()">
                             新增
                         </el-button>
                     </el-form-item>
@@ -48,7 +48,7 @@
                     <div class="card-stock">
                         <div class="card-stock__head">
                             <span>{{ `${item.workShopName}${item.wareHouseName ? '：'+ item.wareHouseName : ''}` }}</span>
-                            <el-button class="floatr" type="text" :disabled="!(isRedact && isStatus !== 'C' && isStatus !== 'D' && isStatus !== 'P')" @click="addRow(item)">
+                            <el-button v-if="isAuth('kjSFMaterialAdd')" class="floatr" type="text" :disabled="!(isRedact && isStatus !== 'C' && isStatus !== 'D' && isStatus !== 'P')" @click="addRow(item)">
                                 领用
                             </el-button>
                         </div>

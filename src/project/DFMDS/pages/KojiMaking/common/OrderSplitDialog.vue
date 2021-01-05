@@ -1,7 +1,7 @@
 <template>
     <el-dialog title="订单拆分" :close-on-click-modal="false" :visible.sync="dialogFormVisible" width="1200px" custom-class="dialog__class">
         <div style="text-align: right;">
-            <el-button v-if="isAuth('steSplit')" type="primary" size="small" @click="addSplitTable">
+            <el-button v-if="isAuth('kjSplitAdd')" type="primary" size="small" @click="addSplitTable">
                 新增
             </el-button>
         </div>
@@ -72,7 +72,7 @@
             <el-table-column label="操作时间" width="180" prop="changed" :show-overflow-tooltip="true" />
             <el-table-column label="操作" fixed="right" align="center" width="80">
                 <template slot-scope="scope">
-                    <el-button v-if="isAuth('steSplit')" type="text" icon="el-icon-delete" :disabled="scope.row.status !== 'S' && scope.row.status !== 'N'" @click="removeDataRow(scope.row)">
+                    <el-button v-if="isAuth('kjSplitDel')" type="text" icon="el-icon-delete" :disabled="scope.row.status !== 'S' && scope.row.status !== 'N'" @click="removeDataRow(scope.row)">
                         删除
                     </el-button>
                 </template>
@@ -80,7 +80,7 @@
         </el-table>
         <span slot="footer" class="dialog-footer">
             <el-button @click="dialogFormVisible = false">取消</el-button>
-            <el-button type="primary" :disabled="splitTable.length===0" @click="submitForm()">确定</el-button>
+            <el-button v-if="isAuth('kjSplitcnf')" type="primary" :disabled="splitTable.length===0" @click="submitForm()">确定</el-button>
         </span>
     </el-dialog>
 </template>
