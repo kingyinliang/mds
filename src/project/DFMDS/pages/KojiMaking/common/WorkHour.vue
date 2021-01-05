@@ -40,7 +40,7 @@
                         <span class="notNull">*</span>人员属性
                     </template>
                     <template slot-scope="scope">
-                        <el-select v-model="scope.row.userType" filterable placeholder="请选择" size="small" :disabled="!(isRedact && status !== 'C' && status !== 'D' && status !== 'P' && status !=='M')" clearable>
+                        <el-select v-model="scope.row.userType" filterable placeholder="请选择" size="small" :disabled="!(isRedact && status !== 'C' && status !== 'D' && status !== 'P' && status !=='M')" clearable @change="scope.row.userList=[]">
                             <el-option v-for="(iteam, index) in userTypeList" :key="index" :label="iteam.dictValue" :value="iteam.dictCode" />
                         </el-select>
                     </template>

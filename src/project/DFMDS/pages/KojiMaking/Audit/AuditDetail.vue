@@ -148,10 +148,10 @@
                 <audit-log :table-data="currentAudit" :verify-man="'verifyMan'" :verify-date="'verifyDate'" :status="true" :height="400" />
             </template>
             <template slot="custom_btn">
-                <el-button type="primary" size="small" @click="goDetail">
+                <el-button v-if="isAuth('kjCkMxQuery')" type="primary" size="small" @click="goDetail">
                     详情
                 </el-button>
-                <el-button v-if="formHeader.orderStatusName === '待审核' && isAuth('kojiCkPass')" type="primary" size="small" @click="pass()">
+                <el-button v-if="formHeader.orderStatusName === '待审核' && isAuth('kjPass')" type="primary" size="small" @click="pass()">
                     审核通过
                 </el-button>
             </template>
