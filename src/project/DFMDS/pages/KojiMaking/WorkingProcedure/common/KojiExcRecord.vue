@@ -2,7 +2,7 @@
     <mds-card :title="'录入数据单位：MIN'" :name="'exc'" :icon-bg="'#f05c4a'">
         <template slot="titleBtn">
             <div style="float: right;">
-                <el-button type="primary" size="small" :disabled="!isRedact" @click="AddExcDate()">
+                <el-button v-if="isAuth(expAdd)" type="primary" size="small" :disabled="!isRedact" @click="AddExcDate()">
                     新增
                 </el-button>
             </div>
@@ -116,6 +116,8 @@
     export default class ExcRecord extends Vue {
         @Prop({ type: Boolean, default: false }) isRedact;
         @Prop({ type: Object, default: {} }) formHeader;
+
+        @Prop({ default: '' }) expAdd: string;
 
         classesOptions: object[] = [];
         abnormalList: object[] = [];

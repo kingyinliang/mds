@@ -24,7 +24,7 @@
                         </el-input>
                     </el-form-item>
                     <el-form-item class="cleanMarginBottom floatr">
-                        <el-button type="primary" size="small" :disabled="!(isRedact && isStatus !== 'C' && isStatus !== 'D' && isStatus !== 'P')" @click="addSeiveBeanDataRow()">
+                        <el-button v-if="isAuth(craftAdd)" type="primary" size="small" :disabled="!(isRedact && isStatus !== 'C' && isStatus !== 'D' && isStatus !== 'P')" @click="addSeiveBeanDataRow()">
                             新增
                         </el-button>
                     </el-form-item>
@@ -164,7 +164,7 @@
             <template slot="titleBtn">
                 <el-form :inline="true" label-width="115px">
                     <el-form-item class="cleanMarginBottom floatr">
-                        <el-button type="primary" size="small" :disabled="!(isRedact && isStatus !== 'C' && isStatus !== 'D' && isStatus !== 'P'&& isStatus !== 'C' && isStatus !== 'D' && isStatus !== 'P')" @click="addWashBeanDataRow()">
+                        <el-button v-if="isAuth(craftAdd)" type="primary" size="small" :disabled="!(isRedact && isStatus !== 'C' && isStatus !== 'D' && isStatus !== 'P'&& isStatus !== 'C' && isStatus !== 'D' && isStatus !== 'P')" @click="addWashBeanDataRow()">
                             新增
                         </el-button>
                     </el-form-item>
@@ -299,6 +299,8 @@
         @Prop({ default: false }) isRedact: boolean;
         @Prop({ default: 'N' }) isStatus: string;
         @Prop({ default: [] }) setMaterialTableData;
+
+        @Prop({ default: '' }) craftAdd: string;
 
         $refs: {
             loanedPersonnel: HTMLFormElement;

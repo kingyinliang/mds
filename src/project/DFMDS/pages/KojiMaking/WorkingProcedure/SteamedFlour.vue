@@ -2,9 +2,9 @@
     <div>
         <data-entry
             ref="dataEntry"
-            redact-auth="steSemiEdit"
-            save-auth="steSemiEdit"
-            submit-auth="steSemiSubmit"
+            redact-auth="kjSFEdit"
+            save-auth="kjSFSave"
+            submit-auth="kjSFSubmit"
             :status-title="'工序状态'"
             :order-status="formHeader.statusName"
             :header-base="headerBase"
@@ -22,7 +22,7 @@
                 <flour-material-craft ref="flourMaterialCraft" :is-status="flourMaterialCraftStatus" :is-redact="data.isRedact" :set-material-table-data="setMaterialTableData" @changeSieveTotalNum="changeSieveTotalNum" />
             </template>
             <template slot="3" slot-scope="data">
-                <koji-exc-record ref="excRecord" :is-redact="data.isRedact" :form-header="formHeader" />
+                <koji-exc-record ref="excRecord" :is-redact="data.isRedact" exp-add="kjSFExpAdd" :form-header="formHeader" />
             </template>
             <template slot="4" slot-scope="data">
                 <koji-text-record ref="textRecord" :is-redact="data.isRedact" />

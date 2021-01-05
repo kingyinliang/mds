@@ -105,7 +105,7 @@
         <mds-card title="看曲记录" :name="'kojiGuard'">
             <template slot="titleBtn">
                 <div style="float: right;">
-                    <el-button type="primary" size="small" :disabled="!(isRedact && isStatus !== 'C' && isStatus !== 'D' && isStatus !== 'P')" @click="addNewKojiGuardRow">
+                    <el-button v-if="isAuth('kjYPContralAdd')" type="primary" size="small" :disabled="!(isRedact && isStatus !== 'C' && isStatus !== 'D' && isStatus !== 'P')" @click="addNewKojiGuardRow">
                         新增
                     </el-button>
                 </div>
@@ -535,7 +535,7 @@
         <mds-card title="曲料生长评价" :name="'kojiEvaluate'">
             <template slot="titleBtn">
                 <div style="float: right;">
-                    <el-button type="primary" size="small" :disabled="!(isRedact&& isStatus !== 'C' && isStatus !== 'D' && isStatus !== 'P')" @click="addNewKojiEvaluateRow">
+                    <el-button v-if="isAuth('kjYPContralAdd')" type="primary" size="small" :disabled="!(isRedact&& isStatus !== 'C' && isStatus !== 'D' && isStatus !== 'P')" @click="addNewKojiEvaluateRow">
                         新增
                     </el-button>
                 </div>
