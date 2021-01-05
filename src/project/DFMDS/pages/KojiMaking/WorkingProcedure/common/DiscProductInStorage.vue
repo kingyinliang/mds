@@ -36,7 +36,7 @@
                             v-model.number="scope.row.inStorageAmount"
                             size="small"
                             placeholder="请输入"
-                            :disabled="!isRedact"
+                            :disabled="!(isRedact && isStatus !== 'C' && isStatus !== 'D' && isStatus !== 'P')"
                         />
                     </template>
                 </el-table-column>
@@ -45,7 +45,7 @@
                         <span class="notNull">* </span>入库批次
                     </template>
                     <template slot-scope="scope">
-                        <el-input v-model.trim="scope.row.inStorageBatch" maxlength="10" size="small" placeholder="请输入" :disabled="!isRedact" />
+                        <el-input v-model.trim="scope.row.inStorageBatch" maxlength="10" size="small" placeholder="请输入" :disabled="!(isRedact && isStatus !== 'C' && isStatus !== 'D' && isStatus !== 'P')" />
                     </template>
                 </el-table-column>
 
@@ -54,13 +54,13 @@
                         <span class="notNull">* </span>单位
                     </template>
                     <template slot-scope="scope">
-                        {{ scope.row.unit }}
+                        {{ scope.row.unitName }}
                     </template>
                 </el-table-column>
                 <el-table-column label="备注" prop="remark" min-width="200">
                     <template slot-scope="scope">
                         <el-tooltip :disabled="!scope.row.remark" effect="dark" :content="scope.row.remark" placement="top">
-                            <el-input v-model.trim="scope.row.remark" size="small" placeholder="请输入" :disabled="!(isRedact && scope.row.checkStatus !== 'C' && scope.row.checkStatus !== 'D' && scope.row.checkStatus !== 'P')" />
+                            <el-input v-model.trim="scope.row.remark" size="small" placeholder="请输入" :disabled="!(isRedact && isStatus !== 'C' && isStatus !== 'D' && isStatus !== 'P')" />
                         </el-tooltip>
                     </template>
                 </el-table-column>
@@ -83,7 +83,8 @@
 <script lang="ts">
     import { Vue, Component, Prop, Watch } from 'vue-property-decorator';
     import { KOJI_API, AUDIT_API } from 'common/api/api';
-    import { dateFormat, getUserNameNumber } from 'utils/utils';
+    // import { dataEntryData } from 'utils/utils';
+    import _ from 'lodash';
     // import _ from 'lodash';
 
     @Component({
@@ -100,6 +101,7 @@
         @Prop({ type: Array, default: () => { return [] } }) potNoList: OptionPotNoList[];
 
         @Prop({ type: Boolean, default: false }) isRedact;
+        @Prop({ default: 'N' }) isStatus: string;
         @Prop({ type: String, default: '' }) status;
         @Prop({ default: '' }) potNoNow: number|string; // 发酵罐/池号
 
@@ -108,7 +110,7 @@
 
         // 常有变数
         currentFormDataGroup: CurrentDataTable[] = [] // 主 data
-        // orgFormDataGroup: CurrentDataTable[] = [] // 主 data 复制
+        orgFormDataGroup: CurrentDataTable[] = [] // 主 data 复制
 
 
         // 发酵罐选择改变 触发字段变更值
@@ -152,7 +154,7 @@
             // 生产入库
             this.getKojiStatus()
             // 审核日志
-            this.getAudit(this.targetOrderObj, 'KJ_INSTORAGE');
+            this.getAudit(this.targetOrderObj);
         }
 
         // 生产入库
@@ -162,23 +164,19 @@
             }).then(({ data }) => {
                 console.log('生产入库')
                 console.log(data)
+                this.currentFormDataGroup = [];
+                this.orgFormDataGroup = [];
                 this.$set(this.currentFormDataGroup, 0, [])
+                this.$set(this.orgFormDataGroup, 0, [])
                 if (data.data) {
-                    this.currentFormDataGroup[0] = data.data
                     this.$set(this.currentFormDataGroup, 0, data.data)
-
-                    this.$set(this.currentFormDataGroup[0], 'orderNo', this.targetOrderObj.orderNo)
-                    this.$set(this.currentFormDataGroup[0], 'kojiOrderNo', this.targetOrderObj.kojiOrderNo)
+                    this.$set(this.orgFormDataGroup, 0, JSON.parse(JSON.stringify(this.currentFormDataGroup[0])))
                 }
             });
         }
 
         // 审核日志
-        getAudit(formHeader, verifyType) {
-            console.log(verifyType);
-            // AUDIT_API.AUDIT_LOG_LIST_API({ orderNo: formHeader.orderNo, verifyType: verifyType }).then(({ data }) => {
-            //     this.currentAudit = data.data
-            // })
+        getAudit(formHeader) {
             AUDIT_API.STE_AUDIT_LOG_API({ orderNo: formHeader.orderNo, splitOrderNo: formHeader.kojiOrderNo, verifyType: ['KJ_INSTORAGE', 'INSTORAGE'] }).then(({ data }) => {
                 this.currentAudit = data.data;
             });
@@ -198,16 +196,15 @@
 
         savedData() {
             // const instorageDelete = [];
-            // const instorageInsert = [];
-            // const instorageUpdate = [];
-            // dataEntryData(formHeader, this.currentFormDataGroup, this.orgFormDataGroup, instorageDelete, instorageInsert, instorageUpdate);
-            if (this.currentFormDataGroup[0]) {
-                this.$set(this.currentFormDataGroup[0], 'changed', dateFormat(new Date(), 'yyyy-MM-dd hh:mm'))
-                this.$set(this.currentFormDataGroup[0], 'changer', getUserNameNumber())
+            const instorageInsert: CurrentDataTable[] = [];
+            const instorageUpdate: CurrentDataTable[] = [];
+            if (!_.isEqual(this.currentFormDataGroup[0], this.orgFormDataGroup[0])) {
+                this.$set(this.currentFormDataGroup[0], 'orderNo', this.targetOrderObj.orderNo)
+                this.$set(this.currentFormDataGroup[0], 'kojiOrderNo', this.targetOrderObj.kojiOrderNo)
+                instorageUpdate.push(this.currentFormDataGroup[0]);
             }
 
-
-            return this.currentFormDataGroup[0]
+            return instorageInsert[0] ? instorageInsert[0] : instorageUpdate[0] ? instorageUpdate[0] : null
         }
 
         //  rowDelFlag
@@ -234,6 +231,7 @@ interface CurrentDataTable{
     strainAmount?: string;
     unit?: string;
     unitName?: string;
+    delFlag?: number;
 }
 
 interface OrderObject{
@@ -264,6 +262,7 @@ interface OrderObject{
     status?: string;
     workShop?: string;
     workShopName?: string;
+
 }
     interface StatusObj {
         semiMaterialStatus?: string;

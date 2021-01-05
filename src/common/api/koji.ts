@@ -140,6 +140,10 @@ const KOJI_API = {
      * @property {string} KOJI_MATERIAL_GET_EDIT_QUERY_API 制曲车间-修改编辑物料领用
      */
     KOJI_MATERIAL_GET_EDIT_QUERY_API: params => httpProxy('/kojiMaterial/update', 'POST', params),
+    /**
+     * @property KOJI_MATERIAL_GET_BOM_API 制曲车间-BOM物料
+     */
+    KOJI_MATERIAL_GET_BOM_API: params => httpProxy('/kojiMaterial/get/bom', 'GET', params),
 
     /**
      * @property ORDER_SPLITE_QUERY_BY_ID_API 制曲车间-订单拆分-根据车间订单Id查询曲房订单明细

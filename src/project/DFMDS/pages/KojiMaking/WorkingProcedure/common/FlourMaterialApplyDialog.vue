@@ -23,7 +23,7 @@
                     <el-input v-model.number="dataForm.amount" placeholder="手动输入" @input="calcStockAmount" />
                 </el-form-item>
                 <el-form-item label="单位：">
-                    <el-input v-model="dataForm.unit" placeholder="NA" disabled />
+                    <el-input v-model="dataForm.unitName" placeholder="NA" disabled />
                 </el-form-item>
                 <el-form-item label="面粉厂家：">
                     <el-input v-model="dataForm.supplier" placeholder="NA" disabled />
@@ -151,25 +151,37 @@
                 });
             }
 
-            console.log(Data, '==============')
+            const { data: { data: result } } = await KOJI_API.KOJI_MATERIAL_GET_BOM_API({
+                orderNo: this.formHeader.orderNo,
+                dictType: 'KOJI_WHEAT_MATERIAL'
+            });
+            console.log(result, 'result=-=-========================================')
 
             this.dataForm = {
                 id: Data.id,
                 materialHL: Data.wareHouseNo || Data.materialLocation,
                 wareHouseNo: Data.wareHouseNo,
+                processCode: formHeader.textStage,
                 materialLocation: Data.materialLocation,
                 batch: Data.batch,
-                material: `${String(Data.materialName)} ${String(Data.materialCode)}`,
-                materialCode: Data.materialCode,
-                materialName: Data.materialName,
-                materialLink: Data.materialCode ? Data.materialName + Data.materialCode : '',
-                materialType: 'FLOUR',
+                // material: `${String(Data.materialName)} ${String(Data.materialCode)}`,
+                // materialCode: Data.materialCode,
+                // materialName: Data.materialName,
+                // materialLink: Data.materialCode ? Data.materialName + Data.materialCode : '',
+                // materialType: 'FLOUR',
+                material: `${String(result.materialName)} ${String(result.materialCode)}`,
+                materialCode: result.materialCode,
+                materialName: result.materialName,
+                materialLink: result.materialCode ? `${String(result.materialName)} ${String(result.materialCode)}` : '',
+                materialType: result.materialType,
+                storageType: 'FLOUR', // 写死
                 amount: Data.amount,
                 impurityAmount: Data.impurityAmount || 0,
                 supplier: Data.supplier,
                 stockAmount: Data.stockAmount || Data.currentAmount,
                 operationMans: Data.operationMans || '',
-                unit: Data.unitName,
+                unit: Data.unit,
+                unitName: Data.unitName,
                 remark: Data.remark,
                 changer: getUserNameNumber(),
                 changed: dateFormat(new Date(), 'yyyy-MM-dd hh:mm:ss'),
@@ -209,9 +221,11 @@
             this.$refs.dataForm.validate(valid => {
                 if (valid) {
                     if (this.type === 'add') {
+                        const params = JSON.parse(JSON.stringify(this.dataForm))
+                        delete params.id;
                         KOJI_API.KOJI_MATERIAL_GET_ADD_QUERY_API({
                             insertDto: [{
-                                ...this.dataForm,
+                                ...params,
                                 impurityAmount: this.dataForm.impurityAmount || 0
                             }]
                         }).then(() => {
@@ -293,6 +307,8 @@
         materialName?: string;
         materialLink?: string;
         materialType?: string;
+        storageType?: string;
+        processCode?: string;
         amount?: string;
         impurityAmount?: string|number;
         supplier?: string;

@@ -22,7 +22,7 @@
                     <el-input v-model.number="dataForm.amount" placeholder="请输入" @input="calcStockAmount" />
                 </el-form-item>
                 <el-form-item label="单位：">
-                    <el-input v-model="dataForm.unit" placeholder="请输入" disabled />
+                    <el-input v-model="dataForm.unitName" placeholder="请输入" disabled />
                 </el-form-item>
                 <el-form-item label="添加人：" prop="operationMans">
                     <el-tooltip class="item" effect="dark" :content="dataForm.operationMans + '点击选择人员'" placement="top">
@@ -114,7 +114,8 @@
                 this.workShopList = data.data;
                 if (data.data.length !== 0 && type === 'add') {
                     this.dataForm.materialLocation = data.data[0]['materialLocation'];
-                    this.dataForm.unit = data.data[0]['unitName'];
+                    this.dataForm.unit = data.data[0]['unit'];
+                    this.dataForm.unitName = data.data[0]['unitName'];
                 }
                 // 默认选中第一个选项 库位详细信息查询
                 this.checkShopDetail()
@@ -178,19 +179,26 @@
             if (type !== 'add') {
                 Data = infoData;
             }
+            console.log('infoData1111111')
+            console.log(infoData)
 
             this.dataForm = {
                 id: Data.id,
                 materialLocation: Data.materialLocation,
                 batch: Data.batch,
+                // processCode: this.formHeader.textStage,
+                processCode: 'ZM', // 写死
                 materialCode: Data.materialCode,
                 materialName: Data.materialName,
-                materialLink: Data.materialCode ? String(Data.materialName) + String(Data.materialCode) : '',
-                materialType: 'Y158',
+                materialLink: Data.materialCode ? `${String(Data.materialName)} ${String(Data.materialCode)}` : '',
+                materialType: 'ZHZC', // 写死
+                storageType: 'Y158', // 写死
                 amount: Data.amount,
                 operationMans: Data.operationMans || '',
                 stockAmount: Data.stockAmount || Data.currentAmount,
-                unit: Data.unitName,
+                unit: Data.unit,
+                unitName: Data.unitName,
+                storageId: Data.storageId,
                 remark: Data.remark,
                 changer: getUserNameNumber(),
                 changed: dateFormat(new Date(), 'yyyy-MM-dd hh:mm:ss'),
@@ -216,6 +224,7 @@
         }
 
         batchChange() {
+            console.log(this.batchList)
             this.batchList.map(item => {
                 if (item.batch === this.dataForm.batch) {
                     this.dataForm.materialLink = String(item.materialName) + String(item.materialCode);
@@ -225,6 +234,8 @@
                     this.STOCK_AMOUNT = Number(item.currentAmount);
                     this.dataForm.amount = '';
                     this.dataForm.storageId = item.id;
+                    this.dataForm.unitName = item.unitName;
+                    this.dataForm.unit = item.unit;
                 }
             })
         }
@@ -234,8 +245,10 @@
             this.$refs.dataForm.validate(valid => {
                 if (valid) {
                     if (this.type === 'add') {
+                        const params = JSON.parse(JSON.stringify(this.dataForm))
+                        delete params.id;
                         KOJI_API.KOJI_MATERIAL_GET_ADD_QUERY_API({
-                            insertDto: [this.dataForm]
+                            insertDto: [params]
                         }).then(() => {
                             this.visible = false;
                             this.$emit('success', this.dataForm);
@@ -275,6 +288,8 @@
         stockAmount?: string;
         supplier?: string;
         currentAmount?: string;
+        unitName?: string;
+        unit?: string;
     }
 
     interface DataForm {
@@ -282,10 +297,12 @@
         materialLocation?: string;
         batch?: string;
         material?: string;
+        processCode?: string;
         materialCode?: string;
         materialName?: string;
         materialLink?: string;
         materialType?: string;
+        storageType?: string;
         amount?: string;
         supplier?: string;
         orderNo?: string;

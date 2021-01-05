@@ -9,7 +9,7 @@
             </el-table-column>
             <el-table-column label="批次" width="100" :show-overflow-tooltip="true" prop="batch" />
             <el-table-column label="移动类型" width="100" :show-overflow-tooltip="true" prop="moveTypeName" />
-            <el-table-column :label="stockType==='Y158'?'数量(BOX)':'数量(KG)'" width="100" :show-overflow-tooltip="true" prop="moveAmount" align="right" />
+            <el-table-column :label="stockType==='Y158'?'数量(盒)':'数量(千克)'" width="100" :show-overflow-tooltip="true" prop="moveAmount" align="right" />
             <el-table-column label="领用订单" width="100" :show-overflow-tooltip="true" prop="orderNo" />
             <el-table-column label="调整说明" width="100" :show-overflow-tooltip="true" prop="adjustInfo" />
             <el-table-column label="操作人" width="100" :show-overflow-tooltip="true" prop="changer" />

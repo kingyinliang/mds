@@ -262,7 +262,7 @@
         //保存校验
         ruleFn(): boolean {
             for (const item of this.tableData.filter(it => it.delFlag !== 1)) {
-                if (!item.useType || !item.useAmount || !item.batch || !item.manufactor) {
+                if (!item.useType || item.useAmount === '' || item.useAmount === null || !item.batch || !item.manufactor) {
                     this.$warningToast('请填写必填项');
                     return false
                 }

@@ -3,7 +3,11 @@
         <mds-card :title="'调酱列表'" :name="'list1'">
             <el-table header-row-class-name="tableHead" class="newTable" :data="table1">
                 <el-table-column type="index" label="序号" width="50" fixed align="center" />
-                <el-table-column label="状态" prop="openFlagName" min-width="50" :show-overflow-tooltip="true" />
+                <el-table-column label="状态" prop="openFlagName" min-width="80" :show-overflow-tooltip="true">
+                    <template slot-scope="scope">
+                        {{ scope.row.openFlagName === '否'? '未开罐' : '已开罐' }}
+                    </template>
+                </el-table-column>
                 <el-table-column label="车间" prop="workShopName" min-width="100" :show-overflow-tooltip="true" />
                 <el-table-column label="容器号" prop="holderName" min-width="80" :show-overflow-tooltip="true" />
                 <el-table-column label="领用说明" prop="receiveMaterial" min-width="120" :show-overflow-tooltip="true">
@@ -57,25 +61,25 @@
             </el-table>
         </mds-card>
         <mds-card :title="'鲜香泡豆'" :name="'list2'">
-            <el-table header-row-class-name="tableHead" class="newTable" :data="table2">
+            <el-table header-row-class-name="tableHead" class="newTable" :data="table2" :row-class-name="rowDelFlag">
                 <el-table-column type="index" label="序号" width="50" fixed align="center" />
                 <el-table-column label="容器号" prop="openFlagName" min-width="150" :show-overflow-tooltip="true">
                     <template slot-scope="scope">
-                        <el-select v-model="scope.row.fermentorNo" :disabled="!isRedact" placeholder="请选择" size="small" filterable clearable @change="fermentorNoChange(scope.row)">
-                            <el-option v-for="(item, index) in holderArr" :key="index" :label="item.holderName" :value="item.holderId" />
+                        <el-select v-model="scope.row.fermentorNo" :disabled="!isRedact" placeholder="请选择" size="small" filterable clearable @change="fermentorNoChange(scope.row, holderPickArr)">
+                            <el-option v-for="(item, index) in holderPickArr" :key="index" :label="item.holderName" :value="item.holderId" />
                         </el-select>
                     </template>
                 </el-table-column>
                 <el-table-column label="添加物料" prop="addMaterialCode" min-width="150" :show-overflow-tooltip="true">
                     <template slot-scope="scope">
-                        <el-select v-model="scope.row.addMaterialCode" :disabled="!isRedact" placeholder="请选择" size="small" filterable clearable>
+                        <el-select v-model="scope.row.addMaterialCode" :disabled="!isRedact" placeholder="请选择" size="small" filterable clearable @change="materialChange(scope.row)">
                             <el-option v-for="(item, index) in scope.row.addMaterialArr" :key="index" :label="item.materialName+' ' + item.materialCode" :value="item.materialCode" />
                         </el-select>
                     </template>
                 </el-table-column>
                 <el-table-column label="单位" prop="openFlagName" min-width="50" :show-overflow-tooltip="true">
                     <template slot-scope="scope">
-                        {{ scope.row.unit }}}
+                        {{ scope.row.unit }}
                     </template>
                 </el-table-column>
                 <el-table-column label="库存数量" prop="stockAmount" min-width="100" :show-overflow-tooltip="true" />
@@ -90,7 +94,11 @@
                         <el-input v-model="scope.row.remark" :disabled="!isRedact" placeholder="手动输入" size="small" />
                     </template>
                 </el-table-column>
-                <el-table-column label="领用数量" prop="receiveMaterial" min-width="100" :show-overflow-tooltip="true" />
+                <el-table-column label="领用数量" prop="receiveMaterial" min-width="100" :show-overflow-tooltip="true">
+                    <template slot-scope="scope">
+                        <el-input v-model="scope.row.realAddAmount" :disabled="!(isRedact)" size="small" placeholder="请输入" />
+                    </template>
+                </el-table-column>
                 <el-table-column label="操作" fixed="right" width="70">
                     <template slot-scope="scope">
                         <el-button :disabled="!(isRedact)" class="delBtn" type="text" icon="el-icon-delete" size="mini" @click="del(scope.row)">
@@ -142,7 +150,7 @@
                 <el-table-column type="index" label="序号" width="50" fixed align="center" />
                 <el-table-column label="容器号" prop="receiveMaterial" min-width="120" :show-overflow-tooltip="true">
                     <template slot-scope="scope">
-                        <el-select v-model="scope.row.fermentorNo" placeholder="请选择" size="small" :disabled="!isRedact" @change="fermentorNoChange(scope.row)">
+                        <el-select v-model="scope.row.fermentorNo" placeholder="请选择" size="small" :disabled="!isRedact" @change="fermentorNoChange(scope.row, holderArr)">
                             <el-option v-for="(item, index) in holderArr" :key="index" :label="item.holderName" :value="item.holderId" />
                         </el-select>
                     </template>
@@ -200,14 +208,13 @@
 
         spanArr: number[] = []
 
+        holderPickArr: PotObj[] = []
         holderArr: PotObj[] = []
 
         init(formHeader) {
             this.getSelect()
             this.getSauce(formHeader)
-            this.getList('PICKLED', formHeader)
-            this.getList('RECEIVE', formHeader)
-            this.getList('SAUCE', formHeader)
+            this.getList(formHeader)
         }
 
         // 获取调酱列表
@@ -220,24 +227,32 @@
         }
 
         // 获取鲜香泡豆、调配物料、超期酱
-        getList(str, formHeader) {
-            FER_API.FER_DEPLOY_SAUCE_DETAIL_LIST_API({
-                mixMaterialType: str,
+        getList(formHeader) {
+            FER_API.FER_DEPLOY_SAUCE_DETAIL_PICKLED_LIST_API({
                 openPotNo: formHeader.openPotNo
             }).then(({ data }) => {
-                if (str === 'PICKLED') {
-                    this.table2 = data.data
-                } else if (str === 'RECEIVE') {
-                    this.table3 = data.data
-                    this.spanArr = merge(this.table3, 'addMaterialCode')
-                } else if (str === 'SAUCE') {
-                    this.table4 = data.data
-                }
+                this.table2 = data.data
+            })
+            FER_API.FER_DEPLOY_SAUCE_DETAIL_MATERIAL_LIST_API({
+                openPotNo: formHeader.openPotNo
+            }).then(({ data }) => {
+                this.table3 = data.data
+                this.spanArr = merge(this.table3, 'addMaterialCode')
+            })
+            FER_API.FER_DEPLOY_SAUCE_DETAIL_SAUCE_LIST_API({
+                openPotNo: formHeader.openPotNo
+            }).then(({ data }) => {
+                this.table4 = data.data
             })
         }
 
         // 获取下拉
         getSelect() {
+            FER_API.FER_OPEN_POT_DETAIL_LIST_API({
+                holderType: '025'
+            }).then(({ data }) => {
+                this.holderPickArr = data.data
+            })
             FER_API.FER_OPEN_POT_DETAIL_LIST_API({
                 judgeResult: 'CQ'
             }).then(({ data }) => {
@@ -246,8 +261,8 @@
         }
 
         // 超期酱修改容器号
-        fermentorNoChange(row) {
-            const filterArr: (any) = this.holderArr.filter(item => item.holderId === row.fermentorNo)// eslint-disable-line
+        fermentorNoChange(row, data) {
+            const filterArr: (any) = data.filter(item => item.holderId === row.fermentorNo)// eslint-disable-line
             row.addMaterialCode = ''
             row.addMaterialArr = filterArr[0].ferInStorageList
         }

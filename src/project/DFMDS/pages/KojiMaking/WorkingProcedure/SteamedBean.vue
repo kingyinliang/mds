@@ -16,10 +16,10 @@
             @success="getOrderList"
         >
             <template slot="1" slot-scope="data">
-                <steamed-bean-craft ref="steamedBeanCraft" :is-redact="data.isRedact" />
+                <steamed-bean-craft ref="steamedBeanCraft" :is-status="steamedBeanCraftStatus" :is-redact="data.isRedact" />
             </template>
             <template slot="2" slot-scope="data">
-                <steamed-in-storage ref="steamedInStorage" :pot-no-now="potNodNow" :is-redact="data.isRedact" />
+                <steamed-in-storage ref="steamedInStorage" :is-status="steamedInStorageStatus" :pot-no-now.sync="potNoNow" :is-redact="data.isRedact" />
             </template>
             <template slot="3" slot-scope="data">
                 <koji-exc-record ref="excRecord" :is-redact="data.isRedact" :form-header="formHeader" />
@@ -57,8 +57,6 @@
             dataEntry: HTMLFormElement;
         }
 
-        orderIndex=['已同步', '已保存', '待审核', '已审核', '已过账', '已退回', '未录入']
-
         formHeader: OrderData = {};
         jumpFromAudit=false // is from audit ?
         // 泡豆罐list
@@ -66,15 +64,19 @@
 
         // 当前罐号
         potIdNow: string|number = '';
-        potNodNow: string|number = '';
+        potNoNow: string|number = '';
+
+        steamedBeanCraftStatus='N';
+        steamedInStorageStatus='N';
 
         @Watch('formHeader.potNo', { immediate: true, deep: true })
         onChangeValue(newVal: number| string) {
             if (newVal) {
-                console.log('newVal')
-                console.log(newVal)
                 this.potIdNow = newVal
-                this.potNodNow = this.scanList.filter(item => item.id === newVal)[0].holderNo as string
+                if (this.scanList.length !== 0) {
+                    this.potNoNow = this.scanList.filter(item => item.id === newVal)[0].holderNo as string
+                }
+
             }
         }
 
@@ -156,11 +158,14 @@
             }).then(({ data }) => {
 
                 this.$store.commit('koji/updateHouseTag', data.data);
-                this.tabs[0].status = data.data.steamBeanCraftName
-                this.tabs[1].status = data.data.steamBeanInStorageName
-                this.$refs.dataEntry.updateTabs();
-                this.$set(this.formHeader, 'statusName', this.orderIndex[Math.min(this.orderIndex.indexOf(data.data.steamBeanCraftName), this.orderIndex.indexOf(data.data.steamBeanInStorageName))])
+                this.tabs[0].status = data.data.steamBeanCraft
+                this.tabs[1].status = data.data.steamBeanInStorage
 
+                this.steamedBeanCraftStatus = data.data.steamBeanCraft;
+                this.steamedInStorageStatus = data.data.steamBeanInStorage;
+
+                this.$refs.dataEntry.updateTabs();
+                this.$set(this.formHeader, 'statusName', data.data.steamBeanStatusName);
             })
         }
 
@@ -168,11 +173,16 @@
             return [this.$refs.steamedBeanCraft.ruleSubmit, this.$refs.steamedInStorage.ruleSubmit, this.$refs.excRecord.ruleSubmit]
         }
 
-        mounted() {
+        async mounted() {
+            // 跳转用
             if (typeof this.$route.params.order !== 'undefined') {
-                this.jumpFromAudit = true
+                this.jumpFromAudit = true;
+                setTimeout(() => {
+                    this.$refs.dataEntry.activeName = this.$route.params.activeName;
+                }, 2000);
             }
-            this.getOrderList()
+            await this.getScanList();
+            await this.getOrderList()
         }
 
         // 查询表头
@@ -185,7 +195,11 @@
                     orderNo: this.jumpFromAudit ? this.$route.params.order : this.$store.state.koji.orderScInfo.orderNo || ''
                 }).then(({ data: res }) => {
                     this.potIdNow = res.data.beanJarId
-
+                    console.log(res)
+                    // this.potNoNow = this.scanList.filter(item => item.id === res.data.beanJarId)[0].holderNo as string
+                    if (this.scanList.length !== 0 && res.data.beanJarId !== '') {
+                            this.potNoNow = this.scanList.filter(item => item.id === res.data.beanJarId)[0].holderNo as string
+                    }
                     this.formHeader = {
                         ...data.data,
                         // potNo: queryInStorageData && queryInStorageData[0] ? queryInStorageData[0].scPotNo : '',
@@ -196,7 +210,7 @@
                     this.getHouseTag();
                     this.formHeader.textStage = 'ZD';
                     this.formHeader.factoryName = JSON.parse(sessionStorage.getItem('factory') || '{}').deptShort;
-                    this.getScanList();
+
                     this.$refs.steamedBeanCraft.init(this.formHeader);
                     this.$refs.steamedInStorage.init(this.formHeader);
                     this.$refs.excRecord.init(this.formHeader, 'ZD');

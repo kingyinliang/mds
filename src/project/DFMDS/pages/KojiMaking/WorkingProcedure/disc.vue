@@ -15,10 +15,10 @@
         @success="getOrderList"
     >
         <template slot="1" slot-scope="data">
-            <craft-control ref="craftControl" :is-redact="data.isRedact" :form-header="formHeader" />
+            <craft-control ref="craftControl" :is-status="craftControlStatus" :is-redact="data.isRedact" :form-header="formHeader" />
         </template>
         <template slot="2" slot-scope="data">
-            <product-in-storage ref="productInStorage" :pot-no-now="potNoNow" :pot-no-list="potNoList" :is-redact="data.isRedact" :form-header="formHeader" />
+            <product-in-storage ref="productInStorage" :is-status="productInStorageStatus" :pot-no-now="potNoNow" :pot-no-list="potNoList" :is-redact="data.isRedact" :form-header="formHeader" />
         </template>
         <template slot="3" slot-scope="data">
             <koji-exc-record ref="excRecord" :is-redact="data.isRedact" :form-header="formHeader" />
@@ -56,13 +56,14 @@
             textRecord: HTMLFormElement; // 文本记录
         }
 
-        orderIndex=['已同步', '已保存', '待审核', '已审核', '已过账', '已退回', '未录入']
         formHeader: OrderData = {};
         fermentPotNoOptions: OptionObj[] = [];
         classesOptions: object[] = [];
 
         jumpFromAudit=false // is from audit ?
 
+        craftControlStatus='N';
+        productInStorageStatus='N';
         headerBase: HeaderBase[] = [
             {
                 type: 'p',
@@ -159,10 +160,17 @@
                 kojiOrderNo: this.formHeader.kojiOrderNo
             }).then(({ data }) => {
                 this.$store.commit('koji/updateHouseTag', data.data);
-                this.tabs[0].status = data.data.discCraftName
-                this.tabs[1].status = data.data.discInStorageName
+                this.tabs[0].status = data.data.discCraft
+                this.tabs[1].status = data.data.discInStorage
+
+                this.craftControlStatus = data.data.discCraft;
+                this.productInStorageStatus = data.data.discInStorage;
+                console.log('this.craftControlStatus')
+                console.log(this.craftControlStatus)
+                console.log('this.productInStorageStatus')
+                console.log(this.productInStorageStatus)
                 this.$refs.dataEntry.updateTabs();
-                this.$set(this.formHeader, 'statusName', this.orderIndex[Math.min(this.orderIndex.indexOf(data.data.discCraftName), this.orderIndex.indexOf(data.data.discInStorageName))])
+                this.$set(this.formHeader, 'statusName', data.data.discStatusName);
             })
         }
 
@@ -172,8 +180,12 @@
         }
 
         mounted() {
+            // 跳转用
             if (typeof this.$route.params.order !== 'undefined') {
                 this.jumpFromAudit = true
+                setTimeout(() => {
+                    this.$refs.dataEntry.activeName = this.$route.params.activeName;
+                }, 2000);
             }
 
             // [下拉]获取溶解罐选项

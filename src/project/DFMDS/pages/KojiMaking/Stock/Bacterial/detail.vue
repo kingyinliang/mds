@@ -87,9 +87,9 @@
 
         get stockUnit() {
             if (this.stockInfoObj.detailsList && this.stockInfoObj.detailsList.length) {
-                return this.stockInfoObj.detailsList[0].unit
+                return this.stockInfoObj.detailsList[0].unitName
             }
-            return 'KG'
+            return '千克'
         }
 
         get stockMaterial() {
@@ -108,6 +108,7 @@
         materialCode?: number|string;
         materialName?: number|string;
         unit?: number|string;
+        unitName?: string;
     }
 </script>
 <style lang="scss" scoped>

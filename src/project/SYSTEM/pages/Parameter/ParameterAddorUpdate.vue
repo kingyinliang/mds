@@ -145,7 +145,6 @@ export default class ParameterAddorUpdate extends Vue {
                 this.dataForm = JSON.parse(JSON.stringify(targetItem));
                 this.dataForm.parentId = parentItem.id
                 this.dataForm.dictType = parentItem.dictType
-                this.dataForm.dictOrder = parentItem.dictOrder
                 this.dataForm.dictName = parentItem.dictName
             } else {
                 this.isAddParas = false;

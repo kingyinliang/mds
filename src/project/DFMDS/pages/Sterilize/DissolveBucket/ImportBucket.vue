@@ -384,10 +384,15 @@
 
         // 新增行
         addNewDataRow() {
+            if (!this.headerInfo.headerProdcutMaterial) {
+                this.$warningToast('请选择生产物料')
+                return
+            }
             let sole: CurrentDataTable = {}
             const itemSize = this.importBucketInfo.length
             if (itemSize !== 0) {
                 // const tempProductMaterial = this.productMaterialList.filter(item => item.dictCode === this.importBucketInfo[itemSize - 1].prodcutMaterial) as ProductMaterial
+                const lastRow = this.importBucketInfo.filter(it => it.delFlag !== 1)
                 sole = {
                     cycle: this.currentCycle,
                     delFlag: 0,
@@ -400,8 +405,8 @@
                     feedUnit: 'KG', // 投料物料单位
                     feedAmount: 0, // 投料数量
                     feedBatch: '', // 投料批次
-                    feedMan: '', // 投料人
-                    feedDate: '', // 投料时间
+                    feedMan: lastRow.length ? lastRow[lastRow.length - 1].feedMan : '', // 投料人
+                    feedDate: lastRow.length ? lastRow[lastRow.length - 1].feedDate : '', // 投料时间
                     remark: '',
                     changer: getUserNameNumber(),
                     changed: dateFormat(new Date(), 'yyyy-MM-dd hh:mm:ss'),

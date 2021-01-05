@@ -73,20 +73,20 @@
                                 :content="orderStatusMapping[item.houseSplitList[item.nowIndex].houseTag.washBeanStatus]"
                                 placement="top-start"
                             >
-                                <el-button class="bottom-item" type="primary" @click="goDetail('first',1, item.houseSplitList[item.nowIndex])">
+                                <el-button class="bottom-item" :type="item.houseSplitList[item.nowIndex].houseTag.washBeanStatus === 'R' ? 'danger' : 'primary'" @click="goDetail('first',1, item.houseSplitList[item.nowIndex])">
                                     <!-- <el-button :disabled="!isAuth('bottle:inStorage:list')" class="bottom-item" @click="goDetail('first',1, item)"> -->
                                     洗豆
                                 </el-button>
                             </el-tooltip>
 
                             <el-tooltip class="item" effect="dark" :content="orderStatusMapping[item.houseSplitList[item.nowIndex].houseTag.steamFlourStatus]" placement="top-start">
-                                <el-button class="bottom-item" type="primary" @click="goDetail('first',2, item.houseSplitList[item.nowIndex])">
+                                <el-button class="bottom-item" :type="item.houseSplitList[item.nowIndex].houseTag.steamFlourStatus === 'R' ? 'danger' : 'primary'" @click="goDetail('first',2, item.houseSplitList[item.nowIndex])">
                                     <!-- <el-button :disabled="!isAuth('bottle:workshop:techProductParameterList')" class="bottom-item" @click="goDetail('first',2, item)"> -->
                                     蒸面
                                 </el-button>
                             </el-tooltip>
                             <el-tooltip class="item" effect="dark" :content="orderStatusMapping[item.houseSplitList[item.nowIndex].houseTag.discStatus]" placement="top-start">
-                                <el-button class="bottom-item" type="primary" @click="goDetail('first',3, item.houseSplitList[item.nowIndex])">
+                                <el-button class="bottom-item" :type="item.houseSplitList[item.nowIndex].houseTag.discStatus === 'R' ? 'danger' : 'primary'" @click="goDetail('first',3, item.houseSplitList[item.nowIndex])">
                                     <!-- <el-button :disabled="!isAuth('bottle:workshop:qualityInspectionList')" class="bottom-item" @click="goDetail('first',3, item)"> -->
                                     圆盘
                                 </el-button>
@@ -138,10 +138,10 @@
                                             </el-tooltip>
                                         </li>
                                         <li class="lines">
-                                            <span>订单产量：</span><span>{{ querySecondResultList[secondObjIndex].planOutput }} {{ querySecondResultList[secondObjIndex].outputUnit }}</span>
+                                            <span>订单产量：</span><span>{{ querySecondResultList[secondObjIndex].planOutput? `${querySecondResultList[secondObjIndex].planOutput} ${querySecondResultList[secondObjIndex].outputUnitName}`:'' }} </span>
                                         </li>
                                         <li class="lines">
-                                            <span>实际产量：</span><span>{{ querySecondResultList[secondObjIndex].realOutput }}</span>
+                                            <span>实际产量：</span><span>{{ querySecondResultList[secondObjIndex].realOutput? `${querySecondResultList[secondObjIndex].realOutput} ${querySecondResultList[secondObjIndex].outputUnitName}`: '' }} </span>
                                         </li>
                                     </ul>
                                 </div>
@@ -153,14 +153,14 @@
                                     :content="orderStatusMapping[querySecondResultList[secondObjIndex].houseTag.washBeanStatus]"
                                     placement="top-start"
                                 >
-                                    <el-button class="bottom-item" type="primary" @click="goDetail('second',1, querySecondResultList[secondObjIndex])">
+                                    <el-button class="bottom-item" :type="querySecondResultList[secondObjIndex].houseTag.washBeanStatus === 'R' ? 'danger' : 'primary'" @click="goDetail('second',1, querySecondResultList[secondObjIndex])">
                                         <!-- <el-button :disabled="!isAuth('bottle:inStorage:list')" class="bottom-item" @click="goDetail('first',1, item)"> -->
                                         洗豆
                                     </el-button>
                                 </el-tooltip>
 
                                 <el-tooltip class="item" effect="dark" :content="orderStatusMapping[querySecondResultList[secondObjIndex].houseTag.steamBeanStatus]" placement="top-start">
-                                    <el-button class="bottom-item" type="primary" @click="goDetail('second',2, querySecondResultList[secondObjIndex])">
+                                    <el-button class="bottom-item" :type="querySecondResultList[secondObjIndex].houseTag.steamBeanStatus === 'R' ? 'danger' : 'primary'" @click="goDetail('second',2, querySecondResultList[secondObjIndex])">
                                         <!-- <el-button :disabled="!isAuth('bottle:workshop:techProductParameterList')" class="bottom-item" @click="goDetail('first',2, item)"> -->
                                         蒸豆
                                     </el-button>
@@ -257,7 +257,7 @@
 
         // 查询请求
         async listInterface(params) {
-
+            this.secondObjIndex = 0;
             const paramsTemp = {
                 factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
                 orderNo: params.orderNo,

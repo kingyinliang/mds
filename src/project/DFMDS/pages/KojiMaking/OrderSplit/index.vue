@@ -30,7 +30,7 @@
                                     </template>
                                 </el-table-column>
                                 <el-table-column label="计划数量" width="100" prop="planOutput" />
-                                <el-table-column label="单位" width="60" prop="outputUnit" />
+                                <el-table-column label="单位" width="60" prop="outputUnitName" />
                                 <el-table-column label="操作" fixed="right" align="center" width="80">
                                     <template slot-scope="scope">
                                         <el-button v-if="isAuth('steSplit')" class="iconfont factory-chaifen" type="text" :disabled="['C','P','X'].includes(scope.row.orderStatus)" @click="orderSplit(scope.row)">
@@ -58,7 +58,7 @@
                                 <el-table-column label="操作时间" width="180" prop="changed" :show-overflow-tooltip="true" />
                                 <el-table-column label="操作" fixed="right" align="center" width="140">
                                     <template slot-scope="scope">
-                                        <el-button v-if="isAuth('steSplitDel')" type="text" icon="el-icon-delete" :disabled="['0'].includes(scope.row.canBeDeleted)" @click="delSplitRow(scope.row)">
+                                        <el-button v-if="isAuth('steSplitDel')" type="text" icon="el-icon-delete" :disabled="scope.row.status !== 'S' && scope.row.status !== 'N'" @click="delSplitRow(scope.row)">
                                             删除
                                         </el-button>
                                     </template>
@@ -288,6 +288,17 @@
 
         // 删除订单
         delSplitRow(row) {
+            if (row.canBeDeleted === '0') {
+                if (row.materialFlag === '1') {
+                    this.$warningToast('该曲房订单下存在领料数据，请删除数据后再删除曲房订单');
+                    return;
+                }
+                if (row.manHourFlag === '1') {
+                    this.$warningToast('关联订单人工工时已提交，此订单不可删除，请取消已审核订单：' + row.manHourOrders);
+                    return;
+                }
+                return;
+            }
             this.$confirm('删除后数据将丢失，是否删除？', '提示', {
                 confirmButtonText: '确定',
                 cancelButtonText: '取消',

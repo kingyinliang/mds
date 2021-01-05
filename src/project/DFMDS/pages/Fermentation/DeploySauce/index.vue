@@ -3,6 +3,7 @@
         <query-table
             ref="queryTable"
             :tabs="tabs"
+            :factory-type="1"
             :query-form-data="queryFormData"
             :custom-data="true"
             :list-interface="listInterface"
@@ -151,6 +152,11 @@
                     label: ['holderNo'],
                     value: 'id'
                 }
+            },
+            {
+                type: 'input',
+                label: '开罐单号',
+                prop: 'openPotNo'
             },
             {
                 type: 'input',

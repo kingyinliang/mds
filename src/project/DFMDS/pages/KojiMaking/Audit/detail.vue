@@ -34,7 +34,7 @@
                             <el-button type="text" size="small" :disabled="scope.row.enableBack!==1" @click="reject('1',scope.row)">
                                 退回
                             </el-button>
-                            <el-button type="text" size="small" @click="auditLog(scope.row)">
+                            <el-button type="text" size="small" @click="auditLog(scope.row,tabs[0].label)">
                                 审核日志
                             </el-button>
                         </template>
@@ -59,7 +59,7 @@
                             <el-button type="text" size="small" :disabled="scope.row.enableBack!==1" @click="reject('2',scope.row)">
                                 退回
                             </el-button>
-                            <el-button type="text" size="small" @click="auditLog(scope.row)">
+                            <el-button type="text" size="small" @click="auditLog(scope.row,tabs[1].label)">
                                 审核日志
                             </el-button>
                         </template>
@@ -84,7 +84,7 @@
                             <el-button type="text" size="small" :disabled="scope.row.enableBack!==1" @click="reject('3',scope.row)">
                                 退回
                             </el-button>
-                            <el-button type="text" size="small" @click="auditLog(scope.row)">
+                            <el-button type="text" size="small" @click="auditLog(scope.row,tabs[2].label)">
                                 审核日志
                             </el-button>
                         </template>
@@ -115,7 +115,7 @@
                             <el-button type="text" size="small" :disabled="scope.row.enableBack!==1" @click="reject('4',scope.row)">
                                 退回
                             </el-button>
-                            <el-button type="text" size="small" @click="auditLog(scope.row)">
+                            <el-button type="text" size="small" @click="auditLog(scope.row,tabs[3].label)">
                                 审核日志
                             </el-button>
                         </template>
@@ -144,7 +144,7 @@
             </template>
         </data-entry>
         <el-dialog title="审核日志" width="900px" :close-on-click-modal="false" :visible.sync="visibleAuditLog">
-            <audit-log :table-data="auditLogData" :verify-man="'verifyMan'" :verify-date="'verifyDate'" :pack-up="false" :status="true" :show-title="false" />
+            <audit-log :table-data="auditLogData" :verify-man="'verifyMan'" :verify-date="'verifyDate'" :pack-up="false" :status="true" :show-title="false" :height="400" />
             <div slot="footer" class="dialog-footer" />
         </el-dialog>
         <el-dialog title="退回原因" :close-on-click-modal="false" :visible.sync="visibleRefuse">
@@ -308,23 +308,31 @@
         // 跳转工序页面
         goDetail(who, arg) {
             let url = '';
+            let whichTab = '';
                 switch (who) {
                     case 'XD':
                         url = 'DFMDS-pages-KojiMaking-WorkingProcedure-WashBean';
+                        whichTab = '2';
                         break;
                     case 'ZM':
                         url = 'DFMDS-pages-KojiMaking-WorkingProcedure-SteamedFlour';
+                        whichTab = '2';
                         break;
                     case 'YP':
                         url = 'DFMDS-pages-KojiMaking-WorkingProcedure-disc';
+                        whichTab = '1';
                         break;
                     case 'SC':
                         url = 'DFMDS-pages-KojiMaking-WorkingProcedure-SCWashBean';
+                        whichTab = '2';
                         break;
                     case 'ZD':
                         url = 'DFMDS-pages-KojiMaking-WorkingProcedure-SteamedBean';
+                        whichTab = '1';
                         break;
                     default:
+                        url = 'DFMDS-pages-KojiMaking-WorkingProcedure-SteamedBean'; // 防呆 SC 蒸豆命名
+                        whichTab = '1';
                 }
 
             console.log(`url:${url}`)
@@ -336,7 +344,7 @@
 
             setTimeout(() => {
                 this.$router.push({
-                    name: url, params: { order: arg }
+                    name: url, params: { order: arg, activeName: whichTab }
                 });
             }, 100);
         }
@@ -483,18 +491,111 @@
                 break;
                 case '4':
                     this.rejectKojiHouseId = this.kojiHouseNoOptions.filter(element => element.optValue === item.kojiHouseNo)[0].optId
-                    this.rejectMaterialStyle = item.materialType;
+                    this.rejectMaterialStyle = item.storageType;
                     this.rejectBatch = item.batch;
                 break;
                 default:
             }
         }
 
-        auditLog() {
-            AUDIT_API.AUDIT_LOG_LIST_API({ orderNo: this.currentOrderNo, verifyType: '' }).then(({ data }) => {
-                    this.auditLogData = data.data
-                    this.visibleAuditLog = true
-            })
+        auditLog(row, tab) {
+            console.log('row')
+            console.log(row)
+            // ['WB_MATERIAL', 'MATERIAL']
+            let verifyTypeTemp: string[] = []
+            switch (tab) {
+                case '准备人工':
+                    // if (row.process === '洗豆') {
+                    //     verifyTypeTemp = ['WB_CONTROL', 'TIMESHEET']
+                    // }
+                    // if (row.process === '蒸面') {
+                    //     verifyTypeTemp = ['SF_CONTROL', 'TIMESHEET']
+                    // }
+                    // if (row.process === '圆盘') {
+                    //     verifyTypeTemp = ['KJ_CONTROL', 'TIMESHEET']
+                    // }
+                    // if (row.process === 'SC洗豆') {
+                    //     verifyTypeTemp = ['WB_CONTROL', 'TIMESHEET']
+                    // }
+                    // if (row.process === '篜豆') {
+                    //     verifyTypeTemp = ['SB_CONTROL', 'TIMESHEET']
+                    // }
+                    AUDIT_API.STE_AUDIT_QUERY_BY_ID({
+                        id: row.timeSheetId
+                    }).then(({ data }) => {
+                        this.auditLogData = data.data;
+                        this.visibleAuditLog = true
+                    })
+                    break;
+                case '机器工时':
+                    if (row.process === '洗豆') {
+                        verifyTypeTemp = ['WB_CONTROL', 'TIMESHEET']
+                    }
+                    if (row.process === '蒸面') {
+                        verifyTypeTemp = ['SF_CONTROL', 'TIMESHEET']
+                    }
+                    if (row.process === '圆盘') {
+                        verifyTypeTemp = ['KJ_CONTROL', 'TIMESHEET']
+                    }
+                    if (row.process === 'SC洗豆') {
+                        verifyTypeTemp = ['WB_CONTROL', 'TIMESHEET']
+                    }
+                    if (row.process === 'SC篜豆') {
+                        verifyTypeTemp = ['SB_CONTROL', 'TIMESHEET']
+                    }
+                    AUDIT_API.STE_AUDIT_LOG_API({ orderNo: this.currentOrderNo, splitOrderNo: row.kojiOrderNo, verifyType: verifyTypeTemp }).then(({ data }) => {
+                        this.auditLogData = data.data
+                        this.visibleAuditLog = true
+                    })
+                    break;
+                case '生产入库':
+                    if (row.process === 'XD') { // 洗豆
+                        verifyTypeTemp = []
+                    }
+                    if (row.process === 'ZM') { // 蒸面
+                        verifyTypeTemp = []
+                    }
+                    if (row.process === 'YP') { // 圆盘
+                        verifyTypeTemp = ['KJ_INSTORAGE', 'INSTORAGE']
+                    }
+                    if (row.process === 'SC') { // SC洗豆
+                        verifyTypeTemp = []
+                    }
+                    if (row.process === 'ZD') { // SC篜豆
+                        verifyTypeTemp = ['SB_INSTORAGE', 'INSTORAGE']
+                    }
+                    AUDIT_API.STE_AUDIT_LOG_API({ orderNo: this.currentOrderNo, splitOrderNo: row.kojiOrderNo, verifyType: verifyTypeTemp }).then(({ data }) => {
+                        this.auditLogData = data.data
+                        this.visibleAuditLog = true
+                    })
+                    break;
+                case '物料领用':
+                    if (row.process === 'XD') { // 洗豆
+                        verifyTypeTemp = ['WB_MATERIAL', 'MATERIAL']
+                    }
+                    if (row.process === 'ZM') { // 蒸面
+                        verifyTypeTemp = ['SF_MATERIAL', 'MATERIAL']
+                    }
+                    if (row.process === 'YP') { // 圆盘
+                        verifyTypeTemp = []
+                    }
+                    if (row.process === 'SC') { // SC洗豆
+                        verifyTypeTemp = ['WB_MATERIAL', 'MATERIAL']
+                    }
+                    if (row.process === 'ZD') { // SC篜豆
+                        verifyTypeTemp = []
+                    }
+                    AUDIT_API.STE_AUDIT_LOG_API({ orderNo: this.currentOrderNo, splitOrderNo: row.kojiOrderNo, verifyType: verifyTypeTemp }).then(({ data }) => {
+                        this.auditLogData = data.data
+                        this.visibleAuditLog = true
+                    })
+                    break;
+                default:
+                    break;
+            }
+
+            // AUDIT_API.STE_AUDIT_LOG_API({ orderNo: this.formHeader.orderNo, splitOrderNo: this.formHeader.kojiOrderNo, verifyType: ['WB_MATERIAL', 'MATERIAL'] }).then(({ data }) => {
+
         }
 
         // 获取曲房下拉选项
@@ -573,7 +674,7 @@
                         batch: this.rejectBatch,
                         kojiHouseId: this.rejectKojiHouseId,
                         orderNo: this.formHeader.orderNo,
-                        materialType: this.rejectMaterialStyle,
+                        storageType: this.rejectMaterialStyle,
                         productDate: this.formHeader.productDate,
                         refuseSeason: this.rejectText
                     }).then(() => {

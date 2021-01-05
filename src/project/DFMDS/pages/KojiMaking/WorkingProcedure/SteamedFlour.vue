@@ -16,10 +16,10 @@
             @success="getOrderList"
         >
             <template slot="1" slot-scope="data">
-                <flour-material-apply ref="flourMaterialApply" :is-redact="data.isRedact" :sieve-total-num="sieveTotalNum" @setMaterialTable="setMaterialTable" />
+                <flour-material-apply ref="flourMaterialApply" :is-status="flourMaterialApplyStatus" :is-redact="data.isRedact" :sieve-total-num="sieveTotalNum" @setMaterialTable="setMaterialTable" />
             </template>
             <template slot="2" slot-scope="data">
-                <flour-material-craft ref="flourMaterialCraft" :is-redact="data.isRedact" :set-material-table-data="setMaterialTableData" @changeSieveTotalNum="changeSieveTotalNum" />
+                <flour-material-craft ref="flourMaterialCraft" :is-status="flourMaterialCraftStatus" :is-redact="data.isRedact" :set-material-table-data="setMaterialTableData" @changeSieveTotalNum="changeSieveTotalNum" />
             </template>
             <template slot="3" slot-scope="data">
                 <koji-exc-record ref="excRecord" :is-redact="data.isRedact" :form-header="formHeader" />
@@ -58,7 +58,6 @@
             dataEntry: HTMLFormElement;
         }
 
-        orderIndex=['已同步', '已保存', '待审核', '已审核', '已过账', '已退回', '未录入']
         formHeader: OrderData = {};
         jumpFromAudit=false // is from audit ?
 
@@ -66,6 +65,8 @@
         sieveTotalNum = 0;
         // 物料领用记录 == 批次信息
         setMaterialTableData = [];
+        flourMaterialApplyStatus='N';
+        flourMaterialCraftStatus='N';
 
         changeSieveTotalNum(num) {
             this.sieveTotalNum = num;
@@ -151,12 +152,13 @@
                 kojiOrderNo: this.formHeader.kojiOrderNo
             }).then(({ data }) => {
                 this.$store.commit('koji/updateHouseTag', data.data);
-                this.tabs[0].status = data.data.steamFlourMaterialName
-                this.tabs[1].status = data.data.steamFlourCraftName
+                this.tabs[0].status = data.data.steamFlourMaterial
+                this.tabs[1].status = data.data.steamFlourCraft
+
+                this.flourMaterialApplyStatus = data.data.steamFlourMaterial;
+                this.flourMaterialCraftStatus = data.data.steamFlourCraft;
                 this.$refs.dataEntry.updateTabs()
-
-                this.$set(this.formHeader, 'statusName', this.orderIndex[Math.min(this.orderIndex.indexOf(data.data.steamFlourMaterialName), this.orderIndex.indexOf(data.data.steamFlourCraftName))])
-
+                this.$set(this.formHeader, 'statusName', data.data.steamFlourStatusName);
             })
         }
 
@@ -165,8 +167,12 @@
         }
 
         mounted() {
+            // 跳转用
             if (typeof this.$route.params.order !== 'undefined') {
-                this.jumpFromAudit = true
+                this.jumpFromAudit = true;
+                setTimeout(() => {
+                    this.$refs.dataEntry.activeName = this.$route.params.activeName;
+                }, 2000);
             }
             this.getOrderList()
         }

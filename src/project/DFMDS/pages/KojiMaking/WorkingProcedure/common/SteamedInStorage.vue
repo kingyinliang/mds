@@ -13,7 +13,7 @@
                         <span class="notNull">* </span>入库数量
                     </template>
                     <template slot-scope="scope">
-                        <el-input v-model="scope.row.inStorageAmount" placeholder="请输入" :disabled="!isRedact" size="small" style="width: 120px;" />
+                        <el-input v-model="scope.row.inStorageAmount" placeholder="请输入" :disabled="!(isRedact && isStatus !== 'C' && isStatus !== 'D' && isStatus !== 'P')" size="small" style="width: 120px;" />
                     </template>
                 </el-table-column>
                 <el-table-column label="单位" width="80">
@@ -26,13 +26,13 @@
                         <span class="notNull">* </span>入库批次
                     </template>
                     <template slot-scope="scope">
-                        <el-input v-model="scope.row.inStorageBatch" placeholder="请输入" :disabled="!isRedact" size="small" maxlength="10" style="width: 160px;" />
+                        <el-input v-model="scope.row.inStorageBatch" placeholder="请输入" :disabled="!(isRedact && isStatus !== 'C' && isStatus !== 'D' && isStatus !== 'P')" size="small" maxlength="10" style="width: 160px;" />
                     </template>
                 </el-table-column>
                 <el-table-column label="备注">
                     <template slot-scope="scope">
                         <el-tooltip :disabled="!scope.row.remark" effect="dark" :content="scope.row.remark" placement="top">
-                            <el-input v-model.trim="scope.row.remark" size="small" placeholder="请输入" :disabled="!isRedact" />
+                            <el-input v-model.trim="scope.row.remark" size="small" placeholder="请输入" :disabled="!(isRedact && isStatus !== 'C' && isStatus !== 'D' && isStatus !== 'P')" />
                         </el-tooltip>
                     </template>
                 </el-table-column>
@@ -64,6 +64,7 @@
     })
     export default class WashBeanMaterialCraft extends Vue {
         @Prop({ default: false }) isRedact: boolean;
+        @Prop({ default: 'N' }) isStatus: string;
         @Prop({ default: '' }) potNoNow: number|string;
 
         // 订单信息
@@ -221,9 +222,6 @@
 
         // 查询最新审核记录
         getAuditList(orderNo) {
-            // AUDIT_API.AUDIT_LOG_LIST_API({ orderNo, verifyType: 'INSTORAGE' }).then(({ data }) => {
-            //     this.craftAuditList = data.data;
-            // });
             AUDIT_API.STE_AUDIT_LOG_API({ orderNo, splitOrderNo: this.formHeader.kojiOrderNo, verifyType: ['SB_INSTORAGE', 'INSTORAGE'] }).then(({ data }) => {
                 this.craftAuditList = data.data;
             });

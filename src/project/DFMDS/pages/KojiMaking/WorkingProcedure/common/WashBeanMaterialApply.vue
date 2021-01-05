@@ -6,7 +6,7 @@
                     <div class="card-stock">
                         <div class="card-stock__head">
                             <span>{{ `${item.workShopName}${item.wareHouseName? '：' + item.wareHouseName: ''}` }}</span>
-                            <el-button class="floatr" type="text" :disabled="!isRedact" @click="addRow(item)">
+                            <el-button class="floatr" type="text" :disabled="!(isRedact && isStatus !== 'C' && isStatus !== 'D' && isStatus !== 'P')" @click="addRow(item)">
                                 领用
                             </el-button>
                         </div>
@@ -32,14 +32,14 @@
                     <el-table-column prop="stockAmount" label="库存量" width="90" :show-overflow-tooltip="true" />
                     <el-table-column prop="amount" label="领用数量" min-width="100" :show-overflow-tooltip="true" />
                     <el-table-column prop="smallBeanAmount" label="小豆数量" min-width="100" :show-overflow-tooltip="true" />
-                    <el-table-column prop="unit" label="单位" min-width="100" :show-overflow-tooltip="true" />
+                    <el-table-column prop="unitName" label="单位" min-width="100" :show-overflow-tooltip="true" />
                     <el-table-column prop="supplier" label="大豆厂家" min-width="100" :show-overflow-tooltip="true" />
                     <el-table-column prop="remark" label="备注" min-width="100" :show-overflow-tooltip="true" />
                     <el-table-column label="操作人" prop="changer" width="140" />
                     <el-table-column label="操作时间" prop="changed" width="180" />
                     <el-table-column width="70" label="操作" fixed="right">
                         <template slot-scope="scope">
-                            <el-button class="delBtn" type="text" icon="el-icon-delete" size="mini" :disabled="!(isRedact && scope.row.status !== 'C' && scope.row.status !== 'D' && scope.row.status !== 'P')" @click="removeDataRow(scope.row, scope.$index)">
+                            <el-button class="delBtn" type="text" icon="el-icon-delete" size="mini" :disabled="!(isRedact && isStatus !== 'C' && isStatus !== 'D' && isStatus !== 'P' && scope.row.status !== 'C' && scope.row.status !== 'D' && scope.row.status !== 'P')" @click="removeDataRow(scope.row, scope.$index)">
                                 删除
                             </el-button>
                         </template>
@@ -75,6 +75,7 @@
     })
     export default class WashBeanMaterialApply extends Vue {
         @Prop({ default: false }) isRedact: boolean;
+        @Prop({ default: 'N' }) isStatus: string;
         @Prop({ default: 0 }) sieveTotalNum: number | string;
 
         $refs: { washBeanMaterialApplyDialog: HTMLFormElement };
@@ -93,7 +94,7 @@
             if (!row.wareHouseNo) {
                 return this.formHeader.workShopName
             }
-            return this.stockInfoList.filter(item => item.wareHouseNo === row.wareHouseNo)[0].wareHouseName
+            return this.stockInfoList.filter(item => item.wareHouseNo === row.wareHouseNo)[0]?.wareHouseName
         }
 
         init(formHeader) {
@@ -114,7 +115,7 @@
         materialGetList() {
             KOJI_API.KOJI_MATERIAL_GET_QUERY_API({
                 kojiOrderNo: this.formHeader.kojiOrderNo,
-                materialType: 'BEAN',
+                storageType: 'BEAN',
                 orderNo: this.formHeader.orderNo
             }).then(({ data }) => {
                 this.$emit('setMaterialTable', data.data || [])
@@ -124,9 +125,6 @@
 
         // 查询最新审核记录
         getAuditList() {
-            // AUDIT_API.AUDIT_LOG_LIST_API({ orderNo: this.formHeader.orderNo, verifyType: 'MATERIAL' }).then(({ data }) => {
-            //     this.auditList = data.data;
-            // });
             AUDIT_API.STE_AUDIT_LOG_API({ orderNo: this.formHeader.orderNo, splitOrderNo: this.formHeader.kojiOrderNo, verifyType: ['WB_MATERIAL', 'MATERIAL'] }).then(({ data }) => {
                 this.auditList = data.data;
             });
@@ -144,7 +142,7 @@
         }
 
         EditRow(row) {
-            if (!this.isRedact) {
+            if (!(this.isRedact && this.isStatus !== 'C' && this.isStatus !== 'D' && this.isStatus !== 'P' && row.status !== 'C' && row.status !== 'D' && row.status !== 'P')) {
                 return false;
             }
             this.visible = true;

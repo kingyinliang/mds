@@ -4,7 +4,7 @@
             <template slot="titleBtn">
                 <el-form :inline="true" label-width="115px">
                     <el-form-item class="cleanMarginBottom floatr">
-                        <el-button type="primary" size="small" :disabled="!isRedact" @click="addY158DataRow()">
+                        <el-button type="primary" size="small" :disabled="!(isRedact &&isStatus !== 'C' && isStatus !== 'D' && isStatus !== 'P' && isStatus !== 'C' && isStatus !== 'D' && isStatus !== 'P')" @click="addY158DataRow()">
                             新增
                         </el-button>
                     </el-form-item>
@@ -22,14 +22,14 @@
                     <el-table-column prop="batch" label="领用批次" min-width="110" :show-overflow-tooltip="true" />
                     <el-table-column prop="stockAmount" label="库存数量" width="90" :show-overflow-tooltip="true" />
                     <el-table-column prop="amount" label="领用数量" min-width="100" :show-overflow-tooltip="true" />
-                    <el-table-column prop="unit" label="单位" min-width="100" :show-overflow-tooltip="true" />
+                    <el-table-column prop="unitName" label="单位" min-width="100" :show-overflow-tooltip="true" />
                     <el-table-column prop="operationMans" label="添加人" min-width="100" :show-overflow-tooltip="true" />
                     <el-table-column prop="remark" label="备注" min-width="100" :show-overflow-tooltip="true" />
                     <el-table-column label="操作人" prop="changer" width="140" />
                     <el-table-column label="操作时间" prop="changed" width="180" />
                     <el-table-column width="70" label="操作" fixed="right">
                         <template slot-scope="scope">
-                            <el-button class="delBtn" type="text" icon="el-icon-delete" size="mini" :disabled="!(isRedact && scope.row.status !== 'C' && scope.row.status !== 'D' && scope.row.status !== 'P')" @click="removeDataRow(scope.row, 'Y158')">
+                            <el-button class="delBtn" type="text" icon="el-icon-delete" size="mini" :disabled="!(isRedact && isStatus !== 'C' && isStatus !== 'D' && isStatus !== 'P' &&scope.row.status !== 'C' && scope.row.status !== 'D' && scope.row.status !== 'P')" @click="removeDataRow(scope.row, 'Y158')">
                                 删除
                             </el-button>
                         </template>
@@ -48,7 +48,7 @@
                     <div class="card-stock">
                         <div class="card-stock__head">
                             <span>{{ `${item.workShopName}${item.wareHouseName ? '：'+ item.wareHouseName : ''}` }}</span>
-                            <el-button class="floatr" type="text" :disabled="!isRedact" @click="addRow(item)">
+                            <el-button class="floatr" type="text" :disabled="!(isRedact && isStatus !== 'C' && isStatus !== 'D' && isStatus !== 'P')" @click="addRow(item)">
                                 领用
                             </el-button>
                         </div>
@@ -86,7 +86,7 @@
                     <el-table-column label="操作时间" prop="changed" width="180" />
                     <el-table-column width="70" label="操作" fixed="right">
                         <template slot-scope="scope">
-                            <el-button class="delBtn" type="text" icon="el-icon-delete" size="mini" :disabled="!(isRedact && scope.row.status !== 'C' && scope.row.status !== 'D' && scope.row.status !== 'P')" @click="removeDataRow(scope.row)">
+                            <el-button class="delBtn" type="text" icon="el-icon-delete" size="mini" :disabled="!(isRedact && isStatus !== 'C' && isStatus !== 'D' && isStatus !== 'P' && scope.row.status !== 'C' && scope.row.status !== 'D' && scope.row.status !== 'P')" @click="removeDataRow(scope.row)">
                                 删除
                             </el-button>
                         </template>
@@ -122,6 +122,7 @@
     })
     export default class FlourMaterialApply extends Vue {
         @Prop({ default: false }) isRedact: boolean;
+        @Prop({ default: 'N' }) isStatus: string;
         @Prop({ default: 0 }) sieveTotalNum: number | string;
 
         $refs: {
@@ -174,7 +175,7 @@
                 row.tempLocation = this.formHeader.workShopName
                 return row.tempLocation
             }
-            row.tempLocation = this.stockY158InfoList.filter(item => item.wareHouseNo === row.wareHouseNo)[0].wareHouseName
+            row.tempLocation = this.stockY158InfoList.filter(item => item.wareHouseNo === row.wareHouseNo)[0]?.wareHouseName
             return row.tempLocation
         }
 
@@ -184,7 +185,7 @@
             if (!row.wareHouseNo) {
                 return this.formHeader.workShopName
             }
-            return this.stockInfoList.filter(item => item.wareHouseNo === row.wareHouseNo)[0].wareHouseName
+            return this.stockInfoList.filter(item => item.wareHouseNo === row.wareHouseNo)[0]?.wareHouseName
         }
 
         // 查询领用Y158仓库list
@@ -209,7 +210,8 @@
         materialY158GetList() {
             KOJI_API.KOJI_MATERIAL_GET_QUERY_API({ // /kojiMaterial/query
                 kojiOrderNo: this.formHeader.kojiOrderNo,
-                materialType: 'Y158'
+                // materialType: 'Y158',
+                storageType: 'Y158'
             }).then(({ data }) => {
                 console.log('Y158物料领用记录查询')
                 console.log(data)
@@ -221,7 +223,8 @@
         materialGetList() {
             KOJI_API.KOJI_MATERIAL_GET_QUERY_API({
                 kojiOrderNo: this.formHeader.kojiOrderNo,
-                materialType: 'FLOUR'
+                // materialType: 'FLOUR'
+                storageType: 'FLOUR'
             }).then(({ data }) => {
                 console.log('物料领用记录查询')
                 console.log(data)
@@ -231,9 +234,6 @@
 
         // 查询最新审核记录
         getAuditList() {
-            // AUDIT_API.AUDIT_LOG_LIST_API({ orderNo: this.formHeader.orderNo, verifyType: 'MATERIAL' }).then(({ data }) => {
-            //     this.auditList = data.data;
-            // });
             AUDIT_API.STE_AUDIT_LOG_API({ orderNo: this.formHeader.orderNo, splitOrderNo: this.formHeader.kojiOrderNo, verifyType: ['SF_MATERIAL', 'MATERIAL'] }).then(({ data }) => {
                 this.auditList = data.data;
             });
@@ -267,7 +267,7 @@
         }
 
         EditY158Row(row) {
-            if (!this.isRedact) {
+            if (!(this.isRedact && this.isStatus !== 'C' && this.isStatus !== 'D' && this.isStatus !== 'P' && row.status !== 'C' && row.status !== 'D' && row.status !== 'P')) {
                 return false;
             }
             this.Y158Visible = true;
@@ -288,7 +288,7 @@
         }
 
         EditRow(row) {
-            if (!this.isRedact) {
+            if (!(this.isRedact && this.isStatus !== 'C' && this.isStatus !== 'D' && this.isStatus !== 'P' && row.status !== 'C' && row.status !== 'D' && row.status !== 'P')) {
                 return false;
             }
             this.visible = true;
