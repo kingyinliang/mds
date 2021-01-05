@@ -288,6 +288,7 @@ export default class ProductPeople extends Vue {
             factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
             deptId: formHeader['productLine'],
             queryDate: formHeader['productDate'],
+            materialCode: formHeader['materialCode'],
             current: 1,
             size: 10
         }).then(({ data }) => {
