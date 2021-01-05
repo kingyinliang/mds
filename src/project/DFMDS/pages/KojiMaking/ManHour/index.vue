@@ -32,12 +32,12 @@
                         span(:style="{color: formHeader.checkStatus === 'R' ? 'red' : ''}") {{ formHeader.checkStatusName }}
                     div(style="width: 100%; margin-top: 10px; text-align: right;")
                         template(style="float: right; margin-left: 10px;")
-                            el-button(v-if="isAuth('steTimeQuery')" type="primary" size="small" @click="getList()") 查询
+                            el-button(v-if="isAuth('kjTimeQuery')" type="primary" size="small" @click="getList()") 查询
         div(v-show="searchCard")
             ready-time(ref="readyTime" :is-redact="isRedact" :status="this.formHeader.checkStatus" style="margin-top: 10px;")
             work-hour(ref="workHour" :is-redact="isRedact" :status="this.formHeader.checkStatus")
             audit-log(:table-data="manHourAudit" :verify-man="'verifyMan'" :verify-date="'verifyDate'" :status="true")
-        redact-box(v-if="!(formHeader.checkStatus === 'C' || formHeader.checkStatus === 'D' || formHeader.checkStatus === 'P' || formHeader.checkStatus ==='M')" :disabled="redactBoxDisable" :is-redact.sync='isRedact' redact-auth="steTimeEdit" save-auth="steTimeSave" submit-auth="steTimeSubmit" :urgent-submit="false" :submit-rules="submitRules" :saved-rules="savedRules" :saved-datas="savedDatas" :submit-datas="submitDatas")
+        redact-box(v-if="!(formHeader.checkStatus === 'C' || formHeader.checkStatus === 'D' || formHeader.checkStatus === 'P' || formHeader.checkStatus ==='M')" :disabled="redactBoxDisable" :is-redact.sync='isRedact' redact-auth="kjTimeEdit" save-auth="kjTimeSave" submit-auth="kjTimeSubmit" :urgent-submit="false" :submit-rules="submitRules" :saved-rules="savedRules" :saved-datas="savedDatas" :submit-datas="submitDatas")
 </template>
 
 <script lang="ts">

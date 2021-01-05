@@ -3,7 +3,7 @@
         <mds-card title="人员统计" :name="'productPeople'">
             <template slot="titleBtn">
                 <div style="float: right;">
-                    <el-button type="primary" size="small" :disabled="!isRedact" @click="addNewDataRow()">
+                    <el-button v-if="isAuth('kjUserAdd')" type="primary" size="small" :disabled="!isRedact" @click="addNewDataRow()">
                         新增
                     </el-button>
                 </div>

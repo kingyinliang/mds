@@ -42,13 +42,13 @@
                 <span slot="label" class="spanview">
                     当前库存信息
                 </span>
-                <stock-table-data :work-shop-info="$store.state.koji.StockY158Info" stock-type="Y158" />
+                <stock-table-data :work-shop-info="$store.state.koji.StockY158Info" query-auth="strainMxQuery" adjust-auth="strainAdjust" stock-type="Y158" />
             </el-tab-pane>
             <el-tab-pane name="2">
                 <span slot="label" class="spanview">
                     历史库存信息
                 </span>
-                <stock-table-data :work-shop-info="$store.state.koji.StockY158Info" :is-history-page="true" stock-type="Y158" />
+                <stock-table-data :work-shop-info="$store.state.koji.StockY158Info" query-auth="strainMxQuery" adjust-auth="strainAdjust" :is-history-page="true" stock-type="Y158" />
             </el-tab-pane>
         </el-tabs>
     </div>

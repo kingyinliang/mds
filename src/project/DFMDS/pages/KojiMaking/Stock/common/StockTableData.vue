@@ -25,11 +25,11 @@
             <el-table-column v-if="stockType!=='Y158'" label="杂质率" :show-overflow-tooltip="true" prop="impurityRate" />
             <el-table-column label="操作" width="140">
                 <template slot-scope="scope">
-                    <el-button size="mini" type="text" icon="iconfont factory-fangdajing-copy" @click="btnCheckStock(scope.row, true)">
+                    <el-button v-if="isAuth(queryAuth)" size="mini" type="text" icon="iconfont factory-fangdajing-copy" @click="btnCheckStock(scope.row, true)">
                         查询
                     </el-button>
                     <div v-if="!isHistoryPage" class="table-divider__vertical" />
-                    <el-button v-if="!isHistoryPage" size="mini" type="text" icon="iconfont factory-banshou" @click="btnHandleStock(scope.row, true)">
+                    <el-button v-if="!isHistoryPage && isAuth(adjustAuth)" size="mini" type="text" icon="iconfont factory-banshou" @click="btnHandleStock(scope.row, true)">
                         调整
                     </el-button>
                 </template>
@@ -71,6 +71,9 @@
 
         @Prop({ default: false }) isHistoryPage: boolean;
         @Prop({ default: false }) stockType: string;
+
+        @Prop({ default: '' }) queryAuth: string;
+        @Prop({ default: '' }) adjustAuth: string;
 
         $refs: {
             stockTableData: HTMLFormElement;

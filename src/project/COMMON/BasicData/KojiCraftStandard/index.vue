@@ -7,10 +7,10 @@
                         el-form-item
                             el-input(v-model="controllableForm.material" placeholder="物料" suffix-icon="el-icon-search" clearable @clear="getItemsList")
                         el-form-item(style="height: 32px;")
-                            el-button(type="primary" size="small" @click="getItemsList(true,'normal')") 查询
-                            el-button(type="primary" size="small" @click="btnAdvanceSearch") 高级查询
-                            el-button(type="primary" size="small" @click="btnAddItem") 新增
-                            el-button(type="danger" size="small" @click="btnRemoveItems" v-if="tableData.length!==0" :disabled="chechDeleteList===0") 批量删除
+                            el-button(v-if="isAuth('kjSdQuery')" type="primary" size="small" @click="getItemsList(true,'normal')") 查询
+                            el-button(v-if="isAuth('kjSdQuery')" type="primary" size="small" @click="btnAdvanceSearch") 高级查询
+                            el-button(v-if="isAuth('kjSdAdd')" type="primary" size="small" @click="btnAddItem") 新增
+                            el-button(type="danger" size="small" @click="btnRemoveItems" v-if="tableData.length!==0 && isAuth('kjSdDel')" :disabled="chechDeleteList===0") 批量删除
             //- show table
             table-show(ref="showTable" :table-element-setting.sync="tableItemSetting" :target-table.sync="tableData" :check-delete.sync="chechDeleteList" @updateItem="btnUpdateItem" @removeItem="")
             el-pagination(v-if="tableData.length!==0" :current-page="currPage" :page-sizes="[10, 20, 50]" :page-size="pageSize" layout="total, sizes, prev, pager, next, jumper" :total="totalCount" @size-change="handleSizeChange" @current-change="handleCurrentChange")
@@ -161,7 +161,7 @@
                             buttonName: '编辑',
                             btn: 'editBtn',
                             icon: '',
-                            isAuth: 'specEdit'
+                            isAuth: 'kjSdEdit'
                         }]
                 }
             ]
