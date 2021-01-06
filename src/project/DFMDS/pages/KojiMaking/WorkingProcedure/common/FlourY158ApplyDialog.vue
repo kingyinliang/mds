@@ -182,16 +182,28 @@
             console.log('infoData1111111')
             console.log(infoData)
 
+            const { data: { data: result } } = await KOJI_API.KOJI_MATERIAL_GET_BOM_API({
+                orderNo: this.formHeader.orderNo,
+                dictType: 'KOJI_SUP_MATERIAL'
+            });
+            console.log(result, 'result=-=-========================================')
+
             this.dataForm = {
                 id: Data.id,
                 materialLocation: Data.materialLocation,
                 batch: Data.batch,
                 // processCode: this.formHeader.textStage,
                 processCode: 'ZM', // 写死
-                materialCode: Data.materialCode,
-                materialName: Data.materialName,
-                materialLink: Data.materialCode ? `${String(Data.materialName)} ${String(Data.materialCode)}` : '',
-                materialType: 'ZHZC', // 写死
+                // materialCode: Data.materialCode,
+                // materialName: Data.materialName,
+                // materialLink: Data.materialCode ? `${String(Data.materialName)} ${String(Data.materialCode)}` : '',
+                // materialType: 'ZHZC', // 写死
+                // storageType: 'Y158', // 写死
+                materialCode: result.materialCode,
+                materialName: result.materialName,
+                materialLink: result.materialCode ? `${String(result.materialName)} ${String(result.materialCode)}` : '',
+                materialType: result.materialType,
+
                 storageType: 'Y158', // 写死
                 amount: Data.amount,
                 operationMans: Data.operationMans || '',
