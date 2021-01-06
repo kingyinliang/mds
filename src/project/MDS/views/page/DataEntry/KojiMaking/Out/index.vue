@@ -78,7 +78,7 @@
                 ],
                 tabs: [
                     {
-                        label: '原料领用',
+                        label: '物料领用',
                         status: '未录入'
                     },
                     {
@@ -308,6 +308,7 @@
                         this.orderStatus = data.list[0].outStatus;
                         this.$refs.meateriel.GetBrineTankNo(this.formHeader);
                         this.$refs.meateriel.GetBrine(this.formHeader.factory);
+                        this.$refs.meateriel.GetMaterialList(this.formHeader);
                         this.$refs.outinstorage.GetThreeNum(this.formHeader);
                         this.$refs.outinstorage.GetParams(this.formHeader.factory);
                         this.$refs.outtech.selectUser(this.formHeader.prolineId);

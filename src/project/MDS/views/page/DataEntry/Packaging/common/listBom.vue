@@ -10,47 +10,69 @@
                 </el-table-column>
                 <el-table-column prop="unit" label="单位" width="60" />
                 <el-table-column prop="needNum" label="需求用量" width="90" />
+                <el-table-column width="70">
+                    <template slot-scope="scope">
+                        <el-button
+                            v-if="scope.row.isSplit === '1'"
+                            :disabled="scope.row.delFlag === '1' || (!(scope.row.isSplit === '1' && isRedact && (Sapstatus === 'noPass' || Sapstatus === 'saved' || Sapstatus === '') && scope.row.status !== 'submit' && scope.row.status !== 'checked'))"
+                            type="text"
+                            size="small"
+                            icon="el-icon-delete"
+                            class="delBtn"
+                            @click="delLine(scope.row)"
+                        >
+                            删除
+                        </el-button>
+                        <el-button
+                            v-else
+                            :disabled="scope.row.delFlag === '1' || ( !(scope.row.isSplit === '0' && isRedact && (Sapstatus === 'noPass' || Sapstatus === 'saved' || Sapstatus === '') && scope.row.status !== 'submit' && scope.row.status !== 'checked'))"
+                            type="text"
+                            size="small"
+                            @click="spliteLine(scope.row, scope.$index)"
+                        >
+                            <i class="icons iconfont factory-chaifen" /> 拆分
+                        </el-button>
+                    </template>
+                </el-table-column>
+                <el-table-column label="生产批次" :show-overflow-tooltip="true" width="140">
+                    <template slot-scope="scope">
+                        <div class="required">
+                            <em class="reqI">*</em>
+                            <el-input v-if="isRedact && (Sapstatus === 'noPass' || Sapstatus === 'saved' || Sapstatus === '') && scope.row.status !== 'submit' && scope.row.status !== 'checked'" v-model="scope.row.batch" size="small" placeholder="手工录入" type="text" maxlength="10" :disabled="scope.row.delFlag === '1'" />
+                            <el-input v-else v-model="scope.row.batch" size="small" placeholder="手工录入" disabled type="number" />
+                        </div>
+                    </template>
+                </el-table-column>
                 <el-table-column label="生产使用" width="135">
                     <template slot-scope="scope">
                         <div class="required">
                             <em class="reqI">*</em>
-                            <el-input v-if="isRedact && (Sapstatus === 'noPass' || Sapstatus === 'saved' || Sapstatus === '') && scope.row.status !== 'submit' && scope.row.status !== 'checked'" v-model="scope.row.productUseNum" size="small" placeholder="手工录入" type="number" min="0" />
+                            <el-input v-if="isRedact && (Sapstatus === 'noPass' || Sapstatus === 'saved' || Sapstatus === '') && scope.row.status !== 'submit' && scope.row.status !== 'checked'" v-model="scope.row.productUseNum" :disabled="scope.row.delFlag === '1'" size="small" placeholder="手工录入" type="number" min="0" />
                             <el-input v-else v-model="scope.row.productUseNum" size="small" placeholder="手工录入" disabled type="number" min="0" />
                         </div>
                     </template>
                 </el-table-column>
                 <el-table-column label="本班损耗">
                     <template slot-scope="scope">
-                        <el-input v-if="isRedact && (Sapstatus === 'noPass' || Sapstatus === 'saved' || Sapstatus === '') && scope.row.status !== 'submit' && scope.row.status !== 'checked'" v-model="scope.row.classLoss" size="small" placeholder="手工录入" type="number" min="0" />
+                        <el-input v-if="isRedact && (Sapstatus === 'noPass' || Sapstatus === 'saved' || Sapstatus === '') && scope.row.status !== 'submit' && scope.row.status !== 'checked'" v-model="scope.row.classLoss" :disabled="scope.row.delFlag === '1'" size="small" placeholder="手工录入" type="number" min="0" />
                         <el-input v-else v-model="scope.row.classLoss" size="small" placeholder="手工录入" disabled type="number" min="0" />
                     </template>
                 </el-table-column>
                 <el-table-column label="不合格数">
                     <template slot-scope="scope">
-                        <el-input v-if="isRedact && (Sapstatus === 'noPass' || Sapstatus === 'saved' || Sapstatus === '') && scope.row.status !== 'submit' && scope.row.status !== 'checked'" v-model="scope.row.belowGradeNum" size="small" placeholder="手工录入" type="number" min="0" />
+                        <el-input v-if="isRedact && (Sapstatus === 'noPass' || Sapstatus === 'saved' || Sapstatus === '') && scope.row.status !== 'submit' && scope.row.status !== 'checked'" v-model="scope.row.belowGradeNum" :disabled="scope.row.delFlag === '1'" size="small" placeholder="手工录入" type="number" min="0" />
                         <el-input v-else v-model="scope.row.belowGradeNum" size="small" placeholder="手工录入" disabled type="number" min="0" />
-                    </template>
-                </el-table-column>
-                <el-table-column label="不良批次">
-                    <template slot-scope="scope">
-                        <el-input v-if="isRedact && (Sapstatus === 'noPass' || Sapstatus === 'saved' || Sapstatus === '') && scope.row.status !== 'submit' && scope.row.status !== 'checked'" v-model="scope.row.badBatch" size="small" maxlength="10" placeholder="手工录入" />
-                        <el-input v-else v-model="scope.row.badBatch" size="small" placeholder="手工录入" disabled />
                     </template>
                 </el-table-column>
                 <el-table-column label="厂家">
                     <template slot-scope="scope">
-                        <el-input v-if="isRedact && (Sapstatus === 'noPass' || Sapstatus === 'saved' || Sapstatus === '') && scope.row.status !== 'submit' && scope.row.status !== 'checked'" v-model="scope.row.factory" size="small" placeholder="手工录入" />
+                        <el-input v-if="isRedact && (Sapstatus === 'noPass' || Sapstatus === 'saved' || Sapstatus === '') && scope.row.status !== 'submit' && scope.row.status !== 'checked'" v-model="scope.row.factory" :disabled="scope.row.delFlag === '1'" size="small" placeholder="手工录入" />
                         <el-input v-else v-model="scope.row.factory" size="small" placeholder="手工录入" disabled />
-                    </template>
-                </el-table-column>
-                <el-table-column label="批次" :show-overflow-tooltip="true" width="90">
-                    <template slot-scope="scope">
-                        <span>{{ scope.row.batch }}</span>
                     </template>
                 </el-table-column>
                 <el-table-column label="备注">
                     <template slot-scope="scope">
-                        <el-input v-if="isRedact && (Sapstatus === 'noPass' || Sapstatus === 'saved' || Sapstatus === '') && scope.row.status !== 'submit' && scope.row.status !== 'checked'" v-model="scope.row.remark" size="small" />
+                        <el-input v-if="isRedact && (Sapstatus === 'noPass' || Sapstatus === 'saved' || Sapstatus === '') && scope.row.status !== 'submit' && scope.row.status !== 'checked'" v-model="scope.row.remark" :disabled="scope.row.delFlag === '1'" size="small" />
                         <el-input v-else v-model="scope.row.remark" size="small" disabled />
                     </template>
                 </el-table-column>
@@ -411,17 +433,26 @@ export default {
             //   }
             // }
             if (st === 'submit') {
-                this.listbomP.forEach(item => {
-                    if (item.delFlag !== '1') {
-                        if (item.productUseNum === 0 || item.productUseNum) {
-                            //
-                        } else {
+                for (const it of this.listbomP) {
+                    if (it.delFlag !== '1') {
+                        if (it.productUseNum === '' || !it.batch) {
                             ty = false;
                             this.$warningToast('物料必填项未填');
                             return false;
                         }
                     }
-                });
+                }
+                // this.listbomP.forEach(item => {
+                //     if (item.delFlag !== '1') {
+                //         if (item.productUseNum === 0 || item.productUseNum) {
+                //             //
+                //         } else {
+                //             ty = false;
+                //             this.$warningToast('物料必填项未填');
+                //             return false;
+                //         }
+                //     }
+                // });
                 // if (this.order.properties !== '二合一&礼盒产线') {
                 //   for (var itema of this.listbomS) {
                 //     if (itema.delFlag !== '1') {
@@ -678,6 +709,34 @@ export default {
                 holderMaterialName: '',
                 serialNumber: serialNumber
             });
+        },
+        // 物料拆分
+        spliteLine(row, index) {
+            console.log(row);
+            this.listbomP.splice(
+                index + 1,
+                0,
+                {
+                    materialName: row['materialName'],
+                    materialCode: row['materialCode'],
+                    unit: row['unit'],
+                    needNum: row['needNum'],
+                    isSplit: '1',
+                    delFlag: '0',
+                    workShop: row['workShop'],
+                    orderId: row['orderId']
+                }
+            );
+        },
+        // 物料删除
+        delLine(row) {
+            this.$confirm('是否删除?', '提示', {
+                confirmButtonText: '确定',
+                cancelButtonText: '取消',
+                type: 'warning'
+            }).then(() => {
+                row.delFlag = '1';
+            })
         },
         // tableRowClassName
         tableRowClassName({ row }) {
