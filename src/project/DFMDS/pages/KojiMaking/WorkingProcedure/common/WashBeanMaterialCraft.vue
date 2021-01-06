@@ -734,7 +734,7 @@
 
         transferUnit(val) {
             // return val
-            return this.unitList.filter(item => item.dictCode === val)[0].dictValue || val
+            return this.unitList.filter(item => item.dictCode === val)[0] ? this.unitList.filter(item => item.dictCode === val)[0].dictValue : val
         }
     }
 
