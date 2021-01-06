@@ -221,11 +221,11 @@
             const textRequest = this.$refs.textRecord.savedData(this.formHeader, 'koji');
             return KOJI_API.KOJI_CRAFT_STEAM_SUBMIT_API({
                 ...steSemi,
-                // material: {
-                //     deleteDto: [],
-                //     insertDto: [],
-                //     updateDto: materialTableList
-                // },
+                material: {
+                    deleteDto: [],
+                    insertDto: [],
+                    updateDto: []
+                },
                 exception: {
                     insertDatas: excRequest.InsertDto,
                     removeIds: excRequest.ids,
