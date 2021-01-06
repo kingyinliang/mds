@@ -75,7 +75,7 @@ export default class AuditIndex extends Vue {
             minwidth: '75'
         },
         {
-            prop: 'workShopName',
+            prop: 'houseName',
             label: '曲房',
             minwidth: '75'
         },
@@ -136,7 +136,7 @@ export default class AuditIndex extends Vue {
                     minwidth: '75'
                 },
                 {
-                    prop: 'workShopName',
+                    prop: 'houseName',
                     label: '曲房',
                     minwidth: '75'
                 },
@@ -224,6 +224,7 @@ export default class AuditIndex extends Vue {
         } else {
             orderStatus = ['R'];
         }
+        params.workShopType = 'koji';
         params.orderStatus = orderStatus; // eslint-disable-line
         params.current = this.$refs.queryTable.tabs[this.$refs.queryTable.activeName].pages.currPage;// eslint-disable-line
         params.size = this.$refs.queryTable.tabs[this.$refs.queryTable.activeName].pages.pageSize;// eslint-disable-line

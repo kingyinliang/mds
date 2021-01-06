@@ -25,7 +25,7 @@
                         <span class="notNull">* </span>蒸球号
                     </template>
                     <template slot-scope="scope">
-                        <el-select v-model="scope.row.steamBallNo" placeholder="请选择" :disabled="!(isRedact&& isStatus !== 'C' && isStatus !== 'D' && isStatus !== 'P' && scope.row.status !== 'C' && scope.row.status !== 'D' && scope.row.status !== 'P')" size="small" style="width: 100%;">
+                        <el-select v-model="scope.row.steamBallNo" placeholder="请选择" :disabled="!(isRedact&& isStatus !== 'C' && isStatus !== 'D' && isStatus !== 'P' && scope.row.status !== 'C' && scope.row.status !== 'D' && scope.row.status !== 'P')" size="small" style="width: 100%;" @change="val=>modifySteamBall(val,scope.row)">
                             <el-option v-for="(subItem, index) in steamBallList" :key="index" :label="subItem.holderName" :value="subItem.holderNo" />
                         </el-select>
                     </template>
@@ -266,7 +266,7 @@
         temHardTable = []
 
         // 蒸球list
-        steamBallList = [];
+        steamBallList: SteamBallListOption[] = [];
 
         // 审核记录
         craftAuditList = [];
@@ -543,8 +543,15 @@
                 factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
                 holderType: '026'
             }).then(({ data }) => {
+                console.log('查询蒸球list')
+                console.log(data.data)
                 this.steamBallList = data.data
             })
+        }
+
+        modifySteamBall(val, row) {
+            row.steamBallName = this.steamBallList.filter(item => item.holderNo === val)[0].holderName
+            row.steamBallId = this.steamBallList.filter(item => item.holderNo === val)[0].id
         }
     }
 
@@ -636,6 +643,18 @@
         insertDto: CraftList[];
         updateDto: CraftList[];
     }
+
+    interface SteamBallListOption{
+        deptId?: string;
+        holderArea?: string;
+        holderBatch?: string;
+        holderName?: string;
+        holderNo?: string;
+        holderStatus?: string;
+        holderType?: string;
+        id?: string;
+    }
+
 </script>
 
 <style lang="scss" scoped>
