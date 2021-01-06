@@ -1,6 +1,6 @@
 <template>
     <div class="KojiMaking-Out-index">
-        <mds-card :title="'原料领用'" :name="'material'">
+        <mds-card :title="'物料领用'" :name="'material'">
             <template slot="titleBtn">
                 <el-button type="primary" size="small" :disabled="materialList.every((item) => { return item.code !== formHeader.materialCode }) ? true : !isRedact" style="float: right;" @click="AddMateriel(MaterielDate)">
                     新增
@@ -14,7 +14,7 @@
                         <span>盐水</span>
                     </template>
                     <template slot-scope="scope">
-                        <el-select v-model="scope.row.material" placeholder="请选择" :disabled="!(isRedact && scope.row.status !== 'submit' && scope.row.status !== 'checked' && scope.row.delFlag !== '1')" size="small">
+                        <el-select v-model="scope.row.material" placeholder="请选择" :disabled="!(isRedact && scope.row.status !== 'submit' && scope.row.status !== 'checked' && scope.row.delFlag !== '1') || !(materialList.some((item) => { return item.code === formHeader.materialCode }))" size="small">
                             <el-option v-for="(item, index) in brine" :key="index" :label="item.value" :value="item.value + ' ' + item.code" />
                         </el-select>
                     </template>
@@ -285,7 +285,7 @@
                     } else {
                         this.$errorToast(data.msg);
                         if (reject) {
-                            reject('原料领用' + data.msg);
+                            reject('物料领用' + data.msg);
                         }
                     }
                 });

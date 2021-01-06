@@ -300,6 +300,10 @@
                     this.$warningToast('结束时间不能小于或等于开始时间');
                     return false;
                 }
+                if (item.exceptionSituation === 'AB_OTHERS' && !item.exceptionInfo) {
+                    this.$warningToast('请填写异常记录页签异常描述')
+                    return false;
+                }
             }
             return true;
         }
