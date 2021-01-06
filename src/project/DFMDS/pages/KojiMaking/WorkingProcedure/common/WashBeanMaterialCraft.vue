@@ -633,7 +633,7 @@
             }
 
             for (const item of this.craftSeiveBeanTable.filter(it => it.delFlag !== 1)) {
-                if (!item.sieveBeanBatch || !item.sieveImpurityType || !item.sieveImpurityAmount || !item.sieveMans) {
+                if (!item.sieveBeanBatch || !item.sieveImpurityType || (!item.sieveImpurityAmount && item.sieveImpurityAmount !== 0) || !item.sieveMans) {
                     this.$warningToast('请填写工艺控制页签"筛豆记录"必填项');
                     return false;
                 }
