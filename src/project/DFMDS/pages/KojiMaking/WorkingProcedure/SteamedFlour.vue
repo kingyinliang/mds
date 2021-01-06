@@ -215,17 +215,17 @@
         }
 
         submitDatas() {
-            const materialTableList = this.$refs.flourMaterialApply.getSavedOrSubmitData(this.formHeader);
+            // const materialTableList = this.$refs.flourMaterialApply.getSavedOrSubmitData(this.formHeader);
             const steSemi = this.$refs.flourMaterialCraft.getSavedOrSubmitData(this.formHeader);
             const excRequest = this.$refs.excRecord.getSavedOrSubmitData(this.formHeader, 'ZM');
             const textRequest = this.$refs.textRecord.savedData(this.formHeader, 'koji');
             return KOJI_API.KOJI_CRAFT_STEAM_SUBMIT_API({
                 ...steSemi,
-                material: {
-                    deleteDto: [],
-                    insertDto: [],
-                    updateDto: materialTableList
-                },
+                // material: {
+                //     deleteDto: [],
+                //     insertDto: [],
+                //     updateDto: materialTableList
+                // },
                 exception: {
                     insertDatas: excRequest.InsertDto,
                     removeIds: excRequest.ids,
