@@ -10,7 +10,7 @@
                 </el-table-column>
                 <el-table-column prop="unit" label="单位" width="60" />
                 <el-table-column prop="needNum" label="需求用量" width="90" />
-                <el-table-column width="70">
+                <el-table-column width="75">
                     <template slot-scope="scope">
                         <el-button
                             v-if="scope.row.isSplit === '1'"
@@ -39,7 +39,7 @@
                         <div class="required">
                             <em class="reqI">*</em>
                             <el-input v-if="isRedact && (Sapstatus === 'noPass' || Sapstatus === 'saved' || Sapstatus === '') && scope.row.status !== 'submit' && scope.row.status !== 'checked'" v-model="scope.row.batch" size="small" placeholder="手工录入" type="text" maxlength="10" :disabled="scope.row.delFlag === '1'" />
-                            <el-input v-else v-model="scope.row.batch" size="small" placeholder="手工录入" disabled type="number" />
+                            <el-input v-else v-model="scope.row.batch" size="small" placeholder="手工录入" disabled />
                         </div>
                     </template>
                 </el-table-column>
