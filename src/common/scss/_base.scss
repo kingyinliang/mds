@@ -501,23 +501,23 @@
     .el-card {
         margin-bottom: 20px;
     }
-    .el-table .warning-row:hover > td {
-        background: #FFEAAD !important;
-        background-color: #FFEAAD !important;
-    }
-    .el-table .warning-row > td {
-        background: #FFEAAD !important;
-        background-color: #FFEAAD !important;
-    }
-    .el-table .disabled-row:hover > td {
-        background: #bbb !important;
-        background-color: #bbb !important;
-    }
-    .el-table .disabled-row > td {
-        background: #bbb !important;
-        background-color: #bbb !important;
-    }
     // .el-input--small .el-input__inner { height: 22px; line-height: 22px; }
+}
+.el-table .warning-row:hover > td {
+    background: #FFEAAD !important;
+    background-color: #FFEAAD !important;
+}
+.el-table .warning-row > td {
+    background: #FFEAAD !important;
+    background-color: #FFEAAD !important;
+}
+.el-table .disabled-row:hover > td {
+    background: #bbb !important;
+    background-color: #bbb !important;
+}
+.el-table .disabled-row > td {
+    background: #bbb !important;
+    background-color: #bbb !important;
 }
 
 .newCard {

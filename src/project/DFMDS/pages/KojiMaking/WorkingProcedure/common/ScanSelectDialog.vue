@@ -3,7 +3,7 @@
  * @Anthor: Telliex
  * @Date: 2020-11-24 11:10:26
  * @LastEditors: Telliex
- * @LastEditTime: 2020-11-30 18:27:04
+ * @LastEditTime: 2020-12-29 10:19:53
 -->
 <template>
     <el-dialog title="泡豆罐选择" :close-on-click-modal="false" :visible.sync="visible">

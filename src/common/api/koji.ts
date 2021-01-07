@@ -3,7 +3,7 @@
  * @Anthor: Telliex
  * @Date: 2020-08-27 14:28:27
  * @LastEditors: Telliex
- * @LastEditTime: 2020-11-12 18:06:18
+ * @LastEditTime: 2020-12-23 17:57:42
  */
 import httpProxy from 'utils/net/httpProxy';
 const KOJI_API = {
@@ -93,6 +93,10 @@ const KOJI_API = {
     WORKPROCEDURE_QUERY_API: params => httpProxy('/koji/kojiWorkProcedure/query', 'POST', params),
 
     /**
+     * @property WORKPROCEDURE_QUERY_NOPAGE_API 制曲车间-报工工序-根据高级查询条件查询报工中间表数据列表
+     */
+    WORKPROCEDURE_QUERY_NOPAGE_API: params => httpProxy('/koji/kojiWorkProcedure/list/query', 'POST', params),
+    /**
      * @property {string} KOJI_CRAFT_HEAD_INFO_QUERY_API 制曲车间-制曲头部信息查询(洗豆 蒸面 圆盘 头部信息)
      */
     KOJI_CRAFT_HEAD_INFO_QUERY_API: params => httpProxy('/koji/kojiHouseSplit/getHouseSplite', 'GET', params),
@@ -136,6 +140,10 @@ const KOJI_API = {
      * @property {string} KOJI_MATERIAL_GET_EDIT_QUERY_API 制曲车间-修改编辑物料领用
      */
     KOJI_MATERIAL_GET_EDIT_QUERY_API: params => httpProxy('/kojiMaterial/update', 'POST', params),
+    /**
+     * @property KOJI_MATERIAL_GET_BOM_API 制曲车间-BOM物料
+     */
+    KOJI_MATERIAL_GET_BOM_API: params => httpProxy('/kojiMaterial/get/bom', 'GET', params),
 
     /**
      * @property ORDER_SPLITE_QUERY_BY_ID_API 制曲车间-订单拆分-根据车间订单Id查询曲房订单明细
@@ -206,7 +214,7 @@ const KOJI_API = {
      */
     KOJI_DISC_QUERY_SUBMIT_API: params => httpProxy('/kojiDisc/submitKojiDisc', 'POST', params),
     /**
-     * @KOJI_DISC_QUERY_SUBMIT_API 制曲车间-圆盘-溶解罐统计
+     * @KOJI_DISC_QUERY_INSTORAGE_AMOUNT_API 制曲车间-圆盘-溶解罐统计
      */
     KOJI_DISC_QUERY_INSTORAGE_AMOUNT_API: params => httpProxy('/kojiDisc/calcInStorageAmount', 'GET', params),
     /**
@@ -330,6 +338,10 @@ const KOJI_API = {
      */
     KOJI_TIMESHEET_SUBMIT_API: params => httpProxy('/koji/kojiTimeSheet/submit', 'POST', params),
     /**
+     * @property KOJI_QUERY_STEAMBEAN_API 查询SC泡豆罐
+     */
+    KOJI_QUERY_STEAMBEAN_API: params => httpProxy('/kojiSteamBean/getScPot', 'GET', params),
+    /**
      * @property KOJI_AUDIT_QUERY_CRAFT_API 审核(SC)详情-查询工艺列表
      */
     KOJI_AUDIT_QUERY_CRAFT_API: params => httpProxy('/kojiVerify/detail/queryCraft', 'GET', params),
@@ -350,6 +362,10 @@ const KOJI_API = {
      */
     KOJI_AUDIT_QUERY_MARTERIAL_API: params => httpProxy('/kojiVerify/detail/queryMaterial', 'GET', params),
     /**
+     * @property KOJI_AUDIT_QUERY_CHECKED_API 制曲车间-制曲审核-审核通过
+     */
+    KOJI_AUDIT_QUERY_CHECKED_API: params => httpProxy('/kojiVerify/checked', 'GET', params),
+    /**
      * @property KOJI_REFUSE_READY_API 制曲车间-制曲审核-准备工时退回
      */
     KOJI_REFUSE_READY_API: params => httpProxy('/kojiVerify/ready/refuse', 'POST', params),
@@ -368,7 +384,31 @@ const KOJI_API = {
     /**
      * @property KOJI_VERIFY_TAB_STATUS_API 制曲车间-制曲审核-审核详情页签查询
      */
-    KOJI_VERIFY_TAB_STATUS_API: params => httpProxy('/koji/houseTag/queryVerifyDetail', 'GET', params)
+    KOJI_VERIFY_TAB_STATUS_API: params => httpProxy('/koji/houseTag/queryVerifyDetail', 'GET', params),
+    /**
+     * @property KOJI_VERIFY_RECORD_QUERY_BYID_API 制曲车间-制曲工时的审核日志查询
+     */
+    KOJI_VERIFY_RECORD_QUERY_BYID_API: params => httpProxy('/verifyRecord/koji/queryById', 'GET', params),
+    /**
+     * @property KOJI_FERMENTOR_ADJUST_API 发酵车间-发酵罐调整-调整
+     */
+    KOJI_FERMENTOR_ADJUST_MODIFY_API: params => httpProxy('/fer/fermentorAdjust/adjust', 'POST', params),
+    /**
+     * @property KKOJI_FERMENTO_GET_MATERIAL_BATCH_API 发酵车间-发酵罐调整-根据容器查询主物料批次
+     */
+    KOJI_FERMENTO_GET_MATERIAL_BATCH_API: params => httpProxy('/fer/fermentorAdjust/getMaterialBatch', 'GET', params),
+    /**
+     * @property KOJI_FERMENTO_GET_MATERIAL_BATCH_LIST_API 发酵车间-发酵罐调整-根据容器和物料编码查询物料批次列表
+     */
+    KOJI_FERMENTO_GET_MATERIAL_BATCH_LIST_API: params => httpProxy('/fer/fermentorAdjust/getMaterialBatchList', 'GET', params),
+    /**
+     * @property KOJI_FERMENTO_GET_MATERIAL_BATCH_LIST_API 发酵车间-发酵罐调整-根据容器查询物料列表
+     */
+    KOJI_FERMENTO_GET_MATERIAL_LIST_API: params => httpProxy('/fer/fermentorAdjust/getMaterialList', 'GET', params),
+    /**
+     * @property KOJI_FERMENTOR_ADJUST_API 发酵车间-发酵罐调整-挪罐
+     */
+    KOJI_FERMENTOR_ADJUST_CHANGE_API: params => httpProxy('/fer/fermentorAdjust/change', 'POST', params)
 };
 
 export default KOJI_API;

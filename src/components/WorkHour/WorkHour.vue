@@ -8,8 +8,8 @@
                     </el-button>
                 </div>
             </template>
-            <el-table class="newTable" :data="currentFormDataGroup" :row-class-name="RowDelFlag" header-row-class-name="tableHead" border style="width: 100%;">
-                <el-table-column label="序号" type="index" :index="index => getIndexMethod(index, currentFormDataGroup)" width="60" fixed align="center" />
+            <el-table class="newTable" :data="currentFormDataGroup.filter(item=>item.delFlag!==1)" :row-class-name="RowDelFlag" header-row-class-name="tableHead" border style="width: 100%;">
+                <el-table-column label="序号" type="index" :index="index => getIndexMethod(index, currentFormDataGroup.filter(item=>item.delFlag!==1))" width="60" fixed align="center" />
                 <el-table-column prop="status" min-width="120" :show-overflow-tooltip="true">
                     <template slot="header">
                         <span class="notNull">*</span>班次
@@ -52,14 +52,14 @@
                     <template slot-scope="scope">
                         <div class="required" style="min-height: 32px; line-height: 32px;">
                             <span v-if="!isRedact" style="cursor: not-allowed;">
-                                <em v-for="(item, index) in scope.row.userList" :key="index">{{ item }}，</em>
+                                <em v-for="(item, index) in scope.row.userList" :key="index">{{ item }}{{ index | userListFilter(scope.row.userList.length) }}</em>
                             </span>
                             <span v-if="isRedact && scope.row.userType !== 'EXTERNAL' && scope.row.userType !== 'TEMP'" style="cursor: pointer;" :disabled="!(isRedact && status !== 'C' && status !== 'D' && status !== 'P' && status !=='M')" :style="{cursor:!(isRedact && status !== 'C' && status !== 'D' && status !== 'P' && status !=='M')?'not-allowed':'pointer'}" @click="selectUser(scope.row)">
-                                <em v-for="(item, index) in scope.row.userList" :key="index">{{ item }}，</em>
+                                <em v-for="(item, index) in scope.row.userList" :key="index">{{ item }}{{ index | userListFilter(scope.row.userList.length) }}</em>
                                 <em>点击选择人员</em>
                             </span>
                             <span v-if="isRedact && (scope.row.userType === 'EXTERNAL' || scope.row.userType === 'TEMP')" style="cursor: pointer;" :disabled="!(isRedact && status !== 'C' && status !== 'D' && status !== 'P' && status !=='M')" :style="{cursor:!(isRedact && status !== 'C' && status !== 'D' && status !== 'P' && status !=='M')?'not-allowed':'pointer'}" @click="dayLaborer(scope.row)">
-                                <em v-for="(item, index) in scope.row.userList" :key="index">{{ item }}，</em>
+                                <em v-for="(item, index) in scope.row.userList" :key="index">{{ item }}{{ index | userListFilter(scope.row.userList.length) }}</em>
                                 <em>点击输入人员</em>
                             </span>
                         </div>
@@ -70,7 +70,7 @@
                         <span class="notNull">*</span>开始时间
                     </template>
                     <template slot-scope="scope">
-                        <el-date-picker v-model="scope.row.startDate" type="datetime" value-format="yyyy-MM-dd HH:mm" format="yyyy-MM-dd HH:mm" placeholder="选择" size="small" :disabled="!(isRedact && status !== 'C' && status !== 'D' && status !== 'P' && status !=='M')" style="width: 180px;" />
+                        <el-date-picker v-model="scope.row.startDate" type="datetime" value-format="yyyy-MM-dd HH:mm" format="yyyy-MM-dd HH:mm" placeholder="请选择" size="small" :disabled="!(isRedact && status !== 'C' && status !== 'D' && status !== 'P' && status !=='M')" style="width: 180px;" />
                     </template>
                 </el-table-column>
                 <el-table-column prop="verify_date" width="140" :show-overflow-tooltip="true">
@@ -88,7 +88,7 @@
                         <span class="notNull">*</span>结束时间
                     </template>
                     <template slot-scope="scope">
-                        <el-date-picker v-model="scope.row.endDate" type="datetime" value-format="yyyy-MM-dd HH:mm" format="yyyy-MM-dd HH:mm" placeholder="选择" size="small" :disabled="!(isRedact && status !== 'C' && status !== 'D' && status !== 'P' && status !=='M')" style="width: 180px;" />
+                        <el-date-picker v-model="scope.row.endDate" type="datetime" value-format="yyyy-MM-dd HH:mm" format="yyyy-MM-dd HH:mm" placeholder="请选择" size="small" :disabled="!(isRedact && status !== 'C' && status !== 'D' && status !== 'P' && status !=='M')" style="width: 180px;" />
                     </template>
                 </el-table-column>
                 <el-table-column prop="verify_date" min-width="90" label="时长(H)" :show-overflow-tooltip="true">
@@ -149,6 +149,11 @@ import _ from 'lodash';
         OfficialWorker,
         LoanedPersonnel,
         TemporaryWorker
+    },
+    filters: {
+        userListFilter(index, len) {
+            return index < len - 1 ? '，' : '';
+        }
     }
 })
 
@@ -427,6 +432,7 @@ export default class ProductPeople extends Vue {
         });
         return scrapNum;
     }
+
 }
 interface CurrentDataTable {
     factory?: string;
@@ -467,5 +473,8 @@ interface UserTypeListObject {
     div {
         float: left;
     }
+}
+.el-table th.gutter {
+    display: table-cell !important;
 }
 </style>

@@ -1,12 +1,12 @@
 <template>
     <el-dialog title="订单拆分" :close-on-click-modal="false" :visible.sync="dialogFormVisible" width="1200px" custom-class="dialog__class">
         <div style="text-align: right;">
-            <el-button v-if="isAuth('steSplit')" type="primary" size="small" @click="addSplitTable">
+            <el-button v-if="isAuth('kjSplitAdd')" type="primary" size="small" @click="addSplitTable">
                 新增
             </el-button>
         </div>
-        <el-table :data="splitTable" :row-class-name="rowDelFlag" header-row-class-name="tableHead" class="newTable" border tooltip-effect="dark">
-            <el-table-column type="index" width="55" label="序号" fixed align="center" />
+        <el-table :data="splitTable.filter(item=>item.delFlag!==1)" :row-class-name="rowDelFlag" header-row-class-name="tableHead" class="newTable" border tooltip-effect="dark">
+            <el-table-column type="index" :index="index => getIndexMethod(index, splitTable.filter(item=>item.delFlag!==1))" width="55" label="序号" fixed align="center" />
             <el-table-column label="曲房状态" width="80" prop="statusName" :show-overflow-tooltip="true" />
             <el-table-column label="生产订单" width="120" prop="orderNo" :show-overflow-tooltip="true" />
             <el-table-column min-width="250" label="生产物料" :show-overflow-tooltip="true">
@@ -15,7 +15,7 @@
                 </template>
             </el-table-column>
             <el-table-column label="计划数量" width="100" prop="planOutput" />
-            <el-table-column label="单位" width="70" prop="outputUnit" />
+            <el-table-column label="单位" width="70" prop="outputUnitName" />
             <el-table-column label="曲房号" width="160" prop="kojiHouseNo" :show-overflow-tooltip="true">
                 <template slot="header">
                     <span class="notNull">* </span>曲房号
@@ -33,7 +33,7 @@
             </el-table-column>
             <el-table-column label="发酵罐/池" width="160" prop="fermentPotNo" :show-overflow-tooltip="true">
                 <template slot-scope="scope">
-                    <el-select v-model="scope.row.fermentPotNo" size="small" :disabled="!['N','S','R'].includes(scope.row.status)" filterable clearable @change="val=>setTheSameFermentPot(val,scope.row)">
+                    <el-select v-model="scope.row.fermentPotNo" size="small" :disabled="!['N','S','R'].includes(scope.row.status) || unchangeableFermentPotNo" filterable clearable @change="val=>setTheSameFermentPot(val,scope.row)">
                         <el-option
                             v-for="item in fermentPotNoOptions"
                             :key="item.optValue"
@@ -72,7 +72,7 @@
             <el-table-column label="操作时间" width="180" prop="changed" :show-overflow-tooltip="true" />
             <el-table-column label="操作" fixed="right" align="center" width="80">
                 <template slot-scope="scope">
-                    <el-button v-if="isAuth('steSplit')" type="text" icon="el-icon-delete" :disabled="['D','C','P'].includes(orderObj.orderStatus)" @click="removeDataRow(scope.row)">
+                    <el-button v-if="isAuth('kjSplitDel')" type="text" icon="el-icon-delete" :disabled="scope.row.status !== 'S' && scope.row.status !== 'N'" @click="removeDataRow(scope.row)">
                         删除
                     </el-button>
                 </template>
@@ -80,7 +80,7 @@
         </el-table>
         <span slot="footer" class="dialog-footer">
             <el-button @click="dialogFormVisible = false">取消</el-button>
-            <el-button type="primary" :disabled="splitTable.length===0" @click="submitForm()">确定</el-button>
+            <el-button v-if="isAuth('kjSplitcnf')" type="primary" :disabled="splitTable.length===0" @click="submitForm()">确定</el-button>
         </span>
     </el-dialog>
 </template>
@@ -116,10 +116,16 @@
                 this.splitTable.forEach(item => {
                     this.$set(item, 'statusName', this.orderStatusMapping[item.status])
                     this.$set(item, 'isChangeAddKojiDate', true)
+                    this.$set(item, 'delFlag', 0)
                 })
                 this.orgSplitTable = JSON.parse(JSON.stringify(this.splitTable))
             })
 
+        }
+
+        // 只要有一个不是 ['N', 'S', 'R'] 三个可编辑状态，就都不可修改
+        get unchangeableFermentPotNo() {
+            return this.splitTable.some(item => !['N', 'S', 'R'].includes(item.status))
         }
 
         // 同步发酵罐值
@@ -163,7 +169,7 @@
             const tempCheckArray: string[] = []
             const tempSplitTable: object[] = []
             this.splitTable.forEach(item => {
-                if (item.kojiHouseNo && item.addKojiDate) {
+                if (item.kojiHouseNo && item.addKojiDate && item.delFlag !== 1) {
                     tempSplitTable.push(item)
                     const temp = `${item.kojiHouseNo}-${item.addKojiDate}`
                     if (!(tempCheckArray.includes(temp))) {
@@ -353,6 +359,17 @@
 
         // 删除 item
         removeDataRow(row) {
+            if (row.canBeDeleted === '0') {
+                if (row.materialFlag === '1') {
+                    this.$warningToast('该曲房订单下存在领料数据，请删除数据后再删除曲房订单');
+                    return;
+                }
+                if (row.manHourFlag === '1') {
+                    this.$warningToast('关联订单人工工时已提交，此订单不可删除，请取消已审核订单：' + row.manHourOrders);
+                    return;
+                }
+                return;
+            }
             this.$confirm('确定是否删除？', '提示', {
                 confirmButtonText: '确定',
                 cancelButtonText: '取消',
@@ -427,6 +444,7 @@
         planOutput?: number;
         outputUnit?: string;
         outputUnitName?: string;
+        canBeDeleted?: string;
     }
 
     interface OrderObject {

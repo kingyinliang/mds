@@ -48,7 +48,9 @@
                                 {{ item.workShopName }}
                             </div>
                             <div class="message-item__content">
-                                <span>{{ item.msgContent }}</span>
+                                <el-tooltip class="item" effect="dark" :content="item.msgContent" placement="top">
+                                    <span>{{ item.msgContent }}</span>
+                                </el-tooltip>
                                 <span class="message-item__date">{{ item.created.slice(0,-3) }}</span>
                             </div>
                         </div>

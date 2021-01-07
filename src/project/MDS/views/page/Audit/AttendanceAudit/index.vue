@@ -23,7 +23,7 @@
                             </el-select>
                         </el-form-item>
                         <el-form-item label="日期：" label-width="50px">
-                            <el-date-picker v-model="plantList.startDate" type="date" placeholder="选择" value-format="yyyy-MM-dd" style="width: 140px;" /> - <el-date-picker v-model="plantList.endDate" type="date" placeholder="选择" value-format="yyyy-MM-dd" style="width: 140px;" />
+                            <el-date-picker v-model="plantList.startDate" type="date" placeholder="请选择" value-format="yyyy-MM-dd" style="width: 140px;" /> - <el-date-picker v-model="plantList.endDate" type="date" placeholder="请选择" value-format="yyyy-MM-dd" style="width: 140px;" />
                         </el-form-item>
                         <el-form-item label="考勤类型：">
                             <el-select v-model="plantList.kqlx" placeholder="请选择" size="small" style="width: 160px;">

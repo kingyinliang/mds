@@ -18,7 +18,7 @@
                 <el-table-column type="index" label="序号" :index="indexMethod" width="50" align="center" fixed />
                 <el-table-column prop="dictionaryCode" label="属性编码" :show-overflow-tooltip="true" min-width="200">
                     <template slot-scope="scope">
-                        <el-input v-model="scope.row.dictionaryCode" size="small" placeholder="输入属性编码" :disabled="!scope.row.isRedact" @blur="checkInput(scope.row)" />
+                        <el-input v-model="scope.row.dictionaryCode" size="small" placeholder="请输入属性编码" :disabled="!scope.row.isRedact" @blur="checkInput(scope.row)" />
                     </template>
                 </el-table-column>
                 <el-table-column prop="dictionaryOwner" label="属性归属人" width="200">

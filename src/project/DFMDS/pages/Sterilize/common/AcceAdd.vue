@@ -23,7 +23,7 @@
                         <span class="notNull">* </span>配置日期
                     </template>
                     <template slot-scope="scope">
-                        <el-date-picker v-model="scope.row.configDate" type="date" value-format="yyyy-MM-dd" format="yyyy.MM.dd" placeholder="选择" :disabled="!(isRedact && scope.row.checkStatus !== 'C' && scope.row.checkStatus !== 'D' && scope.row.checkStatus !== 'P')" size="small" style="width: 130px;" @change="getCookingNum(scope.row, scope.$index)" />
+                        <el-date-picker v-model="scope.row.configDate" type="date" value-format="yyyy-MM-dd" format="yyyy.MM.dd" placeholder="请选择" :disabled="!(isRedact && scope.row.checkStatus !== 'C' && scope.row.checkStatus !== 'D' && scope.row.checkStatus !== 'P')" size="small" style="width: 130px;" @change="getCookingNum(scope.row, scope.$index)" />
                     </template>
                 </el-table-column>
                 <el-table-column min-width="100px">
@@ -59,7 +59,7 @@
                         <span class="notNull">* </span>添加时间
                     </template>
                     <template slot-scope="scope">
-                        <el-date-picker v-model="scope.row.addDate" type="datetime" value-format="yyyy-MM-dd HH:mm" format="yyyy.MM.dd HH:mm" placeholder="选择" :disabled="!(isRedact && scope.row.checkStatus !== 'C' && scope.row.checkStatus !== 'D' && scope.row.checkStatus !== 'P')" size="small" style="width: 170px;" />
+                        <el-date-picker v-model="scope.row.addDate" type="datetime" value-format="yyyy-MM-dd HH:mm" format="yyyy.MM.dd HH:mm" placeholder="请选择" :disabled="!(isRedact && scope.row.checkStatus !== 'C' && scope.row.checkStatus !== 'D' && scope.row.checkStatus !== 'P')" size="small" style="width: 170px;" />
                     </template>
                 </el-table-column>
                 <el-table-column prop="transferTank" label="转运罐号" min-width="100px" :show-overflow-tooltip="true">
@@ -87,7 +87,7 @@
         </mds-card>
         <mds-card title="辅料领用" name="table1" icon-bg="#ffbf00">
             <el-table header-row-class-name="tableHead" class="newTable" :data="steAccessoriesConsume" :span-method="spanMethod" :row-class-name="rowDelFlag" border tooltip-effect="dark">
-                <el-table-column type="index" label="序号" width="50px" fixed />
+                <el-table-column type="index" :index="index => getIndexMethod(index, steAccessoriesConsume)" label="序号" width="55" fixed />
                 <el-table-column label="领用物料" min-width="160" :show-overflow-tooltip="true">
                     <template slot-scope="scope">
                         {{ scope.row.useMaterialName + ' ' + scope.row.useMaterialCode }}
@@ -122,7 +122,7 @@
                         <span class="notNull">* </span>添加时间
                     </template>
                     <template slot-scope="scope">
-                        <el-date-picker v-model="scope.row.addDate" type="datetime" value-format="yyyy-MM-dd HH:mm:ss" format="yyyy.MM.dd HH:mm" placeholder="选择" :disabled="!(isRedact && scope.row.checkStatus !== 'C' && scope.row.checkStatus !== 'D' && scope.row.checkStatus !== 'P')" size="small" style="width: 170px;" />
+                        <el-date-picker v-model="scope.row.addDate" type="datetime" value-format="yyyy-MM-dd HH:mm:ss" format="yyyy.MM.dd HH:mm" placeholder="请选择" :disabled="!(isRedact && scope.row.checkStatus !== 'C' && scope.row.checkStatus !== 'D' && scope.row.checkStatus !== 'P')" size="small" style="width: 170px;" />
                     </template>
                 </el-table-column>
                 <el-table-column min-width="140" label="称取盒编号">
@@ -163,7 +163,7 @@
                 </el-button>
             </template>
             <el-table header-row-class-name="tableHead" class="newTable" :data="newSteAccessoriesConsume" :span-method="spanTwoMethod" :row-class-name="rowDelFlag" border tooltip-effect="dark">
-                <el-table-column type="index" label="序号" width="50px" fixed />
+                <el-table-column type="index" :index="index => getIndexMethod(index, newSteAccessoriesConsume)" label="序号" width="55" fixed />
                 <el-table-column label="领用物料" width="140">
                     <template slot="header">
                         <span class="notNull">* </span>领用物料
@@ -209,7 +209,7 @@
                         <span class="notNull">* </span>添加时间
                     </template>
                     <template slot-scope="scope">
-                        <el-date-picker v-model="scope.row.addDate" type="datetime" value-format="yyyy-MM-dd HH:mm:ss" format="yyyy.MM.dd HH:mm" placeholder="选择" :disabled="!(isRedact && scope.row.checkStatus !== 'C' && scope.row.checkStatus !== 'D' && scope.row.checkStatus !== 'P')" size="small" />
+                        <el-date-picker v-model="scope.row.addDate" type="datetime" value-format="yyyy-MM-dd HH:mm:ss" format="yyyy.MM.dd HH:mm" placeholder="请选择" :disabled="!(isRedact && scope.row.checkStatus !== 'C' && scope.row.checkStatus !== 'D' && scope.row.checkStatus !== 'P')" size="small" />
                     </template>
                 </el-table-column>
                 <el-table-column label="备注">
@@ -435,7 +435,7 @@
                 this.transferTank = data.data
             })
             COMMON_API.HOLDER_DROPDOWN_API({
-                deptId: this.formHeader.workShop,
+                factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
                 holderType: ['023']
             }).then(({ data }) => {
                 this.useBoxNo = data.data

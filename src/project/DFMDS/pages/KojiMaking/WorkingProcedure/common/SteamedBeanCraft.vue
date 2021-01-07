@@ -7,25 +7,25 @@
                         <template slot="label">
                             蒸球压力(Mpa)：
                         </template>
-                        <el-input v-model="steamBallPressure" placeholder="" :disabled="!isRedact" size="small" style="width: 175px;">
+                        <el-input v-model="steamBallPressure" placeholder="" :disabled="!(isRedact&& isStatus !== 'C' && isStatus !== 'D' && isStatus !== 'P')" size="small" style="width: 175px;">
                             <span slot="suffix" class="stock-form_item_input_suffix">Mpa</span>
                         </el-input>
                     </el-form-item>
                     <el-form-item class="cleanMarginBottom floatr">
-                        <el-button type="primary" size="small" :disabled="!isRedact" @click="addDataRow()">
+                        <el-button v-if="isAuth('kjSBControlAdd')" type="primary" size="small" :disabled="!(isRedact && isStatus !== 'C' && isStatus !== 'D' && isStatus !== 'P')" @click="addDataRow()">
                             新增
                         </el-button>
                     </el-form-item>
                 </el-form>
             </template>
             <el-table header-row-class-name="tableHead" class="newTable" :data="craftSteamBeanTable" :row-class-name="RowDelFlag" border tooltip-effect="dark" size="mini" style="min-height: 90px;">
-                <el-table-column type="index" :index="index => getIndexMethod(index, craftSteamBeanTable)" label="序号" width="50px" fixed />
+                <el-table-column type="index" :index="index => getIndexMethod(index, craftSteamBeanTable)" label="序号" width="55" fixed />
                 <el-table-column width="140" show-overflow-tooltip>
                     <template slot="header">
                         <span class="notNull">* </span>蒸球号
                     </template>
                     <template slot-scope="scope">
-                        <el-select v-model="scope.row.steamBallNo" placeholder="请选择" :disabled="!isRedact" size="small" style="width: 100%;">
+                        <el-select v-model="scope.row.steamBallNo" placeholder="请选择" :disabled="!(isRedact&& isStatus !== 'C' && isStatus !== 'D' && isStatus !== 'P' && scope.row.status !== 'C' && scope.row.status !== 'D' && scope.row.status !== 'P')" size="small" style="width: 100%;" @change="val=>modifySteamBall(val,scope.row)">
                             <el-option v-for="(subItem, index) in steamBallList" :key="index" :label="subItem.holderName" :value="subItem.holderNo" />
                         </el-select>
                     </template>
@@ -35,7 +35,7 @@
                         <span class="notNull">* </span>加汽开始时间
                     </template>
                     <template slot-scope="scope">
-                        <el-date-picker v-model="scope.row.addSteamStart" type="datetime" value-format="yyyy-MM-dd HH:mm" format="yyyy-MM-dd HH:mm" placeholder="选择" :disabled="!isRedact" style="width: 170px;" size="small" />
+                        <el-date-picker v-model="scope.row.addSteamStart" type="datetime" value-format="yyyy-MM-dd HH:mm" format="yyyy-MM-dd HH:mm" placeholder="请选择" :disabled="!(isRedact&& isStatus !== 'C' && isStatus !== 'D' && isStatus !== 'P' && scope.row.status !== 'C' && scope.row.status !== 'D' && scope.row.status !== 'P')" style="width: 170px;" size="small" />
                     </template>
                 </el-table-column>
                 <el-table-column min-width="192">
@@ -43,19 +43,19 @@
                         <span class="notNull">* </span>加汽结束时间
                     </template>
                     <template slot-scope="scope">
-                        <el-date-picker v-model="scope.row.addSteamEnd" type="datetime" value-format="yyyy-MM-dd HH:mm" format="yyyy-MM-dd HH:mm" placeholder="选择" :disabled="!isRedact" style="width: 170px;" size="small" />
+                        <el-date-picker v-model="scope.row.addSteamEnd" type="datetime" value-format="yyyy-MM-dd HH:mm" format="yyyy-MM-dd HH:mm" placeholder="请选择" :disabled="!(isRedact && isStatus !== 'C' && isStatus !== 'D' && isStatus !== 'P'&& scope.row.status !== 'C' && scope.row.status !== 'D' && scope.row.status !== 'P')" style="width: 170px;" size="small" />
                     </template>
                 </el-table-column>
                 <el-table-column label="汽包压力" width="144">
                     <template slot-scope="scope">
-                        <el-input v-model="scope.row.steamPocketPressure" placeholder="输入" :disabled="!isRedact" size="small" style="width: 120px;">
+                        <el-input v-model="scope.row.steamPocketPressure" placeholder="请输入" :disabled="!(isRedact&& isStatus !== 'C' && isStatus !== 'D' && isStatus !== 'P' && scope.row.status !== 'C' && scope.row.status !== 'D' && scope.row.status !== 'P')" size="small" style="width: 120px; line-height: 32px;">
                             <span slot="suffix" class="stock-form_item_input_suffix">Mpa</span>
                         </el-input>
                     </template>
                 </el-table-column>
                 <el-table-column label="转动圈数" width="144">
                     <template slot-scope="scope">
-                        <el-input v-model="scope.row.turnCount" placeholder="输入" :disabled="!isRedact" size="small" style="width: 120px;" />
+                        <el-input v-model="scope.row.turnCount" placeholder="请输入" :disabled="!(isRedact && isStatus !== 'C' && isStatus !== 'D' && isStatus !== 'P'&& scope.row.status !== 'C' && scope.row.status !== 'D' && scope.row.status !== 'P')" size="small" style="width: 120px;" />
                     </template>
                 </el-table-column>
                 <el-table-column label="蒸煮时间" width="80">
@@ -65,7 +65,7 @@
                 </el-table-column>
                 <el-table-column label="保压时间" width="144">
                     <template slot-scope="scope">
-                        <el-input v-model="scope.row.pressureDuration" placeholder="输入" :disabled="!isRedact" size="small" style="width: 120px;">
+                        <el-input v-model="scope.row.pressureDuration" placeholder="请输入" :disabled="!(isRedact&& isStatus !== 'C' && isStatus !== 'D' && isStatus !== 'P' && scope.row.status !== 'C' && scope.row.status !== 'D' && scope.row.status !== 'P')" size="small" style="width: 120px; line-height: 32px;">
                             <span slot="suffix" class="stock-form_item_input_suffix">min</span>
                         </el-input>
                     </template>
@@ -75,12 +75,14 @@
                         熟豆放豆时间
                     </template>
                     <template slot-scope="scope">
-                        <el-date-picker v-model="scope.row.addBeanDate" type="datetime" value-format="yyyy-MM-dd HH:mm" format="yyyy-MM-dd HH:mm" placeholder="选择" :disabled="!isRedact" style="width: 170px;" size="small" />
+                        <el-date-picker v-model="scope.row.addBeanDate" type="datetime" value-format="yyyy-MM-dd HH:mm" format="yyyy-MM-dd HH:mm" placeholder="请选择" :disabled="!(isRedact&& isStatus !== 'C' && isStatus !== 'D' && isStatus !== 'P' && scope.row.status !== 'C' && scope.row.status !== 'D' && scope.row.status !== 'P')" style="width: 170px;" size="small" />
                     </template>
                 </el-table-column>
                 <el-table-column label="备注" width="170">
                     <template slot-scope="scope">
-                        <el-input v-model.trim="scope.row.remark" size="small" placeholder="请输入" :disabled="!isRedact" />
+                        <el-tooltip :disabled="!scope.row.remark" effect="dark" :content="scope.row.remark" placement="top">
+                            <el-input v-model.trim="scope.row.remark" size="small" placeholder="请输入" :disabled="!(isRedact&& isStatus !== 'C' && isStatus !== 'D' && isStatus !== 'P' && scope.row.status !== 'C' && scope.row.status !== 'D' && scope.row.status !== 'P')" />
+                        </el-tooltip>
                     </template>
                 </el-table-column>
                 <el-table-column label="操作人" width="140">
@@ -95,7 +97,7 @@
                 </el-table-column>
                 <el-table-column label="操作" width="70" fixed="right">
                     <template slot-scope="scope">
-                        <el-button class="delBtn" type="text" icon="el-icon-delete" size="mini" :disabled="!isRedact" @click="removeRow(scope.row)">
+                        <el-button class="delBtn" type="text" icon="el-icon-delete" size="mini" :disabled="!(isRedact&& isStatus !== 'C' && isStatus !== 'D' && isStatus !== 'P' && scope.row.status !== 'C' && scope.row.status !== 'D' && scope.row.status !== 'P')" @click="removeRow(scope.row)">
                             删除
                         </el-button>
                     </template>
@@ -106,7 +108,7 @@
             <template slot="titleBtn">
                 <el-form :inline="true" label-width="115px">
                     <el-form-item class="cleanMarginBottom floatr">
-                        <el-button type="primary" size="small" :disabled="!isRedact" @click="addDataRow('hard')">
+                        <el-button v-if="isAuth('kjSBControlAdd')" type="primary" size="small" :disabled="!(isRedact && isStatus !== 'C' && isStatus !== 'D' && isStatus !== 'P')" @click="addDataRow('hard')">
                             新增
                         </el-button>
                     </el-form-item>
@@ -119,7 +121,7 @@
                         <span class="notNull">* </span>蒸球号
                     </template>
                     <template slot-scope="scope">
-                        <el-select v-model="scope.row.steamBallNo" placeholder="请选择" :disabled="!isRedact" size="small" style="width: 100%;">
+                        <el-select v-model="scope.row.steamBallNo" placeholder="请选择" :disabled="!(isRedact && isStatus !== 'C' && isStatus !== 'D' && isStatus !== 'P'&& scope.row.status !== 'C' && scope.row.status !== 'D' && scope.row.status !== 'P')" size="small" style="width: 100%;">
                             <el-option v-for="(subItem, index) in steamBallList" :key="index" :label="subItem.holderName" :value="subItem.holderNo" />
                         </el-select>
                     </template>
@@ -129,7 +131,7 @@
                         <span class="notNull">* </span>蒸豆硬度1
                     </template>
                     <template slot-scope="scope">
-                        <el-input v-model="scope.row.hardnessOne" placeholder="输入" :disabled="!isRedact" size="small" style="width: 120px;" />
+                        <el-input v-model="scope.row.hardnessOne" placeholder="请输入" :disabled="!(isRedact&& isStatus !== 'C' && isStatus !== 'D' && isStatus !== 'P' && scope.row.status !== 'C' && scope.row.status !== 'D' && scope.row.status !== 'P')" size="small" style="width: 120px;" />
                     </template>
                 </el-table-column>
                 <el-table-column min-width="146">
@@ -137,7 +139,7 @@
                         <span class="notNull">* </span>蒸豆硬度2
                     </template>
                     <template slot-scope="scope">
-                        <el-input v-model="scope.row.hardnessTwo" placeholder="输入" :disabled="!isRedact" size="small" style="width: 120px;" />
+                        <el-input v-model="scope.row.hardnessTwo" placeholder="请输入" :disabled="!(isRedact&& isStatus !== 'C' && isStatus !== 'D' && isStatus !== 'P' && scope.row.status !== 'C' && scope.row.status !== 'D' && scope.row.status !== 'P')" size="small" style="width: 120px;" />
                     </template>
                 </el-table-column>
                 <el-table-column min-width="146">
@@ -145,7 +147,7 @@
                         <span class="notNull">* </span>蒸豆硬度3
                     </template>
                     <template slot-scope="scope">
-                        <el-input v-model="scope.row.hardnessThree" placeholder="输入" :disabled="!isRedact" size="small" style="width: 120px;" />
+                        <el-input v-model="scope.row.hardnessThree" placeholder="请输入" :disabled="!(isRedact && isStatus !== 'C' && isStatus !== 'D' && isStatus !== 'P' && scope.row.status !== 'C' && scope.row.status !== 'D' && scope.row.status !== 'P')" size="small" style="width: 120px;" />
                     </template>
                 </el-table-column>
                 <el-table-column min-width="146">
@@ -153,7 +155,7 @@
                         <span class="notNull">* </span>蒸豆硬度4
                     </template>
                     <template slot-scope="scope">
-                        <el-input v-model="scope.row.hardnessFour" placeholder="输入" :disabled="!isRedact" size="small" style="width: 120px;" />
+                        <el-input v-model="scope.row.hardnessFour" placeholder="请输入" :disabled="!(isRedact&& isStatus !== 'C' && isStatus !== 'D' && isStatus !== 'P' && scope.row.status !== 'C' && scope.row.status !== 'D' && scope.row.status !== 'P')" size="small" style="width: 120px;" />
                     </template>
                 </el-table-column>
                 <el-table-column min-width="146">
@@ -161,7 +163,7 @@
                         <span class="notNull">* </span>蒸豆硬度5
                     </template>
                     <template slot-scope="scope">
-                        <el-input v-model="scope.row.hardnessFive" placeholder="输入" :disabled="!isRedact" size="small" style="width: 120px;" />
+                        <el-input v-model="scope.row.hardnessFive" placeholder="请输入" :disabled="!(isRedact && isStatus !== 'C' && isStatus !== 'D' && isStatus !== 'P'&& scope.row.status !== 'C' && scope.row.status !== 'D' && scope.row.status !== 'P')" size="small" style="width: 120px;" />
                     </template>
                 </el-table-column>
                 <el-table-column min-width="146">
@@ -169,7 +171,7 @@
                         <span class="notNull">* </span>蒸豆硬度6
                     </template>
                     <template slot-scope="scope">
-                        <el-input v-model="scope.row.hardnessSix" placeholder="输入" :disabled="!isRedact" size="small" style="width: 120px;" />
+                        <el-input v-model="scope.row.hardnessSix" placeholder="请输入" :disabled="!(isRedact && isStatus !== 'C' && isStatus !== 'D' && isStatus !== 'P'&& scope.row.status !== 'C' && scope.row.status !== 'D' && scope.row.status !== 'P')" size="small" style="width: 120px;" />
                     </template>
                 </el-table-column>
                 <el-table-column min-width="146">
@@ -177,7 +179,7 @@
                         <span class="notNull">* </span>蒸豆硬度7
                     </template>
                     <template slot-scope="scope">
-                        <el-input v-model="scope.row.hardnessSeven" placeholder="输入" :disabled="!isRedact" size="small" style="width: 120px;" />
+                        <el-input v-model="scope.row.hardnessSeven" placeholder="请输入" :disabled="!(isRedact&& isStatus !== 'C' && isStatus !== 'D' && isStatus !== 'P' && scope.row.status !== 'C' && scope.row.status !== 'D' && scope.row.status !== 'P')" size="small" style="width: 120px;" />
                     </template>
                 </el-table-column>
                 <el-table-column min-width="146">
@@ -185,7 +187,7 @@
                         <span class="notNull">* </span>蒸豆硬度8
                     </template>
                     <template slot-scope="scope">
-                        <el-input v-model="scope.row.hardnessEight" placeholder="输入" :disabled="!isRedact" size="small" style="width: 120px;" />
+                        <el-input v-model="scope.row.hardnessEight" placeholder="请输入" :disabled="!(isRedact&& isStatus !== 'C' && isStatus !== 'D' && isStatus !== 'P' && scope.row.status !== 'C' && scope.row.status !== 'D' && scope.row.status !== 'P')" size="small" style="width: 120px;" />
                     </template>
                 </el-table-column>
                 <el-table-column min-width="146">
@@ -193,7 +195,7 @@
                         <span class="notNull">* </span>蒸豆硬度9
                     </template>
                     <template slot-scope="scope">
-                        <el-input v-model="scope.row.hardnessNine" placeholder="输入" :disabled="!isRedact" size="small" style="width: 120px;" />
+                        <el-input v-model="scope.row.hardnessNine" placeholder="请输入" :disabled="!(isRedact && isStatus !== 'C' && isStatus !== 'D' && isStatus !== 'P'&& scope.row.status !== 'C' && scope.row.status !== 'D' && scope.row.status !== 'P')" size="small" style="width: 120px;" />
                     </template>
                 </el-table-column>
                 <el-table-column min-width="146">
@@ -201,12 +203,14 @@
                         <span class="notNull">* </span>蒸豆硬度10
                     </template>
                     <template slot-scope="scope">
-                        <el-input v-model="scope.row.hardnessTen" placeholder="输入" :disabled="!isRedact" size="small" style="width: 120px;" />
+                        <el-input v-model="scope.row.hardnessTen" placeholder="请输入" :disabled="!(isRedact && isStatus !== 'C' && isStatus !== 'D' && isStatus !== 'P'&& scope.row.status !== 'C' && scope.row.status !== 'D' && scope.row.status !== 'P')" size="small" style="width: 120px;" />
                     </template>
                 </el-table-column>
                 <el-table-column label="备注" width="170">
                     <template slot-scope="scope">
-                        <el-input v-model.trim="scope.row.remark" size="small" placeholder="请输入" :disabled="!isRedact" />
+                        <el-tooltip :disabled="!scope.row.remark" effect="dark" :content="scope.row.remark" placement="top">
+                            <el-input v-model.trim="scope.row.remark" size="small" placeholder="请输入" :disabled="!(isRedact && isStatus !== 'C' && isStatus !== 'D' && isStatus !== 'P' && scope.row.status !== 'C' && scope.row.status !== 'D' && scope.row.status !== 'P')" />
+                        </el-tooltip>
                     </template>
                 </el-table-column>
                 <el-table-column label="操作人" width="140">
@@ -221,7 +225,7 @@
                 </el-table-column>
                 <el-table-column label="操作" width="70" fixed="right">
                     <template slot-scope="scope">
-                        <el-button class="delBtn" type="text" icon="el-icon-delete" size="mini" :disabled="!isRedact" @click="removeRow(scope.row)">
+                        <el-button class="delBtn" type="text" icon="el-icon-delete" size="mini" :disabled="!(isRedact && isStatus !== 'C' && isStatus !== 'D' && isStatus !== 'P'&& scope.row.status !== 'C' && scope.row.status !== 'D' && scope.row.status !== 'P')" @click="removeRow(scope.row)">
                             删除
                         </el-button>
                     </template>
@@ -235,7 +239,8 @@
 <script lang="ts">
     import { Vue, Component, Prop } from 'vue-property-decorator';
     import { COMMON_API, KOJI_API, AUDIT_API } from 'common/api/api';
-    import { dateFormat, getUserNameNumber, getDateDiff, dataEntryData } from 'utils/utils';
+    import { dateFormat, getUserNameNumber, getDateDiff } from 'utils/utils';
+    import _ from 'lodash';
 
 
     @Component({
@@ -243,6 +248,7 @@
     })
     export default class WashBeanMaterialCraft extends Vue {
         @Prop({ default: false }) isRedact: boolean;
+        @Prop({ default: 'N' }) isStatus: string;
 
         // 订单信息
         formHeader: Craft = {};
@@ -251,7 +257,7 @@
         craftSteamBeanTable: CraftList[] = [];
         // 蒸球压力
         steamBallPressure = '';
-
+        orgSteamBallPressure = '';
         // 硬度数据
         hardTable: CraftList[] = [];
 
@@ -260,13 +266,13 @@
         temHardTable = []
 
         // 蒸球list
-        steamBallList = [];
+        steamBallList: SteamBallListOption[] = [];
 
         // 审核记录
         craftAuditList = [];
 
         // 提交保存时获取处理数据
-        getSavedOrSubmitData(formHeader, isSubmit) {
+        getSavedOrSubmitData(formHeader) {
             const handleCraftSteamBeanTable = () => {
                 this.craftSteamBeanTable.map(item => {
                     item.steamBallPressure = this.steamBallPressure;
@@ -276,50 +282,69 @@
             this.steamBallPressure && handleCraftSteamBeanTable();
 
             // 蒸豆记录
-            const tableSaveDto = {
+            const tableSaveDto: SendDataForm = {
                 deleteDto: [],
                 insertDto: [],
                 updateDto: []
             };
             // 蒸豆硬度
-            const hardTableSaveDto = {
+            const hardTableSaveDto: SendDataForm = {
                 deleteDto: [],
                 insertDto: [],
                 updateDto: []
             };
 
-            dataEntryData(formHeader, this.craftSteamBeanTable, this.temCraftSteamBeanTable, tableSaveDto.deleteDto, tableSaveDto.insertDto, tableSaveDto.updateDto, (item) => {
-                item.kojiOrderNo = formHeader.kojiOrderNo;
-                item.orderNo = formHeader.orderNo;
-            });
-            dataEntryData(formHeader, this.hardTable, this.temHardTable, hardTableSaveDto.deleteDto, hardTableSaveDto.insertDto, hardTableSaveDto.updateDto, (item) => {
-                item.kojiOrderNo = formHeader.kojiOrderNo;
-                item.orderNo = formHeader.orderNo;
-            });
+            this.craftSteamBeanTable.forEach((item: CraftList, index) => {
+                if (item.delFlag === 1) {
+                    if (item.id) {
+                        tableSaveDto.deleteDto.push(item.id)
+                    }
+                } else if (item.id) {
+                    if (!_.isEqual(this.temCraftSteamBeanTable[index], item)) {
+                        item.kojiOrderNo = formHeader.kojiOrderNo
+                        item.orderNo = formHeader.orderNo
+                        tableSaveDto.updateDto.push(item)
+                    }
+                } else {
+                    item.kojiOrderNo = formHeader.kojiOrderNo
+                    item.orderNo = formHeader.orderNo
+                    tableSaveDto.insertDto.push(item)
+                }
+            })
 
-            function filterTableData(whichTable, type) {
-                if (type === 'insert') {
-                    return whichTable.filter(item => !item.id && item.delFlag !== 1);
+            this.hardTable.forEach((item: CraftList, index) => {
+                if (item.delFlag === 1) {
+                    if (item.id) {
+                        hardTableSaveDto.deleteDto.push(item.id)
+                    }
+                } else if (item.id) {
+                    if (!_.isEqual(this.temHardTable[index], item)) {
+                        item.kojiOrderNo = formHeader.kojiOrderNo
+                        item.orderNo = formHeader.orderNo
+                        hardTableSaveDto.updateDto.push(item)
+                    }
+                } else {
+                    item.kojiOrderNo = formHeader.kojiOrderNo
+                    item.orderNo = formHeader.orderNo
+                    hardTableSaveDto.insertDto.push(item)
                 }
-                if (type === 'update') {
-                    return whichTable.filter(item => item.id && item.delFlag !== 1);
-                }
-                if (type === 'del') {
-                    return whichTable.filter(item => item.id && item.delFlag === 0);
-                }
-            }
+            })
 
             return {
-                steamBean: isSubmit === 'submit' ? {
-                    insertDto: filterTableData(this.craftSteamBeanTable, 'insert'),
-                    updateDto: filterTableData(this.craftSteamBeanTable, 'update'),
-                    deleteDto: filterTableData(this.craftSteamBeanTable, 'del')
-                } : tableSaveDto,
-                steamBeanHardness: isSubmit === 'submit' ? {
-                    insertDto: filterTableData(this.hardTable, 'insert'),
-                    updateDto: filterTableData(this.hardTable, 'update'),
-                    deleteDto: filterTableData(this.hardTable, 'del')
-                } : hardTableSaveDto
+                steamBean: tableSaveDto.insertDto.length === 0 && tableSaveDto.updateDto.length === 0 && tableSaveDto.deleteDto.length === 0 ? null : {
+                    insertDto: tableSaveDto.insertDto,
+                    updateDto: tableSaveDto.updateDto,
+                    deleteDto: tableSaveDto.deleteDto,
+                    kojiOrderNo: formHeader.kojiOrderNo,
+                    orderNo: formHeader.orderNo
+                },
+                steamBeanHardness: hardTableSaveDto.insertDto.length === 0 && hardTableSaveDto.updateDto.length === 0 && hardTableSaveDto.deleteDto.length === 0 ? null : {
+                    insertDto: hardTableSaveDto.insertDto,
+                    updateDto: hardTableSaveDto.updateDto,
+                    deleteDto: hardTableSaveDto.deleteDto,
+                    kojiOrderNo: formHeader.kojiOrderNo,
+                    orderNo: formHeader.orderNo
+                }
             };
         }
 
@@ -506,7 +531,7 @@
 
         // 查询最新审核记录
         getAuditList(orderNo) {
-            AUDIT_API.AUDIT_LOG_LIST_API({ orderNo, verifyType: '' }).then(({ data }) => {
+            AUDIT_API.STE_AUDIT_LOG_API({ orderNo, splitOrderNo: this.formHeader.kojiOrderNo, verifyType: ['SB_CONTROL', 'TIMESHEET'] }).then(({ data }) => {
                 this.craftAuditList = data.data;
             });
         }
@@ -518,8 +543,15 @@
                 factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
                 holderType: '026'
             }).then(({ data }) => {
+                console.log('查询蒸球list')
+                console.log(data.data)
                 this.steamBallList = data.data
             })
+        }
+
+        modifySteamBall(val, row) {
+            row.steamBallName = this.steamBallList.filter(item => item.holderNo === val)[0].holderName
+            row.steamBallId = this.steamBallList.filter(item => item.holderNo === val)[0].id
         }
     }
 
@@ -605,6 +637,24 @@
         deviceNo?: string;
         deviceName?: string;
     }
+
+    interface SendDataForm{
+        deleteDto: string[];
+        insertDto: CraftList[];
+        updateDto: CraftList[];
+    }
+
+    interface SteamBallListOption{
+        deptId?: string;
+        holderArea?: string;
+        holderBatch?: string;
+        holderName?: string;
+        holderNo?: string;
+        holderStatus?: string;
+        holderType?: string;
+        id?: string;
+    }
+
 </script>
 
 <style lang="scss" scoped>

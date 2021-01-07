@@ -35,7 +35,7 @@
                     <el-table-column type="index" label="序号" width="55" align="center" fixed />
                     <el-table-column label="包材物料" show-overflow-tooltip>
                         <template slot-scope="scope">
-                            {{ scope.row.materialCode + ' ' + scope.row.materialName }}
+                            {{ scope.row.materialName + ' ' + scope.row.materialCode }}
                         </template>
                     </el-table-column>
                     <el-table-column label="单位" prop="moveUnit" width="60" />
@@ -65,6 +65,19 @@
                             {{ transferForm.materialCode + ' ' + transferForm.materialName }}
                         </p>
                     </el-form-item>
+                    <el-form-item label="批次：">
+                        <el-input v-model="transferForm.batch" type="text" maxlength="10" style="width: 380px;" disabled />
+                    </el-form-item>
+                    <el-form-item label="当前库存：">
+                        <p class="disabled-text" style="width: 380px;">
+                            {{ transferForm.storageAmount = Number(amout) - Number(transferForm.amount) }}
+                        </p>
+                    </el-form-item>
+                    <el-form-item label="转入线：" prop="productLineIn">
+                        <el-select v-model="transferForm.productLineIn" filterable placeholder="请选择" style="width: 380px;">
+                            <el-option v-for="(item, index) in productlineListFilter" :key="index" :label="item.deptName" :value="item.id" />
+                        </el-select>
+                    </el-form-item>
                     <el-form-item label="数量：" prop="amount">
                         <el-input v-model="transferForm.amount" type="number" style="width: 380px;" />
                     </el-form-item>
@@ -72,14 +85,6 @@
                         <p class="disabled-text" style="width: 380px;">
                             {{ transferForm.storageUnit }}
                         </p>
-                    </el-form-item>
-                    <el-form-item label="批次：">
-                        <el-input v-model="transferForm.batch" type="text" maxlength="10" style="width: 380px;" />
-                    </el-form-item>
-                    <el-form-item label="转入线：" prop="productLineIn">
-                        <el-select v-model="transferForm.productLineIn" filterable placeholder="请选择" style="width: 380px;">
-                            <el-option v-for="(item, index) in productlineListFilter" :key="index" :label="item.deptName" :value="item.id" />
-                        </el-select>
                     </el-form-item>
                     <el-form-item label="备注：">
                         <el-input v-model="transferForm.remark" type="text" style="width: 380px;" />
@@ -114,7 +119,12 @@
                         </p>
                     </el-form-item>
                     <el-form-item label="批次：">
-                        <el-input v-model="adjustForm.batch" type="text" maxlength="10" style="width: 380px;" />
+                        <el-input v-model="adjustForm.batch" type="text" maxlength="10" style="width: 380px;" disabled />
+                    </el-form-item>
+                    <el-form-item label="当前库存：">
+                        <p class="disabled-text" style="width: 380px;">
+                            {{ adjustForm.storageAmount = adjustForm.moveType === 'INVENTORY_PROFIT'? Number(amout) + Number(adjustForm.amount) : Number(amout) - Number(adjustForm.amount) }}
+                        </p>
                     </el-form-item>
                     <el-form-item label="调整类型：" prop="moveType">
                         <el-select v-model="adjustForm.moveType" filterable placeholder="请选择" style="width: 380px;">
@@ -239,7 +249,7 @@ export default class MaterialStock extends Vue {
             label: '包材物料',
             prop: 'materialName',
             formatter: (row) => {
-                return row.materialCode + ' ' + row.materialName;
+                return row.materialName + ' ' + row.materialCode;
             },
             minwidth: '330'
         },
@@ -306,6 +316,8 @@ export default class MaterialStock extends Vue {
     visibleAdjust = false; // 调整弹窗
     adjustForm = {}
 
+    amout = 0
+
     mounted() {
         this.getProductline();
         this.getMoveType();
@@ -314,9 +326,9 @@ export default class MaterialStock extends Vue {
         // })
     }
 
-    updated() {
-        this.$refs.queryTable.getDataList(true)
-    }
+    // updated() {
+    //     this.$refs.queryTable.getDataList(true)
+    // }
     // createdEnd() {
     // }
 
@@ -353,6 +365,7 @@ export default class MaterialStock extends Vue {
         PKG_API.PKG_MATERIALSTOCK_STORAGEITEM_API({
             factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
             pkgPackageStorageId: row['id'],
+            batch: row['batch'],
             current: this.current,
             size: this.size
         }).then(({ data }) => {
@@ -364,6 +377,7 @@ export default class MaterialStock extends Vue {
 
     // 转线
     changeTransferLine(row: object) {
+        this.amout = row['storageAmount']
         this.productlineListFilter = [];
         this.productlineListFilter = this.productlineList.filter(n => n['id'] !== row['productLine']);
         this.transferForm = {
@@ -374,7 +388,8 @@ export default class MaterialStock extends Vue {
             materialName: row['materialName'],
             amount: '',
             storageUnit: row['storageUnit'],
-            batch: '',
+            batch: row['batch'],
+            storageAmount: row['storageAmount'],
             productLineIn: '',
             remark: '',
             changer: getUserNameNumber(),
@@ -391,6 +406,10 @@ export default class MaterialStock extends Vue {
 
     // 保存 转线
     saveTransferLine(formName) {
+        if (this.transferForm['storageAmount'] < 0) {
+            this.$warningToast('库存不能为负')
+            return
+        }
         this.$refs[formName].validate((valid) => {
             if (valid) {
                 this.transferForm['factory'] = JSON.parse(sessionStorage.getItem('factory') || '{}').id;
@@ -405,11 +424,13 @@ export default class MaterialStock extends Vue {
 
     // 调整
     doAdjust(row: object) {
+        this.amout = row['storageAmount']
         this.adjustForm = {
             packageStorageId: row['id'],
             materialCode: row['materialCode'],
             materialName: row['materialName'],
-            batch: '',
+            batch: row['batch'],
+            storageAmount: row['storageAmount'],
             moveType: '',
             amount: '',
             storageUnit: row['storageUnit'],
@@ -428,6 +449,10 @@ export default class MaterialStock extends Vue {
 
     // 保存 调整
     saveAdjustForm(formName) {
+        if (this.adjustForm['storageAmount'] < 0) {
+            this.$warningToast('库存不能为负')
+            return
+        }
         this.$refs[formName].validate((valid) => {
             if (valid) {
                 this.adjustForm['factory'] = JSON.parse(sessionStorage.getItem('factory') || '{}').id;
@@ -450,5 +475,9 @@ export default class MaterialStock extends Vue {
         this.current = val;
         this.getDetailLog(this.row);
     }
+}
+interface FormObj{
+    storageAmount?: number;
+    amount?: string;
 }
 </script>

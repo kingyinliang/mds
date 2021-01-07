@@ -2,9 +2,9 @@
     <div>
         <data-entry
             ref="dataEntry"
-            redact-auth="steSemiEdit"
-            save-auth="steSemiEdit"
-            submit-auth="steSemiSubmit"
+            redact-auth="kjSCWBEdit"
+            save-auth="kjSCWBSave"
+            submit-auth="kjSCWBSubmit"
             :order-status="formHeader.statusName"
             :status-title="'工序状态'"
             :header-base="headerBase"
@@ -16,13 +16,13 @@
             @success="getOrderList"
         >
             <template slot="1" slot-scope="data">
-                <wash-bean-material-apply ref="washBeanMaterialApply" :is-redact="data.isRedact" :sieve-total-num="sieveTotalNum" @setMaterialTable="setMaterialTable" />
+                <wash-bean-material-apply ref="washBeanMaterialApply" :is-status="washBeanMaterialApplyStatus" :is-redact="data.isRedact" :sieve-total-num="sieveTotalNum" @setMaterialTable="setMaterialTable" />
             </template>
             <template slot="2" slot-scope="data">
-                <wash-bean-material-craft ref="washBeanMaterialCraft" :is-redact="data.isRedact" :set-material-table-data="setMaterialTableData" @changeSieveTotalNum="changeSieveTotalNum" />
+                <wash-bean-material-craft ref="washBeanMaterialCraft" craft-add="kjSCWBControlAdd" :is-status="washBeanMaterialCraftStatus" :is-redact="data.isRedact" :set-material-table-data="setMaterialTableData" @changeSieveTotalNum="changeSieveTotalNum" />
             </template>
             <template slot="3" slot-scope="data">
-                <koji-exc-record ref="excRecord" :is-redact="data.isRedact" :form-header="formHeader" />
+                <koji-exc-record ref="excRecord" :is-redact="data.isRedact" exp-add="kjSCWBExpAdd" :form-header="formHeader" />
             </template>
             <template slot="4" slot-scope="data">
                 <koji-text-record ref="textRecord" :is-redact="data.isRedact" />
@@ -58,8 +58,6 @@
             dataEntry: HTMLFormElement;
         }
 
-        orderIndex=['已同步', '已保存', '待审核', '已审核', '已过账', '已退回', '未录入']
-
         formHeader: OrderData = {};
         jumpFromAudit=false // is from audit ?
 
@@ -67,6 +65,8 @@
         sieveTotalNum = 0;
         // 物料领用记录 == 批次信息
         setMaterialTableData = [];
+        washBeanMaterialApplyStatus='N';
+        washBeanMaterialCraftStatus='N';
 
         changeSieveTotalNum(num) {
             this.sieveTotalNum = num;
@@ -137,8 +137,12 @@
         }
 
         mounted() {
+            // 跳转用
             if (typeof this.$route.params.order !== 'undefined') {
-                this.jumpFromAudit = true
+                this.jumpFromAudit = true;
+                setTimeout(() => {
+                    this.$refs.dataEntry.activeName = this.$route.params.activeName;
+                }, 2000);
             }
             this.getOrderList();
         }
@@ -164,15 +168,16 @@
         // 获取页签状态
         getHouseTag() {
             KOJI_API.KOJI_PAGE_TAG_STATUS_QUERY_API({
-                orderNo: this.formHeader.orderNo,
-                kojiOrderNo: this.formHeader.kojiOrderNo
+                orderNo: this.formHeader.orderNo
+                // kojiOrderNo: this.formHeader.kojiOrderNo
             }).then(({ data }) => {
                 this.$store.commit('koji/updateHouseTag', data.data);
-                this.tabs[0].status = data.data.washBeanMaterailName
-                this.tabs[1].status = data.data.washBeanCraftName
+                this.tabs[0].status = data.data.washBeanMaterail
+                this.tabs[1].status = data.data.washBeanCraft
+                this.washBeanMaterialApplyStatus = data.data.washBeanMaterail;
+                this.washBeanMaterialCraftStatus = data.data.washBeanCraft;
                 this.$refs.dataEntry.updateTabs();
-                this.$set(this.formHeader, 'statusName', this.orderIndex[Math.min(this.orderIndex.indexOf(data.data.washBeanMaterailName), this.orderIndex.indexOf(data.data.washBeanCraftName))])
-
+                this.$set(this.formHeader, 'statusName', data.data.washBeanStatusName);
             })
         }
 

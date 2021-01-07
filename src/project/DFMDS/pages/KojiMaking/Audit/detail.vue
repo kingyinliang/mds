@@ -34,7 +34,7 @@
                             <el-button type="text" size="small" :disabled="scope.row.enableBack!==1" @click="reject('1',scope.row)">
                                 退回
                             </el-button>
-                            <el-button type="text" size="small" @click="auditLog(scope.row)">
+                            <el-button type="text" size="small" @click="auditLog(scope.row,tabs[0].label)">
                                 审核日志
                             </el-button>
                         </template>
@@ -59,7 +59,7 @@
                             <el-button type="text" size="small" :disabled="scope.row.enableBack!==1" @click="reject('2',scope.row)">
                                 退回
                             </el-button>
-                            <el-button type="text" size="small" @click="auditLog(scope.row)">
+                            <el-button type="text" size="small" @click="auditLog(scope.row,tabs[1].label)">
                                 审核日志
                             </el-button>
                         </template>
@@ -71,12 +71,12 @@
                     <el-table-column type="index" label="序号" width="50" align="center" fixed />
                     <el-table-column v-if="isNormalPage" label="曲房号" prop="kojiHouseName" min-width="120" />
                     <el-table-column v-if="isNormalPage" label="入曲日期" prop="addKojiDate" width="180" />
-                    <el-table-column label="大豆量(KG)" prop="beanAmount" width="120" />
-                    <el-table-column v-if="isNormalPage" label="麦粉量(KG)" prop="wheatAmount" width="120" />
+                    <el-table-column label="大豆量(千克)" prop="beanAmount" width="120" />
+                    <el-table-column v-if="isNormalPage" label="麦粉量(千克)" prop="wheatAmount" width="120" />
                     <el-table-column v-if="isNormalPage" label="菌种量" prop="strainAmount" width="120" />
                     <el-table-column label="入库量" prop="inStorageAmount" width="120" />
                     <el-table-column label="入库批次" prop="inStorageBatch" min-width="120" />
-                    <el-table-column label="单位" prop="unit" width="120" />
+                    <el-table-column label="单位" prop="unitName" width="120" />
                     <el-table-column label="操作人" prop="changer" width="180" />
                     <el-table-column label="操作时间" prop="changed" width="180" />
                     <el-table-column label="操作" prop="" width="120" fixed="right">
@@ -84,7 +84,7 @@
                             <el-button type="text" size="small" :disabled="scope.row.enableBack!==1" @click="reject('3',scope.row)">
                                 退回
                             </el-button>
-                            <el-button type="text" size="small" @click="auditLog(scope.row)">
+                            <el-button type="text" size="small" @click="auditLog(scope.row,tabs[2].label)">
                                 审核日志
                             </el-button>
                         </template>
@@ -95,7 +95,7 @@
                         入库量：
                     </div>
                     <div class="input_bottom">
-                        {{ inStorageComputed }} KG
+                        {{ inStorageComputed }} 千克
                     </div>
                 </el-row>
             </template>
@@ -104,10 +104,10 @@
                     <el-table-column type="index" label="序号" width="50" align="center" fixed />
                     <el-table-column v-if="isNormalPage" label="曲房" prop="kojiHouseName" width="120" />
                     <el-table-column v-if="isNormalPage" label="入曲日期" prop="addKojiDate" width="180" />
-                    <el-table-column label="物料" prop="material" min-width="120" />
+                    <el-table-column label="物料" prop="materialTypeName" min-width="120" />
                     <el-table-column label="批次" prop="batch" min-width="120" />
                     <el-table-column label="数量" prop="amount" width="120" />
-                    <el-table-column label="单位" prop="unit" width="120" />
+                    <el-table-column label="单位" prop="unitName" width="120" />
                     <el-table-column label="操作人员" prop="changer" width="180" />
                     <el-table-column label="操作时间" prop="changed" width="180" />
                     <el-table-column label="操作" prop="" width="120" fixed="right">
@@ -115,7 +115,7 @@
                             <el-button type="text" size="small" :disabled="scope.row.enableBack!==1" @click="reject('4',scope.row)">
                                 退回
                             </el-button>
-                            <el-button type="text" size="small" @click="auditLog(scope.row)">
+                            <el-button type="text" size="small" @click="auditLog(scope.row,tabs[3].label)">
                                 审核日志
                             </el-button>
                         </template>
@@ -144,7 +144,7 @@
             </template>
         </data-entry>
         <el-dialog title="审核日志" width="900px" :close-on-click-modal="false" :visible.sync="visibleAuditLog">
-            <audit-log :table-data="auditLogData" :verify-man="'verifyMan'" :verify-date="'verifyDate'" :pack-up="false" :status="true" :show-title="false" />
+            <audit-log :table-data="auditLogData" :verify-man="'verifyMan'" :verify-date="'verifyDate'" :pack-up="false" :status="true" :show-title="false" :height="400" />
             <div slot="footer" class="dialog-footer" />
         </el-dialog>
         <el-dialog title="退回原因" :close-on-click-modal="false" :visible.sync="visibleRefuse">
@@ -238,22 +238,22 @@
         tabs = [
             {
                 label: '准备人工',
-                status: '未录入1',
+                status: '未录入',
                 isRedact: false
             },
             {
                 label: '机器工时',
-                status: '未录入1',
+                status: '未录入',
                 isRedact: false
             },
             {
                 label: '生产入库',
-                status: '未录入1',
+                status: '未录入',
                 isRedact: false
             },
             {
                 label: '物料领用',
-                status: '未录入1',
+                status: '未录入',
                 isRedact: false
             },
             {
@@ -272,6 +272,8 @@
         rejectText = '';
         rejectProcess='';
         rejectKojiHouseId='';
+        rejectMaterialStyle=''; // 物料领用使用
+        rejectBatch=''; // 物料领用使用
 
         kojiHouseNoOptions: OptionObj[]=[]; // 曲房下拉
         manHourList: ManHourList[] = [];
@@ -294,15 +296,7 @@
             await this.initData(this.currentOrderNo)
             await this.getKojiHolder()
             await this.getProcessMapping()
-
-            // 5个 tab 加载
-            this.getManHourList()
-            this.getMachineHourList()
-            this.getInStorageList()
-            this.getMeterialList()
-            this.getCraftList()
         }
-
 
         // 工艺列表 tab 工序详情
         goProcessDetail(item) {
@@ -313,39 +307,33 @@
 
         // 跳转工序页面
         goDetail(who, arg) {
-            console.log(who)
-            console.log(arg)
             let url = '';
-            // 曲房工序跳转
-            // if (this.isNormalPage) {
-                // this.$store.commit('koji/updateOrderKojiInfo', item);
-
+            let whichTab = '';
                 switch (who) {
                     case 'XD':
                         url = 'DFMDS-pages-KojiMaking-WorkingProcedure-WashBean';
+                        whichTab = '2';
                         break;
                     case 'ZM':
                         url = 'DFMDS-pages-KojiMaking-WorkingProcedure-SteamedFlour';
+                        whichTab = '2';
                         break;
                     case 'YP':
                         url = 'DFMDS-pages-KojiMaking-WorkingProcedure-disc';
+                        whichTab = '1';
                         break;
-                    // default:
-                // }
-
-            // } else { // 蒸豆工序跳转
-                // this.$store.commit('koji/updateOrderScInfo', item);
-                // switch (who) {
                     case 'SC':
                         url = 'DFMDS-pages-KojiMaking-WorkingProcedure-SCWashBean';
+                        whichTab = '2';
                         break;
                     case 'ZD':
                         url = 'DFMDS-pages-KojiMaking-WorkingProcedure-SteamedBean';
+                        whichTab = '1';
                         break;
                     default:
+                        url = 'DFMDS-pages-KojiMaking-WorkingProcedure-SteamedBean'; // 防呆 SC 蒸豆命名
+                        whichTab = '1';
                 }
-
-            // }
 
             console.log(`url:${url}`)
 
@@ -356,10 +344,9 @@
 
             setTimeout(() => {
                 this.$router.push({
-                    name: url, params: { order: arg }
+                    name: url, params: { order: arg, activeName: whichTab }
                 });
             }, 100);
-
         }
 
         get inStorageComputed() {
@@ -462,7 +449,7 @@
 
 
             // 页签状态
-            await KOJI_API.KOJI_VERIFY_TAB_STATUS_API({
+            await KOJI_API.KOJI_VERIFY_TAB_STATUS_API({ // /koji/houseTag/queryVerifyDetail
                 orderNo: this.formHeader.orderNo
             }).then(({ data }) => {
                 console.log('页签data')
@@ -477,17 +464,20 @@
                     this.$refs.dataEntry.updateTabs();
                 }
             });
+
+            // 5 个 tab 加载
+            this.getManHourList()
+            this.getMachineHourList()
+            this.getInStorageList()
+            this.getMeterialList()
+            this.getCraftList()
         }
 
         reject(who, item) {
-            // if (this.$refs.dataEntry.activeName === '6' || this.$refs.dataEntry.activeName === '7') {
-            //     return false
-            // }
-            // if (this.tabs[Number(this.$refs.dataEntry.activeName) - 1].status !== 'D') {
-            //     return false
-            // }
             this.visibleRefuse = true;
             this.rejectText = '';
+            console.log('item')
+            console.log(item)
             switch (who) {
                 case '1':
                     this.rejectProcess = this.processMapping[item.process]
@@ -501,24 +491,111 @@
                 break;
                 case '4':
                     this.rejectKojiHouseId = this.kojiHouseNoOptions.filter(element => element.optValue === item.kojiHouseNo)[0].optId
+                    this.rejectMaterialStyle = item.storageType;
+                    this.rejectBatch = item.batch;
                 break;
                 default:
             }
         }
 
-        auditLog() {
+        auditLog(row, tab) {
+            console.log('row')
+            console.log(row)
+            // ['WB_MATERIAL', 'MATERIAL']
+            let verifyTypeTemp: string[] = []
+            switch (tab) {
+                case '准备人工':
+                    // if (row.process === '洗豆') {
+                    //     verifyTypeTemp = ['WB_CONTROL', 'TIMESHEET']
+                    // }
+                    // if (row.process === '蒸面') {
+                    //     verifyTypeTemp = ['SF_CONTROL', 'TIMESHEET']
+                    // }
+                    // if (row.process === '圆盘') {
+                    //     verifyTypeTemp = ['KJ_CONTROL', 'TIMESHEET']
+                    // }
+                    // if (row.process === 'SC洗豆') {
+                    //     verifyTypeTemp = ['WB_CONTROL', 'TIMESHEET']
+                    // }
+                    // if (row.process === '篜豆') {
+                    //     verifyTypeTemp = ['SB_CONTROL', 'TIMESHEET']
+                    // }
+                    AUDIT_API.STE_AUDIT_QUERY_BY_ID({
+                        id: row.timeSheetId
+                    }).then(({ data }) => {
+                        this.auditLogData = data.data;
+                        this.visibleAuditLog = true
+                    })
+                    break;
+                case '机器工时':
+                    if (row.process === '洗豆') {
+                        verifyTypeTemp = ['WB_CONTROL', 'TIMESHEET']
+                    }
+                    if (row.process === '蒸面') {
+                        verifyTypeTemp = ['SF_CONTROL', 'TIMESHEET']
+                    }
+                    if (row.process === '圆盘') {
+                        verifyTypeTemp = ['KJ_CONTROL', 'TIMESHEET']
+                    }
+                    if (row.process === 'SC洗豆') {
+                        verifyTypeTemp = ['WB_CONTROL', 'TIMESHEET']
+                    }
+                    if (row.process === 'SC篜豆') {
+                        verifyTypeTemp = ['SB_CONTROL', 'TIMESHEET']
+                    }
+                    AUDIT_API.STE_AUDIT_LOG_API({ orderNo: this.currentOrderNo, splitOrderNo: row.kojiOrderNo, verifyType: verifyTypeTemp }).then(({ data }) => {
+                        this.auditLogData = data.data
+                        this.visibleAuditLog = true
+                    })
+                    break;
+                case '生产入库':
+                    if (row.process === 'XD') { // 洗豆
+                        verifyTypeTemp = []
+                    }
+                    if (row.process === 'ZM') { // 蒸面
+                        verifyTypeTemp = []
+                    }
+                    if (row.process === 'YP') { // 圆盘
+                        verifyTypeTemp = ['KJ_INSTORAGE', 'INSTORAGE']
+                    }
+                    if (row.process === 'SC') { // SC洗豆
+                        verifyTypeTemp = []
+                    }
+                    if (row.process === 'ZD') { // SC篜豆
+                        verifyTypeTemp = ['SB_INSTORAGE', 'INSTORAGE']
+                    }
+                    AUDIT_API.STE_AUDIT_LOG_API({ orderNo: this.currentOrderNo, splitOrderNo: row.kojiOrderNo, verifyType: verifyTypeTemp }).then(({ data }) => {
+                        this.auditLogData = data.data
+                        this.visibleAuditLog = true
+                    })
+                    break;
+                case '物料领用':
+                    if (row.process === 'XD') { // 洗豆
+                        verifyTypeTemp = ['WB_MATERIAL', 'MATERIAL']
+                    }
+                    if (row.process === 'ZM') { // 蒸面
+                        verifyTypeTemp = ['SF_MATERIAL', 'MATERIAL']
+                    }
+                    if (row.process === 'YP') { // 圆盘
+                        verifyTypeTemp = []
+                    }
+                    if (row.process === 'SC') { // SC洗豆
+                        verifyTypeTemp = ['WB_MATERIAL', 'MATERIAL']
+                    }
+                    if (row.process === 'ZD') { // SC篜豆
+                        verifyTypeTemp = []
+                    }
+                    AUDIT_API.STE_AUDIT_LOG_API({ orderNo: this.currentOrderNo, splitOrderNo: row.kojiOrderNo, verifyType: verifyTypeTemp }).then(({ data }) => {
+                        this.auditLogData = data.data
+                        this.visibleAuditLog = true
+                    })
+                    break;
+                default:
+                    break;
+            }
 
-            AUDIT_API.AUDIT_LOG_LIST_API({ orderNo: this.currentOrderNo, verifyType: '' }).then(({ data }) => {
-                    this.auditLogData = data.data
-                    this.visibleAuditLog = true
-            })
-            // AUDIT_API.AUDIT_DIALOG_LOG_LIST_API({
-            //     verifyId: row.id,
-            //     verifyType: 'TIMESHEET'
-            // }).then(({ data }) => {
-            //     this.auditLogData = data.data
-            //     this.visibleAuditLog = true
-            // })
+            // AUDIT_API.STE_AUDIT_LOG_API({ orderNo: this.formHeader.orderNo, splitOrderNo: this.formHeader.kojiOrderNo, verifyType: ['WB_MATERIAL', 'MATERIAL'] }).then(({ data }) => {
+
         }
 
         // 获取曲房下拉选项
@@ -542,7 +619,6 @@
                 data.data.forEach(item => {
                     this.$set(this.processMapping, item.dictValue, item.dictCode)
                 })
-
             });
         }
 
@@ -595,8 +671,10 @@
                     break;
                 case '4':
                     KOJI_API.KOJI_REFUSE_MATERIAL_API({
+                        batch: this.rejectBatch,
                         kojiHouseId: this.rejectKojiHouseId,
                         orderNo: this.formHeader.orderNo,
+                        storageType: this.rejectMaterialStyle,
                         productDate: this.formHeader.productDate,
                         refuseSeason: this.rejectText
                     }).then(() => {
@@ -624,6 +702,7 @@
         id?: string;
         materialCode?: string;
         materialName?: string;
+        materialTypeName?: string;
         operator?: string;
         operatorDate?: string;
         orderEndDate?: string;

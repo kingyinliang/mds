@@ -219,7 +219,7 @@
                         type="datetime"
                         value-format="yyyy-MM-dd HH:mm:ss"
                         format="yyyy-MM-dd HH:mm"
-                        placeholder="选择"
+                        placeholder="请选择"
                         size="small"
                         :disabled="!isRedact || soleRowstatus === '已提交' || soleRowstatus === '审核通过'"
                     />
@@ -268,7 +268,7 @@
                     <el-input v-model="record.afterMet" class="width100" :disabled="!isRedact || soleRowstatus === '已提交' || soleRowstatus === '审核通过'" />
                 </el-form-item>
                 <el-form-item label="合格时间：">
-                    <el-date-picker v-model="record.qualTime" type="datetime" class="width100" value-format="yyyy-MM-dd HH:mm:ss" format="yyyy-MM-dd HH:mm" placeholder="选择" size="small" :disabled="!isRedact || soleRowstatus === '已提交' || soleRowstatus === '审核通过'" />
+                    <el-date-picker v-model="record.qualTime" type="datetime" class="width100" value-format="yyyy-MM-dd HH:mm:ss" format="yyyy-MM-dd HH:mm" placeholder="请选择" size="small" :disabled="!isRedact || soleRowstatus === '已提交' || soleRowstatus === '审核通过'" />
                 </el-form-item>
                 <el-form-item label="白班操作人：">
                     <el-select v-model="record.dayOperator" filterable class="width100" :disabled="!isRedact || soleRowstatus === '已提交' || soleRowstatus === '审核通过'">

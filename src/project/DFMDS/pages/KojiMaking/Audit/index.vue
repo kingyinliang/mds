@@ -2,7 +2,7 @@
     <div class="header_main">
         <query-table
             ref="queryTable"
-            query-auth="steCkQuery"
+            query-auth="kjCkQuery"
             :factory-type="1"
             :query-form-data="queryFormData"
             :tabs="tabs"
@@ -75,7 +75,7 @@ export default class AuditIndex extends Vue {
             minwidth: '75'
         },
         {
-            prop: 'workShopName',
+            prop: 'houseName',
             label: '曲房',
             minwidth: '75'
         },
@@ -99,7 +99,7 @@ export default class AuditIndex extends Vue {
             minwidth: '60'
         },
         {
-            prop: 'outputUnit',
+            prop: 'outputUnitName',
             label: '订单单位',
             minwidth: '60'
         },
@@ -136,7 +136,7 @@ export default class AuditIndex extends Vue {
                     minwidth: '75'
                 },
                 {
-                    prop: 'workShopName',
+                    prop: 'houseName',
                     label: '曲房',
                     minwidth: '75'
                 },
@@ -160,7 +160,7 @@ export default class AuditIndex extends Vue {
                     minwidth: '60'
                 },
                 {
-                    prop: 'outputUnit',
+                    prop: 'outputUnitName',
                     label: '订单单位',
                     minwidth: '60'
                 },
@@ -224,6 +224,7 @@ export default class AuditIndex extends Vue {
         } else {
             orderStatus = ['R'];
         }
+        params.workShopType = 'koji';
         params.orderStatus = orderStatus; // eslint-disable-line
         params.current = this.$refs.queryTable.tabs[this.$refs.queryTable.activeName].pages.currPage;// eslint-disable-line
         params.size = this.$refs.queryTable.tabs[this.$refs.queryTable.activeName].pages.pageSize;// eslint-disable-line

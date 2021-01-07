@@ -43,11 +43,11 @@
                                 </div>
                                 <div class="foot">
                                     <p>
-                                        <span>{{ item.order.productMaterialName }}</span>
+                                        <span>{{ item.ferOrder.productMaterialName }}</span>
                                         <span>{{ item.fermentDays + '天' }}</span>
                                     </p>
                                     <p>
-                                        <span>{{ item.order.orderNo }}</span>
+                                        <span>{{ item.ferOrder.orderNo }}</span>
                                         <span>{{ item.currentStock / 1000 + '吨' }}</span>
                                     </p>
                                 </div>
@@ -110,7 +110,8 @@
                     resData: 'data',
                     label: ['deptName'],
                     value: 'id'
-                }
+                },
+                linkageProp: ['holderId']
             },
             {
                 type: 'select',
@@ -120,9 +121,10 @@
                 filterable: true,
                 rule: [{ required: false, message: ' ', trigger: 'change' }],
                 defaultValue: '',
-                defaultOptionsFn: () => {
+                optionsFn: val => {
                     return new Promise((resolve) => {
                         COMMON_API.HOLDER_DROPDOWN_API({ // /sysHolder/query
+                            deptId: val,
                             factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
                             holderType: ['001'] // 发酵罐/池 参数编码
                         }).then((res) => {
@@ -207,7 +209,7 @@
                 //         holderVolume: 50, // 容器容量
                 //         changed: '2020-10-10',
                 //         changer: '张三',
-                //         order: {
+                //         ferOrder: {
                 //             id: '2',
                 //             orderNo: '订单号', // 订单号
                 //             preMaterialCode: 'A00', // 前置物料编码
@@ -240,6 +242,11 @@
                 ...row,
                 workShop: this.$refs.queryTable.queryForm.workShop
             });
+
+            this.$store.commit(
+                'common/updateMainTabs',
+                this.$store.state.common.mainTabs.filter(subItem => subItem.name !== 'DFMDS-pages-Fermentation-SaltWater-SaltWaterDetail')
+            );
             // sessionStorage.setItem('brineInfo', JSON.stringify(row));
             setTimeout(() => {
                 this.$router.push({
@@ -266,7 +273,7 @@
         holderVolume: number; // 容器容量
         changed: string; // 最后操作时间
         changer: string; // 最后操作人
-        order: OrderType; // 订单
+        ferOrder: OrderType; // 订单
     }
     interface OrderType {
         id: string;

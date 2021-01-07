@@ -29,7 +29,7 @@
                             <template slot="titleBtn">
                                 <el-form :inline="true" size="small" class="dataEntry-head-base__form" style="float: right; margin-top: 0;">
                                     <el-form-item label="杂质总数：">
-                                        <p>{{ soybeanImpuritiesTotal }}KG</p>
+                                        <p>{{ soybeanImpuritiesTotal }}千克</p>
                                     </el-form-item>
                                 </el-form>
                             </template>
@@ -52,14 +52,8 @@
                     </el-table>
                 </mds-card>
                 <mds-card v-if="productLine === ''" title="看曲工艺" :name="'lookCraft'">
-                    <div class="mod-demo-echarts">
-                        <div id="J_chartLineBoxlookCraft0" style="height: 400px;" />
-                    </div>
-                    <div class="mod-demo-echarts">
-                        <div id="J_chartLineBoxlookCraft1" style="height: 400px;" />
-                    </div>
-                    <div class="mod-demo-echarts">
-                        <div id="J_chartLineBoxlookCraft2" style="height: 400px;" />
+                    <div v-for="i in lookListCount" :key="i" class="mod-demo-echarts">
+                        <div :id="'J_chartLineBoxlookCraft'+ i" style="height: 400px;" />
                     </div>
                 </mds-card>
                 <mds-card v-if="productLine === ''" title="入曲及出曲工艺" :name="' '">
@@ -151,13 +145,13 @@
                         </el-col>
                     </el-row>
                 </mds-card>
-                <audit-log :table-data="currentAudit" :verify-man="'verifyMan'" :verify-date="'verifyDate'" :status="true" />
+                <audit-log :table-data="currentAudit" :verify-man="'verifyMan'" :verify-date="'verifyDate'" :status="true" :height="400" />
             </template>
             <template slot="custom_btn">
-                <el-button v-if="isAuth('steCkRefuse')" type="primary" size="small" @click="goDetail">
+                <el-button v-if="isAuth('kjCkMxQuery')" type="primary" size="small" @click="goDetail">
                     详情
                 </el-button>
-                <el-button type="primary" size="small" @click="pass()">
+                <el-button v-if="formHeader.orderStatusName === '待审核' && isAuth('kjPass')" type="primary" size="small" @click="pass()">
                     审核通过
                 </el-button>
             </template>
@@ -167,7 +161,7 @@
 
 <script lang="ts">
     import { Vue, Component } from 'vue-property-decorator';
-    import { KOJI_API, COMMON_API } from 'common/api/api';
+    import { KOJI_API, COMMON_API, AUDIT_API } from 'common/api/api';
     import echarts from 'echarts';
 
     @Component({
@@ -201,7 +195,7 @@
                 type: 'p',
                 icon: 'factory--meirijihuachanliangpeizhi',
                 label: '订单产量',
-                value: ['planOutput', 'outputUnit']
+                value: ['planOutput', 'outputUnitName']
             },
             {
                 type: 'p',
@@ -252,10 +246,12 @@
         turnList = [];
         exceptionList: ExceptionList[] = [];
         beanUsageList = [];
+        lookListCount = 10;
         materialList = [];
         currentAudit = [];
         productLine = '';
         beanSteepAndMaterial: object[] = [];
+        colorList: string[] = ['#6C9AFC', '#EA6B5B', '#66779A', '#63DAAB'];
 
 
         mounted() {
@@ -269,10 +265,13 @@
             const net01 = new Promise(resolve => {
                 this.getDictionary('ENERGY', resolve);
             });
+            const net03 = new Promise(resolve => {
+                this.getDictionary('WAIT', resolve);
+            });
             const net02 = new Promise(resolve => {
                 this.getExcConitionList(this.auditDetail['workShop'], resolve);
             });
-            Promise.all([net01, net02]).then(() => {
+            Promise.all([net01, net02, net03]).then(() => {
                 this.getException(this.auditDetail['orderNo']);
             }).catch((reason) => {
                 this.$errorToast(reason);
@@ -382,7 +381,7 @@
                     const itemSole = {};
                     itemSole['product'] = item.beanBatch;
                     item.impurityAmountList.map(items => {
-                        itemSole[items.impurityTypeName + '(' + items.impurityUnit + ')'] = items.impurityAmount;
+                        itemSole[items.impurityTypeName + '(' + items.impurityUnitName + ')'] = items.impurityAmount;
                     })
                     datasetSource.push(itemSole);
                 })
@@ -400,6 +399,7 @@
                         trigger: 'axis'
                     },
                     dataset: {
+                        dimensions: ['product', '豆皮(千克)', '小豆(千克)', '废豆(千克)'],
                         source: datasetSource
                     },
                     xAxis: { type: 'category' },
@@ -483,13 +483,34 @@
                     ['混合料温度1'],
                     ['混合料温度2']
                 ];
+                const series: object[] = [];
+                let i = 0;
                 data.data.map(item => {
                     datasetSource[0].push(item.kojiHouseName);
-                    datasetSource[1].push(item.flourWindTemp);
-                    datasetSource[2].push(item.beanWindTempOne);
-                    datasetSource[3].push(item.beanWindTempTwo);
-                    datasetSource[4].push(item.mixtureTempOne);
-                    datasetSource[5].push(item.mixtureTempTwo);
+                    datasetSource[1].push(item.flourWindTemp === null ? '' : item.flourWindTemp);
+                    datasetSource[2].push(item.beanWindTempOne === null ? '' : item.beanWindTempOne);
+                    datasetSource[3].push(item.beanWindTempTwo === null ? '' : item.beanWindTempTwo);
+                    datasetSource[4].push(item.mixtureTempOne === null ? '' : item.mixtureTempOne);
+                    datasetSource[5].push(item.mixtureTempTwo === null ? '' : item.mixtureTempTwo);
+                    series.push({
+                        type: 'bar',
+                        barWidth: 30,
+                        itemStyle: {
+                            normal: {
+                                color: this.colorList[i],
+                                barBorderRadius: 15,
+                                label: {
+                                    show: true, //是否展示
+                                    textStyle: {
+                                        fontWeight: 'bolder',
+                                        fontSize: '12',
+                                        fontFamily: '微软雅黑'
+                                    }
+                                }
+                            }
+                        }
+                    })
+                    i++;
                 })
                 this.chartLine = echarts.init(document.getElementById('J_chartLineBoxMixedIntoMaterial'));
                 const optionMixedIntoMaterial = {
@@ -509,44 +530,7 @@
                     },
                     xAxis: { type: 'category' },
                     yAxis: {},
-                    series: [
-                        {
-                            type: 'bar',
-                            barWidth: 30,
-                            itemStyle: {
-                                normal: {
-                                    color: '#6C9AFC',
-                                    barBorderRadius: 15,
-                                    label: {
-                                        show: true, //是否展示
-                                        textStyle: {
-                                            fontWeight: 'bolder',
-                                            fontSize: '12',
-                                            fontFamily: '微软雅黑'
-                                        }
-                                    }
-                                }
-                            }
-                        },
-                        {
-                            type: 'bar',
-                            barWidth: 30,
-                            itemStyle: {
-                                normal: {
-                                    color: '#EA6B5B',
-                                    barBorderRadius: 15,
-                                    label: {
-                                        show: true, //是否展示
-                                        textStyle: {
-                                            fontWeight: 'bolder',
-                                            fontSize: '12',
-                                            fontFamily: '微软雅黑'
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    ]
+                    series: series
                 };
                 this.chartLine.setOption(optionMixedIntoMaterial);
                 window.addEventListener('resize', () => {
@@ -569,7 +553,8 @@
             KOJI_API.KOJI_AUDIT_LOOKCRAFTONE_API({
                 orderNo: orderNo
             }).then(({ data }) => {
-                let i = 0;
+                this.lookListCount = data.data.length;
+                let i = 1;
                 data.data.map(item => {
                     const chartId = 'J_chartLineBoxlookCraft' + i;
                     this.chartLine = echarts.init(document.getElementById(chartId));
@@ -792,6 +777,7 @@
                     } else if (item.exceptionSituation === 'ENERGY') {
                         excReasonList = this.excReasonTotal.ENERGY
                     }
+                    console.log(excReasonList);
                     const exceptionReasonSole = excReasonList.find((it: Dictionary) => it.dictCode === item.exceptionReason);
                     if (exceptionReasonSole) {
                         item.exceptionReasonName = exceptionReasonSole['dictValue'];
@@ -895,8 +881,8 @@
                 const seriesData: number[] = [];
                 data.data.map(item => {
                     yAxisData.push(item.materialName);
-                    seriesDataReal.push(item.materialAmount);
-                    seriesData.push(item.impurityAmount);
+                    seriesDataReal.push(item.materialAmount === 0 ? null : item.materialAmount);
+                    seriesData.push(item.impurityAmount === 0 ? null : item.impurityAmount);
                 })
                 this.chartLine = echarts.init(document.getElementById('J_chartLineBoxMaterial'));
                 const optionMaterial = {
@@ -987,6 +973,8 @@
                     this.excReasonTotal.POORPROCESSWAIT = data.data
                 } else if (dictType === 'ENERGY') {
                     this.excReasonTotal.ENERGY = data.data
+                } else if (dictType === 'WAIT') {
+                    this.excReasonTotal.POORPROCESSWAIT = data.data
                 }
                 if (resolve) {
                     resolve('resolve');
@@ -1012,7 +1000,13 @@
 
         // 审核日志
         getAudit(orderNo) {
-            COMMON_API.COMMON_LOG_LIST_API({ orderNo: orderNo, verifyType: '' }).then(({ data }) => {
+            // COMMON_API.COMMON_LOG_LIST_API({ orderNo: orderNo, verifyType: '' }).then(({ data }) => {
+            //     this.currentAudit = data.data
+            // })
+            AUDIT_API.STE_AUDIT_LOG_API({
+                orderNo,
+                verifyType: ['MATERIAL', 'TIMESHEET', 'INSTORAGE', 'WB_MATERIAL', 'WB_CONTROL', 'SF_MATERIAL', 'SF_CONTROL', 'KJ_CONTROL', 'KJ_INSTORAGE', 'SB_CONTROL', 'SB_INSTORAGE'] // '审核类型'
+            }).then(({ data }) => {
                 this.currentAudit = data.data
             })
         }
@@ -1025,7 +1019,7 @@
 
         goDetail() {
             this.$store.commit('sterilize/updateAuditDetailDetail', this.$store.state.sterilize.auditDetail);
-            this.$store.commit('common/updateMainTabs', this.$store.state.common.mainTabs.filter(subItem => subItem.name !== 'DFMDS-pages-Sterilize-Audit-'))
+            this.$store.commit('common/updateMainTabs', this.$store.state.common.mainTabs.filter(subItem => subItem.name !== 'DFMDS-pages-KojiMaking-Audit-detail'))
             setTimeout(() => {
                 this.$router.push({
                     name: `DFMDS-pages-KojiMaking-Audit-detail`
@@ -1039,19 +1033,12 @@
                 cancelButtonText: '取消',
                 type: 'warning'
             }).then(() => {
-                // PKG_API.PKG_AUDIT_DETAIL_PASS_API({
-                //     factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
-                //     materialCode: this.formHeader.materialCode,
-                //     orderId: this.formHeader.id,
-                //     orderNo: this.formHeader.orderNo,
-                //     orderType: this.formHeader.orderType,
-                //     productDate: this.formHeader.productDate,
-                //     productLine: this.formHeader.productLine,
-                //     workShop: this.formHeader.workShop
-                // }).then(() => {
-                //     this.$successToast('操作成功');
-                //     // this.getOrderList();
-                // })
+                KOJI_API.KOJI_AUDIT_QUERY_CHECKED_API({
+                    orderNo: this.auditDetail['orderNo']
+                }).then(() => {
+                    this.$successToast('操作成功');
+                    this.getHeaderInfo(this.auditDetail['orderNo']);
+                })
             })
         }
 

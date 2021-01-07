@@ -15,7 +15,7 @@
                     </el-select>
                 </el-form-item>
                 <el-form-item label="生产日期：">
-                    <el-date-picker v-model="formHeader.productDate" type="date" placeholder="选择" value-format="yyyy-MM-dd" style="width: 140px;" />
+                    <el-date-picker v-model="formHeader.productDate" type="date" placeholder="请选择" value-format="yyyy-MM-dd" style="width: 140px;" />
                 </el-form-item>
                 <el-form-item label="生产订单：">
                     <el-input v-model="formHeader.orderNo" type="text" clearable style="width: 140px;" />
@@ -41,7 +41,7 @@
                 <div style="float: right; width: 688px; text-align: right;">
                     <el-form ref="pstngDate" :model="formHeader" :rules="plantListRule" size="small" :inline="true" label-position="right" label-width="82px" class="topforms">
                         <el-form-item label="记账日期：" prop="pstngDate">
-                            <el-date-picker v-model="formHeader.pstngDate" type="date" placeholder="选择" value-format="yyyy-MM-dd" style="width: 160px;" />
+                            <el-date-picker v-model="formHeader.pstngDate" type="date" placeholder="请选择" value-format="yyyy-MM-dd" style="width: 160px;" />
                         </el-form-item>
                         <el-form-item label="抬头文本：">
                             <el-input v-model="formHeader.headerTxt" placeholder="抬头文本" style="width: 160px;" />

@@ -2,11 +2,12 @@
     <div class="header_main">
         <query-table
             ref="queryTable"
+            :factory-type="1"
             :column="column"
             :rules="rules"
+            :custom-data="true"
             :query-form-data="queryFormData"
             :list-interface="listInterface"
-            get-list-field="data"
         />
     </div>
 </template>
@@ -57,7 +58,7 @@
             {
                 type: 'select',
                 label: '领料状态',
-                prop: 'status',
+                prop: 'useMaterialStatus',
                 options: [
                     { label: '已领料', value: '1' },
                     { label: '未领料', value: '0' }
@@ -65,6 +66,20 @@
                 resVal: {
                     label: ['label'],
                     value: 'value'
+                }
+            },
+            {
+                type: 'select',
+                label: '订单状态',
+                prop: 'orderStatus',
+                defaultOptionsFn: () => {
+                    return COMMON_API.DICTQUERY_API({ dictType: 'COMMON_CHECK_STATUS' });
+                },
+                defaultValue: '',
+                resVal: {
+                    resData: 'data',
+                    label: ['dictValue'],
+                    value: 'dictCode'
                 }
             },
             {
@@ -91,13 +106,19 @@
         column = [
             {
                 label: '订单状态',
-                prop: 'orderStatus',
+                prop: 'orderStatusName',
                 minwidth: '80'
             },
             {
                 label: '领料状态',
-                prop: 'status',
-                minwidth: '80'
+                prop: 'useMaterialStatus',
+                minwidth: '80',
+                formatter: (row) => {
+                    if (row.useMaterialStatus === '1') {
+                        return '已领料'
+                    }
+                    return '未领料'
+                }
             },
             {
                 label: '生产日期',
@@ -107,7 +128,7 @@
             {
                 label: '生产产线',
                 prop: 'productLineName',
-                minwidth: '80'
+                minwidth: '130'
             },
             {
                 label: '生产订单',
@@ -131,6 +152,7 @@
             {
                 label: '生产物料',
                 prop: 'materialCode;',
+                minwidth: '180',
                 formatter: (row) => {
                     return row.materialName + ' ' + row.materialCode;
                 }

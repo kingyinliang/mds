@@ -2,7 +2,7 @@
     <div class="header_main">
         <query-table
             ref="queryTable"
-            query-auth="steSplitQuery"
+            query-auth="kjSplitQuery"
             :type="'home'"
             :rules="rules"
             :query-form-data="queryFormData"
@@ -16,7 +16,7 @@
                     <el-col :span="10">
                         <mds-card title="订单查询" name="ste" :pack-up="false" style="margin-bottom: 0; background: #fff;">
                             <el-table :data="queryResultList" header-row-class-name="tableHead" class="newTable" :height="mainClientHeight - 61 - 52 - 47" border tooltip-effect="dark" @row-dblclick="showSplitTable">
-                                <el-table-column type="index" width="55" label="序号" align="center" fixed />
+                                <el-table-column type="index" :index="index => getIndexMethod(index, splitTable)" label="序号" width="55" fixed />
                                 <el-table-column label="订单状态" width="80" :show-overflow-tooltip="true">
                                     <template slot-scope="scope">
                                         <label :style="{ color: scope.row.orderStatusName === '不通过' ? 'red' : scope.row.orderStatusName === '通过' ? 'rgb(103, 194, 58)' : '',}">{{ scope.row.orderStatusName }}</label>
@@ -30,10 +30,10 @@
                                     </template>
                                 </el-table-column>
                                 <el-table-column label="计划数量" width="100" prop="planOutput" />
-                                <el-table-column label="单位" width="60" prop="outputUnit" />
+                                <el-table-column label="单位" width="60" prop="outputUnitName" />
                                 <el-table-column label="操作" fixed="right" align="center" width="80">
                                     <template slot-scope="scope">
-                                        <el-button v-if="isAuth('steSplit')" class="iconfont factory-chaifen" type="text" :disabled="['C','P'].includes(scope.row.orderStatus)" @click="orderSplit(scope.row)">
+                                        <el-button v-if="isAuth('kjSplit')" class="iconfont factory-chaifen" type="text" :disabled="['C','P','X'].includes(scope.row.orderStatus)" @click="orderSplit(scope.row)">
                                             拆分
                                         </el-button>
                                     </template>
@@ -47,7 +47,7 @@
                     <el-col :span="14">
                         <mds-card title="拆分管理" name="split" :pack-up="false" style="margin-bottom: 0; background: #fff;">
                             <el-table :data="splitTable" header-row-class-name="tableHead" class="newTable" :height="mainClientHeight - 61 - 62 - 47" border tooltip-effect="dark">
-                                <el-table-column type="index" width="55" label="序号" align="center" fixed />
+                                <el-table-column type="index" :index="index => getIndexMethod(index, splitTable)" label="序号" width="55" fixed />
                                 <el-table-column label="曲房状态" width="100" prop="statusName" :show-overflow-tooltip="true" />
                                 <el-table-column label="生产订单" min-width="120" prop="orderNo" :show-overflow-tooltip="true" />
                                 <el-table-column label="曲房号" min-width="100" prop="kojiHouseName" :show-overflow-tooltip="true" />
@@ -58,7 +58,7 @@
                                 <el-table-column label="操作时间" width="180" prop="changed" :show-overflow-tooltip="true" />
                                 <el-table-column label="操作" fixed="right" align="center" width="140">
                                     <template slot-scope="scope">
-                                        <el-button v-if="isAuth('steSplitDel')" type="text" icon="el-icon-delete" :disabled="['C','D','P'].includes(scope.row.status)" @click="delSplitRow(scope.row)">
+                                        <el-button v-if="isAuth('kjSplitDel')" type="text" icon="el-icon-delete" :disabled="scope.row.status !== 'S' && scope.row.status !== 'N'" @click="delSplitRow(scope.row)">
                                             删除
                                         </el-button>
                                     </template>
@@ -168,8 +168,14 @@
                 label: '状态',
                 prop: 'status',
                 defaultOptionsFn: () => {
-                    return COMMON_API.DICTQUERY_API({
-                        dictType: 'COMMON_CHECK_STATUS'
+                    return new Promise((resolve) => {
+                        COMMON_API.DICTQUERY_API({
+                            dictType: 'COMMON_CHECK_STATUS'
+                        }).then((res) => {
+                            const temp = res.data.data.filter(item => item.dictValue !== '已提交') // DFMDS-2548
+                            res.data.data = temp
+                            resolve(res)
+                        })
                     })
                 },
                 defaultValue: '',
@@ -236,12 +242,12 @@
 
 
         // 表格双击
-        showSplitTable(row) {
-            if (!(row.orderStatus === 'D' || row.orderStatus === 'P')) {
+        showSplitTable(row) { // 已审核C、已过账P、已反审按钮不可操作X
+            // if (!(row.orderStatus === 'D' || row.orderStatus === 'P' || row.orderStatus === 'X')) {
                 this.splitForm.orderNo = row.orderNo
                 this.nowRow = row
                 this.getSplitTable()
-            }
+            // }
 
         }
 
@@ -270,16 +276,29 @@
 
         // 拆分
         orderSplit(row) {
-            this.orderSplitRow = row;
-            this.dialogFormVisible = true;
-            this.$nextTick(() => {
-                this.$refs.orderSplitDialog.init(row, this.orderStatusMapping);
-            });
+            // if (!(row.orderStatus === 'D' || row.orderStatus === 'P' || row.orderStatus === 'X')) {
+                this.orderSplitRow = row;
+                this.dialogFormVisible = true;
+                this.$nextTick(() => {
+                    this.$refs.orderSplitDialog.init(row, this.orderStatusMapping);
+                });
+            // }
         }
 
 
         // 删除订单
         delSplitRow(row) {
+            if (row.canBeDeleted === '0') {
+                if (row.materialFlag === '1') {
+                    this.$warningToast('该曲房订单下存在领料数据，请删除数据后再删除曲房订单');
+                    return;
+                }
+                if (row.manHourFlag === '1') {
+                    this.$warningToast('关联订单人工工时已提交，此订单不可删除，请取消已审核订单：' + row.manHourOrders);
+                    return;
+                }
+                return;
+            }
             this.$confirm('删除后数据将丢失，是否删除？', '提示', {
                 confirmButtonText: '确定',
                 cancelButtonText: '取消',
@@ -388,6 +407,7 @@
         status: string;
         workShop: string;
         workShopName: string;
+        canBeDeleted: string;
     }
 
     interface OptionObj {

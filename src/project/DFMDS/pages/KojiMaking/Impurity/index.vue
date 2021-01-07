@@ -2,7 +2,7 @@
     <div class="header_main">
         <query-table
             ref="queryTable"
-            query-auth="steDisQuery"
+            query-auth="kjImQuery"
             :type="'home'"
             :rules="queryTableFormRules"
             :query-form-data="queryTableFormData"
@@ -14,19 +14,19 @@
                 <mds-card :title="'异物统计'" :name="'magnet'">
                     <template slot="titleBtn">
                         <div style="float: right;">
-                            <el-button type="primary" size="small" :disabled="!isRedact" @click="addNewForiegnMatterRow">
+                            <el-button v-if="isAuth('kjImAdd')" type="primary" size="small" :disabled="!isRedact" @click="addNewForiegnMatterRow">
                                 新增
                             </el-button>
                         </div>
                     </template>
-                    <el-table class="newTable markStyle" :data="targetQueryTableListOfForiegnMatter" :row-class-name="rowDelFlag" header-row-class-name="tableHead" border style="width: 100%; min-height: 80px;">
-                        <el-table-column label="序号" type="index" width="50" fixed="left" align="center" />
+                    <el-table class="newTable markStyle" :data="targetQueryTableListOfForiegnMatter" :row-class-name="rowDelFlag" header-row-class-name="tableHead" border style="width: 100%; min-height: 80px;" tooltip-effect="dark">
+                        <el-table-column label="序号" type="index" :index="index => getIndexMethod(index, targetQueryTableListOfForiegnMatter)" width="55" fixed="left" align="center" />
                         <el-table-column width="150" :show-overflow-tooltip="true" class="star">
                             <template slot="header">
                                 <span class="notNull">设备名称</span>
                             </template>
                             <template slot-scope="scope">
-                                <el-select v-model="scope.row.deviceName" size="small" clearable style="width: 100%;" :disabled="!isRedact">
+                                <el-select v-model="scope.row.deviceId" size="small" clearable style="width: 100%;" :disabled="!isRedact" @change="val=>setObjectProp(val,scope.row,'deviceName',deviceNameOptions)">
                                     <el-option
                                         v-for="item in deviceNameOptions"
                                         :key="item.optValue"
@@ -41,7 +41,7 @@
                                 <span class="notNull">异物数量</span>
                             </template>
                             <template slot-scope="scope">
-                                <el-input v-model="scope.row.impurityAmount" size="small" placeholder="请输入" :disabled="!isRedact" />
+                                <el-input v-model.number="scope.row.impurityAmount" size="small" placeholder="请输入" :disabled="!isRedact" />
                             </template>
                         </el-table-column>
                         <el-table-column width="150" :show-overflow-tooltip="true">
@@ -49,7 +49,7 @@
                                 <span class="notNull">异物种类</span>
                             </template>
                             <template slot-scope="scope">
-                                <el-select v-model="scope.row.impurityType" size="small" clearable style="width: 100%;" :disabled="!isRedact">
+                                <el-select v-model="scope.row.impurityType" size="small" clearable style="width: 100%;" :disabled="!isRedact" @change="val=>setObjectProp(val,scope.row,'impurityName',foriegnMatterImpurityTypeOptions)">
                                     <el-option
                                         v-for="item in foriegnMatterImpurityTypeOptions"
                                         :key="item.optValue"
@@ -64,7 +64,7 @@
                                 <span>单位</span>
                             </template>
                             <template slot-scope="scope">
-                                <el-input v-model="scope.row.unit" size="small" placeholder="" :disabled="true" />
+                                <el-input v-model="scope.row.unitName" size="small" placeholder="" :disabled="true" />
                             </template>
                         </el-table-column>
                         <el-table-column :show-overflow-tooltip="true" min-width="200">
@@ -72,7 +72,9 @@
                                 <span>备注</span>
                             </template>
                             <template slot-scope="scope">
-                                <el-input v-model.trim="scope.row.remark" size="small" placeholder="请输入" :disabled="!isRedact" />
+                                <el-tooltip :disabled="!scope.row.remark" effect="dark" :content="scope.row.remark" placement="top">
+                                    <el-input v-model.trim="scope.row.remark" size="small" placeholder="请输入" :disabled="!isRedact" />
+                                </el-tooltip>
                             </template>
                         </el-table-column>
                         <el-table-column prop="changer" width="140" label="操作人" :show-overflow-tooltip="true" />
@@ -99,12 +101,12 @@
                 <mds-card :title="'磁铁检查'" :name="'foriegnMatter'">
                     <template slot="titleBtn">
                         <div style="float: right;">
-                            <el-button type="primary" size="small" :disabled="!isRedact" @click="addNewMagnetRow">
+                            <el-button v-if="isAuth('kjImAdd')" type="primary" size="small" :disabled="!isRedact" @click="addNewMagnetRow">
                                 新增
                             </el-button>
                         </div>
                     </template>
-                    <el-table class="newTable markStyle" :data="targetQueryTableListOfMagnet" :row-class-name="rowDelFlag" header-row-class-name="tableHead" border style="width: 100%; min-height: 80px;">
+                    <el-table class="newTable markStyle" :data="targetQueryTableListOfMagnet" :row-class-name="rowDelFlag" header-row-class-name="tableHead" border tooltip-effect="dark" style="width: 100%; min-height: 80px;">
                         <el-table-column label="序号" type="index" width="50" fixed="left" align="center" />
                         <el-table-column width="150" :show-overflow-tooltip="true">
                             <template slot="header">
@@ -126,7 +128,7 @@
                                 <span class="notNull">异物种类</span>
                             </template>
                             <template slot-scope="scope">
-                                <el-select v-model="scope.row.impurityType" size="small" clearable style="width: 100%;" :disabled="!isRedact" @change="clearImpurityInfo(scope.row)">
+                                <el-select v-model="scope.row.impurityType" size="small" clearable style="width: 100%;" :disabled="!isRedact" @change="val=>setImpurityInfo(val,scope.row,'impurityName',magnetImpurityTypeOptions)">
                                     <el-option
                                         v-for="item in magnetImpurityTypeOptions"
                                         :key="item.optValue"
@@ -142,7 +144,9 @@
                                 <span>异物描述</span>
                             </template>
                             <template slot-scope="scope">
-                                <el-input v-model.trim="scope.row.impurityInfo" :disabled="!(scope.row.impurityType==='OTHER'&&isRedact)" size="small" placeholder="请输入" />
+                                <el-tooltip :disabled="!scope.row.impurityInfo" effect="dark" :content="scope.row.impurityInfo" placement="top">
+                                    <el-input v-model.trim="scope.row.impurityInfo" :disabled="!(scope.row.impurityType==='OTHER'&&isRedact)" size="small" placeholder="请输入" />
+                                </el-tooltip>
                             </template>
                         </el-table-column>
                         <el-table-column :show-overflow-tooltip="true" min-width="200">
@@ -150,7 +154,9 @@
                                 <span>处理措施</span>
                             </template>
                             <template slot-scope="scope">
-                                <el-input v-model.trim="scope.row.measures" size="small" placeholder="请输入" :disabled="!isRedact" />
+                                <el-tooltip :disabled="!scope.row.measures" effect="dark" :content="scope.row.measures" placement="top">
+                                    <el-input v-model.trim="scope.row.measures" size="small" placeholder="请输入" :disabled="!isRedact" />
+                                </el-tooltip>
                             </template>
                         </el-table-column>
                         <el-table-column label="备注" :show-overflow-tooltip="true" min-width="200">
@@ -158,7 +164,9 @@
                                 <span>备注</span>
                             </template>
                             <template slot-scope="scope">
-                                <el-input v-model.trim="scope.row.remark" size="small" placeholder="请输入" :disabled="!isRedact" />
+                                <el-tooltip :disabled="!scope.row.remark" effect="dark" :content="scope.row.remark" placement="top">
+                                    <el-input v-model.trim="scope.row.remark" size="small" placeholder="请输入" :disabled="!isRedact" />
+                                </el-tooltip>
                             </template>
                         </el-table-column>
                         <el-table-column prop="changer" min-width="140" label="操作人" :show-overflow-tooltip="true" />
@@ -174,7 +182,7 @@
                 </mds-card>
             </template>
         </query-table>
-        <redact-box v-if="isShowContent" :disabled="redactBoxDisable" :is-redact.sync="isRedact" redact-auth="steStgEdit" save-auth="steStgEdit" :is-show-submit-btn="false" :saved-rules="savedRules" :saved-datas="savedDatas" />
+        <redact-box v-if="isShowContent" :disabled="redactBoxDisable" :is-redact.sync="isRedact" redact-auth="kjImEdit" save-auth="kjImSave" :is-show-submit-btn="false" :saved-rules="savedRules" :saved-datas="savedDatas" />
     </div>
 </template>
 <script lang="ts">
@@ -266,17 +274,17 @@
             let amountTemp = 0;
             if (this.targetQueryTableListOfForiegnMatter.length !== 0) {
                 this.targetQueryTableListOfForiegnMatter.forEach(item => {
-                    amountTemp += item.impurityAmount as number
+                    if (item.delFlag === 0 && typeof item.impurityAmount === 'number') {
+                        amountTemp = amountTemp + item.impurityAmount
+                    }
                 })
             }
-
             return amountTemp
         }
 
-        clearImpurityInfo(row) {
-            console.log(row)
-            row.impurityInfo = ''
-
+        setImpurityInfo(val, target, prop, who) {
+            this.setObjectProp(val, target, prop, who)
+            target.impurityInfo = ''
         }
 
         // 表格内下拉选项
@@ -286,12 +294,10 @@
                 deptId: workShop,
                 factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id
                 }).then(({ data }) => {
-                    console.log('获取设备')
-                    console.log(data)
                     this.deviceNameOptions = []
                     if (data.data) {
                         data.data.forEach(item => {
-                        this.deviceNameOptions.push({ optLabel: item.deviceName, optValue: item.deviceNo })
+                        this.deviceNameOptions.push({ optLabel: item.deviceName, optValue: item.id })
                         })
                     }
                 });
@@ -335,11 +341,12 @@
             return '';
         }
 
+        setObjectProp(val, target, prop, who) {
+            target[prop] = who.filter(item => item.optValue === val)[0].optLabel
+        }
 
         // queryTable 查询请求
         queryTableListInterface(params) {
-            console.log('查询传值')
-            console.log(params)
             this.globalVal = params
 
             // ：若今天以后时间，终止查询并提示
@@ -356,8 +363,6 @@
 
         // [v]queryTable 回传 result
         returnDataFromQueryTableForm(data) {
-            console.log('queryTable Magnet查询结果回传')
-            console.log(data)
             this.targetQueryTableListOfMagnet = []
             if (data.data.length !== 0) {
                 this.targetQueryTableListOfMagnet = data.data
@@ -371,8 +376,6 @@
             }
 
             KOJI_API.KOJI_IMPURITY_FOREIGNMATTER_API(this.globalVal).then(({ data: target }) => {
-                console.log('queryTable foriegn matter查询结果回传')
-                console.log(target)
                 this.targetQueryTableListOfForiegnMatter = []
                 if (target.data.length !== 0) {
                     this.targetQueryTableListOfForiegnMatter = target.data
@@ -405,7 +408,8 @@
                 impurityName: '',
                 impurityType: '',
                 remark: '',
-                unit: '个',
+                unit: 'EA',
+                unitName: '个',
                 workShop: this.globalVal.workShop,
                 delFlag: 0
             }
@@ -503,7 +507,7 @@
 
         ruleForiegnMatterSubmit() {
             for (const item of this.targetQueryTableListOfForiegnMatter.filter(it => it.delFlag !== 1)) {
-                if (!item.deviceName || !item.impurityAmount || !item.impurityType) {
+                if (!item.deviceId || !item.impurityAmount || !item.impurityType) {
                     this.$warningToast('请填写异物统计必填栏位');
                     return false;
                 }
@@ -581,6 +585,7 @@ interface ForiegnMatterDataListObj{
     impurityType: string;
     remark: string;
     unit: string;
+    unitName: string;
     workShop: string;
     delFlag: number;
 }

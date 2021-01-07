@@ -50,7 +50,16 @@
             </el-table-column>
             <el-table-column label="备注" :show-overflow-tooltip="true">
                 <template slot-scope="scope">
-                    <el-input v-model.trim="scope.row.remark" size="small" clearable />
+                    <el-tooltip :disabled="!scope.row.remark" effect="dark" :content="scope.row.remark" placement="top">
+                        <el-input v-model.trim="scope.row.remark" size="small" clearable />
+                    </el-tooltip>
+                </template>
+            </el-table-column>
+            <el-table-column fixed="right" label="操作" header-align="left" align="left" width="70">
+                <template slot-scope="scope">
+                    <el-button v-if="!scope.row.id" class="delBtn" type="text" icon="el-icon-delete" size="mini" @click="del(scope.$index)">
+                        删除
+                    </el-button>
                 </template>
             </el-table-column>
         </el-table>
@@ -172,6 +181,10 @@
             })
         }
 
+        del(index) {
+            this.dataForm.ferBrineItemList.splice(index, 1);
+        }
+
         dataFormSubmit() {
             this.$refs.dataForm.validate(valid => {
                 if (valid) {
@@ -194,6 +207,9 @@
             })
         }
     }
+    interface ListObj {
+        id?: string;
+    }
     interface Brine {
         id?: string;
         virtualMaterialCode?: string;
@@ -202,6 +218,7 @@
         useMaterialCode?: string;
         useMaterialName?: string;
         useMaterialType?: string;
+        ferBrineItemList?: ListObj[];
         useAmount?: string;
         unit?: string;
         remark?: string;

@@ -60,7 +60,7 @@
                 </el-table-column>
                 <el-table-column min-width="180" label="开始时间">
                     <template slot-scope="scope">
-                        <el-date-picker v-model="scope.row.startDate" type="datetime" value-format="yyyy-MM-dd HH:mm:ss" format="yyyy.MM.dd HH:mm" placeholder="选择" size="small" style="width: 165px;" :disabled="!isRedact" />
+                        <el-date-picker v-model="scope.row.startDate" type="datetime" value-format="yyyy-MM-dd HH:mm:ss" format="yyyy.MM.dd HH:mm" placeholder="请选择" size="small" style="width: 165px;" :disabled="!isRedact" />
                     </template>
                 </el-table-column>
                 <el-table-column label="用餐时间" min-width="100">
@@ -70,7 +70,7 @@
                 </el-table-column>
                 <el-table-column min-width="180" label="结束时间">
                     <template slot-scope="scope">
-                        <el-date-picker v-model="scope.row.endDate" type="datetime" value-format="yyyy-MM-dd HH:mm:ss" format="yyyy.MM.dd HH:mm" placeholder="选择" size="small" style="width: 165px;" :disabled="!isRedact" />
+                        <el-date-picker v-model="scope.row.endDate" type="datetime" value-format="yyyy-MM-dd HH:mm:ss" format="yyyy.MM.dd HH:mm" placeholder="请选择" size="small" style="width: 165px;" :disabled="!isRedact" />
                     </template>
                 </el-table-column>
                 <el-table-column label="工作时长" min-width="80">

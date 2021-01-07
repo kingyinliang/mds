@@ -219,7 +219,7 @@
             const net02 = new Promise(resolve => {
                 this.getDictionary('ABNORMAL_HALT', resolve);
             });
-            // 异常原因
+            // // 异常原因
             const net03 = new Promise(resolve => {
                 this.getDictionary('POOR_PROCESS_WAIT', resolve);
             });
@@ -323,11 +323,13 @@
             STE_API.STE_AUDIT_CRAFT_TEMPERATURE_API({
                 orderNo: orderNo
             }).then(({ data }) => {
-                this.tempList = data.data;
                 const xAxisData: string[] = [];
                 const legendData = ['保温开始', '保温10min', '保温15min', '保温20min', '二次保温', '保温30min'];
                 const seriesData: object[] = [];
                 const timeData: object[] = [];
+                if (data.data !== null) {
+                    this.tempList = data.data;
+                }
                 let num = 0
                 let normalColor = '#1691FE'
                 while (num < 6) {
@@ -374,9 +376,9 @@
                             data: [
                                 [{
                                     name: '',
-                                    yAxis: data.data[0]['upLimit']
+                                    yAxis: this.tempList[0]['upLimit']
                                 }, {
-                                    yAxis: data.data[0]['downLimit']
+                                    yAxis: this.tempList[0]['downLimit']
                                 }]
                             ]
                         },
@@ -392,14 +394,14 @@
                     /* eslint-enable */
                     num++;
                 }
-                data.data.map(item => {
-                    xAxisData.push(item.potName); // x轴
-                    seriesData[0]['data'].push(item.start);
-                    seriesData[1]['data'].push(item.tenMin);
-                    seriesData[2]['data'].push(item.fifteenMin);
-                    seriesData[3]['data'].push(item.twentyMin);
-                    seriesData[4]['data'].push(item.twoKeepWarm);
-                    seriesData[5]['data'].push(item.thirtyMin);
+                this.tempList.map(item => {
+                    xAxisData.push(item['potName']); // x轴
+                    seriesData[0]['data'].push(item['start']);
+                    seriesData[1]['data'].push(item['tenMin']);
+                    seriesData[2]['data'].push(item['fifteenMin']);
+                    seriesData[3]['data'].push(item['twentyMin']);
+                    seriesData[4]['data'].push(item['twoKeepWarm']);
+                    seriesData[5]['data'].push(item['thirtyMin']);
                     // seriesData[i]['markArea']['data'] = [
                     //     [{
                     //         name: '',
@@ -410,12 +412,12 @@
                     // ]
                     timeData.push(
                         {
-                            0: item.startTime,
-                            1: item.tenMinTime,
-                            2: item.fifteenMinTime,
-                            3: item.twentyMinTime,
-                            4: item.twoKeepWarmTime,
-                            5: item.thirtyMinTime
+                            0: item['startTime'],
+                            1: item['tenMinTime'],
+                            2: item['fifteenMinTime'],
+                            3: item['twentyMinTime'],
+                            4: item['twoKeepWarmTime'],
+                            5: item['thirtyMinTime']
                         }
                     );
                 })
@@ -513,17 +515,19 @@
             STE_API.STE_AUDIT_CRAFT_TIME_API({
                 orderNo: orderNo
             }).then(({ data }) => {
-                this.timeList = data.data;
                 const xAxisData: string[] = [];
                 const timeData: number[] = [];
                 const tempStart: number[] = []
                 const tempEnd: number[] = []
-                data.data.map(item => {
-                    xAxisData.push(item.potName);
-                    timeData.push(item.keepWarmTime);
-                    tempStart.push(item.upLimit);
-                    tempEnd.push(item.downLimit);
-                })
+                if (data.data !== null) {
+                    this.timeList = data.data;
+                    data.data.map(item => {
+                        xAxisData.push(item.potName);
+                        timeData.push(item.keepWarmTime);
+                        tempStart.push(item.upLimit);
+                        tempEnd.push(item.downLimit);
+                    })
+                }
                 this.chartLine = echarts.init(document.getElementById('J_chartLineBoxTime'));
                 const optionTime = {
                         color: ['#3398DB', '#3398DB', '#3398DB'],

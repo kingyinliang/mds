@@ -1,9 +1,9 @@
 <template>
     <data-entry
         ref="dataEntry"
-        redact-auth="steSemiEdit"
-        save-auth="steSemiEdit"
-        submit-auth="steSemiSubmit"
+        redact-auth="kjYPEdit"
+        save-auth="kjYPSave"
+        submit-auth="kjYPSubmit"
         :status-title="'工序状态'"
         :order-status="formHeader.statusName"
         :header-base="headerBase"
@@ -15,13 +15,13 @@
         @success="getOrderList"
     >
         <template slot="1" slot-scope="data">
-            <craft-control ref="craftControl" :is-redact="data.isRedact" :form-header="formHeader" />
+            <craft-control ref="craftControl" :is-status="craftControlStatus" :is-redact="data.isRedact" :form-header="formHeader" />
         </template>
         <template slot="2" slot-scope="data">
-            <product-in-storage ref="productInStorage" :pot-no-now="potNoNow" :pot-no-list="potNoList" :is-redact="data.isRedact" :form-header="formHeader" />
+            <product-in-storage ref="productInStorage" :is-status="productInStorageStatus" :pot-no-now="potNoNow" :pot-no-list="potNoList" :is-redact="data.isRedact" :form-header="formHeader" />
         </template>
         <template slot="3" slot-scope="data">
-            <koji-exc-record ref="excRecord" :is-redact="data.isRedact" :form-header="formHeader" />
+            <koji-exc-record ref="excRecord" :is-redact="data.isRedact" exp-add="kjYPExpAdd" :form-header="formHeader" />
         </template>
         <template slot="4" slot-scope="data">
             <koji-text-record ref="textRecord" :is-redact="data.isRedact" />
@@ -35,7 +35,7 @@
 
     import CraftControl from './common/DiscCraftControl.vue'; // import tab 工艺控制
     import ProductInStorage from './common/DiscProductInStorage.vue'; // import tab 生产入库
-    import kojiExcRecord from './common/DiscKojiExcRecord.vue'; // import 异常记录
+    import kojiExcRecord from './common/KojiExcRecord.vue'; // import 异常记录
     import kojiTextRecord from './common/DiscKojiTextRecord.vue'; // import 文本记录
 
     @Component({
@@ -56,13 +56,14 @@
             textRecord: HTMLFormElement; // 文本记录
         }
 
-        orderIndex=['已同步', '已保存', '待审核', '已审核', '已过账', '已退回', '未录入']
         formHeader: OrderData = {};
         fermentPotNoOptions: OptionObj[] = [];
         classesOptions: object[] = [];
 
         jumpFromAudit=false // is from audit ?
 
+        craftControlStatus='N';
+        productInStorageStatus='N';
         headerBase: HeaderBase[] = [
             {
                 type: 'p',
@@ -145,6 +146,9 @@
         @Watch('formHeader.fermentPotNo', { immediate: true, deep: true })
         onChangeValue(newVal: number| string) {
             if (newVal) {
+                const obj = this.potNoList.find(item => item.optValue === newVal);
+                // console.log(newVal, this.potNoList, obj, '===============')
+                this.formHeader.fermentPotId = obj?.optId;
                 this.potNoNow = newVal
             }
         }
@@ -156,10 +160,17 @@
                 kojiOrderNo: this.formHeader.kojiOrderNo
             }).then(({ data }) => {
                 this.$store.commit('koji/updateHouseTag', data.data);
-                this.tabs[0].status = data.data.discCraftName
-                this.tabs[1].status = data.data.discInStorageName
+                this.tabs[0].status = data.data.discCraft
+                this.tabs[1].status = data.data.discInStorage
+
+                this.craftControlStatus = data.data.discCraft;
+                this.productInStorageStatus = data.data.discInStorage;
+                console.log('this.craftControlStatus')
+                console.log(this.craftControlStatus)
+                console.log('this.productInStorageStatus')
+                console.log(this.productInStorageStatus)
                 this.$refs.dataEntry.updateTabs();
-                this.$set(this.formHeader, 'statusName', this.orderIndex[Math.min(this.orderIndex.indexOf(data.data.discCraftName), this.orderIndex.indexOf(data.data.discInStorageName))])
+                this.$set(this.formHeader, 'statusName', data.data.discStatusName);
             })
         }
 
@@ -169,8 +180,12 @@
         }
 
         mounted() {
+            // 跳转用
             if (typeof this.$route.params.order !== 'undefined') {
                 this.jumpFromAudit = true
+                setTimeout(() => {
+                    this.$refs.dataEntry.activeName = this.$route.params.activeName;
+                }, 2000);
             }
 
             // [下拉]获取溶解罐选项
@@ -243,9 +258,9 @@
                 discGuardException: craftControlTemp.discGuardException, // 看曲记录异常情况
                 discTurnException: craftControlTemp.discTurnException, // 翻曲记录异常情况
                 exception: { // 异常记录
-                    insertDatas: excRecordTemp.insertDto,
+                    insertDatas: excRecordTemp.InsertDto,
                     removeIds: excRecordTemp.ids,
-                    updateDatas: excRecordTemp.updateDto
+                    updateDatas: excRecordTemp.UpdateDto
                 }, // 异常记录
                 fermentPotId: this.formHeader.fermentPotId, // 发酵罐Id
                 fermentPotNo: this.formHeader.fermentPotNo, // 发酵罐号
@@ -257,11 +272,19 @@
         }
 
         submitDatas() {
-            if (this.$refs.craftControl.ruleSubmit() && this.$refs.productInStorage.ruleSubmit() && this.$refs.excRecord.ruleSubmit()) {
+            // if (this.$refs.craftControl.ruleSubmit() && this.$refs.productInStorage.ruleSubmit() && this.$refs.excRecord.ruleSubmit()) {
                 const craftControlTemp = this.$refs.craftControl.savedData(this.formHeader);
                 const productInStorageTemp = this.$refs.productInStorage.savedData(this.formHeader);
                 const excRecordTemp = this.$refs.excRecord.getSavedOrSubmitData(this.formHeader, 'YP');
                 const textRecordTemp = this.$refs.textRecord.savedData(this.formHeader);
+                console.log('craftControlTemp')
+                console.log(craftControlTemp)
+                console.log('productInStorageTemp')
+                console.log(productInStorageTemp)
+                console.log('excRecordTemp')
+                console.log(excRecordTemp)
+                console.log('textRecordTemp')
+                console.log(textRecordTemp)
 
                 return KOJI_API.KOJI_DISC_QUERY_SUBMIT_API({
                     discEvaluate: craftControlTemp.discEvaluate,
@@ -273,9 +296,9 @@
                     discGuardException: craftControlTemp.discGuardException, // 看曲记录异常情况
                     discTurnException: craftControlTemp.discTurnException, // 翻曲记录异常情况
                     exception: { // 异常记录
-                        insertDatas: excRecordTemp.insertDto,
+                        insertDatas: excRecordTemp.InsertDto,
                         removeIds: excRecordTemp.ids,
-                        updateDatas: excRecordTemp.updateDto
+                        updateDatas: excRecordTemp.UpdateDto
                     }, // 异常记录
                     fermentPotId: this.formHeader.fermentPotId, // 发酵罐/池号Id
                     fermentPotNo: this.formHeader.fermentPotNo, // 发酵罐/池号
@@ -284,7 +307,7 @@
                     orderNo: this.formHeader.orderNo, // 订单号
                     text: textRecordTemp
                 })
-            }
+            // }
         }
     }
 

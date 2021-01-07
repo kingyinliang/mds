@@ -1,3 +1,10 @@
+<!--
+ * @Description:
+ * @Anthor: Telliex
+ * @Date: 2020-12-02 10:12:17
+ * @LastEditors: Telliex
+ * @LastEditTime: 2020-12-17 17:23:13
+-->
 <template>
     <el-dialog title="人员分配" :close-on-click-modal="false" :visible.sync="visible">
         <el-row>
@@ -38,6 +45,8 @@ export default {
         /* eslint-disable @typescript-eslint/camelcase*/
         init(id, userId) {
             this.visible = true;
+            this.selctId = []; // DFMDS-2571 , 没清空遗留上一次数据问题
+            this.userlist = [];
             COMMON_API.USER_ROLE_ALL_QUERY_API({
                 factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
                 deptId: id

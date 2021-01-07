@@ -19,19 +19,21 @@
                 <el-input v-model="dataForm.stockAmount" placeholder="NA" disabled />
             </el-form-item>
             <el-form-item label="领用数量：" prop="amount">
-                <el-input v-model.number="dataForm.amount" placeholder="手动输入" @blur="calcStockAmount" />
+                <el-input v-model.number="dataForm.amount" placeholder="请输入" @input="calcStockAmount" />
             </el-form-item>
             <el-form-item label="小豆数量：" prop="smallBeanAmount">
-                <el-input v-model.number="dataForm.smallBeanAmount" placeholder="手动输入" />
+                <el-input v-model="dataForm.smallBeanAmount" placeholder="请输入" />
             </el-form-item>
             <el-form-item label="单位：">
-                <el-input v-model="dataForm.unit" placeholder="NA" disabled />
+                <el-input v-model="dataForm.unitName" placeholder="NA" disabled />
             </el-form-item>
             <el-form-item label="大豆厂家：">
                 <el-input v-model="dataForm.supplier" placeholder="NA" disabled />
             </el-form-item>
             <el-form-item label="备注：" prop="remark">
-                <el-input v-model="dataForm.remark" placeholder="手动输入" />
+                <el-tooltip :disabled="!dataForm.remark" effect="dark" :content="dataForm.remark" placement="top">
+                    <el-input v-model="dataForm.remark" placeholder="请输入" />
+                </el-tooltip>
             </el-form-item>
             <el-form-item label="操作人：">
                 <el-input v-model="dataForm.changer" placeholder="NA" disabled />
@@ -82,8 +84,18 @@
             ],
             batch: [{ required: true, message: '请选择领用批次', trigger: 'change' }],
             smallBeanAmount: [
-                { type: 'number', message: '必须为数字值' }
-            ]
+                { required: true, message: '请输入数字', trigger: 'blur' },
+                {
+                    validator(rule, value, callback) {
+                        if (/^([1-9][0-9]*|0)(\.([0-9]+)?[1-9])?$/.test(value)) {
+                        return callback()
+                        }
+                        return callback(new Error('请输入数字'))
+
+                    },
+                    trigger: 'blur'
+                }
+    ]
         };
 
         // 表单对象
@@ -94,13 +106,16 @@
             this.visible = true;
             let Data: DataForm = {};
 
+            let storageId = '';
             if (type === 'add') {
                 this.batchList = infoData.detailsList || [];
                 Data = {
                     ...infoData,
                     ...infoData.detailsList[0]
                 }
+                storageId = infoData.detailsList[0].id;
             } else {
+                storageId = infoData.storageId;
                 // 查询
                 await KOJI_API.KOJI_STORAGE_BEAN_DROPDOWN_API({
                     workShop: formHeader.workShop,
@@ -119,20 +134,33 @@
                 });
             }
 
+            const { data: { data: result } } = await KOJI_API.KOJI_MATERIAL_GET_BOM_API({
+                orderNo: this.formHeader.orderNo,
+                dictType: 'KOJI_BEAN_MATERIAL'
+            });
+            console.log(result, 'result=-=-========================================')
+
             this.STOCK_AMOUNT = (Data.stockAmount || Data.currentAmount) ? Number(Data.stockAmount) || Number(Data.currentAmount) : 0;
             if (Data.amount) { this.STOCK_AMOUNT += Number(Data.amount); }
 
             this.dataForm = {
                 id: Data.id,
+                processCode: formHeader.textStage,
                 materialHL: Data.wareHouseNo || Data.materialLocation,
                 materialLocation: Data.materialLocation,
                 batch: Data.batch,
                 wareHouseNo: Data.wareHouseNo,
-                material: `${String(Data.materialName)} ${String(Data.materialCode)}`,
-                materialCode: Data.materialCode,
-                materialName: Data.materialName,
-                materialLink: Data.materialCode ? Data.materialName + Data.materialCode : '',
-                materialType: 'BEAN',
+                // material: `${String(Data.materialName)} ${String(Data.materialCode)}`,
+                // materialCode: Data.materialCode,
+                // materialName: Data.materialName,
+                // materialLink: Data.materialCode ? Data.materialName + Data.materialCode : '',
+                // materialType: 'BEAN',
+                material: `${String(result.materialName)} ${String(result.materialCode)}`,
+                materialCode: result.materialCode,
+                materialName: result.materialName,
+                materialLink: result.materialCode ? `${String(result.materialName)} ${String(result.materialCode)}` : '',
+                materialType: result.materialType,
+                storageType: 'BEAN', // 写死
                 amount: Data.amount,
                 supplier: Data.supplier,
                 stockAmount: Data.stockAmount || Data.currentAmount,
@@ -140,9 +168,11 @@
                 kojiOrderNo: this.formHeader.kojiOrderNo,
                 smallBeanAmount: Data.smallBeanAmount,
                 unit: 'KG',
+                unitName: '千克',
                 remark: Data.remark,
                 changer: getUserNameNumber(),
-                changed: dateFormat(new Date(), 'yyyy-MM-dd hh:mm:ss')
+                changed: dateFormat(new Date(), 'yyyy-MM-dd hh:mm:ss'),
+                storageId: storageId
             }
         }
 
@@ -164,6 +194,7 @@
                     this.STOCK_AMOUNT = Number(item.stockAmount) || Number(item.currentAmount);
                     this.dataForm.amount = '';
                     this.dataForm.supplier = item.supplier;
+                    this.dataForm.storageId = item.id;
                 }
             })
         }
@@ -173,8 +204,10 @@
             this.$refs.dataForm.validate(valid => {
                 if (valid) {
                     if (this.type === 'add') {
+                        const params = JSON.parse(JSON.stringify(this.dataForm))
+                        delete params.id;
                         KOJI_API.KOJI_MATERIAL_GET_ADD_QUERY_API({
-                            insertDto: [this.dataForm]
+                            insertDto: [params]
                         }).then(() => {
                             this.visible = false;
                             this.$emit('success', this.dataForm)
@@ -206,6 +239,7 @@
     }
 
     interface BatchList {
+        id?: string;
         batch?: string;
         materialName?: string;
         materialCode?: string;
@@ -223,12 +257,15 @@
         materialName?: string;
         materialLink?: string;
         materialType?: string;
+        storageType?: string;
+        processCode?: string;
         amount?: string;
         supplier?: string;
         orderNo?: string;
         kojiOrderNo?: string;
         smallBeanAmount?: string;
         unit?: string;
+        unitName?: string;
         remark?: string;
         changer?: string;
         changed?: string;
@@ -236,6 +273,7 @@
         currentAmount?: string;
         wareHouseNo?: string;
         materialHL?: string;
+        storageId?: string;
     }
 
 </script>

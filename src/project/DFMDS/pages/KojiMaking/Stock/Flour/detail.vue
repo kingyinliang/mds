@@ -33,7 +33,7 @@
                         </div>
                         <div class="dataEntry-head-leftRight-message__item">
                             <p class="dataEntry-head-leftRight-message__item_info">
-                                {{ totalNum }}<span>{{ stockUnit }}</span>
+                                {{ totalNum }}<span style="margin-left: 5px;">{{ stockUnit }}</span>
                             </p>
                             <p><em class="iconfont factory-cunchurongliang" />总库存</p>
                         </div>
@@ -46,13 +46,13 @@
                 <span slot="label" class="spanview">
                     当前库存信息
                 </span>
-                <stock-table-data :work-shop-info="$store.state.koji.StockFlourInfo" stock-type="FLOUR" />
+                <stock-table-data :work-shop-info="$store.state.koji.StockFlourInfo" query-auth="flourMxQuery" adjust-auth="flourAdjust" stock-type="FLOUR" />
             </el-tab-pane>
             <el-tab-pane name="2">
                 <span slot="label" class="spanview">
                     历史库存信息
                 </span>
-                <stock-table-data :work-shop-info="$store.state.koji.StockFlourInfo" :is-history-page="true" stock-type="FLOUR" />
+                <stock-table-data :work-shop-info="$store.state.koji.StockFlourInfo" query-auth="flourMxQuery" adjust-auth="flourAdjust" :is-history-page="true" stock-type="FLOUR" />
             </el-tab-pane>
         </el-tabs>
     </div>
@@ -94,9 +94,9 @@
 
         get stockUnit() {
             if (this.stockInfoObj.detailsList && this.stockInfoObj.detailsList.length) {
-                return this.stockInfoObj.detailsList[0].unit
+                return this.stockInfoObj.detailsList[0].unitName
             }
-            return 'KG'
+            return '千克'
         }
 
         get stockMaterial() {
@@ -117,6 +117,7 @@
         materialCode?: number|string;
         materialName?: number|string;
         unit?: number|string;
+        unitName?: string;
     }
 </script>
 <style lang="scss" scoped>

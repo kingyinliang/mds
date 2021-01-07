@@ -1,7 +1,7 @@
 <template>
     <div>
         <el-card v-if="isQueryFormShow" class="searchCard" style="margin-bottom: 5px;">
-            <el-form :model="queryForm" :rules="queryFormRules" :inline="true" size="small" label-width="70px" class="multi_row clearfix" style="font-size: 0;">
+            <el-form :model="queryForm" :rules="queryFormRules" :inline="true" size="small" label-width="70px" class="multi_row clearfix" style="font-size: 0;" @keyup.enter.native="getDataList(true)">
                 <template v-for="item in queryFormData">
                     <template v-if="!item.hide">
                         <el-form-item v-if="item.type === 'select'" :key="item.prop" :label="`${item.label}：` || ''" :prop="item.prop" :rules="item.rule" :label-width="`${item.labelWidth ? item.labelWidth : 70}px`">
@@ -15,7 +15,7 @@
                             </el-select>
                         </el-form-item>
                         <el-form-item v-if="item.type === 'input'" :key="item.prop" :label="`${item.label}：` || ''" :prop="item.prop" :rules="item.rule" :label-width="`${item.labelWidth ? item.labelWidth : 70}px`">
-                            <el-input :ref="item.prop" v-model="queryForm[item.prop]" style="width: 170px;" />
+                            <el-input :ref="item.prop" v-model.trim="queryForm[item.prop]" style="width: 170px;" clearable />
                         </el-form-item>
                         <el-form-item v-if="item.type === 'radio'" :key="item.prop" :label="item.label?`${item.label}：` : ''" :prop="item.prop" :rules="item.rule" :label-width="`${item.labelWidth ? item.labelWidth : 70}px`">
                             <el-radio v-for="(it, num) in item.radioArr" :key="num" v-model="queryForm[item.prop]" :label="it.val">
@@ -84,8 +84,11 @@
                                 <em class="reqI">*</em><span>{{ item.label }}</span>
                             </template>
                             <template slot-scope="scope">
-                                <el-input v-if="item.redact && item.type === 'input'" v-model="scope.row[item.prop]" :disabled="!scope.row.redact" placeholder="手工录入" size="small" />
-                                <el-date-picker v-else-if="item.redact && item.type === 'date-picker'" v-model="scope.row[item.prop]" :disabled="!scope.row.redact" :type="item.dataType" placeholder="请选择" :value-format="item.valueFormat" :style="{width: item.width - 25 + 'px'}" size="small" />
+                                <div v-if="item.type === 'clickSpan'" style="color: #45c2b5; cursor: pointer;" @click="item.onclick(scope.row)">
+                                    {{ scope.row[item.prop] }}
+                                </div>
+                                <el-input v-else-if="item.redact && item.type === 'input'" v-model="scope.row[item.prop]" :disabled="!scope.row.redact" placeholder="手工录入" size="small" />
+                                <el-date-picker v-else-if="item.redact && item.type === 'date-picker'" v-model="scope.row[item.prop]" :disabled="!scope.row.redact" :type="item.dataType" placeholder="请选择" :value-format="item.valueFormat" :style="{width: item.width - 25 + 'px'}" size="small" @change="val => selectChange(scope.row, scope.$index, val)" />
                                 <el-select v-else-if="item.redact && item.type === 'select'" v-model="scope.row[item.prop]" :disabled="!scope.row.redact" :type="item.dataType" placeholder="请选择" size="small">
                                     <!--<el-option label="请选择" value="" />-->
                                     <el-option v-for="(opt, optIndex) in optionLists[item.prop]" :key="optIndex" :label="opt[item.resVal.label]" :value="opt[item.resVal.value]" />
@@ -104,7 +107,7 @@
                     </el-table-column>
                 </el-table>
                 <el-row v-if="tabItem.pages">
-                    <el-pagination :current-page="tabItem.pages.currPage" :page-sizes="[10, 20, 50]" :page-size="tabItem.pages.pageSize" layout="total, sizes, prev, pager, next, jumper" :total="tabItem.pages.totalCount" @size-change="(val) => {tabHandleSizeChange(tabItem.pages, val)}" @current-change="(val) => {tabHandleCurrentChange(tabItem.pages, val)}" />
+                    <el-pagination :current-page.sync="tabItem.pages.currPage" :page-sizes="[10, 20, 50]" :page-size="tabItem.pages.pageSize" layout="total, sizes, prev, pager, next, jumper" :total="tabItem.pages.totalCount" @size-change="(val) => {tabHandleSizeChange(tabItem.pages, val)}" @current-change="(val) => {tabHandleCurrentChange(tabItem.pages, val)}" />
                 </el-row>
             </el-tab-pane>
         </el-tabs>
@@ -302,6 +305,10 @@
             tableHeight: {
                 type: Number,
                 default: 405
+            },
+            isRedact: {
+                type: Boolean,
+                default: false
             }
         },
         data() {
@@ -316,7 +323,8 @@
                 multipleSelection: [],
                 tableHeightSet: this.tableHeight,
                 currpageConfig: 'currPage',
-                pagesizeConfig: 'pageSize'
+                pagesizeConfig: 'pageSize',
+                prePage: 1
             };
         },
         computed: {},
@@ -581,11 +589,21 @@
             },
             // 改变每页条数
             tabHandleSizeChange(item, val) {
+                if (this.isRedact) {
+                    this.$warningToast('请先保存数据');
+                    return false;
+                }
                 item.pageSize = val;
                 this.getDataList();
             },
             // 跳转页数
             tabHandleCurrentChange(item, val) {
+                if (this.isRedact) {
+                    this.$warningToast('请先保存数据');
+                    item.currPage = item.prePage;
+                    return false;
+                }
+                item.prePage = item.currPage;
                 item.currPage = val;
                 this.getDataList();
             },
@@ -605,6 +623,10 @@
             },
             lineClick(row) {
                 this.$emit('line-click', row);
+            },
+            // 选择变化
+            selectChange(row, index, val) {
+                this.$emit('select-change', row, index, val);
             }
         }
     };

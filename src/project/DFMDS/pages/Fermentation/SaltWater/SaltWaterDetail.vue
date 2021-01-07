@@ -62,12 +62,12 @@
                                     <span class="notNull">盐水用量（KG）</span>
                                 </template>
                                 <template slot-scope="scope">
-                                    <el-input v-model.number="scope.row.useAmount" oninput="value=value.replace(/\D*/g,'')" size="small" placeholder="输入数量" :disabled="!isRedact" />
+                                    <el-input v-model.number="scope.row.useAmount" oninput="value=value.replace(/\D*/g,'')" size="small" placeholder="请输入数量" :disabled="!isRedact" />
                                 </template>
                             </el-table-column>
                             <el-table-column width="120" label="盐水温度（°C）" :show-overflow-tooltip="true" class="star">
                                 <template slot-scope="scope">
-                                    <el-input v-model.number="scope.row.temperature" oninput="value=value.replace(/\D*/g,'')" :disabled="!isRedact" size="small" placeholder="输入温度" />
+                                    <el-input v-model.number="scope.row.temperature" oninput="value=value.replace(/\D*/g,'')" :disabled="!isRedact" size="small" placeholder="请输入温度" />
                                 </template>
                             </el-table-column>
                             <el-table-column width="150" :show-overflow-tooltip="true" class="star">
@@ -75,7 +75,7 @@
                                     <span class="notNull">盐水浓度</span>
                                 </template>
                                 <template slot-scope="scope">
-                                    <el-input v-model.number="scope.row.concentration" oninput="value=value.replace(/\D*/g,'')" size="small" placeholder="输入浓度" :disabled="!isRedact" />
+                                    <el-input v-model.number="scope.row.concentration" oninput="value=value.replace(/\D*/g,'')" size="small" placeholder="请输入浓度" :disabled="!isRedact" />
                                 </template>
                             </el-table-column>
                             <el-table-column :show-overflow-tooltip="true" min-width="200">
@@ -128,7 +128,7 @@
                                     <span class="notNull">领用数量</span>
                                 </template>
                                 <template slot-scope="scope">
-                                    <el-input v-model="scope.row.useAmount" size="small" placeholder="输入数量" :disabled="!isRedact" />
+                                    <el-input v-model="scope.row.useAmount" size="small" placeholder="请输入数量" :disabled="!isRedact" />
                                 </template>
                             </el-table-column>
                             <el-table-column :show-overflow-tooltip="true" width="100">
@@ -144,7 +144,7 @@
                                     <span class="notNull">批次</span>
                                 </template>
                                 <template slot-scope="scope">
-                                    <el-input v-model.trim="scope.row.receiveBatch" size="small" placeholder="输入批次" :disabled="!isRedact" />
+                                    <el-input v-model.trim="scope.row.receiveBatch" size="small" placeholder="请输入批次" :disabled="!isRedact" />
                                 </template>
                             </el-table-column>
                             <el-table-column :show-overflow-tooltip="true" min-width="200">
@@ -203,22 +203,23 @@ export default class SaltWaterDetail extends Vue {
             value: ['holderName']
         },
         {
-            type: 'p',
+            type: 'tooltip',
             icon: 'factory-bianhao',
             label: '制曲订单',
-            value: 'orderNo'
+            value: 'preOrderNo'
         },
         {
             type: 'tooltip',
             icon: 'factory-pinleiguanli',
             label: '制曲物料',
-            value: ['preMaterialCode', 'preMaterialName']
+            value: ['preMaterialName', 'preMaterialCode']
         },
         {
             type: 'p',
             icon: 'factory--meirijihuachanliangpeizhi',
             label: '制曲数量',
-            value: 'kojiAmount'
+            value: 'kojiAmount',
+            unit: '吨'
         },
         {
             type: 'tooltip',
@@ -230,7 +231,7 @@ export default class SaltWaterDetail extends Vue {
             type: 'tooltip',
             icon: 'factory-pinleiguanli',
             label: '发酵物料',
-            value: ['productMaterialCode', 'productMaterialName']
+            value: ['productMaterialName', 'productMaterialCode']
         },
         {
             type: 'p',
@@ -249,7 +250,8 @@ export default class SaltWaterDetail extends Vue {
             icon: 'factory-riqi',
             label: '曲料温度', // 曲料温度
             value: 'kojiTempature',
-            placeholder: '输入温度°C'
+            placeholder: '输入温度°C',
+            unit: '°C'
         }
     ];
 
@@ -308,23 +310,24 @@ export default class SaltWaterDetail extends Vue {
         const brineInfo = this.$store.state.fer.brineInfo;
         FER_API.FER_BRINE_QUERY_DETAIL_API({ fermentorId: brineInfo.id }).then(res => {
             const info = res.data.data;
-            const order = { ...info.order };
+            const ferOrder = { ...info.ferOrder };
             this.formHeader = {
                 holderNo: info.holderNo,
                 holderName: info.holderName,
                 kojiTempature: info.ferBrineIssue.kojiTempature,
                 changed: info.changed,
                 changer: info.changer,
-                productMaterialCode: order.productMaterialCode,
-                productMaterialName: order.productMaterialName,
+                productMaterialCode: ferOrder.productMaterialCode,
+                productMaterialName: ferOrder.productMaterialName,
                 kojiOutDate: info.intoDate,
-                kojiAmount: order.preAmount,
-                preMaterialCode: order.preMaterialCode,
-                preMaterialName: order.preMaterialName,
-                orderNo: order.orderNo,
+                kojiAmount: ferOrder.preAmount,
+                preMaterialCode: ferOrder.preMaterialCode,
+                preMaterialName: ferOrder.preMaterialName,
+                orderNo: ferOrder.orderNo,
                 orderStatus: info.ferBrineIssue.checkStatusName,
                 orderStatusName: info.brineFlagName,
-                factoryName: JSON.parse(sessionStorage.getItem('factory') || '{}').deptName
+                factoryName: JSON.parse(sessionStorage.getItem('factory') || '{}').deptName,
+                preOrderNo: ferOrder.preOrderNo
             }
             this.selectForm = {
                 brineMaterialCode: info.ferBrineIssue?.brineMaterialCode
@@ -345,7 +348,7 @@ export default class SaltWaterDetail extends Vue {
 
     getOrtherMaterialList() {
         const info = this.$store.state.fer.brineInfo;
-        FER_API.FER_BRINE_OTHER_BOM_API({ fermentorId: info.id, cycle: info.cycle, orderNo: info.order.orderNo }).then(({ data }) => {
+        FER_API.FER_BRINE_OTHER_BOM_API({ fermentorId: info.id, cycle: info.cycle, orderNo: info.ferOrder.orderNo }).then(({ data }) => {
             // console.log(data, '=-=-=-=-=-=-=')
             this.otherMaterialList = data.data;
         })
@@ -389,6 +392,12 @@ export default class SaltWaterDetail extends Vue {
     savedDatas() {
         const info = this.$store.state.fer.brineInfo;
         const obj = this.formHeader;
+        let virtualMaterialId;
+        this.materialOptionsList.map((item: { virtualMaterialCode: string; id: string }) => {
+            if (item.virtualMaterialCode === this.selectForm.brineMaterialCode) {
+                virtualMaterialId = item.id
+            }
+        });
         return FER_API.FER_BRINE_SAVE_API({
             ferBrineIssueBomList: this.otherMaterialList,
             ferBrineIssueBomRemoveIdList: this.ferBrineIssueBomRemoveIdList,
@@ -398,7 +407,7 @@ export default class SaltWaterDetail extends Vue {
             ferMaterialName: obj.productMaterialName,
             cycle: info.cycle,
             ferMaterialCode: obj.productMaterialCode,
-            // ferMaterialType: info., // 发酵物料类型
+            ferMaterialType: info.ferBrineIssue.ferMaterialType, // 发酵物料类型
             fermentorId: info.holderId,
             id: info.id,
             kojiAmount: obj.kojiAmount,
@@ -407,13 +416,23 @@ export default class SaltWaterDetail extends Vue {
             kojiOutDate: obj.kojiOutDate,
             kojiTempature: obj.kojiTempature,
             remark: info.remark,
-            workShop: info.workShop
+            workShop: info.workShop,
+            kojiOrderNo: this.formHeader.preOrderNo,
+            orderNo: obj.orderNo,
+            orderId: info.ferOrder.id,
+            virtualMaterialId: virtualMaterialId
         });
     }
 
     submitDatas() {
         const info = this.$store.state.fer.brineInfo;
         const obj = this.formHeader;
+        let virtualMaterialId;
+        this.materialOptionsList.map((item: { virtualMaterialCode: string; id: string }) => {
+            if (item.virtualMaterialCode === this.selectForm.brineMaterialCode) {
+                virtualMaterialId = item.id
+            }
+        });
         return FER_API.FER_BRINE_SUBMIT_API({
             ferBrineIssueBomList: this.otherMaterialList,
             ferBrineIssueBomRemoveIdList: this.ferBrineIssueBomRemoveIdList,
@@ -423,7 +442,7 @@ export default class SaltWaterDetail extends Vue {
             ferMaterialName: obj.productMaterialName,
             cycle: info.cycle,
             ferMaterialCode: obj.productMaterialCode,
-            // ferMaterialType: info., // 发酵物料类型
+            ferMaterialType: info.ferBrineIssue.ferMaterialType, // 发酵物料类型
             fermentorId: info.holderId,
             id: info.id,
             kojiAmount: obj.kojiAmount,
@@ -432,7 +451,11 @@ export default class SaltWaterDetail extends Vue {
             kojiOutDate: obj.kojiOutDate,
             kojiTempature: obj.kojiTempature,
             remark: info.remark,
-            workShop: info.workShop
+            workShop: info.workShop,
+            kojiOrderNo: this.formHeader.preOrderNo,
+            orderNo: obj.orderNo,
+            orderId: info.ferOrder.id,
+            virtualMaterialId: virtualMaterialId
         });
     }
 
@@ -442,7 +465,7 @@ export default class SaltWaterDetail extends Vue {
                 this.saltWaterList.push({
                     brinePotId: '',	// 盐水罐ID
                     brinePotName: '', // 盐水罐名称
-                    brinePotN: '', // 盐水罐号
+                    brinePotNo: '', // 盐水罐号
                     changed: dateFormat(new Date(), 'yyyy-MM-dd hh:mm:ss'), // 最后操作时间
                     changer: getUserNameNumber(), // 最后操作人
                     concentration: 0, // 盐水浓度
@@ -533,12 +556,13 @@ interface FormHeaderObj {
     orderStatus?: string;
     orderStatusName?: string;
     factoryName?: string;
+    preOrderNo?: string; // 前置订单
 }
 
 interface SaltWaterObj {
     brinePotId: string;	// 盐水罐ID
     brinePotName: string; // 盐水罐名称
-    brinePotN: string; // 盐水罐号
+    brinePotNo: string; // 盐水罐号
     changed: string; // 最后操作时间
     changer: string; // 最后操作人
     concentration: number; // 盐水浓度

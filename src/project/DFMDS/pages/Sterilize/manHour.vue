@@ -14,7 +14,7 @@
                             template(slot="label")
                                 span(class="notNull") *
                                 span 生产日期：
-                            el-date-picker(v-model="formHeader.productDate" type="date" value-format="yyyy-MM-dd" format="yyyy-MM-dd" placeholder="选择" style="width: 180px;")
+                            el-date-picker(v-model="formHeader.productDate" type="date" value-format="yyyy-MM-dd" format="yyyy-MM-dd" placeholder="请选择" style="width: 180px;")
                         el-form-item
                             template(slot="label")
                                 span(class="notNull") *

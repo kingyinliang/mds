@@ -36,7 +36,7 @@ const BASIC_API = {
     /**
      * @property {string} STEPKG_UPDATE_API 发酵信息-查询
      */
-    FERINFO_LIST_API: params => httpProxy('/fer/information/pagingOfQuery', 'POST', params),
+    FERINFO_LIST_API: params => httpProxy('/fer/information/pagingQuery', 'POST', params),
     /**
      * @property {string} STEPKG_UPDATE_API 发酵信息-保存
      */
@@ -48,7 +48,7 @@ const BASIC_API = {
     /**
      * @property {string} STEPKG_UPDATE_API 盐水管理-查询
      */
-    BRINE_LIST_API: params => httpProxy('/fer/brineManage/pagingOfQuery', 'POST', params),
+    BRINE_LIST_API: params => httpProxy('/fer/brineManage/pagingQuery', 'POST', params),
     /**
      * @property {string} STEPKG_UPDATE_API 盐水管理-保存
      */

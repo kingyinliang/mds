@@ -20,10 +20,10 @@
                     <el-input v-model="dataForm.stockAmount" placeholder="NA" disabled />
                 </el-form-item>
                 <el-form-item label="领用数量：" prop="amount">
-                    <el-input v-model.number="dataForm.amount" placeholder="手动输入" @blur="calcStockAmount" />
+                    <el-input v-model.number="dataForm.amount" placeholder="手动输入" @input="calcStockAmount" />
                 </el-form-item>
                 <el-form-item label="单位：">
-                    <el-input v-model="dataForm.unit" placeholder="NA" disabled />
+                    <el-input v-model="dataForm.unitName" placeholder="NA" disabled />
                 </el-form-item>
                 <el-form-item label="面粉厂家：">
                     <el-input v-model="dataForm.supplier" placeholder="NA" disabled />
@@ -39,7 +39,9 @@
                     <el-input v-model.number="dataForm.impurityAmount" placeholder="手动输入" />
                 </el-form-item>
                 <el-form-item label="备注：" prop="remark">
-                    <el-input v-model="dataForm.remark" placeholder="手动输入" />
+                    <el-tooltip :disabled="!dataForm.remark" effect="dark" :content="dataForm.remark" placement="top">
+                        <el-input v-model="dataForm.remark" placeholder="手动输入" />
+                    </el-tooltip>
                 </el-form-item>
                 <el-form-item label="操作人：">
                     <el-input v-model="dataForm.changer" placeholder="NA" disabled />
@@ -117,8 +119,7 @@
             this.type = type;
             this.visible = true;
             let Data: DataForm = {};
-            console.log('infoData')
-            console.log(infoData)
+            let storageId = '';
             if (type === 'add') {
                 this.batchList = infoData.detailsList || [];
                 Data = {
@@ -127,7 +128,9 @@
                     operationMans: Data.operationMans || ''
                 };
                 this.STOCK_AMOUNT = Data.stockAmount || Data.currentAmount ? Number(Data.stockAmount) || Number(Data.currentAmount) : 0;
+                storageId = infoData.detailsList[0].id;
             } else {
+                storageId = infoData.storageId;
                 // 查询
                 await KOJI_API.KOJI_STORAGE_WHEAT_DROPDOWN_API({
                     workShop: formHeader.workShop,
@@ -148,29 +151,44 @@
                 });
             }
 
+            const { data: { data: result } } = await KOJI_API.KOJI_MATERIAL_GET_BOM_API({
+                orderNo: this.formHeader.orderNo,
+                dictType: 'KOJI_WHEAT_MATERIAL'
+            });
+            console.log(result, 'result=-=-========================================')
+
             this.dataForm = {
                 id: Data.id,
                 materialHL: Data.wareHouseNo || Data.materialLocation,
                 wareHouseNo: Data.wareHouseNo,
+                processCode: formHeader.textStage,
                 materialLocation: Data.materialLocation,
                 batch: Data.batch,
-                material: `${String(Data.materialName)} ${String(Data.materialCode)}`,
-                materialCode: Data.materialCode,
-                materialName: Data.materialName,
-                materialLink: Data.materialCode ? Data.materialName + Data.materialCode : '',
-                materialType: 'FLOUR',
+                // material: `${String(Data.materialName)} ${String(Data.materialCode)}`,
+                // materialCode: Data.materialCode,
+                // materialName: Data.materialName,
+                // materialLink: Data.materialCode ? Data.materialName + Data.materialCode : '',
+                // materialType: 'FLOUR',
+                material: `${String(result.materialName)} ${String(result.materialCode)}`,
+                materialCode: result.materialCode,
+                materialName: result.materialName,
+                materialLink: result.materialCode ? `${String(result.materialName)} ${String(result.materialCode)}` : '',
+                materialType: result.materialType,
+                storageType: 'FLOUR', // 写死
                 amount: Data.amount,
                 impurityAmount: Data.impurityAmount || 0,
                 supplier: Data.supplier,
                 stockAmount: Data.stockAmount || Data.currentAmount,
                 operationMans: Data.operationMans || '',
                 unit: Data.unit,
+                unitName: Data.unitName,
                 remark: Data.remark,
                 changer: getUserNameNumber(),
                 changed: dateFormat(new Date(), 'yyyy-MM-dd hh:mm:ss'),
                 orderNo: this.formHeader.orderNo,
                 kojiOrderNo: this.formHeader.kojiOrderNo,
-                workShop: this.formHeader.workShop
+                workShop: this.formHeader.workShop,
+                storageId: storageId
             };
         }
 
@@ -191,6 +209,9 @@
                     // this.dataForm.stockAmount = item.stockAmount;
                     this.dataForm.stockAmount = item.currentAmount
                     this.dataForm.supplier = item.supplier;
+                    this.STOCK_AMOUNT = Number(item.currentAmount);
+                    this.dataForm.storageId = item.id;
+                    this.calcStockAmount();
                 }
             });
         }
@@ -200,9 +221,11 @@
             this.$refs.dataForm.validate(valid => {
                 if (valid) {
                     if (this.type === 'add') {
+                        const params = JSON.parse(JSON.stringify(this.dataForm))
+                        delete params.id;
                         KOJI_API.KOJI_MATERIAL_GET_ADD_QUERY_API({
                             insertDto: [{
-                                ...this.dataForm,
+                                ...params,
                                 impurityAmount: this.dataForm.impurityAmount || 0
                             }]
                         }).then(() => {
@@ -266,6 +289,7 @@
     }
 
     interface BatchList {
+        id?: string;
         batch?: string;
         materialName?: string;
         materialCode?: string;
@@ -283,6 +307,8 @@
         materialName?: string;
         materialLink?: string;
         materialType?: string;
+        storageType?: string;
+        processCode?: string;
         amount?: string;
         impurityAmount?: string|number;
         supplier?: string;
@@ -290,6 +316,7 @@
         kojiOrderNo?: string;
         smallBeanAmount?: string;
         unit?: string;
+        unitName?: string;
         remark?: string;
         changer?: string;
         changed?: string;
@@ -299,6 +326,7 @@
         wareHouseNo?: string;
         materialHL?: string;
         workShop?: string;
+        storageId?: string;
     }
 </script>
 <style lang="scss" scoped>

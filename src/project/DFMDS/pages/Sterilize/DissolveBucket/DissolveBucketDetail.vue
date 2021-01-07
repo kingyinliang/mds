@@ -76,7 +76,7 @@
                     </el-table-column>
                     <el-table-column label="移动类型" :show-overflow-tooltip="true" width="100">
                         <template slot-scope="scope">
-                            {{ chechMoveType(scope.row.moveType) }}
+                            {{ chechMoveType(scope.row) }}
                         </template>
                     </el-table-column>
                     <el-table-column label="移动数量" :show-overflow-tooltip="true" width="100">
@@ -147,7 +147,7 @@
                     </el-table-column>
                     <el-table-column label="移动类型" :show-overflow-tooltip="true" width="180">
                         <template slot-scope="scope">
-                            {{ chechMoveType(scope.row.moveType) }}
+                            {{ chechMoveType(scope.row) }}
                         </template>
                     </el-table-column>
                     <el-table-column label="移动数量" :show-overflow-tooltip="true" width="180">
@@ -259,10 +259,10 @@ export default class DissolveBucketDetail extends Vue {
                 })
                 this.historyInventoryDataGroup = data.data.historyItem
                 this.historyInventoryDataGroup.forEach(item => {
-                    if (item.moveType !== 'I') {
-                        this.$set(item, 'feedMaterial', this.importData.prodcutMaterial)
-                        this.$set(item, 'feedMaterialName', this.importData.prodcutMaterialName)
-                    }
+                    // if (item.moveType !== 'I') {
+                    //     this.$set(item, 'feedMaterial', this.importData.prodcutMaterial)
+                    //     this.$set(item, 'feedMaterialName', this.importData.prodcutMaterialName)
+                    // }
 
                     this.$set(item, 'potName', this.importData.potName)
                 })
@@ -270,10 +270,15 @@ export default class DissolveBucketDetail extends Vue {
 
     }
 
-    chechMoveType(typeString) {
-        if (typeString === 'I') {
+    chechMoveType(row) {
+        console.log('row')
+        console.log(row)
+        if (row.cleanFlag === 1) {
+            return '清罐'
+        }
+        if (row.moveType === 'I') {
             return '投料'
-        } else if (typeString === 'F') {
+        } else if (row.moveType === 'F') {
             return '领用'
         }
         return ''

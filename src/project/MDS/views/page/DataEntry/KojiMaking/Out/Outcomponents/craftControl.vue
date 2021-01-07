@@ -10,10 +10,10 @@
         </el-row>
         <el-form :inline="true" :model="CraftControlDate" size="small" label-width="82px" class="topform">
             <el-form-item label="出曲开始时间：" label-width="125px">
-                <el-date-picker v-model="CraftControlDate.outStartTime" type="datetime" value-format="yyyy-MM-dd HH:mm:ss" format="yyyy.MM.dd HH:mm" placeholder="选择" :disabled="!(CraftControlDate.status !== 'submit')" style="width: 184px;" />
+                <el-date-picker v-model="CraftControlDate.outStartTime" type="datetime" value-format="yyyy-MM-dd HH:mm:ss" format="yyyy.MM.dd HH:mm" placeholder="请选择" :disabled="!(CraftControlDate.status !== 'submit')" style="width: 184px;" />
             </el-form-item>
             <el-form-item label="出曲结束时间：" label-width="125px">
-                <el-date-picker v-model="CraftControlDate.outEndTime" type="datetime" value-format="yyyy-MM-dd HH:mm:ss" format="yyyy.MM.dd HH:mm" placeholder="选择" :disabled="!(CraftControlDate.status !== 'submit')" style="width: 184px;" />
+                <el-date-picker v-model="CraftControlDate.outEndTime" type="datetime" value-format="yyyy-MM-dd HH:mm:ss" format="yyyy.MM.dd HH:mm" placeholder="请选择" :disabled="!(CraftControlDate.status !== 'submit')" style="width: 184px;" />
             </el-form-item>
             <el-form-item label="制曲时间：" label-width="125px">
                 <p style="min-width: 184px;">

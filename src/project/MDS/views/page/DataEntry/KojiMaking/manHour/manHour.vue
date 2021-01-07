@@ -18,7 +18,7 @@
                                 </el-select>
                             </el-form-item>
                             <el-form-item label="制曲日期：">
-                                <el-date-picker v-model="formHeader.inKjmDate" type="date" value-format="yyyy-MM-dd" format="yyyy.MM.dd" placeholder="选择" style="width: 180px;" />
+                                <el-date-picker v-model="formHeader.inKjmDate" type="date" value-format="yyyy-MM-dd" format="yyyy.MM.dd" placeholder="请选择" style="width: 180px;" />
                             </el-form-item>
                             <el-form-item label="生产工序：">
                                 <el-select v-model="formHeader.deptId" placeholder="请选择" style="width: 180px;">

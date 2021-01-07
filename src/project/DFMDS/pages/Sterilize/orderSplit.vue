@@ -29,7 +29,8 @@
                                         {{ scope.row.materialName + ' ' + scope.row.materialCode }}
                                     </template>
                                 </el-table-column>
-                                <el-table-column label="计划数量" width="120" prop="planOutput" />
+                                <el-table-column label="订单计划" width="120" prop="planOutput" />
+                                <el-table-column label="车间计划" width="120" prop="workShopNum" />
                                 <el-table-column label="单位" width="70" prop="outputUnit" />
                                 <el-table-column label="备注" width="70" prop="remark" />
                                 <el-table-column label="操作" fixed="right" align="center" width="80">
@@ -63,14 +64,15 @@
                                 </el-form>
                             </template>
                             <el-table :data="splitTable" header-row-class-name="tableHead" class="newTable" :height="mainClientHeight - 61 - 62 - 47" border tooltip-effect="dark">
-                                <el-table-column type="index" width="55" label="序号" fixed />
+                                <el-table-column type="index" :index="index => getIndexMethod(index, splitTable)" label="序号" width="55" fixed />
                                 <el-table-column label="生产订单" width="120" prop="orderNo" :show-overflow-tooltip="true" />
                                 <el-table-column min-width="180" label="生产物料" :show-overflow-tooltip="true">
                                     <template slot-scope="scope">
                                         {{ scope.row.materialName + ' ' + scope.row.materialCode }}
                                     </template>
                                 </el-table-column>
-                                <el-table-column label="计划数量" width="120" prop="planOutput" :show-overflow-tooltip="true" />
+                                <el-table-column label="订单计划" width="120" prop="planOutput" :show-overflow-tooltip="true" />
+                                <el-table-column label="杀菌锅计划" width="120" prop="potNum" :show-overflow-tooltip="true" />
                                 <el-table-column label="单位" width="70" prop="outputUnit" :show-overflow-tooltip="true" />
                                 <el-table-column label="生产日期" width="100" prop="productDate" :show-overflow-tooltip="true" />
                                 <el-table-column label="锅号" width="100" prop="potName" :show-overflow-tooltip="true" />
@@ -214,6 +216,7 @@
             params.OrgOrderStatus ? params.orderStatus = [params.OrgOrderStatus] : params.orderStatus = [];
             params.current = this.currPage; // eslint-disable-line
             params.size = this.pageSize; // eslint-disable-line
+            params.workShopType = 'sterilize'
             params.factory = JSON.parse(sessionStorage.getItem('factory') || '{}').id;
             return COMMON_API.ORDER_QUERY_API(params);
         }

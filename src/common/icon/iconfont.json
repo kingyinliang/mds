@@ -6,6 +6,13 @@
   "description": "味达美工厂后台管理系统",
   "glyphs": [
     {
+      "icon_id": "15085043",
+      "name": "库存管理",
+      "font_class": "kucunguanli",
+      "unicode": "e7d4",
+      "unicode_decimal": 59348
+    },
+    {
       "icon_id": "2077527",
       "name": "调整",
       "font_class": "tiaozheng",

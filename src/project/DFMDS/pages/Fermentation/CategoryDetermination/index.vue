@@ -22,7 +22,6 @@
                             </template>
                         </el-table-column>
                         <el-table-column label="容器号" prop="fermentorName" width="120px" />
-                        <!-- 暂无该字段 -->
                         <el-table-column label="容器状态" prop="fermentorStatusName" />
                         <el-table-column label="生产订单" prop="orderNo" width="120px" />
                         <el-table-column label="发酵天数" prop="fermentDays" />
@@ -36,7 +35,7 @@
                             </template>
                         </el-table-column>
                         <el-table-column label="备注" prop="remark" width="160px" />
-                        <el-table-column label="操作人员" prop="changer" width="140px" />
+                        <el-table-column label="操作人员" prop="changer" width="160px" />
                         <el-table-column label="操作时间" prop="changed" width="160px" />
                         <el-table-column label="操作" fixed="right">
                             <template slot-scope="scope">
@@ -62,7 +61,6 @@
                 <el-form-item label="容器号" prop="fermentorName">
                     <el-input v-model="formObj.fermentorName" size="small" disabled />
                 </el-form-item>
-                <!-- 暂无该字段 -->
                 <el-form-item label="状态" prop="fermentorStatusName">
                     <el-input v-model="formObj.fermentorStatusName" size="small" disabled />
                 </el-form-item>
@@ -119,6 +117,7 @@
     import { Vue, Component } from 'vue-property-decorator';
     import { COMMON_API } from 'common/api/api';
 import FER_API from 'src/common/api/fer';
+import { dateFormat } from 'src/utils/utils';
     @Component({
         name: 'CategoryDetermination',
         components: {}
@@ -176,7 +175,8 @@ import FER_API from 'src/common/api/fer';
                     resData: 'data',
                     label: ['deptName'],
                     value: 'id'
-                }
+                },
+                linkageProp: ['fermentorId']
             },
             {
                 type: 'input',
@@ -242,9 +242,10 @@ import FER_API from 'src/common/api/fer';
                 rule: [{ required: false, message: ' ', trigger: 'change' }],
                 defaultValue: '',
                 filterable: true,
-                defaultOptionsFn: () => {
+                optionsFn: val => {
                     return new Promise((resolve) => {
                         COMMON_API.HOLDER_DROPDOWN_API({ // /sysHolder/query
+                            deptId: val,
                             factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
                             holderType: ['001', '029', '028'] // 发酵罐/池、泡豆罐、调酱罐/池 参数编码
                         }).then((res) => {
@@ -275,7 +276,7 @@ import FER_API from 'src/common/api/fer';
                 label: '订单日期',
                 // labelWidth: 85,
                 valueFormat: 'yyyy-MM-dd',
-                // defaultValue: dateFormat(new Date(), 'yyyy-MM-dd'),
+                defaultValue: dateFormat(new Date(), 'yyyy-MM-dd'),
                 prop: 'startDate',
                 propTwo: 'endDate'
             }

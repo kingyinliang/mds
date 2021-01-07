@@ -59,14 +59,14 @@
                             </el-form-item>
                         </template>
                     </el-table-column>
-                    <el-table-column label="运行时长(H)" width="120" :show-overflow-tooltip="true" placeholder="输入小时">
+                    <el-table-column label="运行时长(H)" width="120" :show-overflow-tooltip="true" placeholder="请输入小时">
                         <template slot-scope="scope">
                             {{ operationHour(scope.row,scope.$index) }}
                         </template>
                     </el-table-column>
                     <el-table-column label="备注" :show-overflow-tooltip="true" min-width="200">
                         <template slot-scope="scope">
-                            <el-input v-model.trim="scope.row.remark" size="small" placeholder="输入备注" :disabled="!(isRedact && scope.row.checkStatus !== 'C' && scope.row.checkStatus !== 'D' && scope.row.checkStatus !== 'P')" />
+                            <el-input v-model.trim="scope.row.remark" size="small" placeholder="请输入备注" :disabled="!(isRedact && scope.row.checkStatus !== 'C' && scope.row.checkStatus !== 'D' && scope.row.checkStatus !== 'P')" />
                         </template>
                     </el-table-column>
                     <el-table-column prop="changer" min-width="140" label="操作人" :show-overflow-tooltip="true" />
@@ -194,8 +194,8 @@
                             <span class="notNull">*</span>次数
                         </template>
                         <template slot-scope="scope">
-                            <!-- <el-input v-model.number="scope.row.exceptionCount" size="small" placeholder="输入次数" clearable oninput="value=value.replace(/\D*/g,'')" :disabled="!(!scope.row.tempFzExceptionCount)" /> -->
-                            <el-input v-model.number="scope.row.exceptionCount" size="small" placeholder="输入次数" clearable oninput="value=value.replace(/\D*/g,'')" :disabled="!(scope.row.stopMode!=='CONTINUE_HALT' && isRedact && scope.row.checkStatus !== 'C' && scope.row.checkStatus !== 'D' && scope.row.checkStatus !== 'P')" />
+                            <!-- <el-input v-model.number="scope.row.exceptionCount" size="small" placeholder="请输入次数" clearable oninput="value=value.replace(/\D*/g,'')" :disabled="!(!scope.row.tempFzExceptionCount)" /> -->
+                            <el-input v-model.number="scope.row.exceptionCount" size="small" placeholder="请输入次数" clearable oninput="value=value.replace(/\D*/g,'')" :disabled="!(scope.row.stopMode!=='CONTINUE_HALT' && isRedact && scope.row.checkStatus !== 'C' && scope.row.checkStatus !== 'D' && scope.row.checkStatus !== 'P')" />
                         </template>
                     </el-table-column>
                     <el-table-column width="140" :show-overflow-tooltip="true">

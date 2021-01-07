@@ -4,7 +4,7 @@
             <el-form ref="dataForm" :model="dataForm" status-icon :rules="dataRule" label-width="125px" size="small" @keyup.enter.native="dataFormSubmit()">
                 <el-form-item label="领用库位：">
                     <el-select v-model="dataForm.materialLocation" :disabled="type !== 'add'" placeholder="请选择" style="width: 100%;" @change="workShopChange">
-                        <el-option v-for="(item, index) in workShopList" :key="index" :label="item.materialLocation" :value="item.materialCode" />
+                        <el-option v-for="(item, index) in workShopList" :key="index" :label="item.materialLocation" :value="item.materialLocation" />
                     </el-select>
                 </el-form-item>
                 <el-form-item label="领用批次：" prop="batch">
@@ -13,16 +13,16 @@
                     </el-select>
                 </el-form-item>
                 <el-form-item label="领用物料：">
-                    <el-input v-model="dataForm.materialLink" placeholder="手动输入" disabled />
+                    <el-input v-model="dataForm.materialLink" placeholder="请输入" disabled />
                 </el-form-item>
                 <el-form-item label="库存量：">
-                    <el-input v-model="dataForm.stockAmount" placeholder="手动输入" disabled />
+                    <el-input v-model="dataForm.stockAmount" placeholder="请输入" disabled />
                 </el-form-item>
                 <el-form-item label="领用数量：" prop="amount">
-                    <el-input v-model.number="dataForm.amount" placeholder="手动输入" @blur="calcStockAmount" />
+                    <el-input v-model.number="dataForm.amount" placeholder="请输入" @input="calcStockAmount" />
                 </el-form-item>
                 <el-form-item label="单位：">
-                    <el-input v-model="dataForm.unit" placeholder="手动输入" disabled />
+                    <el-input v-model="dataForm.unitName" placeholder="请输入" disabled />
                 </el-form-item>
                 <el-form-item label="添加人：" prop="operationMans">
                     <el-tooltip class="item" effect="dark" :content="dataForm.operationMans + '点击选择人员'" placement="top">
@@ -32,13 +32,15 @@
                     </el-tooltip>
                 </el-form-item>
                 <el-form-item label="备注：" prop="remark">
-                    <el-input v-model="dataForm.remark" placeholder="手动输入" />
+                    <el-tooltip :disabled="!dataForm.remark" effect="dark" :content="dataForm.remark" placement="top">
+                        <el-input v-model="dataForm.remark" placeholder="请输入" />
+                    </el-tooltip>
                 </el-form-item>
                 <el-form-item label="操作人：">
-                    <el-input v-model="dataForm.changer" placeholder="手动输入" disabled />
+                    <el-input v-model="dataForm.changer" disabled />
                 </el-form-item>
                 <el-form-item label="操作时间：">
-                    <el-input v-model="dataForm.changed" placeholder="手动输入" disabled />
+                    <el-input v-model="dataForm.changed" disabled />
                 </el-form-item>
             </el-form>
             <div slot="footer" class="dialog-footer">
@@ -112,6 +114,8 @@
                 this.workShopList = data.data;
                 if (data.data.length !== 0 && type === 'add') {
                     this.dataForm.materialLocation = data.data[0]['materialLocation'];
+                    this.dataForm.unit = data.data[0]['unit'];
+                    this.dataForm.unitName = data.data[0]['unitName'];
                 }
                 // 默认选中第一个选项 库位详细信息查询
                 this.checkShopDetail()
@@ -175,19 +179,38 @@
             if (type !== 'add') {
                 Data = infoData;
             }
+            console.log('infoData1111111')
+            console.log(infoData)
+
+            const { data: { data: result } } = await KOJI_API.KOJI_MATERIAL_GET_BOM_API({
+                orderNo: this.formHeader.orderNo,
+                dictType: 'KOJI_SUP_MATERIAL'
+            });
+            console.log(result, 'result=-=-========================================')
 
             this.dataForm = {
                 id: Data.id,
                 materialLocation: Data.materialLocation,
                 batch: Data.batch,
-                materialCode: Data.materialCode,
-                materialName: Data.materialName,
-                materialLink: Data.materialCode ? String(Data.materialName) + String(Data.materialCode) : '',
-                materialType: 'Y158',
+                // processCode: this.formHeader.textStage,
+                processCode: 'ZM', // 写死
+                // materialCode: Data.materialCode,
+                // materialName: Data.materialName,
+                // materialLink: Data.materialCode ? `${String(Data.materialName)} ${String(Data.materialCode)}` : '',
+                // materialType: 'ZHZC', // 写死
+                // storageType: 'Y158', // 写死
+                materialCode: result.materialCode,
+                materialName: result.materialName,
+                materialLink: result.materialCode ? `${String(result.materialName)} ${String(result.materialCode)}` : '',
+                materialType: result.materialType,
+
+                storageType: 'Y158', // 写死
                 amount: Data.amount,
                 operationMans: Data.operationMans || '',
                 stockAmount: Data.stockAmount || Data.currentAmount,
-                unit: '盒',
+                unit: Data.unit,
+                unitName: Data.unitName,
+                storageId: Data.storageId,
                 remark: Data.remark,
                 changer: getUserNameNumber(),
                 changed: dateFormat(new Date(), 'yyyy-MM-dd hh:mm:ss'),
@@ -213,6 +236,7 @@
         }
 
         batchChange() {
+            console.log(this.batchList)
             this.batchList.map(item => {
                 if (item.batch === this.dataForm.batch) {
                     this.dataForm.materialLink = String(item.materialName) + String(item.materialCode);
@@ -221,6 +245,9 @@
                     this.dataForm.stockAmount = item.currentAmount;
                     this.STOCK_AMOUNT = Number(item.currentAmount);
                     this.dataForm.amount = '';
+                    this.dataForm.storageId = item.id;
+                    this.dataForm.unitName = item.unitName;
+                    this.dataForm.unit = item.unit;
                 }
             })
         }
@@ -230,8 +257,10 @@
             this.$refs.dataForm.validate(valid => {
                 if (valid) {
                     if (this.type === 'add') {
+                        const params = JSON.parse(JSON.stringify(this.dataForm))
+                        delete params.id;
                         KOJI_API.KOJI_MATERIAL_GET_ADD_QUERY_API({
-                            insertDto: [this.dataForm]
+                            insertDto: [params]
                         }).then(() => {
                             this.visible = false;
                             this.$emit('success', this.dataForm);
@@ -264,12 +293,15 @@
     }
 
     interface BatchList {
+        id?: string;
         batch?: string;
         materialName?: string;
         materialCode?: string;
         stockAmount?: string;
         supplier?: string;
         currentAmount?: string;
+        unitName?: string;
+        unit?: string;
     }
 
     interface DataForm {
@@ -277,16 +309,19 @@
         materialLocation?: string;
         batch?: string;
         material?: string;
+        processCode?: string;
         materialCode?: string;
         materialName?: string;
         materialLink?: string;
         materialType?: string;
+        storageType?: string;
         amount?: string;
         supplier?: string;
         orderNo?: string;
         kojiOrderNo?: string;
         smallBeanAmount?: string;
         unit?: string;
+        unitName?: string;
         remark?: string;
         changer?: string;
         changed?: string;
@@ -295,6 +330,7 @@
         operationMans?: string;
         wareHouseNo?: string;
         workShop?: string;
+        storageId?: string;
     }
 </script>
 <style lang="scss" scoped>

@@ -121,9 +121,9 @@
                                 type="datetime"
                                 value-format="yyyy-MM-dd HH:mm:ss"
                                 format="yyyy.MM.dd HH:mm"
-                                placeholder="选择"
+                                placeholder="请选择"
                             />
-                            <el-date-picker v-else v-model="scope.row.filterDate" size="small" type="datetime" value-format="yyyy-MM-dd HH:mm:ss" format="yyyy.MM.dd HH:mm" placeholder="选择" disabled />
+                            <el-date-picker v-else v-model="scope.row.filterDate" size="small" type="datetime" value-format="yyyy-MM-dd HH:mm:ss" format="yyyy.MM.dd HH:mm" placeholder="请选择" disabled />
                         </div>
                     </template>
                 </el-table-column>
@@ -175,9 +175,9 @@
                             size="small"
                             value-format="yyyy-MM-dd HH:mm:ss"
                             format="yyyy.MM.dd HH:mm"
-                            placeholder="选择"
+                            placeholder="请选择"
                         />
-                        <el-date-picker v-else v-model="scope.row.changePotDate" type="datetime" size="small" value-format="yyyy-MM-dd HH:mm:ss" format="yyyy.MM.dd HH:mm" placeholder="选择" disabled />
+                        <el-date-picker v-else v-model="scope.row.changePotDate" type="datetime" size="small" value-format="yyyy-MM-dd HH:mm:ss" format="yyyy.MM.dd HH:mm" placeholder="请选择" disabled />
                     </template>
                 </el-table-column>
                 <el-table-column width="250" label="用完时间">
@@ -189,9 +189,9 @@
                             size="small"
                             value-format="yyyy-MM-dd HH:mm:ss"
                             format="yyyy.MM.dd HH:mm"
-                            placeholder="选择"
+                            placeholder="请选择"
                         />
-                        <el-date-picker v-else v-model="scope.row.usePotDate" type="datetime" size="small" value-format="yyyy-MM-dd HH:mm:ss" format="yyyy.MM.dd HH:mm" placeholder="选择" disabled />
+                        <el-date-picker v-else v-model="scope.row.usePotDate" type="datetime" size="small" value-format="yyyy-MM-dd HH:mm:ss" format="yyyy.MM.dd HH:mm" placeholder="请选择" disabled />
                     </template>
                 </el-table-column>
                 <el-table-column label="备注">

@@ -26,7 +26,7 @@
                             <el-input v-model="plantList.orderNo" placeholder="订单号" />
                         </el-form-item>
                         <el-form-item label="日期：">
-                            <el-date-picker v-model="plantList.productdate" type="date" placeholder="选择" value-format="yyyy-MM-dd HH:mm:ss" />
+                            <el-date-picker v-model="plantList.productdate" type="date" placeholder="请选择" value-format="yyyy-MM-dd HH:mm:ss" />
                         </el-form-item>
                         <el-form-item class="floatr">
                             <el-button type="primary" size="small" @click="GetMaintainList(true)">

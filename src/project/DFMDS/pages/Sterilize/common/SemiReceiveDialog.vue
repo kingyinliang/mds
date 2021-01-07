@@ -13,12 +13,12 @@
                 </el-radio>
             </el-form-item>
             <el-form-item v-if="dataForm.consumeType === '1'" label="发酵罐/池号：" prop="fermentPotNo">
-                <el-select v-model="dataForm.fermentPotNo" placeholder="请选择" style="width: 100%;" clearable>
+                <el-select v-model="dataForm.fermentPotNo" filterable placeholder="请选择" style="width: 100%;" clearable>
                     <el-option v-for="(item, index) in potArr" :key="index" :label="item.holderName" :value="item.holderNo" />
                 </el-select>
             </el-form-item>
             <el-form-item label="领用物料：" prop="">
-                <el-select v-model="dataForm.materialCode" placeholder="请选择" style="width: 100%;" clearable @change="setUtil">
+                <el-select v-model="dataForm.materialCode" filterable placeholder="请选择" style="width: 100%;" clearable @change="setUtil">
                     <el-option v-for="(item, index) in materialArr" :key="index" :label="item.matnr + ' ' + item.materialName" :value="item.matnr" />
                 </el-select>
             </el-form-item>
@@ -46,7 +46,7 @@
                 <el-input v-model="dataForm.changer" placeholder="手动输入" disabled />
             </el-form-item>
             <el-form-item label="操作时间：">
-                <el-date-picker v-model="dataForm.changed" type="datetime" placeholder="选择" disabled style="width: 100%;" />
+                <el-date-picker v-model="dataForm.changed" type="datetime" placeholder="请选择" disabled style="width: 100%;" />
             </el-form-item>
         </el-form>
         <div slot="footer" class="dialog-footer">

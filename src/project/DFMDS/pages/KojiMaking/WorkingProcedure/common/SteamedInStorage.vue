@@ -13,7 +13,7 @@
                         <span class="notNull">* </span>入库数量
                     </template>
                     <template slot-scope="scope">
-                        <el-input v-model="scope.row.inStorageAmount" placeholder="输入" :disabled="!isRedact" size="small" style="width: 120px;" />
+                        <el-input v-model="scope.row.inStorageAmount" placeholder="请输入" :disabled="!(isRedact && isStatus !== 'C' && isStatus !== 'D' && isStatus !== 'P')" size="small" style="width: 120px;" />
                     </template>
                 </el-table-column>
                 <el-table-column label="单位" width="80">
@@ -26,15 +26,17 @@
                         <span class="notNull">* </span>入库批次
                     </template>
                     <template slot-scope="scope">
-                        <el-input v-model="scope.row.inStorageBatch" placeholder="输入" :disabled="!isRedact" size="small" maxlength="10" style="width: 160px;" />
+                        <el-input v-model="scope.row.inStorageBatch" placeholder="请输入" :disabled="!(isRedact && isStatus !== 'C' && isStatus !== 'D' && isStatus !== 'P')" size="small" maxlength="10" style="width: 160px;" />
                     </template>
                 </el-table-column>
                 <el-table-column label="备注">
                     <template slot-scope="scope">
-                        <el-input v-model.trim="scope.row.remark" size="small" placeholder="请输入" :disabled="!isRedact" />
+                        <el-tooltip :disabled="!scope.row.remark" effect="dark" :content="scope.row.remark" placement="top">
+                            <el-input v-model.trim="scope.row.remark" size="small" placeholder="请输入" :disabled="!(isRedact && isStatus !== 'C' && isStatus !== 'D' && isStatus !== 'P')" />
+                        </el-tooltip>
                     </template>
                 </el-table-column>
-                <el-table-column label="操作人" width="120">
+                <el-table-column label="操作人" width="140">
                     <template slot-scope="scope">
                         {{ scope.row.changer }}
                     </template>
@@ -54,6 +56,7 @@
     import { Vue, Component, Prop, Watch } from 'vue-property-decorator';
     import { KOJI_API, AUDIT_API } from 'common/api/api';
     import { dateFormat, getUserNameNumber } from 'utils/utils';
+    import _ from 'lodash';
 
 
     @Component({
@@ -61,6 +64,7 @@
     })
     export default class WashBeanMaterialCraft extends Vue {
         @Prop({ default: false }) isRedact: boolean;
+        @Prop({ default: 'N' }) isStatus: string;
         @Prop({ default: '' }) potNoNow: number|string;
 
         // 订单信息
@@ -68,6 +72,7 @@
 
         // 蒸豆记录表格数据
         tableData: CraftList[] = [];
+        temTableData: CraftList[] = [];
 
         // 审核记录
         craftAuditList = [];
@@ -99,21 +104,38 @@
         }
 
         // 提交保存时获取处理数据
-        getSavedOrSubmitData() {
-            function filterTableData(whichTable, type) {
-                if (type === 'insert') {
-                    return whichTable.filter(item => !item.id && item.delFlag !== 1);
-                }
-                if (type === 'update') {
-                    return whichTable.filter(item => item.id && item.delFlag !== 1);
-                }
-            }
+        getSavedOrSubmitData(formHeader) {
+            const tableDataDto: SendDataForm = {
+                deleteDto: [],
+                insertDto: [],
+                updateDto: []
+            };
+
+            this.tableData.forEach((item: CraftList, index) => {
+                if (item.delFlag === 1) {
+                    if (item.id) {
+                        tableDataDto.deleteDto.push(item.id)
+                    }
+                } else if (item.id) {
+                    if (!_.isEqual(this.temTableData[index], item)) {
+                        item.kojiOrderNo = formHeader.kojiOrderNo
+                        item.orderNo = formHeader.orderNo
+                        tableDataDto.updateDto.push(item)
+                    }
+                } else if (!_.isEqual(this.temTableData[index], item)) {
+                        item.kojiOrderNo = formHeader.kojiOrderNo
+                        item.orderNo = formHeader.orderNo
+                        tableDataDto.insertDto.push(item)
+                    }
+            })
 
             return {
-                inStorage: {
-                    insertDto: filterTableData(this.tableData, 'insert'),
-                    updateDto: filterTableData(this.tableData, 'update'),
-                    deleteDto: []
+                inStorage: tableDataDto.insertDto.length === 0 && tableDataDto.updateDto.length === 0 && tableDataDto.deleteDto.length === 0 ? null : {
+                    insertDto: tableDataDto.insertDto,
+                    updateDto: tableDataDto.updateDto,
+                    deleteDto: tableDataDto.deleteDto,
+                    kojiOrderNo: formHeader.kojiOrderNo,
+                    orderNo: formHeader.orderNo
                 }
             };
         }
@@ -121,6 +143,7 @@
 
         // 初始化数据
         init(formHeader) {
+
             this.formHeader = formHeader;
             const { kojiOrderNo, orderNo, workShop, orderType, planOutput } = formHeader;
             // 查询蒸面记录
@@ -167,7 +190,7 @@
                         this.tableData = [{
                             ...queryInStorageData[0],
                             feBeanMount: totalNum,
-                            unit: 'KG',
+                            unit: '千克',
                             changed: dateFormat(new Date(), 'yyyy-MM-dd hh:mm:ss'),
                             changer: getUserNameNumber(),
                             kojiOrderNo,
@@ -180,7 +203,7 @@
                             feBeanMount: totalNum,
                             inStorageAmount: planOutput || '',
                             inStorageBatch: '',
-                            unit: 'KG',
+                            unit: '千克',
                             scPotNo: '',
                             remark: '',
                             changed: dateFormat(new Date(), 'yyyy-MM-dd hh:mm:ss'),
@@ -191,13 +214,15 @@
                             orderType
                         }];
                     }
+
+                    this.temTableData = JSON.parse(JSON.stringify(this.tableData))
                 })
             });
         }
 
         // 查询最新审核记录
         getAuditList(orderNo) {
-            AUDIT_API.AUDIT_LOG_LIST_API({ orderNo, verifyType: '' }).then(({ data }) => {
+            AUDIT_API.STE_AUDIT_LOG_API({ orderNo, splitOrderNo: this.formHeader.kojiOrderNo, verifyType: ['SB_INSTORAGE', 'INSTORAGE'] }).then(({ data }) => {
                 this.craftAuditList = data.data;
             });
         }
@@ -281,6 +306,12 @@
         sieveDeviceName?: string;
         deviceNo?: string;
         deviceName?: string;
+    }
+
+    interface SendDataForm{
+        deleteDto: string[];
+        insertDto: CraftList[];
+        updateDto: CraftList[];
     }
 </script>
 

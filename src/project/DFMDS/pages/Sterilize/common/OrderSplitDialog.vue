@@ -14,7 +14,12 @@
                 </template>
             </el-table-column>
             <el-table-column label="订单日期" width="100" prop="orderDate" :show-overflow-tooltip="true" />
-            <el-table-column label="计划数量" width="100" prop="planOutput" />
+            <el-table-column label="订单数量" width="100" prop="planOutput" />
+            <el-table-column label="杀菌锅计划量" width="120" prop="potNum">
+                <template slot-scope="scope">
+                    {{ scope.row.potNum = scope.row.potCount * scope.row.potAmount }}
+                </template>
+            </el-table-column>
             <el-table-column label="单位" width="70" prop="outputUnit" />
             <el-table-column label="生产日期" width="160" prop="productDate" :show-overflow-tooltip="true">
                 <template slot="header">

@@ -10,8 +10,8 @@
                         placeholder="请输入入曲情况"
                         clearable
                         style="width: 180px;"
-                        :disabled="!isRedact"
                         maxlength="30"
+                        :disabled="!(isRedact && isStatus !== 'C' && isStatus !== 'D' && isStatus !== 'P' && kojiInformData.status !== 'C' && kojiInformData.status !== 'D' && kojiInformData.status !== 'P')"
                     />
                 </el-form-item>
                 <el-form-item
@@ -20,14 +20,14 @@
                     class="star"
                 >
                     <div style="width: 180px;">
-                        <span :style="{cursor:isRedact? 'pointer':'default',color:isRedact? '#333':'#aaa'}" @click="selectUser(kojiInformData,'addKojiMans','内部调借')">
+                        <span :style="{cursor:isRedact? 'pointer':'default',color:isRedact? '#333':'#aaa'}" @click="selectUser(kojiInformData,'addKojiMans','入曲人')">
                             <el-tooltip v-if="kojiInformData.addKojiMans&&kojiInformData.addKojiMans!==''" class="item" effect="dark" :content="kojiInformData.addKojiMans" placement="top">
                                 <el-input
                                     v-if="kojiInformData.addKojiMans&&kojiInformData.addKojiMans!==''"
                                     v-model="kojiInformData.addKojiMans"
                                     placeholder="请输入入曲人"
-
-                                    :disabled="!isRedact"
+                                    size="small"
+                                    :disabled="!(isRedact && isStatus !== 'C' && isStatus !== 'D' && isStatus !== 'P'&& kojiInformData.status !== 'C' && kojiInformData.status !== 'D' && kojiInformData.status !== 'P')"
                                 />
                             </el-tooltip>
                             <em v-if="!kojiInformData.addKojiMans" :class="{'like-el-input__inner':isRedact,'input-in-form-disabled':!isRedact}">点击选择人员</em>
@@ -44,7 +44,7 @@
                         placeholder="请输入"
                         clearable
                         style="width: 180px;"
-                        :disabled="!isRedact"
+                        :disabled="!(isRedact&& isStatus !== 'C' && isStatus !== 'D' && isStatus !== 'P' && kojiInformData.status !== 'C' && kojiInformData.status !== 'D' && kojiInformData.status !== 'P')"
                         @input="(val)=>oninput(val,kojiInformData,'addKojiTemp')"
                     >
                         <span slot="suffix">°C</span>
@@ -73,7 +73,7 @@
                         placeholder="请选择"
                         clearable
                         style="width: 180px;"
-                        :disabled="!isRedact"
+                        :disabled="!(isRedact && isStatus !== 'C' && isStatus !== 'D' && isStatus !== 'P'&& kojiInformData.status !== 'C' && kojiInformData.status !== 'D' && kojiInformData.status !== 'P')"
                     />
                 </el-form-item>
                 <el-form-item
@@ -89,7 +89,7 @@
                         placeholder="请选择"
                         clearable
                         style="width: 180px;"
-                        :disabled="!isRedact"
+                        :disabled="!(isRedact && isStatus !== 'C' && isStatus !== 'D' && isStatus !== 'P'&& kojiInformData.status !== 'C' && kojiInformData.status !== 'D' && kojiInformData.status !== 'P')"
                     />
                 </el-form-item>
                 <el-form-item
@@ -105,20 +105,20 @@
         <mds-card title="看曲记录" :name="'kojiGuard'">
             <template slot="titleBtn">
                 <div style="float: right;">
-                    <el-button type="primary" size="small" :disabled="!isRedact" @click="addNewKojiGuardRow">
+                    <el-button v-if="isAuth('kjYPContralAdd')" type="primary" size="small" :disabled="!(isRedact && isStatus !== 'C' && isStatus !== 'D' && isStatus !== 'P')" @click="addNewKojiGuardRow">
                         新增
                     </el-button>
                 </div>
             </template>
 
             <el-table class="newTable other" :data="kojiGuardData" :row-class-name="rowDelFlag" max-height="300" header-row-class-name="tableHead" border tooltip-effect="dark">
-                <el-table-column type="index" label="序号" width="50" align="center" fixed="left" />
+                <el-table-column type="index" :index="index => getIndexMethod(index, kojiGuardData)" label="序号" width="55" fixed />
                 <el-table-column label="看曲时间" :show-overflow-tooltip="true" width="210">
                     <template slot="header">
                         <span class="notNull">* </span>看曲时间
                     </template>
                     <template slot-scope="scope">
-                        <el-date-picker v-model="scope.row.guardDate" type="datetime" size="small" value-format="yyyy-MM-dd HH:mm" format="yyyy-MM-dd HH:mm" placeholder="选择时间" style="width: 180px;" :disabled="!isRedact" @change="(val)=>kojiStartTimeChange(val,scope.row)" />
+                        <el-date-picker v-model="scope.row.guardDate" type="datetime" size="small" value-format="yyyy-MM-dd HH:mm" format="yyyy-MM-dd HH:mm" placeholder="选择时间" style="width: 180px;" :disabled="!(isRedact && isStatus !== 'C' && isStatus !== 'D' && isStatus !== 'P'&& scope.row.status !== 'C' && scope.row.status !== 'D' && scope.row.status !== 'P')" @change="(val)=>kojiStartTimeChange(val,scope.row)" />
                     </template>
                 </el-table-column>
                 <el-table-column label="实际风温" :show-overflow-tooltip="true" width="140">
@@ -130,7 +130,7 @@
                             v-model.trim="scope.row.windTemp"
                             size="small"
                             placeholder="请输入"
-                            :disabled="!isRedact"
+                            :disabled="!(isRedact&& isStatus !== 'C' && isStatus !== 'D' && isStatus !== 'P' && scope.row.status !== 'C' && scope.row.status !== 'D' && scope.row.status !== 'P')"
                             @input="(val)=>oninput(val,scope.row,'windTemp')"
                         >
                             <span slot="suffix">°C</span>
@@ -143,7 +143,7 @@
                             v-model.trim="scope.row.settingWindTemp"
                             size="small"
                             placeholder="请输入"
-                            :disabled="!isRedact"
+                            :disabled="!(isRedact&& isStatus !== 'C' && isStatus !== 'D' && isStatus !== 'P' && scope.row.status !== 'C' && scope.row.status !== 'D' && scope.row.status !== 'P')"
                             @input="(val)=>oninput(val,scope.row,'settingWindTemp')"
                         >
                             <span slot="suffix">°C</span>
@@ -159,7 +159,7 @@
                             v-model.trim="scope.row.roomTemp"
                             size="small"
                             placeholder="请输入"
-                            :disabled="!isRedact"
+                            :disabled="!(isRedact&& isStatus !== 'C' && isStatus !== 'D' && isStatus !== 'P' && scope.row.status !== 'C' && scope.row.status !== 'D' && scope.row.status !== 'P')"
                             @input="(val)=>oninput(val,scope.row,'roomTemp')"
                         >
                             <span slot="suffix">°C</span>
@@ -175,7 +175,7 @@
                             v-model.trim="scope.row.windSpeed"
                             size="small"
                             placeholder="请输入"
-                            :disabled="!isRedact"
+                            :disabled="!(isRedact&& isStatus !== 'C' && isStatus !== 'D' && isStatus !== 'P' && scope.row.status !== 'C' && scope.row.status !== 'D' && scope.row.status !== 'P')"
                             @input="(val)=>oninput(val,scope.row,'windSpeed')"
                         >
                             <span slot="suffix">m/s</span>
@@ -191,7 +191,7 @@
                             v-model.trim="scope.row.prodTemp"
                             size="small"
                             placeholder="请输入"
-                            :disabled="!isRedact"
+                            :disabled="!(isRedact&& isStatus !== 'C' && isStatus !== 'D' && isStatus !== 'P' && scope.row.status !== 'C' && scope.row.status !== 'D' && scope.row.status !== 'P')"
                             @input="(val)=>oninput(val,scope.row,'prodTemp')"
                         >
                             <span slot="suffix">°C</span>
@@ -204,7 +204,7 @@
                             v-model.trim="scope.row.settingProdTemp"
                             size="small"
                             placeholder="请输入"
-                            :disabled="!isRedact"
+                            :disabled="!(isRedact && isStatus !== 'C' && isStatus !== 'D' && isStatus !== 'P'&& scope.row.status !== 'C' && scope.row.status !== 'D' && scope.row.status !== 'P')"
                             @input="(val)=>oninput(val,scope.row,'settingProdTemp')"
                         >
                             <span slot="suffix">°C</span>
@@ -225,7 +225,7 @@
                                 v-model.trim="scope.row.outUpTemp"
                                 size="small"
                                 placeholder="请输入"
-                                :disabled="!isRedact"
+                                :disabled="!(isRedact&& isStatus !== 'C' && isStatus !== 'D' && isStatus !== 'P' && scope.row.status !== 'C' && scope.row.status !== 'D' && scope.row.status !== 'P')"
                                 @input="(val)=>oninput(val,scope.row,'outUpTemp')"
                             >
                                 <span slot="suffix">°C</span>
@@ -245,7 +245,7 @@
                                 v-model.trim="scope.row.outMidTemp"
                                 size="small"
                                 placeholder="请输入"
-                                :disabled="!isRedact"
+                                :disabled="!(isRedact&& isStatus !== 'C' && isStatus !== 'D' && isStatus !== 'P' && scope.row.status !== 'C' && scope.row.status !== 'D' && scope.row.status !== 'P')"
                                 @input="(val)=>oninput(val,scope.row,'outMidTemp')"
                             >
                                 <span slot="suffix">°C</span>
@@ -265,7 +265,7 @@
                                 v-model.trim="scope.row.outDownTemp"
                                 size="small"
                                 placeholder="请输入"
-                                :disabled="!isRedact"
+                                :disabled="!(isRedact&& isStatus !== 'C' && isStatus !== 'D' && isStatus !== 'P' && scope.row.status !== 'C' && scope.row.status !== 'D' && scope.row.status !== 'P')"
                                 @input="(val)=>oninput(val,scope.row,'outDownTemp')"
                             >
                                 <span slot="suffix">°C</span>
@@ -282,7 +282,7 @@
                                 v-model.trim="scope.row.innerUpTemp"
                                 size="small"
                                 placeholder="请输入"
-                                :disabled="!isRedact"
+                                :disabled="!(isRedact&& isStatus !== 'C' && isStatus !== 'D' && isStatus !== 'P' && scope.row.status !== 'C' && scope.row.status !== 'D' && scope.row.status !== 'P')"
                                 @input="(val)=>oninput(val,scope.row,'innerUpTemp')"
                             >
                                 <span slot="suffix">°C</span>
@@ -299,7 +299,7 @@
                                 v-model.trim="scope.row.innerMidTemp"
                                 size="small"
                                 placeholder="请输入"
-                                :disabled="!isRedact"
+                                :disabled="!(isRedact && isStatus !== 'C' && isStatus !== 'D' && isStatus !== 'P'&& scope.row.status !== 'C' && scope.row.status !== 'D' && scope.row.status !== 'P')"
                                 @input="(val)=>oninput(val,scope.row,'innerMidTemp')"
                             >
                                 <span slot="suffix">°C</span>
@@ -316,7 +316,7 @@
                                 v-model.trim="scope.row.innerDownTemp"
                                 size="small"
                                 placeholder="请输入"
-                                :disabled="!isRedact"
+                                :disabled="!(isRedact&& isStatus !== 'C' && isStatus !== 'D' && isStatus !== 'P' && scope.row.status !== 'C' && scope.row.status !== 'D' && scope.row.status !== 'P')"
                                 @input="(val)=>oninput(val,scope.row,'innerDownTemp')"
                             >
                                 <span slot="suffix">°C</span>
@@ -338,7 +338,7 @@
                                 v-model.trim="scope.row.testTempOne"
                                 size="small"
                                 placeholder="请输入"
-                                :disabled="!isRedact"
+                                :disabled="!(isRedact && isStatus !== 'C' && isStatus !== 'D' && isStatus !== 'P'&& scope.row.status !== 'C' && scope.row.status !== 'D' && scope.row.status !== 'P')"
                                 @input="(val)=>oninput(val,scope.row,'testTempOne')"
                             >
                                 <span slot="suffix">°C</span>
@@ -358,7 +358,7 @@
                                 v-model.trim="scope.row.testTempTwo"
                                 size="small"
                                 placeholder="请输入"
-                                :disabled="!isRedact"
+                                :disabled="!(isRedact && isStatus !== 'C' && isStatus !== 'D' && isStatus !== 'P'&& scope.row.status !== 'C' && scope.row.status !== 'D' && scope.row.status !== 'P')"
                                 @input="(val)=>oninput(val,scope.row,'testTempTwo')"
                             >
                                 <span slot="suffix">°C</span>
@@ -375,14 +375,14 @@
                             v-model.trim="scope.row.windDoor"
                             size="small"
                             placeholder="请输入"
-                            :disabled="!isRedact"
+                            :disabled="!(isRedact&& isStatus !== 'C' && isStatus !== 'D' && isStatus !== 'P' && scope.row.status !== 'C' && scope.row.status !== 'D' && scope.row.status !== 'P')"
                             @input="(val)=>oninput(val,scope.row,'windDoor')"
                         />
                     </template>
                 </el-table-column>
                 <el-table-column label="强排" :show-overflow-tooltip="true" width="130">
                     <template slot-scope="scope">
-                        <el-select v-model="scope.row.forceDrain" size="small" clearable style="width: 100%;" :disabled="!isRedact">
+                        <el-select v-model="scope.row.forceDrain" size="small" clearable style="width: 100%;" :disabled="!(isRedact && scope.row.status !== 'C' && scope.row.status !== 'D' && scope.row.status !== 'P')">
                             <el-option
                                 v-for="item in forceDrainOptions"
                                 :key="item.optValue"
@@ -394,7 +394,7 @@
                 </el-table-column>
                 <el-table-column label="换热" :show-overflow-tooltip="true" width="130">
                     <template slot-scope="scope">
-                        <el-select v-model="scope.row.changeHot" size="small" clearable style="width: 100%;" :disabled="!isRedact">
+                        <el-select v-model="scope.row.changeHot" size="small" clearable style="width: 100%;" :disabled="!(isRedact && scope.row.status !== 'C' && scope.row.status !== 'D' && scope.row.status !== 'P')">
                             <el-option
                                 v-for="item in changeHotOptions"
                                 :key="item.optValue"
@@ -406,14 +406,16 @@
                 </el-table-column>
                 <el-table-column label="备注" :show-overflow-tooltip="true" min-width="200">
                     <template slot-scope="scope">
-                        <el-input v-model.trim="scope.row.remark" size="small" placeholder="输入备注" :disabled="!isRedact" />
+                        <el-tooltip :disabled="!scope.row.remark" effect="dark" :content="scope.row.remark" placement="top">
+                            <el-input v-model.trim="scope.row.remark" size="small" placeholder="请输入" :disabled="!(isRedact && isStatus !== 'C' && isStatus !== 'D' && isStatus !== 'P'&& scope.row.status !== 'C' && scope.row.status !== 'D' && scope.row.status !== 'P')" />
+                        </el-tooltip>
                     </template>
                 </el-table-column>
                 <el-table-column prop="changer" min-width="140" label="操作人" :show-overflow-tooltip="true" />
                 <el-table-column prop="changed" min-width="180" label="操作时间" :show-overflow-tooltip="true" />
                 <el-table-column fixed="right" label="操作" width="80" :show-overflow-tooltip="true">
                     <template slot-scope="scope">
-                        <el-button class="delBtn" type="text" icon="el-icon-delete" size="mini" :disabled="!isRedact" @click="removeFirstDataRow(scope.row);">
+                        <el-button class="delBtn" type="text" icon="el-icon-delete" size="mini" :disabled="!(isRedact && isStatus !== 'C' && isStatus !== 'D' && isStatus !== 'P' && scope.row.status !== 'C' && scope.row.status !== 'D' && scope.row.status !== 'P')" @click="removeFirstDataRow(scope.row,'kojiGuardData');">
                             删除
                         </el-button>
                     </template>
@@ -424,13 +426,13 @@
                 <div style="margin: 10px 5px;">
                     异常情况：
                 </div>
-                <el-input v-model="kojiDiscExceptionInfo.discGuardExceptionInfo" type="textarea" :rows="4" :disabled="!isRedact" style="width: 80%;" />
+                <el-input v-model="kojiDiscExceptionInfo.discGuardExceptionInfo" type="textarea" :rows="4" :disabled="!(isRedact&& isStatus !== 'C' && isStatus !== 'D' && isStatus !== 'P')" style="width: 80%;" />
             </div>
         </mds-card>
 
         <mds-card :title="'翻曲记录'" :name="'kojiTurn'">
             <el-table ref="kojiTurn" header-row-class-name="tableHead" class="newTable" max-height="267" :data="kojiDiscTurnData" :row-class-name="rowDelFlag" border tooltip-effect="dark">
-                <el-table-column type="index" label="序号" width="50px" align="center" />
+                <el-table-column type="index" label="序号" width="55" fixed />
                 <el-table-column label="翻曲" prop="turnStageName" width="100" />
                 <el-table-column label="翻曲开始时间" prop="turnStart" width="230">
                     <template slot="header">
@@ -445,7 +447,7 @@
                             value-format="yyyy-MM-dd HH:mm"
                             placeholder="请选择"
                             style="width: 200px;"
-                            :disabled="!isRedact"
+                            :disabled="!(isRedact&& isStatus !== 'C' && isStatus !== 'D' && isStatus !== 'P' && scope.row.status !== 'C' && scope.row.status !== 'D' && scope.row.status !== 'P')"
                             @change="(val)=>turnStartTimeChange(val,scope.row)"
                         />
                     </template>
@@ -463,7 +465,7 @@
                             value-format="yyyy-MM-dd HH:mm"
                             placeholder="请选择"
                             style="width: 200px;"
-                            :disabled="!isRedact"
+                            :disabled="!(isRedact&& isStatus !== 'C' && isStatus !== 'D' && isStatus !== 'P' && scope.row.status !== 'C' && scope.row.status !== 'D' && scope.row.status !== 'P')"
                         />
                     </template>
                 </el-table-column>
@@ -477,7 +479,7 @@
                         <el-input
                             v-model="scope.row.turnAddWaterAmount"
                             maxlength="30"
-                            :disabled="!isRedact"
+                            :disabled="!(isRedact&& isStatus !== 'C' && isStatus !== 'D' && isStatus !== 'P' && scope.row.status !== 'C' && scope.row.status !== 'D' && scope.row.status !== 'P')"
                             size="small"
                             placeholder="请输入"
                             @input="(val)=>oninput(val,scope.row,'turnAddWaterAmount')"
@@ -489,14 +491,15 @@
                         <span class="notNull">* </span>翻曲人
                     </template>
                     <template slot-scope="scope">
-                        <span :style="{cursor:isRedact? 'pointer':'default',color:isRedact? '#333':'#aaa'}" @click="selectUser(scope.row,'turnMans','内部调借')">
+                        <span :style="{cursor:isRedact? 'pointer':'default',color:isRedact? '#333':'#aaa'}" @click="selectUser(scope.row,'turnMans','翻曲人')">
                             <el-tooltip v-if="scope.row.turnMans&&scope.row.turnMans!==''" class="item" effect="dark" :content="scope.row.turnMans" placement="top">
                                 <el-input
                                     v-if="scope.row.turnMans&&scope.row.turnMans!==''"
                                     v-model="scope.row.turnMans"
                                     placeholder="请输入翻曲人"
+                                    size="small"
                                     style="width: 200px;"
-                                    :disabled="!isRedact"
+                                    :disabled="!(isRedact&& isStatus !== 'C' && isStatus !== 'D' && isStatus !== 'P' && scope.row.status !== 'C' && scope.row.status !== 'D' && scope.row.status !== 'P')"
                                 />
                             </el-tooltip>
                             <em v-if="!scope.row.turnMans" :class="{'like-el-input__inner':isRedact,'input-in-table-disabled':!isRedact}">点击选择人员</em>
@@ -505,7 +508,9 @@
                 </el-table-column>
                 <el-table-column label="备注" prop="remark" min-width="200">
                     <template slot-scope="scope">
-                        <el-input v-model="scope.row.remark" :disabled="!isRedact" size="small" placeholder="请输入" />
+                        <el-tooltip :disabled="!scope.row.remark" effect="dark" :content="scope.row.remark" placement="top">
+                            <el-input v-model="scope.row.remark" :disabled="!(isRedact&& isStatus !== 'C' && isStatus !== 'D' && isStatus !== 'P' && scope.row.status !== 'C' && scope.row.status !== 'D' && scope.row.status !== 'P')" size="small" placeholder="请输入" />
+                        </el-tooltip>
                     </template>
                 </el-table-column>
                 <el-table-column label="操作人" prop="changer" width="180">
@@ -523,28 +528,28 @@
                 <div style="margin: 10px 5px;">
                     异常情况：
                 </div>
-                <el-input v-model="kojiDiscExceptionInfo.discTurnExceptionInfo" type="textarea" :rows="4" :disabled="!isRedact" style="width: 80%;" />
+                <el-input v-model="kojiDiscExceptionInfo.discTurnExceptionInfo" type="textarea" :rows="4" :disabled="!(isRedact&& isStatus !== 'C' && isStatus !== 'D' && isStatus !== 'P')" style="width: 80%;" />
             </div>
         </mds-card>
 
         <mds-card title="曲料生长评价" :name="'kojiEvaluate'">
             <template slot="titleBtn">
                 <div style="float: right;">
-                    <el-button type="primary" size="small" :disabled="!isRedact" @click="addNewKojiEvaluateRow">
+                    <el-button v-if="isAuth('kjYPContralAdd')" type="primary" size="small" :disabled="!(isRedact&& isStatus !== 'C' && isStatus !== 'D' && isStatus !== 'P')" @click="addNewKojiEvaluateRow">
                         新增
                     </el-button>
                 </div>
             </template>
             <el-form ref="ruleKojiEvaluateForm" :model="ruleKojiEvaluateForm">
                 <el-table class="newTable" :data="kojiEvaluateData" :row-class-name="rowDelFlag" max-height="300" header-row-class-name="tableHead" border style="width: 100%; min-height: 90px;">
-                    <el-table-column label="序号" type="index" width="50" fixed="left" align="center" />
+                    <el-table-column type="index" :index="index => getIndexMethod(index, kojiEvaluateData)" label="序号" width="55" fixed />
                     <el-table-column width="130" :show-overflow-tooltip="true">
                         <template slot="header">
                             <span class="notNull">* </span>阶段
                         </template>
                         <template slot-scope="scope">
                             <el-form-item prop="kojiStage">
-                                <el-select v-model="scope.row.kojiStage" size="small" clearable style="width: 100%;" :disabled="!isRedact">
+                                <el-select v-model="scope.row.kojiStage" size="small" clearable style="width: 100%;" :disabled="!(isRedact&& isStatus !== 'C' && isStatus !== 'D' && isStatus !== 'P' && scope.row.status !== 'C' && scope.row.status !== 'D' && scope.row.status !== 'P')">
                                     <el-option
                                         v-for="item in kojiStageOptions"
                                         :key="item.optValue"
@@ -561,7 +566,7 @@
                         </template>
                         <template slot-scope="scope">
                             <el-form-item prop="recordDate">
-                                <el-date-picker v-model="scope.row.recordDate" type="datetime" size="small" value-format="yyyy-MM-dd HH:mm" format="yyyy-MM-dd HH:mm" :disabled="!isRedact" placeholder="选择时间" style="width: 180px;" />
+                                <el-date-picker v-model="scope.row.recordDate" type="datetime" size="small" value-format="yyyy-MM-dd HH:mm" format="yyyy-MM-dd HH:mm" :disabled="!(isRedact && isStatus !== 'C' && isStatus !== 'D' && isStatus !== 'P'&& scope.row.status !== 'C' && scope.row.status !== 'D' && scope.row.status !== 'P')" placeholder="选择时间" style="width: 180px;" />
                             </el-form-item>
                         </template>
                     </el-table-column>
@@ -571,7 +576,7 @@
                         </template>
                         <template slot-scope="scope">
                             <el-form-item prop="growInfo">
-                                <el-select v-model="scope.row.growInfo" size="small" clearable style="width: 100%;" :disabled="!isRedact" @change="val=>scope.row.exceptionInfo=''">
+                                <el-select v-model="scope.row.growInfo" size="small" clearable style="width: 100%;" :disabled="!(isRedact&& isStatus !== 'C' && isStatus !== 'D' && isStatus !== 'P' && scope.row.status !== 'C' && scope.row.status !== 'D' && scope.row.status !== 'P')" @change="val=>scope.row.exceptionInfo=''">
                                     <el-option
                                         v-for="item in kojiEvaluateGrowInfoOptions"
                                         :key="item.optValue"
@@ -584,7 +589,7 @@
                     </el-table-column>
                     <el-table-column label="异常描述" :show-overflow-tooltip="true" min-width="200">
                         <template slot-scope="scope">
-                            <el-input v-model.trim="scope.row.exceptionInfo" size="small" placeholder="输入异常描述" :disabled="!isRedact || scope.row.growInfo==='GOOD'" />
+                            <el-input v-model.trim="scope.row.exceptionInfo" size="small" placeholder="请输入异常描述" :disabled="!(isRedact && isStatus !== 'C' && isStatus !== 'D' && isStatus !== 'P'&& scope.row.status !== 'C' && scope.row.status !== 'D' && scope.row.status !== 'P') || scope.row.growInfo==='GOOD'" />
                         </template>
                     </el-table-column>
                     <el-table-column
@@ -593,15 +598,19 @@
                         width="230"
                         class="star"
                     >
+                        <template slot="header">
+                            <span class="notNull">* </span>记录人
+                        </template>
                         <template slot-scope="scope">
-                            <span :style="{cursor:isRedact? 'pointer':'default',color:isRedact? '#333':'#aaa'}" @click="selectUser(scope.row,'recordMans','内部调借')">
+                            <span :style="{cursor:isRedact? 'pointer':'default',color:isRedact? '#333':'#aaa'}" @click="selectUser(scope.row,'recordMans','记录人')">
                                 <el-tooltip v-if="scope.row.recordMans&&scope.row.recordMans!==''" class="item" effect="dark" :content="scope.row.recordMans" placement="top">
                                     <el-input
                                         v-if="scope.row.recordMans&&scope.row.recordMans!==''"
                                         v-model="scope.row.recordMans"
                                         placeholder="请输入记录人"
                                         style="width: 200px;"
-                                        :disabled="!isRedact"
+                                        size="small"
+                                        :disabled="!(isRedact&& isStatus !== 'C' && isStatus !== 'D' && isStatus !== 'P' && scope.row.status !== 'C' && scope.row.status !== 'D' && scope.row.status !== 'P')"
                                     />
                                 </el-tooltip>
                                 <em v-if="!scope.row.recordMans" :class="{'like-el-input__inner':isRedact,'input-in-table-disabled':!isRedact}">点击选择人员</em>
@@ -610,14 +619,16 @@
                     </el-table-column>
                     <el-table-column label="备注" :show-overflow-tooltip="true" min-width="200">
                         <template slot-scope="scope">
-                            <el-input v-model.trim="scope.row.remark" size="small" placeholder="输入备注" :disabled="!isRedact" />
+                            <el-tooltip :disabled="!scope.row.remark" effect="dark" :content="scope.row.remark" placement="top">
+                                <el-input v-model.trim="scope.row.remark" size="small" placeholder="请输入" :disabled="!(isRedact&& isStatus !== 'C' && isStatus !== 'D' && isStatus !== 'P' && scope.row.status !== 'C' && scope.row.status !== 'D' && scope.row.status !== 'P')" />
+                            </el-tooltip>
                         </template>
                     </el-table-column>
                     <el-table-column prop="changer" min-width="140" label="操作人" :show-overflow-tooltip="true" />
                     <el-table-column prop="changed" min-width="180" label="操作时间" :show-overflow-tooltip="true" />
                     <el-table-column fixed="right" label="操作" width="80" :show-overflow-tooltip="true">
                         <template slot-scope="scope">
-                            <el-button class="delBtn" type="text" icon="el-icon-delete" size="mini" :disabled="!isRedact" @click="removeFirstDataRow(scope.row)">
+                            <el-button class="delBtn" type="text" icon="el-icon-delete" size="mini" :disabled="!(isRedact&& isStatus !== 'C' && isStatus !== 'D' && isStatus !== 'P' && scope.row.status !== 'C' && scope.row.status !== 'D' && scope.row.status !== 'P')" @click="removeFirstDataRow(scope.row)">
                                 删除
                             </el-button>
                         </template>
@@ -641,7 +652,7 @@
                         placeholder="请选择"
                         clearable
                         style="width: 180px;"
-                        :disabled="!isRedact"
+                        :disabled="!(isRedact&& isStatus !== 'C' && isStatus !== 'D' && isStatus !== 'P' && kojiOutCraftformData.status !== 'C' && kojiOutCraftformData.status !== 'D' && kojiOutCraftformData.status !== 'P')"
                     />
                 </el-form-item>
                 <el-form-item
@@ -657,7 +668,7 @@
                         placeholder="请选择"
                         clearable
                         style="width: 180px;"
-                        :disabled="!isRedact"
+                        :disabled="!(isRedact&& isStatus !== 'C' && isStatus !== 'D' && isStatus !== 'P' && kojiOutCraftformData.status !== 'C' && kojiOutCraftformData.status !== 'D' && kojiOutCraftformData.status !== 'P')"
                     />
                 </el-form-item>
                 <el-form-item
@@ -673,14 +684,15 @@
                     class="star"
                 >
                     <div style="width: 180px;">
-                        <span :style="{cursor:isRedact? 'pointer':'default',color:isRedact? '#333':'#aaa'}" @click="selectUser(kojiOutCraftformData,'outKojiMans','内部调借')">
+                        <span :style="{cursor:isRedact? 'pointer':'default',color:isRedact? '#333':'#aaa'}" @click="selectUser(kojiOutCraftformData,'outKojiMans','出曲操作人')">
                             <el-tooltip v-if="kojiOutCraftformData.outKojiMans&&kojiOutCraftformData.outKojiMans!==''" class="item" effect="dark" :content="kojiOutCraftformData.outKojiMans" placement="top">
                                 <el-input
                                     v-if="kojiOutCraftformData.outKojiMans&&kojiOutCraftformData.outKojiMans!==''"
                                     v-model="kojiOutCraftformData.outKojiMans"
                                     placeholder="请输入出曲操作人"
+                                    size="small"
                                     style="width: 200px;"
-                                    :disabled="!isRedact"
+                                    :disabled="!(isRedact&& isStatus !== 'C' && isStatus !== 'D' && isStatus !== 'P' && kojiOutCraftformData.status !== 'C' && kojiOutCraftformData.status !== 'D' && kojiOutCraftformData.status !== 'P')"
                                 />
                             </el-tooltip>
                             <em v-if="!kojiOutCraftformData.outKojiMans" :class="{'like-el-input__inner':isRedact,'input-in-form-disabled':!isRedact}">点击选择人员</em>
@@ -697,7 +709,7 @@
                         placeholder="请输入"
                         clearable
                         style="width: 180px;"
-                        :disabled="!isRedact"
+                        :disabled="!(isRedact && isStatus !== 'C' && isStatus !== 'D' && isStatus !== 'P'&& kojiOutCraftformData.status !== 'C' && kojiOutCraftformData.status !== 'D' && kojiOutCraftformData.status !== 'P')"
                         @input="(val)=>oninput(val,kojiOutCraftformData,'outKojiTemp')"
                     >
                         <span slot="suffix">°C</span>
@@ -731,6 +743,7 @@
     export default class DiscCraftControl extends Vue {
         @Prop({ type: Object, default: () => { return {} } }) formHeader: object;
         @Prop({ default: false }) isRedact: boolean;
+        @Prop({ default: 'N' }) isStatus: string;
         @Prop({ default: '' }) status: string;
 
         $refs: {
@@ -747,20 +760,25 @@
 
         // 入曲情況
         kojiInformData: KojiInObject= {}
+        kojiInformDataOrg: KojiInObject={}
         isLoanedPersonnelStatusDialogShow=false // 入曲人选择弹窗
         orgTree: object[] = [];
         arrList: string[] = [];
         // 出曲工艺
         kojiOutCraftformData: KojiOutCraftObject= {}
+        kojiOutCraftformDataOrg: KojiOutCraftObject={}
 
         // 翻曲记录
         kojiDiscTurnData: KojiDiscTurn[]=[]
+        kojiDiscTurnDataOrg: KojiDiscTurn[]=[]
 
         // 异常情况
         kojiDiscExceptionInfo: KojiDiscExceptionInfo={}
+        kojiDiscExceptionInfoOrg: KojiDiscExceptionInfo={}
 
         // 曲料生产评价
         kojiEvaluateData: KojiEvaluate[]=[]
+        kojiEvaluateDataOrg: KojiEvaluate[]=[]
         ruleKojiEvaluateForm= {}
         kojiEvaluateGrowInfoOptions: OptionObj[]=[]
         kojiStageOptions: OptionObj[]=[]
@@ -793,7 +811,7 @@
             // 看曲记录
             this.getKojiDiscGuard()
             // 审核日志
-            this.getAudit(this.targetOrderObj, 'CONTROL');
+            this.getAudit(this.targetOrderObj);
         }
 
 
@@ -817,7 +835,7 @@
 
         // 选择人员 内部借调
         selectUser(target, prop, who) {
-            if (this.isRedact) {
+            if (!(this.isRedact && this.isStatus !== 'C' && this.isStatus !== 'D' && this.isStatus !== 'P' && target['status'] !== 'C' && target['status'] !== 'D' && target['status'] !== 'P')) return;
                 this.targetUserList = target
                 this.targetUserProp = prop
                 this.isLoanedPersonnelStatusDialogShow = true;
@@ -828,7 +846,7 @@
                 this.$nextTick(() => {
                     this.$refs.loanedPersonnel.init(tempUserList, who);
                 });
-            }
+
         }
 
         // 员工确认
@@ -846,6 +864,8 @@
             }).then(({ data }) => {
                 this.kojiInformData = {}
                 if (data.data) {
+                    console.log('入曲情况')
+                    console.log(data.data)
                     this.kojiInformData = data.data
                 } else {
                     this.$set(this.kojiInformData, 'addKojiDuration', '')
@@ -858,6 +878,7 @@
                 }
                 this.$set(this.kojiInformData, 'orderNo', this.targetOrderObj.orderNo)
                 this.$set(this.kojiInformData, 'kojiOrderNo', this.targetOrderObj.kojiOrderNo)
+                this.kojiInformDataOrg = JSON.parse(JSON.stringify(this.kojiInformData))
             })
         }
 
@@ -882,6 +903,8 @@
                 }
                 this.$set(this.kojiOutCraftformData, 'orderNo', this.targetOrderObj.orderNo)
                 this.$set(this.kojiOutCraftformData, 'kojiOrderNo', this.targetOrderObj.kojiOrderNo)
+
+                this.kojiOutCraftformDataOrg = JSON.parse(JSON.stringify(this.kojiOutCraftformData))
             })
         }
 
@@ -907,6 +930,11 @@
                         this.$set(this.kojiDiscTurnData[0], 'turnEnd', '')
                     }
 
+                    if (!this.kojiDiscTurnData[0].id) {
+                        this.$set(this.kojiDiscTurnData[0], 'changer', getUserNameNumber())
+                        this.$set(this.kojiDiscTurnData[0], 'changed', dateFormat(new Date(), 'yyyy-MM-dd hh:mm:ss'))
+                    }
+
                     this.$set(this.kojiDiscTurnData[1], 'orderNo', this.targetOrderObj.orderNo)
                     this.$set(this.kojiDiscTurnData[1], 'kojiOrderNo', this.targetOrderObj.kojiOrderNo)
                     if (this.kojiDiscTurnData[1].turnStart === null) {
@@ -915,6 +943,11 @@
                     if (this.kojiDiscTurnData[1].turnEnd === null) {
                         this.$set(this.kojiDiscTurnData[1], 'turnEnd', '')
                     }
+                    if (!this.kojiDiscTurnData[1].id) {
+                        this.$set(this.kojiDiscTurnData[1], 'changer', getUserNameNumber())
+                        this.$set(this.kojiDiscTurnData[1], 'changed', dateFormat(new Date(), 'yyyy-MM-dd hh:mm:ss'))
+                    }
+                    this.kojiDiscTurnDataOrg = JSON.parse(JSON.stringify(this.kojiDiscTurnData))
                 }
             })
         }
@@ -924,29 +957,21 @@
             if (val === null) {
                 target.turnStart = ''
             }
-            target.turnDuration = 0
-
-            const timeList: number[] = [];
-            this.kojiGuardData.forEach(item => {
-                if (item.guardDate) {
-                    timeList.push(new Date(item.guardDate).getTime())
-                }
-            })
-
-            if (target.turnStart !== '' && this.kojiGuardData.length !== 0 && Math.min(...timeList) !== Infinity) {
-                const timeTemp = new Date(val).getTime();
-                let result = 0
-                if (this.kojiGuardData.length !== 0) {
-                    const compareTimeList: number[] = []// 时间暂存容器
-                    this.kojiGuardData.forEach(item => {
-                        if (item.guardDate) {
-                            compareTimeList.push(new Date(item.guardDate).getTime())
-                        }
-                    })
-                    result = Math.min(...compareTimeList)
-                }
-                target.turnDuration = (timeTemp - result) / 3600000
-            }
+            this.runCount()
+            // if (target.turnStart !== '' && this.kojiGuardData.length !== 0 && Math.min(...timeList) !== Infinity) {
+            //     const timeTemp = new Date(val).getTime();
+            //     let result = 0
+            //     if (this.kojiGuardData.length !== 0) {
+            //         const compareTimeList: number[] = []// 时间暂存容器
+            //         this.kojiGuardData.forEach(item => {
+            //             if (item.guardDate) {
+            //                 compareTimeList.push(new Date(item.guardDate).getTime())
+            //             }
+            //         })
+            //         result = Math.min(...compareTimeList)
+            //     }
+            //     target.turnDuration = (timeTemp - result) / 3600000
+            // }
         }
 
         // 异常情况
@@ -959,6 +984,7 @@
                 this.kojiDiscExceptionInfo = {}
                 if (data.data) {
                     this.kojiDiscExceptionInfo = data.data
+                    this.kojiDiscExceptionInfoOrg = JSON.parse(JSON.stringify(data.data))
                 }
             })
         }
@@ -985,9 +1011,12 @@
             KOJI_API.KOJI_DISC_QUERY_EVALUATE_API({
                 kojiOrderNo: this.targetOrderObj.kojiOrderNo
             }).then(({ data }) => {
+                console.log('曲料生长情况')
+                console.log(data)
                 this.kojiEvaluateData = []
                 if (data.data) {
                     this.kojiEvaluateData = data.data
+                    this.kojiEvaluateDataOrg = JSON.parse(JSON.stringify(data.data))
                 }
             })
         }
@@ -1016,8 +1045,13 @@
             }).then(({ data }) => {
                 this.kojiGuardData = []
                 if (data.data) {
+                    console.log('看曲情况')
+                    console.log(data)
                     this.kojiGuardData = JSON.parse(JSON.stringify(data.data))
-                    this.kojiGuardDataOrg = JSON.parse(JSON.stringify(data.data))
+                    this.kojiGuardData.forEach(item => {
+                        item.delFlag = 0
+                    })
+                    this.kojiGuardDataOrg = JSON.parse(JSON.stringify(this.kojiGuardData))
                 }
             })
         }
@@ -1025,17 +1059,28 @@
         // 看曲时间 change
         kojiStartTimeChange(val, target) {
 
+            // 点击栏位清除扭 vall 变 null
             if (val === null) {
                 target.guardDate = ''
             }
+            this.runCount();
+
+        }
+
+        runCount() {
+            // 将两翻清空，重新计算
             this.kojiDiscTurnData[0].turnDuration = 0
             this.kojiDiscTurnData[1].turnDuration = 0
+
             const timeList: number[] = [];
             this.kojiGuardData.forEach(item => {
                 if (item.guardDate && item.delFlag === 0) {
                     timeList.push(new Date(item.guardDate).getTime())
                 }
             })
+
+            console.log('timeList')
+            console.log(timeList)
 
             if (timeList.length !== 0) {
                 if (this.kojiDiscTurnData[0] && this.kojiDiscTurnData[0].turnStart !== '' && this.kojiDiscTurnData[0].turnStart !== null) {
@@ -1053,39 +1098,9 @@
                     turn2Result = (timeTemp2 - turn2Result) / 3600000
                     this.kojiDiscTurnData[1].turnDuration = turn2Result
                 }
+
             }
         }
-
-        kojiStartTimeDelet() {
-
-            this.kojiDiscTurnData[0].turnDuration = 0
-            this.kojiDiscTurnData[1].turnDuration = 0
-            const timeList: number[] = [];
-            this.kojiGuardData.forEach(item => {
-                if (item.guardDate && item.delFlag === 0) {
-                    timeList.push(new Date(item.guardDate).getTime())
-                }
-            })
-
-            if (timeList.length !== 0) {
-                if (this.kojiDiscTurnData[0] && this.kojiDiscTurnData[0].turnStart !== '' && this.kojiDiscTurnData[0].turnStart !== null) {
-                    const timeTemp1 = new Date(this.kojiDiscTurnData[0].turnStart).getTime();
-                    let turn1Result = 0
-                    turn1Result = Math.min(...timeList)
-                    turn1Result = (timeTemp1 - turn1Result) / 3600000
-                    this.kojiDiscTurnData[0].turnDuration = turn1Result
-                }
-
-                if (this.kojiDiscTurnData[1] && this.kojiDiscTurnData[1].turnStart !== '' && this.kojiDiscTurnData[1].turnStart !== null) {
-                    const timeTemp2 = new Date(this.kojiDiscTurnData[1].turnStart).getTime();
-                    let turn2Result = 0
-                    turn2Result = Math.min(...timeList)
-                    turn2Result = (timeTemp2 - turn2Result) / 3600000
-                    this.kojiDiscTurnData[1].turnDuration = turn2Result
-                }
-            }
-        }
-
 
         // [新增]曲料生长评价
         addNewKojiEvaluateRow() {
@@ -1146,13 +1161,13 @@
 
         ruleSubmit() {
             // 入曲情况
-            if (!this.kojiInformData.addKojiMans || !this.kojiInformData.addKojiTemp || !this.kojiInformData.addKojiStart || !this.kojiInformData.addKojiStart || !this.kojiInformData.addKojiEnd || !this.kojiInformData.addKojiDuration) {
+            if (!this.kojiInformData.addKojiMans || !this.kojiInformData.addKojiTemp || !this.kojiInformData.addKojiStart || !this.kojiInformData.addKojiEnd) {
                 this.$warningToast('请填写入曲情况必填栏位');
                 return false
             }
 
             for (const item of this.kojiGuardData.filter(it => it.delFlag !== 1)) {
-                if (!item.guardDate || !item.windTemp || !item.roomTemp || !item.windSpeed || !item.prodTemp || !item.outUpTemp || !item.outMidTemp || !item.testTempOne || !item.testTempTwo || !item.windDoor) {
+                if (!item.guardDate || !item.windTemp || !item.roomTemp || !item.windSpeed || !item.prodTemp || !item.outUpTemp || !item.outMidTemp || !item.outDownTemp || !item.testTempOne || !item.testTempTwo || !item.windDoor) {
                     this.$warningToast('请填写看曲记录必填项');
                     return false
                 }
@@ -1164,19 +1179,53 @@
                 }
             }
             for (const item of this.kojiEvaluateData) {
-                if (!item.kojiStage || !item.recordDate || !item.recordMans) {
+                if (!item.kojiStage || !item.recordDate || !item.growInfo || !item.recordMans) {
                     this.$warningToast('请填写曲料生长评价必填项');
+                    return false
+                }
+
+                if (item.growInfo === 'EXCEPTION' && !item.exceptionInfo) {
+                    this.$warningToast('请填写曲料生长评价异常描述');
                     return false
                 }
             }
 
-            if (!this.kojiOutCraftformData.outKojiStart || !this.kojiOutCraftformData.outKojiStart || !this.kojiOutCraftformData.outKojiEnd || !this.kojiOutCraftformData.outKojiMans || !this.kojiOutCraftformData.outKojiTemp) {
+
+            if (!this.kojiOutCraftformData.outKojiStart || !this.kojiOutCraftformData.outKojiEnd || !this.kojiOutCraftformData.outKojiMans || !this.kojiOutCraftformData.outKojiTemp) {
                 this.$warningToast('请填写出曲工艺必填项');
                 return false
             }
 
 
             return true
+        }
+
+        /**
+         * 数据对比：针对特殊字段 addKojiDuration '.00' '0.00'，addKojiTemp, outKojiDuration, outKojiTemp
+         * @param data 新数据
+         * @param oldData 旧数据
+         * @param specialNames 特殊字段名
+         */
+        chargeSameData<T>(data: T, oldData: T, specialNames: string[]): (T | null) {
+            let isSame = true;
+            for (const key in data) {
+                if (Object.prototype.hasOwnProperty.call(data, key)) {
+                    const element = data[key];
+                    const element1 = oldData[key];
+                    if (specialNames.includes(key)) {
+                        if (Number(element) !== Number(element1)) {
+                            isSame = false;
+                            break;
+                        }
+                        continue;
+                    }
+                    if (element1 !== element) {
+                        isSame = false;
+                        break;
+                    }
+                }
+            }
+            return isSame ? null : data;
         }
 
         savedData() {
@@ -1193,7 +1242,7 @@
                         discEvaluate.deleteIds.push(item.id)
                     }
                 } else if (item.id) {
-                    if (!_.isEqual(this.kojiGuardDataOrg[index], item)) {
+                    if (!_.isEqual(this.kojiEvaluateDataOrg[index], item)) {
                         discEvaluate.updateList.push(item)
                     }
                 } else {
@@ -1220,12 +1269,14 @@
                 }
             })
 
-            const discTurn1 = this.kojiDiscTurnData[0]
-            const discTurn2 = this.kojiDiscTurnData[1]
-            const discIn = this.kojiInformData
-            const discOut = this.kojiOutCraftformData
-            const discGuardException = this.kojiDiscExceptionInfo.discGuardExceptionInfo
-            const discTurnException = this.kojiDiscExceptionInfo.discTurnExceptionInfo
+            const discTurn1 = !_.isEqual(this.kojiDiscTurnDataOrg[0], this.kojiDiscTurnData[0]) ? this.kojiDiscTurnData[0] : null
+            const discTurn2 = !_.isEqual(this.kojiDiscTurnDataOrg[1], this.kojiDiscTurnData[1]) ? this.kojiDiscTurnData[1] : null
+            // const discIn = !_.isEqual(this.kojiInformDataOrg, this.kojiInformData) ? this.kojiInformData : null
+            // const discOut = !_.isEqual(this.kojiOutCraftformDataOrg, this.kojiOutCraftformData) ? this.kojiOutCraftformData : null
+            const discIn = this.chargeSameData(this.kojiInformData, this.kojiInformDataOrg, ['addKojiDuration', 'addKojiTemp'])
+            const discOut = this.chargeSameData(this.kojiOutCraftformData, this.kojiOutCraftformDataOrg, ['outKojiDuration', 'outKojiTemp'])
+            const discGuardException = this.kojiDiscExceptionInfoOrg.discGuardExceptionInfo !== this.kojiDiscExceptionInfo.discGuardExceptionInfo ? this.kojiDiscExceptionInfo.discGuardExceptionInfo : null
+            const discTurnException = this.kojiDiscExceptionInfoOrg.discTurnExceptionInfo !== this.kojiDiscExceptionInfo.discTurnExceptionInfo ? this.kojiDiscExceptionInfo.discTurnExceptionInfo : null
             return {
                 discEvaluate,
                 discGuard,
@@ -1239,16 +1290,22 @@
         }
 
         // 审核日志
-        getAudit(formHeader, verifyType) {
-            AUDIT_API.AUDIT_LOG_LIST_API({ orderNo: formHeader.orderNo, verifyType: verifyType }).then(({ data }) => {
-                this.currentAudit = data.data
-            })
+        getAudit(formHeader) {
+            AUDIT_API.STE_AUDIT_LOG_API({ orderNo: formHeader.orderNo, splitOrderNo: formHeader.kojiOrderNo, verifyType: ['KJ_CONTROL', 'TIMESHEET'] }).then(({ data }) => {
+                this.currentAudit = data.data;
+            });
         }
 
         // 处理小数点后两位
         oninput(val, target, prop) {
             // 通过正则过滤小数点后两位
-            target[prop] = (val.match(/^\d*(\.?\d{0,2})/g)[0]) || null
+            if (val >= 99.99) {
+                this.$errorToast('超过温度限制');
+                target[prop] = null
+            } else {
+                target[prop] = (val.match(/^\d*(\.?\d{0,2})/g)[0]) || null
+            }
+
         }
 
         rowDelFlag({ row }) {
@@ -1263,17 +1320,17 @@
         }
 
         // 删除
-        removeFirstDataRow(row) {
+        removeFirstDataRow(row, who) {
             this.$confirm('是否删除?', '提示', {
                 confirmButtonText: '确定',
                 cancelButtonText: '取消',
                 type: 'warning'
             }).then(() => {
-                if (row.guardDate || row.guardDate === '') {
-                    this.kojiStartTimeDelet()
-                }
                 this.$set(row, 'delFlag', 1)
                 this.$successToast('删除成功');
+                if (who === 'kojiGuardData') {
+                    this.runCount()
+                }
 
             });
         }
@@ -1436,6 +1493,9 @@ interface DiscGuard {
         margin-right: 4px;
         color: #f56c6c;
         content: "*";
+    }
+    .other >>> .el-input__suffix {
+        line-height: 32px;
     }
 
 

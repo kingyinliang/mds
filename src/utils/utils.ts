@@ -412,6 +412,26 @@ interface DataEntryDataObj {
 export function getIsRedact(status) {
     return status !== 'C' && status !== 'D' && status !== 'P';
 }
+
+export function merge(tableData, condition: string): number[] {
+    const spanOneArr: number[] = [];
+    let concatOne = 0;
+    tableData.forEach((item, index) => {
+        if (index === 0) {
+            spanOneArr.push(1);
+        } else if (item[condition] === tableData[index - 1][condition]) {
+            if (item.delFlag !== 1) {
+                spanOneArr[concatOne] += 1;
+            }
+            spanOneArr.push(0);
+        } else {
+            spanOneArr.push(1);
+            concatOne = index;
+        }
+    });
+    return spanOneArr
+}
+
 // 浮点型加法函数
 export function accAdd(arg1, arg2) {
     let r1, r2, argTemp1, argTemp2;

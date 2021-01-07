@@ -15,13 +15,13 @@
                             template(slot="label")
                                 span(class="notNull") *
                                 span 生产日期：
-                            el-date-picker(v-model="formHeader.productDate" type="date" value-format="yyyy-MM-dd" format="yyyy-MM-dd" placeholder="选择" style="width: 180px;")
+                            el-date-picker(v-model="formHeader.productDate" type="date" value-format="yyyy-MM-dd" format="yyyy-MM-dd" placeholder="请选择" style="width: 180px;")
                         el-form-item
                             template(slot="label")
                                 span(class="notNull") *
-                                span 生产工序：
+                                span 工序：
                             el-select(v-model="formHeader.productProcess" placeholder="请选择" style="width: 180px;")
-                                el-option(v-for="(item, index) in productProcessList" :key="index" :label="item.productProcessName" :value="item.productProcess")
+                                el-option(v-for="(item, index) in productProcessList" :key="index" :label="item.dictValue" :value="item.dictCode")
                         el-form-item(label="提交人员：")
                             p(class="input_border_bg" style="width: 180px;") {{ formHeader.changer }}
                         el-form-item(label="提交时间：")
@@ -44,13 +44,14 @@
 <script lang="ts">
 import { Vue, Component, Watch } from 'vue-property-decorator';
 // import { COMMON_API, AUDIT_API, KOJI_API } from 'common/api/api';
-import { COMMON_API, KOJI_API } from 'common/api/api';
+import { COMMON_API } from 'common/api/api';
 import { dateFormat } from 'utils/utils';
 import ReadyTime from 'components/ReadyTimes.vue';
 import OfficialWorker from 'components/OfficialWorker.vue';
 import LoanedPersonnel from 'components/LoanedPersonnel.vue';
 import TemporaryWorker from 'components/TemporaryWorker.vue';
 import RedactBox from 'components/RedactBox.vue' // 下方状态 bar
+import FER_API from 'src/common/api/fer';
 @Component({
     name: 'TimeEntry',
     components: {
@@ -97,14 +98,15 @@ export default class TimeEntry extends Vue {
     mounted() {
         this.getCheckStatus(); // audit status list
         this.getWorkshopList(); // workshop list
+        this.getProductProcess();
         this.$refs.readyTime.init();
         this.$refs.workHour.init();
     }
 
-    @Watch('formHeader.workShop')
-    watchWorkShop() {
-        this.getProductProcess()
-    }
+    // @Watch('formHeader.workShop')
+    // watchWorkShop() {
+    //     this.getProductProcess()
+    // }
 
     @Watch('formHeader.productDate')
     watchProductDate() {
@@ -151,21 +153,17 @@ export default class TimeEntry extends Vue {
 
     // 获取工序
     getProductProcess() {
-        this.formHeader.productProcess = ''
-        KOJI_API.WORKPROCEDURE_QUERY_API({
-            workShop: this.formHeader.workShop,
-            current: 1,
-            size: 999999
+        COMMON_API.DICTIONARY_ITEM_DROPDOWN_POST_API({
+            dictType: 'FER_PROCESS_STAGE' // 发酵工序段
         }).then(({ data }) => {
-            this.productProcessList = data.data.records
-
+            this.productProcessList = data.data;
         });
     }
 
     // 获取审核状态 list
     getCheckStatus() {
         COMMON_API.DICTQUERY_API({ dictType: 'COMMON_CHECK_STATUS' }).then(({ data }) => {
-            this.checkStatus = data.data
+            this.checkStatus = data.data;
         });
     }
 
@@ -192,11 +190,11 @@ export default class TimeEntry extends Vue {
             this.$infoToast('请选择查询必填项');
             return false;
         }
-        KOJI_API.KOJI_TIMESHEET_QUERY_API(this.formHeader).then(({ data }) => {
+        FER_API.FER_TIME_SHEET_QUERY_API(this.formHeader).then(({ data }) => {
                 console.log('data')
                 console.log(data)
                 // this.searchCard = true;
-                if (data.data.kojiTimeSheetResponseDto === null && data.data.kojiUserDtos.length === 0) {
+                if (data.data.ferTimeSheetResponseDto === null && data.data.ferUserDtos.length === 0) {
                     this.$infoToast('暂无任何内容');
                     this.formHeader.checkStatus = '';
                     this.formHeader.checkStatusName = '';
@@ -205,12 +203,12 @@ export default class TimeEntry extends Vue {
                     this.$refs.readyTime.changeList({});
                     this.$refs.workHour.changeList([]);
                 } else {
-                    this.formHeader.checkStatus = data.data.kojiTimeSheetResponseDto.status;
+                    this.formHeader.checkStatus = data.data.ferTimeSheetResponseDto.status;
                     this.formHeader.checkStatusName = this.checkStatus.filter(item => item.dictCode === this.formHeader.checkStatus)[0].dictValue
                     this.formHeader.changed = data.data.changed;
                     this.formHeader.changer = data.data.changer;
-                    this.$refs.readyTime.changeList(data.data.kojiTimeSheetResponseDto);
-                    this.$refs.workHour.changeList(data.data.kojiUserDtos);
+                    this.$refs.readyTime.changeList(data.data.ferTimeSheetResponseDto);
+                    this.$refs.workHour.changeList(data.data.ferUserDtos);
                 }
 
 
@@ -253,8 +251,8 @@ export default class TimeEntry extends Vue {
 
 
         return new Promise((resolve) => {
-                KOJI_API.KOJI_TIMESHEET_SAVE_API({
-                    kojiTimeSheetInsertDto: timeSheetRequest,
+                FER_API.FER_TIME_SHEET_SAVE_API({
+                    ferTimeSheetInsertDto: timeSheetRequest,
                     userInsertDtos: userRequest.userInsertDto,
                     userRemoveIds: userRequest.ids,
                     userUpdateDtos: userRequest.userUpdateDto
@@ -313,8 +311,8 @@ export default class TimeEntry extends Vue {
                 }
 
             return new Promise((resolve) => {
-                KOJI_API.KOJI_TIMESHEET_SUBMIT_API({
-                    kojiTimeSheetInsertDto: timeSheetRequest,
+                FER_API.FER_TIME_SHEET_SUBMIT_API({
+                    ferTimeSheetInsertDto: timeSheetRequest,
                     userInsertDtos: userRequest.userInsertDto,
                     userRemoveIds: userRequest.ids,
                     userUpdateDtos: userRequest.userUpdateDto
@@ -371,4 +369,3 @@ interface CheckStatus{
     border-radius: 50%;
 }
 </style>
-
