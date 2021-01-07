@@ -2,7 +2,7 @@
     <mds-card :title="'录入数据单位：MIN'" :name="'exc'" :icon-bg="'#f05c4a'">
         <template slot="titleBtn">
             <div style="float: right;">
-                <el-button type="primary" size="small" :disabled="!isRedact" @click="AddExcDate()">
+                <el-button v-if="isAuth(expAdd)" type="primary" size="small" :disabled="!isRedact" @click="AddExcDate()">
                     新增
                 </el-button>
             </div>
@@ -116,6 +116,8 @@
     export default class ExcRecord extends Vue {
         @Prop({ type: Boolean, default: false }) isRedact;
         @Prop({ type: Object, default: {} }) formHeader;
+
+        @Prop({ default: '' }) expAdd: string;
 
         classesOptions: object[] = [];
         abnormalList: object[] = [];
@@ -296,6 +298,10 @@
                 }
                 if (item.duration && item.duration <= 0) {
                     this.$warningToast('结束时间不能小于或等于开始时间');
+                    return false;
+                }
+                if (item.exceptionSituation === 'AB_OTHERS' && !item.exceptionInfo) {
+                    this.$warningToast('请填写异常记录页签异常描述')
                     return false;
                 }
             }

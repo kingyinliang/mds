@@ -22,7 +22,7 @@
                 <el-input v-model.number="dataForm.amount" placeholder="请输入" @input="calcStockAmount" />
             </el-form-item>
             <el-form-item label="小豆数量：" prop="smallBeanAmount">
-                <el-input v-model.number="dataForm.smallBeanAmount" placeholder="请输入" />
+                <el-input v-model="dataForm.smallBeanAmount" placeholder="请输入" />
             </el-form-item>
             <el-form-item label="单位：">
                 <el-input v-model="dataForm.unitName" placeholder="NA" disabled />
@@ -84,8 +84,18 @@
             ],
             batch: [{ required: true, message: '请选择领用批次', trigger: 'change' }],
             smallBeanAmount: [
-                { type: 'number', message: '必须为数字值' }
-            ]
+                { required: true, message: '请输入数字', trigger: 'blur' },
+                {
+                    validator(rule, value, callback) {
+                        if (/^([1-9][0-9]*|0)(\.([0-9]+)?[1-9])?$/.test(value)) {
+                        return callback()
+                        }
+                        return callback(new Error('请输入数字'))
+
+                    },
+                    trigger: 'blur'
+                }
+    ]
         };
 
         // 表单对象

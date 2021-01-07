@@ -24,7 +24,7 @@
                         </el-input>
                     </el-form-item>
                     <el-form-item class="cleanMarginBottom floatr">
-                        <el-button type="primary" size="small" :disabled="!(isRedact && isStatus !== 'C' && isStatus !== 'D' && isStatus !== 'P')" @click="addSeiveBeanDataRow()">
+                        <el-button v-if="isAuth(craftAdd)" type="primary" size="small" :disabled="!(isRedact && isStatus !== 'C' && isStatus !== 'D' && isStatus !== 'P')" @click="addSeiveBeanDataRow()">
                             新增
                         </el-button>
                     </el-form-item>
@@ -77,7 +77,7 @@
                 </el-table-column>
                 <el-table-column label="单位">
                     <template slot-scope="scope">
-                        {{ scope.row.unitName }}
+                        {{ transferUnit(scope.row.unit) }}
                     </template>
                 </el-table-column>
                 <el-table-column width="140" show-overflow-tooltip>
@@ -164,7 +164,7 @@
             <template slot="titleBtn">
                 <el-form :inline="true" label-width="115px">
                     <el-form-item class="cleanMarginBottom floatr">
-                        <el-button type="primary" size="small" :disabled="!(isRedact && isStatus !== 'C' && isStatus !== 'D' && isStatus !== 'P'&& isStatus !== 'C' && isStatus !== 'D' && isStatus !== 'P')" @click="addWashBeanDataRow()">
+                        <el-button v-if="isAuth(craftAdd)" type="primary" size="small" :disabled="!(isRedact && isStatus !== 'C' && isStatus !== 'D' && isStatus !== 'P'&& isStatus !== 'C' && isStatus !== 'D' && isStatus !== 'P')" @click="addWashBeanDataRow()">
                             新增
                         </el-button>
                     </el-form-item>
@@ -300,6 +300,8 @@
         @Prop({ default: 'N' }) isStatus: string;
         @Prop({ default: [] }) setMaterialTableData;
 
+        @Prop({ default: '' }) craftAdd: string;
+
         $refs: {
             loanedPersonnel: HTMLFormElement;
             scanSelectDialog: HTMLFormElement;
@@ -335,6 +337,9 @@
         // 泡豆罐操作对象
         scanRow: Craft = {};
 
+        // 单位清单
+        unitList: Options[]=[]
+
         get filterMaterialTableData() {
             const TEMObject = {};
             return this.setMaterialTableData.reduce((totalArr, currentItem) => {
@@ -369,12 +374,6 @@
                 item.kojiOrderNo = formHeader.kojiOrderNo;
                 item.orderNo = formHeader.orderNo;
             });
-            console.log(1111111);
-
-            console.log(this.temCraftWashBeanTable)
-            console.log(this.craftWashBeanTable);
-
-
             return {
                 kojiBeanSieveSaveDto: {
                     ...this.craftSeiveBeanInfo,
@@ -415,13 +414,15 @@
         ];
 
         // 初始化数据
-        init(formHeader) {
+        async init(formHeader) {
             const { orderNo, workShop } = formHeader;
             this.formHeader = formHeader;
-            // 查询设备list
-            this.getSieveDeviceList(workShop);
+            // 查询设备 list
+            await this.getSieveDeviceList(workShop);
+            // 查询单位 list
+            await this.getUnitList();
             // 查询筛豆记录
-            this.getSeiveBeanLogList(formHeader);
+            await this.getSeiveBeanLogList(formHeader);
             // 查询洗豆记录
             this.getWashBeanLogList(formHeader);
             // 查询审核记录
@@ -467,6 +468,7 @@
                 sieveImpurityType: '',
                 sieveMans: '',
                 unit: 'KG',
+                unitName: '千克',
                 remark: '',
                 changed: dateFormat(new Date(), 'yyyy-MM-dd hh:mm:ss'),
                 changer: getUserNameNumber(),
@@ -631,7 +633,7 @@
             }
 
             for (const item of this.craftSeiveBeanTable.filter(it => it.delFlag !== 1)) {
-                if (!item.sieveBeanBatch || !item.sieveImpurityType || !item.sieveImpurityAmount || !item.sieveMans) {
+                if (!item.sieveBeanBatch || !item.sieveImpurityType || (!item.sieveImpurityAmount && item.sieveImpurityAmount !== 0) || !item.sieveMans) {
                     this.$warningToast('请填写工艺控制页签"筛豆记录"必填项');
                     return false;
                 }
@@ -712,11 +714,27 @@
             });
         }
 
-        // 查询设备list
+        // 查询设备 list
         getSieveDeviceList(deptId) {
             COMMON_API.DEVICE_LISTBYTYPE_API({ deptId, deptName: '洗豆', factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id }).then(({ data }) => {
                 this.sieveDeviceList = data.data || [];
             });
+        }
+
+        // 查询单位 list
+        getUnitList() {
+            COMMON_API.DICTQUERY_API({
+                dictType: 'COMMON_UNIT'
+            }).then(({ data }) => {
+                console.log('单位')
+                console.log(data.data)
+                this.unitList = data.data;
+            });
+        }
+
+        transferUnit(val) {
+            // return val
+            return this.unitList.filter(item => item.dictCode === val)[0] ? this.unitList.filter(item => item.dictCode === val)[0].dictValue : val
         }
     }
 
@@ -777,6 +795,14 @@
         sieveDeviceName?: string;
         deviceNo?: string;
         deviceName?: string;
+    }
+    interface Options{
+        dictCode?: string;
+        dictId?: string;
+        dictOrder?: string;
+        dictValue?: string;
+        factoryName?: string;
+        id?: string;
     }
 </script>
 

@@ -198,6 +198,12 @@
             // const instorageDelete = [];
             const instorageInsert: CurrentDataTable[] = [];
             const instorageUpdate: CurrentDataTable[] = [];
+            // 初次保存
+            if (!this.currentFormDataGroup[0].id) {
+                this.$set(this.currentFormDataGroup[0], 'orderNo', this.targetOrderObj.orderNo)
+                this.$set(this.currentFormDataGroup[0], 'kojiOrderNo', this.targetOrderObj.kojiOrderNo)
+                return this.currentFormDataGroup[0];
+            }
             if (!_.isEqual(this.currentFormDataGroup[0], this.orgFormDataGroup[0])) {
                 this.$set(this.currentFormDataGroup[0], 'orderNo', this.targetOrderObj.orderNo)
                 this.$set(this.currentFormDataGroup[0], 'kojiOrderNo', this.targetOrderObj.kojiOrderNo)

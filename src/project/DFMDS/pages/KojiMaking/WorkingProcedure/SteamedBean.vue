@@ -2,9 +2,9 @@
     <div>
         <data-entry
             ref="dataEntry"
-            redact-auth="steSemiEdit"
-            save-auth="steSemiEdit"
-            submit-auth="steSemiSubmit"
+            redact-auth="kjSBEdit"
+            save-auth="kjSBSave"
+            submit-auth="kjSBSubmit"
             :status-title="'工序状态'"
             :order-status="formHeader.statusName"
             :header-base="headerBase"
@@ -22,7 +22,7 @@
                 <steamed-in-storage ref="steamedInStorage" :is-status="steamedInStorageStatus" :pot-no-now.sync="potNoNow" :is-redact="data.isRedact" />
             </template>
             <template slot="3" slot-scope="data">
-                <koji-exc-record ref="excRecord" :is-redact="data.isRedact" :form-header="formHeader" />
+                <koji-exc-record ref="excRecord" :is-redact="data.isRedact" exp-add="kjSBExpAdd" :form-header="formHeader" />
             </template>
             <template slot="4" slot-scope="data">
                 <koji-text-record ref="textRecord" :is-redact="data.isRedact" />
@@ -188,21 +188,47 @@
         // 查询表头
         getOrderList() {
             COMMON_API.OREDER_QUERY_BY_NO_API({
-                // orderNo: this.$store.state.koji.orderScInfo.orderNo || ''
+                // this.jumpFromAudit 承接判断跳转过来
                 orderNo: this.jumpFromAudit ? this.$route.params.order : this.$store.state.koji.orderScInfo.orderNo || ''
             }).then(({ data }) => {
-                KOJI_API.KOJI_QUERY_STEAMBEAN_API({
+                // 1.德兴程式
+                // KOJI_API.KOJI_QUERY_STEAMBEAN_API({
+                //     orderNo: this.jumpFromAudit ? this.$route.params.order : this.$store.state.koji.orderScInfo.orderNo || ''
+                // }).then(({ data: res }) => {
+                //     this.potIdNow = res.data.beanJarId
+                //     console.log('res99999999999999')
+                //     console.log(res)
+                //     if (this.scanList.length !== 0 && res.data.beanJarId !== '') {
+                //             this.potNoNow = this.scanList.filter(item => item.id === res.data.beanJarId)[0].holderNo as string
+                //     }
+                //     this.formHeader = {
+                //         ...data.data,
+                //         potNo: this.potIdNow,
+                //         kojiOrderNo: null
+                //     };
+                //     // 获取页签状态
+                //     this.getHouseTag();
+                //     this.formHeader.textStage = 'ZD';
+                //     this.formHeader.factoryName = JSON.parse(sessionStorage.getItem('factory') || '{}').deptShort;
+
+                //     this.$refs.steamedBeanCraft.init(this.formHeader);
+                //     this.$refs.steamedInStorage.init(this.formHeader);
+                //     this.$refs.excRecord.init(this.formHeader, 'ZD');
+                //     this.$refs.textRecord.init(this.formHeader, 'koji');
+                // });
+
+                // 2.雪健建议
+                KOJI_API.KOJI_STEAM_INSTORAGE_LIST_API({
                     orderNo: this.jumpFromAudit ? this.$route.params.order : this.$store.state.koji.orderScInfo.orderNo || ''
                 }).then(({ data: res }) => {
-                    this.potIdNow = res.data.beanJarId
-                    console.log(res)
-                    // this.potNoNow = this.scanList.filter(item => item.id === res.data.beanJarId)[0].holderNo as string
-                    if (this.scanList.length !== 0 && res.data.beanJarId !== '') {
-                            this.potNoNow = this.scanList.filter(item => item.id === res.data.beanJarId)[0].holderNo as string
+                    this.potIdNow = '';
+                    this.potNoNow = '';
+                    if (res.data.length !== 0) {
+                        this.potIdNow = res.data[0].scPotId;
+                        this.potNoNow = res.data[0].scPotNo;
                     }
                     this.formHeader = {
                         ...data.data,
-                        // potNo: queryInStorageData && queryInStorageData[0] ? queryInStorageData[0].scPotNo : '',
                         potNo: this.potIdNow,
                         kojiOrderNo: null
                     };
@@ -215,9 +241,11 @@
                     this.$refs.steamedInStorage.init(this.formHeader);
                     this.$refs.excRecord.init(this.formHeader, 'ZD');
                     this.$refs.textRecord.init(this.formHeader, 'koji');
+
                 });
 
             })
+
 
         }
 
@@ -254,7 +282,7 @@
                 kojiHouseNo: this.formHeader.kojiHouseNo,
                 beanJarId: this.potIdNow,
                 beanJarName: tempScanList.holderName || '',
-                beanJarNo: tempScanList.holderNo || ''
+                beanJarNo: this.potNoNow
             })
         }
 
@@ -280,7 +308,7 @@
                 kojiHouseNo: this.formHeader.kojiHouseNo,
                 beanJarId: this.potIdNow,
                 beanJarName: tempScanList.holderName || '',
-                beanJarNo: tempScanList.holderNo || ''
+                beanJarNo: this.potNoNow
             })
         }
     }

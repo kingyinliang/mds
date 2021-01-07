@@ -9,10 +9,10 @@
                             el-select(v-model="controllableForm.workShop" placeholder="生产车间" clearable @clear="clearSearchKeyWords")
                                 el-option(v-for="(opt, optIndex) in workShopList" :key="opt+optIndex" :label="opt.optLabel" :value="opt.optValue" )
                         el-form-item(style="height: 32px;")
-                            el-button(type="primary" size="small" @click="getItemsList(true,'normal')") 查询
-                            el-button(type="primary" size="small" @click="btnAdvanceSearch") 高级查询
-                            el-button(type="primary" size="small" @click="btnAddItem") 新增
-                            el-button(type="danger" size="small" @click="btnRemoveItems" v-if="tableData.length!==0" :disabled="chechDeleteList===0") 批量删除
+                            el-button(v-if="isAuth('kjProQuery')" type="primary" size="small" @click="getItemsList(true,'normal')") 查询
+                            el-button(v-if="isAuth('kjProQuery')" type="primary" size="small" @click="btnAdvanceSearch") 高级查询
+                            el-button(v-if="isAuth('kjProAdd')" type="primary" size="small" @click="btnAddItem") 新增
+                            el-button(type="danger" size="small" @click="btnRemoveItems" v-if="tableData.length!==0 && isAuth('kjProDel')" :disabled="chechDeleteList===0") 批量删除
             //- show table
             table-show(ref="showTable" :table-element-setting="tableItemSetting" :target-table.sync="tableData" :check-delete.sync="chechDeleteList" @updateItem="btnUpdateItem" @removeItem="")
             el-pagination(v-if="tableData.length!==0" :current-page="currPage" :page-sizes="[10, 20, 50]" :page-size="pageSize" layout="total, sizes, prev, pager, next, jumper" :total="totalCount" @size-change="handleSizeChange" @current-change="handleCurrentChange")
@@ -155,7 +155,7 @@
                             buttonName: '编辑',
                             btn: 'editBtn',
                             icon: '',
-                            isAuth: 'specEdit'
+                            isAuth: 'kjProEdit'
                         }]
                 }
             ]

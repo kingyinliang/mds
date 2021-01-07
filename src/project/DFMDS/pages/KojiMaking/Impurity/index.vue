@@ -2,7 +2,7 @@
     <div class="header_main">
         <query-table
             ref="queryTable"
-            query-auth="steDisQuery"
+            query-auth="kjImQuery"
             :type="'home'"
             :rules="queryTableFormRules"
             :query-form-data="queryTableFormData"
@@ -14,7 +14,7 @@
                 <mds-card :title="'异物统计'" :name="'magnet'">
                     <template slot="titleBtn">
                         <div style="float: right;">
-                            <el-button type="primary" size="small" :disabled="!isRedact" @click="addNewForiegnMatterRow">
+                            <el-button v-if="isAuth('kjImAdd')" type="primary" size="small" :disabled="!isRedact" @click="addNewForiegnMatterRow">
                                 新增
                             </el-button>
                         </div>
@@ -101,7 +101,7 @@
                 <mds-card :title="'磁铁检查'" :name="'foriegnMatter'">
                     <template slot="titleBtn">
                         <div style="float: right;">
-                            <el-button type="primary" size="small" :disabled="!isRedact" @click="addNewMagnetRow">
+                            <el-button v-if="isAuth('kjImAdd')" type="primary" size="small" :disabled="!isRedact" @click="addNewMagnetRow">
                                 新增
                             </el-button>
                         </div>
@@ -182,7 +182,7 @@
                 </mds-card>
             </template>
         </query-table>
-        <redact-box v-if="isShowContent" :disabled="redactBoxDisable" :is-redact.sync="isRedact" redact-auth="steStgEdit" save-auth="steStgEdit" :is-show-submit-btn="false" :saved-rules="savedRules" :saved-datas="savedDatas" />
+        <redact-box v-if="isShowContent" :disabled="redactBoxDisable" :is-redact.sync="isRedact" redact-auth="kjImEdit" save-auth="kjImSave" :is-show-submit-btn="false" :saved-rules="savedRules" :saved-datas="savedDatas" />
     </div>
 </template>
 <script lang="ts">

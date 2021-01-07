@@ -104,7 +104,7 @@
                     <el-table-column type="index" label="序号" width="50" align="center" fixed />
                     <el-table-column v-if="isNormalPage" label="曲房" prop="kojiHouseName" width="120" />
                     <el-table-column v-if="isNormalPage" label="入曲日期" prop="addKojiDate" width="180" />
-                    <el-table-column label="物料" prop="materialTypeName" min-width="120" />
+                    <el-table-column label="物料" prop="storageTypeName" min-width="120" />
                     <el-table-column label="批次" prop="batch" min-width="120" />
                     <el-table-column label="数量" prop="amount" width="120" />
                     <el-table-column label="单位" prop="unitName" width="120" />

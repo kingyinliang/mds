@@ -46,13 +46,13 @@
                 <span slot="label" class="spanview">
                     当前库存信息
                 </span>
-                <stock-table-data :work-shop-info="$store.state.koji.StockFlourInfo" stock-type="FLOUR" />
+                <stock-table-data :work-shop-info="$store.state.koji.StockFlourInfo" query-auth="flourMxQuery" adjust-auth="flourAdjust" stock-type="FLOUR" />
             </el-tab-pane>
             <el-tab-pane name="2">
                 <span slot="label" class="spanview">
                     历史库存信息
                 </span>
-                <stock-table-data :work-shop-info="$store.state.koji.StockFlourInfo" :is-history-page="true" stock-type="FLOUR" />
+                <stock-table-data :work-shop-info="$store.state.koji.StockFlourInfo" query-auth="flourMxQuery" adjust-auth="flourAdjust" :is-history-page="true" stock-type="FLOUR" />
             </el-tab-pane>
         </el-tabs>
     </div>

@@ -105,8 +105,8 @@
         dataForm: DataForm = {};
 
         // 车间库位查询
-        private getWorkShop(type) {
-            KOJI_API.KOJI_STORAGE_STRAIN_DROPDOWN_API({
+        private async getWorkShop(type) {
+            return KOJI_API.KOJI_STORAGE_STRAIN_DROPDOWN_API({
                 workShop: this.$store.state.koji.orderKojiInfo.workShop
             }).then(({ data }) => {
                 console.log('领用库位')
@@ -174,13 +174,25 @@
             this.visible = true;
             let Data: DataForm = {};
             // 查询
-            this.getWorkShop(type);
+            await this.getWorkShop(type);
 
             if (type !== 'add') {
                 Data = infoData;
+            } else {
+                Data = {
+                    materialLocation: this.workShopList[0]['materialLocation'],
+                    unit: this.workShopList[0]['unit'],
+                    unitName: this.workShopList[0]['unitName']
+                }
             }
             console.log('infoData1111111')
             console.log(infoData)
+
+            const { data: { data: result } } = await KOJI_API.KOJI_MATERIAL_GET_BOM_API({
+                orderNo: this.formHeader.orderNo,
+                dictType: 'KOJI_SUP_MATERIAL'
+            });
+            console.log(result, 'result=-=-========================================')
 
             this.dataForm = {
                 id: Data.id,
@@ -188,10 +200,16 @@
                 batch: Data.batch,
                 // processCode: this.formHeader.textStage,
                 processCode: 'ZM', // 写死
-                materialCode: Data.materialCode,
-                materialName: Data.materialName,
-                materialLink: Data.materialCode ? `${String(Data.materialName)} ${String(Data.materialCode)}` : '',
-                materialType: 'ZHZC', // 写死
+                // materialCode: Data.materialCode,
+                // materialName: Data.materialName,
+                // materialLink: Data.materialCode ? `${String(Data.materialName)} ${String(Data.materialCode)}` : '',
+                // materialType: 'ZHZC', // 写死
+                // storageType: 'Y158', // 写死
+                materialCode: result.materialCode,
+                materialName: result.materialName,
+                materialLink: result.materialCode ? `${String(result.materialName)} ${String(result.materialCode)}` : '',
+                materialType: result.materialType,
+
                 storageType: 'Y158', // 写死
                 amount: Data.amount,
                 operationMans: Data.operationMans || '',

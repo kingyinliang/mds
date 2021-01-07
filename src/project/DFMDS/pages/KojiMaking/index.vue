@@ -2,7 +2,7 @@
     <div class="header_main">
         <query-table
             ref="queryTable"
-            query-auth="steSplitQuery"
+            query-auth="kjQuery"
             :type="'home'"
             :rules="rules"
             :query-form-data="queryFormData"
@@ -73,20 +73,20 @@
                                 :content="orderStatusMapping[item.houseSplitList[item.nowIndex].houseTag.washBeanStatus]"
                                 placement="top-start"
                             >
-                                <el-button class="bottom-item" :type="item.houseSplitList[item.nowIndex].houseTag.washBeanStatus === 'R' ? 'danger' : 'primary'" @click="goDetail('first',1, item.houseSplitList[item.nowIndex])">
+                                <el-button v-if="isAuth('kjWB')" class="bottom-item" :type="item.houseSplitList[item.nowIndex].houseTag.washBeanStatus === 'R' ? 'danger' : 'primary'" @click="goDetail('first',1, item.houseSplitList[item.nowIndex])">
                                     <!-- <el-button :disabled="!isAuth('bottle:inStorage:list')" class="bottom-item" @click="goDetail('first',1, item)"> -->
                                     洗豆
                                 </el-button>
                             </el-tooltip>
 
                             <el-tooltip class="item" effect="dark" :content="orderStatusMapping[item.houseSplitList[item.nowIndex].houseTag.steamFlourStatus]" placement="top-start">
-                                <el-button class="bottom-item" :type="item.houseSplitList[item.nowIndex].houseTag.steamFlourStatus === 'R' ? 'danger' : 'primary'" @click="goDetail('first',2, item.houseSplitList[item.nowIndex])">
+                                <el-button v-if="isAuth('kjSF')" class="bottom-item" :type="item.houseSplitList[item.nowIndex].houseTag.steamFlourStatus === 'R' ? 'danger' : 'primary'" @click="goDetail('first',2, item.houseSplitList[item.nowIndex])">
                                     <!-- <el-button :disabled="!isAuth('bottle:workshop:techProductParameterList')" class="bottom-item" @click="goDetail('first',2, item)"> -->
                                     蒸面
                                 </el-button>
                             </el-tooltip>
                             <el-tooltip class="item" effect="dark" :content="orderStatusMapping[item.houseSplitList[item.nowIndex].houseTag.discStatus]" placement="top-start">
-                                <el-button class="bottom-item" :type="item.houseSplitList[item.nowIndex].houseTag.discStatus === 'R' ? 'danger' : 'primary'" @click="goDetail('first',3, item.houseSplitList[item.nowIndex])">
+                                <el-button v-if="isAuth('kjYP')" class="bottom-item" :type="item.houseSplitList[item.nowIndex].houseTag.discStatus === 'R' ? 'danger' : 'primary'" @click="goDetail('first',3, item.houseSplitList[item.nowIndex])">
                                     <!-- <el-button :disabled="!isAuth('bottle:workshop:qualityInspectionList')" class="bottom-item" @click="goDetail('first',3, item)"> -->
                                     圆盘
                                 </el-button>
@@ -153,14 +153,14 @@
                                     :content="orderStatusMapping[querySecondResultList[secondObjIndex].houseTag.washBeanStatus]"
                                     placement="top-start"
                                 >
-                                    <el-button class="bottom-item" :type="querySecondResultList[secondObjIndex].houseTag.washBeanStatus === 'R' ? 'danger' : 'primary'" @click="goDetail('second',1, querySecondResultList[secondObjIndex])">
+                                    <el-button v-if="isAuth('kjSCWB')" class="bottom-item" :type="querySecondResultList[secondObjIndex].houseTag.washBeanStatus === 'R' ? 'danger' : 'primary'" @click="goDetail('second',1, querySecondResultList[secondObjIndex])">
                                         <!-- <el-button :disabled="!isAuth('bottle:inStorage:list')" class="bottom-item" @click="goDetail('first',1, item)"> -->
                                         洗豆
                                     </el-button>
                                 </el-tooltip>
 
                                 <el-tooltip class="item" effect="dark" :content="orderStatusMapping[querySecondResultList[secondObjIndex].houseTag.steamBeanStatus]" placement="top-start">
-                                    <el-button class="bottom-item" :type="querySecondResultList[secondObjIndex].houseTag.steamBeanStatus === 'R' ? 'danger' : 'primary'" @click="goDetail('second',2, querySecondResultList[secondObjIndex])">
+                                    <el-button v-if="isAuth('kjSB')" class="bottom-item" :type="querySecondResultList[secondObjIndex].houseTag.steamBeanStatus === 'R' ? 'danger' : 'primary'" @click="goDetail('second',2, querySecondResultList[secondObjIndex])">
                                         <!-- <el-button :disabled="!isAuth('bottle:workshop:techProductParameterList')" class="bottom-item" @click="goDetail('first',2, item)"> -->
                                         蒸豆
                                     </el-button>

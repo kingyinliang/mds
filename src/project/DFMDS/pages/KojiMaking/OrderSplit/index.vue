@@ -2,7 +2,7 @@
     <div class="header_main">
         <query-table
             ref="queryTable"
-            query-auth="steSplitQuery"
+            query-auth="kjSplitQuery"
             :type="'home'"
             :rules="rules"
             :query-form-data="queryFormData"
@@ -33,7 +33,7 @@
                                 <el-table-column label="单位" width="60" prop="outputUnitName" />
                                 <el-table-column label="操作" fixed="right" align="center" width="80">
                                     <template slot-scope="scope">
-                                        <el-button v-if="isAuth('steSplit')" class="iconfont factory-chaifen" type="text" :disabled="['C','P','X'].includes(scope.row.orderStatus)" @click="orderSplit(scope.row)">
+                                        <el-button v-if="isAuth('kjSplit')" class="iconfont factory-chaifen" type="text" :disabled="['C','P','X'].includes(scope.row.orderStatus)" @click="orderSplit(scope.row)">
                                             拆分
                                         </el-button>
                                     </template>
@@ -58,7 +58,7 @@
                                 <el-table-column label="操作时间" width="180" prop="changed" :show-overflow-tooltip="true" />
                                 <el-table-column label="操作" fixed="right" align="center" width="140">
                                     <template slot-scope="scope">
-                                        <el-button v-if="isAuth('steSplitDel')" type="text" icon="el-icon-delete" :disabled="scope.row.status !== 'S' && scope.row.status !== 'N'" @click="delSplitRow(scope.row)">
+                                        <el-button v-if="isAuth('kjSplitDel')" type="text" icon="el-icon-delete" :disabled="scope.row.status !== 'S' && scope.row.status !== 'N'" @click="delSplitRow(scope.row)">
                                             删除
                                         </el-button>
                                     </template>
