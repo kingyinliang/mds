@@ -105,8 +105,8 @@
         dataForm: DataForm = {};
 
         // 车间库位查询
-        private getWorkShop(type) {
-            KOJI_API.KOJI_STORAGE_STRAIN_DROPDOWN_API({
+        private async getWorkShop(type) {
+            return KOJI_API.KOJI_STORAGE_STRAIN_DROPDOWN_API({
                 workShop: this.$store.state.koji.orderKojiInfo.workShop
             }).then(({ data }) => {
                 console.log('领用库位')
@@ -174,10 +174,16 @@
             this.visible = true;
             let Data: DataForm = {};
             // 查询
-            this.getWorkShop(type);
+            await this.getWorkShop(type);
 
             if (type !== 'add') {
                 Data = infoData;
+            } else {
+                Data = {
+                    materialLocation: this.workShopList[0]['materialLocation'],
+                    unit: this.workShopList[0]['unit'],
+                    unitName: this.workShopList[0]['unitName']
+                }
             }
             console.log('infoData1111111')
             console.log(infoData)
