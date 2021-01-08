@@ -66,6 +66,7 @@
         @Prop({ default: false }) isRedact: boolean;
         @Prop({ default: 'N' }) isStatus: string;
         @Prop({ default: '' }) potNoNow: number|string;
+        @Prop({ default: [] }) scanList: Holder[];
 
         // 订单信息
         formHeader: Craft = {};
@@ -82,6 +83,7 @@
         onChangeValue(newVal: number| string) {
             if (newVal && this.tableData[0]) {
                 this.tableData[0].scPotNo = String(newVal) || ''
+                this.tableData[0].scPotId = this.scanList.filter(item => item.holderNo === newVal)[0].id as string
                 this.tableData[0].inStorageBatch = this.getNowFormatDate() + '1' + newVal
                 this.$infoToast('生产入库的入库批次自动生成')
             }
@@ -204,6 +206,7 @@
                             inStorageAmount: planOutput || '',
                             inStorageBatch: '',
                             unit: '千克',
+                            scPotId: '',
                             scPotNo: '',
                             remark: '',
                             changed: dateFormat(new Date(), 'yyyy-MM-dd hh:mm:ss'),
@@ -296,6 +299,7 @@
         inStorageBatch?: string;
         unit?: string;
         scPotNo?: string;
+        scPotId?: string;
         workShop?: number | string;
         orderType?: number | string;
         processCode?: string;
@@ -312,6 +316,18 @@
         deleteDto: string[];
         insertDto: CraftList[];
         updateDto: CraftList[];
+    }
+
+    interface Holder {
+        deptId?: string;
+        holderArea?: string;
+        holderBatch?: string;
+        holderName?: string;
+        holderNo?: string;
+        holderStatus?: string;
+        holderType?: string;
+        holderVolume?: number;
+        id?: string;
     }
 </script>
 
