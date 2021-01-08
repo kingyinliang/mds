@@ -245,7 +245,7 @@
             console.log(this.batchList)
             this.batchList.map(item => {
                 if (item.batch === this.dataForm.batch) {
-                    this.dataForm.materialLink = String(item.materialName) + String(item.materialCode);
+                    this.dataForm.materialLink = String(item.materialName) + ' ' + String(item.materialCode);
                     this.dataForm.materialName = String(item.materialName);
                     this.dataForm.materialCode = String(item.materialCode);
                     this.dataForm.stockAmount = item.currentAmount;
