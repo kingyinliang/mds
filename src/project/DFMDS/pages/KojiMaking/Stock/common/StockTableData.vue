@@ -22,7 +22,7 @@
                     {{ scope.row.currentAmount ? scope.row.currentAmount.toLocaleString(): '' }}
                 </template>
             </el-table-column>
-            <el-table-column v-if="stockType!=='Y158'" label="杂质率" :show-overflow-tooltip="true" prop="impurityRate" />
+            <el-table-column v-if="stockType!=='Y158'" label="杂质率（%）" :show-overflow-tooltip="true" prop="impurityRate" />
             <el-table-column label="操作" width="140">
                 <template slot-scope="scope">
                     <el-button v-if="isAuth(queryAuth)" size="mini" type="text" icon="iconfont factory-fangdajing-copy" @click="btnCheckStock(scope.row, true)">

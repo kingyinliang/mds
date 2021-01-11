@@ -5,7 +5,7 @@
                 <el-form :inline="true" :model="craftSteamFlourInfo" label-width="115px">
                     <el-form-item class="cleanMarginBottom">
                         <template slot="label">
-                            <span class="notNull">* </span>气泡压力：
+                            <span class="notNull">* </span>气包压力：
                         </template>
                         <el-input v-model="craftSteamFlourInfo.steamPacketPressure" placeholder="请输入" :disabled="!(isRedact && isStatus !== 'C' && isStatus !== 'D' && isStatus !== 'P' &&craftSteamFlourInfo.status !== 'C' && craftSteamFlourInfo.status !== 'D' && craftSteamFlourInfo.status !== 'P')" size="small" style="width: 180px;">
                             <span slot="suffix" class="stock-form_item_input_suffix">Mpa</span>
@@ -17,6 +17,11 @@
                         </template>
                         <el-input v-model="craftSteamFlourInfo.steamFlourSpeed" placeholder="请输入" :disabled="!(isRedact && isStatus !== 'C' && isStatus !== 'D' && isStatus !== 'P' &&craftSteamFlourInfo.status !== 'C' && craftSteamFlourInfo.status !== 'D' && craftSteamFlourInfo.status !== 'P')" size="small" style="width: 180px;">
                             <span slot="suffix" class="stock-form_item_input_suffix">L/H</span>
+                        </el-input>
+                    </el-form-item>
+                    <el-form-item class="cleanMarginBottom" label="蒸汽流量：">
+                        <el-input v-model="craftSteamFlourInfo.steamFlow" placeholder="请输入" :disabled="!(isRedact && isStatus !== 'C' && isStatus !== 'D' && isStatus !== 'P' &&craftSteamFlourInfo.status !== 'C' && craftSteamFlourInfo.status !== 'D' && craftSteamFlourInfo.status !== 'P')" size="small" style="width: 180px;">
+                            <span slot="suffix" class="stock-form_item_input_suffix">KG/H</span>
                         </el-input>
                     </el-form-item>
                     <el-form-item class="cleanMarginBottom">
@@ -249,13 +254,15 @@
         craftSteamFlourInfo: Craft = {
             steamPacketPressure: '',
             steamFlourSpeed: '',
-            steamFlourMans: ''
+            steamFlourMans: '',
+            steamFlow: ''
         };
 
         temCraftSteamFlourInfo: Craft ={
             steamPacketPressure: '',
             steamFlourSpeed: '',
-            steamFlourMans: ''
+            steamFlourMans: '',
+            steamFlow: ''
         };
 
         // 蒸豆记录表格数据
@@ -399,7 +406,7 @@
                 steamBallNo: '',
                 kojiOrderNo: this.formHeader.kojiOrderNo,
                 orderNo: this.formHeader.orderNo,
-                addSteamStart: '',
+                addSteamStart: dateFormat(new Date(), 'yyyy-MM-dd hh:mm:ss'),
                 addSteamEnd: '',
                 steamPocketPressure: '',
                 turnCount: '',
@@ -604,6 +611,7 @@
         delFlag?: number;
         orderId?: string;
         factory?: string;
+        steamFlow?: string;
     }
     interface CraftList {
         id?: string;

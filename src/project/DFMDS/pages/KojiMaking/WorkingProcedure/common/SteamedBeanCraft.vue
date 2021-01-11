@@ -392,7 +392,7 @@
                     steamBallNo: '',
                     kojiOrderNo: this.formHeader.kojiOrderNo,
                     orderNo: this.formHeader.orderNo,
-                    addSteamStart: '',
+                    addSteamStart: dateFormat(new Date(), 'yyyy-MM-dd hh:mm:ss'),
                     addSteamEnd: '',
                     steamPocketPressure: '',
                     turnCount: '',
