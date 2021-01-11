@@ -121,7 +121,7 @@
                         <span class="notNull">* </span>蒸球号
                     </template>
                     <template slot-scope="scope">
-                        <el-select v-model="scope.row.steamBallNo" placeholder="请选择" :disabled="!(isRedact && isStatus !== 'C' && isStatus !== 'D' && isStatus !== 'P'&& scope.row.status !== 'C' && scope.row.status !== 'D' && scope.row.status !== 'P')" size="small" style="width: 100%;">
+                        <el-select v-model="scope.row.steamBallNo" placeholder="请选择" :disabled="!(isRedact && isStatus !== 'C' && isStatus !== 'D' && isStatus !== 'P'&& scope.row.status !== 'C' && scope.row.status !== 'D' && scope.row.status !== 'P')" size="small" style="width: 100%;" @change="val=>modifySteamBall(val,scope.row)">
                             <el-option v-for="(subItem, index) in steamBallList" :key="index" :label="subItem.holderName" :value="subItem.holderNo" />
                         </el-select>
                     </template>

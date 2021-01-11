@@ -116,6 +116,7 @@ export default class KojiManHour extends Vue {
             this.isRedact = false;
             // this.$refs.readyTime.changeList(null);
             this.$refs.workHour.changeList([]);
+            this.getList();
         }
     }
 
