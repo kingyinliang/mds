@@ -39,7 +39,7 @@
                     ],
                     roleCode: [
                         { required: true, message: '角色编码', trigger: 'blur' },
-                        { max: 10, message: '长度在 10 个字符内', trigger: 'blur' }
+                        { max: 30, message: '长度在 30 个字符内', trigger: 'blur' }
                     ],
                     roleDescribe: [
                     ]
