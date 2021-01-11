@@ -819,7 +819,7 @@
 
         // 表格复选框
         selectableFn = row => {
-            if (row.status === '已退回') {
+            if (row.statusName === '已退回') {
                 return 0;
             }
             return 1;
