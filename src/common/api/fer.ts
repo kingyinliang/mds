@@ -3,7 +3,7 @@
  * @Anthor: Telliex
  * @Date: 2020-11-18 14:53:12
  * @LastEditors: Telliex
- * @LastEditTime: 2020-12-03 21:02:12
+ * @LastEditTime: 2021-01-11 15:54:30
  */
 import httpProxy from 'utils/net/httpProxy';
 
@@ -49,6 +49,27 @@ const FER_API = {
      * @property {string} FER_FERMENTOR_LY_SAVE_API 发酵车间-发酵罐管理-保存LY记录
      */
     FER_FERMENTOR_LY_SAVE_API: params => httpProxy('/fer/fermentorLy/batchSave', 'POST', params),
+    /**
+     * @property {string} FER_FERMENTOR_ADJUSTION_ADJUST_API 发酵车间-发酵罐调整-调整
+     */
+    FER_FERMENTOR_ADJUSTION_ADJUST_API: params => httpProxy('/fer/fermentorAdjust/adjust', 'POST', params),
+    /**
+     * @property {string} FER_FERMENTOR_ADJUSTION_CHANGE_API 发酵车间-发酵罐调整-挪罐
+     */
+    FER_FERMENTOR_ADJUSTION_CHANGE_API: params => httpProxy('/fer/fermentorAdjust/change', 'POST', params),
+    /**
+     * @property {string} FER_FERMENTOR_ADJUSTION_GET_MATERIAL_BATCH_API 发酵车间-发酵罐调整-根据容器查询主物料批次
+     */
+    FER_FERMENTOR_ADJUSTION_GET_MATERIAL_BATCH_API: params => httpProxy('/fer/fermentorAdjust/getMaterialBatch', 'GET', params),
+    /**
+     * @property {string} FER_FERMENTOR_ADJUSTION_GET_MATERIAL_BATCH_LIST_API 发酵车间-发酵罐调整-根据容器和物料编码查询物料批次列表
+     */
+    FER_FERMENTOR_ADJUSTION_GET_MATERIAL_BATCH_LIST_API: params => httpProxy('/fer/fermentorAdjust/getMaterialBatchLis', 'GET', params),
+    /**
+     * @property {string} FER_FERMENTOR_ADJUSTION_GET_MATERIAL_LIST_API 发酵车间-发酵罐调整-根据容器查询物料列表
+     */
+    FER_FERMENTOR_ADJUSTION_GET_MATERIAL_LIST_API: params => httpProxy('/fer/fermentorAdjust/getMaterialList', 'GET', params),
+
     // ==================== 盐水发料 ==================
     /**
      * @property {string} FER_BRINE_POT_LIST_API 发酵车间-盐水发料-分页查询-罐
