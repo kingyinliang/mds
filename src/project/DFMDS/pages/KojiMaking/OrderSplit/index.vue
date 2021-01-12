@@ -54,8 +54,8 @@
                                 <el-table-column label="发酵罐/池" min-width="100" prop="fermentPotName" :show-overflow-tooltip="true" />
                                 <el-table-column label="入曲日期" width="140" prop="addKojiDate" :show-overflow-tooltip="true" />
                                 <el-table-column label="出曲日期" width="140" prop="outKojiDate" :show-overflow-tooltip="true" />
-                                <el-table-column label="操作人" width="160" prop="changer" :show-overflow-tooltip="true" />
-                                <el-table-column label="操作时间" width="180" prop="changed" :show-overflow-tooltip="true" />
+                                <el-table-column label="操作人" width="160" prop="operator" :show-overflow-tooltip="true" />
+                                <el-table-column label="操作时间" width="180" prop="operateTime" :show-overflow-tooltip="true" />
                                 <el-table-column label="操作" fixed="right" align="center" width="140">
                                     <template slot-scope="scope">
                                         <el-button v-if="isAuth('kjSplitDel')" type="text" icon="el-icon-delete" :disabled="scope.row.status !== 'S' && scope.row.status !== 'N'" @click="delSplitRow(scope.row)">
