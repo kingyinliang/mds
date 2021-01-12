@@ -484,13 +484,13 @@
                 break;
                 case '2':
                     this.rejectProcess = this.processMapping[item.process]
-                    this.rejectKojiHouseId = this.kojiHouseNoOptions.filter(element => element.optValue === item.kojiHouseNo)[0].optId
+                    this.rejectKojiHouseId = this.kojiHouseNoOptions.filter(element => element.optValue === item.kojiHouseNo)[0]?.optId
                 break;
                 case '3':
-                    this.rejectKojiHouseId = this.kojiHouseNoOptions.filter(element => element.optValue === item.kojiHouseNo)[0].optId
+                    this.rejectKojiHouseId = this.kojiHouseNoOptions.filter(element => element.optValue === item.kojiHouseNo)[0]?.optId
                 break;
                 case '4':
-                    this.rejectKojiHouseId = this.kojiHouseNoOptions.filter(element => element.optValue === item.kojiHouseNo)[0].optId
+                    this.rejectKojiHouseId = this.kojiHouseNoOptions.filter(element => element.optValue === item.kojiHouseNo)[0]?.optId
                     this.rejectMaterialStyle = item.storageType;
                     this.rejectBatch = item.batch;
                 break;
