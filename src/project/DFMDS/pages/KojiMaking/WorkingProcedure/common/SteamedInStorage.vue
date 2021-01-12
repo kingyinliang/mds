@@ -182,7 +182,7 @@
                 KOJI_API.KOJI_MATERIAL_GET_QUERY_API({
                     kojiOrderNo,
                     orderNo,
-                    materialType: 'BEAN'
+                    storageType: 'BEAN'
                 }).then(({ data: res }) => {
                     let totalNum = 0;
                     res.data && res.data.map(item => {
