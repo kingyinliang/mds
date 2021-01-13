@@ -5,7 +5,7 @@
                 <el-form :inline="true" :model="craftSteamFlourInfo" label-width="115px">
                     <el-form-item class="cleanMarginBottom">
                         <template slot="label">
-                            <span class="notNull">* </span>气包压力：
+                            <span class="notNull">* </span>汽包压力：
                         </template>
                         <el-input v-model="craftSteamFlourInfo.steamPacketPressure" placeholder="请输入" :disabled="!(isRedact && isStatus !== 'C' && isStatus !== 'D' && isStatus !== 'P' &&craftSteamFlourInfo.status !== 'C' && craftSteamFlourInfo.status !== 'D' && craftSteamFlourInfo.status !== 'P')" size="small" style="width: 180px;">
                             <span slot="suffix" class="stock-form_item_input_suffix">Mpa</span>
