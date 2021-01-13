@@ -118,17 +118,20 @@
                     this.dataForm.unitName = data.data[0]['unitName'];
                 }
                 // 默认选中第一个选项 库位详细信息查询
-                this.checkShopDetail()
+                // this.checkShopDetail()
             });
         }
 
         // 库位详细信息查询--批次
-        checkShopDetail() {
-            KOJI_API.KOJI_STORAGE_STRAIN_DROPDOWN_API({
+        async checkShopDetail() {
+            return KOJI_API.KOJI_STORAGE_STRAIN_DROPDOWN_API({
                 // Y158 没有 workshop 概念，故可以不传。此处注解掉
                 // workShop: this.$store.state.koji.orderKojiInfo.workShop,
                 materialLocation: this.dataForm.materialLocation
             }).then(({ data }) => {
+                data.data && data.data.sort((a, b) => {
+                    return a.batch - b.batch;
+                })
                 this.batchList = data.data || [];
                 if (this.type !== 'add') {
                     this.batchList.map(item => {
@@ -175,15 +178,21 @@
             let Data: DataForm = {};
             // 查询
             await this.getWorkShop(type);
+            await this.checkShopDetail();
 
             if (type !== 'add') {
                 Data = infoData;
             } else {
+                const item = this.batchList[0];
                 Data = {
+                    batch: this.batchList[0].batch,
                     materialLocation: this.workShopList[0]['materialLocation'],
                     unit: this.workShopList[0]['unit'],
-                    unitName: this.workShopList[0]['unitName']
+                    unitName: this.workShopList[0]['unitName'],
+                    stockAmount: item?.currentAmount,
+                    storageId: item?.id
                 }
+                this.STOCK_AMOUNT = Number(item?.currentAmount || 0)
             }
             console.log('infoData1111111')
             console.log(infoData)
