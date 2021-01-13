@@ -94,6 +94,7 @@ export default class KojiManHour extends Vue {
     manHourAudit = [];
     timeSheetResponseDto = '';
     userResponseDto: object[] = [];
+    processObj: ProcessObj = {};
 
     mounted() {
         this.getCheckStatus(); // audit status list
@@ -112,6 +113,8 @@ export default class KojiManHour extends Vue {
     @Watch('formHeader.productProcess')
     watchProcess() {
         if (this.formHeader.productProcess !== '') {
+            this.processObj = this.productProcessList.find(item => item.id === this.formHeader.productProcess) || {}
+            console.log(this.processObj, '=======')
             this.$refs.workHour.getTeamList(this.formHeader.productProcess);
             this.isRedact = false;
             // this.$refs.readyTime.changeList(null);
@@ -233,6 +236,7 @@ export default class KojiManHour extends Vue {
 
         return new Promise((resolve) => {
                 KOJI_API.KOJI_TIMESHEET_SAVE_API({
+                    processCode: this.processObj.deptName,
                     kojiTimeSheetInsertDto: timeSheetRequest,
                     userInsertDtos: userRequest.userInsertDto,
                     userRemoveIds: userRequest.ids,
@@ -286,6 +290,7 @@ export default class KojiManHour extends Vue {
 
             return new Promise((resolve) => {
                 KOJI_API.KOJI_TIMESHEET_SUBMIT_API({
+                    processCode: this.processObj.deptName,
                     kojiTimeSheetInsertDto: timeSheetRequest,
                     userInsertDtos: userRequest.userInsertDto,
                     userRemoveIds: userRequest.ids,
@@ -322,6 +327,10 @@ interface CheckStatus{
     dictValue: string;
     factoryName?: string;
     id?: string;
+}
+interface ProcessObj {
+    id?: string;
+    deptName?: string;
 }
 </script>
 
