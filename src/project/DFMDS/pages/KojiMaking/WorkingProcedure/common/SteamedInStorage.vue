@@ -18,7 +18,7 @@
                 </el-table-column>
                 <el-table-column label="单位" width="80">
                     <template slot-scope="scope">
-                        <p>{{ scope.row.unit }}</p>
+                        <p>{{ scope.row.unitName }}</p>
                     </template>
                 </el-table-column>
                 <el-table-column width="186">
@@ -192,7 +192,7 @@
                         this.tableData = [{
                             ...queryInStorageData[0],
                             feBeanMount: totalNum,
-                            unit: '千克',
+                            // unit: '千克',
                             changed: dateFormat(new Date(), 'yyyy-MM-dd hh:mm:ss'),
                             changer: getUserNameNumber(),
                             kojiOrderNo,
