@@ -12,7 +12,7 @@
             @get-data-success="returnDataFromQueryTableForm"
         >
             <template slot="home">
-                <mds-card v-show="isSearchResultMetroShow" :title="'发酵情况总览'" :pack-up="false" :name="'fermenterTotal'" style="margin-top: 10px; overflow: initial;">
+                <mds-card v-show="isSearchResultMetroShow" :title="'发酵情况总览'" :pack-up="false" :name="'fermenterTotal'" style="margin-top: 10px;">
                     <div class="sumbox">
                         <div class="topBox clearfix">
                             <div v-for="(item, index) in topBox" :key="index" class="clearfix" style="float: left;">
@@ -31,7 +31,7 @@
                                             <div
                                                 class="topBox_boxItem_bar_box"
                                                 :style="{
-                                                    background: `linear-gradient(to right,${item.endColor} 0%,${item.endColor} 10%,${item.endColor})`,
+                                                    background: `linear-gradient(to right,${item.endColor} 0%,${item.endColor} 10%,${item.endColor})`
                                                 }"
                                             />
                                         </div>
@@ -42,15 +42,6 @@
                                     <p class="topBox_boxItem_detail">
                                         总计: <span>{{ item.num }}</span> 罐
                                     </p>
-                                    <!-- <div v-if="index > 0 && index < 7" class="topBox_boxItem_popover">
-                                        <p class="">
-                                            <em class="dot" style="background: #1890ff;" />味极鲜<span style="float: right;">{{ item.wdm }} 罐</span>
-                                        </p>
-                                        <p class="">
-                                            <em class="dot" style="background: #ffbf00;" />六月鲜<span style="float: right;">{{ item.lyx }} 罐</span>
-                                        </p>
-                                        <em class="topBox_boxItem_popover_ar" />
-                                    </div> -->
                                 </div>
                                 <div v-if="item.color" class="topBox_circle" :style="{ background: item.color }">
                                     {{ item.text }}
@@ -94,14 +85,12 @@
                                             鼓罐
                                         </el-button>
                                         <el-button v-if="isAuth('')" size="small" plain :disabled="item.fermentorStatus!=='F'" @click="btnLYCY(item)">
-                                            <!-- <el-button v-if="item.fermentorStatus!=='M'" size="small" plain @click="btnFillBucket(item)"> -->
                                             LY/CY
                                         </el-button>
                                         <el-button v-if="isAuth('')" size="small" plain @click="btnAdjust(item)">
                                             调整
                                         </el-button>
                                         <el-button v-if="isAuth('')" size="small" plain :disabled="item.fermentorStatus!=='U'" @click="btnClearBucket(item)">
-                                            <!-- <el-button size="small" plain @click="btnClearBucket(item)"> -->
                                             清罐
                                         </el-button>
                                         <el-button v-if="isAuth('')" size="small" plain :disabled="item.fermentorStatus!=='C'" @click="btnWashBucket(item)">
@@ -353,7 +342,6 @@
                 defaultOptionsFn: () => {
                     return new Promise((resolve) => {
                         COMMON_API.DICTQUERY_API({ dictType: 'COMMON_FERM_STATUS' }).then((res) => {
-
                             resolve(res)
                         })
                     })
@@ -622,7 +610,6 @@
         }
 
         getData() {
-
             if (this.searchSource === 'bar') {
                 this.formHeader.fermentStage = ''
                     this.queryTableListInterface({
@@ -652,8 +639,6 @@
                     this.returnDataFromQueryTableForm(data)
                 })
             }
-
-
         }
 
         // 自动搜索(目前无用)
@@ -998,7 +983,10 @@ interface CurrentDataTable{
 .header_main >>> .searchCard .el-form-item.is-success .el-input__inner:focus {
     border-color: #dcdfe6;
 }
-
+.header_main >>> .fermenterTotalBox {
+    width: 100%;
+    overflow: scroll;
+}
 </style>
 
 <style lang="scss" scoped>
@@ -1339,4 +1327,6 @@ interface CurrentDataTable{
         transition: all 0.5s;
     }
 }
+
+
 </style>
