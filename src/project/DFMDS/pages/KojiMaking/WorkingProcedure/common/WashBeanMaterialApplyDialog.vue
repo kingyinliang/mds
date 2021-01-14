@@ -84,9 +84,12 @@
             ],
             batch: [{ required: true, message: '请选择领用批次', trigger: 'change' }],
             smallBeanAmount: [
-                { required: true, message: '请输入数字', trigger: 'blur' },
+                { required: false, message: '请输入数字', trigger: 'blur' },
                 {
                     validator(rule, value, callback) {
+                        if (!value) {
+                            return callback()
+                        }
                         if (/^([1-9][0-9]*|0)(\.([0-9]+)?[1-9])?$/.test(value)) {
                         return callback()
                         }
@@ -113,7 +116,7 @@
                     ...infoData,
                     ...infoData.detailsList[0]
                 }
-                storageId = infoData.detailsList[0].id;
+                storageId = infoData.detailsList[0]?.id;
             } else {
                 storageId = infoData.storageId;
                 // 查询
