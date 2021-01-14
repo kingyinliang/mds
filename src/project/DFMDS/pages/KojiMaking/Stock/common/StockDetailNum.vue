@@ -40,7 +40,7 @@
             this.currentData.detailsList && this.currentData.detailsList.map(item => {
                 total += item.currentAmount
             })
-            return total ? total.toLocaleString() : ''
+            return total ? total.toLocaleString() : '0'
         }
 
         get stockUnit() {
