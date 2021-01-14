@@ -68,8 +68,8 @@
                     {{ scope.row.outKojiDate }}
                 </template>
             </el-table-column>
-            <el-table-column label="操作人" width="160" prop="changer" :show-overflow-tooltip="true" />
-            <el-table-column label="操作时间" width="180" prop="changed" :show-overflow-tooltip="true" />
+            <el-table-column label="操作人" width="160" prop="operator" :show-overflow-tooltip="true" />
+            <el-table-column label="操作时间" width="180" prop="operateTime" :show-overflow-tooltip="true" />
             <el-table-column label="操作" fixed="right" align="center" width="80">
                 <template slot-scope="scope">
                     <el-button v-if="isAuth('kjSplitDel')" type="text" icon="el-icon-delete" :disabled="scope.row.status !== 'S' && scope.row.status !== 'N'" @click="removeDataRow(scope.row)">
@@ -277,7 +277,9 @@
                     outputUnit: this.orderObj.outputUnit,
                     outputUnitName: this.orderObj.outputUnitName,
                     changed: dateFormat(new Date(), 'yyyy-MM-dd hh:mm:ss'),
-                    changer: getUserNameNumber()
+                    changer: getUserNameNumber(),
+                    operator: getUserNameNumber(),
+                    operateTime: dateFormat(new Date(), 'yyyy-MM-dd hh:mm:ss')
                 })
 
             } else {
@@ -309,7 +311,9 @@
                     outputUnit: this.orderObj.outputUnit,
                     outputUnitName: this.orderObj.outputUnitName,
                     changed: dateFormat(new Date(), 'yyyy-MM-dd hh:mm:ss'),
-                    changer: getUserNameNumber()
+                    changer: getUserNameNumber(),
+                    operator: getUserNameNumber(),
+                    operateTime: dateFormat(new Date(), 'yyyy-MM-dd hh:mm:ss')
                 })
             }
 
@@ -445,6 +449,8 @@
         outputUnit?: string;
         outputUnitName?: string;
         canBeDeleted?: string;
+        operateTime?: string;
+        operator?: string;
     }
 
     interface OrderObject {

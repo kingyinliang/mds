@@ -528,7 +528,7 @@
                 <div style="margin: 10px 5px;">
                     异常情况：
                 </div>
-                <el-input v-model="kojiDiscExceptionInfo.discTurnExceptionInfo" type="textarea" :rows="4" :disabled="!(isRedact&& isStatus !== 'C' && isStatus !== 'D' && isStatus !== 'P')" style="width: 80%;" />
+                <el-input v-model="kojiDiscExceptionInfo.discTurnExceptionInfo" type="textarea" :rows="4" :disabled="!(isRedact&& isStatus !== 'C' && isStatus !== 'D' && isStatus !== 'P' && kojiDiscTurnData[0].status !== 'C' && kojiDiscTurnData[0].status !== 'D' && kojiDiscTurnData[0].status !== 'P')" style="width: 80%;" />
             </div>
         </mds-card>
 

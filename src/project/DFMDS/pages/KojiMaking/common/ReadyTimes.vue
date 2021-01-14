@@ -592,9 +592,14 @@ export default class ReadyTimes extends Vue {
         return JSON.parse(JSON.stringify(this.currentFormDataGroup))
     }
 
+    chargeHandler(val) {
+        return !val && String(val) !== '0';
+    }
+
     ruleSubmit() {
+        const chargeHandler = this.chargeHandler;
         if (this.currentFormDataGroup.classes === 'M' || this.currentFormDataGroup.classes === 'D') { // 早
-            if (!this.currentFormDataGroup.dayUser || !this.currentFormDataGroup.dayShift || !this.currentFormDataGroup.dayMeeting || !this.currentFormDataGroup.dayPrepaired || !this.currentFormDataGroup.dayClear) {
+            if (chargeHandler(this.currentFormDataGroup.dayUser) || chargeHandler(this.currentFormDataGroup.dayShift) || chargeHandler(this.currentFormDataGroup.dayMeeting) || chargeHandler(this.currentFormDataGroup.dayPrepaired) || chargeHandler(this.currentFormDataGroup.dayClear)) {
                 console.log('this.currentFormDataGroup')
                 console.log(this.currentFormDataGroup)
                 this.$warningToast('请填写早班准备时间必填项')
@@ -602,13 +607,13 @@ export default class ReadyTimes extends Vue {
             }
         }
         if (this.currentFormDataGroup.classes === 'A') { // 中
-            if (!this.currentFormDataGroup.midUser || !this.currentFormDataGroup.midShift || !this.currentFormDataGroup.midMeeting || !this.currentFormDataGroup.midPrepaired || !this.currentFormDataGroup.midClear) {
+            if (chargeHandler(this.currentFormDataGroup.midUser) || chargeHandler(this.currentFormDataGroup.midShift) || chargeHandler(this.currentFormDataGroup.midMeeting) || chargeHandler(this.currentFormDataGroup.midPrepaired) || chargeHandler(this.currentFormDataGroup.midClear)) {
                 this.$warningToast('请填写中班准备时间必填项')
                 return false
             }
         }
         if (this.currentFormDataGroup.classes === 'N' || this.currentFormDataGroup.classes === 'D') { // 晚
-            if (!this.currentFormDataGroup.nightUser || !this.currentFormDataGroup.nightShift || !this.currentFormDataGroup.nightMeeting || !this.currentFormDataGroup.nightPrepaired || !this.currentFormDataGroup.nightClear) {
+            if (chargeHandler(this.currentFormDataGroup.nightUser) || chargeHandler(this.currentFormDataGroup.nightShift) || chargeHandler(this.currentFormDataGroup.nightMeeting) || chargeHandler(this.currentFormDataGroup.nightPrepaired) || chargeHandler(this.currentFormDataGroup.nightClear)) {
                 this.$warningToast('请填写晚班准备时间必填项')
                 return false
             }

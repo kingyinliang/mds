@@ -104,7 +104,12 @@
                     <el-table-column type="index" label="序号" width="50" align="center" fixed />
                     <el-table-column v-if="isNormalPage" label="曲房" prop="kojiHouseName" width="120" />
                     <el-table-column v-if="isNormalPage" label="入曲日期" prop="addKojiDate" width="180" />
-                    <el-table-column label="物料" prop="materialTypeName" min-width="120" />
+                    <!-- <el-table-column label="物料" prop="storageTypeName" min-width="120" /> -->
+                    <el-table-column label="物料" prop="storageTypeName" min-width="160">
+                        <template slot-scope="scope">
+                            {{ `${scope.row.materialName} ${scope.row.materialCode}` }}
+                        </template>
+                    </el-table-column>
                     <el-table-column label="批次" prop="batch" min-width="120" />
                     <el-table-column label="数量" prop="amount" width="120" />
                     <el-table-column label="单位" prop="unitName" width="120" />
@@ -484,13 +489,13 @@
                 break;
                 case '2':
                     this.rejectProcess = this.processMapping[item.process]
-                    this.rejectKojiHouseId = this.kojiHouseNoOptions.filter(element => element.optValue === item.kojiHouseNo)[0].optId
+                    this.rejectKojiHouseId = this.kojiHouseNoOptions.filter(element => element.optValue === item.kojiHouseNo)[0]?.optId
                 break;
                 case '3':
-                    this.rejectKojiHouseId = this.kojiHouseNoOptions.filter(element => element.optValue === item.kojiHouseNo)[0].optId
+                    this.rejectKojiHouseId = this.kojiHouseNoOptions.filter(element => element.optValue === item.kojiHouseNo)[0]?.optId
                 break;
                 case '4':
-                    this.rejectKojiHouseId = this.kojiHouseNoOptions.filter(element => element.optValue === item.kojiHouseNo)[0].optId
+                    this.rejectKojiHouseId = this.kojiHouseNoOptions.filter(element => element.optValue === item.kojiHouseNo)[0]?.optId
                     this.rejectMaterialStyle = item.storageType;
                     this.rejectBatch = item.batch;
                 break;

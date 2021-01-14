@@ -77,8 +77,20 @@
                             </el-form-item>
                         </el-form>
                     </div>
-                    <el-table ref="multipleTable" :data="openPotList" height="400px" :header-cell-class-name="tableHeaderClass" header-row-class-name="tableHead" class="newTable" border tooltip-effect="dark" @selection-change="handleSelectionChange" @row-dblclick="Dblckick">
-                        <el-table-column type="selection" :selectable="checkboxT" width="50" />
+                    <el-table
+                        ref="multipleTable"
+                        :data="openPotList"
+                        height="400px"
+                        :header-cell-class-name="tableHeaderClass"
+                        row-key="id"
+                        header-row-class-name="tableHead"
+                        class="newTable"
+                        border
+                        tooltip-effect="dark"
+                        @selection-change="handleSelectionChange"
+                        @row-dblclick="Dblckick"
+                    >
+                        <el-table-column type="selection" :reserve-selection="true" :selectable="checkboxT" width="50" />
                         <el-table-column type="index" :index="index => index + 1 + (Number(searchForm.current) - 1) * (Number(searchForm.size))" label="序号" width="50px" />
                         <el-table-column label="状态" prop="openFlagName" min-width="80" :show-overflow-tooltip="true">
                             <template slot-scope="scope">
@@ -313,7 +325,7 @@
             setTimeout(() => {
                 this.formHeader.ferOpenFermentorList.forEach(item => {
                     if (item.fermentorId) {
-                        const row = this.openPotList.find(it => it.id === item.fermentorId)
+                        const row = this.openPotListSum.find(it => it.id === item.fermentorId)
                         if (row) {
                             this.noChange = true
                             row.ferMaterialList = item.ferMaterialList
@@ -403,7 +415,14 @@
             if (!this.multipleSelection.find(item => item.id === row.id)) {
                 this.$refs.multipleTable.toggleRowSelection(row)
             } else if (this.formHeader.openType === 'SINGLE') {
-                if (row.ferOpenFermentor.mixSauceNo) {
+                if (row.ferOpenFermentor.mixSauceNo && row.pushFlag === 'Y') {
+                    const hang = this.openPotListSum.findIndex(item => item.id === row.id)
+                    row.ferOpenFermentor.mixSauceNo = this.formHeader.openPotNo + hang
+                    this.mixSauceNo = row.ferOpenFermentor.mixSauceNo
+                    this.fermentorId = row.id
+                    this.deployMaterial = row.ferMaterialList = []
+                    this.sauce = row.ferOverdueMaterialList = []
+                } else if (row.ferOpenFermentor.mixSauceNo) {
                     this.mixSauceNo = row.ferOpenFermentor.mixSauceNo
                     this.fermentorId = row.id
                     this.getDeployMaterialList(row)
@@ -534,7 +553,10 @@
             if (!this.isRedact) {
                 return 0;
             }
-            if (row.pushFlag === 'Y') {
+            // if (row.pushFlag === 'Y') {
+            //     return 0;
+            // }
+            if (this.formHeader.ferOpenFermentorList.find(it => it.fermentorId === row.id)) {
                 return 0;
             }
             return 1;
@@ -563,7 +585,7 @@
                     this.multipleSelection.push(item);
                 });
             }
-
+            console.log(this.multipleSelection);
         }
 
         // 保存推送数据处理
@@ -579,7 +601,7 @@
                         ferOpenFermentor: {},
                         fermentorId: item.id,
                         id: this.formHeader.ferOpenFermentorList?.find(it => it.fermentorId === item.id)?.id || '',
-                        mixSauceNo: item.ferOpenFermentor.mixSauceNo
+                        mixSauceNo: this.mixSauceNo
                     })
                 })
                 savedData.openFermentorList = openFermentorList

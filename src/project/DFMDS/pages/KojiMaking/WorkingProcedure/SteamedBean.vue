@@ -19,7 +19,7 @@
                 <steamed-bean-craft ref="steamedBeanCraft" :is-status="steamedBeanCraftStatus" :is-redact="data.isRedact" />
             </template>
             <template slot="2" slot-scope="data">
-                <steamed-in-storage ref="steamedInStorage" :is-status="steamedInStorageStatus" :pot-no-now.sync="potNoNow" :is-redact="data.isRedact" />
+                <steamed-in-storage ref="steamedInStorage" :is-status="steamedInStorageStatus" :pot-no-now.sync="potNoNow" :scan-list="scanList" :is-redact="data.isRedact" />
             </template>
             <template slot="3" slot-scope="data">
                 <koji-exc-record ref="excRecord" :is-redact="data.isRedact" exp-add="kjSBExpAdd" :form-header="formHeader" />

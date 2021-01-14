@@ -84,9 +84,12 @@
             ],
             batch: [{ required: true, message: '请选择领用批次', trigger: 'change' }],
             smallBeanAmount: [
-                { required: true, message: '请输入数字', trigger: 'blur' },
+                { required: false, message: '请输入数字', trigger: 'blur' },
                 {
                     validator(rule, value, callback) {
+                        if (!value) {
+                            return callback()
+                        }
                         if (/^([1-9][0-9]*|0)(\.([0-9]+)?[1-9])?$/.test(value)) {
                         return callback()
                         }
@@ -113,7 +116,7 @@
                     ...infoData,
                     ...infoData.detailsList[0]
                 }
-                storageId = infoData.detailsList[0].id;
+                storageId = infoData.detailsList[0]?.id;
             } else {
                 storageId = infoData.storageId;
                 // 查询
@@ -153,12 +156,12 @@
                 // material: `${String(Data.materialName)} ${String(Data.materialCode)}`,
                 // materialCode: Data.materialCode,
                 // materialName: Data.materialName,
-                // materialLink: Data.materialCode ? Data.materialName + Data.materialCode : '',
+                materialLink: Data.materialCode ? Data.materialName + ' ' + Data.materialCode : '',
                 // materialType: 'BEAN',
                 material: `${String(result.materialName)} ${String(result.materialCode)}`,
                 materialCode: result.materialCode,
                 materialName: result.materialName,
-                materialLink: result.materialCode ? `${String(result.materialName)} ${String(result.materialCode)}` : '',
+                // materialLink: result.materialCode ? `${String(result.materialName)} ${String(result.materialCode)}` : '',
                 materialType: result.materialType,
                 storageType: 'BEAN', // 写死
                 amount: Data.amount,
@@ -189,7 +192,7 @@
         batchChange() {
             this.batchList.map(item => {
                 if (item.batch === this.dataForm.batch) {
-                    this.dataForm.materialLink = String(item.materialName) + String(item.materialCode);
+                    this.dataForm.materialLink = String(item.materialName) + ' ' + String(item.materialCode);
                     this.dataForm.stockAmount = item.stockAmount || item.currentAmount;
                     this.STOCK_AMOUNT = Number(item.stockAmount) || Number(item.currentAmount);
                     this.dataForm.amount = '';
@@ -201,6 +204,10 @@
 
         // 提交
         dataFormSubmit() {
+            if (this.dataForm.materialLink !== this.dataForm.material) {
+                this.$warningToast('领用物料和BOM物料不一致');
+                return
+            }
             this.$refs.dataForm.validate(valid => {
                 if (valid) {
                     if (this.type === 'add') {

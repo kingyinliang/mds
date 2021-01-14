@@ -105,8 +105,8 @@
         dataForm: DataForm = {};
 
         // 车间库位查询
-        private getWorkShop(type) {
-            KOJI_API.KOJI_STORAGE_STRAIN_DROPDOWN_API({
+        private async getWorkShop(type) {
+            return KOJI_API.KOJI_STORAGE_STRAIN_DROPDOWN_API({
                 workShop: this.$store.state.koji.orderKojiInfo.workShop
             }).then(({ data }) => {
                 console.log('领用库位')
@@ -118,17 +118,20 @@
                     this.dataForm.unitName = data.data[0]['unitName'];
                 }
                 // 默认选中第一个选项 库位详细信息查询
-                this.checkShopDetail()
+                // this.checkShopDetail()
             });
         }
 
         // 库位详细信息查询--批次
-        checkShopDetail() {
-            KOJI_API.KOJI_STORAGE_STRAIN_DROPDOWN_API({
+        async checkShopDetail() {
+            return KOJI_API.KOJI_STORAGE_STRAIN_DROPDOWN_API({
                 // Y158 没有 workshop 概念，故可以不传。此处注解掉
                 // workShop: this.$store.state.koji.orderKojiInfo.workShop,
                 materialLocation: this.dataForm.materialLocation
             }).then(({ data }) => {
+                data.data && data.data.sort((a, b) => {
+                    return a.batch - b.batch;
+                })
                 this.batchList = data.data || [];
                 if (this.type !== 'add') {
                     this.batchList.map(item => {
@@ -174,10 +177,22 @@
             this.visible = true;
             let Data: DataForm = {};
             // 查询
-            this.getWorkShop(type);
+            await this.getWorkShop(type);
+            await this.checkShopDetail();
 
             if (type !== 'add') {
                 Data = infoData;
+            } else {
+                const item = this.batchList[0];
+                Data = {
+                    batch: this.batchList[0].batch,
+                    materialLocation: this.workShopList[0]['materialLocation'],
+                    unit: this.workShopList[0]['unit'],
+                    unitName: this.workShopList[0]['unitName'],
+                    stockAmount: item?.currentAmount,
+                    storageId: item?.id
+                }
+                this.STOCK_AMOUNT = Number(item?.currentAmount || 0)
             }
             console.log('infoData1111111')
             console.log(infoData)
@@ -239,7 +254,7 @@
             console.log(this.batchList)
             this.batchList.map(item => {
                 if (item.batch === this.dataForm.batch) {
-                    this.dataForm.materialLink = String(item.materialName) + String(item.materialCode);
+                    this.dataForm.materialLink = String(item.materialName) + ' ' + String(item.materialCode);
                     this.dataForm.materialName = String(item.materialName);
                     this.dataForm.materialCode = String(item.materialCode);
                     this.dataForm.stockAmount = item.currentAmount;

@@ -127,6 +127,7 @@
                     ...infoData.detailsList[0],
                     operationMans: Data.operationMans || ''
                 };
+                console.log(Data, '=============')
                 this.STOCK_AMOUNT = Data.stockAmount || Data.currentAmount ? Number(Data.stockAmount) || Number(Data.currentAmount) : 0;
                 storageId = infoData.detailsList[0].id;
             } else {
@@ -167,12 +168,12 @@
                 // material: `${String(Data.materialName)} ${String(Data.materialCode)}`,
                 // materialCode: Data.materialCode,
                 // materialName: Data.materialName,
-                // materialLink: Data.materialCode ? Data.materialName + Data.materialCode : '',
+                materialLink: Data.materialCode ? Data.materialName + ' ' + Data.materialCode : '',
                 // materialType: 'FLOUR',
                 material: `${String(result.materialName)} ${String(result.materialCode)}`,
                 materialCode: result.materialCode,
                 materialName: result.materialName,
-                materialLink: result.materialCode ? `${String(result.materialName)} ${String(result.materialCode)}` : '',
+                // materialLink: result.materialCode ? `${String(result.materialName)} ${String(result.materialCode)}` : '',
                 materialType: result.materialType,
                 storageType: 'FLOUR', // 写死
                 amount: Data.amount,
@@ -205,19 +206,24 @@
         batchChange() {
             this.batchList.map(item => {
                 if (item.batch === this.dataForm.batch) {
-                    this.dataForm.materialLink = String(item.materialName) + String(item.materialCode);
+                    this.dataForm.materialLink = String(item.materialName) + ' ' + String(item.materialCode);
                     // this.dataForm.stockAmount = item.stockAmount;
                     this.dataForm.stockAmount = item.currentAmount
                     this.dataForm.supplier = item.supplier;
                     this.STOCK_AMOUNT = Number(item.currentAmount);
                     this.dataForm.storageId = item.id;
                     this.calcStockAmount();
+                    console.log(item)
                 }
             });
         }
 
         // 提交
         dataFormSubmit() {
+            if (this.dataForm.materialLink !== this.dataForm.material) {
+                this.$warningToast('领用物料和BOM物料不一致');
+                return
+            }
             this.$refs.dataForm.validate(valid => {
                 if (valid) {
                     if (this.type === 'add') {
