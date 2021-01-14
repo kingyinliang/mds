@@ -209,10 +209,9 @@
                                         />
                                     </el-select>
                                 </el-form-item>
-                                <el-form-item label="挪入批次：">
+                                <el-form-item label="挪入批次：" class="star">
                                     <el-input v-model.trim="moveDataGroup.movebatch" placeholder="请输入" clearable />
                                 </el-form-item>
-
                                 <el-form-item label="挪罐操作人：">
                                     <div class="required" style="min-height: 32px; line-height: 32px;">
                                         <span style="cursor: pointer;" @click="selectUser(moveDataGroup)">
@@ -274,8 +273,7 @@
             // title
             dialogTitle=''
 
-
-            currentTab='调整' // 当前 tab
+            currentTab='调整' // 当前初始 tab
             tabType='modify'
             currentItem: ItemObject={}
 
@@ -301,8 +299,6 @@
             materialOptions: MaterialOptions[]=[]
             batchOptions: BatchOptions[]=[]
 
-            // 当前 row
-            currentRowIndex=0
 
             modifyDataGroup: ItemObject={} // modify data
             convertDataGroup: ItemObject={} // convert data
@@ -333,6 +329,8 @@
 
             // 获取物料
             getMaterialOptions() {
+
+                this.materialOptions = []
                 return new Promise((resolve) => {
                     FER_API.FER_FERMENTOR_ADJUSTION_GET_MATERIAL_LIST_API({
                         holderId: this.currentHolderId
@@ -347,30 +345,29 @@
                 })
             }
 
-
-            // 获取调整类别
-            getMoveTypeOptions(string) {
-                COMMON_API.DICTQUERY_API({ dictType: string }).then(({ data }) => {
-                    this.moveTypeOptions = data.data
-                });
-            }
-
             // 获取批次
-            getBatchOptions(materialCode) {
-
-                    this.batchOptions = [];
-                    return new Promise((resolve) => {
+            getBatchOptions(materialCode = '') {
+                this.batchOptions = [];
+                return new Promise((resolve) => {
                     FER_API.FER_FERMENTOR_ADJUSTION_GET_MATERIAL_BATCH_LIST_API({
                         holderId: this.currentHolderId,
                         materialCode: materialCode
                     }).then(({ data }) => {
                         console.log('根据容器查询主物料批次');
                         console.log(data.data)
-                        this.batchOptions = data.data
+                        if (data.data.length !== 0) {
+                            this.batchOptions = data.data
+                        }
                         resolve(null)
                     });
                 })
+            }
 
+            // 获取调整类别
+            getMoveTypeOptions(string) {
+                COMMON_API.DICTQUERY_API({ dictType: string }).then(({ data }) => {
+                    this.moveTypeOptions = data.data
+                });
             }
 
             // ＝＝挪罐＝＝
@@ -383,7 +380,9 @@
                     }).then(({ data }) => {
                         console.log('根据容器查询主物料批次');
                         console.log(data.data)
-                        this.moveDataOfMateriaBatch = data.data
+                        if (data.data.length !== 0) {
+                            this.moveDataOfMateriaBatch = data.data
+                        }
                         resolve(null)
                     });
                 })
@@ -400,7 +399,6 @@
                         console.log('容器类型')
                         console.log(data.data)
                         const holderTemp: object[] = []
-
                         data.data.forEach(item => {
                             if (item.dictCode === '001' || item.dictCode === '028' || item.dictCode === '029') {
                                 holderTemp.push({ dictCode: item.dictCode, dictValue: item.dictValue })
@@ -412,7 +410,7 @@
                 })
             }
 
-
+            // 获取容器
             getHolderIdOptions(val) {
                 this.holderIdOptions = []
                 return new Promise((resolve) => {
@@ -426,7 +424,6 @@
                     })
                 })
             }
-
 
             // 获取主要数据
             // @param {string} type 数据 list 类型: 调整 modify/转储 convert/挪罐 move
@@ -462,12 +459,12 @@
                 console.log(val)
                 if (val === 'modify') { // 调整
                     this.currentTab = '调整'
-                    // 数据字典出入罐
-                    await this.getInOutStatusOptions();
                     // 获取物料
                     await this.getMaterialOptions();
                     // 获取批次
-                    await this.getBatchOptions(this.materialOptions[0].materialCode);
+                    await this.getBatchOptions(this.materialOptions[0] ? this.materialOptions[0].materialCode : '');
+                    // 数据字典出入罐
+                    await this.getInOutStatusOptions();
                     // 设置数据
                     await this.setData('modify')
 
@@ -509,10 +506,12 @@
                 return str.split(',')
             }
 
-            // 入罐
+            // 发酵罐 item 数值
             init(item) {
-                console.log('入罐')
+                console.log('发酵罐 item 数值')
                 console.log(item)
+                this.currentTab = '调整' // 当前初始 tab
+                this.tabType = 'modify'
                 this.currentItem = item
                 this.isTableDialogVisible = true
                 this.currentWorkShop = item.workshop
@@ -524,7 +523,6 @@
                 this.dialogTitle = this.currentHolderName + this.currentTab
                 // 调整 tab ＝＝＝＝＝
                 this.changeTab(this.tabType);
-
             }
 
             setData(tab) {
@@ -540,7 +538,7 @@
                         moveAmount: null,
                         moveType: '',
                         operators: '',
-                        orderNo: this.currentItem.orderNo,
+                        orderNo: this.batchOptions[0] ? this.batchOptions[0].orderNo : '',
                         remark: '',
                         changed: dateFormat(new Date(), 'yyyy-MM-dd hh:mm:ss'),
                         changer: getUserNameNumber()
@@ -559,14 +557,15 @@
                         changer: getUserNameNumber()
                     } // convert data
                 } else {
+                    console.log('444444')
                     this.moveDataGroup = {
                         holderName: this.currentHolderName,
                         holderId: this.currentHolderId,
                         fermentorStatusName: this.currentFermentorStatusName,
-                        material: `${this.moveDataOfMateriaBatch.materialName} ${this.moveDataOfMateriaBatch.materialCode}`,
-                        materialCode: this.moveDataOfMateriaBatch.materialCode,
-                        materialName: this.moveDataOfMateriaBatch.materialName,
-                        batch: this.moveDataOfMateriaBatch.batch,
+                        material: `${this.moveDataOfMateriaBatch.materialName || ''} ${this.moveDataOfMateriaBatch.materialCode || ''}`,
+                        materialCode: this.moveDataOfMateriaBatch.materialCode || '',
+                        materialName: this.moveDataOfMateriaBatch.materialName || '',
+                        batch: this.moveDataOfMateriaBatch.batch || '',
                         movebatch: '',
                         operators: '',
                         orderNo: this.currentItem.orderNo,
@@ -614,7 +613,6 @@
             // 选择人员 正式借调
             selectUser(row) {
                 this.isLoanedPersonnelStatusDialogVisible = true;
-                // this.currentRowIndex = index
                 this.$nextTick(() => {
                     if (this.tabType === 'modify') {
                         this.$refs.loanedPersonnel.init(row.operators, '调整操作人');
@@ -732,7 +730,7 @@
                     //     }
                     // }
                 } else if (this.tabType === 'move') {
-                    if (this.moveDataGroup.targetHolderType === '' && this.moveDataGroup.targetHolderId === '') {
+                    if (this.moveDataGroup.targetHolderType === '' && this.moveDataGroup.targetHolderId === '' && this.moveDataGroup.movebatch === '') {
                         this.$warningToast('请录入挪罐必填栏位');
                         return false
                     }
