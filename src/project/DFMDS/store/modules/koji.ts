@@ -21,7 +21,9 @@ export default {
         // 页签状态
         houseTagInfo: {},
         // 审核详情
-        auditDetail: {}
+        auditDetail: {},
+        // 大豆库存历史信息
+        beanHistoryObj: {}
     },
     mutations: {
         updateStockSoybeanInfo(state, infoObj) {
@@ -44,6 +46,9 @@ export default {
         },
         updateAuditDetail(state, auditDetail) {
             state.auditDetail = auditDetail;
+        },
+        updateBeanHistoryObj(state, payload) {
+            state.beanHistoryObj = payload;
         }
     }
 };

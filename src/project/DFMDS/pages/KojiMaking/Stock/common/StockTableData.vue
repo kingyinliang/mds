@@ -131,6 +131,7 @@
                 KOJI_API[`KOJI_STOCK_${this.stockType}_DETAIL_HISTORY_LIST_API`](queryObj).then(({ data }) => {
                     this.tableDataList = data.data.records || [];
                     this.tableTotal = data.data.total || 0;
+                    this.$store.commit('koji/updateBeanHistoryObj', data.data.records[0] || {});
                 })
             }
         }

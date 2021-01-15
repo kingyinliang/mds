@@ -47,7 +47,7 @@
             if (this.currentData.detailsList && this.currentData.detailsList.length) {
                 return this.currentData.detailsList[0].unitName
             }
-            return 'KG'
+            return '千克'
         }
     }
 </script>
