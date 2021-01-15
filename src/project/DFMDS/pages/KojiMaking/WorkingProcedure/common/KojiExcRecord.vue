@@ -254,7 +254,8 @@
             const ids: string[] = [];
             const InsertDto: ExcList[] = [];
             const UpdateDto: ExcList[] = [];
-            this.excList.map((item: ExcList) => {
+            const datas = JSON.parse(JSON.stringify(this.excList))
+            datas.map((item: ExcList) => {
                 item.kojiOrderNo = formHeader.kojiOrderNo;
                 item.exceptionStage = tagName;
                 item.orderId = formHeader.orderId;
@@ -269,7 +270,7 @@
                     }
                 } else if (item.id) {
                     if (!_.isEqual(this.excListOrg[index], item)) {
-                        UpdateDto.push(item);
+                        UpdateDto.push(datas[index]);
                     }
                 } else {
                     InsertDto.push(item);
