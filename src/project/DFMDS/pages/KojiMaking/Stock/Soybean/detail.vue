@@ -88,7 +88,7 @@
             this.stockInfoObj.detailsList && this.stockInfoObj.detailsList.map(item => {
                 total += item.currentAmount
             })
-            return total ? total.toLocaleString() : ''
+            return total ? total.toLocaleString() : '0'
         }
 
         // 获取库存明细第一条的单位
@@ -101,10 +101,12 @@
 
         // 获取库存明细第一条的物料
         get stockMaterial() {
+            console.log(this.$store.state.koji.StockSoybeanInfo)
             if (this.stockInfoObj.detailsList && this.stockInfoObj.detailsList.length) {
                 return this.stockInfoObj.detailsList[0].materialName + ' ' + this.stockInfoObj.detailsList[0].materialCode
             }
-            return ''
+            const { materialName = '', materialCode = '' } = this.$store.state.koji.beanHistoryObj
+            return materialName + ' ' + materialCode;
         }
     }
     interface DataObj {
