@@ -205,7 +205,8 @@
                             feBeanMount: totalNum,
                             inStorageAmount: planOutput || '',
                             inStorageBatch: '',
-                            unit: '千克',
+                            unit: 'KG',
+                            unitName: '千克',
                             scPotId: '',
                             scPotNo: '',
                             remark: '',
@@ -298,6 +299,7 @@
         inStorageAmount?: number | string;
         inStorageBatch?: string;
         unit?: string;
+        unitName?: string;
         scPotNo?: string;
         scPotId?: string;
         workShop?: number | string;
