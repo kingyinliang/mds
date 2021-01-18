@@ -65,7 +65,7 @@
             this.materialDetailData.detailsList && this.materialDetailData.detailsList.map(item => {
                 total += item.currentAmount
             })
-            return total ? total.toLocaleString() : ''
+            return total ? total.toLocaleString() : '0'
         }
 
     }

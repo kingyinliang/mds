@@ -145,7 +145,6 @@
 
         // 初始化数据
         init(formHeader) {
-
             this.formHeader = formHeader;
             const { kojiOrderNo, orderNo, workShop, orderType, planOutput } = formHeader;
             // 查询蒸面记录
@@ -171,6 +170,11 @@
         }
 
         // === 查询 汇总 ==== //
+/* 此处非治本方式修改
+ * kojiInStorage/queryList
+ * kojiMaterial/query
+ * 两接口返回的 materialCode，materialName ,因为前端用不到,所以给的值是空的(实际非空)，前端自己取标头的 materialCode，materialName 塞入，所以查询后的 data 加工修改。
+ */
         // 查询入库记录
         getTableList(kojiOrderNo, orderNo, workShop, orderType, planOutput) {
             KOJI_API.KOJI_STEAM_INSTORAGE_LIST_API({
@@ -193,6 +197,7 @@
                             ...queryInStorageData[0],
                             feBeanMount: totalNum,
                             // unit: '千克',
+                            unitName: '千克',
                             changed: dateFormat(new Date(), 'yyyy-MM-dd hh:mm:ss'),
                             changer: getUserNameNumber(),
                             kojiOrderNo,
@@ -200,12 +205,15 @@
                             workShop,
                             orderType
                         }];
+                        this.tableData[0].materialCode = this.formHeader.materialCode;
+                        this.tableData[0].materialName = this.formHeader.materialName;
                     } else {
                         this.tableData = [{
                             feBeanMount: totalNum,
                             inStorageAmount: planOutput || '',
                             inStorageBatch: '',
-                            unit: '千克',
+                            unit: 'KG',
+                            unitName: '千克',
                             scPotId: '',
                             scPotNo: '',
                             remark: '',
@@ -216,6 +224,8 @@
                             workShop,
                             orderType
                         }];
+                        this.tableData[0].materialCode = this.formHeader.materialCode;
+                        this.tableData[0].materialName = this.formHeader.materialName;
                     }
 
                     this.temTableData = JSON.parse(JSON.stringify(this.tableData))
@@ -252,6 +262,8 @@
         orderId?: string;
         factory?: string;
         orderType?: string;
+        materialCode?: string;
+        materialName?: string;
     }
     interface CraftList {
         id?: string;
@@ -298,11 +310,15 @@
         inStorageAmount?: number | string;
         inStorageBatch?: string;
         unit?: string;
+        unitName?: string;
         scPotNo?: string;
         scPotId?: string;
         workShop?: number | string;
         orderType?: number | string;
         processCode?: string;
+        materialCode?: string;
+        materialName?: string;
+        unitName?: string;
     }
 
     interface SieveDeviceList {
