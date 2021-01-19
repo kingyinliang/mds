@@ -182,6 +182,7 @@
 
             if (type !== 'add') {
                 Data = infoData;
+                this.STOCK_AMOUNT = Number(infoData.stockAmount || 0) + Number(infoData.amount || 0)
             } else {
                 const item = this.batchList[0];
                 Data = {
