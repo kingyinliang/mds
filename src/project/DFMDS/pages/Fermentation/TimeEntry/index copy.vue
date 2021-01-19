@@ -21,7 +21,7 @@
                                 span(class="notNull") *
                                 span 工序：
                             el-select(v-model="formHeader.productProcess" placeholder="请选择" style="width: 180px;")
-                                el-option(v-for="(item, index) in productProcessList" :key="index" :label="item.deptName" :value="item.id")
+                                el-option(v-for="(item, index) in productProcessList" :key="index" :label="item.dictValue" :value="item.dictCode")
                         el-form-item(label="提交人员：")
                             p(class="input_border_bg" style="width: 180px;") {{ formHeader.changer }}
                         el-form-item(label="提交时间：")
@@ -33,21 +33,21 @@
                         span(:style="{color: formHeader.checkStatus === 'R' ? 'red' : ''}") {{ formHeader.checkStatusName }}
                     div(style="width: 100%; margin-top: 10px; text-align: right;")
                         template(style="float: right; margin-left: 10px;")
-                            el-button(v-if="isAuth('kjTimeQuery')" type="primary" size="small" @click="getList()") 查询
+                            el-button(v-if="isAuth('steTimeQuery')" type="primary" size="small" @click="getList()") 查询
         div(v-show="searchCard")
             ready-time(ref="readyTime" :is-redact="isRedact" :status="this.formHeader.checkStatus" style="margin-top: 10px;")
             work-hour(ref="workHour" :is-redact="isRedact" :status="this.formHeader.checkStatus")
             audit-log(:table-data="manHourAudit" :verify-man="'verifyMan'" :verify-date="'verifyDate'" :status="true")
-        redact-box(v-if="!(formHeader.checkStatus === 'C' || formHeader.checkStatus === 'D' || formHeader.checkStatus === 'P' || formHeader.checkStatus ==='M')" :disabled="redactBoxDisable" :is-redact.sync='isRedact' redact-auth="kjTimeEdit" save-auth="kjTimeSave" submit-auth="kjTimeSubmit" :urgent-submit="false" :submit-rules="submitRules" :saved-rules="savedRules" :saved-datas="savedDatas" :submit-datas="submitDatas")
+        redact-box(v-if="!(formHeader.checkStatus === 'C' || formHeader.checkStatus === 'D' || formHeader.checkStatus === 'P' || formHeader.checkStatus ==='M')" :disabled="redactBoxDisable" :is-redact.sync='isRedact' redact-auth="steTimeEdit" save-auth="steTimeSave" submit-auth="steTimeSubmit" :urgent-submit="false" :submit-rules="submitRules" :saved-rules="savedRules" :saved-datas="savedDatas" :submit-datas="submitDatas")
 </template>
 
 <script lang="ts">
 import { Vue, Component, Watch } from 'vue-property-decorator';
-import { COMMON_API, AUDIT_API } from 'common/api/api';
+// import { COMMON_API, AUDIT_API, KOJI_API } from 'common/api/api';
+import { COMMON_API } from 'common/api/api';
 import { dateFormat } from 'utils/utils';
-import ReadyTime from '../../KojiMaking/common/ReadyTimes.vue';
+import ReadyTime from 'components/ReadyTimes.vue';
 import OfficialWorker from 'components/OfficialWorker.vue';
-import WorkHour from './common/WorkHour.vue';
 import LoanedPersonnel from 'components/LoanedPersonnel.vue';
 import TemporaryWorker from 'components/TemporaryWorker.vue';
 import RedactBox from 'components/RedactBox.vue' // 下方状态 bar
@@ -59,8 +59,7 @@ import FER_API from 'src/common/api/fer';
         OfficialWorker,
         LoanedPersonnel,
         TemporaryWorker,
-        RedactBox,
-        WorkHour
+        RedactBox
     }
 })
 export default class TimeEntry extends Vue {
@@ -81,8 +80,7 @@ export default class TimeEntry extends Vue {
         materialCode: '',
         materialName: '',
         changer: '',
-        changed: '',
-        id: ''
+        changed: ''
     }
 
     redactBoxDisable=true
@@ -96,33 +94,40 @@ export default class TimeEntry extends Vue {
     manHourAudit = [];
     timeSheetResponseDto = '';
     userResponseDto: object[] = [];
-    processObj: ProcessObj = {};
 
     mounted() {
         this.getCheckStatus(); // audit status list
         this.getWorkshopList(); // workshop list
+        this.getProductProcess();
         this.$refs.readyTime.init();
         this.$refs.workHour.init();
     }
 
-    @Watch('formHeader.workShop')
-    watchWorkShop() {
-        this.getProductProcess();
-        this.isRedact = false;
-    }
+    // @Watch('formHeader.workShop')
+    // watchWorkShop() {
+    //     this.getProductProcess()
+    // }
 
+    @Watch('formHeader.productDate')
+    watchProductDate() {
+        // this.getOrderList();
+    }
 
     @Watch('formHeader.productProcess')
     watchProcess() {
-        if (this.formHeader.productProcess !== '') {
-            this.processObj = this.productProcessList.find(item => item.id === this.formHeader.productProcess) || {}
-            console.log(this.processObj, '=======')
-            this.$refs.workHour.getTeamList(this.formHeader.productProcess);
-            this.isRedact = false;
-            // this.$refs.readyTime.changeList(null);
-            this.$refs.workHour.changeList([]);
-            this.getList();
-        }
+
+        // const productProcessSole = this.productProcessList.find((item: OrderList) => item.productProcess === this.formHeader.productProcess)
+        // if (productProcessSole) {
+        //     // this.formHeader['orderId'] = this.productProcessList.find((item: OrderList) => item.productProcess === this.formHeader.productProcess)['id'];
+        //     this.formHeader.orderId = productProcessSole.id;
+        //     this.formHeader.materialCode = productProcessSole.materialCode;
+        //     this.formHeader.materialName = productProcessSole.materialName;
+        //     // this.searchCard = false;
+        //     this.isRedact = false;
+        // }
+
+        // this.$refs.readyTime.changeList({});
+        // this.$refs.workHour.changeList({});
     }
 
     changeIsRedact() {
@@ -148,26 +153,36 @@ export default class TimeEntry extends Vue {
 
     // 获取工序
     getProductProcess() {
-        this.formHeader.productProcess = ''
-        COMMON_API.ORG_QUERY_CHILDREN_API({
-            parentId: this.formHeader.workShop,
-            deptType: 'PROCESS'
+        COMMON_API.DICTIONARY_ITEM_DROPDOWN_POST_API({
+            dictType: 'FER_PROCESS_STAGE' // 发酵工序段
         }).then(({ data }) => {
-            console.log('获取工序')
-            console.log(data)
-            this.productProcessList = []
-            if (data.data.length !== 0) {
-                this.productProcessList = data.data
-            }
+            this.productProcessList = data.data;
         });
     }
 
     // 获取审核状态 list
     getCheckStatus() {
         COMMON_API.DICTQUERY_API({ dictType: 'COMMON_CHECK_STATUS' }).then(({ data }) => {
-            this.checkStatus = data.data
+            this.checkStatus = data.data;
         });
     }
+
+
+    // 订单拉取
+    // getOrderList() {
+    //     this.formHeader.productProcess = '';
+    //     KOJI_API.KOJI_TIMESHEET_QUERY_API({
+    //         workShop: this.formHeader.workShop,
+    //         productDate: this.formHeader.productDate
+    //     }).then(({ data }) => {
+    //         if (data.code === 200) {
+    //             this.productProcessList = data.data;
+    //             if (this.productProcessList.length !== 0) {
+    //                 this.formHeader.productProcess = this.productProcessList[0]['productProcess'];
+    //             }
+    //         }
+    //     })
+    // }
 
     // 查询
     getList() {
@@ -177,39 +192,35 @@ export default class TimeEntry extends Vue {
         }
         FER_API.FER_TIME_SHEET_QUERY_API(this.formHeader).then(({ data }) => {
                 console.log('data')
-                console.log(data, '======', data.data.ferTimeSheetResponseDto === null && data.data.ferUserDtos.length === 0)
+                console.log(data)
                 // this.searchCard = true;
-                this.isRedact = false
                 if (data.data.ferTimeSheetResponseDto === null && data.data.ferUserDtos.length === 0) {
                     this.$infoToast('暂无任何内容');
                     this.formHeader.checkStatus = '';
                     this.formHeader.checkStatusName = '';
                     this.formHeader.changed = '';
                     this.formHeader.changer = '';
-                    this.$refs.readyTime.changeList(null);
+                    this.$refs.readyTime.changeList({});
                     this.$refs.workHour.changeList([]);
-                    this.$refs.readyTime.nowFormDataGroupString = 'M';
-                    this.manHourAudit = [];
-                    this.redactBoxDisable = false
                 } else {
                     this.formHeader.checkStatus = data.data.ferTimeSheetResponseDto.status;
                     this.formHeader.checkStatusName = this.checkStatus.filter(item => item.dictCode === this.formHeader.checkStatus)[0].dictValue
                     this.formHeader.changed = data.data.changed;
                     this.formHeader.changer = data.data.changer;
-                    this.formHeader.id = data.data.ferTimeSheetResponseDto.id;
                     this.$refs.readyTime.changeList(data.data.ferTimeSheetResponseDto);
                     this.$refs.workHour.changeList(data.data.ferUserDtos);
-                    this.$refs.readyTime.nowFormDataGroupString = data.data.ferTimeSheetResponseDto.classes;
-                    // 审核日志
-                    AUDIT_API.STE_AUDIT_QUERY_BY_ID({
-                        id: this.formHeader.id
-                    }).then(result => {
-                        this.manHourAudit = result.data.data;
-                        this.redactBoxDisable = false
-                    })
                 }
+
+
         })
         this.redactBoxDisable = false
+        // AUDIT_API.AUDIT_LOG_LIST_API({
+        //     productProcess: this.formHeader.productProcess,
+        //     verifyType: 'TIMESHEET'
+        // }).then(({ data }) => {
+        //     this.manHourAudit = data.data;
+        //     this.redactBoxDisable = false
+        // })
     }
 
     // 保存
@@ -238,18 +249,25 @@ export default class TimeEntry extends Vue {
             })
         }
 
+
         return new Promise((resolve) => {
                 FER_API.FER_TIME_SHEET_SAVE_API({
-                    processCode: this.processObj.deptName,
                     ferTimeSheetInsertDto: timeSheetRequest,
                     userInsertDtos: userRequest.userInsertDto,
                     userRemoveIds: userRequest.ids,
                     userUpdateDtos: userRequest.userUpdateDto
-                }).then((res) => {
+                }).then(() => {
                     this.getList()
-                    resolve(res)
+                    resolve()
                 })
             })
+
+        // return KOJI_API.KOJI_TIMESHEET_SAVE_API({
+        //     kojiTimeSheetInsertDto: timeSheetRequest,
+        //     userInsertDtos: userRequest.userInsertDto,
+        //     userRemoveIds: userRequest.ids,
+        //     userUpdateDtos: userRequest.userUpdateDto
+        // })
     }
 
     // 提交
@@ -294,18 +312,24 @@ export default class TimeEntry extends Vue {
 
             return new Promise((resolve) => {
                 FER_API.FER_TIME_SHEET_SUBMIT_API({
-                    processCode: this.processObj.deptName,
                     ferTimeSheetInsertDto: timeSheetRequest,
                     userInsertDtos: userRequest.userInsertDto,
                     userRemoveIds: userRequest.ids,
                     userUpdateDtos: userRequest.userUpdateDto
-                }).then((res) => {
+                }).then(() => {
                     this.getList()
-                    resolve(res)
+                    resolve()
                 })
             })
 
-
+            // KOJI_API.KOJI_TIMESHEET_SUBMIT_API({
+            //     kojiTimeSheetInsertDto: timeSheetRequest,
+            //     userInsertDtos: userRequest.userInsertDto,
+            //     userRemoveIds: userRequest.ids,
+            //     userUpdateDtos: userRequest.userUpdateDto
+            // }).then(() => {
+            //     this.getList()
+            // })
         }
     }
 
@@ -331,10 +355,6 @@ interface CheckStatus{
     dictValue: string;
     factoryName?: string;
     id?: string;
-}
-interface ProcessObj {
-    id?: string;
-    deptName?: string;
 }
 </script>
 
