@@ -132,6 +132,7 @@
                 storageId = infoData.detailsList[0].id;
             } else {
                 storageId = infoData.storageId;
+                this.STOCK_AMOUNT = Number(infoData.stockAmount) + Number(infoData.amount);
                 // 查询
                 await KOJI_API.KOJI_STORAGE_WHEAT_DROPDOWN_API({
                     workShop: formHeader.workShop,
