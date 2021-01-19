@@ -273,7 +273,7 @@
                         UpdateDto.push(datas[index]);
                     }
                 } else {
-                    InsertDto.push(item);
+                    InsertDto.push(datas[index]);
                 }
             });
             return {
