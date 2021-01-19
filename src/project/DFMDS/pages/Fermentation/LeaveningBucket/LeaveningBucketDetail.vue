@@ -1,3 +1,10 @@
+<!--
+ * @Description:发酵车间/发酵罐详情
+ * @Anthor: Telliex
+ * @Date: 2021-01-15 23:35:23
+ * @LastEditors: Telliex
+ * @LastEditTime: 2021-01-19 18:15:03
+-->
 <template>
     <div class="header_main">
         <el-row class="dataEntry-head-leftRight" :gutter="10">
@@ -57,7 +64,9 @@
                                 placeholder=""
                                 style="width: 180px;"
                                 :disabled="true"
-                            />
+                            >
+                                <span slot="suffix">吨</span>
+                            </el-input>
                         </el-form-item>
                         <el-form-item
                             label="库存数量："
@@ -67,7 +76,9 @@
                                 placeholder=""
                                 style="width: 180px;"
                                 :disabled="true"
-                            />
+                            >
+                                <span slot="suffix">吨</span>
+                            </el-input>
                         </el-form-item>
                         <el-form-item
                             label="状态："
@@ -114,13 +125,13 @@
                         <el-form-item label="特殊资源：">
                             <el-radio-group v-model="LeaveningformData.brineFlag">
                                 <el-radio label="N" disabled>
-                                    盐水发料未发
+                                    盐水未发
                                 </el-radio>
                                 <el-radio label="N1" disabled>
                                     盐水发料中
                                 </el-radio>
                                 <el-radio label="Y" disabled>
-                                    盐水发料已发
+                                    盐水已发
                                 </el-radio>
                             </el-radio-group>
                         </el-form-item>
@@ -324,7 +335,7 @@ export default class LeaveningBucketDetail extends Vue {
         console.log(this.$store.state.fer.fermentBucketDetail)
         this.LeaveningformData = this.$store.state.fer.fermentBucketDetail
         this.$set(this.LeaveningformData, 'material', `${this.LeaveningformData.materialName} ${this.LeaveningformData.materialCode}`)
-        this.$set(this.LeaveningformData, 'freezeFlagnName', this.LeaveningformData.freezeFlag === 'Y' ? '是' : '否')
+        this.$set(this.LeaveningformData, 'freezeFlagnName', this.LeaveningformData.freezeFlag === 'Y' ? '已成熟' : '未成熟')
         this.currentWorkShopName = this.LeaveningformData.workShopName as string
 
         FER_API.FER_FERMENTOR_STOCK_DETAIL_QUERY_API({
@@ -340,7 +351,6 @@ export default class LeaveningBucketDetail extends Vue {
                     this.currentInStockDataGroup = data.data.inStock;
                     this.currentOutStockDataGroup = data.data.outStock;
                 }
-
         });
 
     }

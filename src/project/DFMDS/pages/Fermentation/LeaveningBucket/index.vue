@@ -1,3 +1,10 @@
+<!--
+ * @Description: 发酵车间/发酵罐首页
+ * @Anthor: Telliex
+ * @Date: 2021-01-15 23:35:23
+ * @LastEditors: Telliex
+ * @LastEditTime: 2021-01-19 18:15:11
+-->
 <template>
     <div class="header_main">
         <query-table
@@ -12,37 +19,52 @@
             @get-data-success="returnDataFromQueryTableForm"
         >
             <template slot="home">
+                <!-- 发酵情况总览区块 -->
                 <mds-card v-show="isSearchResultMetroShow" :title="'发酵情况总览'" :pack-up="false" :name="'fermenterTotal'" style="margin-top: 10px;">
                     <div class="sumbox">
                         <div class="topBox clearfix">
                             <div v-for="(item, index) in topBox" :key="index" class="clearfix" style="float: left;">
-                                <div class="topBox_boxItem" @click="getResultBymetroItem(item)">
-                                    <div style="overflow: hidden;">
-                                        <div class="topBox_boxItem_bar">
-                                            <div
-                                                class="topBox_boxItem_bar_box"
-                                                :style="{ background: `linear-gradient(to right,${item.startColor} 0%,${item.startColor} 10%,${item.startColor})`}"
-                                            />
-                                        </div>
-                                        <div style="float: left; width: 32px; font-size: 14px; line-height: 30px; text-align: center;">
-                                            {{ item.middleText }}
-                                        </div>
-                                        <div class="topBox_boxItem_bar">
-                                            <div
-                                                class="topBox_boxItem_bar_box"
-                                                :style="{
-                                                    background: `linear-gradient(to right,${item.endColor} 0%,${item.endColor} 10%,${item.endColor})`
-                                                }"
-                                            />
-                                        </div>
+                                <el-popover
+                                    placement="top"
+                                    width="200"
+                                    trigger="hover"
+                                >
+                                    <div class="showBox">
+                                        <ul>
+                                            <li><span>xxxxx</span><span>22222吨</span></li>
+                                            <li><span>xxxxx</span><span>22222吨</span></li>
+                                        </ul>
                                     </div>
-                                    <p class="topBox_boxItem_tit">
-                                        {{ item.ptext }}
-                                    </p>
-                                    <p class="topBox_boxItem_detail">
-                                        总计: <span>{{ item.num }}</span> 罐
-                                    </p>
-                                </div>
+                                    <template slot="reference">
+                                        <div class="topBox_boxItem" @click="getResultBymetroItem(item)">
+                                            <div style="overflow: hidden;">
+                                                <div class="topBox_boxItem_bar">
+                                                    <div
+                                                        class="topBox_boxItem_bar_box"
+                                                        :style="{ background: `linear-gradient(to right,${item.startColor} 0%,${item.startColor} 10%,${item.startColor})`}"
+                                                    />
+                                                </div>
+                                                <div style="float: left; width: 32px; font-size: 14px; line-height: 30px; text-align: center;">
+                                                    {{ item.middleText }}
+                                                </div>
+                                                <div class="topBox_boxItem_bar">
+                                                    <div
+                                                        class="topBox_boxItem_bar_box"
+                                                        :style="{
+                                                            background: `linear-gradient(to right,${item.endColor} 0%,${item.endColor} 10%,${item.endColor})`
+                                                        }"
+                                                    />
+                                                </div>
+                                            </div>
+                                            <p class="topBox_boxItem_tit">
+                                                {{ item.ptext }}
+                                            </p>
+                                            <p class="topBox_boxItem_detail">
+                                                总计: <span>{{ item.num }}</span> 罐
+                                            </p>
+                                        </div>
+                                    </template>
+                                </el-popover>
                                 <div v-if="item.color" class="topBox_circle" :style="{ background: item.color }">
                                     {{ item.text }}
                                 </div>
@@ -50,10 +72,11 @@
                         </div>
                     </div>
                 </mds-card>
+                <!-- 发酵罐列表区块 -->
                 <mds-card v-show="isSearchResultListShow" :title="'发酵罐列表'" :pack-up="false" :name="'fermenterTotal'" style="margin-top: 10px; overflow: initial;">
                     <template slot="titleBtn">
                         <div style="float: right;" class="moreItems">
-                            <el-button type="text" size="small" @click="getMore">
+                            <el-button type="text" size="small" @click="getTotalList">
                                 发酵罐一览表
                             </el-button>
                         </div>
@@ -63,7 +86,7 @@
                             <div class="card-bucket">
                                 <div class="card-bucket__head">
                                     <span>{{ item.holderName }} - {{ item.fermentorStatusName }}</span>
-                                    <el-button type="text" @click="goTargetDetail(item)">
+                                    <el-button type="text" @click="goTargetItemDetail(item)">
                                         详情
                                     </el-button>
                                 </div>
@@ -93,20 +116,20 @@
                                         <el-button v-if="isAuth('')" size="small" plain :disabled="item.fermentorStatus!=='U'" @click="btnClearBucket(item)">
                                             清罐
                                         </el-button>
-                                        <el-button v-if="isAuth('')" size="small" plain :disabled="item.fermentorStatus!=='C'" @click="btnWashBucket(item)">
+                                        <el-button v-if="isAuth('')" size="small" plain :disabled="item.fermentorStatus!=='C'" @click="btnCleanBucket(item)">
                                             清洗
                                         </el-button>
                                     </div>
                                 </div>
                                 <div class="card-bucket__fotter">
                                     <div v-show="!(item.fermentorStatus==='E'||item.fermentorStatus==='C')">
-                                        <el-tooltip class="item" effect="dark" :content="item.materialName" placement="top">
+                                        <el-tooltip class="item" effect="dark" :content="item.materialName" placement="top" :disabled="item.materialName===''">
                                             <span style="overflow: hidden; white-space: nowrap; text-overflow: ellipsis;">{{ item.materialName || '未有生产物料' }}</span>
                                         </el-tooltip>
                                         <span>{{ item.fermentDays || '0' }} 天</span>
                                     </div>
                                     <div v-show="!(item.fermentorStatus==='E'||item.fermentorStatus==='C')">
-                                        <el-tooltip class="item" effect="dark" :content="item.orderNo" placement="top">
+                                        <el-tooltip class="item" effect="dark" :content="item.orderNo" placement="top" :disabled="item.orderNo===''">
                                             <span style="overflow: hidden; white-space: nowrap; text-overflow: ellipsis;">{{ item.orderNo || '未有订单号' }}</span>
                                         </el-tooltip>
                                         <span>{{ item.currentStock || '0' }} 吨</span>
@@ -119,11 +142,13 @@
                 </mds-card>
             </template>
         </query-table>
+        <!-- 鼓罐 dialog -->
         <drum-bucket ref="drumBucket" @drumBucketFinish="drumBucketFinish" />
+        <!-- LY/CY dialog -->
         <l-y-c-y-bucket ref="LYCYBucket" @drumBucketFinish="drumBucketFinish" />
+        <!-- 调整 dialog -->
         <modify-bucket ref="modifyBucket" @drumBucketFinish="drumBucketFinish" />
-
-
+        <!-- 清罐 dialog -->
         <el-dialog :title="`${clearDataForm.holderName}清罐`" width="400px" :close-on-click-modal="false" :visible.sync="isClearDialogVisible">
             <div style="font-size: 14px;">
                 罐完成后，库存数量清零,请确认!
@@ -142,7 +167,7 @@
                 </el-button>
             </div>
         </el-dialog>
-
+        <!-- 清洗 dialog -->
         <el-dialog :title="`${cleanDataForm.holderName}清洗`" width="50%" :close-on-click-modal="false" :visible.sync="isCleanDialogVisible">
             <el-form :model="cleanDataForm" size="small" label-width="110px" class="orderMangedialog">
                 <el-form-item label="溶解罐号：">
@@ -178,14 +203,14 @@
     </div>
 </template>
 <script lang="ts">
-
+    // TODOS mouseover 地铁图，需要接口套用
     import { Vue, Component } from 'vue-property-decorator';
-    import { dateFormat, getUserNameNumber } from 'utils/utils';
-    import DrumBucket from './DrumBucket.vue';
-    import LYCYBucket from './LYCYBucke.vue';
-    import ModifyBucket from './ModifyBucket.vue';
     import { COMMON_API, FER_API } from 'common/api/api';
-    // import { dateFormat } from 'utils/utils';
+    import { dateFormat, getUserNameNumber } from 'utils/utils';
+
+    import DrumBucket from './DrumBucket.vue'; // 鼓罐 dialog
+    import LYCYBucket from './LYCYBucke.vue'; // LY/CY dialog
+    import ModifyBucket from './ModifyBucket.vue'; // 调整 dialog
 
     @Component({
         name: 'FermentBucketIndex',
@@ -204,14 +229,11 @@
         }
 
         // 共用变数
-
-        workShopList: Options[]=[]
-
+        workShopList: Options[]=[] // 生产车间
         holderStatus: Options[]=[] // 罐状态对应
 
-        targetQueryTableList: BucketDataListObj[] = []
-
-        searchSource='bar' // 查询来自哪？ bar/ metro
+        targetQueryTableList: BucketDataListObj[] = [] // 查询结果
+        searchSource='bar' // 查询来自哪？ search bar/ metro map
 
         // 清罐弹窗 data
         isClearDialogVisible = false;
@@ -246,7 +268,6 @@
             fermentStage: ''
         }
 
-
         // queryTable 必要变数
         queryTableFormData = [
             {
@@ -265,7 +286,6 @@
                                 // eslint-disable-next-line no-invalid-this
                                 this.workShopList.push({ dictCode: item.deptCode, dictValue: item.deptName })
                             })
-
                             resolve(res)
                         })
                     })
@@ -287,8 +307,6 @@
                         COMMON_API.DICTQUERY_API({
                             dictType: 'COMMON_HOLDER_TYPE'
                         }).then((res) => {
-                            console.log('容器类型')
-                            console.log(res)
                             const resData = res
                             const holderTemp: object[] = []
 
@@ -320,8 +338,6 @@
                         COMMON_API.HOLDER_DROPDOWN_API({
                         holderType: [val]
                     }).then((res) => {
-                        console.log('容器号')
-                        console.log(res)
                         resolve(res)
                     })
                 })
@@ -354,6 +370,7 @@
             }
         ]
 
+        // 查询必填栏位校验
         queryTableFormRules = [
         ]
 
@@ -517,29 +534,25 @@
             }
         ]
 
-        mounted() {
-            // this.ani();
-        }
-
-
         // 入罐完成
         drumBucketFinish() {
             this.$refs.queryTable.getDataList(true)
         }
 
-        // 总览点击
-        getResultBymetroItem(item) {
-            console.log('地铁图传值')
-            console.log(item)
-            this.searchSource = 'metro'
 
-            this.formHeader.fermentStage = item.fermentStage
-            this.formHeader.currPage = 1
-            this.formHeader.pageSize = 10
-            this.$refs.queryTable.queryForm.currPage = 1
-            this.$refs.queryTable.queryForm.pageSize = 10
-            this.$set(this.$refs.queryTable.queryForm, 'fermentStage', item.fermentStage)
-            this.isSearchResultListShow = true
+        // 地铁图总览点击查询
+        getResultBymetroItem(item) {
+            console.log('地铁图传值');
+            console.log(item);
+            this.searchSource = 'metro';
+
+            this.formHeader.fermentStage = item.fermentStage;
+            this.formHeader.currPage = 1;
+            this.formHeader.pageSize = 10;
+            this.$refs.queryTable.queryForm.currPage = 1;
+            this.$refs.queryTable.queryForm.pageSize = 10;
+            this.$set(this.$refs.queryTable.queryForm, 'fermentStage', item.fermentStage);
+            this.isSearchResultListShow = true;
 
             this.queryTableListInterface({
                 searchSource: 'metro',
@@ -552,66 +565,14 @@
                 fermStatus: this.formHeader.fermStatus,
                 fermentStage: this.formHeader.fermentStage
             }).then(({ data }) => {
-                this.returnDataFromQueryTableForm(data)
+                this.returnDataFromQueryTableForm(data);
             })
         }
 
-        ani() {
-            const $ = this.$;
-            this.$('.topBox_boxItem').hover(
-                () => {
-
-                    $(this)
-                        .find('.topBox_boxItem_popover')
-                        .stop();
-                    $(this)
-                        .find('.topBox_boxItem_bar_box')
-                        .stop();
-                    $(this)
-                        .find('.topBox_boxItem_popover')
-                        .show(500);
-                    $(this)
-                        .find('.topBox_boxItem_bar_box')
-                        .css({ width: 0 });
-                    $(this)
-                        .find('.topBox_boxItem_tit')
-                        .css({ color: '#1890FF' });
-                    $(this)
-                        .find('.topBox_boxItem_bar_box')
-                        .animate({ width: '100%' }, 500);
-                    $(this)
-                        .parent()
-                        .find('.topBox_circle')
-                        .css({ transform: 'scale(1.2)' });
-                    $(this)
-                        .parent()
-                        .prev()
-                        .find('.topBox_circle')
-                        .css({ transform: 'scale(1.2)' });
-                },
-                () => {
-                    $(this)
-                        .find('.topBox_boxItem_tit')
-                        .css({ color: 'black' });
-                    $(this)
-                        .find('.topBox_boxItem_popover')
-                        .hide(500);
-                    $(this)
-                        .parent()
-                        .find('.topBox_circle')
-                        .css({ transform: 'scale(1.0)' });
-                    $(this)
-                        .parent()
-                        .prev()
-                        .find('.topBox_circle')
-                        .css({ transform: 'scale(1.0)' });
-                }
-            );
-        }
-
+        // 取得结果 data
         getData() {
-            if (this.searchSource === 'bar') {
-                this.formHeader.fermentStage = ''
+            if (this.searchSource === 'bar') { // 来自 search bar 查询
+                this.formHeader.fermentStage = '';
                     this.queryTableListInterface({
                     factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
                     currPage: this.formHeader.currPage,
@@ -622,9 +583,9 @@
                     fermStatus: this.formHeader.fermStatus,
                     fermentStage: this.formHeader.fermentStage
                 }).then(({ data }) => {
-                    this.returnDataFromQueryTableForm(data)
+                    this.returnDataFromQueryTableForm(data);
                 })
-            } else {
+            } else { // 来自 metro map 查询
                 this.queryTableListInterface({
                     searchSource: 'metro',
                     factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
@@ -636,7 +597,7 @@
                     fermStatus: this.formHeader.fermStatus,
                     fermentStage: this.formHeader.fermentStage
                 }).then(({ data }) => {
-                    this.returnDataFromQueryTableForm(data)
+                    this.returnDataFromQueryTableForm(data);
                 })
             }
         }
@@ -645,13 +606,14 @@
         createdEnd() {
             this.$nextTick(() => {
                 if (this.$refs.queryTable.queryForm.workShop !== '') {
-                    this.$refs.queryTable.getDataList(true)
+                    this.$refs.queryTable.getDataList(true);
                 }
             })
         }
 
-        getMore() {
-            this.$store.commit('common/updateMainTabs', this.$store.state.common.mainTabs.filter(subItem => subItem.name !== 'DFMDS-pages-Fermentation-LeaveningBucket-Overview'))
+        // 跳转发酵罐一览表
+        getTotalList() {
+            this.$store.commit('common/updateMainTabs', this.$store.state.common.mainTabs.filter(subItem => subItem.name !== 'DFMDS-pages-Fermentation-LeaveningBucket-Overview'));
             setTimeout(() => {
                 this.$router.push({
                     name: `DFMDS-pages-Fermentation-LeaveningBucket-Overview`
@@ -659,11 +621,11 @@
             }, 100);
         }
 
-        // 去详请
-        goTargetDetail(item) {
-            this.$set(item, 'workShopName', this.workShopList.filter(element => element.dictCode === item.workShop)[0].dictValue)
+        // 跳转 item 详请
+        goTargetItemDetail(item) {
+            this.$set(item, 'workShopName', this.workShopList.filter(element => element.dictCode === item.workShop)[0].dictValue);
             this.$store.commit('fer/updatefermentBucket', item);
-            this.$store.commit('common/updateMainTabs', this.$store.state.common.mainTabs.filter(subItem => subItem.name !== 'DFMDS-pages-Fermentation-LeaveningBucket-LeaveningBucketDetail'))
+            this.$store.commit('common/updateMainTabs', this.$store.state.common.mainTabs.filter(subItem => subItem.name !== 'DFMDS-pages-Fermentation-LeaveningBucket-LeaveningBucketDetail'));
             setTimeout(() => {
                 this.$router.push({
                     name: `DFMDS-pages-Fermentation-LeaveningBucket-LeaveningBucketDetail`
@@ -673,39 +635,38 @@
 
         // queryTable 查询请求
         queryTableListInterface = (params) => {
-            console.log('搜寻传值')
-            console.log(params)
-            let paramsTemp = {}
+            console.log('搜寻传值');
+            console.log(params);
+            let paramsTemp = {};
             if (params.searchSource === 'metro') {
-                console.log('我来自地图')
-                paramsTemp = params
+                console.log('我来自地图');
+                paramsTemp = params;
             } else {
                 console.log('我来自按钮查询')
                 // eslint-disable-next-line no-invalid-this
-                this.searchSource = 'bar'
+                this.searchSource = 'bar';
                 paramsTemp = {
-                factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
-                current: params.currPage,
-                size: params.pageSize,
-                workShop: params.workShop,
-                holderType: params.holderType,
-                holderId: params.holderId,
-                fermStatus: params.fermStatus,
-                fermentStage: ''
+                    factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
+                    current: params.currPage,
+                    size: params.pageSize,
+                    workShop: params.workShop,
+                    holderType: params.holderType,
+                    holderId: params.holderId,
+                    fermStatus: params.fermStatus,
+                    fermentStage: ''
+                }
             }
-            }
-
             return FER_API.FER_FERMENTOR_BATCH_QUERY_API(paramsTemp);
         };
 
         // queryTable 回传 result
         returnDataFromQueryTableForm(data) {
-            console.log('查询结果回传')
-            console.log(data)
+            console.log('查询结果回传');
+            console.log(data);
             // 取得组件查找字段
-            const queryForm = this.$refs.queryTable.queryForm
+            const queryForm = this.$refs.queryTable.queryForm;
             // 清空结果 array
-            this.targetQueryTableList = []
+            this.targetQueryTableList = [];
             // 更新地铁图数据
             this.topBox[0].num = data.data.emptyAmount;
             this.topBox[1].num = data.data.fermentingAmount0;
@@ -721,27 +682,25 @@
             this.topBox[11].num = data.data.useAmount;
 
             if (data.data.data.records.length !== 0) {
-                this.isSearchResultMetroShow = true // 地铁图区块呈现
-                this.isSearchResultListShow = true // 结果区块呈现
-                this.targetQueryTableList = data.data.data.records
+                this.isSearchResultMetroShow = true; // 地铁图区块呈现
+                this.isSearchResultListShow = true; // 结果区块呈现
+                this.targetQueryTableList = data.data.data.records;
 
-                this.$set(this.formHeader, 'currPage', data.data.data.current)
-                this.$set(this.formHeader, 'fermStatus', queryForm.fermStatus)
-                this.$set(this.formHeader, 'holderId ', queryForm.holderId)
-                this.$set(this.formHeader, 'holderType', queryForm.holderType)
-                this.$set(this.formHeader, 'pageSize', data.data.data.size)
-                this.$set(this.formHeader, 'totalCount', data.data.data.total)
-                this.$set(this.formHeader, 'workShop', queryForm.workShop)
+                this.$set(this.formHeader, 'currPage', data.data.data.current);
+                this.$set(this.formHeader, 'fermStatus', queryForm.fermStatus);
+                this.$set(this.formHeader, 'holderId ', queryForm.holderId);
+                this.$set(this.formHeader, 'holderType', queryForm.holderType);
+                this.$set(this.formHeader, 'pageSize', data.data.data.size);
+                this.$set(this.formHeader, 'totalCount', data.data.data.total);
+                this.$set(this.formHeader, 'workShop', queryForm.workShop);
 
             } else {
-
                 if (this.searchSource === 'bar') { //查询来自按钮
-                    this.isSearchResultMetroShow = false
-                    this.isSearchResultListShow = false
+                    this.isSearchResultMetroShow = false;
+                    this.isSearchResultListShow = false;
                 } else { //查询来自地铁图
-                    this.isSearchResultListShow = false
+                    this.isSearchResultListShow = false;
                 }
-
                 this.$infoToast('暂无任何内容');
             }
 
@@ -749,26 +708,26 @@
 
         // [btn][鼓罐]
         btnFilledBucket(item) {
-            console.log(item)
-            this.$refs.drumBucket.init(item)
+            console.log(item);
+            this.$refs.drumBucket.init(item);
         }
 
         // [btn][LYCY]
         btnLYCY(item) {
-            console.log(item)
-            this.$refs.LYCYBucket.init(item)
+            console.log(item);
+            this.$refs.LYCYBucket.init(item);
         }
 
         // [btn][btnAdjust]
         btnAdjust(item) {
-            console.log(item)
-            this.$refs.modifyBucket.init(item)
+            console.log(item);
+            this.$refs.modifyBucket.init(item);
         }
 
         // [btn][清罐]
         btnClearBucket(item) {
-            console.log(item)
-            this.isClearDialogVisible = true
+            console.log(item);
+            this.isClearDialogVisible = true;
             this.clearDataForm = {
                 holderId: item.holderId,
                 holderName: item.holderName,
@@ -777,9 +736,9 @@
         }
 
         // [btn][清洗]
-        btnWashBucket(item) {
-            console.log(item)
-            this.isCleanDialogVisible = true
+        btnCleanBucket(item) {
+            console.log(item);
+            this.isCleanDialogVisible = true;
             this.cleanDataForm = {
                 holderId: item.holderId,
                 holderName: item.holderName,
@@ -794,8 +753,8 @@
 
         // 关闭弹窗
         btnCloseDialog() {
-            this.isCleanDialogVisible = false
-            this.isClearDialogVisible = false
+            this.isCleanDialogVisible = false;
+            this.isClearDialogVisible = false;
         }
 
 
@@ -1325,6 +1284,34 @@ interface CurrentDataTable{
         background: #999;
         border-radius: 50%;
         transition: all 0.5s;
+    }
+}
+$icon-bg-color:#f05c4a,#333,#147fe7,#5bd171,#ffbf00;
+$repeat: length($icon-bg-color);  // How often you want the pattern to repeat.
+.showBox {
+    padding: 5px;
+    li {
+        position: relative;
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 3px;
+        padding-left: 7px;
+        list-style: none;
+        &::before {
+            position: absolute;
+            top: 7px;
+            left: 0;
+            width: 5px;
+            height: 5px;
+            border-radius: 5px;
+            content: "";
+        }
+    }
+}
+
+@for $i from 1 through $repeat {
+    .showBox li:nth-child(#{length($icon-bg-color)}n+#{$i})::before {
+        background-color: nth($icon-bg-color, $i);
     }
 }
 

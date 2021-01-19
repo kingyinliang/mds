@@ -1,9 +1,9 @@
 <!--
- * @Description:
+ * @Description:发酵车间/发酵罐一览表
  * @Anthor: Telliex
  * @Date: 2020-12-01 20:33:02
  * @LastEditors: Telliex
- * @LastEditTime: 2020-12-04 14:06:29
+ * @LastEditTime: 2021-01-19 18:15:33
 -->
 <template>
     <data-entry ref="dataEntry" :tabs="tabs" :order-status-show="false" :header-area-show="false" :redact-box-show="false" class="mainForm">
@@ -16,12 +16,10 @@
                         </el-button>
                     </div>
                 </template>
-
                 <el-table class="newTable other" :data="targetSummaryQueryTableList" max-height="500" header-row-class-name="tableHead" border tooltip-effect="dark">
-                    <!-- <el-table-column type="index" label="序号" width="50" align="center" fixed="left" /> -->
                     <el-table-column label="名称" :show-overflow-tooltip="true" min-width="210">
                         <template slot-scope="scope">
-                            {{ `${scope.row.materialName} ${scope.row.materialCode}` }}
+                            {{ scope.row.materialName }}
                         </template>
                     </el-table-column>
                     <el-table-column label="N<30" :show-overflow-tooltip="true" width="140">
@@ -70,7 +68,6 @@
                         </template>
                     </el-table-column>
                 </el-table>
-
                 <ul class="solerow">
                     <li>
                         <span class="title">
@@ -88,6 +85,14 @@
                             {{ emptyHolderNum }}
                         </span>
                     </li>
+                    <li>
+                        <span class="title">
+                            待清洗数量:
+                        </span>
+                        <span class="content">
+                            {{ needClearNum }}
+                        </span>
+                    </li>
                 </ul>
             </mds-card>
         </template>
@@ -100,8 +105,6 @@
                         </el-button>
                     </div>
                 </template>
-
-
                 <el-table class="newTable other" :data="targetSotckSummaryQueryTableList" max-height="500" header-row-class-name="tableHead" border tooltip-effect="dark">
                     <el-table-column label="容器类别" :show-overflow-tooltip="true" min-width="210" fixed="left">
                         <template slot-scope="scope">
@@ -189,24 +192,17 @@
     import { FER_API } from 'common/api/api';
     import { exportFileForm } from 'utils/utils.ts';
 
-    // import FermentOverview from './common/FermentOverview.vue';
-    // import FermentList from './common/FermentList.vue';
-
     @Component({
         name: 'OverviewIndex',
         components: {
-            // fermentOverview,
-            // fermentList
         }
     })
     export default class OverviewIndex extends Vue {
         $refs: {
-            fermentOverview: HTMLFormElement;
-            fermentList: HTMLFormElement;
         };
 
-        targetSummaryQueryTableList: QuerySummary[] = [];
-        targetSotckSummaryQueryTableList: StockQuerySummary[] = [];
+        targetSummaryQueryTableList: QuerySummary[] = []; // 发酵罐一览表
+        targetSotckSummaryQueryTableList: StockQuerySummary[] = []; // 发酵库存列表
 
         tabs = [
             {
@@ -219,6 +215,7 @@
 
         holderNum = 0; // 容器总量
         emptyHolderNum = 0; // 空罐数量
+        needClearNum = 0; // 待清洗数量
 
         mounted() {
             // 发酵一览表
@@ -230,6 +227,7 @@
                     this.targetSummaryQueryTableList = data.data.summaryList;
                     this.holderNum = data.data.total;
                     this.emptyHolderNum = data.data.emptyAmount;
+                    this.needClearNum = data.data.cleaningAmount;
                 }
             });
 
@@ -244,8 +242,9 @@
             });
         }
 
+        // TODOS 发酵一览表导出部分未处理
+        // 发酵一览表 export
         exportFermentSummary() {
-            // 发酵一览表 export
             // exportFileForm(`${FER_API.FER_EXPORT_FERMENTOR_SUMMARY_QUERY_API}`, '发酵一览表报表', this);
             // 发酵一览表
             FER_API.FER_EXPORT_FERMENTOR_SUMMARY_QUERY_API({}).then(({ data }) => {
@@ -254,8 +253,9 @@
             });
         }
 
+        // TODOS 发酵罐库存汇总信息导出部分未处理
+        // 发酵罐库存汇总信息 export
         exportFermentStockSummary() {
-            // 发酵罐库存汇总信息 export
             exportFileForm(`${FER_API.FER_EXPORT_FERMENTOR_STOCK_SUMMARY_QUERY_API}`, '发酵罐库存汇总信息表', this);
         }
     }
