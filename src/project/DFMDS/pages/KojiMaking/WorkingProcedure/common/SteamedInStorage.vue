@@ -318,7 +318,6 @@
         processCode?: string;
         materialCode?: string;
         materialName?: string;
-        unitName?: string;
     }
 
     interface SieveDeviceList {
