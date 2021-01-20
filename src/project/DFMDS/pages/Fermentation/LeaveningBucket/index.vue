@@ -3,7 +3,7 @@
  * @Anthor: Telliex
  * @Date: 2021-01-15 23:35:23
  * @LastEditors: Telliex
- * @LastEditTime: 2021-01-19 18:15:11
+ * @LastEditTime: 2021-01-19 18:25:36
 -->
 <template>
     <div class="header_main">
@@ -170,7 +170,7 @@
         <!-- 清洗 dialog -->
         <el-dialog :title="`${cleanDataForm.holderName}清洗`" width="50%" :close-on-click-modal="false" :visible.sync="isCleanDialogVisible">
             <el-form :model="cleanDataForm" size="small" label-width="110px" class="orderMangedialog">
-                <el-form-item label="溶解罐号：">
+                <el-form-item label="容器号：">
                     <span class="default">{{ cleanDataForm.holderName }}</span>
                 </el-form-item>
                 <el-form-item label="状态：">

@@ -20,7 +20,6 @@
                 <div class="inner-area__body">
                     <el-form ref="importBucketForm" :model="importBucketForm" size="size" class="markStyle">
                         <el-table class="table-style-light" :data="drumBucketInfo" :row-class-name="rowDelFlag" header-row-class-name="tableHead" size="mini" border style="width: 100%;" max-height="300">
-                            <el-table-column label="序号" type="index" width="55" fixed="left" align="center" />
                             <el-table-column min-width="200" :show-overflow-tooltip="true">
                                 <template slot="header">
                                     <span class="notNull">鼓罐阶段</span>
@@ -56,9 +55,9 @@
                                     </el-form-item>
                                 </template>
                             </el-table-column>
-                            <el-table-column min-width="100" :show-overflow-tooltip="true">
+                            <el-table-column min-width="140" :show-overflow-tooltip="true">
                                 <template slot="header">
-                                    <span>酱料温度</span>
+                                    <span>酱料温度（℃）</span>
                                 </template>
                                 <template slot-scope="scope">
                                     <el-form-item prop="sauceTemperature">

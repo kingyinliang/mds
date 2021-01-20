@@ -47,7 +47,6 @@
                     <el-tabs v-model="currentTab">
                         <el-tab-pane label="LY" name="LY">
                             <el-table class="table-style-light markStyle" :data="lyDataGroup" :row-class-name="rowDelFlag" header-row-class-name="tableHead" size="mini" border style="width: 100%;" max-height="300">
-                                <el-table-column label="序号" type="index" width="55" fixed="left" align="center" />
                                 <el-table-column width="260" :show-overflow-tooltip="true">
                                     <template slot="header">
                                         <span class="notNull">LY 时间</span>
@@ -87,7 +86,6 @@
                         </el-tab-pane>
                         <el-tab-pane label="CY" name="CY">
                             <el-table class="table-style-light markStyle" :data="cyDataGroup" :row-class-name="rowDelFlag" header-row-class-name="tableHead" size="mini" border style="width: 100%;" max-height="300">
-                                <el-table-column label="序号" type="index" width="55" fixed="left" align="center" />
                                 <el-table-column label="审核状态" width="160" :show-overflow-tooltip="true" prop="checkStatusName" />
                                 <el-table-column :show-overflow-tooltip="true" width="160" prop="injectionPotName">
                                     <template slot="header">
