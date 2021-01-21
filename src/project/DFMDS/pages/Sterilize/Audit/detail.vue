@@ -12,7 +12,6 @@
             <template slot="1">
                 <el-table ref="semiReceive" class="newTable" :data="semiReceiveList" row-key="id" :tree-props="{children: 'children', hasChildren: 'hasChildren'}" header-row-class-name="tableHead" border tooltip-effect="dark">
                     <el-table-column type="index" label="序号" width="50" align="center" fixed />
-                    <!-- <el-table-column label="发酵罐/池号" prop="fermentPotName" min-width="120" /> -->
                     <table-tree-column label="发酵罐/池号" prop="fermentPotName" min-width="120" tree-key="id" show-overflow-tooltip />
                     <el-table-column label="生产锅号" prop="stePotName" min-width="85" />
                     <el-table-column label="锅序" prop="potOrder" min-width="65">
@@ -47,10 +46,8 @@
                             {{ scope.row.materialName }} {{ scope.row.materialCode }}
                         </template>
                     </el-table-column>
-                    <!-- <table-tree-column label="领用物料" prop="material" min-width="220" tree-key="id" show-overflow-tooltip /> -->
                     <el-table-column label="前处理阶段" prop="preStage" min-width="90" />
                     <el-table-column label="需求用量" prop="needAmount" min-width="80" />
-                    <!-- <el-table-column label="生产锅号" prop="potNo" min-width="80" /> -->
                     <table-tree-column label="生产锅号" prop="potName" min-width="110" tree-key="id" show-overflow-tooltip />
                     <el-table-column label="锅序" prop="potOrder" min-width="65">
                         <template slot-scope="scope">
@@ -79,18 +76,18 @@
                             <em v-if="scope.row.potOrder">第{{ scope.row.potOrder }}锅</em>
                         </template>
                     </el-table-column>
-                    <el-table-column label="入料时间" prop="" min-width="160">
+                    <el-table-column label="入料时间" prop="" min-width="200">
                         <template slot-scope="scope">
                             {{ scope.row.feedStartDate }} - {{ scope.row.feedEndDate }}
                         </template>
                     </el-table-column>
-                    <el-table-column label="升温时间" prop="" min-width="180">
+                    <el-table-column label="升温时间" prop="" min-width="220">
                         <template slot-scope="scope">
                             {{ scope.row.riseStartDate }} - {{ scope.row.riseEndDate }}
                         </template>
                     </el-table-column>
-                    <el-table-column label="保温阶段-ZK" prop="keepZkFlag" min-width="65" />
-                    <el-table-column label="降温阶段-ZK" prop="coolZkFlag" min-width="65" />
+                    <el-table-column label="保温阶段-ZK" prop="keepZkFlag" min-width="90" />
+                    <el-table-column label="降温阶段-ZK" prop="coolZkFlag" min-width="90" />
                     <el-table-column label="类型" prop="controlTypeName" min-width="90" />
                     <el-table-column label="阶段" prop="controlStageName" min-width="120" />
                     <el-table-column label="记录时间" prop="recordDate" min-width="165" />
@@ -120,7 +117,7 @@
                 </el-row>
                 <el-table ref="inStorage" class="newTable" :data="inStorageList" header-row-class-name="tableHead" style="margin-top: 10px;" border tooltip-effect="dark">
                     <el-table-column type="index" label="序号" width="50" align="center" fixed />
-                    <el-table-column label="正常入库" prop="normalFlag" min-width="50" />
+                    <el-table-column label="正常入库" prop="normalFlag" min-width="80" />
                     <el-table-column label="包装产线" prop="packageLine" min-width="180" show-overflow-tooltip />
                     <el-table-column label="包装订单" prop="packageOrderNo" min-width="120" />
                     <el-table-column label="入库物料" prop="" min-width="220" show-overflow-tooltip>
@@ -175,8 +172,6 @@
                     <el-table-column label="单位" prop="manUnit" min-width="50" />
                     <el-table-column label="机器工时" prop="machineTime" min-width="80" />
                     <el-table-column label="单位" prop="machineUnit" min-width="50" />
-                    <!-- <el-table-column label="生产锅号" prop="potName" min-width="120" /> -->
-                    <!-- <table-tree-column label="锅序" prop="potOrder" min-width="90" tree-key="id" show-overflow-tooltip /> -->
                     <table-tree-column label="生产锅号" prop="potName" min-width="120" tree-key="id" show-overflow-tooltip />
                     <el-table-column label="锅序" prop="potOrder" min-width="65" />
                     <el-table-column label="锅单号" prop="potOrderNo" min-width="180" show-overflow-tooltip />
@@ -209,7 +204,6 @@
 
 <script lang="ts">
     import { Vue, Component } from 'vue-property-decorator';
-    // import TableTreeColumn from '@/views/components/table-tree-column'
     import { COMMON_API, STE_API } from 'common/api/api';
 
     @Component({
@@ -336,21 +330,60 @@
             ENERGY: []
         };
 
-        controlTypeList = [];
-        controlStageList = [];
+        controlTypeList: Reason[] = [];
+        controlStageList: Reason[] = [];
+        controlList: ControlList[]=[];
 
 
-        mounted() {
+        async mounted() {
             this.auditDetail = this.$store.state.sterilize.auditDetailDetail;
-            this.initData();
-            this.getControlTypeList();
+            await this.getControlTypeList();
+            await this.getHeaderInfo(this.auditDetail['orderNo']);
+
+            const net1 = new Promise((resolve) => {
+                this.getexcReasonTwo(resolve);
+            });
+            const net2 = new Promise((resolve) => {
+                this.getexcReasonThree(resolve);
+            });
+            const net3 = new Promise((resolve) => {
+                this.getClassesList(resolve);
+            });
+            const net4 = new Promise((resolve) => {
+                this.getAbnormalList(resolve);
+            });
+
+            await Promise.all([net1, net2, net3, net4]).then(() => {
+                this.getExceptionList(this.auditDetail['orderNo'], this.auditDetail['workShop']); // 异常
+            })
+            await this.getTimeList(this.auditDetail['orderNo']); // 杀菌工时
+            await this.getSemiMaterial(this.auditDetail['orderNo']); // 半成品领用
+            await this.getAccessList(this.auditDetail['orderNo']); // 辅料添加
+            await this.getInstorageList(this.auditDetail['orderNo']); // 杀菌入库
+            await this.getCraftList(this.auditDetail['orderNo']); // 工艺控制
+            await this.initData(); // 页签状态
         }
 
         // 类型拉取
         getControlTypeList() {
-            COMMON_API.DICTQUERY_API({ dictType: 'CRAFT_PHASE' }).then(({ data }) => {
-                this.controlTypeList = data.data
-            });
+            const tempList: string[] = [];
+            return new Promise((resolve) => {
+                COMMON_API.DICTQUERY_API({ dictType: 'CRAFT_PHASE' }).then(({ data }) => {
+                    this.controlTypeList = data.data
+                    data.data.forEach((item, index) => {
+                        if (tempList.indexOf(item.dictCode) === -1) {
+                            tempList.push(item.dictCode)
+                            COMMON_API.DICTQUERY_API({ dictType: item.dictCode }).then(({ data: res }) => {
+                                this.controlList[index] = { controlTypeList: item, controlStageList: res.data }
+                            });
+                        }
+                        if (data.data.length - 1 === index) {
+                            resolve(null)
+                        }
+                    })
+                });
+            })
+
         }
 
         // 页签状态
@@ -360,77 +393,54 @@
                     this.passBtn = data.data[0].readyTagStatus;
                     this.tabs[0].status = data.data[0].materialStatus;
                     this.tabs[1].status = data.data[0].accessoriesStatus;
-                    // this.tabs[2].status = data.data[0].controlStatus;
+                    this.tabs[2].status = data.data[0].controlStatus;
                     this.tabs[3].status = data.data[0].instorageStatus;
                     this.tabs[5].status = data.data[0].timesheetStatus;
                     this.$refs.dataEntry.updateTabs();
-
-                    this.getHeaderInfo(this.auditDetail['orderNo']);
-                    this.getSemiMaterial(this.auditDetail['orderNo']);
-                    this.getAccessList(this.auditDetail['orderNo']);
-                    this.getInstorageList(this.auditDetail['orderNo']);
-                    this.getCraftList(this.auditDetail['orderNo']);
-
-                    const net1 = new Promise((resolve) => {
-                        this.getexcReasonTwo(resolve);
-                    });
-                    const net2 = new Promise((resolve) => {
-                        this.getexcReasonThree(resolve);
-                    });
-                    const net3 = new Promise((resolve) => {
-                        this.getClassesList(resolve);
-                    });
-                    const net4 = new Promise((resolve) => {
-                        this.getAbnormalList(resolve);
-                    });
-                    Promise.all([net1, net2, net3, net4]).then(() => {
-                        // COMMON_API.DEVICE_LISTBYTYPE_API({ deptId: this.auditDetail['workShop'] }).then(({ data }) => {
-                        //  this.excReasonTotal.FAULTSHUTDOWN = []
-                        //     data.data.map(item => {
-                        //         this.excReasonTotal.FAULTSHUTDOWN.push({
-                        //             dictValue: item.deviceName,
-                        //             dictCode: item.deviceNo
-                        //         })
-                        //     })
-                        //     this.getExceptionList(this.auditDetail['orderNo'], this.auditDetail['workShop']);
-                        // })
-                        this.getExceptionList(this.auditDetail['orderNo'], this.auditDetail['workShop']);
-                    })
-
-                    this.getTimeList(this.auditDetail['orderNo']);
                 }
             });
         }
 
         getHeaderInfo(orderNo) {
-            COMMON_API.OREDER_QUERY_BY_NO_API({ orderNo: orderNo, workShopType: 'sterilize' }).then(({ data }) => {
-                this.formHeader = data.data;
-                // this.formHeader['realPotCount'] = '第' + this.formHeader['realPotCount'] + '锅';
-            })
+            return new Promise((resolve) => {
+                COMMON_API.OREDER_QUERY_BY_NO_API({ orderNo: orderNo, workShopType: 'sterilize' }).then(({ data }) => {
+                    this.formHeader = data.data;
+                    resolve(null)
+                })
+            });
         }
 
-        // 半成品
+        // 半成品领用
         getSemiMaterial(orderNo) {
-            STE_API.STE_AUDIT_DETAIL_DETAUL_SEMI_API({ orderNo: orderNo }).then(({ data }) => {
-                this.semiReceiveList = this.RegroupData(data.data, 1, -1);
-            })
+            return new Promise((resolve) => {
+                STE_API.STE_AUDIT_DETAIL_DETAUL_SEMI_API({ orderNo: orderNo }).then(({ data }) => {
+                    this.semiReceiveList = this.RegroupData(data.data, 1, -1);
+                    resolve(null)
+                })
+            });
         }
 
         // 辅料添加
         getAccessList(orderNo) {
-            STE_API.STE_AUDIT_DETAIL_DETAUL_ACCESS_API({ orderNo: orderNo }).then(({ data }) => {
-                if (data.data !== null) {
-                    this.acceAddList = this.RegroupData(data.data, 1, -1);
-                }
-            })
+            return new Promise((resolve) => {
+                STE_API.STE_AUDIT_DETAIL_DETAUL_ACCESS_API({ orderNo: orderNo }).then(({ data }) => {
+                    if (data.data !== null) {
+                        this.acceAddList = this.RegroupData(data.data, 1, -1);
+                    }
+                    resolve(null)
+                })
+            });
         }
 
         // 杀菌入库
         getInstorageList(orderNo) {
-            STE_API.STE_AUDIT_DETAIL_DETAUL_INSTORAGE_API({ orderNo: orderNo }).then(({ data }) => {
-                this.inStorage = data.data;
-                this.inStorageList = this.RegroupData(data.data.list, 1, -1);
-            })
+            return new Promise((resolve) => {
+                STE_API.STE_AUDIT_DETAIL_DETAUL_INSTORAGE_API({ orderNo: orderNo }).then(({ data }) => {
+                    this.inStorage = data.data;
+                    this.inStorageList = this.RegroupData(data.data.list, 1, -1);
+                    resolve(null);
+                })
+            });
         }
 
         // 工艺
@@ -438,19 +448,17 @@
             STE_API.STE_AUDIT_DETAIL_DETAUL_CRAFT_API({ orderNo: orderNo }).then(({ data }) => {
                 this.craftList = data.data;
                 this.craftList.map((item: CraftList) => {
-                    const controlTypeList = this.controlTypeList.find((it: Reason) => item.controlType === it.dictCode)
-                    if (controlTypeList) {
-                        item['controlTypeName'] = controlTypeList['dictValue']
-                    }
                     if (item.controlType !== '') {
-                        // eslint-disable-next-line
-                        COMMON_API.DICTQUERY_API({ dictType: item.controlType }).then(({ data }) => {
-                            this.controlStageList = data.data
-                            const controlStageList = this.controlStageList.find((it: Reason) => item.controlStage === it.dictCode)
-                            if (controlStageList) {
-                                item['controlStageName'] = controlStageList['dictValue']
+                        item['controlTypeName'] = '';
+                        item['controlStageName'] = '';
+                        const controlTypeItem = this.controlList.find((it: ControlList) => item.controlType === it.controlTypeList.dictCode)
+                        if (controlTypeItem) {
+                            item['controlTypeName'] = controlTypeItem.controlTypeList['dictValue']
+                            const controlStageItem = controlTypeItem.controlStageList.find((it: Reason) => item.controlStage === it.dictCode)
+                            if (controlStageItem) {
+                                item['controlStageName'] = controlStageItem['dictValue']
                             }
-                        });
+                        }
                     }
                 })
             })
@@ -516,7 +524,6 @@
         // 工时
         getTimeList(orderNo) {
             STE_API.STE_AUDIT_DETAIL_DETAUL_TIME_API({ orderNo: orderNo }).then(({ data }) => {
-                // this.workingList.push(data.data);
                 this.workingList = this.RegroupData([data.data], 1, -1);
             })
         }
@@ -674,6 +681,11 @@
         riseEndDate?: string;
         riseStartDate?: string;
         temp?: number;
+    }
+
+    interface ControlList {
+        controlTypeList: Reason;
+        controlStageList: Reason[];
     }
 </script>
 
