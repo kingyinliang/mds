@@ -3,7 +3,7 @@
  * @Anthor: Telliex
  * @Date: 2020-11-18 14:53:12
  * @LastEditors: Telliex
- * @LastEditTime: 2021-01-12 17:25:09
+ * @LastEditTime: 2021-01-20 18:11:36
  */
 import httpProxy from 'utils/net/httpProxy';
 
@@ -69,6 +69,10 @@ const FER_API = {
      * @property {string} FER_FERMENTOR_ADJUSTION_GET_MATERIAL_LIST_API 发酵车间-发酵罐调整-根据容器查询物料列表
      */
     FER_FERMENTOR_ADJUSTION_GET_MATERIAL_LIST_API: params => httpProxy('/fer/fermentorAdjust/getMaterialList', 'GET', params),
+    /**
+     * @property {string} ER_FERMENTOR_ADJUSTION_TRANS_API 发酵车间-发酵罐调整-转储
+     */
+    FER_FERMENTOR_ADJUSTION_TRANS_API: params => httpProxy('/fer/fermentorAdjust/trans', 'POST', params),
 
     // ==================== 盐水发料 ==================
     /**
