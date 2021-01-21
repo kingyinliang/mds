@@ -327,9 +327,11 @@ export default class Crafts extends Vue {
                 return false;
             }
             if (item.controlStage === 'HEAT_START' || item.controlStage === 'HEAT_END' || item.controlStage === 'DISCHARGE_START' || item.controlStage === 'DISCHARGE_END') {
+                console.log(item);
                 isStage++;
             }
         }
+        console.log(isStage);
         if (isStage < 4) {
             this.$warningToast('请填写工艺控制页签保温开始时间、保温结束时间、出料开始时间、出料结束时间');
             return false;
