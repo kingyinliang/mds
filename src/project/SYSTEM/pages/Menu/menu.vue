@@ -36,6 +36,7 @@
                 <el-table-column prop="menuOrder" header-align="left" align="left" width="80" :show-overflow-tooltip="true" label="排序号" />
                 <el-table-column prop="menuUrl" header-align="left" align="left" min-width="200" :show-overflow-tooltip="true" label="菜单URL" />
                 <el-table-column prop="permission" header-align="left" align="left" width="180" :show-overflow-tooltip="true" label="授权标识" />
+                <el-table-column prop="remark" header-align="left" align="left" min-width="100" :show-overflow-tooltip="true" label="备注" />
                 <el-table-column fixed="right" header-align="left" align="left" width="88" label="操作">
                     <template slot-scope="scope">
                         <!--<el-button v-if="isAuth('sys:menu:update')" style="padding: 0;" type="text" size="small" @click="addOrUpdateHandle(scope.row.menuId)">-->

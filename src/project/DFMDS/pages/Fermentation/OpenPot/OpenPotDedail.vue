@@ -342,6 +342,7 @@
         init() {
             this.isRedact = false
             this.multipleSelection = []
+            this.$refs.multipleTable.clearSelection()
             this.deployMaterial = []
             this.sauce = []
             this.mixSauceNo = ''
@@ -523,10 +524,10 @@
         }
 
         materialChange(row) {
-            const filterArr: (any) = row.ferInStorageList.filter(item => item.productMaterialCode === row.addMaterialCode)// eslint-disable-line
+            const filterArr: (any) = row.addMaterialArr.filter(item => item.productMaterialCode === row.addMaterialCode)// eslint-disable-line
             row.unit = filterArr[0].unit
-            // row.stockAmount = filterArr[0]
-            // row.batch = filterArr[0]
+            row.stockAmount = filterArr[0].currentStock
+            row.batch = filterArr[0].inStorageBatch
         }
 
         // 删除

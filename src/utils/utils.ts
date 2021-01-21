@@ -2,6 +2,8 @@ import { RouteConfig } from 'vue-router';
 import { VueRouter } from 'vue-router/types/router';
 import { COMMON_API } from 'common/api/api';
 import _ from 'lodash';
+import FileSaver from 'file-saver'
+import XLSX from 'xlsx'
 
 const importTarget = process.env.NODE_ENV !== 'local' ? file => () => import('project/' + file + '.vue') : file => require('project/' + file + '.vue').default;
 
@@ -668,3 +670,31 @@ export function getNewDay(date, days) {
     if (rDate.getDate() < 10) newDate = '0' + newDate;
     return year + '-' + month + '-' + newDate;
 }
+/* eslint-disable */
+export function outPut(){
+    let fix = document.querySelector('.el-table__fixed')
+    let wb
+    if (fix) {
+        wb = XLSX.utils.table_to_book(document.querySelector('#out-table')?.removeChild(fix))//
+        document.querySelector('#out-table')?.appendChild(fix)
+    } else {
+        wb = XLSX.utils.table_to_book(document.querySelector('#out-table'))
+    }
+    let wbout = XLSX.write(wb, {
+        bookType: 'xlsx',
+        bookSST: true,
+        type: 'array'
+    })
+    try {
+        FileSaver.saveAs(
+            new Blob([wbout], {
+                type: 'application/octet-stream'
+            }),
+            'file.xlsx'
+        )
+    } catch (e) {
+        if (typeof console !== 'undefined') console.log(e, wbout)
+    }
+    return wbout
+}
+/* eslint-enable */
