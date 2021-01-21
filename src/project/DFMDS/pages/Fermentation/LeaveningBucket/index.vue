@@ -3,7 +3,7 @@
  * @Anthor: Telliex
  * @Date: 2021-01-15 23:35:23
  * @LastEditors: Telliex
- * @LastEditTime: 2021-01-19 18:25:36
+ * @LastEditTime: 2021-01-21 14:33:36
 -->
 <template>
     <div class="header_main">
@@ -311,7 +311,7 @@
                             const holderTemp: object[] = []
 
                             res.data.data.forEach(item => {
-                                if (item.dictCode === '001' || item.dictCode === '028' || item.dictCode === '029') {
+                                if (item.dictCode === '001' || item.dictCode === '028' || item.dictCode === '025') {
                                     holderTemp.push({ dictCode: item.dictCode, dictValue: item.dictValue })
                                 }
                             })

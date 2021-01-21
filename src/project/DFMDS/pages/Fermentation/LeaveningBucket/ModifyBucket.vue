@@ -3,7 +3,7 @@
  * @Anthor: Telliex
  * @Date: 2021-01-15 23:35:23
  * @LastEditors: Telliex
- * @LastEditTime: 2021-01-20 18:57:51
+ * @LastEditTime: 2021-01-21 14:26:59
 -->
 <template>
     <div>
@@ -314,10 +314,11 @@
              * @return {*}
              * @example: 示例代码
              */
-            queryFromDict(dictTypeString) {
+            queryFromDict(dictTypeString, Fn) {
                 return new Promise((resolve) => {
                     COMMON_API.DICTQUERY_API({ dictType: dictTypeString }).then(({ data }) => {
-                        resolve(data.data)
+                        Fn(data.data);
+                        resolve(null);
                     });
                 })
             }
@@ -325,11 +326,11 @@
             // ＝＝调整＝＝
 
             // 数据字典出入罐
-            getInOutStatusOptions() {
-                COMMON_API.DICTQUERY_API({ dictType: 'COMMON_FER_ADJUST' }).then(({ data }) => {
-                    this.inOutStatusOptions = data.data
-                });
-            }
+            // getInOutStatusOptions() {
+            //     COMMON_API.DICTQUERY_API({ dictType: 'COMMON_FER_ADJUST' }).then(({ data }) => {
+            //         this.inOutStatusOptions = data.data
+            //     });
+            // }
 
             // 获取物料下拉
             getMaterialOptions() {
@@ -367,12 +368,11 @@
             }
 
             // 获取调整类别
-            getMoveTypeOptions(string) {
-                COMMON_API.DICTQUERY_API({ dictType: string }).then(({ data }) => {
-                    this.moveTypeOptions = data.data
-                });
-            }
-
+            // getMoveTypeOptions(string) {
+            //     COMMON_API.DICTQUERY_API({ dictType: string }).then(({ data }) => {
+            //         this.moveTypeOptions = data.data
+            //     });
+            // }
             // ＝＝转储＝＝
 
             // 获取打入罐容器类型
@@ -470,7 +470,10 @@
 
             changeInOutFlag(val) {
                 this.modifyDataGroup.moveType = ''
-                this.getMoveTypeOptions(val)
+                // this.getMoveTypeOptions(val)
+                this.queryFromDict(val, (data) => {
+                    this.moveTypeOptions = data;
+                }); // 获取调整类别
             }
 
             changeMaterialOptions(materialCode) {
@@ -498,7 +501,10 @@
                     // 获取批次
                     await this.getBatchOptions(this.materialOptions[0] ? this.materialOptions[0].materialCode : '');
                     // 数据字典出入罐
-                    await this.getInOutStatusOptions();
+                    // await this.getInOutStatusOptions();
+                    await this.queryFromDict('COMMON_FER_ADJUST', (data) => {
+                        this.inOutStatusOptions = data;
+                    });
                     // 设置数据
                     await this.setData('modify');
 
