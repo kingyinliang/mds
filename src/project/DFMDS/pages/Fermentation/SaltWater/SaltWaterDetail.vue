@@ -105,7 +105,7 @@
                         </el-button>
                     </template> -->
                     <template>
-                        <el-table :key="Math.random()" class="newTable markStyle" :data="otherMaterialListComp" :row-class-name="rowDelFlag" :row-style="rowStyleHandler" header-row-class-name="tableHead" border style="width: 100%; min-height: 90px;">
+                        <el-table :key="Math.random()" class="newTable markStyle" :data="otherMaterialListComp" :row-class-name="rowDelFlag" header-row-class-name="tableHead" border style="width: 100%; min-height: 90px;">
                             <el-table-column width="150" label="领用物料" :show-overflow-tooltip="true" class="star">
                                 <template slot-scope="scope">
                                     {{ scope.row.useMaterialName + ' ' + scope.row.useMaterialCode }}
@@ -348,7 +348,7 @@ export default class SaltWaterDetail extends Vue {
 
     getOrtherMaterialList() {
         const info = this.$store.state.fer.brineInfo;
-        FER_API.FER_BRINE_OTHER_BOM_API({ fermentorId: info.id, cycle: info.cycle, orderNo: info.ferOrder.orderNo }).then(({ data }) => {
+        FER_API.FER_BRINE_OTHER_BOM_API({ fermentorId: info.id, cycle: info.cycle, orderNo: info.ferOrder.preOrderNo }).then(({ data }) => {
             // console.log(data, '=-=-=-=-=-=-=')
             this.otherMaterialList = data.data;
         })
@@ -409,7 +409,7 @@ export default class SaltWaterDetail extends Vue {
             ferMaterialCode: obj.productMaterialCode,
             ferMaterialType: info.ferBrineIssue.ferMaterialType, // 发酵物料类型
             fermentorId: info.holderId,
-            id: info.id,
+            id: info.ferBrineIssue.id,
             kojiAmount: obj.kojiAmount,
             kojiMaterialCode: obj.preMaterialCode,
             kojiMaterialName: obj.preMaterialName,
@@ -444,7 +444,7 @@ export default class SaltWaterDetail extends Vue {
             ferMaterialCode: obj.productMaterialCode,
             ferMaterialType: info.ferBrineIssue.ferMaterialType, // 发酵物料类型
             fermentorId: info.holderId,
-            id: info.id,
+            id: info.ferBrineIssue.id,
             kojiAmount: obj.kojiAmount,
             kojiMaterialCode: obj.preMaterialCode,
             kojiMaterialName: obj.preMaterialName,
@@ -491,6 +491,11 @@ export default class SaltWaterDetail extends Vue {
     rowDelFlag({ row }) {
         if (row.delFlag === 1) {
             return 'rowDel';
+        }
+        if (row.operatFlag === -1) {
+            return 'rowDel';
+        } else if (row.operatFlag === 1) {
+            return 'warning-row'
         }
         return '';
     }
