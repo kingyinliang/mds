@@ -34,125 +34,48 @@
         column = [
             {
                 prop: 'workShopName',
-                label: '生产车间',
+                label: '生产产线',
                 minWidth: '120'
             },
             {
                 prop: 'holderTypeName',
-                label: '产线',
+                label: '物料编码',
                 minWidth: '120'
             },
             {
                 prop: 'holderNo',
-                label: '班次',
+                label: '物料名称',
                 width: '80'
             },
             {
                 prop: 'holderNo',
-                label: '品项',
+                label: '日/月/季',
                 width: '80'
-            },
-            {
-                prop: 'holderNo',
-                label: '日期',
-                width: '220'
-            },
-            {
-                prop: 'holderNo',
-                label: '可用率',
-                width: '100'
             },
             {
                 prop: 'holderNo',
                 label: '时间嫁动率',
-                width: '140'
+                width: '220'
             },
             {
                 prop: 'holderNo',
                 label: '性能嫁动率',
-                width: '140'
+                width: '100'
             },
             {
                 prop: 'holderNo',
                 label: '良品率',
+                width: '140'
+            },
+            {
+                prop: 'holderNo',
+                label: 'OEE',
+                width: '140'
+            },
+            {
+                prop: 'holderNo',
+                label: '未达成原因',
                 width: '100'
-            },
-            {
-                prop: 'holderNo',
-                label: '综合效率',
-                subLabel: '(OEE)',
-                width: '140'
-            },
-            {
-                prop: 'holderNo',
-                label: '生产效率',
-                width: '100'
-            },
-            {
-                prop: 'holderNo',
-                label: '总时间',
-                subLabel: '(min)',
-                width: '100'
-            },
-            {
-                prop: 'holderNo',
-                label: '计画停机时间',
-                subLabel: '(min)',
-                width: '140'
-            },
-            {
-                prop: 'holderNo',
-                label: '实际投入时间',
-                subLabel: '(min)',
-                width: '140'
-            },
-            {
-                prop: 'holderNo',
-                label: '除外时间',
-                subLabel: '(min)',
-                width: '140'
-            },
-            {
-                prop: 'holderNo',
-                label: '异常损失时间',
-                subLabel: '(min)',
-                width: '140'
-            },
-            {
-                prop: 'holderNo',
-                label: '净作业时间',
-                subLabel: '(min)',
-                width: '140'
-            },
-            {
-                prop: 'holderNo',
-                label: '产出数',
-                subLabel: '(件)',
-                width: '100'
-            },
-            {
-                prop: 'holderNo',
-                label: '不良品数',
-                subLabel: '(件)',
-                width: '100'
-            },
-            {
-                prop: 'holderNo',
-                label: '有效效能',
-                subLabel: '(件/h)',
-                width: '140'
-            },
-            {
-                prop: 'holderNo',
-                label: '产出时间',
-                subLabel: '(h)',
-                width: '100'
-            },
-            {
-                prop: 'holderNo',
-                label: '净作业时间',
-                subLabel: '(h)',
-                width: '140'
             }
         ];
 
@@ -164,8 +87,27 @@
         queryFormData = [
             {
                 type: 'select',
+                label: '报表类型',
+                prop: 'workShop',
+                defaultValue: '',
+                labelWidth: '80',
+                defaultOptionsList: [
+                    { value: '', label: '季' },
+                    { value: '', label: '月' },
+                    { value: '', label: '日' }
+                ],
+                width: '80',
+                resVal: {
+                    resData: 'data',
+                    label: ['deptName'],
+                    value: 'id'
+                }
+            },
+            {
+                type: 'select',
                 label: '生产车间',
                 prop: 'workShop',
+                labelWidth: '100',
                 defaultValue: '',
                 defaultOptionsFn: () => {
                     return COMMON_API.ORG_QUERY_WORKSHOP_API({
@@ -215,6 +157,14 @@
                     label: ['deptName'],
                     value: 'id'
                 }
+            },
+            {
+                type: 'date-picker',
+                label: '年度',
+                defaultValue: '',
+                labelWidth: '60',
+                dataType: 'year',
+                prop: 'oneorderProductDate'
             },
             {
                 type: 'date-interval',

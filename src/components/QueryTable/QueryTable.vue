@@ -135,6 +135,8 @@
                 tooltip-effect="dark"
                 header-row-class-name="tableHead"
                 style="width: 100%; margin-bottom: 20px;"
+                :show-summary="isShowSummary"
+                :summary-method="getSummaries"
                 @selection-change="handleSelectionChange"
             >
                 <el-table-column v-if="showSelectColumn" :selectable="selectableFn" type="selection" width="50px" fixed />
@@ -174,6 +176,10 @@
             isQueryFormShow: { // 标头搜寻区块是否显示
                 type: Boolean,
                 default: true
+            },
+            isShowSummary: { // 数据是否显示合计
+                type: Boolean,
+                default: false
             },
             tableClass: {
                 type: String,
@@ -258,6 +264,10 @@
                 default: ''
             },
             listInterface: {
+                type: Function,
+                default: () => 1
+            },
+            getSummaries: {
                 type: Function,
                 default: () => 1
             },
