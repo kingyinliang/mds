@@ -1,9 +1,9 @@
 /*
- * @Description:
- * @Anthor: Telliex
- * @Date: 2020-08-19 09:16:48
+ * @Description: API 接口汇总
+ * @Anthor: Telliex,银亮,雪涵,付鑫
+ * @Date: 2020-12-24 09:39:15
  * @LastEditors: Telliex
- * @LastEditTime: 2020-11-18 14:56:47
+ * @LastEditTime: 2021-01-22 10:20:07
  */
 import commonApi from './common';
 import orderApi from './order';
@@ -15,6 +15,7 @@ import messageApi from './message';
 import rdmApi from './rdm';
 import kojiApi from './koji';
 import ferApi from './fer';
+import reportsApi from './reports'; // 报表
 
 export const COMMON_API = commonApi;
 export const ORDER_API = orderApi;
@@ -26,3 +27,4 @@ export const STE_API = steApi;
 export const RDM_API = rdmApi;
 export const KOJI_API = kojiApi;
 export const FER_API = ferApi;
+export const REPORTS_API = reportsApi;
