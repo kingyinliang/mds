@@ -71,7 +71,7 @@
                     </el-table>
                 </mds-card>
                 <el-row>
-                    <el-pagination :current-page="currentPage" :page-sizes="[10, 20, 50]" :page-size="pageSize" layout="total, sizes, prev, pager, next, jumper" :total="total" @size-change="sizeChangeHandler" @current-change="currentPageChangeHanlder" />
+                    <el-pagination :current-page.sync="currentPage" :page-sizes="[10, 20, 50]" :page-size="pageSize" layout="total, sizes, prev, pager, next, jumper" :total="total" @size-change="sizeChangeHandler" @current-change="currentPageChangeHanlder" />
                 </el-row>
             </template>
         </query-table>
@@ -113,6 +113,8 @@
         formObj = {};
 
         redactBoxDisable = false; // control bar 可否禁用
+
+        prePage = 1;
 
         currentPage = 1;
 
@@ -278,7 +280,8 @@
         }
 
         // queryTable 查询请求
-        queryTableListInterface = params => {
+        queryTableListInterface(params) {
+            this.isRedact = false;
             params.factory = JSON.parse(sessionStorage.getItem('factory') || '{}').id;
             params.current = this.currentPage;// eslint-disable-line
             params.size = this.pageSize;// eslint-disable-line
@@ -517,6 +520,13 @@
         }
 
         currentPageChangeHanlder(val) {
+            const params = this.getSaveOrSubmitDtos();
+            if (this.isRedact && (params.ferInStorageInsertDtoList.length || params.ferInStorageUpdateDtoList.length)) {
+                this.$warningToast('请先保存数据');
+                this.currentPage = this.prePage;
+                return false;
+            }
+            this.prePage = this.currentPage;
             this.currentPage = val;
             this.$refs.queryTable.getDataList();
         }
