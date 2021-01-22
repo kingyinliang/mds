@@ -350,7 +350,7 @@ export default class SaltWaterDetail extends Vue {
         const info = this.$store.state.fer.brineInfo;
         FER_API.FER_BRINE_OTHER_BOM_API({ fermentorId: info.id, cycle: info.cycle, orderNo: info.ferOrder.preOrderNo }).then(({ data }) => {
             // console.log(data, '=-=-=-=-=-=-=')
-            this.otherMaterialList = data.data;
+            this.otherMaterialList = data.data.filter(item => item.operatFlag !== -2);
         })
     }
 
@@ -375,6 +375,7 @@ export default class SaltWaterDetail extends Vue {
     }
 
     ruleOtherMaterialSubmit() {
+        console.log(this.otherMaterialList)
         for (const item of this.otherMaterialList) {
             if (!item.receiveBatch || !item.useAmount) {
                 this.$warningToast('请填写其他发料必填栏位');
