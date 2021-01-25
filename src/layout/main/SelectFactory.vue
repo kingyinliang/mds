@@ -70,6 +70,7 @@
         }
 
         jumpTo(factory, href) {
+            console.log(href);
             COMMON_API.UPDATE_FACTORY_API({
                 factory: factory.id
             }).then(({ data }) => {
