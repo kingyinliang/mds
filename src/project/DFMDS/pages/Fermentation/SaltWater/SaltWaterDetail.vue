@@ -8,16 +8,15 @@
             :order-status="formHeader.orderStatus"
             status-title="状态"
             :redact-box-show="true"
-            :saved-rules="savedRules"
             :saved-datas="savedDatas"
-            :submit-rules="savedRules"
+            :submit-rules="submitRules"
             :submit-datas="submitDatas"
             @success="successHandler"
         >
             <template v-slot:contentBox="{isRedact}">
                 <mds-card title="盐水发料" name="saltwater">
                     <template slot="titleBtn">
-                        <el-form ref="selectFormRef" :model="selectForm" :inline="true" :rules="selectFormRules" size="small" label-suffix="：" label-width="90px" class="multi_row clearfix" style="float: right; font-size: 0;">
+                        <el-form ref="selectFormRef" :model="selectForm" :inline="true" :rules="selectFormRules" size="small" label-suffix="：" label-width="90px" class="multi_row clearfix" style="float: right; padding-bottom: 8px; font-size: 0;">
                             <el-form-item label="盐水物料" prop="brineMaterialCode">
                                 <el-select v-model="selectForm.brineMaterialCode" :disabled="!isRedact" style="width: 160px;" :clearable="false" :placeholder="'请选择盐水物料'">
                                     <el-option v-for="(opt, optIndex) in materialOptionsList" :key="optIndex" :label="opt.virtualMaterialCode + ' ' + opt.virtualMaterialName" :value="opt.virtualMaterialCode" />
@@ -325,7 +324,7 @@ export default class SaltWaterDetail extends Vue {
                 preMaterialCode: ferOrder.preMaterialCode,
                 preMaterialName: ferOrder.preMaterialName,
                 orderNo: ferOrder.orderNo,
-                orderStatus: info.ferBrineIssue.checkStatusName,
+                orderStatus: info.ferBrineIssue.checkStatus || 'N',
                 orderStatusName: info.brineFlagName,
                 factoryName: JSON.parse(sessionStorage.getItem('factory') || '{}').deptName,
                 preOrderNo: ferOrder.preOrderNo
@@ -365,9 +364,20 @@ export default class SaltWaterDetail extends Vue {
         })
     }
 
+    /**
+     * 判断是否是非空非0的值
+     */
+    chargeNumber(v) {
+        return Boolean(String(v));
+    }
+
     ruleSaltWaterMaterialSubmit() {
+        if (!this.saltWaterList.length) {
+            this.$warningToast('盐水发料不能为空');
+            return false;
+        }
         for (const item of this.saltWaterList) {
-            if (!item.brinePotId || !item.useAmount || !item.concentration) {
+            if (!item.brinePotId || !this.chargeNumber(item.useAmount) || !this.chargeNumber(item.concentration)) {
                 this.$warningToast('请填写盐水发料必填栏位');
                 return false;
             }
@@ -377,8 +387,12 @@ export default class SaltWaterDetail extends Vue {
 
     ruleOtherMaterialSubmit() {
         console.log(this.otherMaterialList)
+        if (!this.otherMaterialList.length) {
+            this.$warningToast('其他发料不能为空');
+            return false;
+        }
         for (const item of this.otherMaterialList) {
-            if (!item.receiveBatch || !item.useAmount) {
+            if (!item.receiveBatch || !this.chargeNumber(item.useAmount)) {
                 this.$warningToast('请填写其他发料必填栏位');
                 return false;
             }
@@ -387,7 +401,7 @@ export default class SaltWaterDetail extends Vue {
     }
 
     // {redact-box} 提交需跑的验证 function
-    savedRules(): Function[] {
+    submitRules(): Function[] {
         return [this.ruleSaltWaterMaterialSubmit, this.ruleOtherMaterialSubmit];
     }
 
@@ -457,7 +471,9 @@ export default class SaltWaterDetail extends Vue {
             kojiOrderNo: this.formHeader.preOrderNo,
             orderNo: obj.orderNo,
             orderId: info.ferOrder.id,
-            virtualMaterialId: virtualMaterialId
+            virtualMaterialId: virtualMaterialId,
+            orderStartDate: info.ferOrder.startDate,
+            orderType: info.ferOrder.orderType
         });
     }
 
