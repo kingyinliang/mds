@@ -3,7 +3,7 @@
  * @Anthor: Telliex
  * @Date: 2021-01-15 23:35:23
  * @LastEditors: Telliex
- * @LastEditTime: 2021-01-21 14:33:36
+ * @LastEditTime: 2021-01-25 17:26:31
 -->
 <template>
     <div class="header_main">
@@ -97,7 +97,7 @@
                                             <div class="pot_water">
                                                 <div
                                                     class="pot_water_sole"
-                                                    :style="{height: (item.volumePercent*100)+'%', background: item.volumePercent===1? '#590101':item.volumePercent>=0.5? '#8A391B':'C67C5A'}"
+                                                    :style="{height:((item.volumePercent)*100)+'%', background: item.volumePercent===1? '#590101':item.volumePercent>=0.5? '#8A391B':'#C67C5A'}"
                                                 />
                                             </div>
                                         </div>

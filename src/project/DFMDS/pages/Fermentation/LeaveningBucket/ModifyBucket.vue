@@ -3,7 +3,7 @@
  * @Anthor: Telliex
  * @Date: 2021-01-15 23:35:23
  * @LastEditors: Telliex
- * @LastEditTime: 2021-01-21 14:26:59
+ * @LastEditTime: 2021-01-25 15:38:57
 -->
 <template>
     <div>
@@ -400,9 +400,9 @@
             getConvertHolderIdOptions(val) {
                 this.moveHolderIdOptions = []
                 return new Promise((resolve) => {
-                        COMMON_API.HOLDER_DROPDOWN_API({
+                        COMMON_API.HOLDER_DROPDOWN_BY_STATUS_API({
                         holderType: [val],
-                        holderStatus: 'E'
+                        holderStatus: ['E', 'U']
                     }).then(({ data }) => {
                         console.log('打入罐容器号')
                         console.log(data.data)
@@ -456,9 +456,9 @@
             getMoveHolderIdOptions(val) {
                 this.moveHolderIdOptions = []
                 return new Promise((resolve) => {
-                        COMMON_API.HOLDER_DROPDOWN_API({
+                        COMMON_API.HOLDER_DROPDOWN_BY_STATUS_API({
                         holderType: [val],
-                        holderStatus: 'E'
+                        holderStatus: ['E']
                     }).then(({ data }) => {
                         console.log('挪入罐容器号')
                         console.log(data.data)
