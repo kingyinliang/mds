@@ -66,7 +66,7 @@
                                 </el-select>
                             </el-form-item>
                             <el-form-item label="容器号：">
-                                <el-select v-model="searchForm.holderId" :disabled="!isRedact" placeholder="请选择" style="width: 120px;" clearable @change="getOpenPotList">
+                                <el-select v-model="searchForm.holderId" filterable :disabled="!isRedact" placeholder="请选择" style="width: 120px;" clearable @change="getOpenPotList">
                                     <el-option v-for="(item, index) in potArr" :key="index" :label="item.split('&')[1]" :value="item.split('&')[0]" />
                                 </el-select>
                             </el-form-item>

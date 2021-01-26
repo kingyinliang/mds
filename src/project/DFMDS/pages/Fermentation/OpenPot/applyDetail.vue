@@ -28,9 +28,11 @@
                             </el-select>
                         </el-form-item>
                         <el-form-item label="申请物料：" required>
-                            <el-select v-model="formHeader.applyMaterialCode" :disabled="!isRedact" placeholder="请选择" style="width: 120px;" clearable @change="materialChange">
-                                <el-option v-for="(item, index) in material" :key="index" :label="item.materialName+' ' + item.materialCode" :value="item.materialCode" />
-                            </el-select>
+                            <el-tooltip class="item" effect="dark" :content="(formHeader.applyMaterialCode || '') + ' ' + (formHeader.applyMaterialName || '')" placement="top">
+                                <el-select v-model="formHeader.applyMaterialCode" :disabled="!isRedact" filterable placeholder="请选择" style="width: 120px;" clearable @change="materialChange">
+                                    <el-option v-for="(item, index) in material" :key="index" :label="item.materialName+' ' + item.materialCode" :value="item.materialCode" />
+                                </el-select>
+                            </el-tooltip>
                         </el-form-item>
                         <el-form-item label="使用日期：" required>
                             <el-date-picker v-model="formHeader.useDate" type="date" value-format="yyyy-MM-dd" format="yyyy-MM-dd" placeholder="请选择" size="small" :disabled="!isRedact" style="width: 120px;" />
@@ -39,9 +41,11 @@
                             <el-input v-model="formHeader.applyAmount" :disabled="!isRedact" placeholder="手动输入" style="width: 120px;" />
                         </el-form-item>
                         <el-form-item label="调酱容器：">
-                            <el-select v-model="formHeader.mixPotNo" :disabled="!isRedact" placeholder="请选择" style="width: 120px;" clearable filterable @change="potChange">
-                                <el-option v-for="(item, index) in potArr" :key="index" :label="item.holderName" :value="item.holderNo" />
-                            </el-select>
+                            <el-tooltip class="item" effect="dark" content="此字段为换罐混调时使用" placement="top">
+                                <el-select v-model="formHeader.mixPotId" :disabled="!isRedact" placeholder="请选择" style="width: 120px;" clearable filterable @change="potChange">
+                                    <el-option v-for="(item, index) in potArr" :key="index" :label="item.holderName" :value="item.id" />
+                                </el-select>
+                            </el-tooltip>
                         </el-form-item>
                         <el-form-item label="开罐单号：">
                             <p>{{ formHeader.openPotNo }}</p>
@@ -123,7 +127,7 @@
                 <el-button v-if="formHeader.statusName === '已保存' || !formHeader.statusName" type="primary" size="small" @click="submit()">
                     提交
                 </el-button>
-                <el-button v-if="formHeader.statusName === '待处理'" type="primary" size="small" @click="submit()">
+                <el-button v-if="formHeader.statusName === '待处理'" type="primary" size="small" @click="withdraw()">
                     撤回
                 </el-button>
             </template>
@@ -189,8 +193,8 @@
         }
 
         potChange() {
-            const filterArr: (any) = this.potArr.filter(it => it['holderNo'] === this.formHeader.mixPotNo);// eslint-disable-line
-            this.formHeader.mixPotId = filterArr[0].id
+            const filterArr: (any) = this.potArr.filter(it => it['id'] === this.formHeader.mixPotId);// eslint-disable-line
+            this.formHeader.mixPotNo = filterArr[0].holderNo
             this.formHeader.mixPotName = filterArr[0].holderName
         }
 

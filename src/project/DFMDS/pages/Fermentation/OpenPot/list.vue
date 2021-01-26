@@ -6,12 +6,13 @@
             :query-form-data="queryFormData"
             :tabs="tabs"
             :list-interface="listInterface"
+            :operation-column-width="65"
             :custom-data="true"
             @get-data-success="setData"
         >
             <template slot="operation_column" slot-scope="{ scope }">
-                <el-button class="ra_btn" type="text" round size="mini" style="margin-left: 0;" @click="del(scope.row, true)">
-                    删除
+                <el-button class="ra_btn" type="text" round size="mini" style="margin-left: 0;" @click="goDetail(scope.row)">
+                    开罐
                 </el-button>
             </template>
         </query-table>
@@ -152,6 +153,7 @@
             {
                 label: '待处理',
                 tableData: [],
+                showOperationColumn: true,
                 pages: {
                     current: 1,
                     pageSize: 10,
@@ -230,10 +232,6 @@
                 this.$refs.queryTable.tabs[this.$refs.queryTable.activeName].pages.pageSize = datas.data.size;
                 this.$refs.queryTable.tabs[this.$refs.queryTable.activeName].pages.totalCount = datas.data.total;
             }
-        }
-
-        del() {
-        //
         }
 
         goDetail(row) {
