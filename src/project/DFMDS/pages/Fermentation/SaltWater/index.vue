@@ -43,11 +43,11 @@
                                 </div>
                                 <div class="foot">
                                     <p>
-                                        <span>{{ item.ferOrder.productMaterialName }}</span>
-                                        <span>{{ item.fermentDays + '天' }}</span>
+                                        <span>{{ item.ferOrder.productMaterialName || '暂无数据' }}</span>
+                                        <span>{{ (item.fermentDays || 0) + '天' }}</span>
                                     </p>
                                     <p>
-                                        <span>{{ item.ferOrder.orderNo }}</span>
+                                        <span>{{ item.ferOrder.orderNo || '暂无数据' }}</span>
                                         <span>{{ item.currentStock / 1000 + '吨' }}</span>
                                     </p>
                                 </div>

@@ -332,6 +332,10 @@ export default class SaltWaterDetail extends Vue {
             this.selectForm = {
                 brineMaterialCode: info.ferBrineIssue?.brineMaterialCode
             }
+            this.$store.commit('fer/updateBrineInfo', {
+                ...info,
+                workShop: brineInfo.workShop
+            });
         })
     }
 
