@@ -1,8 +1,9 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
 import VuexPersistence from 'vuex-persist';
-import common from 'project/SYSTEM/store/modules/common';
-import user from 'project/SYSTEM/store/modules/user';
+import common from './modules/common';
+import user from './modules/user';
+import echarts from './modules/echarts';
 
 Vue.use(Vuex);
 const vuexLocal = new VuexPersistence({
@@ -11,7 +12,8 @@ const vuexLocal = new VuexPersistence({
 export default new Vuex.Store({
     modules: {
         common,
-        user
+        user,
+        echarts
     },
     plugins: [vuexLocal.plugin]
 });

@@ -87,7 +87,7 @@
             } else if (item.deptCode === '9999-xn') {
                 this.jumpTo(item, '/SYSTEM.html')
             } else if (item.deptCode === '8888-xn') {
-                this.jumpTo(item, '/MDS.html#/DataEcharts/KojiMaking-DataScreening-index')
+                this.jumpTo(item, '/DATABOARD.html')
             } else {
                 this.jumpTo(item, '/DFMDS.html')
             }
