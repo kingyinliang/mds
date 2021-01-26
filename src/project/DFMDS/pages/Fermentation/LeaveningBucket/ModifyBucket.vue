@@ -3,7 +3,7 @@
  * @Anthor: Telliex
  * @Date: 2021-01-15 23:35:23
  * @LastEditors: Telliex
- * @LastEditTime: 2021-01-25 15:38:57
+ * @LastEditTime: 2021-01-26 10:57:53
 -->
 <template>
     <div>
@@ -753,7 +753,7 @@
                     }
                 } else if (this.tabType === 'convert') {
                     if (this.convertDataGroup.moveAmount === null || this.convertDataGroup.targetHolderType === '' || this.convertDataGroup.targetHolderId === '') {
-                        this.$warningToast('请录入CY');
+                        this.$warningToast('请录入 LY/CY 必填栏位');
                         return false
                     }
                 } else if (this.tabType === 'move') {
