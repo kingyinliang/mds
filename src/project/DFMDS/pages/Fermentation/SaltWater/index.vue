@@ -19,7 +19,7 @@
                         </el-button>
                     </template> -->
                     <template>
-                        <div class="pots">
+                        <div v-if="targetQueryTableList.length" class="pots">
                             <div v-for="(item) in targetQueryTableList" :key="item.id" class="potbox">
                                 <div class="header">
                                     <span>{{ item.holderName + '-' + item.fermentorStatusName }}</span>
@@ -41,17 +41,21 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="foot">
+                                <!-- 投料中不展示 -->
+                                <div v-if="item.fermentorStatus !== 'R'" class="foot">
                                     <p>
-                                        <span>{{ item.ferOrder.productMaterialName || '暂无数据' }}</span>
-                                        <span>{{ (item.fermentDays || 0) + '天' }}</span>
+                                        <span>{{ item.ferOrder.productMaterialName || '' }}</span>
+                                        <span>{{ item.fermentDays ? (item.fermentDays + '天') : '' }}</span>
                                     </p>
                                     <p>
-                                        <span>{{ item.ferOrder.orderNo || '暂无数据' }}</span>
+                                        <span>{{ item.ferOrder.orderNo || '' }}</span>
                                         <span>{{ item.currentStock / 1000 + '吨' }}</span>
                                     </p>
                                 </div>
                             </div>
+                        </div>
+                        <div v-else class="empty">
+                            暂无数据
                         </div>
                     </template>
                 </mds-card>
@@ -288,6 +292,10 @@
 
 <style lang="scss" scoped>
     .header_main {
+        .empty {
+            padding: 20px;
+            text-align: center;
+        }
         .pots {
             display: flex;
             flex-wrap: wrap;

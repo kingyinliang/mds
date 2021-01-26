@@ -46,12 +46,12 @@
                                     <el-date-picker v-model="scope.row.matchDate" :disabled="!isRedact" type="date" value-format="yyyy-MM-dd" format="yyyy-MM-dd" placeholder="请选择" size="small" />
                                 </template>
                             </el-table-column>
-                            <el-table-column width="180" label="开始时间" :show-overflow-tooltip="false" class="star">
+                            <el-table-column width="180" label="开始领用时间" :show-overflow-tooltip="false" class="star">
                                 <template slot-scope="scope">
                                     <el-date-picker v-model="scope.row.startDate" :disabled="!isRedact" type="datetime" value-format="yyyy-MM-dd HH:mm" format="yyyy-MM-dd HH:mm" placeholder="请选择" size="small" />
                                 </template>
                             </el-table-column>
-                            <el-table-column width="180" label="结束时间" :show-overflow-tooltip="false" class="star">
+                            <el-table-column width="180" label="结束领用时间" :show-overflow-tooltip="false" class="star">
                                 <template slot-scope="scope">
                                     <el-date-picker v-model="scope.row.endDate" :disabled="!isRedact" type="datetime" value-format="yyyy-MM-dd HH:mm" format="yyyy-MM-dd HH:mm" placeholder="请选择" size="small" />
                                 </template>
@@ -71,7 +71,7 @@
                             </el-table-column>
                             <el-table-column width="150" :show-overflow-tooltip="true" class="star">
                                 <template slot="header">
-                                    <span class="notNull">盐水浓度</span>
+                                    <span class="notNull">盐水浓度（%）</span>
                                 </template>
                                 <template slot-scope="scope">
                                     <el-input v-model.number="scope.row.concentration" oninput="value=value.replace(/\D*/g,'')" size="small" placeholder="请输入浓度" :disabled="!isRedact" />
