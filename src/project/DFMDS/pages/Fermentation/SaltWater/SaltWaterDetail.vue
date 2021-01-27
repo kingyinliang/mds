@@ -112,7 +112,7 @@
                             </el-table-column>
                             <el-table-column :show-overflow-tooltip="true" label="需求数量" width="130">
                                 <template slot-scope="scope">
-                                    <el-input v-model="scope.row.needAmount" size="small" :disabled="!isRedact" />
+                                    <el-input v-model="scope.row.needAmount" size="small" :disabled="true" />
                                 </template>
                             </el-table-column>
                             <el-table-column width="150" label="罐号" :show-overflow-tooltip="true">
@@ -341,7 +341,7 @@ export default class SaltWaterDetail extends Vue {
     }
 
     get otherMaterialListComp() {
-        return this.otherMaterialList.filter(item => item.operatFlag !== -2);
+        return this.otherMaterialList.sort((a, b) => a.useMaterialCode > b.useMaterialCode ? 1 : -1).filter(item => item.operatFlag !== -2);
     }
 
     getBrineList() {
@@ -562,7 +562,9 @@ export default class SaltWaterDetail extends Vue {
             ...row,
             useAmount: 0,
             receiveBatch: '',
-            splitFlag: 'Y'
+            splitFlag: 'Y',
+            changer: getUserNameNumber(),
+            changed: dateFormat(new Date(), 'yyyy-MM-dd hh:mm:ss')
         } as OtherMaterial;
         delete obj.id;
         this.otherMaterialList.splice(index + 1, 0, obj);

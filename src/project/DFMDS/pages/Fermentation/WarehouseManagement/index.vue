@@ -27,7 +27,11 @@
                         <el-table-column label="生产订单" prop="orderNo" width="120px" />
                         <el-table-column label="容器号" prop="fermentorName" width="120px" />
                         <el-table-column label="发酵天数" prop="fermentDays" width="120px" />
-                        <el-table-column label="生产物料" prop="productMaterialName" width="160px" />
+                        <el-table-column label="生产物料" prop="productMaterialName" width="160px" show-overflow-tooltip>
+                            <template slot-scope="scope">
+                                {{ `${scope.row.productMaterialName} ${scope.row.productMaterialCode}` }}
+                            </template>
+                        </el-table-column>
                         <el-table-column label="订单数量" prop="amount" width="120px" />
                         <el-table-column label="订单单位" prop="orderUnit" width="120px" />
                         <el-table-column label="移动类型" prop="inStorageType" width="120px" />
@@ -430,6 +434,7 @@
             list.map(item => {
                 if (item.id) {
                     params.ferInStorageUpdateDtoList.push({
+                        ...item,
                         id: item.id,
                         inStorageAmount: item.inStorageAmount,
                         inStorageBatch: item.inStorageBatch,
@@ -438,6 +443,7 @@
                 } else {
                     const selectRow = this.selections.find(row => row.onlyOne === item.onlyOne);
                     const obj: InsertDto = {
+                        ...item,
                         fermentDays: item.fermentDays,
                         inStorageAmount: item.inStorageAmount,
                         inStorageBatch: item.inStorageBatch,
