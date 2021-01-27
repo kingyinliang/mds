@@ -16,18 +16,18 @@
                                 span(class="notNull") *
                                 span 生产日期：
                             el-date-picker(v-model="formHeader.productDate" type="date" value-format="yyyy-MM-dd" format="yyyy-MM-dd" placeholder="请选择" style="width: 180px;")
-                        //- el-form-item
-                        //-     template(slot="label")
-                        //-         span(class="notNull") *
-                        //-         span 工序：
-                        //-     el-select(v-model="formHeader.productProcess" placeholder="请选择" style="width: 180px;")
-                        //-         el-option(v-for="(item, index) in productProcessList" :key="index" :label="item.deptName" :value="item.id")
                         el-form-item
                             template(slot="label")
                                 span(class="notNull") *
                                 span 工序：
                             el-select(v-model="formHeader.productProcess" placeholder="请选择" style="width: 180px;")
-                                el-option(v-for="(item, index) in productProcessList" :key="index" :label="item.dictValue" :value="item.dictCode")
+                                el-option(v-for="(item, index) in productProcessList" :key="index" :label="item.deptName" :value="item.id")
+                        //- el-form-item
+                        //-     template(slot="label")
+                        //-         span(class="notNull") *
+                        //-         span 工序：
+                        //-     el-select(v-model="formHeader.productProcess" placeholder="请选择" style="width: 180px;")
+                        //-         el-option(v-for="(item, index) in productProcessList" :key="index" :label="item.dictValue" :value="item.dictCode")
                         el-form-item(label="提交人员：")
                             p(class="input_border_bg" style="width: 180px;") {{ formHeader.changer }}
                         el-form-item(label="提交时间：")
@@ -114,6 +114,9 @@ export default class TimeEntry extends Vue {
     @Watch('formHeader.workShop')
     watchWorkShop() {
         this.getProductProcess();
+        this.$refs.workHour.getTeamList(this.formHeader.workShop);
+        this.$refs.readyTime.changeList(null);
+        this.$refs.workHour.changeList([]);
         this.isRedact = false;
     }
 
@@ -123,7 +126,7 @@ export default class TimeEntry extends Vue {
         if (this.formHeader.productProcess !== '') {
             this.processObj = this.productProcessList.find(item => item.id === this.formHeader.productProcess) || {}
             console.log(this.processObj, '=======')
-            this.$refs.workHour.getTeamList(this.formHeader.productProcess);
+            // this.$refs.workHour.getTeamList(this.formHeader.productProcess);
             this.isRedact = false;
             // this.$refs.readyTime.changeList(null);
             this.$refs.workHour.changeList([]);
@@ -152,30 +155,30 @@ export default class TimeEntry extends Vue {
         })
     }
 
-    // // 获取工序
-    // getProductProcess() {
-    //     this.formHeader.productProcess = ''
-    //     COMMON_API.ORG_QUERY_CHILDREN_API({
-    //         parentId: this.formHeader.workShop,
-    //         deptType: 'PROCESS'
-    //     }).then(({ data }) => {
-    //         console.log('获取工序')
-    //         console.log(data)
-    //         this.productProcessList = []
-    //         if (data.data.length !== 0) {
-    //             this.productProcessList = data.data
-    //         }
-    //     });
-    // }
-
     // 获取工序
     getProductProcess() {
-        COMMON_API.DICTIONARY_ITEM_DROPDOWN_POST_API({
-            dictType: 'FER_PROCESS_STAGE' // 发酵工序段
+        this.formHeader.productProcess = ''
+        COMMON_API.ORG_QUERY_CHILDREN_API({
+            parentId: this.formHeader.workShop,
+            deptType: 'PROCESS'
         }).then(({ data }) => {
-            this.productProcessList = data.data;
+            console.log('获取工序')
+            console.log(data)
+            this.productProcessList = []
+            if (data.data.length !== 0) {
+                this.productProcessList = data.data
+            }
         });
     }
+
+    // // 获取工序
+    // getProductProcess() {
+    //     COMMON_API.DICTIONARY_ITEM_DROPDOWN_POST_API({
+    //         dictType: 'FER_PROCESS_STAGE' // 发酵工序段
+    //     }).then(({ data }) => {
+    //         this.productProcessList = data.data;
+    //     });
+    // }
 
     // 获取审核状态 list
     getCheckStatus() {

@@ -30,6 +30,9 @@
                                 <!-- <div class="con">
                                     <img src="../../../assets/img/ferPot.png" alt="">
                                 </div> -->
+                                <!-- 盐水未发 N -->
+                                <img v-if="item.brineFlag !== 'N'" src="../../../assets/img/issuing.png" alt="">
+                                <img v-if="item.brineFlag === 'N'" src="../../../assets/img/notIssue.png" alt="">
                                 <div class="bucket-image con">
                                     <div class="pot_border">
                                         <div class="pot" />
@@ -301,6 +304,7 @@
             flex-wrap: wrap;
             width: 100%;
             .potbox {
+                position: relative;
                 box-sizing: border-box;
                 width: 223px;
                 // width: 16%;
@@ -314,6 +318,13 @@
                 border-radius: 8px;
                 box-shadow: 0 4px 4px 0 rgba(0, 0, 0, 0.09);
                 opacity: 0.99;
+                img {
+                    position: absolute;
+                    top: 50px;
+                    left: 20px;
+                    z-index: 99;
+                    width: 60px;
+                }
                 .header {
                     display: flex;
                     align-items: center;

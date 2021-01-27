@@ -135,7 +135,8 @@
                                     <span>单位</span>
                                 </template>
                                 <template slot-scope="scope">
-                                    <el-input v-model="scope.row.unitName" size="small" placeholder="" :disabled="!isRedact" />
+                                    <!-- <el-input v-model="scope.row.unitName" size="small" placeholder="" :disabled="!isRedact" /> -->
+                                    <el-input v-model="scope.row.unitName" size="small" placeholder="" :disabled="true" />
                                 </template>
                             </el-table-column>
                             <el-table-column :show-overflow-tooltip="true" min-width="200">
@@ -143,7 +144,7 @@
                                     <span class="notNull">批次</span>
                                 </template>
                                 <template slot-scope="scope">
-                                    <el-input v-model.trim="scope.row.receiveBatch" size="small" placeholder="请输入批次" :disabled="!isRedact" />
+                                    <el-input v-model.trim="scope.row.receiveBatch" :maxlength="10" size="small" placeholder="请输入批次" :disabled="!isRedact" />
                                 </template>
                             </el-table-column>
                             <el-table-column :show-overflow-tooltip="true" min-width="200">
