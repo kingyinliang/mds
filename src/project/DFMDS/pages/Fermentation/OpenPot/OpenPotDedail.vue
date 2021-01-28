@@ -9,6 +9,11 @@
         >
             <template slot="headerCard">
                 <mds-card title="申请基本信息" :name="'head'">
+                    <template slot="titleBtn">
+                        <div style="float: right;">
+                            {{ formHeader.statusName }}
+                        </div>
+                    </template>
                     <el-form :inline="true" :model="formHeader" size="small" class="dataEntry-head-base__form" label-width="100px">
                         <el-row>
                             <em style="padding-left: 40px;" />
@@ -34,7 +39,9 @@
                             <p>{{ formHeader.applyAmount }}</p>
                         </el-form-item>
                         <el-form-item label="调酱容器：">
-                            <p>{{ formHeader.mixPotName }}</p>
+                            <el-select v-model="formHeader.mixPotId" :disabled="!isRedact" placeholder="请选择" style="width: 120px;" clearable filterable @change="potChange">
+                                <el-option v-for="(item, index) in mixSaucePotArr" :key="index" :label="item.holderName" :value="item.id" />
+                            </el-select>
                         </el-form-item>
                         <el-form-item label="开罐单号：">
                             <p>{{ formHeader.openPotNo }}</p>
@@ -261,6 +268,7 @@
         workShop: string[] = []
         material: string[] = []
         potArr: string[] = []
+        mixSaucePotArr = []
 
         searchForm = {
             workShop: '',
@@ -300,6 +308,12 @@
             return function(a, b) {
                 return rule.indexOf(b[property]) - rule.indexOf(a[property]);
             }
+        }
+
+        potChange() {
+            const filterArr: (any) = this.mixSaucePotArr.filter(it => it['id'] === this.formHeader.mixPotId);// eslint-disable-line
+            this.formHeader.mixPotNo = filterArr[0].holderNo
+            this.formHeader.mixPotName = filterArr[0].holderName
         }
 
         // 过滤数据
@@ -400,6 +414,12 @@
                 this.workShop = [...new Set(workShopArr)]
                 this.material = [...new Set(materialArr)]
                 this.potArr = [...new Set(potArrArr)]
+            })
+            COMMON_API.HOLDER_DROPDOWN_API({
+                factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
+                holderType: ['001', '028']
+            }).then(({ data }) => {
+                this.mixSaucePotArr = data.data || [];
             })
             FER_API.FER_OPEN_POT_DETAIL_HOLDER_LIST_API({}).then(({ data }) => {
                 this.holderArr = data.data
@@ -740,6 +760,9 @@
     }
     interface HeadObj{
         openPotNo: string;
+        mixPotNo?: string;
+        mixPotName?: string;
+        mixPotId?: string;
         openType?: string;
         ferOpenFermentorList: PotObj[];
     }

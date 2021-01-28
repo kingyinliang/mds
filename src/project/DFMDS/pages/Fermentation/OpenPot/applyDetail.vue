@@ -28,7 +28,7 @@
                             </el-select>
                         </el-form-item>
                         <el-form-item label="申请物料：" required>
-                            <el-tooltip class="item" effect="dark" :content="(formHeader.applyMaterialCode || '') + ' ' + (formHeader.applyMaterialName || '')" placement="top">
+                            <el-tooltip class="item" effect="dark" :content="(formHeader.applyMaterialName || '') + ' ' + (formHeader.applyMaterialCode || '')" placement="top">
                                 <el-select v-model="formHeader.applyMaterialCode" :disabled="!isRedact" filterable placeholder="请选择" style="width: 120px;" clearable @change="materialChange">
                                     <el-option v-for="(item, index) in material" :key="index" :label="item.materialName+' ' + item.materialCode" :value="item.materialCode" />
                                 </el-select>
