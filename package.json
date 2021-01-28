@@ -6,7 +6,7 @@
         "serve": "vue-cli-service serve --mode local",
         "build:prod": "vue-cli-service build",
         "build:test": "vue-cli-service build --mode test",
-        "build:pre": "vue-cli-service build --mode test",
+        "build:pre": "vue-cli-service build --mode pre",
         "build:dev": "vue-cli-service build --mode development",
         "build:analyzer:windows": "set npm_config_report=true&& vue-cli-service build",
         "build:analyzer:unix": "export npm_config_report=true&& vue-cli-service build",
