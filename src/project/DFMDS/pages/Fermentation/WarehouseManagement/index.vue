@@ -233,7 +233,7 @@
                         COMMON_API.HOLDER_DROPDOWN_API({ // /sysHolder/query
                             deptId: val,
                             factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
-                            holderType: ['001', '029', '028'] // 发酵罐/池、泡豆罐、调酱罐/池 参数编码
+                            holderType: ['001', '025', '028'] // 发酵罐/池、鲜香泡豆泡豆罐、调酱罐/池 参数编码
                         }).then((res) => {
                             resolve(res)
                         })
@@ -257,6 +257,13 @@
                         COMMON_API.DICTIONARY_ITEM_DROPDOWN_API({
                             dictType: 'COMMON_CHECK_STATUS'
                         }).then((res) => {
+                            console.log(res.data, '==============')
+                            res.data.data = res.data.data.filter(item => {
+                                if (item.dictCode === 'N' || item.dictCode === 'S' || item.dictCode === 'M' || item.dictCode === 'R' || item.dictCode === 'P' || item.dictCode === 'F') {
+                                    return true;
+                                }
+                                return false;
+                            })
                             resolve(res)
                         })
                     })

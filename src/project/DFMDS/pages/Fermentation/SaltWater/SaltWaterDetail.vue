@@ -7,7 +7,7 @@
             :form-header="formHeader"
             :order-status="formHeader.orderStatus"
             status-title="状态"
-            :redact-box-show="true"
+            :redact-box-show="formHeader.orderStatus !== 'M'"
             :saved-datas="savedDatas"
             :submit-rules="submitRules"
             :submit-datas="submitDatas"
