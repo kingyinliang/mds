@@ -87,6 +87,7 @@ export default {
                 if (data.code === 0) {
                     this.factory = data.typeList;
                     for (const item of this.factory) {
+                        console.log(item);
                         this.getWorkshop(item.deptId);
                     }
                 } else {
@@ -101,7 +102,7 @@ export default {
                     'POST',
                     {
                         deptId: id,
-                        deptName: this.page.name.replace(/车间/g, '')
+                        deptName: this.page.menuName.replace(/车间/g, '')
                     },
                     false,
                     false,
