@@ -18,9 +18,14 @@
                             <el-input :ref="item.prop" v-model.trim="queryForm[item.prop]" style="width: 170px;" clearable />
                         </el-form-item>
                         <el-form-item v-if="item.type === 'radio'" :key="item.prop" :label="item.label?`${item.label}：` : ''" :prop="item.prop" :rules="item.rule" :label-width="`${item.labelWidth ? item.labelWidth : 70}px`">
-                            <el-radio v-for="(it, num) in item.radioArr" :key="num" v-model="queryForm[item.prop]" :label="it.val">
+                            <!-- <el-radio v-for="(it, num) in item.radioArr" :key="num" v-model="queryForm[item.prop]" :label="it.val">
                                 {{ it.label }}
-                            </el-radio>
+                            </el-radio> -->
+                            <el-radio-group :ref="item.prop" v-model="queryForm[item.prop]">
+                                <el-radio v-for="(it, num) in item.radioArr" :key="num" :label="it.val">
+                                    {{ it.label }}
+                                </el-radio>
+                            </el-radio-group>
                         </el-form-item>
                         <el-form-item v-if="item.type === 'date-interval'" :key="item.prop" class="dateinput" :label="`${item.label}：` || ''" :prop="item.prop" :rules="item.rule" :label-width="`${item.labelWidth ? item.labelWidth : 70}px`">
                             <el-row>
@@ -34,7 +39,7 @@
                             </el-row>
                         </el-form-item>
                         <el-form-item v-if="item.type === 'date-picker'" :key="item.prop" :label="`${item.label}：` || ''" :prop="item.prop" :rules="item.rule" :label-width="`${item.labelWidth ? item.labelWidth : 70}px`">
-                            <el-date-picker :ref="item.prop" v-model="queryForm[item.prop]" :type="item.dataType" placeholder="请选择" :value-format="item.valueFormat" style="width: 170px;" />
+                            <el-date-picker :ref="item.prop" v-model="queryForm[item.prop]" :type="item.dataType" placeholder="请选择" :value-format="item.valueFormat" style="width: 170px;" @blur="v => dateChange(v)" />
                         </el-form-item>
                     </template>
                 </template>
@@ -89,7 +94,7 @@
                                 </div>
                                 <el-input v-else-if="item.redact && item.type === 'input'" v-model="scope.row[item.prop]" :disabled="!scope.row.redact" placeholder="手工录入" size="small" />
                                 <el-date-picker v-else-if="item.redact && item.type === 'date-picker'" v-model="scope.row[item.prop]" :disabled="!scope.row.redact" :type="item.dataType" placeholder="请选择" :value-format="item.valueFormat" :style="{width: item.width - 25 + 'px'}" size="small" @change="val => selectChange(scope.row, scope.$index, val)" />
-                                <el-select v-else-if="item.redact && item.type === 'select'" v-model="scope.row[item.prop]" :disabled="!scope.row.redact" :type="item.dataType" placeholder="请选择" size="small">
+                                <el-select v-else-if="item.redact && item.type === 'select'" v-model="scope.row[item.prop]" :disabled="!scope.row.redact || (scope.row.notEditableProp ? scope.row.notEditableProp.includes(item.prop) : false)" :type="item.dataType" placeholder="请选择" size="small">
                                     <!--<el-option label="请选择" value="" />-->
                                     <el-option v-for="(opt, optIndex) in optionLists[item.prop]" :key="optIndex" :label="opt[item.resVal.label]" :value="opt[item.resVal.value]" />
                                 </el-select>
@@ -135,12 +140,17 @@
                 tooltip-effect="dark"
                 header-row-class-name="tableHead"
                 style="width: 100%; margin-bottom: 20px;"
+                :show-summary="isShowSummary"
+                :summary-method="getSummaries"
                 @selection-change="handleSelectionChange"
             >
                 <el-table-column v-if="showSelectColumn" :selectable="selectableFn" type="selection" width="50px" fixed />
                 <el-table-column v-if="showIndexColumn" type="index" :index="indexMethod" label="序号" width="50px" fixed />
                 <template v-for="(item, index) in column">
                     <el-table-column v-if="!item.hide" :key="index" :fixed="item.fixed" :prop="item.prop" :label="item.label" :width="item.width || ''" :min-width="item.minwidth || ''" :formatter="item.formatter" :show-overflow-tooltip="(item.showOverFlowTooltip? false : true)">
+                        <template slot="header">
+                            {{ item.label }} <span v-if="item.subLabel" style="font-size: 10px;">{{ item.subLabel }}</span>
+                        </template>
                         <template v-if="item.child">
                             <el-table-column v-for="chind in item.child" :key="chind.prop" :prop="chind.prop" :label="chind.label" :formatter="chind.formatter" :show-overflow-tooltip="chind.showOverFlowTooltip" :width="chind.width || ''" />
                         </template>
@@ -171,6 +181,10 @@
             isQueryFormShow: { // 标头搜寻区块是否显示
                 type: Boolean,
                 default: true
+            },
+            isShowSummary: { // 数据是否显示合计
+                type: Boolean,
+                default: false
             },
             tableClass: {
                 type: String,
@@ -255,6 +269,10 @@
                 default: ''
             },
             listInterface: {
+                type: Function,
+                default: () => 1
+            },
+            getSummaries: {
                 type: Function,
                 default: () => 1
             },
@@ -627,6 +645,9 @@
             // 选择变化
             selectChange(row, index, val) {
                 this.$emit('select-change', row, index, val);
+            },
+            dateChange(v) {
+                this.$emit('date-change', v.value);
             }
         }
     };

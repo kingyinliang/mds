@@ -3,7 +3,7 @@
  * @Anthor: Telliex
  * @Date: 2021-01-15 23:35:23
  * @LastEditors: Telliex
- * @LastEditTime: 2021-01-19 18:25:36
+ * @LastEditTime: 2021-01-27 17:11:49
 -->
 <template>
     <div class="header_main">
@@ -97,7 +97,7 @@
                                             <div class="pot_water">
                                                 <div
                                                     class="pot_water_sole"
-                                                    :style="{height: (item.volumePercent*100)+'%', background: item.volumePercent===1? '#590101':item.volumePercent>=0.5? '#8A391B':'C67C5A'}"
+                                                    :style="{height:((item.volumePercent)*100)+'%', background: item.volumePercent===1? '#590101':item.volumePercent>=0.5? '#8A391B':'#C67C5A'}"
                                                 />
                                             </div>
                                         </div>
@@ -107,28 +107,28 @@
                                         <el-button v-if="isAuth('')" size="small" plain :disabled="item.fermentorStatus!=='F'" @click="btnFilledBucket(item)">
                                             鼓罐
                                         </el-button>
-                                        <el-button v-if="isAuth('')" size="small" plain :disabled="item.fermentorStatus!=='F'" @click="btnLYCY(item)">
+                                        <el-button v-if="isAuth('')" size="small" plain :disabled="item.fermentorStatus!=='F' || item.orderNo===''" @click="btnLYCY(item)">
                                             LY/CY
                                         </el-button>
-                                        <el-button v-if="isAuth('')" size="small" plain @click="btnAdjust(item)">
+                                        <el-button v-if="isAuth('')" size="small" plain :disabled="item.fermentorStatus!=='F' || item.orderNo===''" @click="btnAdjust(item)">
                                             调整
                                         </el-button>
-                                        <el-button v-if="isAuth('')" size="small" plain :disabled="item.fermentorStatus!=='U'" @click="btnClearBucket(item)">
+                                        <el-button v-if="isAuth('')" size="small" plain :disabled="item.fermentorStatus!=='U' || item.orderNo===''" @click="btnClearBucket(item)">
                                             清罐
                                         </el-button>
-                                        <el-button v-if="isAuth('')" size="small" plain :disabled="item.fermentorStatus!=='C'" @click="btnCleanBucket(item)">
+                                        <el-button v-if="isAuth('')" size="small" plain :disabled="item.fermentorStatus!=='C' || item.orderNo===''" @click="btnCleanBucket(item)">
                                             清洗
                                         </el-button>
                                     </div>
                                 </div>
-                                <div class="card-bucket__fotter">
-                                    <div v-show="!(item.fermentorStatus==='E'||item.fermentorStatus==='C')">
+                                <div class="card-bucket__fotter" style="height: 40px;">
+                                    <div v-show="!(item.fermentorStatus==='E'||item.fermentorStatus==='C')&&item.orderNo!==''">
                                         <el-tooltip class="item" effect="dark" :content="item.materialName" placement="top" :disabled="item.materialName===''">
                                             <span style="overflow: hidden; white-space: nowrap; text-overflow: ellipsis;">{{ item.materialName || '未有生产物料' }}</span>
                                         </el-tooltip>
                                         <span>{{ item.fermentDays || '0' }} 天</span>
                                     </div>
-                                    <div v-show="!(item.fermentorStatus==='E'||item.fermentorStatus==='C')">
+                                    <div v-show="!(item.fermentorStatus==='E'||item.fermentorStatus==='C')&&item.orderNo!==''">
                                         <el-tooltip class="item" effect="dark" :content="item.orderNo" placement="top" :disabled="item.orderNo===''">
                                             <span style="overflow: hidden; white-space: nowrap; text-overflow: ellipsis;">{{ item.orderNo || '未有订单号' }}</span>
                                         </el-tooltip>
@@ -311,7 +311,7 @@
                             const holderTemp: object[] = []
 
                             res.data.data.forEach(item => {
-                                if (item.dictCode === '001' || item.dictCode === '028' || item.dictCode === '029') {
+                                if (item.dictCode === '001' || item.dictCode === '028' || item.dictCode === '025') {
                                     holderTemp.push({ dictCode: item.dictCode, dictValue: item.dictValue })
                                 }
                             })

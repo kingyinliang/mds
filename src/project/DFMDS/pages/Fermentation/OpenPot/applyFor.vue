@@ -171,6 +171,17 @@
             return FER_API.FER_OPEN_POT_APPLY_LIST_API(params);
         }
 
+        // out() {
+        //     const params = {
+        //         ...this.$refs.queryTable.queryForm,
+        //         current: 1,
+        //         size: 99999
+        //     }
+        //     FER_API.FER_OPEN_POT_APPLY_LIST_API(params).then(({ data }) => {
+        //         exportFileFor2Excel(this.column, data.data.records, '报表')
+        //     })
+        // }
+
         goDetail(row: object) {
             this.$store.commit('fer/updateapplyForObj', row);
             this.$store.commit('common/updateMainTabs', this.$store.state.common.mainTabs.filter(subItem => subItem.name !== 'DFMDS-pages-Fermentation-OpenPot-applyDetail'))

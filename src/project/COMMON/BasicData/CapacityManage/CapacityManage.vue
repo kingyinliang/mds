@@ -32,6 +32,7 @@
                     <el-table-column prop="designCapacity" label="设计产能" :show-overflow-tooltip="true" width="87" />
                     <el-table-column prop="effectiveCapacity" label="有效产能" :show-overflow-tooltip="true" width="87" />
                     <el-table-column prop="capacityUnit" label="单位" width="50" :show-overflow-tooltip="true" />
+                    <el-table-column prop="theoryReadyTime" label="准备工时" width="87" :show-overflow-tooltip="true" />
                     <el-table-column prop="standardManpower" label="标配人力" min-width="80" :show-overflow-tooltip="true" />
                     <el-table-column prop="availableRate" label="可用率" min-width="80" :show-overflow-tooltip="true">
                         <template slot-scope="scope">

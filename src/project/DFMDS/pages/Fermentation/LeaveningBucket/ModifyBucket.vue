@@ -3,7 +3,7 @@
  * @Anthor: Telliex
  * @Date: 2021-01-15 23:35:23
  * @LastEditors: Telliex
- * @LastEditTime: 2021-01-20 18:57:51
+ * @LastEditTime: 2021-01-26 10:57:53
 -->
 <template>
     <div>
@@ -314,10 +314,11 @@
              * @return {*}
              * @example: 示例代码
              */
-            queryFromDict(dictTypeString) {
+            queryFromDict(dictTypeString, Fn) {
                 return new Promise((resolve) => {
                     COMMON_API.DICTQUERY_API({ dictType: dictTypeString }).then(({ data }) => {
-                        resolve(data.data)
+                        Fn(data.data);
+                        resolve(null);
                     });
                 })
             }
@@ -325,11 +326,11 @@
             // ＝＝调整＝＝
 
             // 数据字典出入罐
-            getInOutStatusOptions() {
-                COMMON_API.DICTQUERY_API({ dictType: 'COMMON_FER_ADJUST' }).then(({ data }) => {
-                    this.inOutStatusOptions = data.data
-                });
-            }
+            // getInOutStatusOptions() {
+            //     COMMON_API.DICTQUERY_API({ dictType: 'COMMON_FER_ADJUST' }).then(({ data }) => {
+            //         this.inOutStatusOptions = data.data
+            //     });
+            // }
 
             // 获取物料下拉
             getMaterialOptions() {
@@ -367,12 +368,11 @@
             }
 
             // 获取调整类别
-            getMoveTypeOptions(string) {
-                COMMON_API.DICTQUERY_API({ dictType: string }).then(({ data }) => {
-                    this.moveTypeOptions = data.data
-                });
-            }
-
+            // getMoveTypeOptions(string) {
+            //     COMMON_API.DICTQUERY_API({ dictType: string }).then(({ data }) => {
+            //         this.moveTypeOptions = data.data
+            //     });
+            // }
             // ＝＝转储＝＝
 
             // 获取打入罐容器类型
@@ -400,9 +400,9 @@
             getConvertHolderIdOptions(val) {
                 this.moveHolderIdOptions = []
                 return new Promise((resolve) => {
-                        COMMON_API.HOLDER_DROPDOWN_API({
+                        COMMON_API.HOLDER_DROPDOWN_BY_STATUS_API({
                         holderType: [val],
-                        holderStatus: 'E'
+                        holderStatus: ['E', 'U']
                     }).then(({ data }) => {
                         console.log('打入罐容器号')
                         console.log(data.data)
@@ -456,9 +456,9 @@
             getMoveHolderIdOptions(val) {
                 this.moveHolderIdOptions = []
                 return new Promise((resolve) => {
-                        COMMON_API.HOLDER_DROPDOWN_API({
+                        COMMON_API.HOLDER_DROPDOWN_BY_STATUS_API({
                         holderType: [val],
-                        holderStatus: 'E'
+                        holderStatus: ['E']
                     }).then(({ data }) => {
                         console.log('挪入罐容器号')
                         console.log(data.data)
@@ -470,7 +470,10 @@
 
             changeInOutFlag(val) {
                 this.modifyDataGroup.moveType = ''
-                this.getMoveTypeOptions(val)
+                // this.getMoveTypeOptions(val)
+                this.queryFromDict(val, (data) => {
+                    this.moveTypeOptions = data;
+                }); // 获取调整类别
             }
 
             changeMaterialOptions(materialCode) {
@@ -498,7 +501,10 @@
                     // 获取批次
                     await this.getBatchOptions(this.materialOptions[0] ? this.materialOptions[0].materialCode : '');
                     // 数据字典出入罐
-                    await this.getInOutStatusOptions();
+                    // await this.getInOutStatusOptions();
+                    await this.queryFromDict('COMMON_FER_ADJUST', (data) => {
+                        this.inOutStatusOptions = data;
+                    });
                     // 设置数据
                     await this.setData('modify');
 
@@ -747,7 +753,7 @@
                     }
                 } else if (this.tabType === 'convert') {
                     if (this.convertDataGroup.moveAmount === null || this.convertDataGroup.targetHolderType === '' || this.convertDataGroup.targetHolderId === '') {
-                        this.$warningToast('请录入CY');
+                        this.$warningToast('请录入 LY/CY 必填栏位');
                         return false
                     }
                 } else if (this.tabType === 'move') {

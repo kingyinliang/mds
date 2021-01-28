@@ -8,16 +8,15 @@
             :order-status="formHeader.orderStatus"
             status-title="状态"
             :redact-box-show="true"
-            :saved-rules="savedRules"
             :saved-datas="savedDatas"
-            :submit-rules="savedRules"
+            :submit-rules="submitRules"
             :submit-datas="submitDatas"
             @success="successHandler"
         >
             <template v-slot:contentBox="{isRedact}">
                 <mds-card title="盐水发料" name="saltwater">
                     <template slot="titleBtn">
-                        <el-form ref="selectFormRef" :model="selectForm" :inline="true" :rules="selectFormRules" size="small" label-suffix="：" label-width="90px" class="multi_row clearfix" style="float: right; font-size: 0;">
+                        <el-form ref="selectFormRef" :model="selectForm" :inline="true" :rules="selectFormRules" size="small" label-suffix="：" label-width="90px" class="multi_row clearfix" style="float: right; padding-bottom: 8px; font-size: 0;">
                             <el-form-item label="盐水物料" prop="brineMaterialCode">
                                 <el-select v-model="selectForm.brineMaterialCode" :disabled="!isRedact" style="width: 160px;" :clearable="false" :placeholder="'请选择盐水物料'">
                                     <el-option v-for="(opt, optIndex) in materialOptionsList" :key="optIndex" :label="opt.virtualMaterialCode + ' ' + opt.virtualMaterialName" :value="opt.virtualMaterialCode" />
@@ -47,12 +46,12 @@
                                     <el-date-picker v-model="scope.row.matchDate" :disabled="!isRedact" type="date" value-format="yyyy-MM-dd" format="yyyy-MM-dd" placeholder="请选择" size="small" />
                                 </template>
                             </el-table-column>
-                            <el-table-column width="180" label="开始时间" :show-overflow-tooltip="false" class="star">
+                            <el-table-column width="180" label="开始领用时间" :show-overflow-tooltip="false" class="star">
                                 <template slot-scope="scope">
                                     <el-date-picker v-model="scope.row.startDate" :disabled="!isRedact" type="datetime" value-format="yyyy-MM-dd HH:mm" format="yyyy-MM-dd HH:mm" placeholder="请选择" size="small" />
                                 </template>
                             </el-table-column>
-                            <el-table-column width="180" label="结束时间" :show-overflow-tooltip="false" class="star">
+                            <el-table-column width="180" label="结束领用时间" :show-overflow-tooltip="false" class="star">
                                 <template slot-scope="scope">
                                     <el-date-picker v-model="scope.row.endDate" :disabled="!isRedact" type="datetime" value-format="yyyy-MM-dd HH:mm" format="yyyy-MM-dd HH:mm" placeholder="请选择" size="small" />
                                 </template>
@@ -72,7 +71,7 @@
                             </el-table-column>
                             <el-table-column width="150" :show-overflow-tooltip="true" class="star">
                                 <template slot="header">
-                                    <span class="notNull">盐水浓度</span>
+                                    <span class="notNull">盐水浓度（%）</span>
                                 </template>
                                 <template slot-scope="scope">
                                     <el-input v-model.number="scope.row.concentration" oninput="value=value.replace(/\D*/g,'')" size="small" placeholder="请输入浓度" :disabled="!isRedact" />
@@ -105,7 +104,7 @@
                         </el-button>
                     </template> -->
                     <template>
-                        <el-table :key="Math.random()" class="newTable markStyle" :data="otherMaterialListComp" :row-class-name="rowDelFlag" :row-style="rowStyleHandler" header-row-class-name="tableHead" border style="width: 100%; min-height: 90px;">
+                        <el-table :key="Math.random()" class="newTable markStyle" :data="otherMaterialListComp" :row-class-name="rowDelFlag" header-row-class-name="tableHead" border style="width: 100%; min-height: 90px;">
                             <el-table-column width="150" label="领用物料" :show-overflow-tooltip="true" class="star">
                                 <template slot-scope="scope">
                                     {{ scope.row.useMaterialName + ' ' + scope.row.useMaterialCode }}
@@ -113,7 +112,7 @@
                             </el-table-column>
                             <el-table-column :show-overflow-tooltip="true" label="需求数量" width="130">
                                 <template slot-scope="scope">
-                                    <el-input v-model="scope.row.needAmount" size="small" :disabled="!isRedact" />
+                                    <el-input v-model="scope.row.needAmount" size="small" :disabled="true" />
                                 </template>
                             </el-table-column>
                             <el-table-column width="150" label="罐号" :show-overflow-tooltip="true">
@@ -136,7 +135,8 @@
                                     <span>单位</span>
                                 </template>
                                 <template slot-scope="scope">
-                                    <el-input v-model="scope.row.unitName" size="small" placeholder="" :disabled="!isRedact" />
+                                    <!-- <el-input v-model="scope.row.unitName" size="small" placeholder="" :disabled="!isRedact" /> -->
+                                    <el-input v-model="scope.row.unitName" size="small" placeholder="" :disabled="true" />
                                 </template>
                             </el-table-column>
                             <el-table-column :show-overflow-tooltip="true" min-width="200">
@@ -144,7 +144,7 @@
                                     <span class="notNull">批次</span>
                                 </template>
                                 <template slot-scope="scope">
-                                    <el-input v-model.trim="scope.row.receiveBatch" size="small" placeholder="请输入批次" :disabled="!isRedact" />
+                                    <el-input v-model.trim="scope.row.receiveBatch" :maxlength="10" size="small" placeholder="请输入批次" :disabled="!isRedact" />
                                 </template>
                             </el-table-column>
                             <el-table-column :show-overflow-tooltip="true" min-width="200">
@@ -319,12 +319,13 @@ export default class SaltWaterDetail extends Vue {
                 changer: info.changer,
                 productMaterialCode: ferOrder.productMaterialCode,
                 productMaterialName: ferOrder.productMaterialName,
-                kojiOutDate: info.intoDate,
+                // kojiOutDate: info.intoDate,
+                kojiOutDate: info.ferOrder.startDate,
                 kojiAmount: ferOrder.preAmount,
                 preMaterialCode: ferOrder.preMaterialCode,
                 preMaterialName: ferOrder.preMaterialName,
                 orderNo: ferOrder.orderNo,
-                orderStatus: info.ferBrineIssue.checkStatusName,
+                orderStatus: info.ferBrineIssue.checkStatus || 'N',
                 orderStatusName: info.brineFlagName,
                 factoryName: JSON.parse(sessionStorage.getItem('factory') || '{}').deptName,
                 preOrderNo: ferOrder.preOrderNo
@@ -332,11 +333,15 @@ export default class SaltWaterDetail extends Vue {
             this.selectForm = {
                 brineMaterialCode: info.ferBrineIssue?.brineMaterialCode
             }
+            this.$store.commit('fer/updateBrineInfo', {
+                ...info,
+                workShop: brineInfo.workShop
+            });
         })
     }
 
     get otherMaterialListComp() {
-        return this.otherMaterialList.filter(item => item.operatFlag !== -2);
+        return this.otherMaterialList.sort((a, b) => a.useMaterialCode > b.useMaterialCode ? 1 : -1).filter(item => item.operatFlag !== -2);
     }
 
     getBrineList() {
@@ -348,9 +353,9 @@ export default class SaltWaterDetail extends Vue {
 
     getOrtherMaterialList() {
         const info = this.$store.state.fer.brineInfo;
-        FER_API.FER_BRINE_OTHER_BOM_API({ fermentorId: info.id, cycle: info.cycle, orderNo: info.ferOrder.orderNo }).then(({ data }) => {
+        FER_API.FER_BRINE_OTHER_BOM_API({ fermentorId: info.id, cycle: info.cycle, orderNo: info.ferOrder.preOrderNo }).then(({ data }) => {
             // console.log(data, '=-=-=-=-=-=-=')
-            this.otherMaterialList = data.data;
+            this.otherMaterialList = data.data.filter(item => item.operatFlag !== -2);
         })
     }
 
@@ -364,9 +369,20 @@ export default class SaltWaterDetail extends Vue {
         })
     }
 
+    /**
+     * 判断是否是非空非0的值
+     */
+    chargeNumber(v) {
+        return Boolean(String(v));
+    }
+
     ruleSaltWaterMaterialSubmit() {
+        if (!this.saltWaterList.length) {
+            this.$warningToast('盐水发料不能为空');
+            return false;
+        }
         for (const item of this.saltWaterList) {
-            if (!item.brinePotId || !item.useAmount || !item.concentration) {
+            if (!item.brinePotId || !this.chargeNumber(item.useAmount) || !this.chargeNumber(item.concentration)) {
                 this.$warningToast('请填写盐水发料必填栏位');
                 return false;
             }
@@ -375,8 +391,13 @@ export default class SaltWaterDetail extends Vue {
     }
 
     ruleOtherMaterialSubmit() {
+        console.log(this.otherMaterialList)
+        if (!this.otherMaterialList.length) {
+            this.$warningToast('其他发料不能为空');
+            return false;
+        }
         for (const item of this.otherMaterialList) {
-            if (!item.receiveBatch || !item.useAmount) {
+            if (!item.receiveBatch || !this.chargeNumber(item.useAmount)) {
                 this.$warningToast('请填写其他发料必填栏位');
                 return false;
             }
@@ -385,7 +406,7 @@ export default class SaltWaterDetail extends Vue {
     }
 
     // {redact-box} 提交需跑的验证 function
-    savedRules(): Function[] {
+    submitRules(): Function[] {
         return [this.ruleSaltWaterMaterialSubmit, this.ruleOtherMaterialSubmit];
     }
 
@@ -409,7 +430,7 @@ export default class SaltWaterDetail extends Vue {
             ferMaterialCode: obj.productMaterialCode,
             ferMaterialType: info.ferBrineIssue.ferMaterialType, // 发酵物料类型
             fermentorId: info.holderId,
-            id: info.id,
+            id: info.ferBrineIssue.id,
             kojiAmount: obj.kojiAmount,
             kojiMaterialCode: obj.preMaterialCode,
             kojiMaterialName: obj.preMaterialName,
@@ -444,7 +465,7 @@ export default class SaltWaterDetail extends Vue {
             ferMaterialCode: obj.productMaterialCode,
             ferMaterialType: info.ferBrineIssue.ferMaterialType, // 发酵物料类型
             fermentorId: info.holderId,
-            id: info.id,
+            id: info.ferBrineIssue.id,
             kojiAmount: obj.kojiAmount,
             kojiMaterialCode: obj.preMaterialCode,
             kojiMaterialName: obj.preMaterialName,
@@ -455,7 +476,9 @@ export default class SaltWaterDetail extends Vue {
             kojiOrderNo: this.formHeader.preOrderNo,
             orderNo: obj.orderNo,
             orderId: info.ferOrder.id,
-            virtualMaterialId: virtualMaterialId
+            virtualMaterialId: virtualMaterialId,
+            orderStartDate: info.ferOrder.startDate,
+            orderType: info.ferOrder.orderType
         });
     }
 
@@ -491,6 +514,11 @@ export default class SaltWaterDetail extends Vue {
     rowDelFlag({ row }) {
         if (row.delFlag === 1) {
             return 'rowDel';
+        }
+        if (row.operatFlag === -1) {
+            return 'rowDel';
+        } else if (row.operatFlag === 1) {
+            return 'warning-row'
         }
         return '';
     }
@@ -534,7 +562,9 @@ export default class SaltWaterDetail extends Vue {
             ...row,
             useAmount: 0,
             receiveBatch: '',
-            splitFlag: 'Y'
+            splitFlag: 'Y',
+            changer: getUserNameNumber(),
+            changed: dateFormat(new Date(), 'yyyy-MM-dd hh:mm:ss')
         } as OtherMaterial;
         delete obj.id;
         this.otherMaterialList.splice(index + 1, 0, obj);

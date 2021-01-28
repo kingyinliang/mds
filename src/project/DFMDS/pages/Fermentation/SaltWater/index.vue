@@ -19,7 +19,7 @@
                         </el-button>
                     </template> -->
                     <template>
-                        <div class="pots">
+                        <div v-if="targetQueryTableList.length" class="pots">
                             <div v-for="(item) in targetQueryTableList" :key="item.id" class="potbox">
                                 <div class="header">
                                     <span>{{ item.holderName + '-' + item.fermentorStatusName }}</span>
@@ -30,6 +30,9 @@
                                 <!-- <div class="con">
                                     <img src="../../../assets/img/ferPot.png" alt="">
                                 </div> -->
+                                <!-- 盐水未发 N -->
+                                <img v-if="item.brineFlag !== 'N'" src="../../../assets/img/issuing.png" alt="">
+                                <img v-if="item.brineFlag === 'N'" src="../../../assets/img/notIssue.png" alt="">
                                 <div class="bucket-image con">
                                     <div class="pot_border">
                                         <div class="pot" />
@@ -41,17 +44,21 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="foot">
+                                <!-- 投料中不展示 -->
+                                <div v-if="item.fermentorStatus !== 'R'" class="foot">
                                     <p>
-                                        <span>{{ item.ferOrder.productMaterialName }}</span>
-                                        <span>{{ item.fermentDays + '天' }}</span>
+                                        <span>{{ item.ferOrder.productMaterialName || '' }}</span>
+                                        <span>{{ item.fermentDays ? (item.fermentDays + '天') : '' }}</span>
                                     </p>
                                     <p>
-                                        <span>{{ item.ferOrder.orderNo }}</span>
+                                        <span>{{ item.ferOrder.orderNo || '' }}</span>
                                         <span>{{ item.currentStock / 1000 + '吨' }}</span>
                                     </p>
                                 </div>
                             </div>
+                        </div>
+                        <div v-else class="empty">
+                            暂无数据
                         </div>
                     </template>
                 </mds-card>
@@ -288,11 +295,16 @@
 
 <style lang="scss" scoped>
     .header_main {
+        .empty {
+            padding: 20px;
+            text-align: center;
+        }
         .pots {
             display: flex;
             flex-wrap: wrap;
             width: 100%;
             .potbox {
+                position: relative;
                 box-sizing: border-box;
                 width: 223px;
                 // width: 16%;
@@ -306,6 +318,13 @@
                 border-radius: 8px;
                 box-shadow: 0 4px 4px 0 rgba(0, 0, 0, 0.09);
                 opacity: 0.99;
+                img {
+                    position: absolute;
+                    top: 50px;
+                    left: 20px;
+                    z-index: 99;
+                    width: 60px;
+                }
                 .header {
                     display: flex;
                     align-items: center;

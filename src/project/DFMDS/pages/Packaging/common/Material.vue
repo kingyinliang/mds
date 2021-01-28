@@ -45,9 +45,19 @@
                         <el-input v-model="scope.row.realLoss" :disabled="!(isRedact && scope.row.checkStatus !== 'C' && scope.row.checkStatus !== 'D' && scope.row.checkStatus !== 'P' && scope.row.materialStatus !== '3')" size="small" placeholder="请输入" />
                     </template>
                 </el-table-column>
+                <el-table-column label="损耗原因" prop="lossReason" min-width="140">
+                    <template slot-scope="scope">
+                        <el-input v-model="scope.row.lossReason" :disabled="!(isRedact && scope.row.checkStatus !== 'C' && scope.row.checkStatus !== 'D' && scope.row.checkStatus !== 'P' && scope.row.materialStatus !== '3')" size="small" placeholder="请输入" />
+                    </template>
+                </el-table-column>
                 <el-table-column label="不合格数" prop="unqualified" width="120">
                     <template slot-scope="scope">
                         <el-input v-model="scope.row.unqualified" :disabled="!(isRedact && scope.row.checkStatus !== 'C' && scope.row.checkStatus !== 'D' && scope.row.checkStatus !== 'P' && scope.row.materialStatus !== '3')" size="small" placeholder="请输入" />
+                    </template>
+                </el-table-column>
+                <el-table-column label="不合格原因" prop="badReason" min-width="140">
+                    <template slot-scope="scope">
+                        <el-input v-model="scope.row.badReason" :disabled="!(isRedact && scope.row.checkStatus !== 'C' && scope.row.checkStatus !== 'D' && scope.row.checkStatus !== 'P' && scope.row.materialStatus !== '3')" size="small" placeholder="请输入" />
                     </template>
                 </el-table-column>
                 <el-table-column label="厂家" prop="manufactor" width="120" :show-overflow-tooltip="true">
@@ -214,6 +224,14 @@
             for (const item of this.currentDataTable.filter(it => it.delFlag !== 1)) {
                 if (!item.realUseAmount) {
                     this.$warningToast('请填写物料领用页签包材领用实际用量');
+                    return false
+                }
+                if ((item.realLoss !== '' && item.realLoss !== 0) && !item.lossReason) {
+                    this.$warningToast('请填写物料领用页签包材领用损耗原因');
+                    return false
+                }
+                if (item.unqualified !== '' && item.unqualified !== 0 && !item.badReason) {
+                    this.$warningToast('请填写物料领用页签包材领用不合格原因');
                     return false
                 }
             }
@@ -777,6 +795,9 @@ interface MaterialMap{
     posnr?: string;
     factory?: string;
     realLoss?: string | number;
+    lossReason?: string;
+    unqualified?: string | number;
+    badReason?: string;
     checkStatus?: string;
     materialType?: string;
     materialCode?: string;

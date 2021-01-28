@@ -3,7 +3,7 @@
  * @Anthor: Telliex
  * @Date: 2020-12-01 20:33:02
  * @LastEditors: Telliex
- * @LastEditTime: 2021-01-19 18:15:33
+ * @LastEditTime: 2021-01-26 10:45:25
 -->
 <template>
     <data-entry ref="dataEntry" :tabs="tabs" :order-status-show="false" :header-area-show="false" :redact-box-show="false" class="mainForm">
@@ -245,12 +245,7 @@
         // TODOS 发酵一览表导出部分未处理
         // 发酵一览表 export
         exportFermentSummary() {
-            // exportFileForm(`${FER_API.FER_EXPORT_FERMENTOR_SUMMARY_QUERY_API}`, '发酵一览表报表', this);
-            // 发酵一览表
-            FER_API.FER_EXPORT_FERMENTOR_SUMMARY_QUERY_API({}).then(({ data }) => {
-                console.log('发酵一览表');
-                console.log(data);
-            });
+            exportFileForm(`${FER_API.FER_EXPORT_FERMENTOR_SUMMARY_QUERY_API}`, '发酵一览表报表', this);
         }
 
         // TODOS 发酵罐库存汇总信息导出部分未处理

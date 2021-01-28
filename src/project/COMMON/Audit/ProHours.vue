@@ -124,7 +124,14 @@
             },
             {
                 prop: 'carAmount',
-                label: '入库数量（箱）'
+                label: '入库数量（箱）',
+                minwidth: '140',
+                formatter: (row) => {
+                    if (row.carAmount === 0) {
+                        return ''
+                    }
+                    return row.carAmount
+                }
             },
             {
                 prop: 'yield',

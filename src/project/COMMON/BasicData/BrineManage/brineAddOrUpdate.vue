@@ -2,7 +2,7 @@
     <el-dialog :close-on-click-modal="false" :visible.sync="visible" :title="dataForm.id? '修改' : '新增'" width="880px">
         <el-form ref="dataForm" :model="dataForm" :rules="dataRule" :inline="true" label-width="90px" size="small">
             <el-form-item label="虚拟物料：" prop="virtualMaterialCode">
-                <el-select v-model="dataForm.virtualMaterialCode" placeholder="请选择" filterable style="width: 180px;" clearable @change="setVirtual">
+                <el-select v-model="dataForm.virtualMaterialCode" :disabled="dataForm.id !== ''" placeholder="请选择" filterable style="width: 180px;" clearable @change="setVirtual">
                     <el-option v-for="(sole, index) in virtualList" :key="index" :value="sole.materialCode" :label="`${sole.materialName} ${sole.materialCode}`" />
                 </el-select>
             </el-form-item>

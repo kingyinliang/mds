@@ -27,7 +27,11 @@
                         <el-table-column label="生产订单" prop="orderNo" width="120px" />
                         <el-table-column label="容器号" prop="fermentorName" width="120px" />
                         <el-table-column label="发酵天数" prop="fermentDays" width="120px" />
-                        <el-table-column label="生产物料" prop="productMaterialName" width="160px" />
+                        <el-table-column label="生产物料" prop="productMaterialName" width="160px" show-overflow-tooltip>
+                            <template slot-scope="scope">
+                                {{ `${scope.row.productMaterialName} ${scope.row.productMaterialCode}` }}
+                            </template>
+                        </el-table-column>
                         <el-table-column label="订单数量" prop="amount" width="120px" />
                         <el-table-column label="订单单位" prop="orderUnit" width="120px" />
                         <el-table-column label="移动类型" prop="inStorageType" width="120px" />
@@ -71,7 +75,7 @@
                     </el-table>
                 </mds-card>
                 <el-row>
-                    <el-pagination :current-page="currentPage" :page-sizes="[10, 20, 50]" :page-size="pageSize" layout="total, sizes, prev, pager, next, jumper" :total="total" @size-change="sizeChangeHandler" @current-change="currentPageChangeHanlder" />
+                    <el-pagination :current-page.sync="currentPage" :page-sizes="[10, 20, 50]" :page-size="pageSize" layout="total, sizes, prev, pager, next, jumper" :total="total" @size-change="sizeChangeHandler" @current-change="currentPageChangeHanlder" />
                 </el-row>
             </template>
         </query-table>
@@ -113,6 +117,8 @@
         formObj = {};
 
         redactBoxDisable = false; // control bar 可否禁用
+
+        prePage = 1;
 
         currentPage = 1;
 
@@ -278,7 +284,8 @@
         }
 
         // queryTable 查询请求
-        queryTableListInterface = params => {
+        queryTableListInterface(params) {
+            this.isRedact = false;
             params.factory = JSON.parse(sessionStorage.getItem('factory') || '{}').id;
             params.current = this.currentPage;// eslint-disable-line
             params.size = this.pageSize;// eslint-disable-line
@@ -427,6 +434,7 @@
             list.map(item => {
                 if (item.id) {
                     params.ferInStorageUpdateDtoList.push({
+                        ...item,
                         id: item.id,
                         inStorageAmount: item.inStorageAmount,
                         inStorageBatch: item.inStorageBatch,
@@ -435,6 +443,7 @@
                 } else {
                     const selectRow = this.selections.find(row => row.onlyOne === item.onlyOne);
                     const obj: InsertDto = {
+                        ...item,
                         fermentDays: item.fermentDays,
                         inStorageAmount: item.inStorageAmount,
                         inStorageBatch: item.inStorageBatch,
@@ -517,6 +526,13 @@
         }
 
         currentPageChangeHanlder(val) {
+            const params = this.getSaveOrSubmitDtos();
+            if (this.isRedact && (params.ferInStorageInsertDtoList.length || params.ferInStorageUpdateDtoList.length)) {
+                this.$warningToast('请先保存数据');
+                this.currentPage = this.prePage;
+                return false;
+            }
+            this.prePage = this.currentPage;
             this.currentPage = val;
             this.$refs.queryTable.getDataList();
         }
