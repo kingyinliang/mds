@@ -390,7 +390,7 @@
             })
             COMMON_API.DICTQUERY_API({
                 factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
-                dictType: 'FER_MIX_MAT_TYPE'
+                dictType: 'COMMON_MATERIAL_ALLO'
             }).then(({ data }) => {
                 this.deployMaterialSelect = data.data
             })

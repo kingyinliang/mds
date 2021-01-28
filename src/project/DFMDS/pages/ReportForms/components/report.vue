@@ -1,7 +1,7 @@
 <!-- 报表模板 -->
 <template>
-    <div class="report">
-        <el-card class="searchCard" style="margin-bottom: 5px;">
+    <div class="report header_main">
+        <el-card v-if="showForm" class="searchCard" style="margin-bottom: 5px;">
             <el-form ref="elForm" :model="formHeader" inline :rules="formRules" size="small" label-width="120px" label-suffix="：">
                 <el-form-item v-for="item in queryFormData" :key="item.label" :label="item.label" :prop="item.prop">
                     <el-select v-if="item.type === 'select'" v-model="formHeader[item.prop]">
@@ -37,6 +37,10 @@ import { Vue, Component, Prop } from 'vue-property-decorator';
 
 @Component({})
 export default class Report extends Vue {
+
+    @Prop({ type: Boolean, default: false })
+    showForm: false;
+
     @Prop({ type: Object, default: () => ({}) })
     formHeader: {};
 
