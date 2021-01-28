@@ -274,6 +274,11 @@ const FER_API = {
      */
     FER_OPEN_POT_DETAIL_LIST_API: params => httpProxy('/fer/open/queryOfFermentorOrderInStorage', 'POST', params),
     /**
+     * @property {string} FER_OPEN_POT_DETAIL_LIST_API 发酵车间-开罐列表-详情页-超期酱容器
+     */
+    FER_OPEN_POT_DETAIL_HOLDER_LIST_API: params => httpProxy('/fer/open/dropDownCqMaterial', 'GET', params),
+
+    /**
      * @property {string} FER_OPEN_POT_DETAIL_DEPLOY_LIST_API 发酵车间-开罐列表-详情页-调配物料
      */
     FER_OPEN_POT_DETAIL_DEPLOY_LIST_API: params => httpProxy('/fer/open/queryOfReceiveMaterial', 'GET', params),
