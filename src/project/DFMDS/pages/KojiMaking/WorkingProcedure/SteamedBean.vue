@@ -251,14 +251,25 @@
 
         // 获取泡豆罐
         getScanList() {
-            COMMON_API.HOLDER_DROPDOWN_API({
+            COMMON_API.HOLDER_DROPDOWN_BY_STATUS_API({
                 // deptId: this.formHeader.workShop,
                 factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
                 holderType: ['025']
             }).then(({ data }) => {
                 console.log('泡豆罐下拉')
                 console.log(data)
-                this.scanList = data.data || [];
+                // this.scanList = data.data || [];
+                this.scanList = [];
+                if (data.data.length !== 0) {
+                    data.data.forEach(item => {
+                        // 是空罐或是已有的罐
+                        if (item.holderStatus === 'E' || item.holderNo === this.formHeader.kojiHouseNo) {
+                            this.scanList.push({ holderName: item.holderName, id: item.id })
+                        }
+                    })
+                }
+
+
             });
         }
 
