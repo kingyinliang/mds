@@ -97,7 +97,7 @@
                         </el-table>
                     </template>
                 </mds-card>
-                <mds-card title="其他发料" name="otherwater">
+                <mds-card v-if="otherMaterialListComp.length" title="其他发料" name="otherwater">
                     <!-- <template slot="titleBtn">
                         <el-button type="primary" size="small" style="float: right;" :disabled="!isRedact" @click="addMaterial()">
                             新增
@@ -162,7 +162,7 @@
                                     <el-button type="text" size="samll" :disabled="!isRedact" @click="splitHandler(scope.row, scope.$index)">
                                         拆分
                                     </el-button>
-                                    <el-button class="delBtn" type="text" icon="el-icon-delete" size="mini" :disabled="!isRedact" @click="removeDataRow(scope.row, scope.$index, 'otherMaterialList', 'ferBrineIssueBomRemoveIdList')">
+                                    <el-button v-if="!(scope.row.splitFlag !== 'Y')" class="delBtn" type="text" icon="el-icon-delete" size="mini" :disabled="!isRedact" @click="removeDataRow(scope.row, scope.$index, 'otherMaterialList', 'ferBrineIssueBomRemoveIdList')">
                                         删除
                                     </el-button>
                                 </template>
@@ -341,7 +341,7 @@ export default class SaltWaterDetail extends Vue {
     }
 
     get otherMaterialListComp() {
-        return this.otherMaterialList.sort((a, b) => a.useMaterialCode > b.useMaterialCode ? 1 : -1).filter(item => item.operatFlag !== -2);
+        return this.otherMaterialList.filter(item => item.operatFlag !== -2);
     }
 
     getBrineList() {
@@ -355,7 +355,7 @@ export default class SaltWaterDetail extends Vue {
         const info = this.$store.state.fer.brineInfo;
         FER_API.FER_BRINE_OTHER_BOM_API({ fermentorId: info.id, cycle: info.cycle, orderNo: info.ferOrder.preOrderNo }).then(({ data }) => {
             // console.log(data, '=-=-=-=-=-=-=')
-            this.otherMaterialList = data.data.filter(item => item.operatFlag !== -2);
+            this.otherMaterialList = data.data.sort((a, b) => a.useMaterialCode > b.useMaterialCode ? 1 : -1).filter(item => item.operatFlag !== -2);
         })
     }
 
@@ -393,8 +393,8 @@ export default class SaltWaterDetail extends Vue {
     ruleOtherMaterialSubmit() {
         console.log(this.otherMaterialList)
         if (!this.otherMaterialList.length) {
-            this.$warningToast('其他发料不能为空');
-            return false;
+            // this.$warningToast('其他发料不能为空');
+            return true;
         }
         for (const item of this.otherMaterialList) {
             if (!item.receiveBatch || !this.chargeNumber(item.useAmount)) {
