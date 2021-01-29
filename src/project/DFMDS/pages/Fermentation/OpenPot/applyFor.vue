@@ -59,7 +59,7 @@
             },
             {
                 type: 'date-picker',
-                label: '生产日期',
+                label: '使用日期',
                 prop: 'useDate',
                 valueFormat: 'yyyy-MM-dd hh:mm:ss',
                 defaultValue: dateFormat(new Date(), 'yyyy-MM-dd hh:mm:ss')
@@ -97,6 +97,11 @@
                     label: ['dictValue'],
                     value: 'dictCode'
                 }
+            },
+            {
+                type: 'input',
+                label: '开罐单号',
+                prop: 'openPotNo'
             }
         ];
 
@@ -149,7 +154,7 @@
                 minwidth: '90'
             },
             {
-                label: '生产日期',
+                label: '使用日期',
                 prop: 'useDate',
                 minwidth: '140'
             },
