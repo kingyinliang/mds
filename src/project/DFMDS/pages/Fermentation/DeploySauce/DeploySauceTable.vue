@@ -212,7 +212,7 @@
         holderArr: PotObj[] = []
 
         init(formHeader) {
-            this.getSelect()
+            this.getSelect(formHeader)
             this.getSauce(formHeader)
             this.getList(formHeader)
         }
@@ -247,14 +247,15 @@
         }
 
         // 获取下拉
-        getSelect() {
+        getSelect(formHeader) {
             FER_API.FER_OPEN_POT_DETAIL_LIST_API({
+                openPotNo: formHeader.openPotNo,
                 holderType: '025'
             }).then(({ data }) => {
                 this.holderPickArr = data.data
             })
             FER_API.FER_OPEN_POT_DETAIL_LIST_API({
-                judgeResult: 'CQ'
+                openPotNo: formHeader.openPotNo
             }).then(({ data }) => {
                 this.holderArr = data.data
             })

@@ -136,9 +136,8 @@
         }
 
         getModule() {
-            COMMON_API.SEARCH_MATERIAL_API({
-                factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
-                materialType: 'ZROH'
+            COMMON_API.ALLMATERIAL_API({
+                materialTypes: ['ZROH', 'ZFZC'] // 物料类型列表 - 原料、辅料、半成品
             }).then(({ data }) => {
                 this.moduleList = data.data
             })

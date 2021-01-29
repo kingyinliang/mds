@@ -108,16 +108,10 @@
                         <el-table-column label="容器号" prop="holderName" min-width="80" :show-overflow-tooltip="true" />
                         <el-table-column label="使用说明" prop="explain" min-width="100" :show-overflow-tooltip="true">
                             <template slot-scope="scope">
-                                {{ scope.row.ferOpenFermentor.explain }}
+                                <el-input v-model="scope.row.description" :disabled="!isRedact || scope.row.mixSauceStatus === 'M' || scope.row.mixSauceStatus === 'S'" size="mini" style="width: 100%;" />
                             </template>
                         </el-table-column>
-                        <el-table-column label="订单类型" prop="materialUnit" min-width="100" :show-overflow-tooltip="true">
-                            <template slot-scope="scope">
-                                <el-select v-if="scope.row.ferOrder.id" v-model="scope.row.ferOrder.orderType" disabled placeholder="请选择" size="small">
-                                    <el-option v-for="(item, index) in orderTypeList" :key="index" :label="item.dictValue" :value="item.dictCode" />
-                                </el-select>
-                            </template>
-                        </el-table-column>
+                        <el-table-column label="订单类型" prop="orderTypeName" min-width="100" :show-overflow-tooltip="true" />
                         <el-table-column label="发酵天数/天" prop="fermentDays" min-width="120" :show-overflow-tooltip="true" />
                         <el-table-column label="物料" prop="productMaterialName" min-width="120" :show-overflow-tooltip="true">
                             <template slot-scope="scope">
@@ -142,6 +136,16 @@
                         <el-table-column label="批次" prop="materialUnit" min-width="100" :show-overflow-tooltip="true">
                             <template slot-scope="scope">
                                 {{ scope.row.ferInStorageList > 0? scope.row.ferInStorageList[0].inStorageBatch : '' }}
+                            </template>
+                        </el-table-column>
+                        <el-table-column label="实验备注" prop="explain" min-width="100" :show-overflow-tooltip="true">
+                            <template slot-scope="scope">
+                                <el-input v-model="scope.row.experiment" :disabled="!isRedact || scope.row.mixSauceStatus === 'M' || scope.row.mixSauceStatus === 'S'" size="mini" style="width: 100%;" />
+                            </template>
+                        </el-table-column>
+                        <el-table-column label="备注" prop="explain" min-width="100" :show-overflow-tooltip="true">
+                            <template slot-scope="scope">
+                                <el-input v-model="scope.row.remark" :disabled="!isRedact || scope.row.mixSauceStatus === 'M' || scope.row.mixSauceStatus === 'S'" size="mini" style="width: 100%;" />
                             </template>
                         </el-table-column>
                     </el-table>
@@ -251,6 +255,7 @@
 <script lang="ts">
     import { Vue, Component } from 'vue-property-decorator';
     import { COMMON_API, FER_API } from 'common/api/api';
+    import _ from 'lodash';
 
     @Component
     export default class OpenPotDedail extends Vue {
@@ -262,7 +267,6 @@
         noChange = false
         formHeader: HeadObj = { ferOpenFermentorList: [], openPotNo: '' }
 
-        orderTypeList = []
         deployMaterialSelect: ListObj[] = []
         Unit = []
         workShop: string[] = []
@@ -289,6 +293,7 @@
         ]
 
         openPotListSum: PotObj[] = []
+        orgOpenPotListSum: PotObj[] = []
         openPotList: PotObj[] = []
         multipleSelection: PotObj[] = []
 
@@ -297,17 +302,12 @@
 
         deployMaterial: ListObj[] = []
         sauce: ListObj[] = []
+        orgDeployMaterial: ListObj[] = []
+        orgSauce: ListObj[] = []
         holderArr: PotObj[] = []
 
         mounted() {
             this.init()
-        }
-
-        // 根据指定规则排序
-        compare(property, rule) {
-            return function(a, b) {
-                return rule.indexOf(b[property]) - rule.indexOf(a[property]);
-            }
         }
 
         potChange() {
@@ -319,15 +319,8 @@
         // 过滤数据
         filterData(data) {
             let tmp = data
-            // const rule: string[] = []
-            // this.formHeader.ferOpenFermentorList.forEach(item => {
-            //     if (item.fermentorId) {
-            //         rule.push(item.fermentorId)
-            //     }
-            // })
-            // tmp.sort(this.compare('id', rule))
             tmp.sort((a, b) => {
-                return (b['openMaterialId'] ? 1 : 0) - (a['openMaterialId'] ? 1 : 0)
+                return (b['openFermentorId'] ? 1 : 0) - (a['openFermentorId'] ? 1 : 0)
             })
             if (this.searchForm.workShop) {
                 tmp = tmp.filter(item => item.workShop === this.searchForm.workShop)
@@ -348,22 +341,11 @@
         initMultiple() {
             setTimeout(() => {
                 this.openPotListSum.forEach(row => {
-                    if (row.openMaterialId) {
+                    if (row.openFermentorId) {
                         this.noChange = true
                         this.$refs.multipleTable.toggleRowSelection(row, true)
                     }
                 })
-                // this.formHeader.ferOpenFermentorList.forEach(item => {
-                //     if (item.fermentorId) {
-                //         const row = this.openPotListSum.find(it => it.id === item.fermentorId)
-                //         if (row) {
-                //             this.noChange = true
-                //             row.ferMaterialList = item.ferMaterialList
-                //             row.ferOverdueMaterialList = item.ferOverdueMaterialList
-                //             this.$refs.multipleTable.toggleRowSelection(row, true)
-                //         }
-                //     }
-                // })
                 this.noChange = false
             }, 500)
         }
@@ -399,6 +381,7 @@
                 openPotNo: this.$store.state.fer.openPotObj.openPotNo
             }).then(({ data }) => {
                 this.openPotListSum = data.data
+                this.orgOpenPotListSum = JSON.parse(JSON.stringify(data.data));
                 this.openPotList = this.filterData(this.openPotListSum)
                 this.searchForm.total = data.data.length
                 this.initMultiple()
@@ -429,12 +412,6 @@
                 dictType: 'COMMON_MATERIAL_ALLO'
             }).then(({ data }) => {
                 this.deployMaterialSelect = data.data
-            })
-            COMMON_API.DICTQUERY_API({
-                factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
-                dictType: 'ORDER_TYPE'
-            }).then(({ data }) => {
-                this.orderTypeList = data.data
             })
             COMMON_API.DICTQUERY_API({
                 factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
@@ -493,7 +470,13 @@
                 }
             }
             FER_API.FER_OPEN_POT_DETAIL_DEPLOY_LIST_API(params).then(({ data }) => {
-                this.deployMaterial = row.ferMaterialList = data.data
+                if (this.formHeader.openType === 'MANY') {
+                    this.deployMaterial = JSON.parse(JSON.stringify(data.data));
+                    this.orgDeployMaterial = JSON.parse(JSON.stringify(data.data));
+                } else {
+                    this.deployMaterial = row.ferMaterialList = data.data
+                    this.orgOpenPotListSum[this.orgOpenPotListSum.findIndex(it => it.id === row.id)].ferMaterialList = JSON.parse(JSON.stringify(data.data));
+                }
             })
         }
 
@@ -517,7 +500,13 @@
                 }
             }
             FER_API.FER_OPEN_POT_DETAIL_SAUCE_LIST_API(params).then(({ data }) => {
-                this.sauce = row.ferOverdueMaterialList = data.data
+                if (this.formHeader.openType === 'MANY') {
+                    this.sauce = JSON.parse(JSON.stringify(data.data));
+                    this.orgSauce = JSON.parse(JSON.stringify(data.data));
+                } else {
+                    this.sauce = row.ferOverdueMaterialList = data.data
+                    this.orgOpenPotListSum[this.orgOpenPotListSum.findIndex(it => it.id === row.id)].ferOverdueMaterialList = JSON.parse(JSON.stringify(data.data));
+                }
             })
         }
 
@@ -615,104 +604,102 @@
                     this.multipleSelection.push(item);
                 });
             }
-            console.log(this.multipleSelection);
         }
 
-        getDelId(arr): string[] {
-            const delId: string[] = []
-            arr.forEach(item => {
-                if (item.delFlag === 1 && item.id) {
-                    delId.push(item.id)
+        dataEntry(data, orgData, delArr, insertArr) {
+            data.forEach(item => {
+                if (item.delFlag === 1) {
+                    if (item.id) {
+                        delArr.push(item.id);
+                    }
+                } else if (item.id) {
+                    const orgObj = orgData.filter(it => it.id === item.id)[0];
+                    if (!_.isEqual(orgObj, item)) {
+                        insertArr.push(item)
+                    }
+                } else {
+                    insertArr.push(item)
                 }
             })
-            return delId
+        }
+
+        setOpenFermentorList(openFermentorList, item) {
+            openFermentorList.push({
+                id: item.openFermentorId || '',
+                mixSauceNo: item.mixSauceNo,
+                cycle: item.cycle,
+                description: item.description,
+                experiment: item.experiment,
+                fermentorId: item.id,
+                remark: item.remark
+            })
         }
 
         // 保存推送数据处理
         pushOrSaved() {
-            const savedData: SavedDataObj = this.formHeader
-            const openMaterialRemoveIds: string[] = []
-            let materialRemoveIds: string[] = []
+            const openFermentorRemoveIds: string[] = [] // 要删除的开罐物料id集合
+            const materialRemoveIds: string[] = [] // 删除的物料id(物料调配、超期酱)
+            const ferMaterialList = [] // 调调配物料
+            const ferOverdueMaterialList = [] // 超期酱
+            const openFermentorList: PotObj[] = [] // 开罐罐信息
 
             // 要删除的开罐物料id集合
             this.openPotListSum.forEach(item => {
-                if (item.openMaterialId) {
-                    if (!this.multipleSelection.find(it => it.openMaterialId === item.openMaterialId)) {
-                        openMaterialRemoveIds.push(item.openMaterialId)
+                if (item.openFermentorId) {
+                    if (!this.multipleSelection.find(it => it.openFermentorId === item.openFermentorId)) {
+                        openFermentorRemoveIds.push(item.openFermentorId)
                     }
                 }
             })
 
             if (this.formHeader.openType === 'MANY') {
-                // 多罐混调调配物料
-                savedData.ferMaterialList = this.deployMaterial
-                // 多罐混调超期酱
-                savedData.ferOverdueMaterialList = this.sauce
-                // 多罐混调删除的物料id(物料调配、超期酱)
-                materialRemoveIds = materialRemoveIds.concat(this.getDelId(this.deployMaterial)).concat(this.getDelId(this.sauce))
+                this.dataEntry(this.deployMaterial, this.orgDeployMaterial, materialRemoveIds, ferMaterialList)
+                this.dataEntry(this.sauce, this.orgSauce, materialRemoveIds, ferOverdueMaterialList)
             }
 
-            const openFermentorList: PotObj[] = []
             this.multipleSelection.forEach(item => {
-                let removeIds: string[] = []
-                // 单罐单调删除的物料id(调配物料、超期酱)
+                // 单罐单调(调配物料、超期酱)
                 if (this.formHeader.openType !== 'MANY') {
-                    removeIds = removeIds.concat(this.getDelId(item.ferMaterialList)).concat(this.getDelId(item.ferOverdueMaterialList))
+                    const org1 = this.orgOpenPotListSum[this.orgOpenPotListSum.findIndex(it => it.id === item.id)].ferMaterialList || []
+                    const org2 = this.orgOpenPotListSum[this.orgOpenPotListSum.findIndex(it => it.id === item.id)].ferOverdueMaterialList || []
+                    this.dataEntry(item.ferMaterialList, org1, materialRemoveIds, ferMaterialList)
+                    this.dataEntry(item.ferOverdueMaterialList, org2, materialRemoveIds, ferOverdueMaterialList)
                 }
-                openFermentorList.push({
-                    ...item,
-                    id: item.openFermentorId,
-                    materialRemoveIds: removeIds
-                })
+                // openFermentorList
+                if (!item.openFermentorId) {
+                    this.setOpenFermentorList(openFermentorList, item)
+                } else if (this.formHeader.openType === 'MANY') {
+                    // 多罐混调 比对
+                    const orgObj = this.orgOpenPotListSum.filter(it => it.id === item.id)[0];
+                    if (!_.isEqual(orgObj, item)) {
+                        this.setOpenFermentorList(openFermentorList, item)
+                    }
+                } else if (this.formHeader.openType !== 'MANY') {
+                    // 单罐 比对
+                    const orgObj = this.orgOpenPotListSum.filter(it => it.id === item.id)[0];
+                    if (orgObj.remark !== item.remark || orgObj.experiment !== item.experiment || orgObj.description !== item.description) {
+                        this.setOpenFermentorList(openFermentorList, item)
+                    }
+                }
             })
 
-            savedData.openFermentorList = openFermentorList
-            savedData.materialRemoveIds = materialRemoveIds
-            savedData.openMaterialRemoveIds = openMaterialRemoveIds
-
+            return {
+                ...this.formHeader,
+                openFermentorRemoveIds,
+                materialRemoveIds,
+                ferMaterialList,
+                ferOverdueMaterialList,
+                openFermentorList
+            }
             /**
              * {
-             *     ferMaterialList: '多罐混调调配物料',
-             *     ferOverdueMaterialList: '多罐混调超期酱',
-             *     materialRemoveIds: '多罐混调删除的物料id(物料调配、超期酱)',
-             *     openMaterialRemoveIds: '要删除的开罐物料id集合(共用)',
+             *     ferMaterialList: '调配物料',
+             *     ferOverdueMaterialList: '超期酱',
+             *     materialRemoveIds: '删除的物料id(物料调配、超期酱)',
+             *     openFermentorRemoveIds: '要删除的开罐物料id集合(共用)',
              *     openFermentorList: '开罐罐信息以及开罐物料信息(共用)',
              * }
-             *
-             *
              * **/
-
-            // const savedData: SavedDataObj = this.formHeader
-            // if (this.formHeader.openType === 'MANY') {
-            //     savedData.ferMaterialList = this.deployMaterial
-            //     savedData.ferOverdueMaterialList = this.sauce
-            //     const materialRemoveIds = []
-            //     const openFermentorList: PotObj[] = []
-            //     this.multipleSelection.forEach(item => {
-            //         openFermentorList.push({
-            //             ferOpenMaterialSaveDto: item,
-            //             fermentorId: item.id,
-            //             id: this.formHeader.ferOpenFermentorList?.find(it => it.fermentorId === item.id)?.id || '',
-            //             mixSauceNo: this.mixSauceNo
-            //         })
-            //     })
-            //     savedData.openFermentorList = openFermentorList
-            //     savedData.materialRemoveIds = materialRemoveIds
-            // } else {
-            //     const openFermentorList: PotObj[] = []
-            //     this.multipleSelection.forEach(item => {
-            //         openFermentorList.push({
-            //             ferOpenMaterialSaveDto: item,
-            //             ferMaterialList: item.ferMaterialList,
-            //             ferOverdueMaterialList: item.ferOverdueMaterialList,
-            //             fermentorId: item.id,
-            //             id: this.formHeader.ferOpenFermentorList?.find(it => it.fermentorId === item.id)?.id || '',
-            //             mixSauceNo: item.mixSauceNo
-            //         })
-            //     })
-            //     savedData.openFermentorList = openFermentorList
-            // }
-            return savedData;
         }
 
         // 保存
@@ -751,7 +738,7 @@
 
     }
     interface SavedDataObj{
-        openMaterialRemoveIds?: string[];
+        openFermentorRemoveIds?: string[];
         materialRemoveIds?: string[];
         openPotNo?: string;
         openFermentorList?: PotObj[];
@@ -774,20 +761,19 @@
         fermentorId?: string;
         openPotNo?: string;
     }
-    interface Fobj{
-        mixSauceNo?: string;
-    }
     interface PotObj{
         id: string;
         cycle?: string;
         holderId?: string;
         openPotNo?: string;
         openMaterialId?: string;
-        openFermentorId: string;
+        openFermentorId?: string;
         fermentorId?: string;
+        description?: string;
+        experiment?: string;
+        remark?: string;
         mixSauceNo?: string;
         ferOpenMaterialSaveDto?: PotObj;
-        ferOpenFermentor?: Fobj;
         ferMaterialList?: ListObj[];
         ferOverdueMaterialList?: ListObj[];
         materialRemoveIds?: string[];
