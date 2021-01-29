@@ -154,7 +154,7 @@
         getHouseTag() {
             KOJI_API.KOJI_PAGE_TAG_STATUS_QUERY_API({
                 orderNo: this.formHeader.orderNo,
-                kojiOrderNo: this.formHeader.kojiOrderNo
+                kojiOrderNo: this.formHeader.kojiOrderNo || ''
             }).then(({ data }) => {
 
                 this.$store.commit('koji/updateHouseTag', data.data);
@@ -196,7 +196,7 @@
                 //     orderNo: this.jumpFromAudit ? this.$route.params.order : this.$store.state.koji.orderScInfo.orderNo || ''
                 // }).then(({ data: res }) => {
                 //     this.potIdNow = res.data.beanJarId
-                //     console.log('res99999999999999')
+                //     console.log('res')
                 //     console.log(res)
                 //     if (this.scanList.length !== 0 && res.data.beanJarId !== '') {
                 //             this.potNoNow = this.scanList.filter(item => item.id === res.data.beanJarId)[0].holderNo as string
@@ -223,15 +223,18 @@
                 }).then(({ data: res }) => {
                     this.potIdNow = '';
                     this.potNoNow = '';
-                    if (res.data.length !== 0) {
-                        this.potIdNow = res.data[0].scPotId;
-                        this.potNoNow = res.data[0].scPotNo;
-                    }
                     this.formHeader = {
                         ...data.data,
                         potNo: this.potIdNow,
                         kojiOrderNo: null
                     };
+
+                    if (res.data.length !== 0) {
+                        this.potIdNow = res.data[0].scPotId;
+                        this.potNoNow = res.data[0].scPotNo;
+                        this.formHeader.kojiOrderNo = res.data[0].kojiOrderNo;
+                    }
+
                     // 获取页签状态
                     this.getHouseTag();
                     this.formHeader.textStage = 'ZD';
@@ -288,7 +291,7 @@
                     updateDatas: excRequest.UpdateDto
                 },
                 text: textRequest.pkgTextInsert,
-                kojiOrderNo: this.formHeader.kojiOrderNo,
+                kojiOrderNo: this.formHeader.kojiOrderNo || '',
                 orderNo: this.formHeader.orderNo,
                 kojiHouseNo: this.formHeader.kojiHouseNo,
                 beanJarId: this.potIdNow,
@@ -314,7 +317,7 @@
                     updateDatas: excRequest.UpdateDto
                 },
                 text: textRequest.pkgTextInsert,
-                kojiOrderNo: this.formHeader.kojiOrderNo,
+                kojiOrderNo: this.formHeader.kojiOrderNo || '',
                 orderNo: this.formHeader.orderNo,
                 kojiHouseNo: this.formHeader.kojiHouseNo,
                 beanJarId: this.potIdNow,
