@@ -199,15 +199,21 @@
 
         // 获取溶解罐下拉选项
         getFermentationHolder() {
-            COMMON_API.HOLDER_QUERY_BY_NOPAGE_API({
+            COMMON_API.HOLDER_DROPDOWN_BY_STATUS_API({
                 factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
-                holderType: '001'
+                holderType: ['001']
             }).then(({ data }) => {
+                console.log('获取溶解罐下拉选项')
+                console.log(data)
                 if (this.headerBase[5].option) {
                     this.headerBase[5].option.list = []
+
                     data.data.forEach(item => {
                         if (this.headerBase[5].option) {
-                            this.headerBase[5].option.list.push({ optLabel: item.holderName, optValue: item.holderNo })
+                            // 是空罐或是已有的罐
+                            if (item.holderStatus === 'E' || item.holderNo === this.formHeader.fermentPotNo) {
+                                this.headerBase[5].option.list.push({ optLabel: item.holderName, optValue: item.holderNo })
+                            }
                         }
                         this.potNoList.push({ optValue: item.holderNo, optId: item.id })
                     })

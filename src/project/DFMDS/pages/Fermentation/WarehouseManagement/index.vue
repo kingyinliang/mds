@@ -498,10 +498,10 @@
              * 入库 INSTORAGE
              * 发料 MATERIAL
              */
-            AUDIT_API.STE_AUDIT_LOG_API({
+            AUDIT_API.AUDIT_LOG_LIST_API({
                 orderNo: row.orderNo,
                 // splitOrderNo: row.splitOrderNo, // 拆分单号<有拆分单时必填>
-                verifyType: ['INSTORAGE'] // '审核类型'
+                verifyType: 'INSTORAGE' // '审核类型'
             }).then(res => {
                 this.dialogVisible = true;
                 this.logList = res.data.data;
