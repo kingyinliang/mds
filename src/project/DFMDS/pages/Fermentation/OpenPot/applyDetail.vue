@@ -159,6 +159,7 @@
                     id: this.$store.state.fer.applyForObj.id
                 }).then(({ data }) => {
                     this.formHeader = data.data
+                    this.formHeader.applied = true
                 })
                 FER_API.FER_OPEN_POT_APPLY_DETAIL_TABLE_API({
                     openPotNo: this.$store.state.fer.applyForObj.openPotNo
@@ -244,6 +245,7 @@
     interface FormHeader{
         id?: string;
         workShop?: string;
+        applied?: boolean;
         openPotNo?: string;
         status?: string;
         statusName?: string;

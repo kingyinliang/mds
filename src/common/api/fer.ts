@@ -222,18 +222,6 @@ const FER_API = {
      */
     FER_DEPLOY_SAUCE_GET_API: params => httpProxy('/fer/mix/get', 'GET', params),
     /**
-     * @property {string} FER_JOB_BOOKING_SUBMIT_API 发酵车间-调酱详情-鲜香泡豆-列表
-     */
-    FER_DEPLOY_SAUCE_DETAIL_PICKLED_LIST_API: params => httpProxy('/fer/mix/queryOfPickledMaterial', 'GET', params),
-    /**
-     * @property {string} FER_JOB_BOOKING_SUBMIT_API 发酵车间-调酱详情-调配物料-列表
-     */
-    FER_DEPLOY_SAUCE_DETAIL_MATERIAL_LIST_API: params => httpProxy('/fer/mix/queryOfReceiveMaterial', 'GET', params),
-    /**
-     * @property {string} FER_JOB_BOOKING_SUBMIT_API 发酵车间-调酱详情-超期酱-列表
-     */
-    FER_DEPLOY_SAUCE_DETAIL_SAUCE_LIST_API: params => httpProxy('/fer/mix/queryOfSauceMaterial', 'GET', params),
-    /**
      * @property {string} FER_JOB_BOOKING_SUBMIT_API 发酵车间-调酱详情-保存
      */
     FER_DEPLOY_SAUCE_DETAIL_SAVE_API: params => httpProxy('/fer/mix/save', 'POST', params),
