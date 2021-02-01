@@ -49,15 +49,15 @@
                 <el-table-column type="index" label="序号" width="50" fixed align="center" />
                 <el-table-column label="容器号" prop="openFlagName" min-width="150" :show-overflow-tooltip="true">
                     <template slot-scope="scope">
-                        <el-select v-model="scope.row.fermentorNo" :disabled="!isRedact" placeholder="请选择" size="small" filterable clearable @change="fermentorNoChange(scope.row, holderPickArr)">
+                        <el-select v-model="scope.row.fermentorNo" :disabled="!isRedact" placeholder="请选择" size="small" filterable clearable @change="fermentorNoChange(scope.row)">
                             <el-option v-for="(item, index) in holderPickArr" :key="index" :label="item.holderName" :value="item.holderId" />
                         </el-select>
                     </template>
                 </el-table-column>
                 <el-table-column label="添加物料" prop="addMaterialCode" min-width="150" :show-overflow-tooltip="true">
                     <template slot-scope="scope">
-                        <el-select v-model="scope.row.addMaterialCode" :disabled="!isRedact" placeholder="请选择" size="small" filterable clearable @change="materialChange(scope.row)">
-                            <el-option v-for="(item, index) in scope.row.addMaterialArr" :key="index" :label="item.materialName+' ' + item.materialCode" :value="item.materialCode" />
+                        <el-select v-model="scope.row.addMaterialCode" :disabled="!isRedact" placeholder="请选择" size="small" filterable clearable style="width: 100%;" @change="materialChange(scope.row)">
+                            <el-option v-for="(item, index) in (holderArr.filter(it => it.holderId === scope.row.fermentorNo).length > 0 ? holderArr.filter(it => it.holderId === scope.row.fermentorNo)[0].ferInStorageList : [])" :key="index" :label="item.productMaterialName +' ' + item.productMaterialCode" :value="item.productMaterialCode" />
                         </el-select>
                     </template>
                 </el-table-column>
@@ -134,7 +134,7 @@
                 <el-table-column type="index" label="序号" width="50" fixed align="center" />
                 <el-table-column label="容器号" prop="receiveMaterial" min-width="120" :show-overflow-tooltip="true">
                     <template slot-scope="scope">
-                        <el-select v-model="scope.row.fermentorNo" placeholder="请选择" size="small" :disabled="!isRedact" @change="fermentorNoChange(scope.row, holderArr)">
+                        <el-select v-model="scope.row.fermentorNo" placeholder="请选择" size="small" :disabled="!isRedact" @change="fermentorNoChange(scope.row)">
                             <el-option v-for="(item, index) in holderArr" :key="index" :label="item.holderName" :value="item.holderId" />
                         </el-select>
                     </template>
@@ -192,7 +192,6 @@
 
         spanArr: number[] = []
 
-        holderPickArr: PotObj[] = []
         holderArr: PotObj[] = []
 
         init(formHeader) {
@@ -212,13 +211,12 @@
         // 获取下拉
         getSelect() {
             FER_API.FER_OPEN_POT_DETAIL_HOLDER_LIST_API({}).then(({ data }) => {
-                this.holderPickArr = data.data
                 this.holderArr = data.data
             })
         }
 
         // 超期酱修改容器号
-        fermentorNoChange(row, data) {
+        fermentorNoChange(row) {
             row.addMaterialCode = ''
             row.unit = ''
             row.stockAmount = ''
