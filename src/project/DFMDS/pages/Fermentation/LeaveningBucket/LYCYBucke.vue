@@ -12,16 +12,6 @@
                         </el-radio>
                     </el-radio-group>
                     <el-form :inline="true" :model="headerInfo" class="markStyle">
-                        <!-- <el-form-item>
-                            <el-radio-group v-model="currentTab">
-                                <el-radio label="LY">
-                                    LY
-                                </el-radio>
-                                <el-radio label="CY">
-                                    CY
-                                </el-radio>
-                            </el-radio-group>
-                        </el-form-item> -->
                         <el-form-item label="容器号：" size="mini">
                             <el-input v-model="headerInfo.holderName" placeholder="" disabled style="width: 100px;" />
                         </el-form-item>
@@ -107,7 +97,9 @@
                                         <span class="notNull">CY 量</span>
                                     </template>
                                     <template slot-scope="scope">
-                                        <el-input v-model.trim="scope.row.cyAmount" size="small" placeholder="请输入批次" maxlength="10" />
+                                        <el-input v-model.trim="scope.row.cyAmount" size="small" placeholder="请输入CY量" maxlength="10">
+                                            <span slot="suffix">KG</span>
+                                        </el-input>
                                     </template>
                                 </el-table-column>
                                 <el-table-column :show-overflow-tooltip="true" min-width="160">
@@ -167,7 +159,6 @@
 
         // 空罐 E
         // 入料中 R (投料)
-
         import { Vue, Component } from 'vue-property-decorator';
         import { dateFormat, getUserNameNumber } from 'utils/utils';
         import LoanedPersonnel from 'components/LoanedPersonnelv1.vue';
@@ -313,9 +304,12 @@
 
                 this.dialogTitle = item.holderName + 'LY/CY'
                 this.isTableDialogVisible = true
-                this.currentWorkShop = item.workshop
+                this.currentWorkShop = item.workShop
                 this.currentCycle = item.cycle
                 this.currentHolderId = item.holderId
+
+
+                this.arrList = [item.workShop];
 
                 // ly
                 await FER_API.FER_FERMENTOR_LY_BATCH_QUERY_API({
@@ -359,8 +353,6 @@
 
             getCyMatiral() {
                 COMMON_API.DICTQUERY_API({ dictType: 'CY_COMMENT' }).then(({ data }) => {
-                    console.log('11111')
-                    console.log(data)
                     this.CYProdcutMaterialOption = []
                     if (data.data.length !== 0) {
                         data.data.forEach(item => {
@@ -372,11 +364,13 @@
             }
 
             changeProdcutMaterialOption(val) {
+                console.log(val)
 
             if (val !== '') {
-                this.CYProdcutMaterial = this.CYProdcutMaterialOption.filter(item => item.dictCode === val)[0].dictValue as string
                 this.cyMaterialCode = val
-                this.cyMaterialName = this.CYProdcutMaterial
+                this.cyMaterialName = this.CYProdcutMaterialOption.filter(item => item.dictCode === val)[0].dictValue as string
+                this.CYProdcutMaterial = `${this.cyMaterialName} ${val}`
+
             } else {
                 this.cyMaterialCode = ''
                 this.cyMaterialName = ''
@@ -449,7 +443,7 @@
                         checkStatus: '',
                         checkStatusName: '',
                         cyAmount: 0,
-                        cyBatch: this.getNowFormatDate() + '1' + '777',
+                        cyBatch: this.getNowFormatDate() + 'Y' + '004',
                         cyMans: '',
                         cyMaterialCode: '',
                         cyMaterialName: '',
@@ -735,6 +729,10 @@
     .inner-area__body >>> .el-tabs__header {
         display: none;
     }
+
+    .inner-area__body >>> span.el-input__suffix span.el-input__suffix-inner span {
+        vertical-align: -webkit-baseline-middle;
+    }
 </style>
 
 <style lang="scss" scoped>
@@ -954,6 +952,5 @@
         margin-top: 10px;
         text-align: right;
     }
-
 
 </style>
