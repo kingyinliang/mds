@@ -9,53 +9,37 @@
                     </template>
                 </el-table-column>
                 <el-table-column label="车间" prop="workShopName" min-width="100" :show-overflow-tooltip="true" />
-                <el-table-column label="容器号" prop="holderName" min-width="80" :show-overflow-tooltip="true" />
-                <el-table-column label="领用说明" prop="receiveMaterial" min-width="120" :show-overflow-tooltip="true">
-                    <template slot-scope="scope">
-                        {{ scope.row.ferOpenFermentor.explain }}
-                    </template>
-                </el-table-column>
-                <el-table-column label="订单类型" prop="receiveMaterial" min-width="120" :show-overflow-tooltip="true">
-                    <template slot-scope="scope">
-                        {{ scope.row.ferOrder.orderType }}
-                    </template>
-                </el-table-column>
+                <el-table-column label="容器号" prop="holderName" min-width="120" :show-overflow-tooltip="true" />
+                <el-table-column label="领用说明" prop="description" min-width="120" :show-overflow-tooltip="true" />
+                <el-table-column label="订单类型" prop="orderType" min-width="120" :show-overflow-tooltip="true" />
                 <el-table-column label="发酵天数/天" prop="fermentDays" min-width="120" :show-overflow-tooltip="true" />
-                <el-table-column label="物料" prop="productMaterialName" min-width="120" :show-overflow-tooltip="true">
+                <el-table-column label="物料" prop="productMaterialName" min-width="180" :show-overflow-tooltip="true">
                     <template slot-scope="scope">
-                        {{ scope.row.ferOrder.productMaterialName + ' ' + scope.row.ferOrder.productMaterialCode }}
+                        {{ scope.row.productMaterialName + ' ' + scope.row.productMaterialCode }}
                     </template>
                 </el-table-column>
                 <el-table-column label="熟酱状态" prop="materialUnit" min-width="100" :show-overflow-tooltip="true">
                     <template slot-scope="scope">
-                        {{ scope.row.ferOrder.matureFlagName }}
+                        {{ scope.row.matureFlagName === '否'? '未成熟' : '已成熟' }}
                     </template>
                 </el-table-column>
                 <el-table-column label="领用数量" prop="materialUnit" min-width="100" :show-overflow-tooltip="true">
                     <template slot-scope="scope">
-                        {{ scope.row.ferOrder.amount }}
+                        {{ scope.row.amount }}
                     </template>
                 </el-table-column>
-                <el-table-column label="库存数量（KG）" prop="receiveMaterial" min-width="140" :show-overflow-tooltip="true" />
-                <el-table-column label="单位" prop="receiveMaterial" min-width="50" :show-overflow-tooltip="true" />
-                <el-table-column label="入库日期" prop="materialUnit" min-width="100" :show-overflow-tooltip="true">
-                    <template slot-scope="scope">
-                        {{ scope.row.ferInStorageList > 0? scope.row.ferInStorageList[0].changed : '' }}
-                    </template>
-                </el-table-column>
-                <el-table-column label="批次" prop="materialUnit" min-width="100" :show-overflow-tooltip="true">
-                    <template slot-scope="scope">
-                        {{ scope.row.ferInStorageList > 0? scope.row.ferInStorageList[0].inStorageBatch : '' }}
-                    </template>
-                </el-table-column>
+                <el-table-column label="库存数量（KG）" prop="currentStock" min-width="140" :show-overflow-tooltip="true" />
+                <el-table-column label="单位" prop="unit" min-width="50" :show-overflow-tooltip="true" />
+                <el-table-column label="入库日期" prop="inStorageDate" min-width="120" :show-overflow-tooltip="true" />
+                <el-table-column label="批次" prop="inStorageBatch" min-width="120" :show-overflow-tooltip="true" />
                 <el-table-column label="实验备注" prop="receiveMaterial" min-width="120" :show-overflow-tooltip="true">
                     <template slot-scope="scope">
-                        <el-input v-model="scope.row.receiveMaterial" :disabled="!(isRedact)" size="small" placeholder="请输入" />
+                        <el-input v-model="scope.row.experiment" :disabled="!(isRedact)" size="small" placeholder="请输入" />
                     </template>
                 </el-table-column>
-                <el-table-column label="备注" prop="receiveMaterial" min-width="80" :show-overflow-tooltip="true">
+                <el-table-column label="备注" prop="remark" min-width="80" :show-overflow-tooltip="true">
                     <template slot-scope="scope">
-                        <el-input v-model="scope.row.receiveMaterial" :disabled="!(isRedact)" size="small" placeholder="请输入" />
+                        <el-input v-model="scope.row.remark" :disabled="!(isRedact)" size="small" placeholder="请输入" />
                     </template>
                 </el-table-column>
             </el-table>
@@ -65,15 +49,15 @@
                 <el-table-column type="index" label="序号" width="50" fixed align="center" />
                 <el-table-column label="容器号" prop="openFlagName" min-width="150" :show-overflow-tooltip="true">
                     <template slot-scope="scope">
-                        <el-select v-model="scope.row.fermentorNo" :disabled="!isRedact" placeholder="请选择" size="small" filterable clearable @change="fermentorNoChange(scope.row, holderPickArr)">
+                        <el-select v-model="scope.row.fermentorNo" :disabled="!isRedact" placeholder="请选择" size="small" filterable clearable @change="fermentorNoChange(scope.row)">
                             <el-option v-for="(item, index) in holderPickArr" :key="index" :label="item.holderName" :value="item.holderId" />
                         </el-select>
                     </template>
                 </el-table-column>
                 <el-table-column label="添加物料" prop="addMaterialCode" min-width="150" :show-overflow-tooltip="true">
                     <template slot-scope="scope">
-                        <el-select v-model="scope.row.addMaterialCode" :disabled="!isRedact" placeholder="请选择" size="small" filterable clearable @change="materialChange(scope.row)">
-                            <el-option v-for="(item, index) in scope.row.addMaterialArr" :key="index" :label="item.materialName+' ' + item.materialCode" :value="item.materialCode" />
+                        <el-select v-model="scope.row.addMaterialCode" :disabled="!isRedact" placeholder="请选择" size="small" filterable clearable style="width: 100%;" @change="materialChange(scope.row)">
+                            <el-option v-for="(item, index) in (holderArr.filter(it => it.holderId === scope.row.fermentorNo).length > 0 ? holderArr.filter(it => it.holderId === scope.row.fermentorNo)[0].ferInStorageList : [])" :key="index" :label="item.productMaterialName +' ' + item.productMaterialCode" :value="item.productMaterialCode" />
                         </el-select>
                     </template>
                 </el-table-column>
@@ -150,15 +134,15 @@
                 <el-table-column type="index" label="序号" width="50" fixed align="center" />
                 <el-table-column label="容器号" prop="receiveMaterial" min-width="120" :show-overflow-tooltip="true">
                     <template slot-scope="scope">
-                        <el-select v-model="scope.row.fermentorNo" placeholder="请选择" size="small" :disabled="!isRedact" @change="fermentorNoChange(scope.row, holderArr)">
+                        <el-select v-model="scope.row.fermentorNo" placeholder="请选择" size="small" :disabled="!isRedact" @change="fermentorNoChange(scope.row)">
                             <el-option v-for="(item, index) in holderArr" :key="index" :label="item.holderName" :value="item.holderId" />
                         </el-select>
                     </template>
                 </el-table-column>
-                <el-table-column label="添加物料" prop="addMaterialCode" min-width="120" :show-overflow-tooltip="true">
+                <el-table-column label="添加物料" prop="addMaterialCode" min-width="150" :show-overflow-tooltip="true">
                     <template slot-scope="scope">
-                        <el-select v-model="scope.row.addMaterialCode" :disabled="!isRedact" placeholder="请选择" size="small" filterable clearable @change="materialChange(scope.row)">
-                            <el-option v-for="(item, index) in scope.row.addMaterialArr" :key="index" :label="item.productMaterialName + ' ' + item.productMaterialCode" :value="item.productMaterialCode" />
+                        <el-select v-model="scope.row.addMaterialCode" :disabled="!isRedact" placeholder="请选择" size="small" filterable clearable style="width: 100%;" @change="materialChange(scope.row)">
+                            <el-option v-for="(item, index) in (holderArr.filter(it => it.holderId === scope.row.fermentorNo).length > 0 ? holderArr.filter(it => it.holderId === scope.row.fermentorNo)[0].ferInStorageList : [])" :key="index" :label="item.productMaterialName +' ' + item.productMaterialCode" :value="item.productMaterialCode" />
                         </el-select>
                     </template>
                 </el-table-column>
@@ -208,71 +192,43 @@
 
         spanArr: number[] = []
 
-        holderPickArr: PotObj[] = []
         holderArr: PotObj[] = []
 
         init(formHeader) {
-            this.getSelect(formHeader)
-            this.getSauce(formHeader)
+            this.getSelect()
             this.getList(formHeader)
-        }
-
-        // 获取调酱列表
-        getSauce(formHeader) {
-            FER_API.FER_OPEN_POT_APPLY_DETAIL_TABLE_API({
-                openPotNo: formHeader.openPotNo
-            }).then(({ data }) => {
-                this.table1 = data.data
-            })
         }
 
         // 获取鲜香泡豆、调配物料、超期酱
         getList(formHeader) {
-            FER_API.FER_DEPLOY_SAUCE_DETAIL_PICKLED_LIST_API({
-                openPotNo: formHeader.openPotNo
-            }).then(({ data }) => {
-                this.table2 = data.data
-            })
-            FER_API.FER_DEPLOY_SAUCE_DETAIL_MATERIAL_LIST_API({
-                openPotNo: formHeader.openPotNo
-            }).then(({ data }) => {
-                this.table3 = data.data
-                this.spanArr = merge(this.table3, 'addMaterialCode')
-            })
-            FER_API.FER_DEPLOY_SAUCE_DETAIL_SAUCE_LIST_API({
-                openPotNo: formHeader.openPotNo
-            }).then(({ data }) => {
-                this.table4 = data.data
-            })
+            this.table1 = formHeader.ferMixFermentorResponseDtoList
+            this.table2 = formHeader.pickledMixMaterialList
+            this.table3 = formHeader.receiveMixMaterialList
+            this.table4 = formHeader.sauceMixMaterialList
+            this.spanArr = merge(this.table3, 'addMaterialCode')
         }
 
         // 获取下拉
-        getSelect(formHeader) {
-            FER_API.FER_OPEN_POT_DETAIL_LIST_API({
-                openPotNo: formHeader.openPotNo,
-                holderType: '025'
-            }).then(({ data }) => {
-                this.holderPickArr = data.data
-            })
-            FER_API.FER_OPEN_POT_DETAIL_LIST_API({
-                openPotNo: formHeader.openPotNo
-            }).then(({ data }) => {
+        getSelect() {
+            FER_API.FER_OPEN_POT_DETAIL_HOLDER_LIST_API({}).then(({ data }) => {
                 this.holderArr = data.data
             })
         }
 
         // 超期酱修改容器号
-        fermentorNoChange(row, data) {
-            const filterArr: (any) = data.filter(item => item.holderId === row.fermentorNo)// eslint-disable-line
+        fermentorNoChange(row) {
             row.addMaterialCode = ''
-            row.addMaterialArr = filterArr[0].ferInStorageList
+            row.unit = ''
+            row.stockAmount = ''
+            row.batch = ''
         }
 
         materialChange(row) {
-            const filterArr: (any) = row.ferInStorageList.filter(item => item.productMaterialCode === row.addMaterialCode)// eslint-disable-line
+            const filterArr1: (any) = this.holderArr.filter(item => item.holderId === row.fermentorNo)// eslint-disable-line
+            const filterArr: (any) = filterArr1[0].ferInStorageList.filter(item => item.productMaterialCode === row.addMaterialCode)// eslint-disable-line
             row.unit = filterArr[0].unit
-            // row.stockAmount = filterArr[0]
-            // row.batch = filterArr[0]
+            row.stockAmount = filterArr[0].currentStock
+            row.batch = filterArr[0].inStorageBatch
         }
 
         saveData() {
@@ -314,6 +270,7 @@
                 realAddAmount: ''
             })
             this.spanArr = merge(this.table3, 'addMaterialCode')
+            console.log(this.spanArr);
         }
 
         // 合并行
@@ -335,12 +292,17 @@
                 this.$set(row, 'delFlag', 1)
                 this.$successToast('删除成功');
                 this.spanArr = merge(this.table3, 'addMaterialCode')
+                console.log(this.spanArr);
             });
         }
 
         rowDelFlag({ row }) {
             if (row.delFlag === 1) {
                 return 'rowDel';
+            } else if (row.pushMark === 2) {
+                return 'disabled-row'
+            } else if (row.materialStatus === 1 || row.materialStatus === 0) {
+                return 'warning-row'
             }
             return '';
         }

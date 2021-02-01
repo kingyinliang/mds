@@ -87,7 +87,6 @@
                     <el-table
                         ref="multipleTable"
                         :data="openPotList"
-                        height="400px"
                         :header-cell-class-name="tableHeaderClass"
                         row-key="id"
                         header-row-class-name="tableHead"
@@ -97,7 +96,7 @@
                         @selection-change="handleSelectionChange"
                         @row-dblclick="Dblckick"
                     >
-                        <el-table-column type="selection" :reserve-selection="true" :selectable="checkboxT" width="50" />
+                        <el-table-column type="selection" fixed :reserve-selection="true" :selectable="checkboxT" width="50" />
                         <el-table-column type="index" :index="index => index + 1 + (Number(searchForm.current) - 1) * (Number(searchForm.size))" label="序号" width="50px" />
                         <el-table-column label="状态" prop="openFlagName" min-width="80" :show-overflow-tooltip="true">
                             <template slot-scope="scope">
@@ -105,7 +104,7 @@
                             </template>
                         </el-table-column>
                         <el-table-column label="车间" prop="workShopName" min-width="100" :show-overflow-tooltip="true" />
-                        <el-table-column label="容器号" prop="holderName" min-width="80" :show-overflow-tooltip="true" />
+                        <el-table-column label="容器号" prop="holderName" min-width="120" :show-overflow-tooltip="true" />
                         <el-table-column label="使用说明" prop="explain" min-width="100" :show-overflow-tooltip="true">
                             <template slot-scope="scope">
                                 <el-input v-model="scope.row.description" :disabled="!isRedact || scope.row.mixSauceStatus === 'M' || scope.row.mixSauceStatus === 'S'" size="mini" style="width: 100%;" />
@@ -113,14 +112,14 @@
                         </el-table-column>
                         <el-table-column label="订单类型" prop="orderTypeName" min-width="100" :show-overflow-tooltip="true" />
                         <el-table-column label="发酵天数/天" prop="fermentDays" min-width="120" :show-overflow-tooltip="true" />
-                        <el-table-column label="物料" prop="productMaterialName" min-width="120" :show-overflow-tooltip="true">
+                        <el-table-column label="物料" prop="productMaterialName" min-width="180" :show-overflow-tooltip="true">
                             <template slot-scope="scope">
-                                {{ scope.row.ferOrder.productMaterialName + ' ' + scope.row.ferOrder.productMaterialCode }}
+                                {{ scope.row.productMaterialName + ' ' + scope.row.productMaterialCode }}
                             </template>
                         </el-table-column>
                         <el-table-column label="熟酱状态" prop="materialUnit" min-width="100" :show-overflow-tooltip="true">
                             <template slot-scope="scope">
-                                {{ scope.row.ferOrder.matureFlagName }}
+                                {{ scope.row.matureFlagName === '否'? '未成熟' : '已成熟' }}
                             </template>
                         </el-table-column>
                         <el-table-column label="数量（KG）" prop="materialUnit" min-width="100" :show-overflow-tooltip="true">
@@ -128,16 +127,9 @@
                                 {{ scope.row.ferOrder.amount }}
                             </template>
                         </el-table-column>
-                        <el-table-column label="入库日期" prop="materialUnit" min-width="100" :show-overflow-tooltip="true">
-                            <template slot-scope="scope">
-                                {{ scope.row.ferInStorageList > 0? scope.row.ferInStorageList[0].changed : '' }}
-                            </template>
-                        </el-table-column>
-                        <el-table-column label="批次" prop="materialUnit" min-width="100" :show-overflow-tooltip="true">
-                            <template slot-scope="scope">
-                                {{ scope.row.ferInStorageList > 0? scope.row.ferInStorageList[0].inStorageBatch : '' }}
-                            </template>
-                        </el-table-column>
+                        <el-table-column label="单位" prop="unit" min-width="50" :show-overflow-tooltip="true" />
+                        <el-table-column label="入库日期" prop="inStorageDate" min-width="120" :show-overflow-tooltip="true" />
+                        <el-table-column label="批次" prop="inStorageBatch" min-width="120" :show-overflow-tooltip="true" />
                         <el-table-column label="实验备注" prop="explain" min-width="100" :show-overflow-tooltip="true">
                             <template slot-scope="scope">
                                 <el-input v-model="scope.row.experiment" :disabled="!isRedact || scope.row.mixSauceStatus === 'M' || scope.row.mixSauceStatus === 'S'" size="mini" style="width: 100%;" />
@@ -207,7 +199,7 @@
                     <el-table-column label="添加物料" prop="addMaterialCode" min-width="150" :show-overflow-tooltip="true">
                         <template slot-scope="scope">
                             <el-select v-model="scope.row.addMaterialCode" :disabled="!isRedact" placeholder="请选择" size="small" filterable clearable style="width: 100%;" @change="materialChange(scope.row)">
-                                <el-option v-for="(item, index) in scope.row.addMaterialArr" :key="index" :label="item.productMaterialName +' ' + item.productMaterialCode" :value="item.productMaterialCode" />
+                                <el-option v-for="(item, index) in (holderArr.filter(it => it.holderId === scope.row.fermentorNo).length > 0 ? holderArr.filter(it => it.holderId === scope.row.fermentorNo)[0].ferInStorageList : [])" :key="index" :label="item.productMaterialName +' ' + item.productMaterialCode" :value="item.productMaterialCode" />
                             </el-select>
                         </template>
                     </el-table-column>
@@ -318,7 +310,7 @@
 
         // 过滤数据
         filterData(data) {
-            let tmp = data
+            let tmp = JSON.parse(JSON.stringify(data));
             tmp.sort((a, b) => {
                 return (b['openFermentorId'] ? 1 : 0) - (a['openFermentorId'] ? 1 : 0)
             })
@@ -334,6 +326,7 @@
             this.searchForm.total = tmp.length
             tmp = tmp.slice((this.searchForm.current - 1) * this.searchForm.size, (this.searchForm.current - 1) * this.searchForm.size + this.searchForm.size)
 
+            console.log(this.openPotListSum);
             return tmp
         }
 
@@ -343,7 +336,8 @@
                 this.openPotListSum.forEach(row => {
                     if (row.openFermentorId) {
                         this.noChange = true
-                        this.$refs.multipleTable.toggleRowSelection(row, true)
+                        const item = this.openPotList.find(it => it.id === row.id)
+                        this.$refs.multipleTable.toggleRowSelection(item, true)
                     }
                 })
                 this.noChange = false
@@ -380,7 +374,7 @@
             FER_API.FER_OPEN_POT_DETAIL_LIST_API({
                 openPotNo: this.$store.state.fer.openPotObj.openPotNo
             }).then(({ data }) => {
-                this.openPotListSum = data.data
+                this.openPotListSum = JSON.parse(JSON.stringify(data.data));
                 this.orgOpenPotListSum = JSON.parse(JSON.stringify(data.data));
                 this.openPotList = this.filterData(this.openPotListSum)
                 this.searchForm.total = data.data.length
@@ -436,6 +430,8 @@
                     this.getSauceList(row)
                 } else {
                     const hang = this.openPotListSum.findIndex(item => item.id === row.id)
+                    console.log(this.openPotListSum);
+                    console.log(hang);
                     row.mixSauceNo = this.formHeader.openPotNo + hang
                     this.mixSauceNo = row.mixSauceNo
                     this.fermentorId = row.id
@@ -539,13 +535,15 @@
 
         // 超期酱修改容器号
         fermentorNoChange(row) {
-            const filterArr: (any) = this.holderArr.filter(item => item.holderId === row.fermentorNo)// eslint-disable-line
             row.addMaterialCode = ''
-            row.addMaterialArr = filterArr[0].ferInStorageList
+            row.unit = ''
+            row.stockAmount = ''
+            row.batch = ''
         }
 
         materialChange(row) {
-            const filterArr: (any) = row.addMaterialArr.filter(item => item.productMaterialCode === row.addMaterialCode)// eslint-disable-line
+            const filterArr1: (any) = this.holderArr.filter(item => item.holderId === row.fermentorNo)// eslint-disable-line
+            const filterArr: (any) = filterArr1[0].ferInStorageList.filter(item => item.productMaterialCode === row.addMaterialCode)// eslint-disable-line
             row.unit = filterArr[0].unit
             row.stockAmount = filterArr[0].currentStock
             row.batch = filterArr[0].inStorageBatch
@@ -604,6 +602,7 @@
                     this.multipleSelection.push(item);
                 });
             }
+            console.log(val);
         }
 
         dataEntry(data, orgData, delArr, insertArr) {
@@ -628,6 +627,7 @@
                 id: item.openFermentorId || '',
                 mixSauceNo: item.mixSauceNo,
                 cycle: item.cycle,
+                fermentDays: item.fermentDays,
                 description: item.description,
                 experiment: item.experiment,
                 fermentorId: item.id,
@@ -660,10 +660,14 @@
             this.multipleSelection.forEach(item => {
                 // 单罐单调(调配物料、超期酱)
                 if (this.formHeader.openType !== 'MANY') {
-                    const org1 = this.orgOpenPotListSum[this.orgOpenPotListSum.findIndex(it => it.id === item.id)].ferMaterialList || []
-                    const org2 = this.orgOpenPotListSum[this.orgOpenPotListSum.findIndex(it => it.id === item.id)].ferOverdueMaterialList || []
-                    this.dataEntry(item.ferMaterialList, org1, materialRemoveIds, ferMaterialList)
-                    this.dataEntry(item.ferOverdueMaterialList, org2, materialRemoveIds, ferOverdueMaterialList)
+                    if (item.ferMaterialList) {
+                        const org1 = this.orgOpenPotListSum[this.orgOpenPotListSum.findIndex(it => it.id === item.id)].ferMaterialList || []
+                        this.dataEntry(item.ferMaterialList, org1, materialRemoveIds, ferMaterialList)
+                    }
+                    if (item.ferOverdueMaterialList) {
+                        const org2 = this.orgOpenPotListSum[this.orgOpenPotListSum.findIndex(it => it.id === item.id)].ferOverdueMaterialList || []
+                        this.dataEntry(item.ferOverdueMaterialList, org2, materialRemoveIds, ferOverdueMaterialList)
+                    }
                 }
                 // openFermentorList
                 if (!item.openFermentorId) {
@@ -685,6 +689,7 @@
 
             return {
                 ...this.formHeader,
+                applied: false,
                 openFermentorRemoveIds,
                 materialRemoveIds,
                 ferMaterialList,

@@ -3,7 +3,7 @@
  * @Anthor: Telliex
  * @Date: 2021-01-15 23:35:23
  * @LastEditors: Telliex
- * @LastEditTime: 2021-01-27 17:11:49
+ * @LastEditTime: 2021-01-27 17:58:23
 -->
 <template>
     <div class="header_main">
@@ -28,11 +28,13 @@
                                     placement="top"
                                     width="200"
                                     trigger="hover"
+                                    :disabled="item.materialCountList.length===0"
                                 >
                                     <div class="showBox">
                                         <ul>
-                                            <li><span>xxxxx</span><span>22222吨</span></li>
-                                            <li><span>xxxxx</span><span>22222吨</span></li>
+                                            <li v-for="(element, subIndex) in item.materialCountList" :key="subIndex">
+                                                <span>{{ element.materialName }}</span><span>{{ element.count }}吨</span>
+                                            </li>
                                         </ul>
                                     </div>
                                     <template slot="reference">
@@ -387,7 +389,8 @@
                 middleText: '空罐',
                 fermentStage: 'E',
                 holderStatus: '0',
-                num: '0'
+                num: '0',
+                materialCountList: []
             },
             {
                 color: '#D6D2C4FF',
@@ -400,7 +403,8 @@
                 middleText: '酿造',
                 fermentStage: '0',
                 search: '1',
-                num: '0'
+                num: '0',
+                materialCountList: []
             },
             {
                 color: '#CDA786FF',
@@ -413,7 +417,8 @@
                 middleText: '酿造',
                 fermentStage: '30',
                 search: '2',
-                num: '0'
+                num: '0',
+                materialCountList: []
             },
             {
                 color: '#B58150FF',
@@ -426,7 +431,8 @@
                 middleText: '酿造',
                 fermentStage: '60',
                 search: '3',
-                num: '0'
+                num: '0',
+                materialCountList: []
             },
             {
                 color: '#C67C5AFF',
@@ -439,7 +445,8 @@
                 middleText: '酿造',
                 fermentStage: '90',
                 search: '4',
-                num: '0'
+                num: '0',
+                materialCountList: []
             },
             {
                 color: '#AD592DFF',
@@ -452,7 +459,8 @@
                 middleText: '酿造',
                 fermentStage: '120',
                 search: '5',
-                num: '0'
+                num: '0',
+                materialCountList: []
             },
             {
                 color: '#8A391BFF',
@@ -465,7 +473,8 @@
                 middleText: '酿造',
                 fermentStage: '150',
                 search: '6',
-                num: '0'
+                num: '0',
+                materialCountList: []
             },
             {
                 color: '#C70909FF',
@@ -478,7 +487,8 @@
                 middleText: '超期',
                 fermentStage: '180',
                 search: '7',
-                num: '0'
+                num: '0',
+                materialCountList: []
             },
             {
                 color: '#8BC34AFF',
@@ -491,7 +501,8 @@
                 middleText: '压榨',
                 fermentStage: 'O',
                 holderStatus: '4',
-                num: '0'
+                num: '0',
+                materialCountList: []
             },
             {
                 color: '#82ab53',
@@ -504,7 +515,8 @@
                 middleText: '调酱',
                 fermentStage: 'T',
                 holderStatus: '0',
-                num: '0'
+                num: '0',
+                materialCountList: []
             },
             {
                 color: '#5b8031',
@@ -517,7 +529,8 @@
                 middleText: '已调',
                 fermentStage: 'A',
                 holderStatus: '0',
-                num: '0'
+                num: '0',
+                materialCountList: []
             },
             {
                 color: '',
@@ -530,7 +543,8 @@
                 middleText: '空罐',
                 fermentStage: 'U',
                 holderStatus: '0',
-                num: '0'
+                num: '0',
+                materialCountList: []
             }
         ]
 
@@ -681,6 +695,17 @@
             this.topBox[10].num = data.data.adjustAmount;
             this.topBox[11].num = data.data.useAmount;
 
+            this.topBox[1].materialCountList = data.data.materialCountList0;
+            this.topBox[2].materialCountList = data.data.materialCountList30;
+            this.topBox[3].materialCountList = data.data.materialCountList60;
+            this.topBox[4].materialCountList = data.data.materialCountList90;
+            this.topBox[5].materialCountList = data.data.materialCountList120;
+            this.topBox[6].materialCountList = data.data.materialCountList150;
+            this.topBox[7].materialCountList = data.data.materialCountList180;
+            this.topBox[8].materialCountList = data.data.overdueMaterialCountList;
+            this.topBox[9].materialCountList = data.data.mixingMaterialCountList;
+            this.topBox[10].materialCountList = data.data.useMaterialCountList;
+            // this.topBox[11].materialCountList = data.data.useAmount;
             if (data.data.data.records.length !== 0) {
                 this.isSearchResultMetroShow = true; // 地铁图区块呈现
                 this.isSearchResultListShow = true; // 结果区块呈现
@@ -1296,6 +1321,7 @@ $repeat: length($icon-bg-color);  // How often you want the pattern to repeat.
         justify-content: space-between;
         margin-bottom: 3px;
         padding-left: 7px;
+        font-size: 11px;
         list-style: none;
         &::before {
             position: absolute;
