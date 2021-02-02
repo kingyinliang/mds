@@ -404,7 +404,9 @@
                     const row = this.selections.find(o => o.onlyOne === item.onlyOne);
                     // @ts-ignore
                     const old = this.oldDataList.find(row1 => row1.onlyOne === item.onlyOne);
-                    if (!_.isEqual(old, item)) {
+                    // 如果被勾选了，不管是否编辑都提交
+                    // 如果没被勾选，则判断是否修改
+                    if (Boolean(row) || !_.isEqual(old, item)) {
                         const obj: InsertDto = {
                             fermentDays: item.fermentDays,
                             inStorageAmount: item.inStorageAmount,

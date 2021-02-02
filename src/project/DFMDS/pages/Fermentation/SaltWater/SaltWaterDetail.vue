@@ -104,7 +104,7 @@
                         </el-button>
                     </template> -->
                     <template>
-                        <el-table :key="Math.random()" class="newTable markStyle" :data="otherMaterialListComp" :row-class-name="rowDelFlag" header-row-class-name="tableHead" border style="width: 100%; min-height: 90px;">
+                        <el-table :key="Math.random()" class="newTable markStyle" :data="otherMaterialListComp" :row-class-name="rowColor" header-row-class-name="tableHead" border style="width: 100%; min-height: 90px;">
                             <el-table-column width="150" label="领用物料" :show-overflow-tooltip="true" class="star">
                                 <template slot-scope="scope">
                                     {{ scope.row.useMaterialName + ' ' + scope.row.useMaterialCode }}
@@ -515,12 +515,14 @@ export default class SaltWaterDetail extends Vue {
         if (row.delFlag === 1) {
             return 'rowDel';
         }
+    }
+
+    rowColor({ row }) {
         if (row.operatFlag === -1) {
-            return 'rowDel';
+            return 'disabled-row';
         } else if (row.operatFlag === 1) {
             return 'warning-row'
         }
-        return '';
     }
 
     rowStyleHandler({ row }) {
