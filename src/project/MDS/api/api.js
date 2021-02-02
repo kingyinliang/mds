@@ -1872,5 +1872,17 @@ export const INVENTORY_API = {
     BRINE_INVENTPRY_LIST_API: HOST + '/kjm/saltPage/list', // 盐水库存 - 查询
     BRINE_INVENTPRY_DETAIL_API: HOST + '/kjm/saltPage/detailList', // 盐水库存 - 明细
     BRINE_INVENTPRY_USELIST_API: HOST + '/kjm/saltPage/useList', // 盐水库存 - 页面领用
-    BRINE_INVENTPRY_ADJUST_API: HOST + '/kjm/saltPage/adjust' // 盐水库存 - 调整
-};
+    BRINE_INVENTPRY_ADJUST_API: HOST + '/kjm/saltPage/adjust', // 盐水库存 - 调整
+    Y010_LIST_API: HOST + '/alcohol/getAlcoholInfo', // Y010 查询
+    Y010_LIST_COSTCENTER_LIST_API: HOST + '/gra/dept/getCostCenter', // Y010 领用中心
+    Y010_LIST_BATCH_LIST_API: HOST + '/gra/dept/getBatch', // Y010 批次
+    Y010_SAVE_API: HOST + '/gra/dept/save', // Y010 保存
+    Y010_SUBMIT_API: HOST + '/gra/dept/submit', // Y010 批次
+    Y010_INVENTORY_MOVE_LIST_API: HOST + '/alcohol/getMoveDetail', // 当前库存明细
+    Y010_INVENTPRY_ADJUST_API: HOST + '/alcohol/insertAdjust', // 调整
+    Y010_INVENTORY_HISTORY_LIST_API: HOST + '/alcohol/getAlcoholHistoryInfo', // 历史库存信息
+    Y010_INVENTORY_JUST_LIST_API: HOST + '/alcohol/getAlcoholAdjustInfo', // 调整信息记录
+    Y010_INVENTORY_DEPT_LIST_API: HOST + '/gra/dept/list', // 部门领用查询
+    Y010_INVENTORY_DEPT_DELETE_API: HOST + '/gra/dept/delete', // 部门领用删除
+    Y010_INVENTORY_DEPT_LOG_LIST_API: HOST + '/gra/dept/logInfo' // 部门领用审核日志
+}
