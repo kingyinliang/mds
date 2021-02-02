@@ -331,7 +331,8 @@ import { dateFormat } from 'src/utils/utils';
                 freezeFlag: this.formObj.freezeFlag,
                 id: this.formObj.id,
                 judgeResult: this.formObj.judgeResult,
-                remark: this.formObj.remark
+                remark: this.formObj.remark,
+                orderNo: this.formObj.orderNo
             }
             FER_API.FER_CATEGORY_JUDGED_API(params).then(res => {
                 this.dialogVisible = false;
