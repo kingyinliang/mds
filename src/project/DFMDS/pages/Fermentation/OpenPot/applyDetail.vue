@@ -204,6 +204,7 @@
                 this.$warningToast('请填写必填项')
                 return false
             }
+            this.formHeader.applied = true
             FER_API.FER_OPEN_POT_APPLY_DETAIL_SAVE_API(this.formHeader).then(({ data }) => {
                 this.$successToast('保存成功')
                 if (!this.$store.state.fer.applyForObj.id) {
@@ -218,6 +219,7 @@
                 this.$warningToast('请填写必填项')
                 return false
             }
+            this.formHeader.applied = true
             FER_API.FER_OPEN_POT_APPLY_DETAIL_SUBMIT_API(this.formHeader).then(({ data }) => {
                 this.$successToast('提交成功')
                 if (!this.$store.state.fer.applyForObj.id) {
