@@ -301,7 +301,7 @@
                 return 'rowDel';
             } else if (row.pushMark === 2) {
                 return 'disabled-row'
-            } else if (row.materialStatus === 1 || row.materialStatus === 0) {
+            } else if (row.pushMark === 1 || row.pushMark === 0) {
                 return 'warning-row'
             }
             return '';
