@@ -1,4 +1,4 @@
-<!-- 分品项产量日报  -->
+<!-- 车间品项产量汇总 -->
 <template>
     <div class="header_main">
         <query-table
@@ -17,7 +17,6 @@
             :export-excel="true"
             :is-show-summary="false"
             @get-data-success="setData"
-            @date-change="dateChange"
         />
     </div>
 </template>
@@ -26,23 +25,13 @@
     import { Vue, Component } from 'vue-property-decorator';
     import { COMMON_API } from 'common/api/api';
     // import { dateFormat } from 'utils/utils';
-    /**
-     * 获取某月有几天
-     * @param yearAndmonth '2021-01'
-     */
-    function getDays(yearAndmonth) {
-        const arr = yearAndmonth.split('-');
-        const d = new Date(arr[0], arr[1] || '', 0);
-        return d.getDate();
-    }
+
     @Component({
         components: {
         },
-        name: 'DailyOfSubItems'
+        name: 'SumOfWorkShopItem'
     })
-    export default class DailyOfSubItems extends Vue {
-
-        currentMonth = '';
+    export default class SumOfWorkShopItem extends Vue {
 
         tableData: Record[] = [];
         spanArr: number[] = [];
@@ -50,37 +39,51 @@
 
         //表格数据
         get column() {
-            console.log(this.currentMonth)
             return [
                 {
-                    prop: 'workShopName',
-                    label: '品项',
+                    prop: 'aaaaaaa',
+                    label: '生产线',
                     width: '140',
                     minWidth: '140'
                 },
                 {
-                    prop: 'holderNo',
-                    label: '单位',
+                    prop: 'bbbbbb',
+                    label: '日期',
                     minWidth: '120'
                 },
                 {
+                    prop: 'ccccc',
+                    label: '品质',
+                    minWidth: '120',
+                    width: 140
+                },
+                {
                     prop: 'holderTypeName',
-                    label: '生产物料',
+                    label: '当日产量',
                     subLabel: '（箱）',
                     minWidth: '120',
                     width: 140
                 },
-                ...new Array(getDays(this.currentMonth)).fill('').map((item, index) => {
-                    return {
-                        prop: 'aaa' + (index + 1),
-                        label: index + 1 + '日',
-                        minWidth: '120'
-                    }
-                }),
                 {
-                    prop: 'xxxx',
-                    label: '合计',
-                    minWidth: '120'
+                    prop: 'holderTypeName',
+                    label: '当日产量',
+                    subLabel: '（吨）',
+                    minWidth: '120',
+                    width: 140
+                },
+                {
+                    prop: 'holderTypeName',
+                    label: '月度产量',
+                    subLabel: '（箱）',
+                    minWidth: '120',
+                    width: 140
+                },
+                {
+                    prop: 'holderTypeName',
+                    label: '月度产量',
+                    subLabel: '（吨）',
+                    minWidth: '120',
+                    width: 140
                 }
             ]
         }
@@ -95,7 +98,6 @@
                 type: 'select',
                 label: '生产车间',
                 prop: 'workShop',
-                defaultValue: '',
                 labelWidth: '100',
                 rule: [{ required: true, message: '请选择生产车间', trigger: 'blur' }],
                 defaultOptionsFn: () => {
@@ -112,19 +114,71 @@
                 }
             },
             {
-                type: 'date-picker',
-                label: '生产月',
-                dataType: 'month',
+                type: 'select',
+                label: '生产产线',
+                prop: 'productLine',
+                labelWidth: '100',
+                rule: [{ required: true, message: '请选择生产产线', trigger: 'blur' }],
+                optionsFn: val => {
+                    return COMMON_API.ORG_QUERY_CHILDREN_API({
+                        parentId: val || '',
+                        deptType: 'PRODUCT_LINE'
+                    })
+                },
+                defaultValue: '',
+                resVal: {
+                    resData: 'data',
+                    label: ['deptName'],
+                    value: 'id'
+                }
+            },
+            {
+                type: 'select',
+                label: '生产物料',
+                prop: 'productMaterial',
+                labelWidth: '100',
+                rule: [{ required: true, message: '请选择生产物料', trigger: 'blur' }],
+                optionsFn: val => {
+                    return COMMON_API.ORG_QUERY_CHILDREN_API({
+                        parentId: val || '',
+                        deptType: 'PRODUCT_LINE'
+                    })
+                },
+                defaultValue: '',
+                resVal: {
+                    resData: 'data',
+                    label: ['deptName'],
+                    value: 'id'
+                }
+            },
+            {
+                type: 'date-interval',
+                label: '生产日期',
                 defaultValue: '',
                 labelWidth: '100',
-                rule: [{ required: true, message: '请选择月', trigger: 'blur' }],
+                rule: [{ required: true, message: '请输入生产日期', trigger: 'blur' }],
                 prop: 'oneorderProductDate',
-                valueFormat: 'yyyy-MM'
+                propTwo: 'twoorderProductDate'
             }
         ];
 
         // 查询请求
         listInterface(params) {
+            // 针对查找必填关键字进行提示
+            for (let i = 0; i < this.queryFormData.length; i++) {
+                const element = this.queryFormData[i];
+                if (element.rule) {
+                    for (let j = 0; j < element.rule.length; j++) {
+                        const item = element.rule[j];
+                        if (item.required && !params[element.prop]) {
+                            this.$warningToast(item.message);
+                            return new Promise((resolve, reject) => {
+                                reject('error') // eslint-disable-line
+                            });
+                        }
+                    }
+                }
+            }
             console.log(this.queryFormData, params)
             params.factory = JSON.parse(sessionStorage.getItem('factory') || '{}').id;
             // return REPORTS_API.REPORT_PACKAGING_OEE_API(params);
@@ -142,11 +196,6 @@
                     }
                 })
             })
-        }
-
-        dateChange(v) {
-            this.currentMonth = v;
-            console.log(this.column)
         }
 
         /**
