@@ -703,7 +703,14 @@ export const AUDIT_API = {
     AUDIT_AID_UPDATE: HOST + '/ver/aid/update',
     AUDIT_AID_AUDIT: HOST + '/ver/aid/audit',
     AUDIT_AID_RESET: HOST + '/ver/aid/resetVerifyAid',
-    AUDIT_AID_SUBMIT: HOST + '/ver/aid/submitAid'
+    AUDIT_AID_SUBMIT: HOST + '/ver/aid/submitAid',
+    /**
+     * 酒精领用审核
+     */
+    AUDIT_ETHYLALCOHOL_LIST_API: HOST + '/gra/dept/list',
+    AUDIT_ETHYLALCOHOL_CHECKED_API: HOST + '/gra/dept/checked',
+    AUDIT_ETHYLALCOHOL_PASS_API: HOST + '/gra/dept/noPass',
+    AUDIT_ETHYLALCOHOL_RESET_API: HOST + '/gra/dept/reset'
 };
 /*
  *考勤api
