@@ -114,7 +114,7 @@ export class AddRoutes {
             }
         }
         if (temp.length >= 1) {
-            this.fnAddDynamicMenuRoutes(temp, routes);
+            this.fnAddDynamicMenuRoutes(temp, routes, type);
         } else {
             this.mainRoutes['name'] = 'main-dynamic';
             this.mainRoutes['children'] = routes;
