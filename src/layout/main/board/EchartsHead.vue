@@ -21,7 +21,6 @@ export default {
 .EchartsHead {
     position: relative;
     width: 100%;
-    height: 90px;
     padding-top: 5px;
     p {
         position: absolute;

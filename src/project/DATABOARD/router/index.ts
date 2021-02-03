@@ -10,7 +10,15 @@ const mainRoutes: RouteConfig = {
     path: '/',
     name: 'index',
     component: () => import('src/layout/main/board/board_main.vue'),
-    children: []
+    children: [
+        { path: '/', redirect: '/home' },
+        {
+            path: '/home',
+            component: () => import('src/layout/main/board/home.vue'),
+            name: 'home',
+            meta: { title: '首页' }
+        }
+    ]
 }
 
 const router = new VueRouter({

@@ -5,8 +5,15 @@
                 index="1"
                 @click="SelectFactory"
             >
-                <em class="site-sidebar__menu-icon iconfont factory-shouye" />
+                <em class="site-sidebar__menu-icon iconfont factory-gongchang" />
                 <span slot="title">切换</span>
+            </el-menu-item>
+            <el-menu-item
+                index="home"
+                @click="() => { menuActiveName = 'home'; $router.push({ path: 'home' });}"
+            >
+                <em class="site-sidebar__menu-icon iconfont factory-shouye" />
+                <span slot="title">首页</span>
             </el-menu-item>
             <page-sub-menu v-for="(item, index) in menuList[0].list" :key="index" :page="item" />
         </el-menu>
