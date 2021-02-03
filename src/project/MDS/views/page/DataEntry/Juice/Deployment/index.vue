@@ -28,7 +28,7 @@
                     <el-form-item label="订单号：">
                         <el-input v-model="formHeader.orderNoAnother" style="width: 150px;" />
                     </el-form-item>
-                    <el-form-item class="floatr" style="width: 290px;">
+                    <el-form-item class="floatr">
                         <template style="float: right;">
                             <el-button v-if="isAuth('ste:allocate:allocateList')" type="primary" size="small" @click="SearchList">
                                 查询
@@ -73,7 +73,7 @@
                     </template>
                 </el-table-column>
                 <el-table-column label="计划BL原汁总量" prop="planAmount" />
-                <el-table-column label="BL原汁总量" prop="blAmount" />
+                <el-table-column label="BL原汁总量" prop="blAmount" width="100" />
                 <el-table-column label="单位" prop="unit" width="50" />
                 <el-table-column width="130">
                     <template slot="header">
@@ -165,9 +165,13 @@
                         <em class="reqI">*</em> 批次
                     </template>
                     <template slot-scope="scope">
-                        <el-input v-model="scope.row.batch" maxlength="10" :disabled="SplitStatuss(scope.row)" size="small" />
+                        <el-select v-if="scope.row.materialName === 'Y010'" v-model="scope.row.batch" value-key="batch" placeholder="请选择" :disabled="SplitStatuss(scope.row)" size="small" @change="changeBatch($event, scope.row)">
+                            <el-option v-for="(item, index) in batchList" :key="index" :label="item.batch" :value="item.batch" />
+                        </el-select>
+                        <el-input v-else v-model="scope.row.batch" maxlength="10" :disabled="SplitStatuss(scope.row)" size="small" />
                     </template>
                 </el-table-column>
+                <el-table-column label="Y010库存" prop="currentQuantity" width="100" />
                 <el-table-column label="备注" :show-overflow-tooltip="true">
                     <template slot-scope="scope">
                         <el-input v-model="scope.row.remark" :disabled="!(lineStatus !== '已提交' && lineStatus !== '审核通过' && isRedact !== false)" size="small" />
@@ -313,7 +317,7 @@
 
 <script>
 import { headanimation, dateFormat, accAdd } from '@/net/validate';
-import { BASICDATA_API, STERILIZED_API, SYSTEMSETUP_API } from '@/api/api';
+import { BASICDATA_API, STERILIZED_API, SYSTEMSETUP_API, INVENTORY_API } from '@/api/api';
 export default {
     name: 'JuiceDeployment',
     data() {
@@ -374,7 +378,8 @@ export default {
             strList: [],
             strList1: [],
             strList2: [],
-            Tdata: ''
+            Tdata: '',
+            batchList: []
         };
     },
     watch: {
@@ -389,11 +394,23 @@ export default {
     },
     mounted() {
         headanimation(this.$);
+        this.getBatchList();
         this.Getdeptcode();
         this.GetUserList();
         this.GetHolderStatusList();
     },
     methods: {
+        // 批次
+        getBatchList() {
+            this.$http(`${INVENTORY_API.Y010_LIST_BATCH_LIST_API}`, `POST`, {}, false, false, false).then(({ data }) => {
+                this.batchList = data.info;
+            });
+        },
+        changeBatch(val, row) {
+            const batchSole = this.batchList.find(item => (item.batch === val));
+            row['currentQuantity'] = batchSole['currentQuantity'];
+            row['holderId'] = batchSole['holderId'];
+        },
         IsGuanStatus(row) {
             return row.materialName.indexOf('原汁') === -1 || !(this.lineStatus !== '已提交' && this.lineStatus !== '审核通过' && this.isRedact !== false && row.status !== 'submit' && row.status !== 'checked');
         },
