@@ -269,6 +269,21 @@ export default {
         BrineInventory: {
             factoryId: '',
             location: '',
+            unit: '',
+            factoryName: '',
+            workShopName: '',
+            materialCode: '',
+            materialName: '',
+            sumAmount: ''
+        },
+        /**
+         * Y010库存
+         */
+        YO10Inventory: {
+            holderName: '',
+            factoryId: '',
+            location: '',
+            holderId: '',
             factoryName: '',
             workShopName: '',
             materialCode: '',
