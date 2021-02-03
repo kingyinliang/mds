@@ -3,7 +3,7 @@
  * @Anthor: Telliex
  * @Date: 2021-01-15 23:35:23
  * @LastEditors: Telliex
- * @LastEditTime: 2021-01-27 17:58:23
+ * @LastEditTime: 2021-02-02 13:56:53
 -->
 <template>
     <div class="header_main">
@@ -1116,7 +1116,7 @@ interface CurrentDataTable{
                 overflow: hidden;
                 .pot {
                     position: absolute;
-                    top: 0;
+                    top: 2px;
                     z-index: 10;
                     width: 100%;
                     height: 200px;
@@ -1321,12 +1321,12 @@ $repeat: length($icon-bg-color);  // How often you want the pattern to repeat.
         justify-content: space-between;
         margin-bottom: 3px;
         padding-left: 7px;
-        font-size: 11px;
+        font-size: 12px;
         list-style: none;
         &::before {
             position: absolute;
-            top: 7px;
-            left: 0;
+            top: 5px;
+            left: -1px;
             width: 5px;
             height: 5px;
             border-radius: 5px;

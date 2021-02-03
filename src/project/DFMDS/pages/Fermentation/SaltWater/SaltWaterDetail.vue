@@ -117,7 +117,7 @@
                             </el-table-column>
                             <el-table-column width="150" label="罐号" :show-overflow-tooltip="true">
                                 <template slot-scope="scope">
-                                    <el-select v-model="scope.row.usePotId" filterable size="small" clearable style="width: 100%;" :disabled="!isRedact">
+                                    <el-select v-model="scope.row.usePotId" filterable size="small" clearable style="width: 100%;" :disabled="!isRedact || scope.row.operatFlag === -1">
                                         <el-option v-for="(opt, optIndex) in pots" :key="optIndex" :label="opt.holderName" :value="opt.id" />
                                     </el-select>
                                 </template>
@@ -127,7 +127,7 @@
                                     <span class="notNull">领用数量</span>
                                 </template>
                                 <template slot-scope="scope">
-                                    <el-input v-model="scope.row.useAmount" size="small" placeholder="请输入数量" :disabled="!isRedact" />
+                                    <el-input v-model="scope.row.useAmount" size="small" placeholder="请输入数量" :disabled="!isRedact || scope.row.operatFlag === -1" />
                                 </template>
                             </el-table-column>
                             <el-table-column :show-overflow-tooltip="true" width="100">
@@ -144,7 +144,7 @@
                                     <span class="notNull">批次</span>
                                 </template>
                                 <template slot-scope="scope">
-                                    <el-input v-model.trim="scope.row.receiveBatch" :maxlength="10" size="small" placeholder="请输入批次" :disabled="!isRedact" />
+                                    <el-input v-model.trim="scope.row.receiveBatch" :maxlength="10" size="small" placeholder="请输入批次" :disabled="!isRedact || scope.row.operatFlag === -1" />
                                 </template>
                             </el-table-column>
                             <el-table-column :show-overflow-tooltip="true" min-width="200">
@@ -152,17 +152,17 @@
                                     <span>备注</span>
                                 </template>
                                 <template slot-scope="scope">
-                                    <el-input v-model.trim="scope.row.remark" size="small" placeholder="请输入" :disabled="!isRedact" />
+                                    <el-input v-model.trim="scope.row.remark" size="small" placeholder="请输入" :disabled="!isRedact || scope.row.operatFlag === -1" />
                                 </template>
                             </el-table-column>
                             <el-table-column prop="changer" width="140" label="操作人" :show-overflow-tooltip="true" />
                             <el-table-column prop="changed" width="180" label="操作时间" :show-overflow-tooltip="true" />
                             <el-table-column fixed="right" label="操作" width="120" :show-overflow-tooltip="true">
                                 <template slot-scope="scope">
-                                    <el-button type="text" size="samll" :disabled="!isRedact" @click="splitHandler(scope.row, scope.$index)">
+                                    <el-button type="text" size="samll" :disabled="!isRedact || scope.row.operatFlag === -1" @click="splitHandler(scope.row, scope.$index)">
                                         拆分
                                     </el-button>
-                                    <el-button v-if="!(scope.row.splitFlag !== 'Y')" class="delBtn" type="text" icon="el-icon-delete" size="mini" :disabled="!isRedact" @click="removeDataRow(scope.row, scope.$index, 'otherMaterialList', 'ferBrineIssueBomRemoveIdList')">
+                                    <el-button v-if="!(scope.row.splitFlag !== 'Y')" class="delBtn" type="text" icon="el-icon-delete" size="mini" :disabled="!isRedact || scope.row.operatFlag === -1" @click="removeDataRow(scope.row, scope.$index, 'otherMaterialList', 'ferBrineIssueBomRemoveIdList')">
                                         删除
                                     </el-button>
                                 </template>
@@ -419,6 +419,11 @@ export default class SaltWaterDetail extends Vue {
                 virtualMaterialId = item.id
             }
         });
+        this.otherMaterialList.filter(item => item.operatFlag === -1).map(row => {
+            if (row.id) {
+                this.ferBrineIssueBomRemoveIdList.push(row.id);
+            }
+        })
         return FER_API.FER_BRINE_SAVE_API({
             ferBrineIssueBomList: this.otherMaterialList,
             ferBrineIssueBomRemoveIdList: this.ferBrineIssueBomRemoveIdList,
@@ -454,6 +459,11 @@ export default class SaltWaterDetail extends Vue {
                 virtualMaterialId = item.id
             }
         });
+        this.otherMaterialList.filter(item => item.operatFlag === -1).map(row => {
+            if (row.id) {
+                this.ferBrineIssueBomRemoveIdList.push(row.id);
+            }
+        })
         return FER_API.FER_BRINE_SUBMIT_API({
             ferBrineIssueBomList: this.otherMaterialList,
             ferBrineIssueBomRemoveIdList: this.ferBrineIssueBomRemoveIdList,
