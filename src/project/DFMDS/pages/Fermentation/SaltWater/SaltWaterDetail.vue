@@ -212,7 +212,7 @@ export default class SaltWaterDetail extends Vue {
             type: 'tooltip',
             icon: 'factory-pinleiguanli',
             label: '制曲物料',
-            value: ['preMaterialName', 'preMaterialCode']
+            value: ['kojiMaterialName', 'kojiMaterialCode']
         },
         {
             type: 'p',
@@ -231,7 +231,7 @@ export default class SaltWaterDetail extends Vue {
             type: 'tooltip',
             icon: 'factory-pinleiguanli',
             label: '发酵物料',
-            value: ['productMaterialName', 'productMaterialCode']
+            value: ['ferMaterialName', 'ferMaterialCode']
         },
         {
             type: 'p',
@@ -295,8 +295,8 @@ export default class SaltWaterDetail extends Vue {
         this.initHandler();
     }
 
-    initHandler() {
-        this.getDetail();
+    async initHandler() {
+        await this.getDetail();
         FER_API.FER_BRINE_VIRTUAL_MATERIAL_API({ }).then(res => {
             this.materialOptionsList = res.data.data;
         })
@@ -306,29 +306,30 @@ export default class SaltWaterDetail extends Vue {
         this.getPotListByType(['001', '027'], false, 'pots'); // 027 储存罐、001发酵罐
     }
 
-    getDetail() {
+    async getDetail() {
         const brineInfo = this.$store.state.fer.brineInfo;
-        FER_API.FER_BRINE_QUERY_DETAIL_API({ fermentorId: brineInfo.id }).then(res => {
+        return FER_API.FER_BRINE_QUERY_DETAIL_API({ fermentorId: brineInfo.id }).then(res => {
             const info = res.data.data;
-            const ferOrder = { ...info.ferOrder };
+            const issue = info.ferBrineIssue;
             this.formHeader = {
                 holderNo: info.holderNo,
                 holderName: info.holderName,
-                kojiTempature: info.ferBrineIssue.kojiTempature,
-                changed: info.changed,
-                changer: info.changer,
-                productMaterialCode: ferOrder.productMaterialCode,
-                productMaterialName: ferOrder.productMaterialName,
+                kojiTempature: issue.kojiTempature,
+                changed: issue.changed || info.changed,
+                changer: issue.changer || info.changer,
+                ferMaterialCode: issue.ferMaterialCode || info.ferMaterialCode,
+                ferMaterialName: issue.ferMaterialName || info.ferMaterialName,
                 // kojiOutDate: info.intoDate,
-                kojiOutDate: info.ferOrder.startDate,
-                kojiAmount: ferOrder.preAmount,
-                preMaterialCode: ferOrder.preMaterialCode,
-                preMaterialName: ferOrder.preMaterialName,
-                orderNo: ferOrder.orderNo,
-                orderStatus: info.ferBrineIssue.checkStatus || 'N',
+                kojiOutDate: issue.kojiOutDate || info.kojiOutDate,
+                kojiAmount: issue.kojiAmount || info.kojiAmount,
+                kojiMaterialCode: issue.kojiMaterialCode || info.kojiMaterialCode,
+                kojiMaterialName: issue.kojiMaterialName || info.kojiMaterialName,
+                // orderNo: issue.orderNo || info.orderNo,
+                orderStatus: issue.checkStatus || 'N',
                 orderStatusName: info.brineFlagName,
                 factoryName: JSON.parse(sessionStorage.getItem('factory') || '{}').deptName,
-                preOrderNo: ferOrder.preOrderNo
+                preOrderNo: issue.preOrderNo || info.preOrderNo,
+                kojiOrderNo: issue.kojiOrderNo || info.kojiOrderNo
             }
             this.selectForm = {
                 brineMaterialCode: info.ferBrineIssue?.brineMaterialCode
@@ -353,7 +354,7 @@ export default class SaltWaterDetail extends Vue {
 
     getOrtherMaterialList() {
         const info = this.$store.state.fer.brineInfo;
-        FER_API.FER_BRINE_OTHER_BOM_API({ fermentorId: info.id, cycle: info.cycle, orderNo: info.ferOrder.preOrderNo }).then(({ data }) => {
+        FER_API.FER_BRINE_OTHER_BOM_API({ fermentorId: info.id, cycle: info.cycle, orderNo: this.formHeader.kojiOrderNo }).then(({ data }) => {
             // console.log(data, '=-=-=-=-=-=-=')
             this.otherMaterialList = data.data.sort((a, b) => a.useMaterialCode > b.useMaterialCode ? 1 : -1).filter(item => item.operatFlag !== -2);
         })
@@ -382,7 +383,8 @@ export default class SaltWaterDetail extends Vue {
             return false;
         }
         for (const item of this.saltWaterList) {
-            if (!item.brinePotId || !this.chargeNumber(item.useAmount) || !this.chargeNumber(item.concentration)) {
+            // 盐水用量等不能为0
+            if (!item.brinePotId || !item.useAmount || !item.concentration) {
                 this.$warningToast('请填写盐水发料必填栏位');
                 return false;
             }
@@ -397,7 +399,7 @@ export default class SaltWaterDetail extends Vue {
             return true;
         }
         for (const item of this.otherMaterialList) {
-            if (!item.receiveBatch || !this.chargeNumber(item.useAmount)) {
+            if (!item.receiveBatch || !item.useAmount) {
                 this.$warningToast('请填写其他发料必填栏位');
                 return false;
             }
@@ -412,6 +414,7 @@ export default class SaltWaterDetail extends Vue {
 
     savedDatas() {
         const info = this.$store.state.fer.brineInfo;
+        const issue = info.ferBrineIssue
         const obj = this.formHeader;
         let virtualMaterialId;
         this.materialOptionsList.map((item: { virtualMaterialCode: string; id: string }) => {
@@ -430,28 +433,27 @@ export default class SaltWaterDetail extends Vue {
             ferBrineIssueBrineList: this.saltWaterList,
             ferBrineIssueBrineRemoveIdList: this.ferBrineIssueBrineRemoveIdList,
             brineMaterialCode: this.selectForm.brineMaterialCode,
-            ferMaterialName: obj.productMaterialName,
-            cycle: info.cycle,
-            ferMaterialCode: obj.productMaterialCode,
-            ferMaterialType: info.ferBrineIssue.ferMaterialType, // 发酵物料类型
+            cycle: issue.cycle || info.cycle,
+            ferMaterialCode: obj.ferMaterialCode,
+            ferMaterialName: obj.ferMaterialName,
+
+            ferMaterialType: issue.ferMaterialType || info.ferMaterialType, // 发酵物料类型
             fermentorId: info.holderId,
-            id: info.ferBrineIssue.id,
+            id: issue.id,
             kojiAmount: obj.kojiAmount,
-            kojiMaterialCode: obj.preMaterialCode,
-            kojiMaterialName: obj.preMaterialName,
+            kojiMaterialCode: obj.kojiMaterialCode,
+            kojiMaterialName: obj.kojiMaterialName,
             kojiOutDate: obj.kojiOutDate,
             kojiTempature: obj.kojiTempature,
             remark: info.remark,
             workShop: info.workShop,
-            kojiOrderNo: this.formHeader.preOrderNo,
-            orderNo: obj.orderNo,
-            orderId: info.ferOrder.id,
             virtualMaterialId: virtualMaterialId
         });
     }
 
     submitDatas() {
         const info = this.$store.state.fer.brineInfo;
+        const issue = info.ferBrineIssue;
         const obj = this.formHeader;
         let virtualMaterialId;
         this.materialOptionsList.map((item: { virtualMaterialCode: string; id: string }) => {
@@ -470,25 +472,25 @@ export default class SaltWaterDetail extends Vue {
             ferBrineIssueBrineList: this.saltWaterList,
             ferBrineIssueBrineRemoveIdList: this.ferBrineIssueBrineRemoveIdList,
             brineMaterialCode: this.selectForm.brineMaterialCode,
-            ferMaterialName: obj.productMaterialName,
-            cycle: info.cycle,
-            ferMaterialCode: obj.productMaterialCode,
-            ferMaterialType: info.ferBrineIssue.ferMaterialType, // 发酵物料类型
+            ferMaterialName: obj.ferMaterialName,
+            cycle: issue.cycle || info.cycle,
+            ferMaterialCode: obj.ferMaterialCode,
+            ferMaterialType: issue.ferMaterialType || info.ferMaterialType, // 发酵物料类型
             fermentorId: info.holderId,
-            id: info.ferBrineIssue.id,
+            id: issue.id,
             kojiAmount: obj.kojiAmount,
-            kojiMaterialCode: obj.preMaterialCode,
-            kojiMaterialName: obj.preMaterialName,
+            kojiMaterialCode: obj.kojiMaterialCode,
+            kojiMaterialName: obj.kojiMaterialName,
             kojiOutDate: obj.kojiOutDate,
             kojiTempature: obj.kojiTempature,
             remark: info.remark,
             workShop: info.workShop,
-            kojiOrderNo: this.formHeader.preOrderNo,
-            orderNo: obj.orderNo,
-            orderId: info.ferOrder.id,
+            kojiOrderNo: obj.kojiOrderNo,
             virtualMaterialId: virtualMaterialId,
-            orderStartDate: info.ferOrder.startDate,
-            orderType: info.ferOrder.orderType
+            // -----待定------
+            kojiOrderId: info.kojiOrderId,
+            kojiOrderType: info.kojiOrderType,
+            kojiOrderStartDate: info.kojiOrderStartDate
         });
     }
 
@@ -535,23 +537,6 @@ export default class SaltWaterDetail extends Vue {
         }
     }
 
-    rowStyleHandler({ row }) {
-        let color = 'none';
-        switch (row.operatFlag) {
-            case 1:
-                color = 'rgba(251, 255, 0, .2)';
-                break;
-            case -1:
-                color = 'rgba(253, 0, 42, .2)';
-                break;
-            default:
-                break;
-        }
-        return {
-            backgroundColor: color
-        }
-    }
-
     removeDataRow(row, index, fileName, removeFileName) {
         this.$confirm('是否删除?', '提示', {
             confirmButtonText: '确定',
@@ -583,22 +568,24 @@ export default class SaltWaterDetail extends Vue {
     }
 }
 interface FormHeaderObj {
+    id?: string;
     holderNo?: string;
     holderName?: string;
     kojiTempature?: string;
     changed?: string;
     changer?: string;
-    productMaterialCode?: string;
-    productMaterialName?: string;
+    ferMaterialCode?: string;
+    ferMaterialName?: string;
     kojiOutDate?: string;
     kojiAmount?: string;
-    preMaterialCode?: string;
-    preMaterialName?: string;
-    orderNo?: string;
+    kojiMaterialCode?: string;
+    kojiMaterialName?: string;
+    // orderNo?: string;
     orderStatus?: string;
     orderStatusName?: string;
     factoryName?: string;
     preOrderNo?: string; // 前置订单
+    kojiOrderNo?: string;
 }
 
 interface SaltWaterObj {
