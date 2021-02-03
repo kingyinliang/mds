@@ -39,7 +39,7 @@
                 </el-form-item>
             </el-form>
         </el-card>
-        <mds-card title="助滤剂审核" name="AuditList" :pack-up="false">
+        <mds-card title="酒精领用审核" name="AuditList" :pack-up="false">
             <template slot="titleBtn">
                 <div style="float: right; width: 688px; text-align: right;">
                     <el-form ref="pstngDate" :model="formHeader" :rules="plantListRule" size="small" :inline="true" label-position="right" label-width="82px" class="topforms">
