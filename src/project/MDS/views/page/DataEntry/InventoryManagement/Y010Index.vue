@@ -290,7 +290,7 @@ export default {
                 deptName: '',
                 batch: '',
                 useAmount: '',
-                useMan: '',
+                useMan: [],
                 useRemark: '',
                 currentQuantity: ''
             })

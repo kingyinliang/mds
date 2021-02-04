@@ -9,11 +9,6 @@
         >
             <template slot="headerCard">
                 <mds-card title="申请基本信息" :name="'head'">
-                    <template slot="titleBtn">
-                        <div style="float: right;">
-                            {{ formHeader.statusName }}
-                        </div>
-                    </template>
                     <el-form :inline="true" :model="formHeader" size="small" class="dataEntry-head-base__form" label-width="100px">
                         <el-row>
                             <em style="padding-left: 40px;" />
@@ -394,7 +389,8 @@
             })
             COMMON_API.HOLDER_DROPDOWN_API({
                 factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
-                holderType: ['001', '028']
+                holderType: ['001', '028'],
+                holderStatus: 'E'
             }).then(({ data }) => {
                 this.mixSaucePotArr = data.data || [];
             })

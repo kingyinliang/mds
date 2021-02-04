@@ -182,7 +182,8 @@
             })
             COMMON_API.HOLDER_DROPDOWN_API({
                 factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
-                holderType: ['001', '028']
+                holderType: ['001', '028'],
+                holderStatus: 'E'
             }).then(({ data }) => {
                 this.potArr = data.data || [];
             })
