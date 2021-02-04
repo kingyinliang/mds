@@ -3,7 +3,7 @@
  * @Anthor: Telliex
  * @Date: 2021-01-15 23:35:23
  * @LastEditors: Telliex
- * @LastEditTime: 2021-01-19 18:15:03
+ * @LastEditTime: 2021-02-02 12:14:26
 -->
 <template>
     <div class="header_main">
@@ -193,12 +193,27 @@
                     </el-table-column>
                     <el-table-column label="来源订单" :show-overflow-tooltip="true" width="180">
                         <template slot-scope="scope">
-                            {{ scope.row.orderNo }}
+                            {{ scope.row.preOrderNo }}
                         </template>
                     </el-table-column>
-                    <el-table-column label="曲房号" :show-overflow-tooltip="true" width="180">
+                    <el-table-column label="来源曲房" :show-overflow-tooltip="true" width="180">
                         <template slot-scope="scope">
                             {{ scope.row.kojiHouse }}
+                        </template>
+                    </el-table-column>
+                    <el-table-column label="来源订单量" :show-overflow-tooltip="true" width="180">
+                        <template slot-scope="scope">
+                            {{ scope.row.preOrderAmount }}
+                        </template>
+                    </el-table-column>
+                    <el-table-column label="订单量" :show-overflow-tooltip="true" width="180">
+                        <template slot-scope="scope">
+                            {{ scope.row.orderAmount }}
+                        </template>
+                    </el-table-column>
+                    <el-table-column label="入库量" :show-overflow-tooltip="true" width="180">
+                        <template slot-scope="scope">
+                            {{ scope.row.inStorageAmount }}
                         </template>
                     </el-table-column>
                     <el-table-column label="来源罐号" :show-overflow-tooltip="true" width="180">

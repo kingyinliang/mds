@@ -25,7 +25,11 @@
                         <el-table-column label="容器状态" prop="fermentorStatusName" />
                         <el-table-column label="生产订单" prop="orderNo" width="120px" />
                         <el-table-column label="发酵天数" prop="fermentDays" />
-                        <el-table-column label="生产物料" prop="productMaterialName" width="140px" />
+                        <el-table-column label="生产物料" prop="productMaterialName" show-overflow-tooltip width="140px">
+                            <template slot-scope="scope">
+                                {{ scope.row.productMaterialName + ' ' + scope.row.productMaterialCode }}
+                            </template>
+                        </el-table-column>
                         <el-table-column label="订单数量" prop="amount" />
                         <el-table-column label="订单单位" prop="unit" />
                         <el-table-column label="满罐日期" prop="startDate" width="160px" />
@@ -52,7 +56,7 @@
             </template>
         </query-table>
         <el-dialog
-            :title="currentRow.name"
+            :title="formObj.fermentorName"
             :visible.sync="dialogVisible"
             width="400px"
             :before-close="handleClose"
@@ -68,7 +72,8 @@
                     <el-input v-model="formObj.orderNo" size="small" disabled />
                 </el-form-item>
                 <el-form-item label="生产物料" prop="productMaterialName">
-                    <el-input v-model="formObj.productMaterialName" size="small" disabled />
+                    <!-- <el-input v-model="formObj.productMaterialName" size="small" disabled /> -->
+                    <el-input size="small" disabled :value="formObj.productMaterialName + ' ' + formObj.productMaterialCode" />
                 </el-form-item>
                 <el-form-item label="发酵天数" prop="fermentDays">
                     <el-input v-model="formObj.fermentDays" size="small" disabled />
