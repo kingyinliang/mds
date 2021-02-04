@@ -2,6 +2,7 @@ import Vue from 'vue';
 import App from './App.vue';
 import router from './router/index';
 import store from './store/index';
+import $ from 'jquery';
 
 // common
 import 'element-ui/lib/theme-chalk/index.css';
@@ -19,6 +20,7 @@ Vue.use(VueCookie);
 Vue.use(useComponents);
 
 Vue.prototype.$http = httpProxy; // ajax请求方法
+Vue.prototype.$ = $;
 
 // 警告通知
 Vue.prototype.$warningToast = str => {
