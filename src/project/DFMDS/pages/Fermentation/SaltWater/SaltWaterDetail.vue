@@ -61,12 +61,12 @@
                                     <span class="notNull">盐水用量（KG）</span>
                                 </template>
                                 <template slot-scope="scope">
-                                    <el-input v-model.number="scope.row.useAmount" oninput="value=value.replace(/\D*/g,'')" size="small" placeholder="请输入数量" :disabled="!isRedact" />
+                                    <el-input v-model.number="scope.row.useAmount" oninput="value=value.replace(/\D*/g,'')" size="small" placeholder="请输入" :disabled="!isRedact" />
                                 </template>
                             </el-table-column>
                             <el-table-column width="120" label="盐水温度（°C）" :show-overflow-tooltip="true" class="star">
                                 <template slot-scope="scope">
-                                    <el-input v-model.number="scope.row.temperature" oninput="value=value.replace(/\D*/g,'')" :disabled="!isRedact" size="small" placeholder="请输入温度" />
+                                    <el-input v-model.number="scope.row.temperature" oninput="value=value.replace(/\D*/g,'')" :disabled="!isRedact" size="small" placeholder="请输入" />
                                 </template>
                             </el-table-column>
                             <el-table-column width="150" :show-overflow-tooltip="true" class="star">
@@ -74,7 +74,7 @@
                                     <span class="notNull">盐水浓度（%）</span>
                                 </template>
                                 <template slot-scope="scope">
-                                    <el-input v-model.number="scope.row.concentration" oninput="value=value.replace(/\D*/g,'')" size="small" placeholder="请输入浓度" :disabled="!isRedact" />
+                                    <el-input v-model.number="scope.row.concentration" oninput="value=value.replace(/\D*/g,'')" size="small" placeholder="请输入" :disabled="!isRedact" />
                                 </template>
                             </el-table-column>
                             <el-table-column :show-overflow-tooltip="true" min-width="200">
@@ -314,7 +314,7 @@ export default class SaltWaterDetail extends Vue {
             this.formHeader = {
                 holderNo: info.holderNo,
                 holderName: info.holderName,
-                kojiTempature: issue.kojiTempature,
+                kojiTempature: issue.kojiTempature || '',
                 changed: issue.changed || info.changed,
                 changer: issue.changer || info.changer,
                 ferMaterialCode: issue.ferMaterialCode || info.ferMaterialCode,
@@ -447,6 +447,7 @@ export default class SaltWaterDetail extends Vue {
             kojiTempature: obj.kojiTempature,
             remark: info.remark,
             workShop: info.workShop,
+            kojiWorkShop: info.kojiWorkShop,
             virtualMaterialId: virtualMaterialId
         });
     }
@@ -485,6 +486,7 @@ export default class SaltWaterDetail extends Vue {
             kojiTempature: obj.kojiTempature,
             remark: info.remark,
             workShop: info.workShop,
+            kojiWorkShop: info.kojiWorkShop,
             kojiOrderNo: obj.kojiOrderNo,
             virtualMaterialId: virtualMaterialId,
             // -----待定------
@@ -503,7 +505,7 @@ export default class SaltWaterDetail extends Vue {
                     brinePotNo: '', // 盐水罐号
                     changed: dateFormat(new Date(), 'yyyy-MM-dd hh:mm:ss'), // 最后操作时间
                     changer: getUserNameNumber(), // 最后操作人
-                    concentration: 0, // 盐水浓度
+                    concentration: '', // 盐水浓度
                     endDate: '', // 结束时间
                     ferBrineIssue: {}, // 盐水发料
                     ferBrineIssueId: '', // 盐水发料主键
@@ -511,10 +513,10 @@ export default class SaltWaterDetail extends Vue {
                     matchDate: '', // 盐水配置日期
                     remark: '', // 备注
                     startDate: '', // 开始时间
-                    temperature: 0, // 盐水温度
+                    temperature: '', // 盐水温度
                     unit: '', // 盐水用量单位
                     unitName: '', // 单位
-                    useAmount: 0 // 盐水用量
+                    useAmount: '' // 盐水用量
                 });
             } else {
                 this.$warningToast('请选择盐水物料');
@@ -594,7 +596,7 @@ interface SaltWaterObj {
     brinePotNo: string; // 盐水罐号
     changed: string; // 最后操作时间
     changer: string; // 最后操作人
-    concentration: number; // 盐水浓度
+    concentration: number | ''; // 盐水浓度
     endDate: string; // 结束时间
     ferBrineIssue: FerBrineIssue; // 盐水发料
     ferBrineIssueId: string; // 盐水发料主键
@@ -602,10 +604,10 @@ interface SaltWaterObj {
     matchDate: string; // 盐水配置日期
     remark: string; // 备注
     startDate: string; // 开始时间
-    temperature: number; // 盐水温度
+    temperature: number | string; // 盐水温度
     unit: string; // 盐水用量单位
     unitName: string; // 单位
-    useAmount: number; // 盐水用量
+    useAmount: number | string; // 盐水用量
 }
 interface OtherMaterial {
     changed: string; // 最后操作时间
