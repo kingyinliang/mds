@@ -132,28 +132,16 @@
         <mds-card :title="'超期酱'" :name="'list4'">
             <el-table header-row-class-name="tableHead" class="newTable" :data="table4" :row-class-name="rowDelFlag">
                 <el-table-column type="index" label="序号" width="50" fixed align="center" />
-                <el-table-column label="容器号" prop="receiveMaterial" min-width="120" :show-overflow-tooltip="true">
-                    <template slot-scope="scope">
-                        <el-select v-model="scope.row.fermentorNo" placeholder="请选择" size="small" :disabled="!isRedact" @change="fermentorNoChange(scope.row)">
-                            <el-option v-for="(item, index) in holderArr" :key="index" :label="item.holderName" :value="item.holderId" />
-                        </el-select>
-                    </template>
-                </el-table-column>
+                <el-table-column label="容器号" prop="fermentorName" min-width="120" :show-overflow-tooltip="true" />
                 <el-table-column label="添加物料" prop="addMaterialCode" min-width="150" :show-overflow-tooltip="true">
                     <template slot-scope="scope">
-                        <el-select v-model="scope.row.addMaterialCode" :disabled="!isRedact" placeholder="请选择" size="small" filterable clearable style="width: 100%;" @change="materialChange(scope.row)">
-                            <el-option v-for="(item, index) in (holderArr.filter(it => it.holderId === scope.row.fermentorNo).length > 0 ? holderArr.filter(it => it.holderId === scope.row.fermentorNo)[0].ferInStorageList : [])" :key="index" :label="item.productMaterialName +' ' + item.productMaterialCode" :value="item.productMaterialCode" />
-                        </el-select>
+                        {{ scope.row.addMaterialName + " " + scope.row.addMaterialCode }}
                     </template>
                 </el-table-column>
                 <el-table-column label="单位" prop="unit" min-width="50" :show-overflow-tooltip="true" />
                 <el-table-column label="库存数量" prop="stockAmount" min-width="100" :show-overflow-tooltip="true" />
                 <el-table-column label="批次" prop="batch" min-width="100" :show-overflow-tooltip="true" />
-                <el-table-column label="计划添加数量" prop="planAddAmount" min-width="120" :show-overflow-tooltip="true">
-                    <template slot-scope="scope">
-                        <el-input v-model="scope.row.planAddAmount" :disabled="!(isRedact)" size="small" placeholder="请输入" />
-                    </template>
-                </el-table-column>
+                <el-table-column label="计划添加数量" prop="planAddAmount" min-width="120" :show-overflow-tooltip="true" />
                 <el-table-column label="领用数量" prop="realAddAmount" min-width="120" :show-overflow-tooltip="true">
                     <template slot-scope="scope">
                         <el-input v-model="scope.row.realAddAmount" :disabled="!(isRedact)" size="small" placeholder="请输入" />
@@ -258,7 +246,7 @@
 
         SplitDate(row, index) {
             this.table3.splice(index + this.table3.filter(item => item.addMaterialCode === row.addMaterialCode).length, 0, {
-                id: '',
+                id: row.id,
                 openPotNo: row.openPotNo,
                 addMaterialCode: row.addMaterialCode,
                 addMaterialName: row.addMaterialName,
@@ -267,7 +255,8 @@
                 unitName: row.unitName,
                 remark: row.remark,
                 batch: '',
-                realAddAmount: ''
+                realAddAmount: '',
+                toBeSplit: true
             })
             this.spanArr = merge(this.table3, 'addMaterialCode')
             console.log(this.spanArr);
@@ -319,6 +308,7 @@
     }
     interface LisObj {
         id?: string;
+        toBeSplit?: boolean;
         openPotNo?: string;
         addMaterialCode?: string;
         addMaterialName?: string;

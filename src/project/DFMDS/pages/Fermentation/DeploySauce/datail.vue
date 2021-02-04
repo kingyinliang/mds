@@ -4,6 +4,7 @@
             ref="dataEntry"
             :header-base="headerBase"
             :form-header="formHeader"
+            :order-status="formHeader.mixSauceStatus"
             :saved-datas="savedDatas"
             :submit-datas="submitDatas"
             @success="getOrderList"
@@ -18,7 +19,7 @@
 <script lang="ts">
     import { Vue, Component } from 'vue-property-decorator';
     import DeploySauceTable from './DeploySauceTable.vue'
-    import { FER_API } from 'common/api/api';
+    import { COMMON_API, FER_API } from 'common/api/api';
 
     @Component({
         name: 'DeploySauceDedail',
@@ -30,6 +31,8 @@
         $refs: {
             tables: HTMLFormElement;
         }
+
+        mixPotList = []
 
         headerBase = [
             {
@@ -48,19 +51,19 @@
                 type: 'select',
                 icon: 'factory-riqi',
                 label: '调酱容器',
-                value: 'mixPotName',
+                value: 'mixPotId',
                 disabled: true,
                 option: {
                     list: [],
                     label: 'holderName',
-                    value: 'holderId'
+                    value: 'id'
                 }
             },
             {
                 type: 'p',
                 icon: 'factory-shengchanchejian',
                 label: '状态',
-                value: 'status'
+                value: 'mixSauceStatusName'
             },
             {
                 type: 'tooltip',
@@ -127,6 +130,17 @@
         }
 
         getOrderList() {
+            COMMON_API.HOLDER_DROPDOWN_API({
+                factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
+                holderType: ['001', '028'],
+                holderStatus: 'E'
+            }).then(({ data }) => {
+                this.headerBase[2]['option'] = {
+                    list: data.data || [],
+                    label: 'holderName',
+                    value: 'id'
+                }
+            })
             FER_API.FER_DEPLOY_SAUCE_GET_API({
                 id: this.$store.state.fer.deploySauceObj.id
             }).then(({ data }) => {
