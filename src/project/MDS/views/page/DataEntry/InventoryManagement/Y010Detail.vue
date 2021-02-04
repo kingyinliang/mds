@@ -259,9 +259,7 @@
                             },
                         ]"
                     >
-                        <el-input v-model.number="adjustForm.quantity" type="number" style="width: 220px;">
-                            <em slot="suffix">L</em>
-                        </el-input>
+                        <el-input v-model.number="adjustForm.quantity" type="number" style="width: 220px;" />
                     </el-form-item>
                     <el-form-item
                         label="说明："

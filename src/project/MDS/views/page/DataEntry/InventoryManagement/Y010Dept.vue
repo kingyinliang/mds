@@ -297,7 +297,7 @@ export default {
         },
         // 复选框
         checkboxT(row) {
-            if (row.status === 'checked' || row.status === 'submit') {
+            if (row.status === 'checked' || row.status === 'submit' || row.status === 'failure') {
                 return 0;
             }
             return 1;
