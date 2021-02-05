@@ -3,7 +3,7 @@
  * @Anthor: Telliex
  * @Date: 2021-01-15 23:35:23
  * @LastEditors: Telliex
- * @LastEditTime: 2021-02-02 13:56:53
+ * @LastEditTime: 2021-02-05 16:53:36
 -->
 <template>
     <div class="header_main">
@@ -140,7 +140,7 @@
                             </div>
                         </el-col>
                     </el-row>
-                    <el-pagination :current-page="formHeader.currPage" :page-sizes="[10, 20, 50]" :page-size="formHeader.pageSize" layout="prev, pager, next,sizes, jumper" :total="formHeader.totalCount" @size-change="handleSizeChange" @current-change="handleCurrentChange" />
+                    <el-pagination :current-page="formHeader.currPage" :page-sizes="[12, 24, 48]" :page-size="formHeader.pageSize" layout="prev, pager, next,sizes, jumper" :total="formHeader.totalCount" @size-change="handleSizeChange" @current-change="handleCurrentChange" />
                 </mds-card>
             </template>
         </query-table>
@@ -264,7 +264,7 @@
             fermStatus: '',
             holderId: '',
             holderType: '',
-            pageSize: 10,
+            pageSize: 12,
             totalCount: 0,
             workShop: '',
             fermentStage: ''
@@ -562,9 +562,9 @@
 
             this.formHeader.fermentStage = item.fermentStage;
             this.formHeader.currPage = 1;
-            this.formHeader.pageSize = 10;
+            this.formHeader.pageSize = 12;
             this.$refs.queryTable.queryForm.currPage = 1;
-            this.$refs.queryTable.queryForm.pageSize = 10;
+            this.$refs.queryTable.queryForm.pageSize = 12;
             this.$set(this.$refs.queryTable.queryForm, 'fermentStage', item.fermentStage);
             this.isSearchResultListShow = true;
 
@@ -662,7 +662,9 @@
                 paramsTemp = {
                     factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
                     current: params.currPage,
-                    size: params.pageSize,
+                    // size: params.pageSize,
+                    // eslint-disable-next-line no-invalid-this
+                    size: this.formHeader.pageSize,
                     workShop: params.workShop,
                     holderType: params.holderType,
                     holderId: params.holderId,
@@ -790,7 +792,7 @@
                     holderId: this.cleanDataForm.holderId,
                     remark: this.cleanDataForm.remark
                 }).then(() => {
-                    this.isCleanDialogVisible = false
+                    this.isClearDialogVisible = false
                     this.$successToast('清罐成功');
                     this.getData() // 刷新结果
                 });
@@ -804,7 +806,7 @@
                 holderId: this.clearDataForm.holderId,
                 clearDate: this.clearDataForm.clearDate
             }).then(() => {
-                this.isClearDialogVisible = false
+                this.isCleanDialogVisible = false
                 this.$successToast('清洗成功');
                 this.getData() // 刷新结果
             });
@@ -1116,19 +1118,22 @@ interface CurrentDataTable{
                 overflow: hidden;
                 .pot {
                     position: absolute;
-                    top: 2px;
+                    top: 0;
                     z-index: 10;
                     width: 100%;
                     height: 200px;
                     // background: url(./assets/img/ferPotNew.png) no-repeat;
-                    background: url("~@/assets/img/ferPotNew.png") no-repeat;
+                    background: bottom center url("~@/assets/img/ferPotNew.png") no-repeat;
                     background-size: contain;
                 }
                 .pot_water {
                     position: absolute;
+                    right: 0;
                     bottom: 13px;
+                    left: 0;
                     width: 114px;
                     height: 200px;
+                    margin: 0 auto;
                     &_sole {
                         position: absolute;
                         bottom: 0;

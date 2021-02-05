@@ -1,4 +1,4 @@
-<!-- 分品项产量日报  -->
+<!-- 待处理酱料明细表 -->
 <template>
     <div class="header_main">
         <query-table
@@ -38,9 +38,9 @@
     @Component({
         components: {
         },
-        name: 'DailyOfSubItems'
+        name: 'DetailOfSauce'
     })
-    export default class DailyOfSubItems extends Vue {
+    export default class DetailOfSauce extends Vue {
 
         currentMonth = '';
 
@@ -60,28 +60,69 @@
                 },
                 {
                     prop: 'holderNo',
-                    label: '单位',
+                    label: '成品料号',
                     minWidth: '120'
                 },
                 {
                     prop: 'holderTypeName',
-                    label: '生产物料',
-                    subLabel: '（箱）',
+                    label: '成品描述',
                     minWidth: '120',
                     width: 140
                 },
-                ...new Array(getDays(this.currentMonth)).fill('').map((item, index) => {
-                    return {
-                        prop: 'aaa' + (index + 1),
-                        label: index + 1 + '日',
-                        minWidth: '120'
+                ...new Array(getDays(this.currentMonth) + 1).fill('').map((item, index) => {
+                    let i: string | number = index;
+                    if (index === 0) {
+                        i = 'Sum';
                     }
-                }),
-                {
-                    prop: 'xxxx',
-                    label: '合计',
-                    minWidth: '120'
-                }
+                    return {
+                        label: index === 0 ? '合计' : (i + '日'),
+                        minWidth: '120',
+                        child: [
+                            {
+                                prop: 'bbbbbbbbbbb' + i,
+                                label: '成品',
+                                subLabel: '（箱）',
+                                minWidth: '120',
+                                width: 140
+                            },
+                            {
+                                prop: 'cccccccccccc' + i,
+                                label: '挤料数量',
+                                subLabel: '（kg）',
+                                minWidth: '120',
+                                width: 140
+                            },
+                            {
+                                prop: 'dddddddddddddd' + i,
+                                label: '测密封度',
+                                subLabel: '（kg）',
+                                minWidth: '120',
+                                width: 140
+                            },
+                            {
+                                prop: 'eeeeeeeeee' + i,
+                                label: '废酱',
+                                subLabel: '（kg）',
+                                minWidth: '120',
+                                width: 140
+                            },
+                            {
+                                prop: 'fffffffffffff' + i,
+                                label: '线上不良',
+                                subLabel: '（kg）',
+                                minWidth: '120',
+                                width: 140
+                            },
+                            {
+                                prop: 'ggggggggggggggggggg' + i,
+                                label: '其他',
+                                subLabel: '（kg）',
+                                minWidth: '120',
+                                width: 140
+                            }
+                        ]
+                    }
+                })
             ]
         }
 
@@ -95,7 +136,6 @@
                 type: 'select',
                 label: '生产车间',
                 prop: 'workShop',
-                defaultValue: '',
                 labelWidth: '100',
                 rule: [{ required: true, message: '请选择生产车间', trigger: 'blur' }],
                 defaultOptionsFn: () => {
@@ -105,6 +145,44 @@
                         deptName: '包装'
                     })
                 },
+                resVal: {
+                    resData: 'data',
+                    label: ['deptName'],
+                    value: 'id'
+                }
+            },
+            {
+                type: 'select',
+                label: '生产产线',
+                prop: 'productLine',
+                labelWidth: '100',
+                rule: [{ required: true, message: '请选择生产产线', trigger: 'blur' }],
+                optionsFn: val => {
+                    return COMMON_API.ORG_QUERY_CHILDREN_API({
+                        parentId: val || '',
+                        deptType: 'PRODUCT_LINE'
+                    })
+                },
+                defaultValue: '',
+                resVal: {
+                    resData: 'data',
+                    label: ['deptName'],
+                    value: 'id'
+                }
+            },
+            {
+                type: 'select',
+                label: '生产物料',
+                prop: 'productMaterial',
+                labelWidth: '100',
+                rule: [{ required: true, message: '请选择生产物料', trigger: 'blur' }],
+                optionsFn: val => {
+                    return COMMON_API.ORG_QUERY_CHILDREN_API({
+                        parentId: val || '',
+                        deptType: 'PRODUCT_LINE'
+                    })
+                },
+                defaultValue: '',
                 resVal: {
                     resData: 'data',
                     label: ['deptName'],
@@ -125,6 +203,30 @@
 
         // 查询请求
         listInterface(params) {
+            // 针对查找必填关键字进行提示
+            for (let i = 0; i < this.queryFormData.length; i++) {
+                const element = this.queryFormData[i];
+                if (element.rule) {
+                    for (let j = 0; j < element.rule.length; j++) {
+                        const item = element.rule[j];
+                        if (item.required && !params[element.prop]) {
+                            this.$warningToast(item.message);
+                            return new Promise((resolve, reject) => {
+                                reject('error') // eslint-disable-line
+                            });
+                        }
+                    }
+                }
+            }
+            // for (let index = 0; index < this.rules.length; index++) {
+            //     const element = this.rules[index];
+            //     if (!params[element.prop]) {
+            //         this.$warningToast(element.text);
+            //         return new Promise((resolve, reject) => {
+            //             reject('error') // eslint-disable-line
+            //         });
+            //     }
+            // }
             console.log(this.queryFormData, params)
             params.factory = JSON.parse(sessionStorage.getItem('factory') || '{}').id;
             // return REPORTS_API.REPORT_PACKAGING_OEE_API(params);
