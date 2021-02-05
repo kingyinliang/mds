@@ -192,6 +192,8 @@
         materialChange() {
             const filterArr: (any) = this.material.filter(it => it['materialCode'] === this.formHeader.applyMaterialCode);// eslint-disable-line
             this.formHeader.applyMaterialName = filterArr[0].materialName
+            this.formHeader.applyMaterialType = filterArr[0].materialTypeCode
+            this.formHeader.applyMaterialTypeName = filterArr[0].materialTypeName
         }
 
         potChange() {
@@ -255,6 +257,8 @@
         openType?: string;
         applyMaterialCode?: string;
         applyMaterialName?: string;
+        applyMaterialType?: string;
+        applyMaterialTypeName?: string;
         mixPotId?: string;
         mixPotName?: string;
         mixPotNo?: string;
