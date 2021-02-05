@@ -25,7 +25,7 @@
             </template>
             <template v-slot:tab-head0>
                 <div class="box-card-title clearfix">
-                    <div style="float: right;">
+                    <div style="float: right; padding-bottom: 10px;">
                         <span class="tab-label">执行结束日期：</span>
                         <el-date-picker v-model="endDate" type="date" value-format="yyyy-MM-dd" format="yyyy-MM-dd" placeholder="请选择" size="small" :picker-options="pickerOptions" @change="endDateChange" />
                     </div>
@@ -33,7 +33,7 @@
             </template>
             <template v-slot:tab-head1>
                 <div class="box-card-title clearfix">
-                    <div style="float: right;">
+                    <div style="float: right; padding-bottom: 10px;">
                         <span class="tab-label">执行结束日期：</span>
                         <el-date-picker v-model="endDate2" type="date" value-format="yyyy-MM-dd" format="yyyy-MM-dd" placeholder="请选择" size="small" :picker-options="pickerOptions" @change="endDateChange" />
                     </div>
