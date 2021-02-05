@@ -6,6 +6,7 @@ import FileSaver from 'file-saver'
 import XLSX from 'xlsx'
 
 const importTarget = process.env.NODE_ENV !== 'local' ? file => () => import('project/' + file + '.vue') : file => require('project/' + file + '.vue').default;
+const importTarget1 = process.env.NODE_ENV !== 'local' ? file => () => import('@/views/page/' + file + '.vue') : file => require('@/views/page/' + file + '.vue').default;
 
 /**
  * 函数节流方法 只加定时器叫防抖
@@ -71,7 +72,7 @@ export class AddRoutes {
         this.SSRoutes = SSRoutes || [];
     }
 
-    fnAddDynamicMenuRoutes(menuList: MenuList[] = [], routes: RouteConfig[] = []) {
+    fnAddDynamicMenuRoutes(menuList: MenuList[] = [], routes: RouteConfig[] = [], type = 'DFMDS') {
         let temp: MenuList[] = [];
         for (let i = 0; i < menuList.length; i++) {
             if (menuList[i].list && menuList[i].list.length >= 1) {
@@ -95,9 +96,15 @@ export class AddRoutes {
                     route['path'] = `i-${menuList[i].id}`;
                     route['name'] = `i-${menuList[i].id}`;
                     route['meta']['iframeUrl'] = menuList[i].menuUrl;
-                } else {
+                } else if (type === 'DFMDS') {
                     try {
                         route['component'] = importTarget(`${menuList[i].menuUrl}`) || null;
+                    } catch (e) {
+                        //
+                    }
+                } else {
+                    try {
+                        route['component'] = importTarget1(`${menuList[i].menuUrl}`) || null;
                     } catch (e) {
                         //
                     }
@@ -107,12 +114,13 @@ export class AddRoutes {
             }
         }
         if (temp.length >= 1) {
-            this.fnAddDynamicMenuRoutes(temp, routes);
+            this.fnAddDynamicMenuRoutes(temp, routes, type);
         } else {
             this.mainRoutes['name'] = 'main-dynamic';
             this.mainRoutes['children'] = routes;
             this.router.addRoutes([this.mainRoutes, { path: '*', redirect: { path: '/404' } }]);
             sessionStorage.setItem('dynamicMenuRoutes', JSON.stringify(this.SSRoutes || '[]'));
+            console.log(this.router);
             console.log('\n');
             console.log('%c!<-------------------- 动态(菜单)路由 s -------------------->', 'color:blue');
             console.log(this.mainRoutes.children);

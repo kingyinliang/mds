@@ -39,7 +39,7 @@ export default {
     name: 'RealTime',
     components: {
         EchartsHead: resolve => {
-            require(['../Layout/EchartsHead'], resolve);
+            require(['src/layout/main/board/EchartsHead'], resolve);
         }
     },
     data() {
