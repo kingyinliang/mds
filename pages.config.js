@@ -28,6 +28,13 @@ module.exports = {
         filename: 'DFMDS.html',
         chunk: ["chunk-vendors", "chunk-common", 'DFMDS']
     },
+    DATABOARD: {
+        title: '欣和-制造管理系统',
+        entry: 'src/project/DATABOARD/main.ts',
+        template: 'public/DATABOARD.html',
+        filename: 'DATABOARD.html',
+        chunk: ["chunk-vendors", "chunk-common", 'DATABOARD']
+    },
     SYSTEM: {
         title: '欣和-制造管理系统',
         entry: 'src/project/SYSTEM/main.ts',

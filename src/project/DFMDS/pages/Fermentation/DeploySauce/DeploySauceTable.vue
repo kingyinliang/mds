@@ -45,12 +45,19 @@
             </el-table>
         </mds-card>
         <mds-card :title="'鲜香泡豆'" :name="'list2'">
+            <template slot="titleBtn">
+                <div style="float: right;">
+                    <el-button type="primary" :disabled="!isRedact" size="small" @click="addList2()">
+                        新增
+                    </el-button>
+                </div>
+            </template>
             <el-table header-row-class-name="tableHead" class="newTable" :data="table2" :row-class-name="rowDelFlag">
                 <el-table-column type="index" label="序号" width="50" fixed align="center" />
                 <el-table-column label="容器号" prop="openFlagName" min-width="150" :show-overflow-tooltip="true">
                     <template slot-scope="scope">
                         <el-select v-model="scope.row.fermentorNo" :disabled="!isRedact" placeholder="请选择" size="small" filterable clearable @change="fermentorNoChange(scope.row)">
-                            <el-option v-for="(item, index) in holderPickArr" :key="index" :label="item.holderName" :value="item.holderId" />
+                            <el-option v-for="(item, index) in holderArr" :key="index" :label="item.holderName" :value="item.holderId" />
                         </el-select>
                     </template>
                 </el-table-column>
@@ -174,7 +181,7 @@
         @Prop({ default: false }) isRedact: boolean;
 
         table1 = []
-        table2 = []
+        table2: LisObj[] = []
         table3: LisObj[] = []
         table4 = []
 
@@ -262,6 +269,19 @@
             console.log(this.spanArr);
         }
 
+        addList2() {
+            this.table2.push({
+                id: '',
+                fermentorNo: '',
+                addMaterialCode: '',
+                unit: '',
+                stockAmount: '',
+                batch: '',
+                planAddAmount: '',
+                remark: ''
+            })
+        }
+
         // 合并行
         spanMethod({ rowIndex, columnIndex }) {
             if (columnIndex <= 5) {
@@ -310,6 +330,8 @@
         id?: string;
         toBeSplit?: boolean;
         openPotNo?: string;
+        fermentorNo?: string;
+        stockAmount?: string;
         addMaterialCode?: string;
         addMaterialName?: string;
         planAddAmount?: string;
