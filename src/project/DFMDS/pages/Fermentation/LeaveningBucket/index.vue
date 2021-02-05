@@ -3,7 +3,7 @@
  * @Anthor: Telliex
  * @Date: 2021-01-15 23:35:23
  * @LastEditors: Telliex
- * @LastEditTime: 2021-02-02 13:56:53
+ * @LastEditTime: 2021-02-05 15:52:26
 -->
 <template>
     <div class="header_main">
@@ -790,7 +790,7 @@
                     holderId: this.cleanDataForm.holderId,
                     remark: this.cleanDataForm.remark
                 }).then(() => {
-                    this.isCleanDialogVisible = false
+                    this.isClearDialogVisible = false
                     this.$successToast('清罐成功');
                     this.getData() // 刷新结果
                 });
@@ -804,7 +804,7 @@
                 holderId: this.clearDataForm.holderId,
                 clearDate: this.clearDataForm.clearDate
             }).then(() => {
-                this.isClearDialogVisible = false
+                this.isCleanDialogVisible = false
                 this.$successToast('清洗成功');
                 this.getData() // 刷新结果
             });
