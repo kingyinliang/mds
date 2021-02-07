@@ -19,7 +19,7 @@
 <script lang="ts">
     import { Vue, Component } from 'vue-property-decorator';
     import DeploySauceTable from './DeploySauceTable.vue'
-    import { COMMON_API, FER_API } from 'common/api/api';
+    import { FER_API } from 'common/api/api';
 
     @Component({
         name: 'DeploySauceDedail',
@@ -47,17 +47,23 @@
                 label: '开罐类型',
                 value: 'ferOpen.openTypeName'
             },
+            // {
+            //     type: 'select',
+            //     icon: 'factory-riqi',
+            //     label: '调酱容器',
+            //     value: 'mixPotId',
+            //     disabled: true,
+            //     option: {
+            //         list: [],
+            //         label: 'holderName',
+            //         value: 'id'
+            //     }
+            // },
             {
-                type: 'select',
+                type: 'p',
                 icon: 'factory-riqi',
                 label: '调酱容器',
-                value: 'mixPotId',
-                disabled: true,
-                option: {
-                    list: [],
-                    label: 'holderName',
-                    value: 'id'
-                }
+                value: 'mixPotName'
             },
             {
                 type: 'p',
@@ -130,17 +136,17 @@
         }
 
         getOrderList() {
-            COMMON_API.HOLDER_DROPDOWN_API({
-                factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
-                holderType: ['001', '028'],
-                holderStatus: 'E'
-            }).then(({ data }) => {
-                this.headerBase[2]['option'] = {
-                    list: data.data || [],
-                    label: 'holderName',
-                    value: 'id'
-                }
-            })
+            // COMMON_API.HOLDER_DROPDOWN_API({
+            //     factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
+            //     holderType: ['001', '028'],
+            //     holderStatus: 'E'
+            // }).then(({ data }) => {
+            //     this.headerBase[2]['option'] = {
+            //         list: data.data || [],
+            //         label: 'holderName',
+            //         value: 'id'
+            //     }
+            // })
             FER_API.FER_DEPLOY_SAUCE_GET_API({
                 id: this.$store.state.fer.deploySauceObj.id
             }).then(({ data }) => {
@@ -151,27 +157,33 @@
         }
 
         savedDatas() {
-            const { pickledMixMaterialList, receiveMixMaterialList, sauceMixMaterialList, materialRemoveIds } = this.$refs.tables.saveData()
+            const { ferMixFermentorUpdateDtoList, ferMixFermentorSaveDtoList, pickledMixMaterialList, receiveMixMaterialList, sauceMixMaterialList, materialRemoveIds } = this.$refs.tables.saveData()
             this.formHeader.pickledMixMaterialList = pickledMixMaterialList
             this.formHeader.receiveMixMaterialList = receiveMixMaterialList
             this.formHeader.sauceMixMaterialList = sauceMixMaterialList
             this.formHeader.materialRemoveIds = materialRemoveIds
+            this.formHeader.ferMixFermentorUpdateDtoList = ferMixFermentorUpdateDtoList
+            this.formHeader.ferMixFermentorSaveDtoList = ferMixFermentorSaveDtoList
             this.formHeader.mixMans = this.formHeader.user.length ? this.formHeader.user.join(',') : ''
             return FER_API.FER_DEPLOY_SAUCE_DETAIL_SAVE_API(this.formHeader)
         }
 
         submitDatas() {
-            const { pickledMixMaterialList, receiveMixMaterialList, sauceMixMaterialList, materialRemoveIds } = this.$refs.tables.saveData()
+            const { ferMixFermentorUpdateDtoList, ferMixFermentorSaveDtoList, pickledMixMaterialList, receiveMixMaterialList, sauceMixMaterialList, materialRemoveIds } = this.$refs.tables.saveData()
             this.formHeader.pickledMixMaterialList = pickledMixMaterialList
             this.formHeader.receiveMixMaterialList = receiveMixMaterialList
             this.formHeader.sauceMixMaterialList = sauceMixMaterialList
             this.formHeader.materialRemoveIds = materialRemoveIds
+            this.formHeader.ferMixFermentorUpdateDtoList = ferMixFermentorUpdateDtoList
+            this.formHeader.ferMixFermentorSaveDtoList = ferMixFermentorSaveDtoList
             this.formHeader.mixMans = this.formHeader.user.length ? this.formHeader.user.join(',') : ''
             return FER_API.FER_DEPLOY_SAUCE_DETAIL_SUBMIT_API(this.formHeader)
         }
     }
     interface HeadObj {
         openPotNo?: string;
+        ferMixFermentorUpdateDtoList?: ListObj[];
+        ferMixFermentorSaveDtoList?: ListObj[];
         pickledMixMaterialList?: ListObj[];
         receiveMixMaterialList?: ListObj[];
         sauceMixMaterialList?: ListObj[];

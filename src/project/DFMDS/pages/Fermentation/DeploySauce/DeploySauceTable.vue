@@ -25,7 +25,7 @@
                 </el-table-column>
                 <el-table-column label="领用数量" prop="materialUnit" min-width="100" :show-overflow-tooltip="true">
                     <template slot-scope="scope">
-                        {{ scope.row.amount }}
+                        <el-input v-model="scope.row.realAddAmount" :disabled="!(isRedact)" size="small" placeholder="请输入" />
                     </template>
                 </el-table-column>
                 <el-table-column label="库存数量（KG）" prop="currentStock" min-width="140" :show-overflow-tooltip="true" />
@@ -34,7 +34,7 @@
                 <el-table-column label="批次" prop="inStorageBatch" min-width="120" :show-overflow-tooltip="true" />
                 <el-table-column label="实验备注" prop="receiveMaterial" min-width="120" :show-overflow-tooltip="true">
                     <template slot-scope="scope">
-                        <el-input v-model="scope.row.experiment" :disabled="!(isRedact)" size="small" placeholder="请输入" />
+                        {{ scope.row.experiment }}
                     </template>
                 </el-table-column>
                 <el-table-column label="备注" prop="remark" min-width="80" :show-overflow-tooltip="true">
@@ -180,7 +180,7 @@
     export default class DeploySauceTable extends Vue {
         @Prop({ default: false }) isRedact: boolean;
 
-        table1 = []
+        table1: LisObj[] = []
         table2: LisObj[] = []
         table3: LisObj[] = []
         table4 = []
@@ -231,7 +231,32 @@
             this.delId(this.table2, materialRemoveIds)
             this.delId(this.table3, materialRemoveIds)
             this.delId(this.table4, materialRemoveIds)
+            const ferMixFermentorSaveDtoList: PotObj[] = []
+            const ferMixFermentorUpdateDtoList: PotObj[] = []
+            this.table1.forEach(item => {
+                if (item.id) {
+                    ferMixFermentorUpdateDtoList.push({
+                        id: item.id,
+                        realAddAmount: item.realAddAmount,
+                        remark: item.remark
+                    })
+                } else {
+                    ferMixFermentorSaveDtoList.push({
+                        cycle: item.cycle,
+                        description: item.description,
+                        experiment: item.experiment,
+                        fermentDays: item.fermentDays,
+                        fermentorId: item.fermentorId,
+                        orderId: item.orderId,
+                        originalId: item.originalId,
+                        realAddAmount: item.realAddAmount,
+                        remark: item.remark
+                    })
+                }
+            })
             return {
+                ferMixFermentorSaveDtoList,
+                ferMixFermentorUpdateDtoList,
                 materialRemoveIds: materialRemoveIds,
                 pickledMixMaterialList: this.table2,
                 receiveMixMaterialList: this.table3,
@@ -319,6 +344,14 @@
     }
     interface PotObj{
         id?: string;
+        cycle?: string;
+        description?: string;
+        experiment?: string;
+        fermentDays?: string;
+        orderId?: string;
+        originalId?: string;
+        realAddAmount?: string;
+        remark?: string;
         holderId?: string;
         openPotNo?: string;
         fermentorId?: string;
@@ -328,6 +361,14 @@
     }
     interface LisObj {
         id?: string;
+        cycle?: string;
+        description?: string;
+        experiment?: string;
+        fermentDays?: string;
+        orderId?: string;
+        originalId?: string;
+        holderId?: string;
+        fermentorId?: string;
         toBeSplit?: boolean;
         openPotNo?: string;
         fermentorNo?: string;
