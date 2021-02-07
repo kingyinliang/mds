@@ -319,10 +319,10 @@ export default {
                 holderId: item.holderId,
                 holderName: item.holderName
             };
-            this.mainTabs = this.mainTabs.filter(tabItem => tabItem.name !== 'DataEntry-Granary-WheatPot-dataEntryIndex');
+            this.mainTabs = this.mainTabs.filter(tabItem => tabItem.name !== 'MDS-views-page-DataEntry-Granary-WheatPot-dataEntryIndex');
             setTimeout(() => {
                 this.$router.push({
-                    name: 'DataEntry-Granary-WheatPot-dataEntryIndex'
+                    name: 'MDS-views-page-DataEntry-Granary-WheatPot-dataEntryIndex'
                 });
             }, 100);
         }

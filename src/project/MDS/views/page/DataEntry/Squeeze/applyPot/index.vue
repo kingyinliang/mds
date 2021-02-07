@@ -211,7 +211,7 @@ export default class Index extends Vue {
         // applyNo = ''就是新增
         // 保存当前单号
         this.$store.commit('common/updateSqueezeApplyPotApplyId', applyId);
-        const name = 'DataEntry-Squeeze-applyPot-detail';
+        const name = 'MDS-views-page-DataEntry-Squeeze-applyPot-detail';
         this.mainTabs = this.mainTabs.filter(item => item.name !== name);
         setTimeout(() => {
             this.$router.push({ name });

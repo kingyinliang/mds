@@ -1143,9 +1143,9 @@
             // 去详请
             godetails(row) {
                 this.$store.state.common.Juice = row;
-                this.mainTabs = this.mainTabs.filter(item => item.name !== 'DataEntry-Juice-Pot-detail');
+                this.mainTabs = this.mainTabs.filter(item => item.name !== 'MDS-views-page-DataEntry-Juice-Pot-detail');
                 setTimeout(() => {
-                    this.$router.push({ name: `DataEntry-Juice-Pot-detail` });
+                    this.$router.push({ name: `MDS-views-page-DataEntry-Juice-Pot-detail` });
                 }, 100);
             },
             // 改变每页条数

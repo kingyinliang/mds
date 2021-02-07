@@ -588,10 +588,10 @@ export default {
                 deptId: this.plantList.workshopIDValue
             };
             this.$store.state.common.MeasureBarnBeanPulp = item;
-            this.mainTabs = this.mainTabs.filter(subItem => subItem.name !== 'DataEntry-MeasureBarn-BeanPulp-DataEntryIndex');
+            this.mainTabs = this.mainTabs.filter(subItem => subItem.name !== 'MDS-views-page-DataEntry-MeasureBarn-BeanPulp-DataEntryIndex');
             setTimeout(() => {
                 this.$router.push({
-                    name: `DataEntry-MeasureBarn-BeanPulp-DataEntryIndex`
+                    name: `MDS-views-page-DataEntry-MeasureBarn-BeanPulp-DataEntryIndex`
                 });
             }, 100);
         }

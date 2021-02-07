@@ -313,9 +313,9 @@ export default {
                 this.PkgorderNo = item.orderNo;
                 this.PkgproductDate = this.productDate;
                 this.PkgworkShop = this.workShop;
-                this.mainTabs = this.mainTabs.filter(subItem => subItem.name !== 'DataEntry-Packaging-ProDataIn');
+                this.mainTabs = this.mainTabs.filter(subItem => subItem.name !== 'MDS-views-page-MDS-views-page-DataEntry-Packaging-ProDataIn');
                 setTimeout(() => {
-                    this.$router.push({ name: `DataEntry-Packaging-ProDataIn` });
+                    this.$router.push({ name: `MDS-views-page-MDS-views-page-DataEntry-Packaging-ProDataIn` });
                 }, 100);
             } else {
                 this.$warningToast('请选择订单号');

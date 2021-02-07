@@ -260,10 +260,10 @@ export default {
                 materialName: item.materialName,
                 sumAmount: item.sumAmount
             }
-            this.mainTabs = this.mainTabs.filter(subItem => subItem.name !== 'DataEntry-InventoryManagement-BrineDetail');
+            this.mainTabs = this.mainTabs.filter(subItem => subItem.name !== 'MDS-views-page-DataEntry-InventoryManagement-BrineDetail');
             setTimeout(() => {
                 this.$router.push({
-                    name: 'DataEntry-InventoryManagement-BrineDetail'
+                    name: 'MDS-views-page-DataEntry-InventoryManagement-BrineDetail'
                 });
             }, 100);
         }

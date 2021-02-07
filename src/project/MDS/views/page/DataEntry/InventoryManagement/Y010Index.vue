@@ -406,10 +406,10 @@ export default {
                 materialName: item.materialName,
                 sumAmount: item.sumAmount
             }
-            this.mainTabs = this.mainTabs.filter(subItem => subItem.name !== 'DataEntry-InventoryManagement-Y010Detail');
+            this.mainTabs = this.mainTabs.filter(subItem => subItem.name !== 'MDS-views-page-DataEntry-InventoryManagement-Y010Detail');
             setTimeout(() => {
                 this.$router.push({
-                    name: 'DataEntry-InventoryManagement-Y010Detail'
+                    name: 'MDS-views-page-DataEntry-InventoryManagement-Y010Detail'
                 });
             }, 100);
         }
