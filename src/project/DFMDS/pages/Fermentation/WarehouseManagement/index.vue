@@ -408,6 +408,9 @@
                     // 如果没被勾选，则判断是否修改
                     if (Boolean(row) || !_.isEqual(old, item)) {
                         const obj: InsertDto = {
+                            productMaterialCode: item.productMaterialCode,
+                            productMaterialName: item.productMaterialName,
+                            productMaterialType: item.productMaterialType,
                             fermentDays: item.fermentDays,
                             inStorageAmount: item.inStorageAmount,
                             inStorageBatch: item.inStorageBatch,
@@ -566,6 +569,8 @@
         remark: string;
         changer: string;
         changed: string;
+        productMaterialType?: string;
+        productMaterialCode?: string;
         onlyOne?: number; // 唯一标识
     }
     interface SaveOrSubmitDto {
@@ -582,6 +587,9 @@
         orderId: string;
         orderNo: string;
         remark: string;
+        productMaterialType?: string;
+        productMaterialName?: string;
+        productMaterialCode?: string;
         unit: string;
         onlyOne?: number;
     }

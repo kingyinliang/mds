@@ -280,10 +280,10 @@ export default {
                 holderName: item.holderName
             };
             this.$store.state.common.MeasureBarnWheatPot = item;
-            this.mainTabs = this.mainTabs.filter(subItem => subItem.name !== 'DataEntry-MeasureBarn-WheatPot-DataEntryIndex');
+            this.mainTabs = this.mainTabs.filter(subItem => subItem.name !== 'MDS-views-page-DataEntry-MeasureBarn-WheatPot-DataEntryIndex');
             setTimeout(() => {
                 this.$router.push({
-                    name: 'DataEntry-MeasureBarn-WheatPot-DataEntryIndex'
+                    name: 'MDS-views-page-DataEntry-MeasureBarn-WheatPot-DataEntryIndex'
                 });
             }, 100);
         }

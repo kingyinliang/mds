@@ -29,13 +29,15 @@ export function showFullScreenLoading() {
     if (needLoadingRequestCount === 0 && Vue.prototype.lodingState) {
         startLoading();
     }
-    needLoadingRequestCount++;
+    if (Vue.prototype.lodingState) {
+        needLoadingRequestCount++;
+    }
 }
 
 export function tryHideFullScreenLoading() {
     if (needLoadingRequestCount <= 0) return;
     needLoadingRequestCount--;
-    if (needLoadingRequestCount === 0 && Vue.prototype.lodingState) {
+    if (needLoadingRequestCount === 0) {
         endLoading();
     }
 }
