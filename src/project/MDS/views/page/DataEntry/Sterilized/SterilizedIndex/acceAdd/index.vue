@@ -64,7 +64,7 @@
                                 <el-input v-else v-model="scope.row.batch" :disabled="!(isRedact && (scope.row.status === 'noPass' || (isRedact && scope.row.status !== 'submit' && scope.row.status !== 'checked' && scope.row.addStatus !== '已添加')))" placeholder="请输入" maxlength="10" size="mini" />
                             </template>
                         </el-table-column>
-                        <el-table-column label="Y010库存" prop="currentQuantity" width="100" />
+                        <!-- <el-table-column label="Y010库存" prop="currentQuantity" width="100" /> -->
                         <el-table-column label="领用数量" min-width="100">
                             <template slot="header">
                                 <em class="reqI">*</em><span>领用数量</span>
@@ -130,7 +130,7 @@
                                 <el-input v-else v-model="scope.row.batch" :disabled="!(isRedact && (scope.row.status === 'noPass' || (isRedact && scope.row.status !== 'submit' && scope.row.status !== 'checked' && scope.row.addStatus !== '已添加')))" placeholder="请输入" maxlength="10" size="mini" />
                             </template>
                         </el-table-column>
-                        <el-table-column label="Y010库存" prop="currentQuantity" width="100" />
+                        <!-- <el-table-column label="Y010库存" prop="currentQuantity" width="100" /> -->
                         <el-table-column label="领用数量" min-width="100">
                             <template slot="header">
                                 <em class="reqI">*</em><span>领用数量</span>
