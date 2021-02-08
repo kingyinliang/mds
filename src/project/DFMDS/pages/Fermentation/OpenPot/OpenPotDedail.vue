@@ -186,7 +186,7 @@
                 <el-table :data="sauce" :row-class-name="rowDelFlag" header-row-class-name="tableHead" class="newTable" border tooltip-effect="dark">
                     <el-table-column label="容器号" prop="openFlagName" min-width="150" :show-overflow-tooltip="true">
                         <template slot-scope="scope">
-                            <el-select v-model="scope.row.fermentorNo" :disabled="!isRedact || mixSauceStatus === 'M'" placeholder="请选择" size="small" filterable clearable style="width: 100%;" @change="fermentorNoChange(scope.row)">
+                            <el-select v-model="scope.row.fermentorId" :disabled="!isRedact || mixSauceStatus === 'M'" placeholder="请选择" size="small" filterable clearable style="width: 100%;" @change="fermentorNoChange(scope.row)">
                                 <el-option v-for="(item, index) in holderArr" :key="index" :label="item.holderName" :value="item.holderId" />
                             </el-select>
                         </template>
@@ -533,6 +533,9 @@
 
         // 超期酱修改容器号
         fermentorNoChange(row) {
+            const filterArr1: (any) = this.holderArr.filter(item => item.holderId === row.fermentorId)// eslint-disable-line
+            row.fermentorNo = filterArr1[0].holderNo
+            row.fermentorName = filterArr1[0].holderName
             row.addMaterialCode = ''
             row.unit = ''
             row.stockAmount = ''
@@ -540,7 +543,7 @@
         }
 
         materialChange(row) {
-            const filterArr1: (any) = this.holderArr.filter(item => item.holderId === row.fermentorNo)// eslint-disable-line
+            const filterArr1: (any) = this.holderArr.filter(item => item.holderId === row.fermentorId)// eslint-disable-line
             const filterArr: (any) = filterArr1[0].ferInStorageList.filter(item => item.productMaterialCode === row.addMaterialCode)// eslint-disable-line
             row.addMaterialName = filterArr[0].productMaterialName
             row.addMaterialType = filterArr[0].productMaterialType
