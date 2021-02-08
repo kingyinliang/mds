@@ -108,7 +108,7 @@
                 </el-table-column>
             </el-table>
             <el-row>
-                <el-pagination :current-page="currPage" :page-sizes="[20, 30, 40]" :page-size="pageSize" layout="total, sizes, prev, pager, next, jumper" :total="formHeader.totalCount" @size-change="handleSizeChange" @current-change="handleCurrentChange" />
+                <el-pagination :current-page="currPage" :page-sizes="[10, 20, 30]" :page-size="pageSize" layout="total, sizes, prev, pager, next, jumper" :total="formHeader.totalCount" @size-change="handleSizeChange" @current-change="handleCurrentChange" />
             </el-row>
         </mds-card>
         <!--编辑-->
@@ -160,7 +160,7 @@
             </el-table>
             <div slot="footer" class="dialog-footer" />
         </el-dialog>
-        <loaned-personnel v-if="loanedPersonnelStatus" ref="loanedPersonnel" :org-tree="OrgTree" :arr-list="arrList" @changeUser="changeUser" />
+        <loaned-personnel v-if="loanedPersonnelStatus" ref="loanedPersonnel" :org-tree="OrgTree" :title="'领用人'" :arr-list="arrList" @changeUser="changeUser" />
     </div>
 </template>
 
@@ -180,7 +180,7 @@ export default {
                 batch: '',
                 status: '',
                 currPage: 1,
-                pageSize: 20,
+                pageSize: 10,
                 totalCount: 0
             },
             dataList: [],
@@ -259,6 +259,8 @@ export default {
         },
         // 查询
         getDataList() {
+            this.dataList = [];
+            this.isRedact = false;
             this.$http(`${INVENTORY_API.Y010_INVENTORY_DEPT_LIST_API}`, 'POST', this.formHeader).then(({ data }) => {
                 if (data.code === 0) {
                     this.formHeader.totalCount = data.info.totalCount;
@@ -285,8 +287,8 @@ export default {
         // 新增
         AddRow() {
             this.dataList.push({
-                materialName: '',
-                materialCode: '',
+                materialName: 'Y010',
+                materialCode: 'A030300007',
                 costCenterString: '',
                 batch: '',
                 useAmount: '',
@@ -297,7 +299,7 @@ export default {
         },
         // 复选框
         checkboxT(row) {
-            if (row.status === 'checked' || row.status === 'submit' || row.status === 'failure') {
+            if (row.status === 'checked' || row.status === 'submit' || row.status === 'failure' || this.isRedact === false) {
                 return 0;
             }
             return 1;
@@ -334,6 +336,7 @@ export default {
                         type: 'success'
                     });
                     this.getDataList(true);
+                    this.isRedact = false;
                 } else {
                     this.$errorToast(data.msg);
                 }
