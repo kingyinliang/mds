@@ -1,5 +1,5 @@
 <template>
-    <el-dialog width="850px" title="借调人员" :close-on-click-modal="false" :visible.sync="visible">
+    <el-dialog width="850px" :title="title" :close-on-click-modal="false" :visible.sync="visible">
         <el-row>
             <el-col style="width: 250px;">
                 <el-card style="height: 303px; overflow-y: scroll;">
@@ -50,6 +50,10 @@ export default {
         arrList: {
             type: Array,
             default: function() { return {} }
+        },
+        title: {
+            type: String,
+            default: '借调人员'
         }
     },
     data() {
