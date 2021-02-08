@@ -358,6 +358,7 @@ export default class Index extends Vue {
             holderId: this.formData.holderId
         }).then(({ data }) => {
             if (data.code === 0) {
+                this.formData['sumAmount'] = data['info'][0]['sumAmount'];
                 this.dataList = data['info'][0]['details'];
             } else {
                 this.$errorToast(data.msg);

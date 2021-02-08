@@ -20,8 +20,8 @@
                         <el-option v-for="(item, index) in costList" :key="index" :label="item.costCenterName + ' ' + item.costCenter" :value="item.costCenter" />
                     </el-select>
                 </el-form-item>
-                <el-form-item label="生产日期：">
-                    <el-date-picker v-model="formHeader.productDate" type="date" clearable placeholder="请选择" value-format="yyyy-MM-dd" style="width: 140px;" />
+                <el-form-item label="批次：">
+                    <el-input v-model="formHeader.batch" type="text" clearable placeholder="请输入" style="width: 140px;" />
                 </el-form-item>
                 <el-form-item label="订单状态：">
                     <el-select v-model="formHeader.status" placeholder="请选择" clearable style="width: 150px;">
@@ -70,7 +70,11 @@
                     </template>
                 </el-table-column>
                 <el-table-column prop="location" label="库位" :show-overflow-tooltip="true" width="85" />
-                <el-table-column prop="deptName" label="领用部门" :show-overflow-tooltip="true" width="110" />
+                <el-table-column prop="costCenterName" label="领用中心" :show-overflow-tooltip="true" width="180">
+                    <template slot-scope="scope">
+                        {{ scope.row.costCenterName + ' ' + scope.row.costCenter }}
+                    </template>
+                </el-table-column>
                 <el-table-column prop="moveType" label="移动类型" :show-overflow-tooltip="true" width="85" />
                 <el-table-column prop="moveReasName" label="移动原因" :show-overflow-tooltip="true" width="100" />
                 <el-table-column prop="batch" label="批次" :show-overflow-tooltip="true" width="110" />

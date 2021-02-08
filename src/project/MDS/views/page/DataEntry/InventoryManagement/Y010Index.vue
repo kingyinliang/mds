@@ -91,13 +91,14 @@
                 </el-card>
             </el-col>
         </el-row>
-        <el-dialog :close-on-click-modal="false" :visible.sync="isShowDeptReceive" width="900px" custom-class="dialog__class bg_dialog">
+        <el-dialog :close-on-click-modal="false" :visible.sync="isShowDeptReceive" width="1100px" custom-class="dialog__class bg_dialog">
             <div slot="title" class="title">
                 <span>部门领用</span>
             </div>
             <el-row>
                 <el-col :span="12" style="line-height: 33px;">
-                    物料： {{ receiveRow.materialName }} {{ receiveRow.materialCode }} 当前库存总量：{{ receiveRow.sumAmount }} {{ receiveRow.unit }}
+                    <span>物料： {{ receiveRow.materialName }} {{ receiveRow.materialCode }}</span>
+                    <span style="margin-left: 40px;">当前库存总量：{{ receiveRow.sumAmount }} {{ receiveRow.unit }}</span>
                 </el-col>
                 <el-col :span="12" style="text-align: right;">
                     <el-button type="primary" size="small" @click="addRecord">
@@ -106,27 +107,27 @@
                 </el-col>
             </el-row>
             <el-table header-row-class-name="" :data="receiveList" border tooltip-effect="dark" class="newTable" style="margin-top: 10px;">
-                <el-table-column :show-overflow-tooltip="true" width="120">
+                <el-table-column :show-overflow-tooltip="true" width="210">
                     <template slot="header">
                         <em class="reqI">*</em> 领用中心
                     </template>
                     <template slot-scope="scope">
-                        <el-select v-model="scope.row.productCode" value-key="productCode" placeholder="请选择" size="small" @change="changeCost($event, scope.row)">
+                        <el-select v-model="scope.row.productCode" value-key="productCode" placeholder="请选择" filterable clearable size="small" @change="changeCost($event, scope.row)">
                             <el-option v-for="(item, index) in costList" :key="index" :label="item.costCenterName + ' ' + item.costCenter" :value="item.costCenter" />
                         </el-select>
                     </template>
                 </el-table-column>
-                <el-table-column :show-overflow-tooltip="true" width="120">
+                <el-table-column :show-overflow-tooltip="true" width="140">
                     <template slot="header">
                         <em class="reqI">*</em> 批次
                     </template>
                     <template slot-scope="scope">
-                        <el-select v-model="scope.row.batch" value-key="productCode" placeholder="请选择" size="small" @change="changeBatch($event, scope.row)">
+                        <el-select v-model="scope.row.batch" value-key="productCode" placeholder="请选择" filterable clearable size="small" @change="changeBatch($event, scope.row)">
                             <el-option v-for="(item, index) in batchList" :key="index" :label="item.batch" :value="item.batch" />
                         </el-select>
                     </template>
                 </el-table-column>
-                <el-table-column label="库存量" :show-overflow-tooltip="true" width="100">
+                <el-table-column label="库存量" :show-overflow-tooltip="true" width="90">
                     <template slot-scope="scope">
                         {{ scope.row.currentQuantity }}
                     </template>
@@ -139,7 +140,7 @@
                         <el-input v-model.number="scope.row.useAmount" type="number" size="small" placeholder="手工录入" @input="changeProductWeight(scope.row)" />
                     </template>
                 </el-table-column>
-                <el-table-column :show-overflow-tooltip="true" width="120">
+                <el-table-column :show-overflow-tooltip="true" width="160">
                     <template slot="header">
                         领用人
                     </template>
@@ -157,7 +158,7 @@
                         用途
                     </template>
                     <template slot-scope="scope">
-                        <el-input v-model.number="scope.row.useRemark" type="number" size="small" placeholder="手工录入" @input="changeProductWeight(scope.row)" />
+                        <el-input v-model.number="scope.row.useRemark" type="text" size="small" placeholder="手工录入" @input="changeProductWeight(scope.row)" />
                     </template>
                 </el-table-column>
                 <el-table-column fixed="right" label="操作" width="70">
@@ -196,7 +197,7 @@ export default {
             plantList: {
                 factoryIDValue: '',
                 factoryName: '',
-                location: '',
+                location: '7104',
                 workshopIDValue: '',
                 workshopName: '',
                 holderId: '',
@@ -316,8 +317,12 @@ export default {
             row['deptName'] = costSole['deptName'];
         },
         changeBatch(val, row) {
-            const batchSole = this.batchList.find(item => (item.batch === val));
-            row['currentQuantity'] = batchSole['currentQuantity'];
+            if (val === '') {
+                row['currentQuantity'] = '';
+            } else {
+                const batchSole = this.batchList.find(item => (item.batch === val));
+                row['currentQuantity'] = batchSole['currentQuantity'];
+            }
         },
         // 获取组织结构树
         getTree(factory) {
