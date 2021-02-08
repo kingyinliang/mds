@@ -6,7 +6,7 @@
                     <el-row style=" margin-bottom: 10px; color: black; font-size: 16px;">
                         组织架构
                     </el-row>
-                    <el-tree ref="orgtree" :data="orgTree" node-key="deptId" :default-expanded-keys="arrList" :expand-on-click-node="false" @node-click="setdetail" />
+                    <el-tree ref="orgtree" :data="orgTree" highlight-current node-key="deptId" :default-expanded-keys="arrList" :expand-on-click-node="false" @node-click="setdetail" />
                 </el-card>
             </el-col>
             <el-col style="width: 250px;">
@@ -97,6 +97,10 @@ export default {
                 userId.forEach((item) => {
                     this.selctId.push({ label: item });
                 });
+            }
+            if (this.orgTree.length !== 0) {
+                this.setdetail(this.orgTree[0], true);
+                // this.$refs.orgtree.setCurrentKey(1);
             }
         },
         // 根据组织架构查人

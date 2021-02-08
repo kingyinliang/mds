@@ -21,7 +21,7 @@
                 </el-form-item>
                 <el-form-item class="floatr">
                     <template style="float: right; margin-left: 10px;">
-                        <el-button v-if="isAuth('gra:dept:list')" type="primary" size="small" @click="getDataList()">
+                        <el-button v-if="isAuth('gra:dept:list')" type="primary" size="small" @click="getDataList(true)">
                             查 询
                         </el-button>
                     </template>
@@ -36,7 +36,7 @@
                     </el-button>
                 </div>
             </template>
-            <el-table :data="dataList" border class="newTable" tooltip-effect="dark" header-row-class-name="tableHead" @selection-change="handleSelectionChange" @row-dblclick="GetLog">
+            <el-table :data="dataList" border class="newTable" tooltip-effect="dark" header-row-class-name="tableHead" @selection-change="handleSelectionChange">
                 <el-table-column type="selection" :selectable="checkboxT" width="50" fixed />
                 <el-table-column type="index" label="序号" width="55" />
                 <el-table-column label="状态" min-width="93" prop="statusName" />
@@ -108,7 +108,7 @@
                 </el-table-column>
             </el-table>
             <el-row>
-                <el-pagination :current-page="currPage" :page-sizes="[10, 20, 30]" :page-size="pageSize" layout="total, sizes, prev, pager, next, jumper" :total="formHeader.totalCount" @size-change="handleSizeChange" @current-change="handleCurrentChange" />
+                <el-pagination :current-page="formHeader.currPage" :page-sizes="[10, 20, 30]" :page-size="formHeader.pageSize" layout="total, sizes, prev, pager, next, jumper" :total="formHeader.totalCount" @size-change="handleSizeChange" @current-change="handleCurrentChange" />
             </el-row>
         </mds-card>
         <!--编辑-->
@@ -258,9 +258,12 @@ export default {
             this.loanedPersonnelStatus = false;
         },
         // 查询
-        getDataList() {
+        getDataList(st) {
             this.dataList = [];
             this.isRedact = false;
+            if (st) {
+                this.formHeader.currPage = 1;
+            }
             this.$http(`${INVENTORY_API.Y010_INVENTORY_DEPT_LIST_API}`, 'POST', this.formHeader).then(({ data }) => {
                 if (data.code === 0) {
                     this.formHeader.totalCount = data.info.totalCount;
