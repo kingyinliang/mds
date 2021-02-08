@@ -48,6 +48,10 @@ export const MAIN_API = {
  */
 export const BASICDATA_API = {
     /**
+     * @property {string} ORGSTRUCTURE_API 库位列表
+     */
+    LOCATION_LIST_API: HOST + '/alcohol/getLocation',
+    /**
      * @property {string} ORGSTRUCTURE_API 组织结构列表
      */
     ORGSTRUCTURE_API: HOST + '/sys/dept/list',
