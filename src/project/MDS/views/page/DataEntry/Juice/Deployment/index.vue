@@ -427,7 +427,7 @@ export default {
         CheckMessage() {
             let tys = 0;
             for (const items of this.ItemList) {
-                if (items.holderId !== null) {
+                if (items.holderId !== null && items.holderType !== null && items.holderType === '013') {
                     if (this.thrwHolderList.filter(item => item.holderId === items.holderId && items.batch === item.batch).length <= 0) {
                         tys = 1;
                     }
