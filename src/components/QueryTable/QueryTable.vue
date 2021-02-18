@@ -580,7 +580,10 @@
                 }
 
                 if (this.queryTabkeType === 'report') { // 类型：报表
-                    exportFileFor2Excel(this.column, this.tableData, this.exportOption.text)
+                    const tableDataTemp = JSON.parse(JSON.stringify(this.tableData))
+                    this.tableData[0].totalData[this.column[0].prop] = '合计';
+                    tableDataTemp.push(this.tableData[0].totalData);
+                    exportFileFor2Excel(this.column, tableDataTemp, this.exportOption.text)
                     return
                 }
 
