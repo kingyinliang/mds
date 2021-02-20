@@ -71,13 +71,20 @@
 
         @Watch('formHeader.potNo', { immediate: true, deep: true })
         onChangeValue(newVal: number| string) {
+            console.log('newVal')
+            console.log(newVal)
+            console.log('this.scanList')
+            console.log(this.scanList)
 
             if (newVal) {
                 this.potIdNow = newVal
                 if (this.scanList.length !== 0) {
                     this.potNoNow = this.scanList.filter(item => item.id === newVal)[0].holderNo as string
                 }
+
             }
+            console.log('this.potNoNow')
+            console.log(this.potNoNow)
         }
 
         get headerBase() {
@@ -181,16 +188,18 @@
                     this.$refs.dataEntry.activeName = this.$route.params.activeName;
                 }, 2000);
             }
-            await this.getScanList();
             await this.getOrderList()
+            // await this.getScanList();
         }
 
         // 查询表头
-        getOrderList() {
+        async getOrderList() {
             COMMON_API.OREDER_QUERY_BY_NO_API({
                 // this.jumpFromAudit 承接判断跳转过来
                 orderNo: this.jumpFromAudit ? this.$route.params.order : this.$store.state.koji.orderScInfo.orderNo || ''
             }).then(({ data }) => {
+                console.log('data')
+                console.log(data)
                 // 1.德兴程式
                 // KOJI_API.KOJI_QUERY_STEAMBEAN_API({
                 //     orderNo: this.jumpFromAudit ? this.$route.params.order : this.$store.state.koji.orderScInfo.orderNo || ''
@@ -233,6 +242,7 @@
                         this.potIdNow = res.data[0].scPotId;
                         this.potNoNow = res.data[0].scPotNo;
                         this.formHeader.kojiOrderNo = res.data[0].kojiOrderNo;
+                        this.formHeader.potNo = res.data[0].scPotId
                     }
 
                     // 获取页签状态
@@ -244,6 +254,8 @@
                     this.$refs.steamedInStorage.init(this.formHeader);
                     this.$refs.excRecord.init(this.formHeader, 'ZD');
                     this.$refs.textRecord.init(this.formHeader, 'koji');
+                    // 获取泡豆罐
+                    this.getScanList()
 
                 });
 
@@ -264,15 +276,16 @@
                 // this.scanList = data.data || [];
                 this.scanList = [];
                 if (data.data.length !== 0) {
+                    console.log('this.potIdNow')
+                    console.log(this.potIdNow)
+
                     data.data.forEach(item => {
                         // 是空罐或是已有的罐
-                        if (item.holderStatus === 'E' || item.holderNo === this.formHeader.kojiHouseNo) {
+                        if (item.holderStatus === 'E' || item.id === this.potIdNow) {
                             this.scanList.push({ holderNo: item.holderNo, holderName: item.holderName, id: item.id })
                         }
                     })
                 }
-
-
             });
         }
 
