@@ -221,6 +221,7 @@
         getFermentationHolder() {
             COMMON_API.HOLDER_QUERY_BY_NOPAGE_API({
                 // deptId: params.workShop,
+                holderStatus: 'E',
                 factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
                 holderType: '001'
             }).then(({ data }) => {
