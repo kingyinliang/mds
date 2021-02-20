@@ -71,12 +71,12 @@
 
         @Watch('formHeader.potNo', { immediate: true, deep: true })
         onChangeValue(newVal: number| string) {
+
             if (newVal) {
                 this.potIdNow = newVal
                 if (this.scanList.length !== 0) {
                     this.potNoNow = this.scanList.filter(item => item.id === newVal)[0].holderNo as string
                 }
-
             }
         }
 
@@ -218,6 +218,7 @@
                 // });
 
                 // 2.雪健建议
+                // kojiInStorage/queryList
                 KOJI_API.KOJI_STEAM_INSTORAGE_LIST_API({
                     orderNo: this.jumpFromAudit ? this.$route.params.order : this.$store.state.koji.orderScInfo.orderNo || ''
                 }).then(({ data: res }) => {
@@ -228,7 +229,6 @@
                         potNo: this.potIdNow,
                         kojiOrderNo: null
                     };
-
                     if (res.data.length !== 0) {
                         this.potIdNow = res.data[0].scPotId;
                         this.potNoNow = res.data[0].scPotNo;
@@ -267,7 +267,7 @@
                     data.data.forEach(item => {
                         // 是空罐或是已有的罐
                         if (item.holderStatus === 'E' || item.holderNo === this.formHeader.kojiHouseNo) {
-                            this.scanList.push({ holderName: item.holderName, id: item.id })
+                            this.scanList.push({ holderNo: item.holderNo, holderName: item.holderName, id: item.id })
                         }
                     })
                 }
