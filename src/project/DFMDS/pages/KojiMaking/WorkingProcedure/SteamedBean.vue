@@ -69,13 +69,8 @@
         steamedBeanCraftStatus='N';
         steamedInStorageStatus='N';
 
-        @Watch('formHeader.potNo', { immediate: true, deep: true })
+        @Watch('formHeader.potId', { immediate: true, deep: true })
         onChangeValue(newVal: number| string) {
-            console.log('newVal')
-            console.log(newVal)
-            console.log('this.scanList')
-            console.log(this.scanList)
-
             if (newVal) {
                 this.potIdNow = newVal
                 if (this.scanList.length !== 0) {
@@ -83,8 +78,6 @@
                 }
 
             }
-            console.log('this.potNoNow')
-            console.log(this.potNoNow)
         }
 
         get headerBase() {
@@ -117,7 +110,7 @@
                     type: 'select',
                     icon: 'factory-bianhaoguize',
                     label: '泡豆罐',
-                    value: 'potNo',
+                    value: 'potId',
                     disabled: true,
                     option: {
                         list: this.scanList,
@@ -198,8 +191,6 @@
                 // this.jumpFromAudit 承接判断跳转过来
                 orderNo: this.jumpFromAudit ? this.$route.params.order : this.$store.state.koji.orderScInfo.orderNo || ''
             }).then(({ data }) => {
-                console.log('data')
-                console.log(data)
                 // 1.德兴程式
                 // KOJI_API.KOJI_QUERY_STEAMBEAN_API({
                 //     orderNo: this.jumpFromAudit ? this.$route.params.order : this.$store.state.koji.orderScInfo.orderNo || ''
@@ -229,20 +220,21 @@
                 // 2.雪健建议
                 // kojiInStorage/queryList
                 KOJI_API.KOJI_STEAM_INSTORAGE_LIST_API({
+                    kojiOrderNo: '',
                     orderNo: this.jumpFromAudit ? this.$route.params.order : this.$store.state.koji.orderScInfo.orderNo || ''
                 }).then(({ data: res }) => {
                     this.potIdNow = '';
                     this.potNoNow = '';
                     this.formHeader = {
                         ...data.data,
-                        potNo: this.potIdNow,
+                        potId: this.potIdNow,
                         kojiOrderNo: null
                     };
                     if (res.data.length !== 0) {
                         this.potIdNow = res.data[0].scPotId;
                         this.potNoNow = res.data[0].scPotNo;
                         this.formHeader.kojiOrderNo = res.data[0].kojiOrderNo;
-                        this.formHeader.potNo = res.data[0].scPotId
+                        this.formHeader.potId = res.data[0].scPotId
                     }
 
                     // 获取页签状态
@@ -352,7 +344,7 @@
         kojiOrderNo?: string;
         textStage?: string;
         factoryName?: string;
-        potNo?: string;
+        potId?: string;
         potOrder?: string;
         steTagPot?: StatusObj;
         workShop?: string;
