@@ -145,7 +145,7 @@ export default {
                     ids: [this.targetID]
                 }).then(({ data }) => {
                     this.dataForm = data.data[0];
-                    this.dataForm.deptName = deptName;
+                    // this.dataForm.deptName = deptName;
                 });
             } else {
                 this.targetID = '';
