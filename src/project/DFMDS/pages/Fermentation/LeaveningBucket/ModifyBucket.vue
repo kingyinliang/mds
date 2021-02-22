@@ -3,7 +3,7 @@
  * @Anthor: Telliex
  * @Date: 2021-01-15 23:35:23
  * @LastEditors: Telliex
- * @LastEditTime: 2021-02-22 14:04:59
+ * @LastEditTime: 2021-02-22 17:32:17
 -->
 <template>
     <div>
@@ -145,7 +145,7 @@
                                     </el-select>
                                 </el-form-item>
                                 <el-form-item label="打入罐号：" class="star">
-                                    <el-select v-model="convertDataGroup.targetHolderId" placeholder="请选择" clearable style="width: 100%;" :disabled="!convertDisabled">
+                                    <el-select v-model="convertDataGroup.targetHolderId" placeholder="请选择" filterable clearable style="width: 100%;" :disabled="!convertDisabled">
                                         <el-option
                                             v-for="item in convertHolderIdOptions"
                                             :key="item.id"
@@ -397,11 +397,12 @@
 
             // 获取打入罐容器号
             getConvertHolderIdOptions(val) {
-                this.moveHolderIdOptions = []
+                this.convertHolderIdOptions = []
                 return new Promise((resolve) => {
                         COMMON_API.HOLDER_DROPDOWN_BY_STATUS_API({
                         holderType: [val],
-                        holderStatus: ['E', 'U']
+                        // holderStatus: ['E', 'U']
+                        holderStatus: ['E', 'S', 'O']
                     }).then(({ data }) => {
                         console.log('打入罐容器号')
                         console.log(data.data)
