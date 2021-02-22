@@ -69,7 +69,7 @@
         steamedBeanCraftStatus='N';
         steamedInStorageStatus='N';
 
-        @Watch('formHeader.potNo', { immediate: true, deep: true })
+        @Watch('formHeader.potId', { immediate: true, deep: true })
         onChangeValue(newVal: number| string) {
             if (newVal) {
                 this.potIdNow = newVal
@@ -110,7 +110,7 @@
                     type: 'select',
                     icon: 'factory-bianhaoguize',
                     label: '泡豆罐',
-                    value: 'potNo',
+                    value: 'potId',
                     disabled: true,
                     option: {
                         list: this.scanList,
@@ -181,12 +181,12 @@
                     this.$refs.dataEntry.activeName = this.$route.params.activeName;
                 }, 2000);
             }
-            await this.getScanList();
             await this.getOrderList()
+            // await this.getScanList();
         }
 
         // 查询表头
-        getOrderList() {
+        async getOrderList() {
             COMMON_API.OREDER_QUERY_BY_NO_API({
                 // this.jumpFromAudit 承接判断跳转过来
                 orderNo: this.jumpFromAudit ? this.$route.params.order : this.$store.state.koji.orderScInfo.orderNo || ''
@@ -218,21 +218,25 @@
                 // });
 
                 // 2.雪健建议
+                // kojiInStorage/queryList
                 KOJI_API.KOJI_STEAM_INSTORAGE_LIST_API({
+                    kojiOrderNo: null,
                     orderNo: this.jumpFromAudit ? this.$route.params.order : this.$store.state.koji.orderScInfo.orderNo || ''
                 }).then(({ data: res }) => {
+                    console.log('res.data')
+                    console.log(res.data)
                     this.potIdNow = '';
                     this.potNoNow = '';
                     this.formHeader = {
                         ...data.data,
-                        potNo: this.potIdNow,
+                        potId: this.potIdNow,
                         kojiOrderNo: null
                     };
-
                     if (res.data.length !== 0) {
                         this.potIdNow = res.data[0].scPotId;
                         this.potNoNow = res.data[0].scPotNo;
                         this.formHeader.kojiOrderNo = res.data[0].kojiOrderNo;
+                        this.formHeader.potId = res.data[0].scPotId
                     }
 
                     // 获取页签状态
@@ -244,6 +248,8 @@
                     this.$refs.steamedInStorage.init(this.formHeader);
                     this.$refs.excRecord.init(this.formHeader, 'ZD');
                     this.$refs.textRecord.init(this.formHeader, 'koji');
+                    // 获取泡豆罐
+                    this.getScanList()
 
                 });
 
@@ -264,15 +270,16 @@
                 // this.scanList = data.data || [];
                 this.scanList = [];
                 if (data.data.length !== 0) {
+                    console.log('this.potIdNow')
+                    console.log(this.potIdNow)
+
                     data.data.forEach(item => {
                         // 是空罐或是已有的罐
-                        if (item.holderStatus === 'E' || item.holderNo === this.formHeader.kojiHouseNo) {
-                            this.scanList.push({ holderName: item.holderName, id: item.id })
+                        if (item.holderStatus === 'E' || item.id === this.potIdNow) {
+                            this.scanList.push({ holderNo: item.holderNo, holderName: item.holderName, id: item.id })
                         }
                     })
                 }
-
-
             });
         }
 
@@ -339,7 +346,7 @@
         kojiOrderNo?: string;
         textStage?: string;
         factoryName?: string;
-        potNo?: string;
+        potId?: string;
         potOrder?: string;
         steTagPot?: StatusObj;
         workShop?: string;

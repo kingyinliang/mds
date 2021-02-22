@@ -3,7 +3,7 @@
  * @Anthor: Telliex
  * @Date: 2021-01-15 23:35:23
  * @LastEditors: Telliex
- * @LastEditTime: 2021-02-01 14:44:57
+ * @LastEditTime: 2021-02-22 18:08:49
 -->
 <template>
     <div>
@@ -145,7 +145,7 @@
                                     </el-select>
                                 </el-form-item>
                                 <el-form-item label="打入罐号：" class="star">
-                                    <el-select v-model="convertDataGroup.targetHolderId" placeholder="请选择" clearable style="width: 100%;" :disabled="!convertDisabled">
+                                    <el-select v-model="convertDataGroup.targetHolderId" placeholder="请选择" filterable clearable style="width: 100%;" :disabled="!convertDisabled">
                                         <el-option
                                             v-for="item in convertHolderIdOptions"
                                             :key="item.id"
@@ -207,7 +207,7 @@
                                     </el-select>
                                 </el-form-item>
                                 <el-form-item label="挪入罐号：" class="star">
-                                    <el-select v-model="moveDataGroup.targetHolderId" placeholder="请选择" clearable style="width: 100%;" :disabled="!moveDisabled">
+                                    <el-select v-model="moveDataGroup.targetHolderId" filterable placeholder="请选择" clearable style="width: 100%;" :disabled="!moveDisabled">
                                         <el-option
                                             v-for="item in moveHolderIdOptions"
                                             :key="item.id"
@@ -397,11 +397,12 @@
 
             // 获取打入罐容器号
             getConvertHolderIdOptions(val) {
-                this.moveHolderIdOptions = []
+                this.convertHolderIdOptions = []
                 return new Promise((resolve) => {
                         COMMON_API.HOLDER_DROPDOWN_BY_STATUS_API({
                         holderType: [val],
-                        holderStatus: ['E', 'U']
+                        // holderStatus: ['E', 'U']
+                        holderStatus: ['E', 'S', 'O']
                     }).then(({ data }) => {
                         console.log('打入罐容器号')
                         console.log(data.data)
@@ -572,9 +573,9 @@
                 this.currentFermentorStatusName = item.fermentorStatusName //
 
                 // radio 状态
-                this.modifyDisabled = (['S', 'O', 'T', 'A', 'U'].includes(item.fermentorStatus))
-                this.convertDisabled = (['S', 'A', 'T', 'U'].includes(item.fermentorStatus))
-                this.moveDisabled = (['S', 'F'].includes(item.fermentorStatus))
+                this.modifyDisabled = ['S', 'O', 'T', 'A', 'U'].includes(item.fermentorStatus)
+                this.convertDisabled = ['O', 'A', 'T', 'U'].includes(item.fermentorStatus)
+                this.moveDisabled = ['S', 'F'].includes(item.fermentorStatus)
                 if (this.modifyDisabled) {
                     this.currentTab = '调整' // 当前初始 tab
                     this.tabType = 'modify'

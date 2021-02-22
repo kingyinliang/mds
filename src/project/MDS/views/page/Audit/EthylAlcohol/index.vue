@@ -127,7 +127,7 @@
 </template>
 
 <script>
-import { getFactory, dateFormat } from '@/net/validate';
+import { getFactory } from '@/net/validate';
 import { AUDIT_API, INVENTORY_API } from '@/api/api';
 export default {
     name: 'Index',
@@ -140,7 +140,7 @@ export default {
             formHeader: {
                 factory: '',
                 workShop: '',
-                productDate: dateFormat(new Date(), 'yyyy-MM-dd hh:mm:ss'),
+                // productDate: dateFormat(new Date(), 'yyyy-MM-dd hh:mm:ss'),
                 pstngDate: new Date().getFullYear().toString() + '-' + (new Date().getMonth() + 1 >= 10 ? (new Date().getMonth() + 1).toString() : '0' + (new Date().getMonth() + 1)) + '-' + (new Date().getDate() >= 10 ? new Date().getDate().toString() : '0' + new Date().getDate()),
                 headerTxt: '',
                 orderNo: '',
@@ -181,10 +181,13 @@ export default {
                 this.costList = data.info;
             });
         },
-        getDataList() {
+        getDataList(st) {
             if (!this.formHeader.factory) {
               this.$message.error('请选择工厂')
               return
+            }
+            if (st) {
+                this.formHeader.currPage = 1;
             }
             // if ((this.formHeader.productDate === '' || !this.formHeader.productDate) && this.formHeader.orderNo === '') {
             //   this.$message.error('生产日期或订单请选填一项')
@@ -247,34 +250,30 @@ export default {
             if (this.Text.length <= 0) {
                 this.$warningToast('请填写不通过原因');
             } else {
-                this.$refs.pstngDate.validate(valid => {
-                    if (valid) {
-                        this.$confirm('确认审核不通过, 是否继续?', '审核不通过', {
-                            confirmButtonText: '确定',
-                            cancelButtonText: '取消',
-                            type: 'warning'
-                        }).then(() => {
-                            this.multipleSelection.forEach(item => {
-                                item.memo = this.Text;
-                                item.pstngDate = this.formHeader.pstngDate;
+                this.$confirm('确认审核不通过, 是否继续?', '审核不通过', {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    type: 'warning'
+                }).then(() => {
+                    this.multipleSelection.forEach(item => {
+                        item.memo = this.Text;
+                    });
+                    this.$http(`${AUDIT_API.AUDIT_ETHYLALCOHOL_PASS_API}`, 'POST', this.multipleSelection).then(({ data }) => {
+                        if (data.code === 0) {
+                            this.visible = false;
+                            this.$notify({
+                                title: '成功',
+                                message: '操作成功',
+                                type: 'success'
                             });
-                            this.$http(`${AUDIT_API.AUDIT_ETHYLALCOHOL_PASS_API}`, 'POST', this.multipleSelection).then(({ data }) => {
-                                if (data.code === 0) {
-                                    this.visible = false;
-                                    this.$notify({
-                                        title: '成功',
-                                        message: '操作成功',
-                                        type: 'success'
-                                    });
-                                    this.getDataList();
-                                } else {
-                                    this.$errorToast(data.msg);
-                                }
-                            });
-                        }).catch(() => {
-                            // this.$infoToast('已取消删除');
-                        });
-                    }
+                            this.getDataList();
+                            this.Text = '';
+                        } else {
+                            this.$errorToast(data.msg);
+                        }
+                    });
+                }).catch(() => {
+                    // this.$infoToast('已取消删除');
                 });
             }
         },
@@ -282,38 +281,38 @@ export default {
         subAutio() {
             if (this.multipleSelection.length <= 0) {
                 this.$warningToast('请选择订单');
-            } else {
-                this.$refs.pstngDate.validate(valid => {
-                    if (valid) {
-                        this.$confirm('确认审核通过, 是否继续?', '审核通过', {
-                            confirmButtonText: '确定',
-                            cancelButtonText: '取消',
-                            type: 'warning'
-                        }).then(() => {
-                            this.multipleSelection.forEach(item => {
-                                item.memo = '审核通过';
-                                item.pstngDate = this.formHeader.pstngDate;
-                                item.headerTxt = this.formHeader.headerTxt;
-                            });
-                            this.$http(`${AUDIT_API.AUDIT_ETHYLALCOHOL_CHECKED_API}`, 'POST', this.multipleSelection).then(({ data }) => {
-                                if (data.code === 0) {
-                                    this.$notify({
-                                        title: '成功',
-                                        message: '操作成功',
-                                        type: 'success'
-                                    });
-                                    this.getDataList();
-                                } else {
-                                    this.$errorToast(data.msg);
-                                    this.getDataList();
-                                }
-                            });
-                        }).catch(() => {
-                            // this.$infoToast('已取消删除');
+                return false;
+            }
+            if (!this.formHeader.pstngDate) {
+                this.$warningToast('请选择记账日期');
+                return false;
+            }
+            this.$confirm('确认审核通过, 是否继续?', '审核通过', {
+                confirmButtonText: '确定',
+                cancelButtonText: '取消',
+                type: 'warning'
+            }).then(() => {
+                this.multipleSelection.forEach(item => {
+                    item.memo = '审核通过';
+                    item.pstngDate = this.formHeader.pstngDate;
+                    item.headerTxt = this.formHeader.headerTxt;
+                });
+                this.$http(`${AUDIT_API.AUDIT_ETHYLALCOHOL_CHECKED_API}`, 'POST', this.multipleSelection).then(({ data }) => {
+                    if (data.code === 0) {
+                        this.$notify({
+                            title: '成功',
+                            message: '操作成功',
+                            type: 'success'
                         });
+                        this.getDataList();
+                    } else {
+                        this.$errorToast(data.msg);
+                        this.getDataList();
                     }
                 });
-            }
+            }).catch(() => {
+                // this.$infoToast('已取消删除');
+            });
         },
         // 审核通过禁用
         checkboxT(row) {

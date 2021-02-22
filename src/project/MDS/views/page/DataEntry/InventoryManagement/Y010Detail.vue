@@ -348,7 +348,7 @@ export default class Index extends Vue {
         this.formData = JSON.parse(JSON.stringify(this.$store.state.common.YO10Inventory));
         this.getDataList();
         this.getHistoryList();
-        this.getAdjustList();
+        this.getAdjustList(true);
     }
 
     // 当前库存量信息
@@ -449,11 +449,12 @@ export default class Index extends Vue {
     }
 
     // 调整信息记录
-    getAdjustList() {
+    getAdjustList(st?) {
         this.adjustList = [];
         this.dataTotalCount = 0;
-        this.dataCurrPage = 1;
-        this.dataPageSize = 10;
+        if (st) {
+            this.dataCurrPage = 1;
+        }
         Vue.prototype.$http(`${INVENTORY_API.Y010_INVENTORY_JUST_LIST_API}`, `POST`, {
             holderId: this.formData.holderId,
             currPage: this.dataCurrPage,

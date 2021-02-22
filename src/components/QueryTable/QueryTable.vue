@@ -27,14 +27,20 @@
                                 </el-radio>
                             </el-radio-group>
                         </el-form-item>
-                        <el-form-item v-if="item.type === 'date-interval'" :key="item.prop" class="dateinput" :label="`${item.label}：` || ''" :prop="item.prop" :rules="item.rule" :label-width="`${item.labelWidth ? item.labelWidth : 70}px`">
-                            <el-row>
-                                <el-col :span="12">
-                                    <el-date-picker :ref="item.prop" v-model="queryForm[item.prop]" :type="item.dataType ? item.dataType : 'date'" placeholder="选择日期" :value-format="item.valueFormat ? item.valueFormat : 'yyyy-MM-dd'" style="width: 140px;" />
-                                    <span style="margin-left: 5px;">-</span>
+                        <el-form-item v-if="item.type === 'date-interval'" :key="item.prop" class="dateinput" :label="`${item.label}：` || ''" :rules="item.rule" :label-width="`${item.labelWidth ? item.labelWidth : 70}px`">
+                            <el-row :style="`width: ${item.width ? item.width : 305}px;`">
+                                <el-col :span="11">
+                                    <el-form-item :prop="item.prop">
+                                        <el-date-picker :ref="item.prop" v-model="queryForm[item.prop]" :type="item.dataType ? item.dataType : 'date'" placeholder="开始日期" :value-format="item.valueFormat ? item.valueFormat : 'yyyy-MM-dd'" :style="`width: ${item.width ? (item.width/24)*11 : 140}px;`" />
+                                    </el-form-item>
                                 </el-col>
-                                <el-col :span="12">
-                                    <el-date-picker :ref="item.propTwo" v-model="queryForm[item.propTwo]" :type="item.dataType ? item.dataType : 'date'" placeholder="选择日期" :value-format="item.valueFormat ? item.valueFormat : 'yyyy-MM-dd'" style="width: 140px;" />
+                                <el-col class="line" :span="2" style="text-align: center;">
+                                    -
+                                </el-col>
+                                <el-col :span="11">
+                                    <el-form-item :prop="item.propTwo">
+                                        <el-date-picker :ref="item.propTwo" v-model="queryForm[item.propTwo]" :type="item.dataType ? item.dataType : 'date'" placeholder="结束日期" :value-format="item.valueFormat ? item.valueFormat : 'yyyy-MM-dd'" :style="`width: ${item.width ? (item.width/24)*11 : 140}px;`" />
+                                    </el-form-item>
                                 </el-col>
                             </el-row>
                         </el-form-item>
@@ -170,7 +176,7 @@
             </el-table>
             <slot name="showTableOther" />
             <slot v-if="!showTable" name="card-main" />
-            <el-row v-if="showPage === true">
+            <el-row v-if="showPage === true && tableData.length!==0">
                 <el-pagination :current-page="queryForm[currpageConfig]" :page-sizes="[10, 20, 50]" :page-size="queryForm[pagesizeConfig] " layout="total, sizes, prev, pager, next, jumper" :total="queryForm.totalCount" @size-change="handleSizeChange" @current-change="handleCurrentChange" />
             </el-row>
         </div>
@@ -178,7 +184,7 @@
 </template>
 
 <script>
-    import { exportFileForm } from 'utils/utils.ts';
+    import { exportFileForm, exportFileFor2Excel } from 'utils/utils.ts';
     import { creatGetPath } from 'utils/utils.ts';
     export default {
         name: 'QueryTable',
@@ -199,6 +205,10 @@
             factoryType: {
                 type: Number,
                 default: 0
+            },
+            queryTabkeType: { // querytable 类型
+                type: String,
+                default: ''
             },
             type: {
                 type: String,
@@ -547,6 +557,11 @@
                     } else if (this.factoryType === 1) {
                         this.tableData = data.data.records;
                         this.queryForm.totalCount = data.data.total;
+                    } else if (this.queryTabkeType === 'report') { // 类型：报表
+                        this.tableData = data.data;
+                        this.queryForm[this.currpageConfig] = 1;
+                        this.queryForm[this.pagesizeConfig] = 10;
+                        this.queryForm.totalCount = data.data.length;
                     }
                     this.$emit('get-data-success', data, st);
                 });
@@ -565,6 +580,15 @@
                     this.$warningToast('无导出权限');
                     return false;
                 }
+
+                if (this.queryTabkeType === 'report') { // 类型：报表
+                    const tableDataTemp = JSON.parse(JSON.stringify(this.tableData))
+                    this.tableData[0].totalData[this.column[0].prop] = '合计';
+                    tableDataTemp.push(this.tableData[0].totalData);
+                    exportFileFor2Excel(this.column, tableDataTemp, this.exportOption.text)
+                    return
+                }
+
                 exportFileForm(`${this.exportOption.exportInterface}`, this.exportOption.text, this);
             },
             // 显示隐藏动画

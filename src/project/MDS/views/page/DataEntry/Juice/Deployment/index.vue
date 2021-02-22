@@ -171,7 +171,7 @@
                         <el-input v-else v-model="scope.row.batch" maxlength="10" :disabled="SplitStatuss(scope.row)" size="small" />
                     </template>
                 </el-table-column>
-                <el-table-column label="Y010库存" prop="currentQuantity" width="100" />
+                <!-- <el-table-column label="Y010库存" prop="currentQuantity" width="100" /> -->
                 <el-table-column label="备注" :show-overflow-tooltip="true">
                     <template slot-scope="scope">
                         <el-input v-model="scope.row.remark" :disabled="!(lineStatus !== '已提交' && lineStatus !== '审核通过' && isRedact !== false)" size="small" />
@@ -427,7 +427,7 @@ export default {
         CheckMessage() {
             let tys = 0;
             for (const items of this.ItemList) {
-                if (items.holderId !== null) {
+                if (items.holderId !== null && items.holderType !== null && items.holderType === '013') {
                     if (this.thrwHolderList.filter(item => item.holderId === items.holderId && items.batch === item.batch).length <= 0) {
                         tys = 1;
                     }

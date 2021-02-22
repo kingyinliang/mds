@@ -10,7 +10,7 @@
                 <el-form-item label="库位：" @change="changeSearch">
                     <el-select v-model="plantList.location" class="w200" clearable placeholder="请选择" :disabled="plantList.factoryIDValue === ''">
                         <el-option label="请选择" value="" />
-                        <el-option v-for="sole in locationList" :key="sole" :label="sole" :value="sole" />
+                        <el-option v-for="sole in locationList" :key="sole" :label="sole.location" :value="sole.location" />
                     </el-select>
                 </el-form-item>
                 <el-form-item style="float: right;">
@@ -178,7 +178,7 @@
                 </el-button>
             </div>
         </el-dialog>
-        <loaned-personnel v-if="loanedPersonnelStatus" ref="loanedPersonnel" :org-tree="OrgTree" :arr-list="arrList" @changeUser="changeUser" />
+        <loaned-personnel v-if="loanedPersonnelStatus" ref="loanedPersonnel" :title="'领用人'" :org-tree="OrgTree" :arr-list="arrList" @changeUser="changeUser" />
     </div>
 </template>
 
@@ -193,11 +193,11 @@ export default {
     data() {
         return {
             factoryList: [],
-            locationList: ['7104'],
+            locationList: [],
             plantList: {
                 factoryIDValue: '',
                 factoryName: '',
-                location: '7104',
+                location: '',
                 workshopIDValue: '',
                 workshopName: '',
                 holderId: '',
@@ -234,6 +234,11 @@ export default {
             }
         }
     },
+    watch: {
+        'plantList.factoryIDValue'(n) {
+            this.getLocation(n);
+        }
+    },
     mounted() {
         this.getFactory();
     },
@@ -243,6 +248,19 @@ export default {
             this.$http(`${BASICDATA_API.FINDORG_API}?code=factory`, `POST`, {}, false, false, false).then(({ data }) => {
                 this.factoryList = data.typeList;
                 this.plantList.factoryIDValue = this.factoryList[0]['deptId'];
+            });
+        },
+        // 获取库位
+        getLocation(n) {
+            this.$http(`${BASICDATA_API.LOCATION_LIST_API}`, `POST`, {
+                factory: n
+            }, false, false, false).then(({ data }) => {
+                this.locationList = data.info;
+                if (this.locationList.length !== 0) {
+                    this.plantList.location = this.locationList[0]['location'];
+                } else {
+                    this.plantList.location = '';
+                }
             });
         },
         // 获取列表
@@ -395,6 +413,7 @@ export default {
         },
         changeSearch() {
             this.dataList = [];
+            this.locationList = [];
             this.receiveList = [];
         },
         // 去详请
