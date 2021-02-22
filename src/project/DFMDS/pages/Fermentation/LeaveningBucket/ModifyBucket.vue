@@ -3,7 +3,7 @@
  * @Anthor: Telliex
  * @Date: 2021-01-15 23:35:23
  * @LastEditors: Telliex
- * @LastEditTime: 2021-02-01 14:44:57
+ * @LastEditTime: 2021-02-22 14:04:59
 -->
 <template>
     <div>
@@ -207,7 +207,7 @@
                                     </el-select>
                                 </el-form-item>
                                 <el-form-item label="挪入罐号：" class="star">
-                                    <el-select v-model="moveDataGroup.targetHolderId" placeholder="请选择" clearable style="width: 100%;" :disabled="!moveDisabled">
+                                    <el-select v-model="moveDataGroup.targetHolderId" filterable placeholder="请选择" clearable style="width: 100%;" :disabled="!moveDisabled">
                                         <el-option
                                             v-for="item in moveHolderIdOptions"
                                             :key="item.id"

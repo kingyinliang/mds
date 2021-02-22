@@ -3,7 +3,7 @@
  * @Anthor: Telliex
  * @Date: 2021-01-15 23:35:23
  * @LastEditors: Telliex
- * @LastEditTime: 2021-02-02 12:14:26
+ * @LastEditTime: 2021-02-22 16:14:45
 -->
 <template>
     <div class="header_main">
@@ -72,7 +72,7 @@
                             label="库存数量："
                         >
                             <el-input
-                                v-model="LeaveningformData.currentStock"
+                                v-model="LeaveningformData.orderAmount"
                                 placeholder=""
                                 style="width: 180px;"
                                 :disabled="true"
@@ -348,16 +348,22 @@ export default class LeaveningBucketDetail extends Vue {
     retrieveDetail() {
         console.log('取值')
         console.log(this.$store.state.fer.fermentBucketDetail)
-        this.LeaveningformData = this.$store.state.fer.fermentBucketDetail
-        this.$set(this.LeaveningformData, 'material', `${this.LeaveningformData.materialName} ${this.LeaveningformData.materialCode}`)
-        this.$set(this.LeaveningformData, 'freezeFlagnName', this.LeaveningformData.freezeFlag === 'Y' ? '已成熟' : '未成熟')
-        this.currentWorkShopName = this.LeaveningformData.workShopName as string
+        // this.LeaveningformData = this.$store.state.fer.fermentBucketDetail
+        // this.$set(this.LeaveningformData, 'material', `${this.LeaveningformData.materialName} ${this.LeaveningformData.materialCode}`)
+        // this.$set(this.LeaveningformData, 'freezeFlagnName', this.LeaveningformData.freezeFlag === 'Y' ? '已成熟' : '未成熟')
+        // this.currentWorkShopName = this.LeaveningformData.workShopName as string
 
         FER_API.FER_FERMENTOR_STOCK_DETAIL_QUERY_API({
-            holderId: '96'
+            holderId: this.$store.state.fer.fermentBucketDetail.holderId
             }).then(({ data }) => {
                 console.log('详细数据')
                 console.log(data)
+
+                this.LeaveningformData = data.data
+                this.$set(this.LeaveningformData, 'material', `${this.LeaveningformData.materialName} ${this.LeaveningformData.materialCode}`)
+                this.$set(this.LeaveningformData, 'freezeFlagnName', this.LeaveningformData.freezeFlag === 'Y' ? '已成熟' : '未成熟')
+                this.currentWorkShopName = this.$store.state.fer.fermentBucketDetail.workShopName as string
+                this.$set(this.LeaveningformData, 'workShopName', this.currentWorkShopName)
                  // 投料信息
                 this.currentInStockDataGroup = [];
                 // 领用信息

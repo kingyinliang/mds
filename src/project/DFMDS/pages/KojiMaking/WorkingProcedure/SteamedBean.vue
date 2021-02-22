@@ -220,9 +220,11 @@
                 // 2.雪健建议
                 // kojiInStorage/queryList
                 KOJI_API.KOJI_STEAM_INSTORAGE_LIST_API({
-                    kojiOrderNo: '',
+                    kojiOrderNo: null,
                     orderNo: this.jumpFromAudit ? this.$route.params.order : this.$store.state.koji.orderScInfo.orderNo || ''
                 }).then(({ data: res }) => {
+                    console.log('res.data')
+                    console.log(res.data)
                     this.potIdNow = '';
                     this.potNoNow = '';
                     this.formHeader = {
