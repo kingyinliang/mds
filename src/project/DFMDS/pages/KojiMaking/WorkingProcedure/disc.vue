@@ -145,6 +145,8 @@
 
         @Watch('formHeader.fermentPotNo', { immediate: true, deep: true })
         onChangeValue(newVal: number| string) {
+            console.log('newVal')
+            console.log(newVal)
             if (newVal) {
                 const obj = this.potNoList.find(item => item.optValue === newVal);
                 // console.log(newVal, this.potNoList, obj, '===============')
@@ -198,6 +200,7 @@
         }
 
         // 获取溶解罐下拉选项
+        // /sysHolder/byManyStatus/dropDown
         getFermentationHolder() {
             COMMON_API.HOLDER_DROPDOWN_BY_STATUS_API({
                 factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
@@ -217,6 +220,8 @@
                         }
                         this.potNoList.push({ optValue: item.holderNo, optId: item.id })
                     })
+                    console.log('this.headerBase[5].option.list')
+                    console.log(this.headerBase[5].option.list)
 
                 }
             })
@@ -236,6 +241,8 @@
                 id: this.jumpFromAudit ? this.$route.params.order : this.$store.state.koji.orderKojiInfo.id || ''
             }).then(({ data }) => {
                 this.formHeader = data.data
+                console.log('this.formHeader')
+                console.log(this.formHeader)
                 this.getHouseTag();
 
                 this.$set(this.formHeader, 'factoryName', JSON.parse(sessionStorage.getItem('factory') || '{}').deptShort)
