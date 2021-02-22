@@ -44,7 +44,7 @@
                 </el-table-column>
             </el-table>
         </mds-card>
-        <mds-card :title="'鲜香泡豆'" :name="'list2'">
+        <mds-card v-if="formHeader.mixMaterialName === '调后鲜香泡豆黄豆酱'" :title="'鲜香泡豆'" :name="'list2'">
             <template slot="titleBtn">
                 <div style="float: right;">
                     <el-button type="primary" :disabled="!isRedact" size="small" @click="addList2()">
@@ -119,7 +119,7 @@
                 </el-table-column>
                 <el-table-column label="批次" prop="batch" min-width="120" :show-overflow-tooltip="true">
                     <template slot-scope="scope">
-                        <el-input v-model="scope.row.batch" :disabled="!(isRedact)" size="small" placeholder="请输入" />
+                        <el-input v-model="scope.row.batch" maxlength="10" :disabled="!(isRedact)" size="small" placeholder="请输入" />
                     </template>
                 </el-table-column>
                 <el-table-column label="领用数量" prop="receiveMaterial" min-width="120" :show-overflow-tooltip="true">
@@ -184,12 +184,14 @@
         table2: LisObj[] = []
         table3: LisObj[] = []
         table4 = []
+        formHeader = {}
 
         spanArr: number[] = []
 
         holderArr: PotObj[] = []
 
         init(formHeader) {
+            this.formHeader = formHeader
             this.getSelect()
             this.getList(formHeader)
         }
