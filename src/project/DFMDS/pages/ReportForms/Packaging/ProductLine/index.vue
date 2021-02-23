@@ -10,10 +10,12 @@
             :query-form-data="queryFormData"
             :list-interface="listInterface"
             :get-summaries="getSummaries"
-            :custom-data="true"
-            :factory-type="1"
-            :export-excel="true"
             :is-show-summary="true"
+            :custom-data="true"
+            :query-tabke-type="'report'"
+            :export-excel="true"
+            :rules="queryTableFormRules"
+            :export-option="exportOption"
             @get-data-success="setData"
         />
     </div>
@@ -27,88 +29,95 @@
     @Component({
         components: {
         },
-        name: 'OEEReport'
+        name: 'ProductLineOEEReport'
     })
-    export default class OEEReport extends Vue {
+    export default class ProductLineOEEReport extends Vue {
+        $refs: {
+            queryTable: HTMLFormElement;
+        };
+
+        // 查询必填栏位校验
+        queryTableFormRules = [
+            {
+                prop: 'workShop',
+                text: '请选择生产车间'
+            }
+        ]
+
+
         //表格数据
         column = [
             {
-                prop: 'workShopName',
+                prop: 'productLineName',
                 label: '生产产线',
                 minWidth: '120'
             },
             {
-                prop: 'holderTypeName',
+                prop: 'materialCode',
                 label: '物料编码',
                 minWidth: '120'
             },
             {
-                prop: 'holderNo',
+                prop: 'materialName',
                 label: '物料名称',
-                width: '80'
+                width: '120'
             },
             {
-                prop: 'holderNo',
+                prop: 'productDate',
                 label: '日/月/季',
-                width: '80'
+                width: '100'
             },
             {
-                prop: 'holderNo',
+                prop: 'timeCropRatio',
                 label: '时间嫁动率',
-                width: '220'
+                width: '100'
             },
             {
-                prop: 'holderNo',
+                prop: 'performCropRatio',
                 label: '性能嫁动率',
                 width: '100'
             },
             {
-                prop: 'holderNo',
+                prop: 'googRatio',
                 label: '良品率',
-                width: '140'
-            },
-            {
-                prop: 'holderNo',
-                label: 'OEE',
-                width: '140'
-            },
-            {
-                prop: 'holderNo',
-                label: '未达成原因',
                 width: '100'
+            },
+            {
+                prop: 'theOEERatio',
+                label: 'OEE',
+                width: '100'
+            },
+            {
+                prop: 'notReach',
+                label: '未达成原因',
+                width: '200'
             }
         ];
 
-        $refs: {
-            queryTable: HTMLFormElement;
-        };
 
         // 查询表头
         queryFormData = [
             {
                 type: 'select',
                 label: '报表类型',
-                prop: 'workShop',
+                prop: 'formType',
                 defaultValue: '',
                 labelWidth: '80',
                 defaultOptionsList: [
-                    { value: '', label: '季' },
-                    { value: '', label: '月' },
-                    { value: '', label: '日' }
+                    { value: 'quarter', label: '季' },
+                    { value: 'month:', label: '月' },
+                    { value: 'day', label: '日' }
                 ],
-                width: '80',
-                resVal: {
-                    resData: 'data',
-                    label: ['deptName'],
-                    value: 'id'
-                }
+                width: '100'
             },
             {
                 type: 'select',
                 label: '生产车间',
                 prop: 'workShop',
                 labelWidth: '100',
+                width: '150',
                 defaultValue: '',
+                rule: [{ required: true, message: '请输入生产车间', trigger: 'blur' }],
                 defaultOptionsFn: () => {
                     return COMMON_API.ORG_QUERY_WORKSHOP_API({
                         factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
@@ -120,20 +129,22 @@
                     resData: 'data',
                     label: ['deptName'],
                     value: 'id'
-                }
+                },
+                linkageProp: ['productLine']
             },
             {
                 type: 'select',
                 label: '生产产线',
                 prop: 'productLine',
-                labelWidth: '100',
+                defaultValue: '',
+                labelWidth: '80',
+                width: '200',
                 optionsFn: val => {
                     return COMMON_API.ORG_QUERY_CHILDREN_API({
                         parentId: val || '',
                         deptType: 'PRODUCT_LINE'
                     })
                 },
-                defaultValue: '',
                 resVal: {
                     resData: 'data',
                     label: ['deptName'],
@@ -143,19 +154,20 @@
             {
                 type: 'select',
                 label: '生产物料',
-                prop: 'productLine',
-                labelWidth: '100',
-                optionsFn: val => {
-                    return COMMON_API.ORG_QUERY_CHILDREN_API({
-                        parentId: val || '',
-                        deptType: 'PRODUCT_LINE'
+                prop: 'materialCode',
+                defaultValue: '',
+                labelWidth: '80',
+                width: '160',
+                defaultOptionsFn: () => {
+                    return REPORTS_API.REPORT_PACKAGING_OEE_MATERIAL_QUERY_API({
+                        workShop: '',
+                        productLine: ''
                     })
                 },
-                defaultValue: '',
                 resVal: {
                     resData: 'data',
-                    label: ['deptName'],
-                    value: 'id'
+                    label: ['materialName', 'materialCode'],
+                    value: 'materialCode'
                 }
             },
             {
@@ -163,25 +175,32 @@
                 label: '年度',
                 defaultValue: '',
                 labelWidth: '60',
+                width: '100',
                 dataType: 'year',
-                prop: 'oneorderProductDate'
+                prop: 'year'
             },
             {
                 type: 'date-interval',
                 label: '生产日期',
                 defaultValue: '',
                 labelWidth: '100',
-                rule: [{ required: true, message: '请输入生产日期', trigger: 'blur' }],
-                prop: 'oneorderProductDate',
-                propTwo: 'twoorderProductDate'
+                width: '305',
+                prop: 'startDate',
+                propTwo: 'endDate'
             }
         ];
 
         // 查询请求
         listInterface = params => {
             params.factory = JSON.parse(sessionStorage.getItem('factory') || '{}').id;
-            return REPORTS_API.REPORT_PACKAGING_OEE_API(params);
+            return REPORTS_API.REPORT_PACKAGING_PRODUCTLINE_OEE_QUERY_API(params);
         };
+
+        exportOption= {
+            exportInterface: '',
+            auth: '',
+            text: '产线OEE报表'
+        }
 
         /**
          * @description: data 表单 合计
@@ -195,34 +214,27 @@
         getSummaries = param => {
             const { columns, data } = param;
             const sums: string[] = []
-            console.log('表单合计param')
-            console.log(param)
-            columns.forEach((column, index) => {
-            if (index === 0) {
-                sums[index] = '合计';
-                return;
+            const target = data[0]
+            if (target) {
+                columns.forEach((column, index) => {
+                    if (Object.prototype.hasOwnProperty.call(target.totalData, column.property)) {
+                        sums[index] = target.totalData[column.property]
+                    } else {
+                        sums[index] = ''
+                    }
+                });
+                sums[0] = '合计';
             }
-            const values = data.map(item => Number(item[column.property]));
-            if (!values.every(value => isNaN(value))) {
-                sums[index] = values.reduce((prev, curr) => {
-                const value = Number(curr);
-                if (!isNaN(value)) {
-                    return prev + curr;
-                }
-                    return prev;
-
-                }, 0);
-                sums[index] += ' 元';
-            } else {
-                sums[index] = 'N/A';
-            }
-            });
             return sums
         };
 
         // 设置数据
         setData(data) {
+            console.log('查找回传结果');
             console.log(data);
+            if (!data.data) {
+                this.$infoToast('暂无任何内容');
+            }
         }
 
     }

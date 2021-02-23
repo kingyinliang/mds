@@ -9,8 +9,8 @@
             query-auth=""
             :query-form-data="queryFormData"
             :list-interface="listInterface"
-            :is-show-summary="true"
             :get-summaries="getSummaries"
+            :is-show-summary="true"
             :custom-data="true"
             :query-tabke-type="'report'"
             :export-excel="true"
@@ -253,7 +253,7 @@
         exportOption= {
             exportInterface: '',
             auth: '',
-            text: 'OEE 报表'
+            text: 'OEE报表'
         }
 
         /**

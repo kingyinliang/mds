@@ -3,7 +3,7 @@
  * @Anthor: Telliex
  * @Date: 2021-01-27 15:06:29
  * @LastEditors: Telliex
- * @LastEditTime: 2021-02-03 12:06:07
+ * @LastEditTime: 2021-02-23 17:03:47
  */
 import httpProxy from 'utils/net/httpProxy';
 
@@ -15,7 +15,11 @@ const REPORTS_API = {
     /**
      * @property {string} REPORT_PACKAGING_OEE_MATERIAL_QUERY_API 包装车间/OEE 报表 - get material
      */
-    REPORT_PACKAGING_OEE_MATERIAL_QUERY_API: params => httpProxy('/pkgReportForm/material/query', 'POST', params, 'REPORT')
+    REPORT_PACKAGING_OEE_MATERIAL_QUERY_API: params => httpProxy('/pkgReportForm/material/query', 'POST', params, 'REPORT'),
+    /**
+     * @property {string} REPORT_PACKAGING_PRODUCTLINE_OEE_QUERY_API 包装车间/产线 OEE 报表
+     */
+    REPORT_PACKAGING_PRODUCTLINE_OEE_QUERY_API: params => httpProxy('/pkgReportForm/productLineOee/query', 'POST', params, 'REPORT')
 };
 
 export default REPORTS_API;
