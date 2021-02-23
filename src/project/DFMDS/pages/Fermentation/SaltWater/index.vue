@@ -23,14 +23,14 @@
                             <div v-for="(item) in targetQueryTableList" :key="item.id" class="potbox">
                                 <div class="header">
                                     <span>{{ item.holderName + '-' + item.fermentorStatusName }}</span>
-                                    <el-button type="primary" size="mini" style="padding: 7px 6px;" @click="toDetailPage(item)">
+                                    <el-button :type="item.ferBrineIssue.checkStatus === 'R' ? 'danger' : 'primary'" size="mini" style="padding: 7px 6px;" @click="toDetailPage(item)">
                                         盐水发料
                                     </el-button>
                                 </div>
                                 <!-- <div class="con">
                                     <img src="../../../assets/img/ferPot.png" alt="">
                                 </div> -->
-                                <!-- 盐水未发 N -->
+                                <!-- 盐水未发 N 盐水发料中 N1 -->
                                 <img v-if="item.brineFlag !== 'N'" src="../../../assets/img/issuing.png" alt="">
                                 <img v-if="item.brineFlag === 'N'" src="../../../assets/img/notIssue.png" alt="">
                                 <div class="bucket-image con">

@@ -28,7 +28,7 @@
                     <el-table-column prop="realName" label="人员姓名" width="100" />
                     <el-table-column prop="deptName" label="所属部门" width="180" :show-overflow-tooltip="true" />
                     <el-table-column prop="sex" label="性别" :show-overflow-tooltip="true" width="60" :formatter="sexFormatter" />
-                    <el-table-column prop="post" label="职务" :show-overflow-tooltip="true" width="160" />
+                    <el-table-column prop="postName" label="职务" :show-overflow-tooltip="true" width="160" />
                     <el-table-column prop="email" label="邮箱" :show-overflow-tooltip="true" width="260" />
                     <el-table-column prop="phone" label="手机号" :show-overflow-tooltip="true" width="120" />
                     <el-table-column prop="created" label="创建日期" width="180" />

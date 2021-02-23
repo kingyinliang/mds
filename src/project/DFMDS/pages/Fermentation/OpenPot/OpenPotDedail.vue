@@ -105,7 +105,11 @@
                                 <el-input v-model="scope.row.description" :disabled="!isRedact || scope.row.mixSauceStatus === 'M'" size="mini" style="width: 100%;" />
                             </template>
                         </el-table-column>
-                        <el-table-column label="订单类型" prop="orderTypeName" min-width="100" :show-overflow-tooltip="true" />
+                        <el-table-column label="订单类型" prop="orderTypeName" min-width="100" :show-overflow-tooltip="true">
+                            <template slot-scope="scope">
+                                {{ scope.row.orderType + scope.row.orderTypeName }}
+                            </template>
+                        </el-table-column>
                         <el-table-column label="发酵天数/天" prop="fermentDays" min-width="120" :show-overflow-tooltip="true" />
                         <el-table-column label="物料" prop="productMaterialName" min-width="180" :show-overflow-tooltip="true">
                             <template slot-scope="scope">
@@ -149,7 +153,7 @@
                     <el-table-column label="添加物料" prop="openFlagName" min-width="50" :show-overflow-tooltip="true">
                         <template slot-scope="scope">
                             <el-select v-model="scope.row.addMaterialCode" :disabled="!isRedact || mixSauceStatus === 'M'" size="small" placeholder="请选择" filterable clearable style="width: 100%;" @change="getName(scope.row)">
-                                <el-option v-for="(item, index) in deployMaterialSelect" :key="index" :label="item.dictValue" :value="item.dictCode" />
+                                <el-option v-for="(item, index) in deployMaterialSelect" :key="index" :label="item.dictValue + ' ' + item.dictCode" :value="item.dictCode" />
                             </el-select>
                         </template>
                     </el-table-column>
@@ -194,7 +198,7 @@
                     <el-table-column label="添加物料" prop="addMaterialCode" min-width="150" :show-overflow-tooltip="true">
                         <template slot-scope="scope">
                             <el-select v-model="scope.row.addMaterialCode" :disabled="!isRedact || mixSauceStatus === 'M'" placeholder="请选择" size="small" filterable clearable style="width: 100%;" @change="materialChange(scope.row)">
-                                <el-option v-for="(item, index) in (holderArr.filter(it => it.holderId === scope.row.fermentorNo).length > 0 ? holderArr.filter(it => it.holderId === scope.row.fermentorNo)[0].ferInStorageList : [])" :key="index" :label="item.productMaterialName +' ' + item.productMaterialCode" :value="item.productMaterialCode" />
+                                <el-option v-for="(item, index) in (holderArr.filter(it => it.holderId === scope.row.fermentorId).length > 0 ? holderArr.filter(it => it.holderId === scope.row.fermentorId)[0].ferInStorageList : [])" :key="index" :label="item.productMaterialName +' ' + item.productMaterialCode" :value="item.productMaterialCode" />
                             </el-select>
                         </template>
                     </el-table-column>
@@ -381,7 +385,7 @@
                 const potArrArr: string[] = []
                 this.openPotListSum.forEach(item => {
                     item['workShop']? workShopArr.push(item['workShop'] + '&' + item['workShopName']) : ''// eslint-disable-line
-                    item['ferOrder']['productMaterialCode']? materialArr.push(item['ferOrder']['productMaterialCode'] + '&' + item['ferOrder']['productMaterialName']) : ''// eslint-disable-line
+                    item['productMaterialCode']? materialArr.push(item['productMaterialCode'] + '&' + item['productMaterialName']) : ''// eslint-disable-line
                     item['holderId']? potArrArr.push(item['holderId'] + '&' + item['holderName']) : ''// eslint-disable-line
                 })
                 this.workShop = [...new Set(workShopArr)]
@@ -509,7 +513,6 @@
                 id: '',
                 remark: '',
                 mixSauceNo: this.mixSauceNo,
-                fermentorId: this.fermentorId,
                 openPotNo: this.formHeader.openPotNo
             })
         }
@@ -520,7 +523,6 @@
                 id: '',
                 remark: '',
                 mixSauceNo: this.mixSauceNo,
-                fermentorId: this.fermentorId,
                 openPotNo: this.formHeader.openPotNo
             })
         }

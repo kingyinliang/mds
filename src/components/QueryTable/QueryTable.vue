@@ -98,7 +98,9 @@
                                 <div v-if="item.type === 'clickSpan'" style="color: #45c2b5; cursor: pointer;" @click="item.onclick(scope.row)">
                                     {{ scope.row[item.prop] }}
                                 </div>
-                                <el-input v-else-if="item.redact && item.type === 'input'" v-model="scope.row[item.prop]" :disabled="!scope.row.redact" placeholder="手工录入" size="small" />
+                                <el-tooltip v-else-if="item.redact && item.type === 'input'" class="item" effect="dark" :content="scope.row[item.prop]" placement="top">
+                                    <el-input v-model="scope.row[item.prop]" :disabled="!scope.row.redact" placeholder="手工录入" size="small" />
+                                </el-tooltip>
                                 <el-date-picker v-else-if="item.redact && item.type === 'date-picker'" v-model="scope.row[item.prop]" :disabled="!scope.row.redact" :type="item.dataType" placeholder="请选择" :value-format="item.valueFormat" :style="{width: item.width - 25 + 'px'}" size="small" @change="val => selectChange(scope.row, scope.$index, val)" />
                                 <el-select v-else-if="item.redact && item.type === 'select'" v-model="scope.row[item.prop]" :disabled="!scope.row.redact || (scope.row.notEditableProp ? scope.row.notEditableProp.includes(item.prop) : false)" :type="item.dataType" placeholder="请选择" size="small">
                                     <!--<el-option label="请选择" value="" />-->

@@ -60,7 +60,7 @@
                                                         color: item1.orderStatus === 'noPass' ? 'red' : item1.exportMaterial !== '' ? '#FFBF00' : '',
                                                     }"
                                                 >
-                                                    {{ item1.orderNo }}
+                                                    {{ item1.orderNo }} - {{ item1.orderStatus === 'submit' ? '已提交' : item1.orderStatus === 'checked' ? '审核通过' : item1.orderStatus === 'noPass' ? '审核不通过' : item1.orderStatus === 'saved' ? '已保存' : item1.orderStatus === '已同步' ? '未录入' : item1.orderStatus }}
                                                 </div>
                                             </el-option>
                                         </el-select>

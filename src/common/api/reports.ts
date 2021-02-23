@@ -15,7 +15,11 @@ const REPORTS_API = {
     /**
      * @property {string} REPORT_PACKAGING_OEE_MATERIAL_QUERY_API 包装车间/OEE 报表 - get material
      */
-    REPORT_PACKAGING_OEE_MATERIAL_QUERY_API: params => httpProxy('/pkgReportForm/material/query', 'POST', params, 'REPORT')
+    REPORT_PACKAGING_OEE_MATERIAL_QUERY_API: params => httpProxy('/pkgReportForm/material/query', 'POST', params, 'REPORT'),
+    /**
+     * @property {string} REPORT_OUTPUT_SUMMARY_QUERY_API 产量汇总 报表 -
+     */
+    REPORT_OUTPUT_SUMMARY_QUERY_API: params => httpProxy('/pkgReportForm/product/queryProductSummary', 'POST', params, 'REPORT')
 };
 
 export default REPORTS_API;
