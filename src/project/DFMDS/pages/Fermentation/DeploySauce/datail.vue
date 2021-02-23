@@ -75,7 +75,7 @@
                 type: 'tooltip',
                 icon: 'factory-pinleiguanli',
                 label: '发酵物料',
-                value: ['mixMaterialCode', 'mixMaterialName']
+                value: ['ferOpen.applyMaterialCode', 'ferOpen.applyMaterialName']
             },
             {
                 type: 'tooltip',
@@ -85,12 +85,14 @@
             },
             {
                 type: 'orgSelectUser',
+                required: true,
                 icon: 'factory-xianchangrenyuan',
                 label: '调酱操作人',
                 value: 'user'
             },
             {
                 type: 'date-time',
+                required: true,
                 icon: 'factory-riqi1',
                 label: '调酱时间',
                 value: 'mixDate'
@@ -153,6 +155,7 @@
                 this.formHeader = data.data
                 this.formHeader.user = this.formHeader.mixMans.length > 0 ? this.formHeader.mixMans.split(',') : []
                 this.$refs.tables.init(this.formHeader)
+                this.formHeader['openType'] === 'MANY' ? this.headerBase[10]['disabled'] = true : this.headerBase[10]['disabled'] = false
             })
         }
 

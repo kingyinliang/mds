@@ -3,7 +3,7 @@
  * @Anthor: Telliex
  * @Date: 2021-01-15 23:35:23
  * @LastEditors: Telliex
- * @LastEditTime: 2021-02-09 15:19:00
+ * @LastEditTime: 2021-02-19 16:38:38
 -->
 <template>
     <div class="header_main">
@@ -112,7 +112,7 @@
                                         <el-button v-if="isAuth('')" size="small" plain :disabled="item.fermentorStatus!=='F' || item.orderNo===''" @click="btnLYCY(item)">
                                             LY/CY
                                         </el-button>
-                                        <el-button v-if="isAuth('')" size="small" plain :disabled="item.fermentorStatus!=='F' || item.orderNo===''" @click="btnAdjust(item)">
+                                        <el-button v-if="isAuth('')" size="small" plain :disabled="! ['F','S','O','T','A','U'].includes(item.fermentorStatus) || item.orderNo===''" @click="btnAdjust(item)">
                                             调整
                                         </el-button>
                                         <el-button v-if="isAuth('')" size="small" plain :disabled="item.fermentorStatus!=='U' || item.orderNo===''" @click="btnClearBucket(item)">
