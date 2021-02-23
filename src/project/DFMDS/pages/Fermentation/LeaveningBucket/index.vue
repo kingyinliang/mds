@@ -3,7 +3,7 @@
  * @Anthor: Telliex
  * @Date: 2021-01-15 23:35:23
  * @LastEditors: Telliex
- * @LastEditTime: 2021-02-19 16:38:38
+ * @LastEditTime: 2021-02-23 10:45:23
 -->
 <template>
     <div class="header_main">
@@ -118,7 +118,7 @@
                                         <el-button v-if="isAuth('')" size="small" plain :disabled="item.fermentorStatus!=='U' || item.orderNo===''" @click="btnClearBucket(item)">
                                             清罐
                                         </el-button>
-                                        <el-button v-if="isAuth('')" size="small" plain :disabled="item.fermentorStatus!=='C' || item.orderNo===''" @click="btnCleanBucket(item)">
+                                        <el-button v-if="isAuth('')" size="small" plain :disabled="item.fermentorStatus!=='C'" @click="btnCleanBucket(item)">
                                             清洗
                                         </el-button>
                                     </div>
