@@ -91,7 +91,7 @@
                 </el-card>
             </el-col>
         </el-row>
-        <el-dialog :close-on-click-modal="false" :visible.sync="isShowDeptReceive" width="1100px" custom-class="dialog__class bg_dialog">
+        <el-dialog :close-on-click-modal="false" :visible.sync="isShowDeptReceive" :before-close="handleClose" width="1100px" custom-class="dialog__class bg_dialog">
             <div slot="title" class="title">
                 <span>部门领用</span>
             </div>
@@ -243,6 +243,14 @@ export default {
         this.getFactory();
     },
     methods: {
+        handleClose(done) {
+            this.receiveList = [];
+            done();
+            // this.$confirm('确认关闭？').then(_ => {
+            //     done();
+            // })
+            // .catch(_ => {});
+        },
         // 获取工厂
         getFactory() {
             this.$http(`${BASICDATA_API.FINDORG_API}?code=factory`, `POST`, {}, false, false, false).then(({ data }) => {
