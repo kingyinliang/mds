@@ -15,7 +15,7 @@
             <template slot="home">
                 <mds-card title="入库列表" :pack-up="false">
                     <el-table class="newTable markStyle" :data="targetQueryTableList" :row-class-name="rowDelFlag" header-row-class-name="tableHead" border style="width: 100%; min-height: 90px;" @selection-change="selectionChange">
-                        <el-table-column type="selection" fixed />
+                        <el-table-column type="selection" fixed :selectable="checkBoxDisable" />
                         <el-table-column label="序号" type="index" fixed />
                         <el-table-column label="状态" prop="checkStatus" width="120px">
                             <template slot-scope="scope">
@@ -27,7 +27,11 @@
                         <el-table-column label="生产订单" prop="orderNo" width="120px" />
                         <el-table-column label="容器号" prop="fermentorName" width="120px" />
                         <el-table-column label="发酵天数" prop="fermentDays" width="120px" />
-                        <el-table-column label="生产物料" prop="productMaterialName" width="160px" />
+                        <el-table-column label="生产物料" prop="productMaterialName" width="160px" show-overflow-tooltip>
+                            <template slot-scope="scope">
+                                {{ `${scope.row.productMaterialName} ${scope.row.productMaterialCode}` }}
+                            </template>
+                        </el-table-column>
                         <el-table-column label="订单数量" prop="amount" width="120px" />
                         <el-table-column label="订单单位" prop="orderUnit" width="120px" />
                         <el-table-column label="移动类型" prop="inStorageType" width="120px" />
@@ -71,7 +75,7 @@
                     </el-table>
                 </mds-card>
                 <el-row>
-                    <el-pagination :current-page="currentPage" :page-sizes="[10, 20, 50]" :page-size="pageSize" layout="total, sizes, prev, pager, next, jumper" :total="total" @size-change="sizeChangeHandler" @current-change="currentPageChangeHanlder" />
+                    <el-pagination :current-page.sync="currentPage" :page-sizes="[10, 20, 50]" :page-size="pageSize" layout="total, sizes, prev, pager, next, jumper" :total="total" @size-change="sizeChangeHandler" @current-change="currentPageChangeHanlder" />
                 </el-row>
             </template>
         </query-table>
@@ -113,6 +117,8 @@
         formObj = {};
 
         redactBoxDisable = false; // control bar 可否禁用
+
+        prePage = 1;
 
         currentPage = 1;
 
@@ -227,7 +233,7 @@
                         COMMON_API.HOLDER_DROPDOWN_API({ // /sysHolder/query
                             deptId: val,
                             factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
-                            holderType: ['001', '029', '028'] // 发酵罐/池、泡豆罐、调酱罐/池 参数编码
+                            holderType: ['001', '025', '028'] // 发酵罐/池、鲜香泡豆泡豆罐、调酱罐/池 参数编码
                         }).then((res) => {
                             resolve(res)
                         })
@@ -251,6 +257,13 @@
                         COMMON_API.DICTIONARY_ITEM_DROPDOWN_API({
                             dictType: 'COMMON_CHECK_STATUS'
                         }).then((res) => {
+                            console.log(res.data, '==============')
+                            res.data.data = res.data.data.filter(item => {
+                                if (item.dictCode === 'N' || item.dictCode === 'S' || item.dictCode === 'M' || item.dictCode === 'R' || item.dictCode === 'P' || item.dictCode === 'F') {
+                                    return true;
+                                }
+                                return false;
+                            })
                             resolve(res)
                         })
                     })
@@ -277,8 +290,17 @@
             this.selections = row;
         }
 
+        checkBoxDisable(row) {
+            // 发料管理/入库管理：已提交、已过账的勾选按钮灰掉，应该灰掉不允许再勾选
+            if (row.checkStatus === 'M' || row.checkStatus === 'P') {
+                return false
+            }
+            return true
+        }
+
         // queryTable 查询请求
-        queryTableListInterface = params => {
+        queryTableListInterface(params) {
+            this.isRedact = false;
             params.factory = JSON.parse(sessionStorage.getItem('factory') || '{}').id;
             params.current = this.currentPage;// eslint-disable-line
             params.size = this.pageSize;// eslint-disable-line
@@ -390,8 +412,13 @@
                     const row = this.selections.find(o => o.onlyOne === item.onlyOne);
                     // @ts-ignore
                     const old = this.oldDataList.find(row1 => row1.onlyOne === item.onlyOne);
-                    if (!_.isEqual(old, item)) {
+                    // 如果被勾选了，不管是否编辑都提交
+                    // 如果没被勾选，则判断是否修改
+                    if (Boolean(row) || !_.isEqual(old, item)) {
                         const obj: InsertDto = {
+                            productMaterialCode: item.productMaterialCode,
+                            productMaterialName: item.productMaterialName,
+                            productMaterialType: item.productMaterialType,
                             fermentDays: item.fermentDays,
                             inStorageAmount: item.inStorageAmount,
                             inStorageBatch: item.inStorageBatch,
@@ -427,6 +454,7 @@
             list.map(item => {
                 if (item.id) {
                     params.ferInStorageUpdateDtoList.push({
+                        ...item,
                         id: item.id,
                         inStorageAmount: item.inStorageAmount,
                         inStorageBatch: item.inStorageBatch,
@@ -435,6 +463,7 @@
                 } else {
                     const selectRow = this.selections.find(row => row.onlyOne === item.onlyOne);
                     const obj: InsertDto = {
+                        ...item,
                         fermentDays: item.fermentDays,
                         inStorageAmount: item.inStorageAmount,
                         inStorageBatch: item.inStorageBatch,
@@ -482,10 +511,10 @@
              * 入库 INSTORAGE
              * 发料 MATERIAL
              */
-            AUDIT_API.STE_AUDIT_LOG_API({
+            AUDIT_API.AUDIT_LOG_LIST_API({
                 orderNo: row.orderNo,
                 // splitOrderNo: row.splitOrderNo, // 拆分单号<有拆分单时必填>
-                verifyType: ['INSTORAGE'] // '审核类型'
+                verifyType: 'INSTORAGE' // '审核类型'
             }).then(res => {
                 this.dialogVisible = true;
                 this.logList = res.data.data;
@@ -517,6 +546,13 @@
         }
 
         currentPageChangeHanlder(val) {
+            const params = this.getSaveOrSubmitDtos();
+            if (this.isRedact && (params.ferInStorageInsertDtoList.length || params.ferInStorageUpdateDtoList.length)) {
+                this.$warningToast('请先保存数据');
+                this.currentPage = this.prePage;
+                return false;
+            }
+            this.prePage = this.currentPage;
             this.currentPage = val;
             this.$refs.queryTable.getDataList();
         }
@@ -541,6 +577,8 @@
         remark: string;
         changer: string;
         changed: string;
+        productMaterialType?: string;
+        productMaterialCode?: string;
         onlyOne?: number; // 唯一标识
     }
     interface SaveOrSubmitDto {
@@ -557,6 +595,9 @@
         orderId: string;
         orderNo: string;
         remark: string;
+        productMaterialType?: string;
+        productMaterialName?: string;
+        productMaterialCode?: string;
         unit: string;
         onlyOne?: number;
     }

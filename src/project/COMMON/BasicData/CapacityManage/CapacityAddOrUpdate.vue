@@ -21,6 +21,9 @@
                         <el-option v-for="item in Unit" :key="item.code" :label="item.dictValue" :value="item.dictCode" />
                     </el-select>
                 </el-form-item>
+                <el-form-item label="准备工时：">
+                    <el-input v-model="dataForm.theoryReadyTime" type="number" placeholder="手动输入" />
+                </el-form-item>
                 <el-form-item label="标配人力：" prop="standardManpower">
                     <el-input v-model="dataForm.standardManpower" type="number" placeholder="手动输入" />
                 </el-form-item>

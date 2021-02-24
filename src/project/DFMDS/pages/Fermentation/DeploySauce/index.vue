@@ -44,7 +44,7 @@
                 prop: 'productLineName',
                 minwidth: '160',
                 formatter: (row) => {
-                    return row.mixMaterialCode + ' ' + row.mixMaterialName;
+                    return row.ferOpen.applyMaterialCode + ' ' + row.ferOpen.applyMaterialName;
                 }
             },
             {
@@ -62,12 +62,15 @@
             },
             {
                 label: '生产日期',
-                prop: 'productLineName',
+                prop: 'mixDate',
+                formatter: (row) => {
+                    return row.ferOpen.useDate;
+                },
                 minwidth: '160'
             },
             {
                 label: '开罐号',
-                prop: 'openPotNo',
+                prop: 'openFermentorInfo',
                 minwidth: '160'
             },
             {

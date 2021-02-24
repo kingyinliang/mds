@@ -28,9 +28,11 @@
                             </el-select>
                         </el-form-item>
                         <el-form-item label="申请物料：" required>
-                            <el-select v-model="formHeader.applyMaterialCode" :disabled="!isRedact" placeholder="请选择" style="width: 120px;" clearable @change="materialChange">
-                                <el-option v-for="(item, index) in material" :key="index" :label="item.materialName+' ' + item.materialCode" :value="item.materialCode" />
-                            </el-select>
+                            <el-tooltip class="item" effect="dark" :content="(formHeader.applyMaterialName || '') + ' ' + (formHeader.applyMaterialCode || '')" placement="top">
+                                <el-select v-model="formHeader.applyMaterialCode" :disabled="!isRedact" filterable placeholder="请选择" style="width: 120px;" clearable @change="materialChange">
+                                    <el-option v-for="(item, index) in material" :key="index" :label="item.useMaterialName+' ' + item.useMaterialCode" :value="item.useMaterialCode" />
+                                </el-select>
+                            </el-tooltip>
                         </el-form-item>
                         <el-form-item label="使用日期：" required>
                             <el-date-picker v-model="formHeader.useDate" type="date" value-format="yyyy-MM-dd" format="yyyy-MM-dd" placeholder="请选择" size="small" :disabled="!isRedact" style="width: 120px;" />
@@ -39,9 +41,11 @@
                             <el-input v-model="formHeader.applyAmount" :disabled="!isRedact" placeholder="手动输入" style="width: 120px;" />
                         </el-form-item>
                         <el-form-item label="调酱容器：">
-                            <el-select v-model="formHeader.mixPotNo" :disabled="!isRedact" placeholder="请选择" style="width: 120px;" clearable filterable @change="potChange">
-                                <el-option v-for="(item, index) in potArr" :key="index" :label="item.holderName" :value="item.holderNo" />
-                            </el-select>
+                            <el-tooltip class="item" effect="dark" content="此字段为换罐混调时使用" placement="top">
+                                <el-select v-model="formHeader.mixPotId" :disabled="!isRedact" placeholder="请选择" style="width: 120px;" clearable filterable @change="potChange">
+                                    <el-option v-for="(item, index) in potArr" :key="index" :label="item.holderName" :value="item.id" />
+                                </el-select>
+                            </el-tooltip>
                         </el-form-item>
                         <el-form-item label="开罐单号：">
                             <p>{{ formHeader.openPotNo }}</p>
@@ -123,7 +127,7 @@
                 <el-button v-if="formHeader.statusName === '已保存' || !formHeader.statusName" type="primary" size="small" @click="submit()">
                     提交
                 </el-button>
-                <el-button v-if="formHeader.statusName === '待处理'" type="primary" size="small" @click="submit()">
+                <el-button v-if="formHeader.statusName === '待处理'" type="primary" size="small" @click="withdraw()">
                     撤回
                 </el-button>
             </template>
@@ -133,7 +137,7 @@
 
 <script lang="ts">
     import { Vue, Component } from 'vue-property-decorator';
-    import { COMMON_API, FER_API } from 'common/api/api';
+    import { BASIC_API, COMMON_API, FER_API } from 'common/api/api';
 
     @Component
     export default class ApplyDetail extends Vue {
@@ -155,6 +159,7 @@
                     id: this.$store.state.fer.applyForObj.id
                 }).then(({ data }) => {
                     this.formHeader = data.data
+                    this.formHeader.applied = true
                 })
                 FER_API.FER_OPEN_POT_APPLY_DETAIL_TABLE_API({
                     openPotNo: this.$store.state.fer.applyForObj.openPotNo
@@ -169,15 +174,23 @@
             }).then(({ data }) => {
                 this.workShop = data.data
             })
-            COMMON_API.SEARCH_MATERIAL_API({
-                factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
-                materialType: 'ZHAL'
+            BASIC_API.FERINFO_LIST_API({
+                productProcess: 'MIX',
+                current: 1,
+                size: 9999
             }).then(({ data }) => {
-                this.material = data.data
+                this.material = data.data.records
             })
+            // COMMON_API.SEARCH_MATERIAL_API({
+            //     factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
+            //     materialType: 'ZHAL'
+            // }).then(({ data }) => {
+            //     this.material = data.data
+            // })
             COMMON_API.HOLDER_DROPDOWN_API({
                 factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
-                holderType: ['001', '028']
+                holderType: ['001', '028'],
+                holderStatus: 'E'
             }).then(({ data }) => {
                 this.potArr = data.data || [];
             })
@@ -186,11 +199,13 @@
         materialChange() {
             const filterArr: (any) = this.material.filter(it => it['materialCode'] === this.formHeader.applyMaterialCode);// eslint-disable-line
             this.formHeader.applyMaterialName = filterArr[0].materialName
+            this.formHeader.applyMaterialType = filterArr[0].materialTypeCode
+            this.formHeader.applyMaterialTypeName = filterArr[0].materialTypeName
         }
 
         potChange() {
-            const filterArr: (any) = this.potArr.filter(it => it['holderNo'] === this.formHeader.mixPotNo);// eslint-disable-line
-            this.formHeader.mixPotId = filterArr[0].id
+            const filterArr: (any) = this.potArr.filter(it => it['id'] === this.formHeader.mixPotId);// eslint-disable-line
+            this.formHeader.mixPotNo = filterArr[0].holderNo
             this.formHeader.mixPotName = filterArr[0].holderName
         }
 
@@ -199,6 +214,7 @@
                 this.$warningToast('请填写必填项')
                 return false
             }
+            this.formHeader.applied = true
             FER_API.FER_OPEN_POT_APPLY_DETAIL_SAVE_API(this.formHeader).then(({ data }) => {
                 this.$successToast('保存成功')
                 if (!this.$store.state.fer.applyForObj.id) {
@@ -213,6 +229,7 @@
                 this.$warningToast('请填写必填项')
                 return false
             }
+            this.formHeader.applied = true
             FER_API.FER_OPEN_POT_APPLY_DETAIL_SUBMIT_API(this.formHeader).then(({ data }) => {
                 this.$successToast('提交成功')
                 if (!this.$store.state.fer.applyForObj.id) {
@@ -240,12 +257,15 @@
     interface FormHeader{
         id?: string;
         workShop?: string;
+        applied?: boolean;
         openPotNo?: string;
         status?: string;
         statusName?: string;
         openType?: string;
         applyMaterialCode?: string;
         applyMaterialName?: string;
+        applyMaterialType?: string;
+        applyMaterialTypeName?: string;
         mixPotId?: string;
         mixPotName?: string;
         mixPotNo?: string;

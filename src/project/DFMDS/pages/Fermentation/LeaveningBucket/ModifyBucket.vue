@@ -1,3 +1,10 @@
+<!--
+ * @Description:发酵罐/调整
+ * @Anthor: Telliex
+ * @Date: 2021-01-15 23:35:23
+ * @LastEditors: Telliex
+ * @LastEditTime: 2021-02-22 18:08:49
+-->
 <template>
     <div>
         <el-dialog :title="dialogTitle" :close-on-click-modal="false" :visible.sync="isTableDialogVisible" width="400px">
@@ -6,13 +13,13 @@
                     <el-form :inline="true">
                         <el-form-item>
                             <el-radio-group v-model="tabType" @change="changeTab">
-                                <el-radio label="modify">
+                                <el-radio label="modify" :disabled="!modifyDisabled">
                                     调整
                                 </el-radio>
-                                <el-radio label="convert">
-                                    转存
+                                <el-radio label="convert" :disabled="!convertDisabled">
+                                    转储
                                 </el-radio>
-                                <el-radio label="move">
+                                <el-radio label="move" :disabled="!moveDisabled">
                                     挪罐
                                 </el-radio>
                             </el-radio-group>
@@ -30,7 +37,7 @@
                                     <span class="default">{{ modifyDataGroup.fermentorStatusName }}</span>
                                 </el-form-item>
                                 <el-form-item label="物料：">
-                                    <el-select v-model="modifyDataGroup.materialCode" placeholder="请选择" clearable style="width: 100%;" @change="changeMaterialOptions">
+                                    <el-select v-model="modifyDataGroup.materialCode" placeholder="请选择" clearable style="width: 100%;" :disabled="!modifyDisabled" @change="changeMaterialOptions">
                                         <el-option
                                             v-for="item in materialOptions"
                                             :key="item.materialCode"
@@ -40,7 +47,7 @@
                                     </el-select>
                                 </el-form-item>
                                 <el-form-item label="批次：">
-                                    <el-select v-model="modifyDataGroup.batch" placeholder="请选择" clearable style="width: 100%;">
+                                    <el-select v-model="modifyDataGroup.batch" placeholder="请选择" clearable style="width: 100%;" :disabled="!modifyDisabled">
                                         <el-option
                                             v-for="item in batchOptions"
                                             :key="item.batch"
@@ -50,7 +57,7 @@
                                     </el-select>
                                 </el-form-item>
                                 <el-form-item label="出/入罐：" class="star">
-                                    <el-select v-model="modifyDataGroup.inOutFlag" placeholder="请选择" clearable style="width: 100%;" @change="changeInOutFlag">
+                                    <el-select v-model="modifyDataGroup.inOutFlag" placeholder="请选择" clearable style="width: 100%;" :disabled="!modifyDisabled" @change="changeInOutFlag">
                                         <el-option
                                             v-for="item in inOutStatusOptions"
                                             :key="item.dictCode"
@@ -60,7 +67,7 @@
                                     </el-select>
                                 </el-form-item>
                                 <el-form-item label="类别调整：" class="star">
-                                    <el-select v-model="modifyDataGroup.moveType" placeholder="请选择" clearable style="width: 100%;">
+                                    <el-select v-model="modifyDataGroup.moveType" placeholder="请选择" clearable style="width: 100%;" :disabled="!modifyDisabled">
                                         <el-option
                                             v-for="item in moveTypeOptions"
                                             :key="item.dictCode"
@@ -70,7 +77,7 @@
                                     </el-select>
                                 </el-form-item>
                                 <el-form-item label="调整量：" class="star">
-                                    <el-input v-model.number="modifyDataGroup.moveAmount" placeholder="请输入" clearable>
+                                    <el-input v-model.number="modifyDataGroup.moveAmount" placeholder="请输入" clearable :disabled="!modifyDisabled">
                                         <span slot="suffix">KG</span>
                                     </el-input>
                                 </el-form-item>
@@ -84,7 +91,7 @@
                                 </el-form-item>
 
                                 <el-form-item label="备注：">
-                                    <el-input v-model.trim="modifyDataGroup.remark" placeholder="请输入" clearable />
+                                    <el-input v-model.trim="modifyDataGroup.remark" placeholder="请输入" clearable :disabled="!modifyDisabled" />
                                 </el-form-item>
                                 <el-form-item label="操作人：">
                                     <span class="default">{{ modifyDataGroup.changer }}</span>
@@ -94,7 +101,7 @@
                                 </el-form-item>
                             </el-form>
                         </el-tab-pane>
-                        <el-tab-pane label="转存" name="convert">
+                        <el-tab-pane label="转储" name="convert">
                             <el-form :model="convertDataGroup" size="small" label-width="110px" class="orderMangedialog markStyle">
                                 <el-form-item label="容器号：">
                                     <span class="default">{{ convertDataGroup.holderName }}</span>
@@ -103,34 +110,34 @@
                                     <span class="default">{{ convertDataGroup.fermentorStatusName }}</span>
                                 </el-form-item>
                                 <el-form-item label="物料：">
-                                    <el-select v-model="convertDataGroup.batch" placeholder="请选择" clearable style="width: 100%;">
+                                    <el-select v-model="convertDataGroup.materialCode" placeholder="请选择" clearable style="width: 100%;" :disabled="!convertDisabled">
                                         <el-option
-                                            v-for="item in options"
-                                            :key="item.dictCode"
-                                            :label="item.dictValue"
-                                            :value="item.dictCode"
+                                            v-for="item in materialOptions"
+                                            :key="item.materialCode"
+                                            :label="`${item.materialName} ${item.materialCode}`"
+                                            :value="item.materialCode"
                                         />
                                     </el-select>
                                 </el-form-item>
                                 <el-form-item label="批次：">
-                                    <el-select v-model="convertDataGroup.a" placeholder="请选择" clearable style="width: 100%;">
+                                    <el-select v-model="convertDataGroup.batch" placeholder="请选择" clearable style="width: 100%;" :disabled="!convertDisabled">
                                         <el-option
-                                            v-for="item in options"
-                                            :key="item.dictCode"
-                                            :label="item.dictValue"
-                                            :value="item.dictCode"
+                                            v-for="item in batchOptions"
+                                            :key="item.batch"
+                                            :label="item.batch"
+                                            :value="item.batch"
                                         />
                                     </el-select>
                                 </el-form-item>
                                 <el-form-item label="领用量：" class="star">
-                                    <el-input v-model.trim="convertDataGroup.a" placeholder="请输入" clearable style="width: 100%;">
+                                    <el-input v-model.trim="convertDataGroup.moveAmount" placeholder="请输入" clearable style="width: 100%;" :disabled="!convertDisabled">
                                         <span slot="suffix">KG</span>
                                     </el-input>
                                 </el-form-item>
                                 <el-form-item label="打入罐类别：" class="star">
-                                    <el-select v-model="convertDataGroup.a" placeholder="请选择" clearable style="width: 100%;">
+                                    <el-select v-model="convertDataGroup.targetHolderType" placeholder="请选择" clearable style="width: 100%;" :disabled="!convertDisabled" @change="val=>changeHolderTypeOptions('convert',val)">
                                         <el-option
-                                            v-for="item in options"
+                                            v-for="item in convertHolderTypeOptions"
                                             :key="item.dictCode"
                                             :label="item.dictValue"
                                             :value="item.dictCode"
@@ -138,24 +145,24 @@
                                     </el-select>
                                 </el-form-item>
                                 <el-form-item label="打入罐号：" class="star">
-                                    <el-select v-model="convertDataGroup.a" placeholder="请选择" clearable style="width: 100%;">
+                                    <el-select v-model="convertDataGroup.targetHolderId" placeholder="请选择" filterable clearable style="width: 100%;" :disabled="!convertDisabled">
                                         <el-option
-                                            v-for="item in options"
-                                            :key="item.dictCode"
-                                            :label="item.dictValue"
-                                            :value="item.dictCode"
+                                            v-for="item in convertHolderIdOptions"
+                                            :key="item.id"
+                                            :label="item.holderName"
+                                            :value="item.id"
                                         />
                                     </el-select>
                                 </el-form-item>
 
-                                <el-form-item label="打入物料：" class="star">
-                                    <span class="default">{{ convertDataGroup.a }}</span>
+                                <el-form-item label="打入物料：">
+                                    <span class="default">{{ convertDataGroup.convertMaterial }}</span>
                                 </el-form-item>
-                                <el-form-item label="打入批次：" class="star">
-                                    <span class="default">{{ convertDataGroup.a }}</span>
+                                <el-form-item label="打入批次：">
+                                    <span class="default">{{ convertDataGroup.convertBatch }}</span>
                                 </el-form-item>
 
-                                <el-form-item label="转存操作人：">
+                                <el-form-item label="转储操作人：">
                                     <div class="required" style="min-height: 32px; line-height: 32px;">
                                         <span style="cursor: pointer;" @click="selectUser(convertDataGroup)">
                                             <em v-for="(item, index) in splitString(convertDataGroup.operators)" :key="index">{{ item }}，</em>
@@ -165,7 +172,7 @@
                                 </el-form-item>
 
                                 <el-form-item label="备注：">
-                                    <el-input v-model.trim="convertDataGroup.remark" placeholder="请输入" clearable />
+                                    <el-input v-model.trim="convertDataGroup.remark" placeholder="请输入" clearable :disabled="!convertDisabled" />
                                 </el-form-item>
                                 <el-form-item label="操作人：">
                                     <span class="default">{{ convertDataGroup.changer }}</span>
@@ -190,9 +197,9 @@
                                     <span class="default">{{ moveDataGroup.batch }}</span>
                                 </el-form-item>
                                 <el-form-item label="挪入罐类别：" class="star">
-                                    <el-select v-model="moveDataGroup.targetHolderType" placeholder="请选择" clearable style="width: 100%;" @change="changeHolderTypeOptions">
+                                    <el-select v-model="moveDataGroup.targetHolderType" placeholder="请选择" clearable style="width: 100%;" :disabled="!moveDisabled" @change="val=>changeHolderTypeOptions('move',val)">
                                         <el-option
-                                            v-for="item in holderTypeOptions"
+                                            v-for="item in moveHolderTypeOptions"
                                             :key="item.dictCode"
                                             :label="item.dictValue"
                                             :value="item.dictCode"
@@ -200,9 +207,9 @@
                                     </el-select>
                                 </el-form-item>
                                 <el-form-item label="挪入罐号：" class="star">
-                                    <el-select v-model="moveDataGroup.targetHolderId" placeholder="请选择" clearable style="width: 100%;">
+                                    <el-select v-model="moveDataGroup.targetHolderId" filterable placeholder="请选择" clearable style="width: 100%;" :disabled="!moveDisabled">
                                         <el-option
-                                            v-for="item in holderIdOptions"
+                                            v-for="item in moveHolderIdOptions"
                                             :key="item.id"
                                             :label="item.holderName"
                                             :value="item.id"
@@ -210,7 +217,7 @@
                                     </el-select>
                                 </el-form-item>
                                 <el-form-item label="挪入批次：" class="star">
-                                    <el-input v-model.trim="moveDataGroup.movebatch" placeholder="请输入" clearable />
+                                    <el-input v-model.trim="moveDataGroup.movebatch" placeholder="请输入" clearable :disabled="!moveDisabled" />
                                 </el-form-item>
                                 <el-form-item label="挪罐操作人：">
                                     <div class="required" style="min-height: 32px; line-height: 32px;">
@@ -221,7 +228,7 @@
                                     </div>
                                 </el-form-item>
                                 <el-form-item label="备注：">
-                                    <el-input v-model.trim="moveDataGroup.remark" placeholder="请输入" clearable />
+                                    <el-input v-model.trim="moveDataGroup.remark" placeholder="请输入" clearable :disabled="!moveDisabled" />
                                 </el-form-item>
                                 <el-form-item label="操作人：">
                                     <span class="default">{{ moveDataGroup.changer }}</span>
@@ -248,16 +255,10 @@
     </div>
 </template>
 <script lang="ts">
-
-        // 空罐 E
-        // 入料中 R (投料)
-
         import { Vue, Component } from 'vue-property-decorator';
         import { dateFormat, getUserNameNumber } from 'utils/utils';
         import LoanedPersonnel from 'components/LoanedPersonnelv1.vue';
         import { COMMON_API, FER_API } from 'common/api/api';
-        // import _ from 'lodash';
-        // import { dateFormat } from 'utils/utils';
 
         @Component({
             name: 'ModifyBucketIndex',
@@ -270,66 +271,68 @@
                 loanedPersonnel: HTMLFormElement;
             }
 
-            // title
-            dialogTitle=''
-
+            dialogTitle='' // 弹窗 title
             currentTab='调整' // 当前初始 tab
-            tabType='modify'
-            currentItem: ItemObject={}
-
-
-            options=[
-                {
-                    dicCode: '',
-                    dicValue: ''
-                }
-            ]
+            tabType='modify' // 当前初始 tab type
+            currentItem: ItemObject={} // 当前 item
 
             currentWorkShop=''
-            // 点击赋予 item info
             currentCycle=''
             currentHolderId=''
             currentHolderName=''
             currentFermentorStatusName=''
-            drumStageOptions: Options[]=[]
-            inOutStatusOptions: Options[]=[]
-            moveTypeOptions: Options[]=[]
-            holderTypeOptions: Options[]=[]
-            holderIdOptions: HolderIdOptions[]=[]
-            materialOptions: MaterialOptions[]=[]
-            batchOptions: BatchOptions[]=[]
 
+            inOutStatusOptions: Options[]=[] // 出入罐下拉选
+            moveTypeOptions: Options[]=[] // 调整类别下拉选
+            moveHolderTypeOptions: Options[]=[] // 挪入罐类别下拉选
+            convertHolderTypeOptions: Options[]=[] // 打入罐类别下拉选
+            moveHolderIdOptions: HolderIdOptions[]=[] // 挪入罐号下拉选
+            convertHolderIdOptions: HolderIdOptions[]=[] // 打入罐号下拉选
+            materialOptions: MaterialOptions[]=[] // 物料下拉选
+            batchOptions: BatchOptions[]=[] // 批次下拉选
+            dataOfMateriaBatch: MoveDataOfMateriaBatch={} // 挪罐物料批次
 
             modifyDataGroup: ItemObject={} // modify data
             convertDataGroup: ItemObject={} // convert data
             moveDataGroup: ItemObject={} // move data
 
-            isTableDialogVisible = false;
-            isLoanedPersonnelStatusDialogVisible = false; // 选人
+            // 判断 radio 禁用
+            modifyDisabled=false
+            convertDisabled=false
+            moveDisabled=false
+
+
+            isTableDialogVisible = false; // 调整弹窗 dialog 显示与否
+            isLoanedPersonnelStatusDialogVisible = false; // 选人弹窗 dialog 显示与否
 
             orgTree: object[] = [];
             arrList: string[] = [];
 
-
-            moveDataOfMateriaBatch: MoveDataOfMateriaBatch={}
 
             mounted() {
                 // 获取组织树
                 this.getTree();
             }
 
-            // ＝＝调整＝＝
-
-            // 数据字典出入罐
-            getInOutStatusOptions() {
-                COMMON_API.DICTQUERY_API({ dictType: 'COMMON_FER_ADJUST' }).then(({ data }) => {
-                    this.inOutStatusOptions = data.data
-                });
+            /**
+             * @description: 查找数据字典
+             * @param1 {*} 字典字串
+             * @return {*}
+             * @example: 示例代码
+             */
+            queryFromDict(dictTypeString, Fn) {
+                return new Promise((resolve) => {
+                    COMMON_API.DICTQUERY_API({ dictType: dictTypeString }).then(({ data }) => {
+                        Fn(data.data);
+                        resolve(null);
+                    });
+                })
             }
 
-            // 获取物料
-            getMaterialOptions() {
+            // ＝＝调整＝＝
 
+            // 获取物料下拉
+            getMaterialOptions() {
                 this.materialOptions = []
                 return new Promise((resolve) => {
                     FER_API.FER_FERMENTOR_ADJUSTION_GET_MATERIAL_LIST_API({
@@ -337,7 +340,7 @@
                     }).then(({ data }) => {
                         console.log('根据容器查询物料列表');
                         console.log(data.data)
-                        if (data.data.length !== 0) {
+                        if (data.data && data.data.length !== 0) {
                             this.materialOptions = data.data
                         }
                         resolve(null)
@@ -345,7 +348,7 @@
                 })
             }
 
-            // 获取批次
+            // 获取批次下拉
             getBatchOptions(materialCode = '') {
                 this.batchOptions = [];
                 return new Promise((resolve) => {
@@ -355,7 +358,7 @@
                     }).then(({ data }) => {
                         console.log('根据容器查询主物料批次');
                         console.log(data.data)
-                        if (data.data.length !== 0) {
+                        if (data.data && data.data.length !== 0) {
                             this.batchOptions = data.data
                         }
                         resolve(null)
@@ -364,24 +367,63 @@
             }
 
             // 获取调整类别
-            getMoveTypeOptions(string) {
-                COMMON_API.DICTQUERY_API({ dictType: string }).then(({ data }) => {
-                    this.moveTypeOptions = data.data
-                });
+            // getMoveTypeOptions(string) {
+            //     COMMON_API.DICTQUERY_API({ dictType: string }).then(({ data }) => {
+            //         this.moveTypeOptions = data.data
+            //     });
+            // }
+            // ＝＝转储＝＝
+
+            // 获取打入罐容器类型
+            getConvertHolderTypeOptions() {
+                this.convertHolderTypeOptions = [];
+                return new Promise((resolve) => {
+                    COMMON_API.DICTQUERY_API({
+                        dictType: 'COMMON_HOLDER_TYPE'
+                    }).then(({ data }) => {
+                        const holderTemp: object[] = []
+                        data.data.forEach(item => {
+                            if (item.dictCode === '001' || item.dictCode === '028' || item.dictCode === '029' || item.dictCode === '027') {
+                                holderTemp.push({ dictCode: item.dictCode, dictValue: item.dictValue })
+                            }
+                        })
+                        console.log('打入罐容器类型')
+                        console.log(holderTemp)
+                        this.convertHolderTypeOptions = holderTemp
+                        resolve(null)
+                    })
+                })
+            }
+
+            // 获取打入罐容器号
+            getConvertHolderIdOptions(val) {
+                this.convertHolderIdOptions = []
+                return new Promise((resolve) => {
+                        COMMON_API.HOLDER_DROPDOWN_BY_STATUS_API({
+                        holderType: [val],
+                        // holderStatus: ['E', 'U']
+                        holderStatus: ['E', 'S', 'O']
+                    }).then(({ data }) => {
+                        console.log('打入罐容器号')
+                        console.log(data.data)
+                        this.convertHolderIdOptions = data.data
+                        resolve(null)
+                    })
+                })
             }
 
             // ＝＝挪罐＝＝
             // 获取物料批次
             getMaterialBatchOptions() {
-                this.moveDataOfMateriaBatch = {}
+                this.dataOfMateriaBatch = {}
                 return new Promise((resolve) => {
                     FER_API.FER_FERMENTOR_ADJUSTION_GET_MATERIAL_BATCH_API({
                         holderId: this.currentHolderId
                     }).then(({ data }) => {
                         console.log('根据容器查询主物料批次');
                         console.log(data.data)
-                        if (data.data.length !== 0) {
-                            this.moveDataOfMateriaBatch = data.data
+                        if (data.data && data.data.length !== 0) {
+                            this.dataOfMateriaBatch = data.data
                         }
                         resolve(null)
                     });
@@ -389,57 +431,49 @@
             }
 
 
-            // 获取容器类型
-            getHolderTypeOptions() {
-                this.holderTypeOptions = [];
+            // 获取挪入罐容器类型
+            getMoveHolderTypeOptions() {
+                this.moveHolderTypeOptions = [];
                 return new Promise((resolve) => {
                     COMMON_API.DICTQUERY_API({
                         dictType: 'COMMON_HOLDER_TYPE'
                     }).then(({ data }) => {
-                        console.log('容器类型')
-                        console.log(data.data)
                         const holderTemp: object[] = []
                         data.data.forEach(item => {
                             if (item.dictCode === '001' || item.dictCode === '028' || item.dictCode === '029') {
                                 holderTemp.push({ dictCode: item.dictCode, dictValue: item.dictValue })
                             }
                         })
-                        this.holderTypeOptions = holderTemp
+                        console.log('挪入罐容器类型')
+                        console.log(holderTemp)
+                        this.moveHolderTypeOptions = holderTemp
                         resolve(null)
                     })
                 })
             }
 
-            // 获取容器
-            getHolderIdOptions(val) {
-                this.holderIdOptions = []
+            // 获取挪入罐容器号
+            getMoveHolderIdOptions(val) {
+                this.moveHolderIdOptions = []
                 return new Promise((resolve) => {
-                        COMMON_API.HOLDER_DROPDOWN_API({
-                        holderType: [val]
+                        COMMON_API.HOLDER_DROPDOWN_BY_STATUS_API({
+                        holderType: [val],
+                        holderStatus: ['E']
                     }).then(({ data }) => {
-                        console.log('容器号')
+                        console.log('挪入罐容器号')
                         console.log(data.data)
-                        this.holderIdOptions = data.data
+                        this.moveHolderIdOptions = data.data
                         resolve(null)
                     })
                 })
             }
-
-            // 获取主要数据
-            // @param {string} type 数据 list 类型: 调整 modify/转储 convert/挪罐 move
-            // getControlData(type) {
-            //     // if (type === 'modify') { // 调整
-
-            //     // } else if (type === 'convert') { // 转存
-            //     //     this.currentTab = '转存'
-            //     // } else { // 挪罐
-            //     //     this.currentTab = '挪罐'
-            //     // }
-            // }
 
             changeInOutFlag(val) {
                 this.modifyDataGroup.moveType = ''
-                this.getMoveTypeOptions(val)
+                // this.getMoveTypeOptions(val)
+                this.queryFromDict(val, (data) => {
+                    this.moveTypeOptions = data;
+                }); // 获取调整类别
             }
 
             changeMaterialOptions(materialCode) {
@@ -447,12 +481,15 @@
                     this.modifyDataGroup.materialName = this.materialOptions.filter(item => item.materialCode === materialCode)[0].materialName
                     this.getBatchOptions(materialCode)
                 }
-
-
             }
 
-            changeHolderTypeOptions(val) {
-                this.getHolderIdOptions(val)
+            changeHolderTypeOptions(who, val) {
+                if (who === 'convert') {
+                    this.getConvertHolderIdOptions(val)
+                }
+                if (who === 'move') {
+                    this.getMoveHolderIdOptions(val)
+                }
             }
 
             async changeTab(val) {
@@ -464,20 +501,35 @@
                     // 获取批次
                     await this.getBatchOptions(this.materialOptions[0] ? this.materialOptions[0].materialCode : '');
                     // 数据字典出入罐
-                    await this.getInOutStatusOptions();
+                    // await this.getInOutStatusOptions();
+                    await this.queryFromDict('COMMON_FER_ADJUST', (data) => {
+                        this.inOutStatusOptions = data;
+                    });
                     // 设置数据
-                    await this.setData('modify')
+                    await this.setData('modify');
 
-                } else if (val === 'convert') { // 转存
-                    this.currentTab = '转存'
+                } else if (val === 'convert') { // 转储
+                    this.currentTab = '转储'
+                    // 获取物料
+                    await this.getMaterialOptions();
+                    // 获取批次
+                    await this.getBatchOptions(this.materialOptions[0] ? this.materialOptions[0].materialCode : '');
+
+                    // 获取打入罐类别
+                    await this.getConvertHolderTypeOptions()
+
+                    // 获取打入物料打入批次
+                    await this.getMaterialBatchOptions();
+                    // 设置数据
+                    await this.setData('convert');
                 } else { // 挪罐
                     this.currentTab = '挪罐'
                     // 获取挪入罐类别
-                    await this.getHolderTypeOptions()
+                    await this.getMoveHolderTypeOptions();
                     // 获取物料批次
                     await this.getMaterialBatchOptions();
                     // 设置数据
-                    await this.setData('move')
+                    await this.setData('move');
                 }
                 this.dialogTitle = this.currentHolderName + this.currentTab
             }
@@ -510,8 +562,8 @@
             init(item) {
                 console.log('发酵罐 item 数值')
                 console.log(item)
-                this.currentTab = '调整' // 当前初始 tab
-                this.tabType = 'modify'
+                this.currentTab = '' // 当前初始 tab
+                this.tabType = ''
                 this.currentItem = item
                 this.isTableDialogVisible = true
                 this.currentWorkShop = item.workshop
@@ -519,6 +571,22 @@
                 this.currentHolderId = item.holderId //
                 this.currentHolderName = item.holderName //
                 this.currentFermentorStatusName = item.fermentorStatusName //
+
+                // radio 状态
+                this.modifyDisabled = ['S', 'O', 'T', 'A', 'U'].includes(item.fermentorStatus)
+                this.convertDisabled = ['O', 'A', 'T', 'U'].includes(item.fermentorStatus)
+                this.moveDisabled = ['S', 'F'].includes(item.fermentorStatus)
+                if (this.modifyDisabled) {
+                    this.currentTab = '调整' // 当前初始 tab
+                    this.tabType = 'modify'
+                } else if (this.convertDisabled) {
+                    this.currentTab = '转储' // 当前初始 tab
+                    this.tabType = 'convert'
+                } else if (this.moveDisabled) {
+                    this.currentTab = '挪罐' // 当前初始 tab
+                    this.tabType = 'move'
+                }
+
 
                 this.dialogTitle = this.currentHolderName + this.currentTab
                 // 调整 tab ＝＝＝＝＝
@@ -546,33 +614,41 @@
                 } else if (tab === 'convert') {
                     this.convertDataGroup = {
                         holderName: this.currentHolderName,
+                        holderId: this.currentHolderId,
                         fermentorStatusName: this.currentFermentorStatusName,
-                        material: `${this.currentItem.materialName} ${this.currentItem.materialCode}`,
-                        materialCode: this.currentItem.materialCode,
-                        materialName: this.currentItem.materialName,
-                        batch: this.moveDataOfMateriaBatch.batch,
+                        materialCode: this.materialOptions[0] ? this.materialOptions[0].materialCode : '',
+                        materialName: this.materialOptions[0] ? this.materialOptions[0].materialName : '',
+                        moveAmount: null,
+                        batch: this.batchOptions[0] ? this.batchOptions[0].batch : '', //v
                         operators: '',
+                        orderNo: this.batchOptions[0] ? this.batchOptions[0].orderNo : '',
+                        convertMaterial: `${this.dataOfMateriaBatch.materialName || ''} ${this.dataOfMateriaBatch.materialCode || ''}`,
+                        convertMaterialCode: this.dataOfMateriaBatch.materialCode || '',
+                        convertMaterialName: this.dataOfMateriaBatch.materialName || '',
+                        convertBatch: this.dataOfMateriaBatch.batch || '',
+                        sourceHolderId: this.currentHolderId,
+                        targetHolderId: '',
+                        targetHolderType: '',
                         remark: '',
                         changed: dateFormat(new Date(), 'yyyy-MM-dd hh:mm:ss'),
                         changer: getUserNameNumber()
                     } // convert data
                 } else {
-                    console.log('444444')
                     this.moveDataGroup = {
                         holderName: this.currentHolderName,
                         holderId: this.currentHolderId,
                         fermentorStatusName: this.currentFermentorStatusName,
-                        material: `${this.moveDataOfMateriaBatch.materialName || ''} ${this.moveDataOfMateriaBatch.materialCode || ''}`,
-                        materialCode: this.moveDataOfMateriaBatch.materialCode || '',
-                        materialName: this.moveDataOfMateriaBatch.materialName || '',
-                        batch: this.moveDataOfMateriaBatch.batch || '',
+                        material: `${this.dataOfMateriaBatch.materialName || ''} ${this.dataOfMateriaBatch.materialCode || ''}`,
+                        materialCode: this.dataOfMateriaBatch.materialCode || '',
+                        materialName: this.dataOfMateriaBatch.materialName || '',
+                        batch: this.dataOfMateriaBatch.batch || '',
                         movebatch: '',
                         operators: '',
                         orderNo: this.currentItem.orderNo,
                         remark: '',
                         sourceHolderId: this.currentHolderId,
-                        targetHolderId: this.moveDataGroup.targetHolderId,
-                        targetHolderType: this.moveDataGroup.targetHolderType,
+                        targetHolderId: '',
+                        targetHolderType: '',
                         changed: dateFormat(new Date(), 'yyyy-MM-dd hh:mm:ss'),
                         changer: getUserNameNumber()
                     } // move data
@@ -581,20 +657,11 @@
 
             getCyMatiral() {
                 FER_API.FER_FERMENTOR_CY_SAVE_API({
-                            cycle: this.currentCycle,
-                            holderId: this.currentHolderId
-                        }).then(() => {
-                            this.$successToast('保存成功');
-
-                        });
-            }
-
-            changeProdcutMaterialOption(val) {
-
-                if (val !== '') {
-                    //this.CYProdcutMaterial = this.options.filter(item => item.dictCode === val)[0].dictValue as string
-                }
-
+                    cycle: this.currentCycle,
+                    holderId: this.currentHolderId
+                }).then(() => {
+                    this.$successToast('保存成功');
+                });
             }
 
             // 员工确认
@@ -614,11 +681,11 @@
             selectUser(row) {
                 this.isLoanedPersonnelStatusDialogVisible = true;
                 this.$nextTick(() => {
-                    if (this.tabType === 'modify') {
+                    if (this.tabType === 'modify' && this.modifyDisabled) {
                         this.$refs.loanedPersonnel.init(row.operators, '调整操作人');
-                    } else if (this.tabType === 'convert') {
-                        this.$refs.loanedPersonnel.init(row.operators, '转存操作人');
-                    } else if (this.tabType === 'move') {
+                    } else if (this.tabType === 'convert' && this.convertDisabled) {
+                        this.$refs.loanedPersonnel.init(row.operators, '转储操作人');
+                    } else if (this.tabType === 'move' && this.moveDisabled) {
                         this.$refs.loanedPersonnel.init(row.operators, '挪罐操作人');
                     }
                 });
@@ -636,12 +703,8 @@
 
             // 入罐确认
             comfirmImportBucket() {
-
                 if (this.tabType === 'modify') {
-
-                        if (this.ruleSubmit()) {
-
-
+                    if (this.ruleSubmit()) {
                         FER_API.FER_FERMENTOR_ADJUSTION_ADJUST_API({
                             batch: this.modifyDataGroup.batch,
                             holderId: this.modifyDataGroup.holderId,
@@ -655,7 +718,6 @@
                             remark: this.modifyDataGroup.remark
                         }).then(() => {
                             this.$successToast('保存成功');
-
                             this.isTableDialogVisible = false
                         });
                     }
@@ -663,23 +725,21 @@
 
                 } else if (this.tabType === 'convert') {
                     if (this.ruleSubmit()) {
-
-                        // FER_API.ER_FERMENTOR_ADJUSTION_CHANGE_API({
-                        //     batch:this.convertDataGroup.batch: this.modifyDataGroup.materialName, //x
-                        //     operators:this.convertDataGroup.operators, //x
-                        //     orderNo:this.convertDataGroup.batch,
-                        //     remark:this.convertDataGroup.remark, //x
-                        //     sourceHolderId:this.convertDataGroup.batch,
-                        //     targetHolderId:this.convertDataGroup.batch,
-                        //     targetHolderType:this.convertDataGroup.batch,
-                        // }).then(() => {
-                        //     this.$successToast('保存成功');
-                        //     this.isTableDialogVisible = false
-                        // });
+                        FER_API.FER_FERMENTOR_ADJUSTION_TRANS_API({
+                            batch: this.convertDataGroup.batch,
+                            operators: this.convertDataGroup.operators,
+                            orderNo: this.convertDataGroup.orderNo,
+                            remark: this.convertDataGroup.remark,
+                            sourceHolderId: this.convertDataGroup.sourceHolderId,
+                            targetHolderId: this.convertDataGroup.targetHolderId,
+                            targetHolderType: this.convertDataGroup.targetHolderType
+                        }).then(() => {
+                            this.$successToast('保存成功');
+                            this.isTableDialogVisible = false
+                        });
                     }
                 } else if (this.tabType === 'move') {
                     if (this.ruleSubmit()) {
-
                         FER_API.FER_FERMENTOR_ADJUSTION_CHANGE_API({
                             batch: this.moveDataGroup.batch, //x
                             operators: this.moveDataGroup.operators, //x
@@ -703,43 +763,24 @@
             // 提交时跑校验
             ruleSubmit() {
                 if (this.tabType === 'modify') {
-
-                    if (this.modifyDataGroup.inOutFlag === '' && this.modifyDataGroup.moveType === '' && this.modifyDataGroup.moveAmount === 0) {
+                    if (this.modifyDataGroup.inOutFlag === '' || this.modifyDataGroup.moveType === '' || this.modifyDataGroup.moveAmount === 0) {
                         this.$warningToast('请录入调整必填栏位');
                         return false
                     }
-
-                    // // 表格栏位
-                    // for (const item of this.modifyDataGroup.filter(it => it.delFlag !== 1)) {
-                    //     if (!item.lyDate || !item.lyMans) {
-                    //         this.$warningToast('请填写LY必填项');
-                    //         return false
-                    //     }
-                    // }
                 } else if (this.tabType === 'convert') {
-                    // if (this.convertDataGroup.length === 0 && this.convertDataGroup.filter(it => it.delFlag !== 1).length === 0) {
-                    //     this.$warningToast('请录入CY');
-                    //     return false
-                    // }
-
-                    // // 表格栏位
-                    // for (const item of this.convertDataGroup.filter(it => it.delFlag !== 1)) {
-                    //     if (!item.cyAmount || !item.cyBatch || !item.cyMans) {
-                    //         this.$warningToast('请填写CY必填项');
-                    //         return false
-                    //     }
-                    // }
+                    if (this.convertDataGroup.moveAmount === null || this.convertDataGroup.targetHolderType === '' || this.convertDataGroup.targetHolderId === '') {
+                        this.$warningToast('请录入 LY/CY 必填栏位');
+                        return false
+                    }
                 } else if (this.tabType === 'move') {
-                    if (this.moveDataGroup.targetHolderType === '' && this.moveDataGroup.targetHolderId === '' && this.moveDataGroup.movebatch === '') {
+                    if (this.moveDataGroup.targetHolderType === '' || this.moveDataGroup.targetHolderId === '') {
                         this.$warningToast('请录入挪罐必填栏位');
                         return false
                     }
                 }
-
                 return true
             }
         }
-
 
     interface Options{
         dictCode?: string;
@@ -811,6 +852,10 @@
         changed?: string;
         changer?: string;
         batch?: string;
+        convertBatch?: string;
+        convertMaterial?: string;
+        convertMaterialCode?: string;
+        convertMaterialName?: string;
         movebatch?: string; //
         currentStock?: number;
         cycle?: string;
@@ -1023,6 +1068,7 @@
 
     .default {
         display: block;
+        height: 36px;
         padding: 2px 20px;
         background: #f5f5f5;
         border-radius: 4px;

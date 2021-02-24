@@ -6,7 +6,7 @@
         "serve": "vue-cli-service serve --mode local",
         "build:prod": "vue-cli-service build",
         "build:test": "vue-cli-service build --mode test",
-        "build:pre": "vue-cli-service build --mode test",
+        "build:pre": "vue-cli-service build --mode pre",
         "build:dev": "vue-cli-service build --mode development",
         "build:analyzer:windows": "set npm_config_report=true&& vue-cli-service build",
         "build:analyzer:unix": "export npm_config_report=true&& vue-cli-service build",
@@ -20,6 +20,7 @@
         "core-js": "^3.6.4",
         "echarts": "^4.6.0",
         "element-ui": "2.6.3",
+        "file-saver": "^2.0.5",
         "jquery": "^3.4.1",
         "lodash": "^4.17.15",
         "vue": "^2.6.11",
@@ -30,7 +31,8 @@
         "vue-router": "^3.1.5",
         "vuex": "^3.1.2",
         "vuex-class": "^0.3.2",
-        "vuex-persist": "^2.2.0"
+        "vuex-persist": "^2.2.0",
+        "xlsx": "^0.16.9"
     },
     "devDependencies": {
         "@types/jest": "^24.0.19",

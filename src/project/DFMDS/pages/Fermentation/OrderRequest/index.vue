@@ -11,8 +11,9 @@
             :list-interface="queryTableListInterface"
             :custom-data="true"
             :operation-column-width="90"
-            :show-select-column="true"
+            :show-select-column="currentTab === '0'"
             :show-index-column="true"
+            @tab-click="tabClick"
             @get-data-success="returnDataFromQueryTableForm"
             @created-end="createdEnd"
         >
@@ -26,7 +27,7 @@
             </template>
             <template v-slot:tab-head1>
                 <div class="box-card-title clearfix">
-                    <h3> <em class="title-icon" :style="{ background: '#487bff' }" />{{ '未申请' }} </h3>
+                    <h3> <em class="title-icon" :style="{ background: '#487bff' }" />{{ '已申请' }} </h3>
                 </div>
             </template>
         </query-table>
@@ -47,6 +48,8 @@ import { dateFormat } from 'src/utils/utils';
         $refs: {
             queryTable: HTMLFormElement;
         }
+
+        currentTab = '0';
 
         // queryTable 必要变数
         queryTableFormData = [
@@ -85,7 +88,7 @@ import { dateFormat } from 'src/utils/utils';
                         COMMON_API.HOLDER_DROPDOWN_API({ // /sysHolder/query
                             deptId: val,
                             factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
-                            holderType: ['001', '029', '028'] // 发酵罐/池、泡豆罐、调酱罐/池 参数编码
+                            holderType: ['001', '025', '028'] // 发酵罐/池、鲜香泡豆泡豆罐、调酱罐/池 参数编码
                         }).then((res) => {
                             resolve(res)
                         })
@@ -147,7 +150,10 @@ import { dateFormat } from 'src/utils/utils';
             {
                 prop: 'productMaterialName',
                 label: '生产物料',
-                minwidth: '160'
+                minwidth: '160',
+                formatter(row) {
+                    return `${row.productMaterialName} ${row.productMaterialCode}`
+                }
             },
             {
                 prop: 'amount',
@@ -166,6 +172,7 @@ import { dateFormat } from 'src/utils/utils';
                 minwidth: '160',
                 type: 'select',
                 redact: true,
+                header: true,
                 resVal: {
                     resData: 'data',
                     label: 'dictValue',
@@ -202,7 +209,10 @@ import { dateFormat } from 'src/utils/utils';
             {
                 prop: 'preMaterialName',
                 label: '前置物料',
-                minwidth: '160'
+                minwidth: '160',
+                formatter(row) {
+                    return `${row.preMaterialName} ${row.preMaterialCode}`
+                }
             },
             {
                 prop: 'preAmount',
@@ -269,6 +279,10 @@ import { dateFormat } from 'src/utils/utils';
             })
         }
 
+        tabClick(name) {
+            this.currentTab = name;
+        }
+
         getDict() {
             COMMON_API.DICTIONARY_ITEM_DROPDOWN_POST_API({
                 factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
@@ -319,7 +333,15 @@ import { dateFormat } from 'src/utils/utils';
                         FER_API.FER_ORDER_LIST_API(params).then(({ data }) => {
                             if (index === edit) {
                                 data.data.records.map(row => {
+                                    row.orderType = this.$refs.queryTable.optionLists.orderType[0].dictCode;
+                                    // 鲜香泡豆默认01，其余物料默认为空不可编辑
                                     row.redact = true;
+                                    if (row.productMaterialCode !== 'SP01130005') {
+                                        row.ver = '';
+                                        row.notEditableProp = ['ver'];
+                                    } else {
+                                        row.ver = this.$refs.queryTable.optionLists.ver[0].dictCode;
+                                    }
                                 })
                             }
                             this.tabs[index].tableData = data.data.records;
@@ -330,7 +352,15 @@ import { dateFormat } from 'src/utils/utils';
                     } else {
                         if (index === edit) {
                             datas.data.records.map(row => {
+                                row.orderType = this.$refs.queryTable.optionLists.orderType[0].dictCode;
+                                // 鲜香泡豆默认01，其余物料默认为空不可编辑
                                 row.redact = true;
+                                if (row.productMaterialCode !== 'SP01130005') {
+                                    row.ver = '';
+                                    row.notEditableProp = ['ver'];
+                                } else {
+                                    row.ver = this.$refs.queryTable.optionLists.ver[0].dictCode;
+                                }
                             })
                         }
                         this.tabs[this.$refs.queryTable.activeName].tableData = datas.data.records;
@@ -342,7 +372,15 @@ import { dateFormat } from 'src/utils/utils';
             } else {
                 if (Number(this.$refs.queryTable.activeName) === edit) {
                     datas.data.records.map(row => {
+                        row.orderType = this.$refs.queryTable.optionLists.orderType[0].dictCode;
+                        // 鲜香泡豆默认01，其余物料默认为空不可编辑
                         row.redact = true;
+                        if (row.productMaterialCode !== 'SP01130005') {
+                            row.ver = '';
+                            row.notEditableProp = ['ver'];
+                        } else {
+                            row.ver = this.$refs.queryTable.optionLists.ver[0].dictCode;
+                        }
                     })
                 }
                 this.tabs[this.$refs.queryTable.activeName].tableData = datas.data.records;

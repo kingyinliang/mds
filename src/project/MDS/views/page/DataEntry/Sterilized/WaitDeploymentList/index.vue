@@ -319,10 +319,10 @@ export default {
                     isRedact: true
                 };
                 // console.log(this.Sterilized);
-                this.mainTabs = this.mainTabs.filter(item => item.name !== 'DataEntry-Sterilized-WaitDeploymentList-doDeployment');
+                this.mainTabs = this.mainTabs.filter(item => item.name !== 'MDS-views-page-DataEntry-Sterilized-WaitDeploymentList-doDeployment');
                 setTimeout(() => {
                     this.$router.push({
-                        name: `DataEntry-Sterilized-WaitDeploymentList-doDeployment`
+                        name: `MDS-views-page-DataEntry-Sterilized-WaitDeploymentList-doDeployment`
                     });
                 }, 100);
             }

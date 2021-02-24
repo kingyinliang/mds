@@ -41,6 +41,7 @@
                     <el-table-column label="单位" prop="moveUnit" width="60" />
                     <el-table-column label="数量" prop="moveAmount" show-overflow-tooltip width="80" />
                     <el-table-column label="批次" prop="batch" width="110" />
+                    <el-table-column label="供应商" prop="manufactor" width="110" />
                     <el-table-column label="移动类型" prop="moveType" width="80" show-overflow-tooltip />
                     <el-table-column label="订单" prop="orderNo" width="120" />
                     <el-table-column label="线别" prop="productLineName" show-overflow-tooltip width="140" />
@@ -67,6 +68,9 @@
                     </el-form-item>
                     <el-form-item label="批次：">
                         <el-input v-model="transferForm.batch" type="text" maxlength="10" style="width: 380px;" disabled />
+                    </el-form-item>
+                    <el-form-item label="供应商：">
+                        <el-input v-model="transferForm.manufactor" type="text" style="width: 380px;" disabled />
                     </el-form-item>
                     <el-form-item label="当前库存：">
                         <p class="disabled-text" style="width: 380px;">
@@ -120,6 +124,9 @@
                     </el-form-item>
                     <el-form-item label="批次：">
                         <el-input v-model="adjustForm.batch" type="text" maxlength="10" style="width: 380px;" disabled />
+                    </el-form-item>
+                    <el-form-item label="供应商：">
+                        <el-input v-model="adjustForm.manufactor" type="text" style="width: 380px;" disabled />
                     </el-form-item>
                     <el-form-item label="当前库存：">
                         <p class="disabled-text" style="width: 380px;">
@@ -251,11 +258,12 @@ export default class MaterialStock extends Vue {
             formatter: (row) => {
                 return row.materialName + ' ' + row.materialCode;
             },
-            minwidth: '330'
+            minwidth: '270'
         },
         {
             label: '单位',
-            prop: 'storageUnit'
+            prop: 'storageUnit',
+            minwidth: '60'
         },
         {
             label: '库存数量',
@@ -267,9 +275,14 @@ export default class MaterialStock extends Vue {
             minwidth: '110'
         },
         {
+            label: '供应商',
+            prop: 'manufactor',
+            minwidth: '110'
+        },
+        {
             label: '操作人',
             prop: 'changer',
-            minwidth: '150'
+            minwidth: '140'
         },
         {
             label: '操作时间',
@@ -389,6 +402,7 @@ export default class MaterialStock extends Vue {
             amount: '',
             storageUnit: row['storageUnit'],
             batch: row['batch'],
+            manufactor: row['manufactor'],
             storageAmount: row['storageAmount'],
             productLineIn: '',
             remark: '',
@@ -430,6 +444,7 @@ export default class MaterialStock extends Vue {
             materialCode: row['materialCode'],
             materialName: row['materialName'],
             batch: row['batch'],
+            manufactor: row['manufactor'],
             storageAmount: row['storageAmount'],
             moveType: '',
             amount: '',

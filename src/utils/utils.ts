@@ -2,6 +2,8 @@ import { RouteConfig } from 'vue-router';
 import { VueRouter } from 'vue-router/types/router';
 import { COMMON_API } from 'common/api/api';
 import _ from 'lodash';
+import FileSaver from 'file-saver'
+import XLSX from 'xlsx'
 
 const importTarget = process.env.NODE_ENV !== 'local' ? file => () => import('project/' + file + '.vue') : file => require('project/' + file + '.vue').default;
 
@@ -111,6 +113,7 @@ export class AddRoutes {
             this.mainRoutes['children'] = routes;
             this.router.addRoutes([this.mainRoutes, { path: '*', redirect: { path: '/404' } }]);
             sessionStorage.setItem('dynamicMenuRoutes', JSON.stringify(this.SSRoutes || '[]'));
+            console.log(this.router);
             console.log('\n');
             console.log('%c!<-------------------- 动态(菜单)路由 s -------------------->', 'color:blue');
             console.log(this.mainRoutes.children);
@@ -245,6 +248,64 @@ export function exportFileForm(url, fileName, vue) {
         }
     });
 }
+
+export function exportFileForElement({ id = 'out-table', fileName = '报表' }) {
+    const fix = document.querySelector('.el-table__fixed')
+    let wb
+    if (fix) {
+        wb = XLSX.utils.table_to_book(document.querySelector(`#${id}`)?.removeChild(fix))
+        // eslint-disable-next-line
+        document.querySelector(`#${id}`)?.appendChild(fix)
+    } else {
+        wb = XLSX.utils.table_to_book(document.querySelector(`#${id}`))
+    }
+    const WBout = XLSX.write(wb, {
+        bookType: 'xlsx',
+        bookSST: true,
+        type: 'array'
+    })
+    try {
+        FileSaver.saveAs(
+            new Blob([WBout], {
+                type: 'application/octet-stream'
+            }),
+            `${fileName}.xlsx`
+        )
+    } catch (e) {
+        if (typeof console !== 'undefined') console.log(e, WBout)
+    }
+    return WBout
+}
+
+function formatJson(column, jsonData) {
+    return jsonData.map(v => column.map(j => {
+        if (j.formatter && typeof (j.formatter(v)) === 'string') {
+            return j.formatter(v)
+        }
+        return v[j.prop]
+    }))
+}
+interface Column {
+    label: string;
+    prop: string;
+}
+export function exportFileFor2Excel(column: Column[], tableData = [], fileName = '报表') {
+    import('../vendor/Export2Excel.js').then(excel => {
+        const tHeader: string[] = []
+        column.forEach(item => {
+            tHeader.push(item['label'])
+        })
+        const list = JSON.parse(JSON.stringify(tableData))
+        const data = formatJson(column, list)
+        excel.export_json_to_excel({
+            header: tHeader, //表头
+            data, //数据
+            filename: fileName, //名称
+            autoWidth: true //宽度自适应
+        })
+    })
+}
+
 
 export function setUserList(data) {
     const res: UserObj[] = [];

@@ -29,13 +29,15 @@ export function showFullScreenLoading() {
     if (needLoadingRequestCount === 0 && Vue.prototype.lodingState) {
         startLoading();
     }
-    needLoadingRequestCount++;
+    if (Vue.prototype.lodingState) {
+        needLoadingRequestCount++;
+    }
 }
 
 export function tryHideFullScreenLoading() {
     if (needLoadingRequestCount <= 0) return;
     needLoadingRequestCount--;
-    if (needLoadingRequestCount === 0 && Vue.prototype.lodingState) {
+    if (needLoadingRequestCount === 0) {
         endLoading();
     }
 }
@@ -115,6 +117,9 @@ export default (url: string, method: string = HTTP_METHOD.GET, data = {}, bussin
             // pre
             HOST = 'https://alb03-in-uat-vpc03.shinho.net.cn/rdm-common';
         }
+    } else if (bussiness === 'REPORT') {
+        // report use
+        HOST = process.env.VUE_APP_REPORT_API + process.env.VUE_APP_API_V;
     } else {
         HOST = process.env.VUE_APP_BASE_API + process.env.VUE_APP_API_V;
     }

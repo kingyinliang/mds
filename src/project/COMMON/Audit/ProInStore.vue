@@ -121,6 +121,7 @@
             },
             {
                 prop: 'carAmount',
+                width: '130',
                 label: '入库数量（箱）'
             },
             {
@@ -139,7 +140,7 @@
                 prop: 'isSample',
                 label: '是否样品',
                 formatter: (row) => {
-                    return row.isSample === '0' ? '否' : '是'
+                    return row.isSample === '0' || row.isSample === '' || row.isSample === 'N' ? '否' : '是'
                 }
             },
             {
@@ -176,9 +177,21 @@
                 label: '库存类型',
                 width: '120'
             },
+            // {
+            //     type: 'input',
+            //     redact: true,
+            //     prop: 'noMoreGr',
+            //     label: '交货已完成',
+            //     width: '120'
+            // },
             {
-                type: 'input',
+                type: 'select',
                 redact: true,
+                header: true,
+                resVal: {
+                    label: 'label',
+                    value: 'value'
+                },
                 prop: 'noMoreGr',
                 label: '交货已完成',
                 width: '120'
@@ -194,7 +207,8 @@
             {
                 type: 'input',
                 redact: true,
-                prop: 'theDate',
+                prop: 'remark',
+                width: '120',
                 label: '备注'
             },
             {
@@ -372,6 +386,13 @@
                     }, 1000);
                 });
             }
+            this.$refs.queryTable.optionLists.noMoreGr = [{
+                label: '完全收货',
+                value: 'X'
+            }, {
+                label: '部分收货',
+                value: ''
+            }]
         }
 
         // 查询请求

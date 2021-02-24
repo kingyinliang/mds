@@ -59,7 +59,7 @@
             },
             {
                 type: 'date-picker',
-                label: '生产日期',
+                label: '使用日期',
                 prop: 'useDate',
                 valueFormat: 'yyyy-MM-dd hh:mm:ss',
                 defaultValue: dateFormat(new Date(), 'yyyy-MM-dd hh:mm:ss')
@@ -97,6 +97,11 @@
                     label: ['dictValue'],
                     value: 'dictCode'
                 }
+            },
+            {
+                type: 'input',
+                label: '开罐单号',
+                prop: 'openPotNo'
             }
         ];
 
@@ -149,7 +154,7 @@
                 minwidth: '90'
             },
             {
-                label: '生产日期',
+                label: '使用日期',
                 prop: 'useDate',
                 minwidth: '140'
             },
@@ -170,6 +175,17 @@
             params['factory'] = JSON.parse(sessionStorage.getItem('factory') || '{}').id;
             return FER_API.FER_OPEN_POT_APPLY_LIST_API(params);
         }
+
+        // out() {
+        //     const params = {
+        //         ...this.$refs.queryTable.queryForm,
+        //         current: 1,
+        //         size: 99999
+        //     }
+        //     FER_API.FER_OPEN_POT_APPLY_LIST_API(params).then(({ data }) => {
+        //         exportFileFor2Excel(this.column, data.data.records, '报表')
+        //     })
+        // }
 
         goDetail(row: object) {
             this.$store.commit('fer/updateapplyForObj', row);

@@ -4,6 +4,7 @@
             ref="dataEntry"
             :header-base="headerBase"
             :form-header="formHeader"
+            :order-status="formHeader.mixSauceStatus"
             :saved-datas="savedDatas"
             :submit-datas="submitDatas"
             @success="getOrderList"
@@ -31,6 +32,8 @@
             tables: HTMLFormElement;
         }
 
+        mixPotList = []
+
         headerBase = [
             {
                 type: 'p',
@@ -44,29 +47,35 @@
                 label: '开罐类型',
                 value: 'ferOpen.openTypeName'
             },
+            // {
+            //     type: 'select',
+            //     icon: 'factory-riqi',
+            //     label: '调酱容器',
+            //     value: 'mixPotId',
+            //     disabled: true,
+            //     option: {
+            //         list: [],
+            //         label: 'holderName',
+            //         value: 'id'
+            //     }
+            // },
             {
-                type: 'select',
+                type: 'p',
                 icon: 'factory-riqi',
                 label: '调酱容器',
-                value: 'mixPotName',
-                disabled: true,
-                option: {
-                    list: [],
-                    label: 'holderName',
-                    value: 'holderId'
-                }
+                value: 'mixPotName'
             },
             {
                 type: 'p',
                 icon: 'factory-shengchanchejian',
                 label: '状态',
-                value: 'status'
+                value: 'mixSauceStatusName'
             },
             {
                 type: 'tooltip',
                 icon: 'factory-pinleiguanli',
                 label: '发酵物料',
-                value: ['mixMaterialCode', 'mixMaterialName']
+                value: ['ferOpen.applyMaterialCode', 'ferOpen.applyMaterialName']
             },
             {
                 type: 'tooltip',
@@ -76,12 +85,14 @@
             },
             {
                 type: 'orgSelectUser',
+                required: true,
                 icon: 'factory-xianchangrenyuan',
                 label: '调酱操作人',
                 value: 'user'
             },
             {
                 type: 'date-time',
+                required: true,
                 icon: 'factory-riqi1',
                 label: '调酱时间',
                 value: 'mixDate'
@@ -127,37 +138,55 @@
         }
 
         getOrderList() {
+            // COMMON_API.HOLDER_DROPDOWN_API({
+            //     factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
+            //     holderType: ['001', '028'],
+            //     holderStatus: 'E'
+            // }).then(({ data }) => {
+            //     this.headerBase[2]['option'] = {
+            //         list: data.data || [],
+            //         label: 'holderName',
+            //         value: 'id'
+            //     }
+            // })
             FER_API.FER_DEPLOY_SAUCE_GET_API({
                 id: this.$store.state.fer.deploySauceObj.id
             }).then(({ data }) => {
                 this.formHeader = data.data
                 this.formHeader.user = this.formHeader.mixMans.length > 0 ? this.formHeader.mixMans.split(',') : []
                 this.$refs.tables.init(this.formHeader)
+                this.formHeader['openType'] === 'MANY' ? this.headerBase[10]['disabled'] = true : this.headerBase[10]['disabled'] = false
             })
         }
 
         savedDatas() {
-            const { pickledMixMaterialList, receiveMixMaterialList, sauceMixMaterialList, materialRemoveIds } = this.$refs.tables.saveData()
+            const { ferMixFermentorUpdateDtoList, ferMixFermentorSaveDtoList, pickledMixMaterialList, receiveMixMaterialList, sauceMixMaterialList, materialRemoveIds } = this.$refs.tables.saveData()
             this.formHeader.pickledMixMaterialList = pickledMixMaterialList
             this.formHeader.receiveMixMaterialList = receiveMixMaterialList
             this.formHeader.sauceMixMaterialList = sauceMixMaterialList
             this.formHeader.materialRemoveIds = materialRemoveIds
+            this.formHeader.ferMixFermentorUpdateDtoList = ferMixFermentorUpdateDtoList
+            this.formHeader.ferMixFermentorSaveDtoList = ferMixFermentorSaveDtoList
             this.formHeader.mixMans = this.formHeader.user.length ? this.formHeader.user.join(',') : ''
             return FER_API.FER_DEPLOY_SAUCE_DETAIL_SAVE_API(this.formHeader)
         }
 
         submitDatas() {
-            const { pickledMixMaterialList, receiveMixMaterialList, sauceMixMaterialList, materialRemoveIds } = this.$refs.tables.saveData()
+            const { ferMixFermentorUpdateDtoList, ferMixFermentorSaveDtoList, pickledMixMaterialList, receiveMixMaterialList, sauceMixMaterialList, materialRemoveIds } = this.$refs.tables.saveData()
             this.formHeader.pickledMixMaterialList = pickledMixMaterialList
             this.formHeader.receiveMixMaterialList = receiveMixMaterialList
             this.formHeader.sauceMixMaterialList = sauceMixMaterialList
             this.formHeader.materialRemoveIds = materialRemoveIds
+            this.formHeader.ferMixFermentorUpdateDtoList = ferMixFermentorUpdateDtoList
+            this.formHeader.ferMixFermentorSaveDtoList = ferMixFermentorSaveDtoList
             this.formHeader.mixMans = this.formHeader.user.length ? this.formHeader.user.join(',') : ''
             return FER_API.FER_DEPLOY_SAUCE_DETAIL_SUBMIT_API(this.formHeader)
         }
     }
     interface HeadObj {
         openPotNo?: string;
+        ferMixFermentorUpdateDtoList?: ListObj[];
+        ferMixFermentorSaveDtoList?: ListObj[];
         pickledMixMaterialList?: ListObj[];
         receiveMixMaterialList?: ListObj[];
         sauceMixMaterialList?: ListObj[];

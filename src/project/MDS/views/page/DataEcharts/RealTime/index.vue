@@ -295,7 +295,7 @@ export default {
         margin: 0 10px;
         padding: 15px;
         overflow-y: hidden;
-        background-image: url("../../../../assets/img/ozoneBg.png");
+        background-image: url("~@/assets/img/ozoneBg.png");
         background-repeat: no-repeat;
         background-size: 100% 100%;
         .Container_box {
@@ -306,7 +306,7 @@ export default {
             height: 100%;
             padding: 30px 0;
             overflow-y: auto;
-            background-image: url("../../../../assets/img/ozoneItemBg.png");
+            background-image: url("~@/assets/img/ozoneItemBg.png");
             background-repeat: no-repeat;
             background-size: 100% 100%;
             &::-webkit-scrollbar {

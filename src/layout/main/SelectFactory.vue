@@ -70,6 +70,7 @@
         }
 
         jumpTo(factory, href) {
+            console.log(href);
             COMMON_API.UPDATE_FACTORY_API({
                 factory: factory.id
             }).then(({ data }) => {
@@ -86,7 +87,7 @@
             } else if (item.deptCode === '9999-xn') {
                 this.jumpTo(item, '/SYSTEM.html')
             } else if (item.deptCode === '8888-xn') {
-                this.jumpTo(item, '/MDS.html#/DataEcharts/KojiMaking-DataScreening-index')
+                this.jumpTo(item, '/DATABOARD.html')
             } else {
                 this.jumpTo(item, '/DFMDS.html')
             }

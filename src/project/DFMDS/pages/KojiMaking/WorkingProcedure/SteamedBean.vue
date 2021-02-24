@@ -69,7 +69,7 @@
         steamedBeanCraftStatus='N';
         steamedInStorageStatus='N';
 
-        @Watch('formHeader.potNo', { immediate: true, deep: true })
+        @Watch('formHeader.potId', { immediate: true, deep: true })
         onChangeValue(newVal: number| string) {
             if (newVal) {
                 this.potIdNow = newVal
@@ -110,7 +110,7 @@
                     type: 'select',
                     icon: 'factory-bianhaoguize',
                     label: '泡豆罐',
-                    value: 'potNo',
+                    value: 'potId',
                     disabled: true,
                     option: {
                         list: this.scanList,
@@ -154,7 +154,7 @@
         getHouseTag() {
             KOJI_API.KOJI_PAGE_TAG_STATUS_QUERY_API({
                 orderNo: this.formHeader.orderNo,
-                kojiOrderNo: this.formHeader.kojiOrderNo
+                kojiOrderNo: this.formHeader.kojiOrderNo || ''
             }).then(({ data }) => {
 
                 this.$store.commit('koji/updateHouseTag', data.data);
@@ -181,12 +181,12 @@
                     this.$refs.dataEntry.activeName = this.$route.params.activeName;
                 }, 2000);
             }
-            await this.getScanList();
             await this.getOrderList()
+            // await this.getScanList();
         }
 
         // 查询表头
-        getOrderList() {
+        async getOrderList() {
             COMMON_API.OREDER_QUERY_BY_NO_API({
                 // this.jumpFromAudit 承接判断跳转过来
                 orderNo: this.jumpFromAudit ? this.$route.params.order : this.$store.state.koji.orderScInfo.orderNo || ''
@@ -196,7 +196,7 @@
                 //     orderNo: this.jumpFromAudit ? this.$route.params.order : this.$store.state.koji.orderScInfo.orderNo || ''
                 // }).then(({ data: res }) => {
                 //     this.potIdNow = res.data.beanJarId
-                //     console.log('res99999999999999')
+                //     console.log('res')
                 //     console.log(res)
                 //     if (this.scanList.length !== 0 && res.data.beanJarId !== '') {
                 //             this.potNoNow = this.scanList.filter(item => item.id === res.data.beanJarId)[0].holderNo as string
@@ -218,20 +218,27 @@
                 // });
 
                 // 2.雪健建议
+                // kojiInStorage/queryList
                 KOJI_API.KOJI_STEAM_INSTORAGE_LIST_API({
+                    kojiOrderNo: null,
                     orderNo: this.jumpFromAudit ? this.$route.params.order : this.$store.state.koji.orderScInfo.orderNo || ''
                 }).then(({ data: res }) => {
+                    console.log('res.data')
+                    console.log(res.data)
                     this.potIdNow = '';
                     this.potNoNow = '';
+                    this.formHeader = {
+                        ...data.data,
+                        potId: this.potIdNow,
+                        kojiOrderNo: null
+                    };
                     if (res.data.length !== 0) {
                         this.potIdNow = res.data[0].scPotId;
                         this.potNoNow = res.data[0].scPotNo;
+                        this.formHeader.kojiOrderNo = res.data[0].kojiOrderNo;
+                        this.formHeader.potId = res.data[0].scPotId
                     }
-                    this.formHeader = {
-                        ...data.data,
-                        potNo: this.potIdNow,
-                        kojiOrderNo: null
-                    };
+
                     // 获取页签状态
                     this.getHouseTag();
                     this.formHeader.textStage = 'ZD';
@@ -241,6 +248,8 @@
                     this.$refs.steamedInStorage.init(this.formHeader);
                     this.$refs.excRecord.init(this.formHeader, 'ZD');
                     this.$refs.textRecord.init(this.formHeader, 'koji');
+                    // 获取泡豆罐
+                    this.getScanList()
 
                 });
 
@@ -251,14 +260,26 @@
 
         // 获取泡豆罐
         getScanList() {
-            COMMON_API.HOLDER_DROPDOWN_API({
+            COMMON_API.HOLDER_DROPDOWN_BY_STATUS_API({
                 // deptId: this.formHeader.workShop,
                 factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
                 holderType: ['025']
             }).then(({ data }) => {
                 console.log('泡豆罐下拉')
                 console.log(data)
-                this.scanList = data.data || [];
+                // this.scanList = data.data || [];
+                this.scanList = [];
+                if (data.data.length !== 0) {
+                    console.log('this.potIdNow')
+                    console.log(this.potIdNow)
+
+                    data.data.forEach(item => {
+                        // 是空罐或是已有的罐
+                        if (item.holderStatus === 'E' || item.id === this.potIdNow) {
+                            this.scanList.push({ holderNo: item.holderNo, holderName: item.holderName, id: item.id })
+                        }
+                    })
+                }
             });
         }
 
@@ -277,7 +298,7 @@
                     updateDatas: excRequest.UpdateDto
                 },
                 text: textRequest.pkgTextInsert,
-                kojiOrderNo: this.formHeader.kojiOrderNo,
+                kojiOrderNo: this.formHeader.kojiOrderNo || '',
                 orderNo: this.formHeader.orderNo,
                 kojiHouseNo: this.formHeader.kojiHouseNo,
                 beanJarId: this.potIdNow,
@@ -303,7 +324,7 @@
                     updateDatas: excRequest.UpdateDto
                 },
                 text: textRequest.pkgTextInsert,
-                kojiOrderNo: this.formHeader.kojiOrderNo,
+                kojiOrderNo: this.formHeader.kojiOrderNo || '',
                 orderNo: this.formHeader.orderNo,
                 kojiHouseNo: this.formHeader.kojiHouseNo,
                 beanJarId: this.potIdNow,
@@ -325,7 +346,7 @@
         kojiOrderNo?: string;
         textStage?: string;
         factoryName?: string;
-        potNo?: string;
+        potId?: string;
         potOrder?: string;
         steTagPot?: StatusObj;
         workShop?: string;

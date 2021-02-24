@@ -60,7 +60,7 @@
                                                         color: item1.orderStatus === 'noPass' ? 'red' : item1.exportMaterial !== '' ? '#FFBF00' : '',
                                                     }"
                                                 >
-                                                    {{ item1.orderNo }}
+                                                    {{ item1.orderNo }} - {{ item1.orderStatus === 'submit' ? '已提交' : item1.orderStatus === 'checked' ? '审核通过' : item1.orderStatus === 'noPass' ? '审核不通过' : item1.orderStatus === 'saved' ? '已保存' : item1.orderStatus === '已同步' ? '未录入' : item1.orderStatus }}
                                                 </div>
                                             </el-option>
                                         </el-select>
@@ -262,7 +262,7 @@ export default {
                         this.$store.state.common.sterilized.seiOrderId = item.orderId;
                         this.$store.state.common.sterilized.seiFactory = item.factory;
                         this.$store.state.common.sterilized.seiOrderNo = item.orderNo;
-                        url = 'DataEntry-Sterilized-SterilizedIndex-semiReceive-index';
+                        url = 'MDS-views-page-DataEntry-Sterilized-SterilizedIndex-semiReceive-index';
                         this.mainTabs = this.mainTabs.filter(subItem => subItem.name !== url);
                         setTimeout(() => {
                             this.$router.push({ name: url });
@@ -287,7 +287,7 @@ export default {
                             this.$store.state.common.sterilized.acceOrderId = item.orderId;
                             this.$store.state.common.sterilized.acceFactory = item.factory;
                             this.$store.state.common.sterilized.acceOrderNo = item.orderNo;
-                            url = 'DataEntry-Sterilized-SterilizedIndex-acceAdd-index';
+                            url = 'MDS-views-page-DataEntry-Sterilized-SterilizedIndex-acceAdd-index';
                             this.mainTabs = this.mainTabs.filter(subItem => subItem.name !== url);
                             setTimeout(() => {
                                 this.$router.push({ name: url });
@@ -303,7 +303,7 @@ export default {
                     return;
                 }
                 this.$store.state.common.sterilized.craftOrderId = item.orderId;
-                url = 'DataEntry-Sterilized-SterilizedIndex-craftControl-index';
+                url = 'MDS-views-page-DataEntry-Sterilized-SterilizedIndex-craftControl-index';
                 this.mainTabs = this.mainTabs.filter(subItem => subItem.name !== url);
                 setTimeout(() => {
                     this.$router.push({ name: url });
@@ -316,7 +316,7 @@ export default {
                 this.$store.state.common.sterilized.inOrderId = item.orderId;
                 this.$store.state.common.sterilized.inFactory = item.factory;
                 this.$store.state.common.sterilized.inOrderNo = item.orderNo;
-                url = 'DataEntry-Sterilized-SterilizedIndex-inStock-index';
+                url = 'MDS-views-page-DataEntry-Sterilized-SterilizedIndex-inStock-index';
                 this.mainTabs = this.mainTabs.filter(subItem => subItem.name !== url);
                 setTimeout(() => {
                     this.$router.push({ name: url });

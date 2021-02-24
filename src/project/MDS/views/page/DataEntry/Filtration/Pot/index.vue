@@ -327,9 +327,9 @@ export default {
             this.$store.state.common.PotReportForms.factory = this.formHeader.factory;
             this.$store.state.common.PotReportForms.workShop = this.formHeader.workShop;
             this.$store.state.common.PotReportForms.type = 'filterHolder';
-            this.$store.state.common.mainTabs = this.$store.state.common.mainTabs.filter(item => item.name !== 'DataEntry-PotReportForms-index');
+            this.$store.state.common.mainTabs = this.$store.state.common.mainTabs.filter(item => item.name !== 'MDS-views-page-DataEntry-PotReportForms-index');
             setTimeout(() => {
-                this.$router.push({ name: `DataEntry-PotReportForms-index` });
+                this.$router.push({ name: `MDS-views-page-DataEntry-PotReportForms-index` });
             }, 100);
         },
         // 查询
@@ -350,9 +350,9 @@ export default {
         // 去详情
         godetails(item) {
             this.$store.state.common.filtrationPot = item;
-            this.mainTabs = this.mainTabs.filter(subItem => subItem.name !== 'DataEntry-Filtration-Pot-detail');
+            this.mainTabs = this.mainTabs.filter(subItem => subItem.name !== 'MDS-views-page-DataEntry-Filtration-Pot-detail');
             setTimeout(() => {
-                this.$router.push({ name: `DataEntry-Filtration-Pot-detail` });
+                this.$router.push({ name: `MDS-views-page-DataEntry-Filtration-Pot-detail` });
             }, 100);
         },
         // 清罐
