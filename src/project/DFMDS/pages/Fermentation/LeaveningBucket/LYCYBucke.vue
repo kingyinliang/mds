@@ -330,6 +330,7 @@
                 })
 
                 // cy
+                // /fer/fermentorCy/batchQuery
                 await FER_API.FER_FERMENTOR_CY_BATCH_QUERY_API({
                     holderId: this.currentHolderId
                 }).then(({ data }) => {
@@ -358,8 +359,11 @@
                         data.data.forEach(item => {
                             this.CYProdcutMaterialOption.push({ dictValue: item.dictValue, dictCode: item.dictCode })
                         })
-
+                        this.CYProdcutMaterial = this.CYProdcutMaterialOption[0].dictCode as string
+                        this.cyMaterialCode = this.CYProdcutMaterialOption[0].dictCode as string
+                        this.cyMaterialName = this.CYProdcutMaterialOption[0].dictValue as string
                     }
+
                 })
             }
 
@@ -477,40 +481,40 @@
                 if (this.currentTab === 'LY') {
 
                     if (this.ruleSubmit()) {
-                    const obj = {}
-                    const deleteItemsArray: string[] = []
-                    const insertListArray: CurrentLyDataTable[] = []
-                    const updateListArray: CurrentLyDataTable[] = []
+                        const obj = {}
+                        const deleteItemsArray: string[] = []
+                        const insertListArray: CurrentLyDataTable[] = []
+                        const updateListArray: CurrentLyDataTable[] = []
 
-                    this.lyDataGroup.forEach((item: CurrentLyDataTable, index) => {
+                        this.lyDataGroup.forEach((item: CurrentLyDataTable, index) => {
 
-                        if (item.delFlag === 1) {
-                            if (item.id) {
-                                deleteItemsArray.push(item.id)
+                            if (item.delFlag === 1) {
+                                if (item.id) {
+                                    deleteItemsArray.push(item.id)
+                                }
+                            } else if (item.id) {
+
+                                if (!_.isEqual(this.orgLyDataGroup[index], item)) {
+                                    // item.potStatus = this.currentPotStatu
+                                    updateListArray.push(item)
+                                }
+                            } else {
+                                // item.potStatus = this.currentPotStatus
+                                insertListArray.push(item)
                             }
-                        } else if (item.id) {
+                        })
 
-                            if (!_.isEqual(this.orgLyDataGroup[index], item)) {
-                                // item.potStatus = this.currentPotStatu
-                                updateListArray.push(item)
-                            }
-                        } else {
-                            // item.potStatus = this.currentPotStatus
-                            insertListArray.push(item)
-                        }
-                    })
-
-                    FER_API.FER_FERMENTOR_LY_SAVE_API({
-                        cycle: this.currentCycle,
-                        holderId: this.currentHolderId,
-                        deleteIds: deleteItemsArray,
-                        insertList: insertListArray,
-                        updateList: updateListArray
-                    }).then(() => {
-                        this.$successToast('保存成功');
-                        this.$emit('drumBucketFinish', obj);
-                        this.isTableDialogVisible = false
-                    });
+                        FER_API.FER_FERMENTOR_LY_SAVE_API({
+                            cycle: this.currentCycle,
+                            holderId: this.currentHolderId,
+                            deleteIds: deleteItemsArray,
+                            insertList: insertListArray,
+                            updateList: updateListArray
+                        }).then(() => {
+                            this.$successToast('保存成功');
+                            this.$emit('drumBucketFinish', obj);
+                            this.isTableDialogVisible = false
+                        });
                 }
 
 
@@ -528,7 +532,7 @@
                             }
                         } else if (item.id) {
 
-                            if (!_.isEqual(this.orgLyDataGroup[index], item)) {
+                            if (!_.isEqual(this.orgCyDataGroup[index], item)) {
                                 // item.potStatus = this.currentPotStatus
 
                                 item.cyMaterialCode = this.cyMaterialCode
@@ -544,6 +548,7 @@
                         }
                     })
 
+                    // /fer/fermentorCy/batchSave
                     FER_API.FER_FERMENTOR_CY_SAVE_API({
                         cycle: this.currentCycle,
                         holderId: this.currentHolderId,

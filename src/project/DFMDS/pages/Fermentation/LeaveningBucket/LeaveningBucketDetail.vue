@@ -3,7 +3,7 @@
  * @Anthor: Telliex
  * @Date: 2021-01-15 23:35:23
  * @LastEditors: Telliex
- * @LastEditTime: 2021-02-22 16:14:45
+ * @LastEditTime: 2021-02-23 17:29:00
 -->
 <template>
     <div class="header_main">
@@ -11,7 +11,7 @@
             <el-col :span="4">
                 <div class="card-left" style="background: #fff;">
                     <p class="dataEntry-head-leftRight__title" style="color: #333;">
-                        罐号：{{ LeaveningformData.holderName }}
+                        罐号：{{ leaveningformData.holderName }}
                     </p>
                     <div class="dataEntry-head-leftRight-pot">
                         <img src="~DFMDS/assets/img/pot-c.png" alt="" style=" left: 0; z-index: 1;">
@@ -21,12 +21,12 @@
             </el-col>
             <el-col :span="20">
                 <div class="card-right" style="background: #fff; cursor: default;">
-                    <el-form ref="Leavening" :model="LeaveningformData" size="small" label-width="120px" :inline="true">
+                    <el-form ref="Leavening" :model="leaveningformData" size="small" label-width="120px" :inline="true">
                         <el-form-item
                             label="生产车间："
                         >
                             <el-input
-                                v-model="LeaveningformData.workShopName"
+                                :value="leaveningformData.workShopName"
                                 placeholder=""
                                 :disabled="true"
                                 style="width: 180px;"
@@ -35,9 +35,9 @@
                         <el-form-item
                             label="生产订单："
                         >
-                            <el-tooltip class="item" effect="dark" :content="LeaveningformData.orderNo" placement="top">
+                            <el-tooltip class="item" effect="dark" :content="leaveningformData.orderNo" placement="top">
                                 <el-input
-                                    v-model="LeaveningformData.orderNo"
+                                    :value="leaveningformData.orderNo"
                                     placeholder=""
                                     :disabled="true"
                                     style="width: 180px;"
@@ -47,9 +47,9 @@
                         <el-form-item
                             label="生产物料："
                         >
-                            <el-tooltip class="item" effect="dark" :content="LeaveningformData.material" placement="top">
+                            <el-tooltip class="item" effect="dark" :content="leaveningformData.material" placement="top">
                                 <el-input
-                                    v-model="LeaveningformData.material"
+                                    :value="leaveningformData.material"
                                     placeholder=""
                                     :disabled="true"
                                     style="width: 180px;"
@@ -60,7 +60,7 @@
                             label="订单数量："
                         >
                             <el-input
-                                v-model="LeaveningformData.currentStock"
+                                :value="leaveningformData.orderAmount/1000"
                                 placeholder=""
                                 style="width: 180px;"
                                 :disabled="true"
@@ -72,7 +72,7 @@
                             label="库存数量："
                         >
                             <el-input
-                                v-model="LeaveningformData.orderAmount"
+                                :value="leaveningformData.currentStock/1000"
                                 placeholder=""
                                 style="width: 180px;"
                                 :disabled="true"
@@ -84,7 +84,7 @@
                             label="状态："
                         >
                             <el-input
-                                v-model="LeaveningformData.fermentorStatusName"
+                                :value="leaveningformData.fermentorStatusName"
                                 placeholder=""
                                 style="width: 180px;"
                                 :disabled="true"
@@ -94,7 +94,7 @@
                             label="入罐日期："
                         >
                             <el-input
-                                v-model="LeaveningformData.intoDate"
+                                :value="leaveningformData.intoDate"
                                 placeholder=""
                                 style="width: 180px;"
                                 :disabled="true"
@@ -104,7 +104,7 @@
                             label="发酵天数："
                         >
                             <el-input
-                                v-model="LeaveningformData.fermentDays"
+                                :value="leaveningformData.fermentDays"
                                 placeholder=""
                                 style="width: 180px;"
                                 :disabled="true"
@@ -116,14 +116,14 @@
                             label="是否成熟："
                         >
                             <el-input
-                                v-model="LeaveningformData.freezeFlagnName"
+                                :value="leaveningformData.freezeFlagnName"
                                 placeholder=""
                                 style="width: 180px;"
                                 :disabled="true"
                             />
                         </el-form-item>
                         <el-form-item label="特殊资源：">
-                            <el-radio-group v-model="LeaveningformData.brineFlag">
+                            <el-radio-group v-model="leaveningformData.brineFlag">
                                 <el-radio label="N" disabled>
                                     盐水未发
                                 </el-radio>
@@ -339,7 +339,7 @@ export default class LeaveningBucketDetail extends Vue {
     // 领用信息
     currentOutStockDataGroup = [];
 
-    LeaveningformData: LeaveningData= {}; // 上方表单讯息
+    leaveningformData: LeaveningData= {}; // 上方表单讯息
 
     mounted() {
         this.retrieveDetail();
@@ -348,23 +348,20 @@ export default class LeaveningBucketDetail extends Vue {
     retrieveDetail() {
         console.log('取值')
         console.log(this.$store.state.fer.fermentBucketDetail)
-        // this.LeaveningformData = this.$store.state.fer.fermentBucketDetail
-        // this.$set(this.LeaveningformData, 'material', `${this.LeaveningformData.materialName} ${this.LeaveningformData.materialCode}`)
-        // this.$set(this.LeaveningformData, 'freezeFlagnName', this.LeaveningformData.freezeFlag === 'Y' ? '已成熟' : '未成熟')
-        // this.currentWorkShopName = this.LeaveningformData.workShopName as string
-
+        this.currentWorkShopName = this.$store.state.fer.fermentBucketDetail.workShopName as string
         FER_API.FER_FERMENTOR_STOCK_DETAIL_QUERY_API({
             holderId: this.$store.state.fer.fermentBucketDetail.holderId
             }).then(({ data }) => {
                 console.log('详细数据')
                 console.log(data)
 
-                this.LeaveningformData = data.data
-                this.$set(this.LeaveningformData, 'material', `${this.LeaveningformData.materialName} ${this.LeaveningformData.materialCode}`)
-                this.$set(this.LeaveningformData, 'freezeFlagnName', this.LeaveningformData.freezeFlag === 'Y' ? '已成熟' : '未成熟')
-                this.currentWorkShopName = this.$store.state.fer.fermentBucketDetail.workShopName as string
-                this.$set(this.LeaveningformData, 'workShopName', this.currentWorkShopName)
-                 // 投料信息
+                this.leaveningformData = data.data
+                this.$set(this.leaveningformData, 'material', `${this.leaveningformData.materialName} ${this.leaveningformData.materialCode}`)
+                this.$set(this.leaveningformData, 'freezeFlagnName', this.leaveningformData.freezeFlag === 'Y' ? '已成熟' : '未成熟')
+                this.$set(this.leaveningformData, 'workShopName', this.currentWorkShopName)
+                // this.leaveningformData.orderAmount = this.leaveningformData.orderAmount ? this.leaveningformData.orderAmount / 1000 : this.leaveningformData.orderAmount
+                // this.leaveningformData.currentStock = this.leaveningformData.currentStock / 1000
+                // 投料信息
                 this.currentInStockDataGroup = [];
                 // 领用信息
                 this.currentOutStockDataGroup = [];
@@ -407,6 +404,7 @@ interface LeaveningData{
         remark?: string;
         workShop?: string;
         workShopName?: string;
+        orderAmount?: string;
     }
 
 </script>

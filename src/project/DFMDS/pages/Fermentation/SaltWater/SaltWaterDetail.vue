@@ -441,8 +441,8 @@ export default class SaltWaterDetail extends Vue {
                 this.ferBrineIssueBomRemoveIdList.push(row.id);
             }
         })
-        return FER_API.FER_BRINE_SAVE_API({
-            ferBrineIssueBomList: this.otherMaterialList.filter(row => row.checkStatus !== 'M'),
+        const param = {
+            ferBrineIssueBomList: this.otherMaterialList.filter(row => row.checkStatus !== 'M').filter(item => item.operatFlag !== -1),
             ferBrineIssueBomRemoveIdList: this.ferBrineIssueBomRemoveIdList,
             ferBrineIssueBrineList: this.saltWaterList.filter(row => row.checkStatus !== 'M'),
             ferBrineIssueBrineRemoveIdList: this.ferBrineIssueBrineRemoveIdList,
@@ -463,7 +463,10 @@ export default class SaltWaterDetail extends Vue {
             workShop: info.workShop,
             kojiWorkShop: info.kojiWorkShop,
             virtualMaterialId: virtualMaterialId
-        });
+        }
+        // console.log(param, '================')
+        // return new Promise((resolve, reject) => reject(1))
+        return FER_API.FER_BRINE_SAVE_API(param);
     }
 
     submitDatas() {
@@ -481,8 +484,8 @@ export default class SaltWaterDetail extends Vue {
                 this.ferBrineIssueBomRemoveIdList.push(row.id);
             }
         })
-        return FER_API.FER_BRINE_SUBMIT_API({
-            ferBrineIssueBomList: this.otherMaterialList.filter(row => row.checkStatus !== 'M'),
+        const param = {
+            ferBrineIssueBomList: this.otherMaterialList.filter(row => row.checkStatus !== 'M').filter(item => item.operatFlag !== -1),
             ferBrineIssueBomRemoveIdList: this.ferBrineIssueBomRemoveIdList,
             ferBrineIssueBrineList: this.saltWaterList.filter(row => row.checkStatus !== 'M'),
             ferBrineIssueBrineRemoveIdList: this.ferBrineIssueBrineRemoveIdList,
@@ -507,7 +510,8 @@ export default class SaltWaterDetail extends Vue {
             kojiOrderId: info.kojiOrderId,
             kojiOrderType: info.kojiOrderType,
             kojiOrderStartDate: info.kojiOrderStartDate
-        });
+        }
+        return FER_API.FER_BRINE_SUBMIT_API(param);
     }
 
     addMaterial(ref) {

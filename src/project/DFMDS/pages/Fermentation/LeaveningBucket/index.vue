@@ -3,7 +3,7 @@
  * @Anthor: Telliex
  * @Date: 2021-01-15 23:35:23
  * @LastEditors: Telliex
- * @LastEditTime: 2021-02-19 16:38:38
+ * @LastEditTime: 2021-02-24 11:30:53
 -->
 <template>
     <div class="header_main">
@@ -33,7 +33,7 @@
                                     <div class="showBox">
                                         <ul>
                                             <li v-for="(element, subIndex) in item.materialCountList" :key="subIndex">
-                                                <span>{{ element.materialName }}</span><span>{{ element.count }}吨</span>
+                                                <span>{{ element.materialName }}</span><span>{{ element.count }} 罐</span>
                                             </li>
                                         </ul>
                                     </div>
@@ -84,7 +84,7 @@
                         </div>
                     </template>
                     <el-row class="home_card__main" :gutter="10">
-                        <el-col v-for="item in targetQueryTableList" :key="item.potId" :span="4" style="min-width: 203px;">
+                        <el-col v-for="item in targetQueryTableList" :key="item.potId" :span="4" style="min-width: 250px;">
                             <div class="card-bucket">
                                 <div class="card-bucket__head">
                                     <span>{{ item.holderName }} - {{ item.fermentorStatusName }}</span>
@@ -118,7 +118,7 @@
                                         <el-button v-if="isAuth('')" size="small" plain :disabled="item.fermentorStatus!=='U' || item.orderNo===''" @click="btnClearBucket(item)">
                                             清罐
                                         </el-button>
-                                        <el-button v-if="isAuth('')" size="small" plain :disabled="item.fermentorStatus!=='C' || item.orderNo===''" @click="btnCleanBucket(item)">
+                                        <el-button v-if="isAuth('')" size="small" plain :disabled="item.fermentorStatus!=='C'" @click="btnCleanBucket(item)">
                                             清洗
                                         </el-button>
                                     </div>
@@ -134,7 +134,7 @@
                                         <el-tooltip class="item" effect="dark" :content="item.orderNo" placement="top" :disabled="item.orderNo===''">
                                             <span style="overflow: hidden; white-space: nowrap; text-overflow: ellipsis;">{{ item.orderNo || '未有订单号' }}</span>
                                         </el-tooltip>
-                                        <span>{{ item.currentStock || '0' }} 吨</span>
+                                        <span>{{ item.currentStock/1000 || '0' }} 吨</span>
                                     </div>
                                 </div>
                             </div>
@@ -205,7 +205,6 @@
     </div>
 </template>
 <script lang="ts">
-    // TODOS mouseover 地铁图，需要接口套用
     import { Vue, Component } from 'vue-property-decorator';
     import { COMMON_API, FER_API } from 'common/api/api';
     import { dateFormat, getUserNameNumber } from 'utils/utils';
@@ -235,7 +234,7 @@
         holderStatus: Options[]=[] // 罐状态对应
 
         targetQueryTableList: BucketDataListObj[] = [] // 查询结果
-        searchSource='bar' // 查询来自哪？ search bar/ metro map
+        //searchSource='bar' // 查询来自哪？ search bar/ metro map
 
         // 清罐弹窗 data
         isClearDialogVisible = false;
@@ -540,13 +539,17 @@
                 ptext: '0个月',
                 numNew: 0,
                 potColor: '#FFF',
-                middleText: '空罐',
+                middleText: '领料',
                 fermentStage: 'U',
                 holderStatus: '0',
                 num: '0',
                 materialCountList: []
             }
         ]
+
+        mounted() {
+            this.$refs.queryTable.searchSource = 'bar'
+        }
 
         // 入罐完成
         drumBucketFinish() {
@@ -558,7 +561,8 @@
         getResultBymetroItem(item) {
             console.log('地铁图传值');
             console.log(item);
-            this.searchSource = 'metro';
+            // this.searchSource = 'metro';
+            this.$refs.queryTable.searchSource = 'metro'
 
             this.formHeader.fermentStage = item.fermentStage;
             this.formHeader.currPage = 1;
@@ -585,9 +589,13 @@
 
         // 取得结果 data
         getData() {
-            if (this.searchSource === 'bar') { // 来自 search bar 查询
+            console.log('=======this.searchSource============')
+            console.log(this.$refs.queryTable.searchSource)
+            // this.searchSource = 'bar'
+            if (this.$refs.queryTable.searchSource === 'bar') { // 来自 search bar 查询
                 this.formHeader.fermentStage = '';
-                    this.queryTableListInterface({
+                this.queryTableListInterface({
+                    searchSource: 'bar',
                     factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
                     currPage: this.formHeader.currPage,
                     pageSize: this.formHeader.pageSize,
@@ -654,12 +662,15 @@
             let paramsTemp = {};
             if (params.searchSource === 'metro') {
                 console.log('我来自地图');
+                // eslint-disable-next-line no-invalid-this
+                this.$refs.queryTable.searchSource = 'metro'
                 paramsTemp = params;
             } else {
                 console.log('我来自按钮查询')
-                // eslint-disable-next-line no-invalid-this
-                this.searchSource = 'bar';
+                 // eslint-disable-next-line no-invalid-this
+                 this.$refs.queryTable.searchSource = 'bar'
                 paramsTemp = {
+                    searchSource: 'bar',
                     factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
                     current: params.currPage,
                     // size: params.pageSize,
@@ -679,6 +690,7 @@
         returnDataFromQueryTableForm(data) {
             console.log('查询结果回传');
             console.log(data);
+            console.log(this.$refs.queryTable.searchSource)
             // 取得组件查找字段
             const queryForm = this.$refs.queryTable.queryForm;
             // 清空结果 array
@@ -722,7 +734,7 @@
                 this.$set(this.formHeader, 'workShop', queryForm.workShop);
 
             } else {
-                if (this.searchSource === 'bar') { //查询来自按钮
+                if (this.$refs.queryTable.searchSource === 'bar') { //查询来自按钮
                     this.isSearchResultMetroShow = false;
                     this.isSearchResultListShow = false;
                 } else { //查询来自地铁图
@@ -1112,15 +1124,15 @@ interface CurrentDataTable{
             justify-content: center;
             .pot_border {
                 position: relative;
-                width: 100%;
-                height: 200px;
+                width: 145px;
+                height: 255px;
                 overflow: hidden;
                 .pot {
                     position: absolute;
                     top: 0;
                     z-index: 10;
-                    width: 100%;
-                    height: 200px;
+                    width: 145px;
+                    height: 255px;
                     // background: url(./assets/img/ferPotNew.png) no-repeat;
                     background: bottom center url("~@/assets/img/ferPotNew.png") no-repeat;
                     background-size: contain;
@@ -1128,11 +1140,12 @@ interface CurrentDataTable{
                 .pot_water {
                     position: absolute;
                     right: 0;
-                    bottom: 13px;
+                    bottom: 10px;
                     left: 0;
-                    width: 114px;
-                    height: 200px;
+                    width: 145px;
+                    height: 235px;
                     margin: 0 auto;
+                    overflow: hidden;
                     &_sole {
                         position: absolute;
                         bottom: 0;
