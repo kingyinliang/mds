@@ -3,7 +3,7 @@
  * @Anthor: Telliex
  * @Date: 2021-01-15 23:35:23
  * @LastEditors: Telliex
- * @LastEditTime: 2021-02-23 21:23:52
+ * @LastEditTime: 2021-02-24 11:30:53
 -->
 <template>
     <div class="header_main">
@@ -84,7 +84,7 @@
                         </div>
                     </template>
                     <el-row class="home_card__main" :gutter="10">
-                        <el-col v-for="item in targetQueryTableList" :key="item.potId" :span="4" style="min-width: 203px;">
+                        <el-col v-for="item in targetQueryTableList" :key="item.potId" :span="4" style="min-width: 250px;">
                             <div class="card-bucket">
                                 <div class="card-bucket__head">
                                     <span>{{ item.holderName }} - {{ item.fermentorStatusName }}</span>
@@ -547,7 +547,7 @@
             }
         ]
 
-        amount() {
+        mounted() {
             this.$refs.queryTable.searchSource = 'bar'
         }
 
@@ -1124,15 +1124,15 @@ interface CurrentDataTable{
             justify-content: center;
             .pot_border {
                 position: relative;
-                width: 100%;
-                height: 200px;
+                width: 145px;
+                height: 255px;
                 overflow: hidden;
                 .pot {
                     position: absolute;
                     top: 0;
                     z-index: 10;
-                    width: 100%;
-                    height: 200px;
+                    width: 145px;
+                    height: 255px;
                     // background: url(./assets/img/ferPotNew.png) no-repeat;
                     background: bottom center url("~@/assets/img/ferPotNew.png") no-repeat;
                     background-size: contain;
@@ -1140,11 +1140,12 @@ interface CurrentDataTable{
                 .pot_water {
                     position: absolute;
                     right: 0;
-                    bottom: 13px;
+                    bottom: 10px;
                     left: 0;
-                    width: 114px;
-                    height: 200px;
+                    width: 145px;
+                    height: 235px;
                     margin: 0 auto;
+                    overflow: hidden;
                     &_sole {
                         position: absolute;
                         bottom: 0;
