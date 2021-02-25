@@ -135,6 +135,7 @@
         // 当前发酵罐/池号
         potNoNow: string|number = '';
         potNoList: OptionPotNoList[]=[]
+        potNoListReadyToCheck=false
 
 
         tabs = [
@@ -156,11 +157,8 @@
 
         @Watch('formHeader.fermentPotNo', { immediate: true, deep: true })
         onChangeValue(newVal: number| string) {
-            console.log('newVal')
-            console.log(newVal)
-            if (newVal) {
+            if (newVal && this.potNoListReadyToCheck) {
                 const obj = this.potNoList.find(item => item.optValue === newVal);
-                // console.log(newVal, this.potNoList, obj, '===============')
                 this.formHeader.fermentPotId = obj?.optId;
                 this.potNoNow = newVal
             }
@@ -199,7 +197,6 @@
 
             // 查询表头
             await this.getOrderList()
-
             // [下拉]获取溶解罐选项
             this.getFermentationHolder()
             // [下拉]获取班次选项
@@ -229,9 +226,7 @@
                         }
                         this.potNoList.push({ optValue: item.holderNo, optId: item.id })
                     })
-                    console.log('this.headerBase[5].option.list')
-                    console.log(this.headerBase[5].option.list)
-
+                    this.potNoListReadyToCheck = true
                 }
             })
         }
@@ -249,11 +244,8 @@
                 // id: this.$store.state.koji.orderKojiInfo.id || ''
                 id: this.jumpFromAudit ? this.$route.params.order : this.$store.state.koji.orderKojiInfo.id || ''
             }).then(({ data }) => {
-                this.formHeader = data.data
-                console.log('this.formHeader')
-                console.log(this.formHeader)
+                this.formHeader = JSON.parse(JSON.stringify(data.data))
                 this.getHouseTag();
-
                 this.$set(this.formHeader, 'factoryName', JSON.parse(sessionStorage.getItem('factory') || '{}').deptShort)
                 this.$set(this.formHeader, 'textStage', 'YP')
 
