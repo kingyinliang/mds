@@ -3,7 +3,7 @@
  * @Anthor: Telliex
  * @Date: 2021-01-15 23:35:23
  * @LastEditors: Telliex
- * @LastEditTime: 2021-02-24 11:30:53
+ * @LastEditTime: 2021-02-25 10:00:10
 -->
 <template>
     <div class="header_main">
@@ -84,7 +84,7 @@
                         </div>
                     </template>
                     <el-row class="home_card__main" :gutter="10">
-                        <el-col v-for="item in targetQueryTableList" :key="item.potId" :span="4" style="min-width: 250px;">
+                        <el-col v-for="item in targetQueryTableList" :key="item.potId" :span="4" style="min-width: 220px;">
                             <div class="card-bucket">
                                 <div class="card-bucket__head">
                                     <span>{{ item.holderName }} - {{ item.fermentorStatusName }}</span>
@@ -709,16 +709,16 @@
             this.topBox[10].num = data.data.adjustAmount;
             this.topBox[11].num = data.data.useAmount;
 
-            this.topBox[1].materialCountList = data.data.materialCountList0;
-            this.topBox[2].materialCountList = data.data.materialCountList30;
-            this.topBox[3].materialCountList = data.data.materialCountList60;
-            this.topBox[4].materialCountList = data.data.materialCountList90;
-            this.topBox[5].materialCountList = data.data.materialCountList120;
-            this.topBox[6].materialCountList = data.data.materialCountList150;
-            this.topBox[7].materialCountList = data.data.materialCountList180;
-            this.topBox[8].materialCountList = data.data.overdueMaterialCountList;
-            this.topBox[9].materialCountList = data.data.mixingMaterialCountList;
-            this.topBox[10].materialCountList = data.data.useMaterialCountList;
+            this.topBox[1].materialCountList = data.data.materialCountList0 || [];
+            this.topBox[2].materialCountList = data.data.materialCountList30 || [];
+            this.topBox[3].materialCountList = data.data.materialCountList60 || [];
+            this.topBox[4].materialCountList = data.data.materialCountList90 || [];
+            this.topBox[5].materialCountList = data.data.materialCountList120 || [];
+            this.topBox[6].materialCountList = data.data.materialCountList150 || [];
+            this.topBox[7].materialCountList = data.data.materialCountList180 || [];
+            this.topBox[8].materialCountList = data.data.overdueMaterialCountList || [];
+            this.topBox[9].materialCountList = data.data.mixingMaterialCountList || [];
+            this.topBox[10].materialCountList = data.data.useMaterialCountList || [];
             // this.topBox[11].materialCountList = data.data.useAmount;
             if (data.data.data.records.length !== 0) {
                 this.isSearchResultMetroShow = true; // 地铁图区块呈现
@@ -901,6 +901,9 @@ interface CurrentDataTable{
 
 </script>
 <style scoped>
+.home_card__main {
+    min-width: 1460px;
+}
 
 .markStyle >>> th .notNull::before {
     margin-right: 4px;
@@ -1124,15 +1127,15 @@ interface CurrentDataTable{
             justify-content: center;
             .pot_border {
                 position: relative;
-                width: 145px;
-                height: 255px;
+                width: 116px;
+                height: 204px;
                 overflow: hidden;
                 .pot {
                     position: absolute;
                     top: 0;
                     z-index: 10;
-                    width: 145px;
-                    height: 255px;
+                    width: 116px;
+                    height: 204px;
                     // background: url(./assets/img/ferPotNew.png) no-repeat;
                     background: bottom center url("~@/assets/img/ferPotNew.png") no-repeat;
                     background-size: contain;
@@ -1142,8 +1145,8 @@ interface CurrentDataTable{
                     right: 0;
                     bottom: 10px;
                     left: 0;
-                    width: 145px;
-                    height: 235px;
+                    width: 116px;
+                    height: 184px;
                     margin: 0 auto;
                     overflow: hidden;
                     &_sole {
