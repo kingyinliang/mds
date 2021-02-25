@@ -3,7 +3,7 @@
  * @Anthor: Telliex
  * @Date: 2021-01-15 23:35:23
  * @LastEditors: Telliex
- * @LastEditTime: 2021-02-25 12:08:41
+ * @LastEditTime: 2021-02-25 16:44:37
 -->
 <template>
     <div class="header_main">
@@ -84,7 +84,7 @@
                         </div>
                     </template>
                     <el-row class="home_card__main" :gutter="10">
-                        <el-col v-for="item in targetQueryTableList" :key="item.potId" :span="4" style="min-width: 220px;">
+                        <el-col v-for="item in targetQueryTableList" :key="item.potId" :span="4" style="min-width: 200px;">
                             <div class="card-bucket">
                                 <div class="card-bucket__head">
                                     <span>{{ item.holderName }} - {{ item.fermentorStatusName }}</span>
@@ -917,7 +917,7 @@ interface CurrentDataTable{
 </script>
 <style scoped>
 .home_card__main {
-    min-width: 1460px;
+    min-width: 1200px;
 }
 
 .markStyle >>> th .notNull::before {
@@ -1142,15 +1142,15 @@ interface CurrentDataTable{
             justify-content: center;
             .pot_border {
                 position: relative;
-                width: 116px;
-                height: 204px;
+                width: 87px;
+                height: 153px;
                 overflow: hidden;
                 .pot {
                     position: absolute;
                     top: 0;
                     z-index: 10;
-                    width: 116px;
-                    height: 204px;
+                    width: 87px;
+                    height: 153px;
                     // background: url(./assets/img/ferPotNew.png) no-repeat;
                     background: bottom center url("~@/assets/img/ferPotNew.png") no-repeat;
                     background-size: contain;
@@ -1160,8 +1160,8 @@ interface CurrentDataTable{
                     right: 0;
                     bottom: 10px;
                     left: 0;
-                    width: 116px;
-                    height: 184px;
+                    width: 87px;
+                    height: 135px;
                     margin: 0 auto;
                     overflow: hidden;
                     &_sole {

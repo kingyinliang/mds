@@ -19,7 +19,7 @@
                             <el-input v-model="headerInfo.fermentorStatusName" placeholder="" disabled style="width: 120px;" />
                         </el-form-item>
                         <el-form-item v-if="currentTab==='CY'" label="CY 物料：" size="mini" class="star">
-                            <el-select v-model="CYProdcutMaterial" placeholder="请选择" clearable style="width: 220px;" @change="changeProdcutMaterialOption">
+                            <el-select v-model="CYProdcutMaterial" placeholder="请选择" clearable style="width: 220px;" :disabled="CYProdcutMaterialStatus" @change="changeProdcutMaterialOption">
                                 <el-option
                                     v-for="item in CYProdcutMaterialOption"
                                     :key="item.dictCode"
@@ -82,7 +82,7 @@
                                         <span class="notNull">打入罐</span>
                                     </template>
                                     <template slot-scope="scope">
-                                        <el-select v-model="scope.row.injectionPotId" size="small" clearable @change="val=>changeContainerTypeOption(val,scope.row)">
+                                        <el-select v-model="scope.row.injectionPotId" size="small" clearable :disabled="scope.row.checkStatus==='M'" @change="val=>changeContainerTypeOption(val,scope.row)">
                                             <el-option
                                                 v-for="item in containerTypeList"
                                                 :key="item.dictCode"
@@ -97,7 +97,7 @@
                                         <span class="notNull">CY 量</span>
                                     </template>
                                     <template slot-scope="scope">
-                                        <el-input v-model.trim="scope.row.cyAmount" size="small" placeholder="请输入CY量" maxlength="10">
+                                        <el-input v-model.trim="scope.row.cyAmount" size="small" placeholder="请输入CY量" maxlength="10" :disabled="scope.row.checkStatus==='M'">
                                             <span slot="suffix">KG</span>
                                         </el-input>
                                     </template>
@@ -107,7 +107,7 @@
                                         <span class="notNull">批次</span>
                                     </template>
                                     <template slot-scope="scope">
-                                        <el-input v-model.trim="scope.row.cyBatch" size="small" placeholder="请输入批次" />
+                                        <el-input v-model.trim="scope.row.cyBatch" size="small" placeholder="请输入批次" :disabled="scope.row.checkStatus==='M'" />
                                     </template>
                                 </el-table-column>
                                 <el-table-column min-width="200" :show-overflow-tooltip="true">
@@ -125,14 +125,14 @@
                                 </el-table-column>
                                 <el-table-column label="备注" :show-overflow-tooltip="true" min-width="200">
                                     <template slot-scope="scope">
-                                        <el-input v-model.trim="scope.row.remark" size="small" placeholder="请输入备注" />
+                                        <el-input v-model.trim="scope.row.remark" size="small" placeholder="请输入备注" :disabled="scope.row.checkStatus==='M'" />
                                     </template>
                                 </el-table-column>
                                 <el-table-column prop="changer" label="操作人" :show-overflow-tooltip="true" width="160" />
                                 <el-table-column prop="changed" label="操作时间" :show-overflow-tooltip="true" width="160" />
                                 <el-table-column fixed="right" label="操作" width="80" :show-overflow-tooltip="true">
                                     <template slot-scope="scope">
-                                        <el-button class="delBtn" type="text" icon="el-icon-delete" size="mini" @click="removeDataRow(scope.row)">
+                                        <el-button class="delBtn" type="text" icon="el-icon-delete" size="mini" :disabled="scope.row.checkStatus==='M'" @click="removeDataRow(scope.row)">
                                             删除
                                         </el-button>
                                     </template>
@@ -198,6 +198,8 @@
                 fermentorStatusName: '',
                 holderId: ''
             }
+
+            CYProdcutMaterialStatus=false
 
             // 点击赋予 item info
             currentCycle=''
@@ -312,6 +314,7 @@
                 this.arrList = [item.workShop];
 
                 // ly
+                // /fer/fermentorLy/batchQuery
                 await FER_API.FER_FERMENTOR_LY_BATCH_QUERY_API({
                     holderId: this.currentHolderId
                 }).then(({ data }) => {
@@ -341,6 +344,9 @@
                     if (data.data) {
                         this.cyDataGroup = data.data
                         this.cyDataGroup.forEach((element) => {
+                            if (element.checkStatus === 'M') {
+                                this.CYProdcutMaterialStatus = true
+                            }
                             this.$set(element, 'delFlag', 0)
                         })
                     }
@@ -370,17 +376,17 @@
             changeProdcutMaterialOption(val) {
                 console.log(val)
 
-            if (val !== '') {
-                this.cyMaterialCode = val
-                this.cyMaterialName = this.CYProdcutMaterialOption.filter(item => item.dictCode === val)[0].dictValue as string
-                this.CYProdcutMaterial = `${this.cyMaterialName} ${val}`
+                if (val !== '') {
+                    this.cyMaterialCode = val
+                    this.cyMaterialName = this.CYProdcutMaterialOption.filter(item => item.dictCode === val)[0].dictValue as string
+                    this.CYProdcutMaterial = `${this.cyMaterialName} ${val}`
 
-            } else {
-                this.cyMaterialCode = ''
-                this.cyMaterialName = ''
+                } else {
+                    this.cyMaterialCode = ''
+                    this.cyMaterialName = ''
+                }
+
             }
-
-        }
 
             // RowDelFlag
             rowDelFlag({ row }) {
@@ -420,9 +426,9 @@
                 this.$nextTick(() => {
                     if (this.currentTab === 'LY') {
                         this.$refs.loanedPersonnel.init(row.lyMans, 'LY 操作人');
-                    } else {
-                        this.$refs.loanedPersonnel.init(row.cyMans, 'CY 操作人');
-                    }
+                    } else if (row.checkStatus && row.checkStatus !== 'M') {
+                            this.$refs.loanedPersonnel.init(row.cyMans, 'CY 操作人');
+                        }
                 });
             }
 
