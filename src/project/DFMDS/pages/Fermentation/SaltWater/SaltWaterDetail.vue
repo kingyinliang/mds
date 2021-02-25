@@ -36,24 +36,24 @@
                                     <span class="notNull">盐水罐号</span>
                                 </template>
                                 <template slot-scope="scope">
-                                    <el-select v-model="scope.row.brinePotId" filterable size="small" clearable style="width: 100%;" :disabled="!isRedact">
+                                    <el-select v-model="scope.row.brinePotId" filterable size="small" clearable style="width: 100%;" :disabled="!isRedact | editAble(scope.row)">
                                         <el-option v-for="(opt, optIndex) in saltWaterPots" :key="optIndex" :label="opt.holderName" :value="opt.id" />
                                     </el-select>
                                 </template>
                             </el-table-column>
                             <el-table-column width="180" label="盐水配置日期" :show-overflow-tooltip="false" class="star">
                                 <template slot-scope="scope">
-                                    <el-date-picker v-model="scope.row.matchDate" :disabled="!isRedact" type="date" value-format="yyyy-MM-dd" format="yyyy-MM-dd" placeholder="请选择" size="small" />
+                                    <el-date-picker v-model="scope.row.matchDate" :disabled="!isRedact | editAble(scope.row)" type="date" style="width: 175px;" value-format="yyyy-MM-dd" format="yyyy-MM-dd" placeholder="请选择" size="small" />
                                 </template>
                             </el-table-column>
                             <el-table-column width="180" label="开始领用时间" :show-overflow-tooltip="false" class="star">
                                 <template slot-scope="scope">
-                                    <el-date-picker v-model="scope.row.startDate" :disabled="!isRedact" type="datetime" value-format="yyyy-MM-dd HH:mm" format="yyyy-MM-dd HH:mm" placeholder="请选择" size="small" />
+                                    <el-date-picker v-model="scope.row.startDate" :disabled="!isRedact | editAble(scope.row)" type="datetime" style="width: 175px;" value-format="yyyy-MM-dd HH:mm" format="yyyy-MM-dd HH:mm" placeholder="请选择" size="small" />
                                 </template>
                             </el-table-column>
                             <el-table-column width="180" label="结束领用时间" :show-overflow-tooltip="false" class="star">
                                 <template slot-scope="scope">
-                                    <el-date-picker v-model="scope.row.endDate" :disabled="!isRedact" type="datetime" value-format="yyyy-MM-dd HH:mm" format="yyyy-MM-dd HH:mm" placeholder="请选择" size="small" />
+                                    <el-date-picker v-model="scope.row.endDate" :disabled="!isRedact | editAble(scope.row)" type="datetime" style="width: 175px;" value-format="yyyy-MM-dd HH:mm" format="yyyy-MM-dd HH:mm" placeholder="请选择" size="small" />
                                 </template>
                             </el-table-column>
                             <el-table-column width="150" :show-overflow-tooltip="true" class="star">
@@ -61,12 +61,12 @@
                                     <span class="notNull">盐水用量（KG）</span>
                                 </template>
                                 <template slot-scope="scope">
-                                    <el-input v-model.number="scope.row.useAmount" oninput="value=value.replace(/\D*/g,'')" size="small" placeholder="请输入" :disabled="!isRedact" />
+                                    <el-input v-model.number="scope.row.useAmount" oninput="value=value.replace(/\D*/g,'')" size="small" placeholder="请输入" :disabled="!isRedact | editAble(scope.row)" />
                                 </template>
                             </el-table-column>
                             <el-table-column width="120" label="盐水温度（°C）" :show-overflow-tooltip="true" class="star">
                                 <template slot-scope="scope">
-                                    <el-input v-model.number="scope.row.temperature" oninput="value=value.replace(/\D*/g,'')" :disabled="!isRedact" size="small" placeholder="请输入" />
+                                    <el-input v-model.number="scope.row.temperature" oninput="value=value.replace(/\D*/g,'')" :disabled="!isRedact | editAble(scope.row)" size="small" placeholder="请输入" />
                                 </template>
                             </el-table-column>
                             <el-table-column width="150" :show-overflow-tooltip="true" class="star">
@@ -74,7 +74,7 @@
                                     <span class="notNull">盐水浓度（%）</span>
                                 </template>
                                 <template slot-scope="scope">
-                                    <el-input v-model.number="scope.row.concentration" oninput="value=value.replace(/\D*/g,'')" size="small" placeholder="请输入" :disabled="!isRedact" />
+                                    <el-input v-model.number="scope.row.concentration" oninput="value=value.replace(/\D*/g,'')" size="small" placeholder="请输入" :disabled="!isRedact | editAble(scope.row)" />
                                 </template>
                             </el-table-column>
                             <el-table-column :show-overflow-tooltip="true" min-width="200">
@@ -82,14 +82,14 @@
                                     <span>备注</span>
                                 </template>
                                 <template slot-scope="scope">
-                                    <el-input v-model.trim="scope.row.remark" size="small" placeholder="请输入" :max="255" :maxlength="255" :disabled="!isRedact" />
+                                    <el-input v-model.trim="scope.row.remark" size="small" placeholder="请输入" :max="255" :maxlength="255" :disabled="!isRedact | editAble(scope.row)" />
                                 </template>
                             </el-table-column>
                             <el-table-column prop="changer" width="140" label="操作人" :show-overflow-tooltip="true" />
                             <el-table-column prop="changed" width="180" label="操作时间" :show-overflow-tooltip="true" />
                             <el-table-column fixed="right" label="操作" width="80" :show-overflow-tooltip="true">
                                 <template slot-scope="scope">
-                                    <el-button class="delBtn" type="text" icon="el-icon-delete" size="mini" :disabled="!isRedact" @click="removeDataRow(scope.row, scope.$index, 'saltWaterList', 'ferBrineIssueBrineRemoveIdList')">
+                                    <el-button class="delBtn" type="text" icon="el-icon-delete" size="mini" :disabled="!isRedact | editAble(scope.row)" @click="removeDataRow(scope.row, scope.$index, 'saltWaterList', 'ferBrineIssueBrineRemoveIdList')">
                                         删除
                                     </el-button>
                                 </template>
@@ -117,7 +117,7 @@
                             </el-table-column>
                             <el-table-column width="150" label="罐号" :show-overflow-tooltip="true">
                                 <template slot-scope="scope">
-                                    <el-select v-model="scope.row.usePotId" filterable size="small" clearable style="width: 100%;" :disabled="!isRedact || scope.row.operatFlag === -1">
+                                    <el-select v-model="scope.row.usePotId" filterable size="small" clearable style="width: 100%;" :disabled="!isRedact | otherEditAble(scope.row)">
                                         <el-option v-for="(opt, optIndex) in pots" :key="optIndex" :label="opt.holderName" :value="opt.id" />
                                     </el-select>
                                 </template>
@@ -127,7 +127,7 @@
                                     <span class="notNull">领用数量</span>
                                 </template>
                                 <template slot-scope="scope">
-                                    <el-input v-model="scope.row.useAmount" size="small" placeholder="请输入数量" :disabled="!isRedact || scope.row.operatFlag === -1" />
+                                    <el-input v-model="scope.row.useAmount" size="small" placeholder="请输入数量" :disabled="!isRedact | otherEditAble(scope.row)" />
                                 </template>
                             </el-table-column>
                             <el-table-column :show-overflow-tooltip="true" width="100">
@@ -144,7 +144,7 @@
                                     <span class="notNull">批次</span>
                                 </template>
                                 <template slot-scope="scope">
-                                    <el-input v-model.trim="scope.row.receiveBatch" :maxlength="10" size="small" placeholder="请输入批次" :disabled="!isRedact || scope.row.operatFlag === -1" />
+                                    <el-input v-model.trim="scope.row.receiveBatch" :maxlength="10" size="small" placeholder="请输入批次" :disabled="!isRedact | otherEditAble(scope.row)" />
                                 </template>
                             </el-table-column>
                             <el-table-column :show-overflow-tooltip="true" min-width="200">
@@ -152,17 +152,17 @@
                                     <span>备注</span>
                                 </template>
                                 <template slot-scope="scope">
-                                    <el-input v-model.trim="scope.row.remark" size="small" placeholder="请输入" :disabled="!isRedact || scope.row.operatFlag === -1" />
+                                    <el-input v-model.trim="scope.row.remark" size="small" placeholder="请输入" :disabled="!isRedact | otherEditAble(scope.row)" />
                                 </template>
                             </el-table-column>
                             <el-table-column prop="changer" width="140" label="操作人" :show-overflow-tooltip="true" />
                             <el-table-column prop="changed" width="180" label="操作时间" :show-overflow-tooltip="true" />
                             <el-table-column fixed="right" label="操作" width="120" :show-overflow-tooltip="true">
                                 <template slot-scope="scope">
-                                    <el-button type="text" size="samll" :disabled="!isRedact || scope.row.operatFlag === -1" @click="splitHandler(scope.row, scope.$index)">
+                                    <el-button type="text" size="samll" :disabled="!isRedact | otherEditAble(scope.row)" @click="splitHandler(scope.row, scope.$index)">
                                         拆分
                                     </el-button>
-                                    <el-button v-if="!(scope.row.splitFlag !== 'Y')" class="delBtn" type="text" icon="el-icon-delete" size="mini" :disabled="!isRedact || scope.row.operatFlag === -1" @click="removeDataRow(scope.row, scope.$index, 'otherMaterialList', 'ferBrineIssueBomRemoveIdList')">
+                                    <el-button v-if="!(scope.row.splitFlag !== 'Y')" class="delBtn" type="text" icon="el-icon-delete" size="mini" :disabled="!isRedact | otherEditAble(scope.row)" @click="removeDataRow(scope.row, scope.$index, 'otherMaterialList', 'ferBrineIssueBomRemoveIdList')">
                                         删除
                                     </el-button>
                                 </template>
@@ -188,6 +188,20 @@ import COMMON_API from 'src/common/api/common';
     name: 'SaltWaterDetail',
     components: {
         RedactBox
+    },
+    filters: {
+        editAble(val, row) {
+            if (!val && (row.checkStatus === 'S' || row.checkStatus === '' || row.checkStatus === 'R' || !row.checkStatus)) {
+                return false
+            }
+            return true;
+        },
+        otherEditAble(val, row) {
+            if (!val && (row.checkStatus === 'S' || row.checkStatus === '' || row.checkStatus === 'R') && row.operatFlag !== -1) {
+                return false
+            }
+            return true;
+        }
     }
 })
 export default class SaltWaterDetail extends Vue {
@@ -427,10 +441,10 @@ export default class SaltWaterDetail extends Vue {
                 this.ferBrineIssueBomRemoveIdList.push(row.id);
             }
         })
-        return FER_API.FER_BRINE_SAVE_API({
-            ferBrineIssueBomList: this.otherMaterialList,
+        const param = {
+            ferBrineIssueBomList: this.otherMaterialList.filter(row => row.checkStatus !== 'M').filter(item => item.operatFlag !== -1),
             ferBrineIssueBomRemoveIdList: this.ferBrineIssueBomRemoveIdList,
-            ferBrineIssueBrineList: this.saltWaterList,
+            ferBrineIssueBrineList: this.saltWaterList.filter(row => row.checkStatus !== 'M'),
             ferBrineIssueBrineRemoveIdList: this.ferBrineIssueBrineRemoveIdList,
             brineMaterialCode: this.selectForm.brineMaterialCode,
             cycle: issue.cycle || info.cycle,
@@ -449,7 +463,10 @@ export default class SaltWaterDetail extends Vue {
             workShop: info.workShop,
             kojiWorkShop: info.kojiWorkShop,
             virtualMaterialId: virtualMaterialId
-        });
+        }
+        // console.log(param, '================')
+        // return new Promise((resolve, reject) => reject(1))
+        return FER_API.FER_BRINE_SAVE_API(param);
     }
 
     submitDatas() {
@@ -467,10 +484,10 @@ export default class SaltWaterDetail extends Vue {
                 this.ferBrineIssueBomRemoveIdList.push(row.id);
             }
         })
-        return FER_API.FER_BRINE_SUBMIT_API({
-            ferBrineIssueBomList: this.otherMaterialList,
+        const param = {
+            ferBrineIssueBomList: this.otherMaterialList.filter(row => row.checkStatus !== 'M').filter(item => item.operatFlag !== -1),
             ferBrineIssueBomRemoveIdList: this.ferBrineIssueBomRemoveIdList,
-            ferBrineIssueBrineList: this.saltWaterList,
+            ferBrineIssueBrineList: this.saltWaterList.filter(row => row.checkStatus !== 'M'),
             ferBrineIssueBrineRemoveIdList: this.ferBrineIssueBrineRemoveIdList,
             brineMaterialCode: this.selectForm.brineMaterialCode,
             ferMaterialName: obj.ferMaterialName,
@@ -493,7 +510,8 @@ export default class SaltWaterDetail extends Vue {
             kojiOrderId: info.kojiOrderId,
             kojiOrderType: info.kojiOrderType,
             kojiOrderStartDate: info.kojiOrderStartDate
-        });
+        }
+        return FER_API.FER_BRINE_SUBMIT_API(param);
     }
 
     addMaterial(ref) {
@@ -516,7 +534,8 @@ export default class SaltWaterDetail extends Vue {
                     temperature: '', // 盐水温度
                     unit: '', // 盐水用量单位
                     unitName: '', // 单位
-                    useAmount: '' // 盐水用量
+                    useAmount: '', // 盐水用量
+                    checkStatus: ''
                 });
             } else {
                 this.$warningToast('请选择盐水物料');
@@ -608,6 +627,7 @@ interface SaltWaterObj {
     unit: string; // 盐水用量单位
     unitName: string; // 单位
     useAmount: number | string; // 盐水用量
+    checkStatus: string;
 }
 interface OtherMaterial {
     changed: string; // 最后操作时间
@@ -630,6 +650,7 @@ interface OtherMaterial {
     usePotName: string; // 领用罐名称
     usePotNo: string; // 领用罐号
     operatFlag: number; // 操作标记(0正常、-1提醒删除、1提醒维护、-2不显示但需要提交表单)
+    checkStatus: string;
 }
 interface FerBrineIssue {
     kojiTempature?: number;
