@@ -3,7 +3,7 @@
  * @Anthor: Telliex
  * @Date: 2021-01-15 23:35:23
  * @LastEditors: Telliex
- * @LastEditTime: 2021-02-24 16:22:36
+ * @LastEditTime: 2021-02-25 10:00:10
 -->
 <template>
     <div class="header_main">
@@ -709,16 +709,16 @@
             this.topBox[10].num = data.data.adjustAmount;
             this.topBox[11].num = data.data.useAmount;
 
-            this.topBox[1].materialCountList = data.data.materialCountList0;
-            this.topBox[2].materialCountList = data.data.materialCountList30;
-            this.topBox[3].materialCountList = data.data.materialCountList60;
-            this.topBox[4].materialCountList = data.data.materialCountList90;
-            this.topBox[5].materialCountList = data.data.materialCountList120;
-            this.topBox[6].materialCountList = data.data.materialCountList150;
-            this.topBox[7].materialCountList = data.data.materialCountList180;
-            this.topBox[8].materialCountList = data.data.overdueMaterialCountList;
-            this.topBox[9].materialCountList = data.data.mixingMaterialCountList;
-            this.topBox[10].materialCountList = data.data.useMaterialCountList;
+            this.topBox[1].materialCountList = data.data.materialCountList0 || [];
+            this.topBox[2].materialCountList = data.data.materialCountList30 || [];
+            this.topBox[3].materialCountList = data.data.materialCountList60 || [];
+            this.topBox[4].materialCountList = data.data.materialCountList90 || [];
+            this.topBox[5].materialCountList = data.data.materialCountList120 || [];
+            this.topBox[6].materialCountList = data.data.materialCountList150 || [];
+            this.topBox[7].materialCountList = data.data.materialCountList180 || [];
+            this.topBox[8].materialCountList = data.data.overdueMaterialCountList || [];
+            this.topBox[9].materialCountList = data.data.mixingMaterialCountList || [];
+            this.topBox[10].materialCountList = data.data.useMaterialCountList || [];
             // this.topBox[11].materialCountList = data.data.useAmount;
             if (data.data.data.records.length !== 0) {
                 this.isSearchResultMetroShow = true; // 地铁图区块呈现
