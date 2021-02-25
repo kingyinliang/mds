@@ -633,7 +633,8 @@ export default {
             }
             // 实际领用数应小于计划领料
             if (this.ItemList.findIndex(item => item.materialName === 'Y010' && item.delFlag === '0') !== -1) {
-                if (this.ItemList.find(item => item.materialName === 'Y010' && item.delFlag === '0').planAmount !== Y010) {
+                const planAmount = this.ItemList.find(item => item.materialName === 'Y010' && item.delFlag === '0').planAmount
+                if (Number(planAmount) !== Y010) {
                     this.$warningToast('Y010物料实际领料数总和应等于计划领用数');
                     return false;
                 }
@@ -666,24 +667,25 @@ export default {
                     }
                 });
             } else if (ty) {
+                this.SubmitFunction();
+            } else {
+                this.$confirm(`领用原汁非R&D原汁，请确认！`, '提示', {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    type: 'warning'
+                }).then(() => {
                     this.SubmitFunction();
-                } else {
-                    this.$confirm(`领用原汁非R&D原汁，请确认！`, '提示', {
-                        confirmButtonText: '确定',
-                        cancelButtonText: '取消',
-                        type: 'warning'
-                    }).then(() => {
-                        this.SubmitFunction();
-                    }).catch(() => {
-                        // this.$infoToast('已取消删除');
-                    });
-                }
+                }).catch(() => {
+                    // this.$infoToast('已取消删除');
+                });
+            }
             // if (new Set(batchList).size !== batchList.length) {
             //   this.$warningToast('批次不能重复')
             //   return false
             // }
         },
         SubmitFunction() {
+            console.log(this.ItemList);
             this.ItemList.forEach((item, index) => {
                 if (item.materielType === 'BL_LY') {
                     delete this.ItemList[index];
