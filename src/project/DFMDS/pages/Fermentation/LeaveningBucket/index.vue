@@ -3,7 +3,7 @@
  * @Anthor: Telliex
  * @Date: 2021-01-15 23:35:23
  * @LastEditors: Telliex
- * @LastEditTime: 2021-02-25 10:00:10
+ * @LastEditTime: 2021-02-25 12:08:41
 -->
 <template>
     <div class="header_main">
@@ -493,7 +493,7 @@
                 color: '#8BC34AFF',
                 startColor: '#C70909FF',
                 endColor: '#8BC34AFF',
-                text: '调',
+                text: '压',
                 ptext: ' ',
                 numNew: 0,
                 potColor: '#C70909',
@@ -507,7 +507,7 @@
                 color: '#82ab53',
                 startColor: '#999999FF',
                 endColor: '#999999FF',
-                text: '已调',
+                text: '调',
                 ptext: '0个月',
                 numNew: 0,
                 potColor: '#FFF',
@@ -521,12 +521,26 @@
                 color: '#5b8031',
                 startColor: '#999999FF',
                 endColor: '#999999FF',
-                text: '领',
+                text: '已调',
                 ptext: '0个月',
                 numNew: 0,
                 potColor: '#FFF',
                 middleText: '已调',
                 fermentStage: 'A',
+                holderStatus: '0',
+                num: '0',
+                materialCountList: []
+            },
+            {
+                color: '#4f5d3f',
+                startColor: '#999999FF',
+                endColor: '#999999FF',
+                text: '领',
+                ptext: '0个月',
+                numNew: 0,
+                potColor: '#FFF',
+                middleText: '领料',
+                fermentStage: 'U',
                 holderStatus: '0',
                 num: '0',
                 materialCountList: []
@@ -539,8 +553,8 @@
                 ptext: '0个月',
                 numNew: 0,
                 potColor: '#FFF',
-                middleText: '领料',
-                fermentStage: 'U',
+                middleText: '空罐',
+                fermentStage: 'E',
                 holderStatus: '0',
                 num: '0',
                 materialCountList: []
@@ -708,6 +722,7 @@
             this.topBox[9].num = data.data.mixingAmount;
             this.topBox[10].num = data.data.adjustAmount;
             this.topBox[11].num = data.data.useAmount;
+            this.topBox[12].num = data.data.emptyAmount;
 
             this.topBox[1].materialCountList = data.data.materialCountList0 || [];
             this.topBox[2].materialCountList = data.data.materialCountList30 || [];
@@ -1251,7 +1266,7 @@ interface CurrentDataTable{
 
 
 .topBox {
-    width: 1500px;
+    width: 1650px;
     margin: auto;
     padding: 10px 0;
     overflow-x: scroll;
