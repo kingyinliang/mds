@@ -140,19 +140,24 @@
                             {{ scope.row.materialName + ' ' + scope.row.materialCode }}
                         </template>
                     </el-table-column>
-                    <el-table-column label="批次" :show-overflow-tooltip="true">
+                    <el-table-column label="批次">
                         <template slot-scope="scope">
                             {{ scope.row.batch }}
                         </template>
                     </el-table-column>
-                    <el-table-column label="移动原因" :show-overflow-tooltip="true">
+                    <el-table-column label="移动原因">
                         <template slot-scope="scope">
                             {{ scope.row.adjustType === '0' ? '盘盈' : '盘亏' }}
                         </template>
                     </el-table-column>
-                    <el-table-column label="移动数量" :show-overflow-tooltip="true" align="right">
+                    <el-table-column label="移动数量" :show-overflow-tooltip="true">
                         <template slot-scope="scope">
                             {{ scope.row.quantity ? scope.row.quantity.toLocaleString() : '' }}
+                        </template>
+                    </el-table-column>
+                    <el-table-column label="说明" width="180" :show-overflow-tooltip="true">
+                        <template slot-scope="scope">
+                            {{ scope.row.remark }}
                         </template>
                     </el-table-column>
                     <el-table-column label="操作人">
