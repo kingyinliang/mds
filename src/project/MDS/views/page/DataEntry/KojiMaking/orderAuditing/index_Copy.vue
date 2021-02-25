@@ -63,7 +63,7 @@
                 </el-row>
                 <el-row style="text-align: right;" class="button_three_goup">
                     <template style="float: right; margin-left: 10px;">
-                        <el-button type="primary" size="small" @click="$router.push({ path: '/DataEntry-KojiMaking-orderManage-index'})">
+                        <el-button type="primary" size="small" @click="$router.push({ path: '/MDS-views-page-DataEntry-KojiMaking-orderManage-index'})">
                             返回
                         </el-button>
                         <el-button :disabled="!(formHeader.orderStatus === 'toBeAudited' || formHeader.orderStatus === 'noPass') && isAuth('sys:midTimeSheet:udpate')" type="primary" size="small" @click="submitForm">
