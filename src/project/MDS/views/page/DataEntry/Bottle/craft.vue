@@ -50,7 +50,7 @@
                         <el-button
                             type="primary"
                             size="small"
-                            @click="$router.push({path: '/DataEntry-Bottle-index'})"
+                            @click="$router.push({path: '/MDS-views-page-DataEntry-Bottle-index'})"
                         >
                             返回
                         </el-button>

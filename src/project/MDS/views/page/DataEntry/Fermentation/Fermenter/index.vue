@@ -94,7 +94,7 @@
             <div class="box-card-title clearfix">
                 <h3> <em class="title-icon" style="background: #ffbf00;" />发酵罐列表 </h3>
                 <em v-if="isAuth('report:production:fermentation')" class="floatR" @click="goSummary()">
-                    <a href="#/DataEntry-Fermentation-Fermenter-summary">发酵罐一览表>></a>
+                    <a href="#/MDS-views-page-DataEntry-Fermentation-Fermenter-summary">发酵罐一览表>></a>
                 </em>
             </div>
             <div>
