@@ -198,7 +198,9 @@
 
                     if (event === 'focus') {
                         this.$warningToast(`关联订单人工工时已提交，此订单不可调整入曲日期，请取消已审核订单：${data.data.join(',')}`)
-                        item.isChangeAddKojiDate = false
+                        // item.isChangeAddKojiDate = false
+                        item.outKojiDate = ''
+                        item.addKojiDate = ''
                     }
                 }
             })
@@ -210,7 +212,7 @@
                 this.$warningToast('同一个订单同一个制曲日期下，不允许曲房重复')
                 item.addKojiDate = ''
                 item.outKojiDate = ''
-            } else {
+            } else if (val) {
                 item.outKojiDate = getNewDay(item.addKojiDate, 2)
             }
 
