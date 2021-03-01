@@ -34,8 +34,6 @@
     })
     export default class OutputSummary extends Vue {
 
-        tableData = [];
-
         //表格数据
         column = [
             {
@@ -151,16 +149,9 @@
         }
 
         setData(data) {
-            const tableData = data.data;
-            // tableData[tableData.length - 1] = {
-            //     ...tableData[tableData.length - 1],
-            //     isSum: true,
-            //     workShopName: '合计'
-            // }
-            // console.log(tableData)
-            const d = tableData.pop()
-            tableData[0].totalData = d
-            this.$refs.queryTable.tableData = tableData;
+            if (!data.data) {
+                this.$infoToast('暂无任何内容');
+            }
         }
 
         spanMethod({ row, /* column, rowIndex, */ columnIndex }) {
