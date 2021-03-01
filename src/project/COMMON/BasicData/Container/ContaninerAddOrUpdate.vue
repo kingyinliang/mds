@@ -42,7 +42,7 @@
                     请先建立车间
                 </template>
                 <template v-else>
-                    <el-select v-model="dataForm.workshop" placeholder="请选择" style="width: 100%;">
+                    <el-select v-model="dataForm.workshop" placeholder="请选择" style="width: 100%;" @change="setWorkshopName">
                         <el-option v-for="(item, index) in workshopList" :key="index" :label="item.deptName" :value="item.id" />
                     </el-select>
                 </template>
@@ -88,7 +88,8 @@
                     holderBatch: '',
                     holderArea: '',
                     material: [],
-                    workshop: ''
+                    workshop: '',
+                    workshopName: ''
                 },
                 dataFormFromAdd: {
                     holderType: '',
@@ -99,7 +100,8 @@
                     holderBatch: '',
                     holderArea: '',
                     material: [],
-                    workshop: ''
+                    workshop: '',
+                    workshopName: ''
                 },
                 checkRules: {
                     holderType: [{ required: true, message: '容器类型不能为空', trigger: 'change' }],
@@ -134,8 +136,6 @@
                         data.data.material.forEach(item => {
                             tempMaterial.push(item.materialCode)
                         })
-
-
                         this.dataForm.id = data.data.id;
                         this.dataForm.holderId = data.data.holderId;
                         this.dataForm.holderType = data.data.holderType;
@@ -147,6 +147,7 @@
                         this.dataForm.holderArea = data.data.holderArea;
                         this.dataForm.material = tempMaterial;
                         this.dataForm.workshop = data.data.deptId;
+                        this.dataForm.workshopName = this.workshopList.filter(item => item.deptCode === data.data.deptId)[0].deptName;
                         this.dataForm.version = data.data.version;
                         this.isDialogShow = true;
                     });
@@ -166,6 +167,13 @@
                 });
 
 
+            },
+            setWorkshopName(val) {
+                if (val) {
+                    this.dataForm.workshopName = this.workshopList.filter(item => item.deptCode === val)[0].deptName
+                    return
+                }
+                this.dataForm.workshopName = ''
             },
             getContainerStatusList() {
                 COMMON_API.DICTQUERY_API({
@@ -198,6 +206,7 @@
                                 holderArea: this.dataForm.holderArea,
                                 material: tempMaterial,
                                 deptId: this.dataForm.workshop,
+                                deptName: this.dataForm.workshopName,
                                 id: this.containerID,
                                 version: this.dataForm.version
                             }).then(() => {
@@ -215,7 +224,8 @@
                                 holderStatus: this.dataForm.holderStatus,
                                 material: tempMaterial,
                                 holderArea: this.dataForm.holderArea,
-                                deptId: this.dataForm.workshop
+                                deptId: this.dataForm.workshop,
+                                deptName: this.dataForm.workshopName
                             }).then(() => {
                                 this.$emit('refreshDataList');
                                 this.isDialogShow = false;
