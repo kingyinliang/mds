@@ -212,7 +212,7 @@
                 this.$warningToast('同一个订单同一个制曲日期下，不允许曲房重复')
                 item.addKojiDate = ''
                 item.outKojiDate = ''
-            } else {
+            } else if (val) {
                 item.outKojiDate = getNewDay(item.addKojiDate, 2)
             }
 
