@@ -108,6 +108,7 @@
         };
 
         deptId = ''
+        deptName = ''
         materialCode = ''
         totalCount = 0
         currPage = 1
@@ -120,6 +121,7 @@
 
         setDeptId(data) {
             this.deptId = data[0].id
+            this.deptName = data[0].deptName
         }
 
         getData(row = false, first = false) {
@@ -129,6 +131,7 @@
             }
             if (row) {
                 this.deptId = row['id'];
+                this.deptName = row['deptName'];
             }
             if (first) {
                 this.currPage = 1;
@@ -164,7 +167,7 @@
             if (this.deptId) {
                 this.visible = true;
                 this.$nextTick(() => {
-                    this.$refs.capaaddupdate.init(this.deptId, data);
+                    this.$refs.capaaddupdate.init(this.deptId, this.deptName, data);
                 });
             } else {
                 this.$warningToast('请先选择部门');
