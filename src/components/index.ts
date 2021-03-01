@@ -11,6 +11,7 @@ import TextRecord from './TextRecord/index.vue'
 import ExcRecord from './ExcRecord/index.vue'
 import RedactBox from './RedactBox/RedactBox.vue';
 import WorkHour from './WorkHour/WorkHour.vue';
+import FormDialog from './FormDialog/index.vue';
 
 export default function(Vue) {
     Vue.component('ScrollTop', ScrollToTop);
@@ -26,4 +27,5 @@ export default function(Vue) {
     Vue.component('ExcRecord', ExcRecord);
     Vue.component('RedactBox', RedactBox);
     Vue.component('WorkHour', WorkHour);
+    Vue.component('FormDialog', FormDialog);
 }
