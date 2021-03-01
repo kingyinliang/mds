@@ -3,7 +3,7 @@
  * @Anthor: Telliex
  * @Date: 2021-01-15 23:35:23
  * @LastEditors: Telliex
- * @LastEditTime: 2021-02-25 10:00:10
+ * @LastEditTime: 2021-02-25 16:44:37
 -->
 <template>
     <div class="header_main">
@@ -84,7 +84,7 @@
                         </div>
                     </template>
                     <el-row class="home_card__main" :gutter="10">
-                        <el-col v-for="item in targetQueryTableList" :key="item.potId" :span="4" style="min-width: 220px;">
+                        <el-col v-for="item in targetQueryTableList" :key="item.potId" :span="4" style="min-width: 200px;">
                             <div class="card-bucket">
                                 <div class="card-bucket__head">
                                     <span>{{ item.holderName }} - {{ item.fermentorStatusName }}</span>
@@ -493,7 +493,7 @@
                 color: '#8BC34AFF',
                 startColor: '#C70909FF',
                 endColor: '#8BC34AFF',
-                text: '调',
+                text: '压',
                 ptext: ' ',
                 numNew: 0,
                 potColor: '#C70909',
@@ -507,7 +507,7 @@
                 color: '#82ab53',
                 startColor: '#999999FF',
                 endColor: '#999999FF',
-                text: '已调',
+                text: '调',
                 ptext: '0个月',
                 numNew: 0,
                 potColor: '#FFF',
@@ -521,12 +521,26 @@
                 color: '#5b8031',
                 startColor: '#999999FF',
                 endColor: '#999999FF',
-                text: '领',
+                text: '已调',
                 ptext: '0个月',
                 numNew: 0,
                 potColor: '#FFF',
                 middleText: '已调',
                 fermentStage: 'A',
+                holderStatus: '0',
+                num: '0',
+                materialCountList: []
+            },
+            {
+                color: '#4f5d3f',
+                startColor: '#999999FF',
+                endColor: '#999999FF',
+                text: '领',
+                ptext: '0个月',
+                numNew: 0,
+                potColor: '#FFF',
+                middleText: '领料',
+                fermentStage: 'U',
                 holderStatus: '0',
                 num: '0',
                 materialCountList: []
@@ -539,8 +553,8 @@
                 ptext: '0个月',
                 numNew: 0,
                 potColor: '#FFF',
-                middleText: '领料',
-                fermentStage: 'U',
+                middleText: '空罐',
+                fermentStage: 'E',
                 holderStatus: '0',
                 num: '0',
                 materialCountList: []
@@ -708,6 +722,7 @@
             this.topBox[9].num = data.data.mixingAmount;
             this.topBox[10].num = data.data.adjustAmount;
             this.topBox[11].num = data.data.useAmount;
+            this.topBox[12].num = data.data.emptyAmount;
 
             this.topBox[1].materialCountList = data.data.materialCountList0 || [];
             this.topBox[2].materialCountList = data.data.materialCountList30 || [];
@@ -902,7 +917,7 @@ interface CurrentDataTable{
 </script>
 <style scoped>
 .home_card__main {
-    min-width: 1460px;
+    min-width: 1200px;
 }
 
 .markStyle >>> th .notNull::before {
@@ -1127,15 +1142,15 @@ interface CurrentDataTable{
             justify-content: center;
             .pot_border {
                 position: relative;
-                width: 116px;
-                height: 204px;
+                width: 87px;
+                height: 153px;
                 overflow: hidden;
                 .pot {
                     position: absolute;
                     top: 0;
                     z-index: 10;
-                    width: 116px;
-                    height: 204px;
+                    width: 87px;
+                    height: 153px;
                     // background: url(./assets/img/ferPotNew.png) no-repeat;
                     background: bottom center url("~@/assets/img/ferPotNew.png") no-repeat;
                     background-size: contain;
@@ -1145,8 +1160,8 @@ interface CurrentDataTable{
                     right: 0;
                     bottom: 10px;
                     left: 0;
-                    width: 116px;
-                    height: 184px;
+                    width: 87px;
+                    height: 135px;
                     margin: 0 auto;
                     overflow: hidden;
                     &_sole {
@@ -1251,7 +1266,7 @@ interface CurrentDataTable{
 
 
 .topBox {
-    width: 1500px;
+    width: 1650px;
     margin: auto;
     padding: 10px 0;
     overflow-x: scroll;

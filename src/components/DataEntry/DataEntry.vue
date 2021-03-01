@@ -20,7 +20,7 @@
             </div>
             <div class="dataEntry-head-base">
                 <el-form :inline="true" :model="formHeader" size="small" class="dataEntry-head-base__form" label-width="120px">
-                    <el-form-item v-for="(item, index) in headerBase" :key="index">
+                    <el-form-item v-for="(item, index) in headerBase" :key="index" :rules="item.rules" :label-width="item.labelWidth?item.labelWidth+'px':'120px'">
                         <template slot="label">
                             <em v-if="item.required" style="color: red;">*</em>
                             <em class="iconfont" :class="item.icon" style="margin-right: 5px; margin-left: 2px;" />
