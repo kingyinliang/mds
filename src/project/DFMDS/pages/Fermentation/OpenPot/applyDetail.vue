@@ -177,7 +177,7 @@
             BASIC_API.FERINFO_DROPDOWN_API({
                 productProcess: 'MIX'
             }).then(({ data }) => {
-                this.material = data.data.records
+                this.material = data.data
             })
             // COMMON_API.SEARCH_MATERIAL_API({
             //     factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
