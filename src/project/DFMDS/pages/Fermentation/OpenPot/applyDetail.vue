@@ -174,10 +174,8 @@
             }).then(({ data }) => {
                 this.workShop = data.data
             })
-            BASIC_API.FERINFO_LIST_API({
-                productProcess: 'MIX',
-                current: 1,
-                size: 9999
+            BASIC_API.FERINFO_DROPDOWN_API({
+                productProcess: 'MIX'
             }).then(({ data }) => {
                 this.material = data.data.records
             })
@@ -197,10 +195,9 @@
         }
 
         materialChange() {
-            const filterArr: (any) = this.material.filter(it => it['materialCode'] === this.formHeader.applyMaterialCode);// eslint-disable-line
-            this.formHeader.applyMaterialName = filterArr[0].materialName
-            this.formHeader.applyMaterialType = filterArr[0].materialTypeCode
-            this.formHeader.applyMaterialTypeName = filterArr[0].materialTypeName
+            const filterArr: (any) = this.material.filter(it => it['useMaterialCode'] === this.formHeader.applyMaterialCode);// eslint-disable-line
+            this.formHeader.applyMaterialName = filterArr[0].useMaterialName
+            this.formHeader.applyMaterialType = filterArr[0].useMaterialType
         }
 
         potChange() {

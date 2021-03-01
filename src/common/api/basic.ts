@@ -38,6 +38,10 @@ const BASIC_API = {
      */
     FERINFO_LIST_API: params => httpProxy('/fer/information/pagingQuery', 'POST', params),
     /**
+     * @property {string} FERINFO_DROPDOWN_API 发酵信息-查询
+     */
+    FERINFO_DROPDOWN_API: params => httpProxy('/fer/information/queryList', 'POST', params),
+    /**
      * @property {string} STEPKG_UPDATE_API 发酵信息-保存
      */
     FERINFO_SAVE_API: params => httpProxy('/fer/information/save', 'POST', params),
