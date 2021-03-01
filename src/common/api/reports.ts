@@ -19,7 +19,11 @@ const REPORTS_API = {
     /**
      * @property {string} REPORT_OUTPUT_SUMMARY_QUERY_API 产量汇总 报表 -
      */
-    REPORT_OUTPUT_SUMMARY_QUERY_API: params => httpProxy('/pkgReportForm/product/queryProductSummary', 'POST', params, 'REPORT')
+    REPORT_OUTPUT_SUMMARY_QUERY_API: params => httpProxy('/pkgReportForm/product/queryProductSummary', 'POST', params, 'REPORT'),
+    /**
+     * @property {string} REPORT_PRODUCT_LINE_CAPACITY_API 生产线产能利用率 报表 -
+     */
+    REPORT_PRODUCT_LINE_CAPACITY_API: params => httpProxy('/pkgReportForm/product/queryProductLineCapacity', 'POST', params, 'REPORT')
 };
 
 export default REPORTS_API;
