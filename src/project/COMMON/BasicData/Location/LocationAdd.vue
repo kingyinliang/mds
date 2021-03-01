@@ -3,18 +3,12 @@
         <div style="width: 400px; margin: auto;">
             <el-form ref="addLo" :model="formatDate" :rules="dataRule" size="small" label-width="110px" @keyup.enter.native="dataFormSubmit()" @submit.native.prevent>
                 <el-form-item label="车间：" prop="deptId">
-                    <el-select v-model="formatDate.deptId">
-                        <el-option label="" value="">
-                            请选择
-                        </el-option>
+                    <el-select v-model="formatDate.deptId" placeholder="请选择车间" @change="setDeptName">
                         <el-option v-for="(item, index) in workShop" :key="index" :label="item.deptName" :value="item.id" />
                     </el-select>
                 </el-form-item>
-                <el-form-item label="物料类型：" prop="materialTypeCode">
+                <el-form-item label="物料类型：" placeholder="请选择物料类型" prop="materialTypeCode">
                     <el-select v-model="formatDate.materialTypeCode">
-                        <el-option label="" value="">
-                            请选择
-                        </el-option>
                         <el-option v-for="(item, index) in materialList" :key="index" :label="item.dictCode + ' ' + item.dictValue" :value="item.dictCode" />
                     </el-select>
                 </el-form-item>
@@ -98,6 +92,7 @@ export default {
                 this.targetID = '';
                 this.formatDate = {
                     deptId: '',
+                    deptName: '',
                     materialType: '',
                     materialCode: '',
                     materialTypeCode: '',
@@ -109,6 +104,14 @@ export default {
             }
             this.isDialogShow = true;
         },
+        // 设置车间DeptName
+        setDeptName(val) {
+            if (val) {
+                this.formatDate.deptName = this.workShop.filter(item => item.deptCode === val)[0].deptName
+                return
+            }
+            this.formatDate.deptName = ''
+        },
         // 保存
         dataFormSubmit() {
             this.$refs.addLo.validate(valid => {
@@ -118,6 +121,7 @@ export default {
                             id: this.targetID,
                             factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
                             deptId: this.formatDate.deptId,
+                            deptName: this.formatDate.deptName,
                             materialCode: this.formatDate.materialCode,
                             materialTypeCode: this.formatDate.materialTypeCode,
                             materialTypeName: this.materialList.find(item => item.dictCode === this.formatDate.materialTypeCode).dictValue,
@@ -133,6 +137,7 @@ export default {
                         COMMON_API.STORAGE_INSERT_API({
                                 factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
                                 deptId: this.formatDate.deptId,
+                                deptName: this.formatDate.deptName,
                                 materialCode: this.formatDate.materialCode,
                                 materialTypeCode: this.formatDate.materialTypeCode,
                                 materialTypeName: this.materialList.find(item => item.dictCode === this.formatDate.materialTypeCode).dictValue,
