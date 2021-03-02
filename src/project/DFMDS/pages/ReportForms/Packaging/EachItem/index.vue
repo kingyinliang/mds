@@ -11,10 +11,8 @@
             query-auth=""
             :query-form-data="queryFormData"
             :list-interface="listInterface"
-            :get-summaries="getSummaries"
             :custom-data="true"
             :export-excel="true"
-            :is-show-summary="true"
             :query-tabke-type="'report'"
             @get-data-success="setData"
         />
@@ -178,43 +176,6 @@ import { dateFormat } from 'src/utils/utils';
         listInterface = params => {
             // params.factory = JSON.parse(sessionStorage.getItem('factory') || '{}').id;
             return REPORTS_API.REPORT_SUB_OUT_PUT_API(params);
-        };
-
-        /**
-         * @description: data 表单 合计
-         * @param1 {*}
-         * @param2 {*}
-         * @param3 {*}
-         * @return {*}
-         * @example: 示例代码
-         * @param {*} getSummaries
-         */
-        getSummaries = param => {
-            const { columns, data } = param;
-            const sums: string[] = []
-            console.log('表单合计param')
-            console.log(param)
-            columns.forEach((column, index) => {
-            if (index === 0) {
-                sums[index] = '合计';
-                return;
-            }
-            const values = data.map(item => Number(item[column.property]));
-            if (!values.every(value => isNaN(value))) {
-                sums[index] = values.reduce((prev, curr) => {
-                const value = Number(curr);
-                if (!isNaN(value)) {
-                    return prev + curr;
-                }
-                    return prev;
-
-                }, 0);
-                sums[index] += ' 元';
-            } else {
-                sums[index] = 'N/A';
-            }
-            });
-            return sums
         };
 
         // 设置数据

@@ -35,7 +35,11 @@ const REPORTS_API = {
     /**
      * @property {string} REPORT_SUB_OUT_PUT_API 包装车间-产量报表-包装各品项产量
      */
-    REPORT_SUB_OUT_PUT_API: params => httpProxy('/pkgReportForm/product/querySubOutput', 'POST', params, 'REPORT')
+    REPORT_SUB_OUT_PUT_API: params => httpProxy('/pkgReportForm/product/querySubOutput', 'POST', params, 'REPORT'),
+    /**
+     * @property {string} REPORT_QUERY_YIELD_API 包装车间-产量报表-产品出成率
+     */
+    REPORT_QUERY_YIELD_API: params => httpProxy('/pkgReportForm/product/queryYield', 'POST', params, 'REPORT')
 };
 
 export default REPORTS_API;
