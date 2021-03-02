@@ -7,14 +7,15 @@
             :show-index-column="false"
             :column="column"
             :show-page="true"
+            :rules="queryTableFormRules"
             query-auth=""
             :query-form-data="queryFormData"
             :list-interface="listInterface"
             :get-summaries="getSummaries"
             :custom-data="true"
-            :factory-type="1"
             :export-excel="true"
             :is-show-summary="true"
+            :query-tabke-type="'report'"
             @get-data-success="setData"
         />
     </div>
@@ -23,6 +24,7 @@
 <script lang="ts">
     import { Vue, Component } from 'vue-property-decorator';
     import { COMMON_API, REPORTS_API } from 'common/api/api';
+import { dateFormat } from 'src/utils/utils';
     // import { dateFormat } from 'utils/utils';
 
     const months = ['一', '二', '三', '四', '五', '六', '七', '八', '九', '十', '十一', '十二'];
@@ -36,29 +38,29 @@
         //表格数据
         column = [
             {
-                prop: 'workShopName',
+                prop: 'materialCode',
                 label: '物料编号',
-                minWidth: '120'
+                width: '140'
             },
             {
-                prop: 'holderTypeName',
+                prop: 'materialName',
                 label: '物料名称',
-                minWidth: '120'
+                width: '140'
             },
             {
-                prop: 'holderNo',
+                prop: 'unit',
                 label: '单位',
                 width: '80'
             },
             ...months.map((item, index) => {
                 return {
-                    prop: 'holderTypeName' + (index + 1),
+                    prop: 'output' + (index + 1),
                     label: item + '月',
                     minWidth: '120'
                 }
             }),
             {
-                prop: 'holderNo',
+                prop: 'outputSummary',
                 label: '合计',
                 width: '140'
             }
@@ -74,10 +76,10 @@
                 type: 'date-picker',
                 label: '年度',
                 dataType: 'year',
-                defaultValue: '',
+                defaultValue: dateFormat(new Date(), 'yyyy'),
                 labelWidth: '100',
                 rule: [{ required: true, message: '请选择年度', trigger: 'blur' }],
-                prop: 'oneorderProductDate',
+                prop: 'year',
                 valueFormat: 'yyyy'
             },
             {
@@ -86,7 +88,7 @@
                 prop: 'workShop',
                 defaultValue: '',
                 labelWidth: '100',
-                rule: [{ required: true, message: '请选择生产车间', trigger: 'blur' }],
+                rule: [{ required: false, message: '请选择生产车间', trigger: 'blur' }],
                 defaultOptionsFn: () => {
                     return COMMON_API.ORG_QUERY_WORKSHOP_API({
                         factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
@@ -97,45 +99,48 @@
                 resVal: {
                     resData: 'data',
                     label: ['deptName'],
-                    value: 'id'
+                    value: 'deptCode'
                 }
+                // linkageProp: ['largeClass', 'materialCode']
             },
             {
                 type: 'select',
                 label: '品项大类',
-                prop: 'bigCategory',
+                prop: 'largeClass',
                 labelWidth: '100',
-                rule: [{ required: true, message: '请选择品项大类', trigger: 'blur' }],
-                optionsFn: val => {
-                    return COMMON_API.ORG_QUERY_CHILDREN_API({
-                        parentId: val || '',
-                        deptType: 'PRODUCT_LINE'
+                filterable: true,
+                rule: [{ required: false, message: '请选择品项大类', trigger: 'blur' }],
+                defaultOptionsFn: () => {
+                    return REPORTS_API.REPORT_LARGE_CLASS_DROP_DOWN_API({
+                        // workShop: val || ''
                     })
                 },
                 defaultValue: '',
                 resVal: {
                     resData: 'data',
-                    label: ['deptName'],
-                    value: 'id'
+                    label: ['dictValue'],
+                    value: 'dictCode'
                 }
+                // linkageProp: ['materialCode']
             },
             {
                 type: 'select',
                 label: '生产物料',
-                prop: 'productLine',
+                prop: 'materialCode',
                 labelWidth: '100',
-                rule: [{ required: true, message: '请选择生产物料', trigger: 'blur' }],
-                optionsFn: val => {
-                    return COMMON_API.ORG_QUERY_CHILDREN_API({
-                        parentId: val || '',
-                        deptType: 'PRODUCT_LINE'
+                filterable: true,
+                rule: [{ required: false, message: '请选择生产物料', trigger: 'blur' }],
+                defaultOptionsFn: () => {
+                    return REPORTS_API.REPORT_MATERIAL_DROP_DOWN_API({
+                        // workShop: val1 || '',
+                        // largeClass: val2 || ''
                     })
                 },
                 defaultValue: '',
                 resVal: {
                     resData: 'data',
-                    label: ['deptName'],
-                    value: 'id'
+                    label: ['dictCode', 'dictValue'],
+                    value: 'dictCode'
                 }
             },
             {
@@ -144,25 +149,35 @@
                 prop: 'unit',
                 labelWidth: '100',
                 rule: [{ required: true, message: '请选择单位', trigger: 'blur' }],
-                optionsFn: val => {
-                    return COMMON_API.ORG_QUERY_CHILDREN_API({
-                        parentId: val || '',
-                        deptType: 'PRODUCT_LINE'
-                    })
-                },
-                defaultValue: '',
+                options: [
+                    { label: '箱', value: 'CAR' },
+                    { label: '吨', value: 'T' }
+                ],
+                defaultValue: 'CAR',
                 resVal: {
-                    resData: 'data',
-                    label: ['deptName'],
-                    value: 'id'
+                    // resData: 'data',
+                    label: ['label'],
+                    value: 'value'
                 }
             }
         ];
 
+        // 查询必填栏位校验
+        queryTableFormRules = [
+            {
+                prop: 'year',
+                text: '请选择年度'
+            },
+            {
+                prop: 'unit',
+                text: '请选择单位'
+            }
+        ]
+
         // 查询请求
         listInterface = params => {
-            params.factory = JSON.parse(sessionStorage.getItem('factory') || '{}').id;
-            return REPORTS_API.REPORT_PACKAGING_OEE_API(params);
+            // params.factory = JSON.parse(sessionStorage.getItem('factory') || '{}').id;
+            return REPORTS_API.REPORT_SUB_OUT_PUT_API(params);
         };
 
         /**
