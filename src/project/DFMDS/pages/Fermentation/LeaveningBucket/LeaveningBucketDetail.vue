@@ -228,12 +228,12 @@
                     </el-table-column>
                     <el-table-column label="操作人员" width="160">
                         <template slot-scope="scope">
-                            {{ scope.row.operators }}
+                            {{ scope.row.changer }}
                         </template>
                     </el-table-column>
                     <el-table-column label="操作时间" width="160">
                         <template slot-scope="scope">
-                            {{ scope.row.operated }}
+                            {{ scope.row.changed }}
                         </template>
                     </el-table-column>
                 </el-table>
@@ -306,12 +306,12 @@
                     </el-table-column>
                     <el-table-column label="操作人员" width="160">
                         <template slot-scope="scope">
-                            {{ scope.row.operators }}
+                            {{ scope.row.changer }}
                         </template>
                     </el-table-column>
                     <el-table-column label="操作时间" width="160">
                         <template slot-scope="scope">
-                            {{ scope.row.operated }}
+                            {{ scope.row.changed }}
                         </template>
                     </el-table-column>
                 </el-table>
