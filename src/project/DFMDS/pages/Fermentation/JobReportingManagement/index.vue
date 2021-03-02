@@ -60,7 +60,7 @@
 
 <script lang="ts">
     import { Vue, Component, Watch } from 'vue-property-decorator';
-    import { AUDIT_API, COMMON_API } from 'common/api/api';
+    import { AUDIT_API, COMMON_API, BASIC_API } from 'common/api/api';
     import { dateFormat } from 'utils/utils';
     import RedactBox from 'components/RedactBox.vue'; // 下方状态 bar
     import FER_API from 'src/common/api/fer';
@@ -167,17 +167,30 @@
                 filterable: true,
                 defaultOptionsFn: () => {
                     return new Promise((resolve) => {
-                        COMMON_API.ALLMATERIAL_API({
-                            materialTypes: ['ZHAL'] // 物料类型列表 - 半成品
-                        }).then((res) => {
+                        BASIC_API.FERINFO_LIST_API({
+                            current: 1,
+                            size: 9999
+                        }).then(res => {
+                            const arr = res.data.data.records.reduce((pre, cur) => {
+                                if (!pre.find(row => row.productMaterialCode === cur.productMaterialCode)) {
+                                    pre.push(cur)
+                                }
+                                return pre
+                            }, [])
+                            res.data.data = arr
                             resolve(res)
                         })
+                        // COMMON_API.ALLMATERIAL_API({
+                        //     materialTypes: ['ZHAL'] // 物料类型列表 - 半成品
+                        // }).then((res) => {
+                        //     resolve(res)
+                        // })
                     })
                 },
                 resVal: {
                     resData: 'data',
-                    label: ['materialName', 'materialCode'],
-                    value: 'materialCode'
+                    label: ['productMaterialName', 'productMaterialCode'],
+                    value: 'productMaterialCode'
                 }
             },
             {
@@ -264,7 +277,8 @@
             {
                 prop: 'productMaterialName',
                 label: '生产物料',
-                minwidth: '120'
+                minwidth: '220',
+                formatter: row => row.productMaterialName + ' ' + row.productMaterialCode
             },
             {
                 prop: 'orderAmount',
@@ -318,12 +332,12 @@
             {
                 prop: 'startDate',
                 label: '执行开始日期',
-                minwidth: '140'
+                minwidth: '160'
             },
             {
                 prop: 'endDate',
                 label: '执行结束日期',
-                minwidth: '140',
+                minwidth: '160',
                 type: 'date-picker',
                 redact: true,
                 dataType: 'date',
