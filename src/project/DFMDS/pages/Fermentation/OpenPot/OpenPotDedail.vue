@@ -321,7 +321,7 @@
                 tmp = tmp.filter(item => item.holderId === this.searchForm.holderId)
             }
             if (this.searchForm.material) {
-                tmp = tmp.filter(item => item.ferOrder.productMaterialCode === this.searchForm.material)
+                tmp = tmp.filter(item => item.productMaterialCode === this.searchForm.material)
             }
             this.searchForm.total = tmp.length
             tmp = tmp.slice((this.searchForm.current - 1) * this.searchForm.size, (this.searchForm.current - 1) * this.searchForm.size + this.searchForm.size)
