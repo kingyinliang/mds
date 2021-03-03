@@ -98,7 +98,7 @@
                                     </template>
                                     <template slot-scope="scope">
                                         <el-input v-model.trim="scope.row.cyAmount" size="small" placeholder="请输入CY量" maxlength="10" :disabled="scope.row.checkStatus==='M'">
-                                            <span slot="suffix">KG</span>
+                                            <span slot="suffix">L</span>
                                         </el-input>
                                     </template>
                                 </el-table-column>

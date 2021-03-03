@@ -3,7 +3,7 @@
  * @Anthor: Telliex
  * @Date: 2021-01-15 23:35:23
  * @LastEditors: Telliex
- * @LastEditTime: 2021-02-23 17:29:00
+ * @LastEditTime: 2021-03-03 10:18:19
 -->
 <template>
     <div class="header_main">
@@ -35,7 +35,7 @@
                         <el-form-item
                             label="生产订单："
                         >
-                            <el-tooltip class="item" effect="dark" :content="leaveningformData.orderNo" placement="top">
+                            <el-tooltip :disabled="!leaveningformData.orderNo" class="item" effect="dark" :content="leaveningformData.orderNo" placement="top">
                                 <el-input
                                     :value="leaveningformData.orderNo"
                                     placeholder=""
@@ -47,7 +47,7 @@
                         <el-form-item
                             label="生产物料："
                         >
-                            <el-tooltip class="item" effect="dark" :content="leaveningformData.material" placement="top">
+                            <el-tooltip :disabled="!leaveningformData.material" class="item" effect="dark" :content="leaveningformData.material" placement="top">
                                 <el-input
                                     :value="leaveningformData.material"
                                     placeholder=""
@@ -356,7 +356,7 @@ export default class LeaveningBucketDetail extends Vue {
                 console.log(data)
 
                 this.leaveningformData = data.data
-                this.$set(this.leaveningformData, 'material', `${this.leaveningformData.materialName} ${this.leaveningformData.materialCode}`)
+                this.$set(this.leaveningformData, 'material', `${this.leaveningformData.materialName} ${this.leaveningformData.materialCode}`.trim())
                 this.$set(this.leaveningformData, 'freezeFlagnName', this.leaveningformData.freezeFlag === 'Y' ? '已成熟' : '未成熟')
                 this.$set(this.leaveningformData, 'workShopName', this.currentWorkShopName)
                 // this.leaveningformData.orderAmount = this.leaveningformData.orderAmount ? this.leaveningformData.orderAmount / 1000 : this.leaveningformData.orderAmount

@@ -3,7 +3,7 @@
  * @Anthor: Telliex
  * @Date: 2021-01-15 23:35:23
  * @LastEditors: Telliex
- * @LastEditTime: 2021-02-25 16:44:37
+ * @LastEditTime: 2021-03-03 10:21:13
 -->
 <template>
     <div class="header_main">
@@ -1211,7 +1211,7 @@ interface CurrentDataTable{
             .cq {
                 position: absolute;
                 top: 0;
-                left: 0;
+                left: 30px;
                 z-index: 99;
                 img {
                     width: 40px;
