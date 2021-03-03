@@ -43,7 +43,7 @@
 </template>
 
 <script>
-import { COMMON_API } from 'common/api/api';
+import { COMMON_API, JOB_API } from 'common/api/api';
 import SuppliesDetail from './SuppliesDetail';
 // import { Loading } from 'element-ui';
 export default {
@@ -103,7 +103,7 @@ export default {
             });
         },
         syncData() {
-            COMMON_API.METERIAL_SYNC_API({
+            JOB_API.METERIAL_SYNC_API({
                 factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id
             }).then(() => {
                     this.getItemsList()

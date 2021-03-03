@@ -16,6 +16,7 @@ import rdmApi from './rdm';
 import kojiApi from './koji';
 import ferApi from './fer';
 import reportsApi from './reports'; // 报表
+import jobApi from './job'; // 报表
 
 export const COMMON_API = commonApi;
 export const ORDER_API = orderApi;
@@ -28,3 +29,4 @@ export const RDM_API = rdmApi;
 export const KOJI_API = kojiApi;
 export const FER_API = ferApi;
 export const REPORTS_API = reportsApi;
+export const JOB_API = jobApi;
