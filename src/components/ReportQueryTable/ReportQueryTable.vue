@@ -3,7 +3,7 @@
  * @Anthor: Telliex
  * @Date: 2021-02-26 10:58:05
  * @LastEditors: Telliex
- * @LastEditTime: 2021-03-04 14:32:28
+ * @LastEditTime: 2021-03-04 16:54:02
 -->
 <template>
     <div>
@@ -484,7 +484,11 @@
                     return false;
                 }
                 if (st) {
-                    this.queryForm[this.currpageConfig] = 1;
+                    if (this.dataTableSetting.dataChangeByAPI) {
+                        this.queryForm[this.currpageConfig] = 1;
+                        return
+                    }
+                    this.currentPage = 1;
                 }
 
                 // 外置 pagination

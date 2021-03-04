@@ -17,7 +17,7 @@
             <div class="inner-area">
                 <div class="inner-area__title">
                     <h3>异常汇总</h3>
-                    <el-button type="primary" size="small" :disabled="dialogDataMainTable.length===0" @click="subTableExportExcel()">
+                    <el-button type="primary" size="small" :disabled="dialogDataMainTable.length===0" @click="subTableExportExcel(dialogDataMainTable)">
                         导出
                     </el-button>
                 </div>
@@ -53,7 +53,7 @@
 <script lang="ts">
     import { Vue, Component } from 'vue-property-decorator';
     import { COMMON_API, REPORTS_API } from 'common/api/api';
-    import { exportFileFor2Excel } from 'utils/utils.ts';
+    import { exportFileFor2ExcelMultiSheets } from 'utils/utils.ts';
     // import { dateFormat } from 'utils/utils';
 
     @Component({
@@ -303,7 +303,8 @@
                 {
                     prop: 'notReach',
                     label: '未达成原因',
-                    width: '200',
+                    minWidth: '240',
+                    width: '240',
                     hide: false,
                     fixed: false,
                     showOverFlowTooltip: true,
@@ -350,12 +351,25 @@
             this.isShowSecondTable = true;
         }
 
-        subTableExportExcel() {
-            // const tableDataTemp = JSON.parse(JSON.stringify(this.dialogDataMainTable))
-            // exportFileFor2Excel(this.column, tableDataTemp, this.exportOption.text)
+        subTableExportExcel(data) {
+            const excelDatas = [
+                {
+                    tHeader: ['生产线', '物料编码', '生产物料', '月/季', '停机情况', '停机时长（MIN)'],
+                    filterVal: ['productLineName', 'materialCode', 'materialName', 'productDate', 'stopType', 'stopTime'],
+                    tableDatas: data,
+                    sheetName: '异常汇总'
+                }
+            ]
 
-            const tableDataTemp = JSON.parse(JSON.stringify(this.dialogDataMainTable))
-            exportFileFor2Excel(this.dataTableSetting.column, tableDataTemp, '异常明细')
+            data.foeEach(item => {
+                excelDatas.push({
+                    tHeader: ['生产日期', '停机类型', '停机方式', '停机时间开始', '停机结束时间', '停机时长（MIN)', '次数', '停机情况', '停机原因'],
+                    filterVal: ['productDate', 'stopType', 'stopMode', 'startDate', 'endDate', 'duration', 'exceptionCount', 'stopReason'],
+                    tableDatas: item.notReachInfo,
+                    sheetName: item.stopType
+                })
+            })
+            exportFileFor2ExcelMultiSheets(excelDatas, '异常明细', true, 'xlsx')
         }
 
         /**

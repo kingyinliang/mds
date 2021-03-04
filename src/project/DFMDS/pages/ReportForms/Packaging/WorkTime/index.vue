@@ -140,7 +140,7 @@
                 {
                     prop: 'productLineName',
                     label: '生产产线',
-                    minWidth: '120',
+                    width: '120',
                     hide: false,
                     fixed: true,
                     showOverFlowTooltip: true,
@@ -149,7 +149,7 @@
                 {
                     prop: 'orderNo',
                     label: '订单',
-                    minWidth: '120',
+                    width: '120',
                     hide: false,
                     fixed: true,
                     showOverFlowTooltip: true,
@@ -158,7 +158,7 @@
                 {
                     prop: 'productDate',
                     label: '生产日期',
-                    width: '80',
+                    width: '100',
                     hide: false,
                     fixed: false,
                     showOverFlowTooltip: true,
@@ -176,7 +176,7 @@
                 {
                     prop: 'productDate',
                     label: '日期',
-                    width: '160',
+                    width: '100',
                     hide: false,
                     fixed: false,
                     showOverFlowTooltip: true,
@@ -194,7 +194,7 @@
                 {
                     prop: 'reportWork',
                     label: '报工产量',
-                    width: '140',
+                    width: '100',
                     hide: false,
                     fixed: false,
                     showOverFlowTooltip: true,
@@ -203,7 +203,7 @@
                 {
                     prop: 'theoryReadyTime',
                     label: '理论准备工时',
-                    width: '140',
+                    width: '100',
                     hide: false,
                     fixed: false,
                     showOverFlowTooltip: true,
@@ -212,7 +212,7 @@
                 {
                     prop: 'theoryMachineTime',
                     label: '理论机器工时',
-                    width: '140',
+                    width: '100',
                     hide: false,
                     fixed: false,
                     showOverFlowTooltip: true,
@@ -221,7 +221,7 @@
                 {
                     prop: 'theoryManTime',
                     label: '理论人工工时',
-                    width: '140',
+                    width: '100',
                     hide: false,
                     fixed: false,
                     showOverFlowTooltip: true,
@@ -230,7 +230,7 @@
                 {
                     prop: 'actualReadyTime',
                     label: '实际准备工时',
-                    width: '140',
+                    width: '100',
                     hide: false,
                     fixed: false,
                     showOverFlowTooltip: true,
@@ -239,7 +239,7 @@
                 {
                     prop: 'actualMachineTime',
                     label: '实际机器工时',
-                    width: '140',
+                    width: '100',
                     hide: false,
                     fixed: false,
                     showOverFlowTooltip: true,
@@ -248,7 +248,7 @@
                 {
                     prop: 'actualManTime',
                     label: '实际人工工时',
-                    width: '140',
+                    width: '100',
                     hide: false,
                     fixed: false,
                     showOverFlowTooltip: true,
@@ -257,7 +257,7 @@
                 {
                     prop: 'diffReadyTime',
                     label: '差异准备工时',
-                    width: '140',
+                    width: '100',
                     hide: false,
                     fixed: false,
                     showOverFlowTooltip: true,
@@ -266,7 +266,7 @@
                 {
                     prop: 'diffMachineTime',
                     label: '差异机器工时',
-                    width: '140',
+                    width: '100',
                     hide: false,
                     fixed: false,
                     showOverFlowTooltip: true,
@@ -275,7 +275,7 @@
                 {
                     prop: 'diffManTime',
                     label: '差异人工工时',
-                    width: '140',
+                    width: '100',
                     hide: false,
                     fixed: false,
                     showOverFlowTooltip: true,
@@ -284,7 +284,7 @@
                 {
                     prop: 'standardMan',
                     label: '标准人力',
-                    width: '140',
+                    width: '100',
                     hide: false,
                     fixed: false,
                     showOverFlowTooltip: true,
@@ -293,7 +293,7 @@
                 {
                     prop: 'actualMan',
                     label: '实际人力',
-                    width: '140',
+                    width: '100',
                     hide: false,
                     fixed: false,
                     showOverFlowTooltip: true,
@@ -302,7 +302,7 @@
                 {
                     prop: 'stopTime',
                     label: '停机时间',
-                    width: '140',
+                    width: '100',
                     hide: false,
                     fixed: false,
                     showOverFlowTooltip: true,
@@ -311,7 +311,8 @@
                 {
                     prop: 'stopReason',
                     label: '停机原因',
-                    width: '200',
+                    minWidth: '240',
+                    width: '240',
                     hide: false,
                     fixed: false,
                     showOverFlowTooltip: true,
