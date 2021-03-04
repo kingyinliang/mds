@@ -3,7 +3,7 @@
  * @Anthor: Telliex
  * @Date: 2021-01-15 23:35:23
  * @LastEditors: Telliex
- * @LastEditTime: 2021-02-23 17:29:00
+ * @LastEditTime: 2021-03-03 10:18:19
 -->
 <template>
     <div class="header_main">
@@ -35,7 +35,7 @@
                         <el-form-item
                             label="生产订单："
                         >
-                            <el-tooltip class="item" effect="dark" :content="leaveningformData.orderNo" placement="top">
+                            <el-tooltip :disabled="!leaveningformData.orderNo" class="item" effect="dark" :content="leaveningformData.orderNo" placement="top">
                                 <el-input
                                     :value="leaveningformData.orderNo"
                                     placeholder=""
@@ -47,7 +47,7 @@
                         <el-form-item
                             label="生产物料："
                         >
-                            <el-tooltip class="item" effect="dark" :content="leaveningformData.material" placement="top">
+                            <el-tooltip :disabled="!leaveningformData.material" class="item" effect="dark" :content="leaveningformData.material" placement="top">
                                 <el-input
                                     :value="leaveningformData.material"
                                     placeholder=""
@@ -142,9 +142,9 @@
         <el-tabs id="DaatTtabs" ref="tabs" v-model="activetTabName" class="NewDaatTtabs tabsPages" type="border-card">
             <el-tab-pane name="1">
                 <span slot="label" class="spanview">
-                    投料信息
+                    当前库存
                 </span>
-                <el-table header-row-class-name="" :data="currentInStockDataGroup" border tooltip-effect="dark" class="newTable" size="mini" max-height="500">
+                <el-table header-row-class-name="" :data="stockList" border tooltip-effect="dark" class="newTable" size="mini" max-height="500">
                     <el-table-column type="index" label="序号" width="55" fixed align="center" />
                     <el-table-column label="车间" :show-overflow-tooltip="true" width="180">
                         <template>
@@ -173,7 +173,7 @@
                     </el-table-column>
                     <el-table-column label="移动类型" :show-overflow-tooltip="true" width="180">
                         <template slot-scope="scope">
-                            {{ scope.row.moveTypeName }}
+                            {{ scope.row.moveTypeFullName }}
                         </template>
                     </el-table-column>
                     <el-table-column label="移动数量" :show-overflow-tooltip="true" width="180">
@@ -240,9 +240,9 @@
             </el-tab-pane>
             <el-tab-pane name="2">
                 <span slot="label" class="spanview">
-                    领用信息
+                    历史库存
                 </span>
-                <el-table header-row-class-name="" :data="currentOutStockDataGroup" border tooltip-effect="dark" class="newTable" size="mini" max-height="500">
+                <el-table header-row-class-name="" :data="historyStockList" border tooltip-effect="dark" class="newTable" size="mini" max-height="500">
                     <el-table-column type="index" label="序号" width="55" fixed />
                     <el-table-column label="车间" :show-overflow-tooltip="true" width="180">
                         <template>
@@ -271,7 +271,7 @@
                     </el-table-column>
                     <el-table-column label="移动类型" :show-overflow-tooltip="true" width="180">
                         <template slot-scope="scope">
-                            {{ scope.row.moveType }}
+                            {{ scope.row.moveTypeFullName }}
                         </template>
                     </el-table-column>
                     <el-table-column label="移动数量" :show-overflow-tooltip="true" width="180">
@@ -333,11 +333,11 @@ export default class LeaveningBucketDetail extends Vue {
     activetTabName = '1';
 
     currentWorkShopName=''
-    // 投料信息
-    currentInStockDataGroup = [];
+    // 当前库存
+    stockList = [];
     totalDataList = [];
-    // 领用信息
-    currentOutStockDataGroup = [];
+    // 历史库存
+    historyStockList = [];
 
     leaveningformData: LeaveningData= {}; // 上方表单讯息
 
@@ -356,18 +356,18 @@ export default class LeaveningBucketDetail extends Vue {
                 console.log(data)
 
                 this.leaveningformData = data.data
-                this.$set(this.leaveningformData, 'material', `${this.leaveningformData.materialName} ${this.leaveningformData.materialCode}`)
+                this.$set(this.leaveningformData, 'material', `${this.leaveningformData.materialName} ${this.leaveningformData.materialCode}`.trim())
                 this.$set(this.leaveningformData, 'freezeFlagnName', this.leaveningformData.freezeFlag === 'Y' ? '已成熟' : '未成熟')
                 this.$set(this.leaveningformData, 'workShopName', this.currentWorkShopName)
                 // this.leaveningformData.orderAmount = this.leaveningformData.orderAmount ? this.leaveningformData.orderAmount / 1000 : this.leaveningformData.orderAmount
                 // this.leaveningformData.currentStock = this.leaveningformData.currentStock / 1000
-                // 投料信息
-                this.currentInStockDataGroup = [];
-                // 领用信息
-                this.currentOutStockDataGroup = [];
+                // 当前库存
+                this.stockList = [];
+                // 历史库存
+                this.historyStockList = [];
                 if (data.data) {
-                    this.currentInStockDataGroup = data.data.inStock;
-                    this.currentOutStockDataGroup = data.data.outStock;
+                    this.stockList = data.data.stockList;
+                    this.historyStockList = data.data.historyStockList;
                 }
         });
 
