@@ -22,9 +22,9 @@
     @Component({
         components: {
         },
-        name: 'OEEReport'
+        name: 'LossStatisticsReport'
     })
-    export default class OEEReport extends Vue {
+    export default class LossStatisticsReport extends Vue {
         $refs: {
             queryTable: HTMLFormElement;
         }
@@ -34,8 +34,12 @@
             isQueryFormShow: true, // 标头搜寻区块是否显示
             rules: [ // 查询必填栏位校验
                 {
+                    prop: 'workShop',
+                    text: '请输入生产车间'
+                },
+                             {
                     prop: 'startDate',
-                    text: '请输入生产时间'
+                    text: '请输入生产日期'
                 }
             ],
             queryAuth: '',
@@ -43,7 +47,7 @@
             exportOption: {
                 exportInterface: '',
                 auth: '',
-                text: 'OEE报表'
+                text: '损耗统计及分析'
             }
         }
 
@@ -55,10 +59,10 @@
                 label: '生产车间',
                 prop: 'workShop',
                 defaultValue: '',
-                labelWidth: '80', // default 70px
+                labelWidth: '90', // default 70px
                 width: '150',
                 clearable: true,
-                marked: false, // mark it
+                marked: true, // mark it
                 disabled: false,
                 defaultOptionsFn: () => {
                     return COMMON_API.ORG_QUERY_WORKSHOP_API({
@@ -96,6 +100,18 @@
                     label: ['deptName'],
                     value: 'id'
                 }
+            },
+            {
+                type: 'input',
+                hide: false, // hide column
+                label: '生产订单',
+                prop: 'orderNo',
+                defaultValue: '',
+                labelWidth: '80',
+                width: '160',
+                clearable: true,
+                marked: false, // mark it
+                disabled: false
             },
             {
                 type: 'select',
@@ -145,17 +161,8 @@
             //表格数据
             column: [
                 {
-                    prop: 'workShopName',
-                    label: '生产车间',
-                    minWidth: '120',
-                    hide: false,
-                    fixed: true,
-                    showOverFlowTooltip: true,
-                    dataType: 'default'
-                },
-                {
                     prop: 'productLineName',
-                    label: '产线',
+                    label: '生产产线',
                     minWidth: '120',
                     hide: false,
                     fixed: true,
@@ -163,17 +170,17 @@
                     dataType: 'default'
                 },
                 {
-                    prop: 'classesName',
-                    label: '班次',
-                    width: '80',
+                    prop: 'orderNo',
+                    label: '订单',
+                    minWidth: '120',
                     hide: false,
                     fixed: true,
                     showOverFlowTooltip: true,
                     dataType: 'default'
                 },
                 {
-                    prop: 'materialName',
-                    label: '品项',
+                    prop: 'materialCode',
+                    label: '物料编码',
                     width: '180',
                     hide: false,
                     fixed: true,
@@ -181,17 +188,26 @@
                     dataType: 'default'
                 },
                 {
-                    prop: 'productDate',
-                    label: '日期',
-                    width: '160',
+                    prop: 'materialName',
+                    label: '物料名称',
+                    width: '180',
+                    hide: false,
+                    fixed: true,
+                    showOverFlowTooltip: true,
+                    dataType: 'default'
+                },
+                {
+                    prop: 'materialUnit',
+                    label: '单位',
+                    width: '80',
                     hide: false,
                     fixed: false,
                     showOverFlowTooltip: true,
                     dataType: 'default'
                 },
                 {
-                    prop: 'avbRatio',
-                    label: '可用率',
+                    prop: 'orderStartDate',
+                    label: '订单开始日期',
                     width: '100',
                     hide: false,
                     fixed: false,
@@ -199,26 +215,8 @@
                     dataType: 'default'
                 },
                 {
-                    prop: 'timeCropRatio',
-                    label: '时间嫁动率',
-                    width: '140',
-                    hide: false,
-                    fixed: false,
-                    showOverFlowTooltip: true,
-                    dataType: 'default'
-                },
-                {
-                    prop: 'performCropRatio',
-                    label: '性能嫁动率',
-                    width: '140',
-                    hide: false,
-                    fixed: false,
-                    showOverFlowTooltip: true,
-                    dataType: 'default'
-                },
-                {
-                    prop: 'googRatio',
-                    label: '良品率',
+                    prop: 'orderEndDate',
+                    label: '订单结束日期',
                     width: '100',
                     hide: false,
                     fixed: false,
@@ -226,9 +224,8 @@
                     dataType: 'default'
                 },
                 {
-                    prop: 'theOEERatio',
-                    label: '综合效率',
-                    subLabel: '(OEE)',
+                    prop: 'receivingNum',
+                    label: '收货数量',
                     width: '140',
                     hide: false,
                     fixed: false,
@@ -236,28 +233,8 @@
                     dataType: 'default'
                 },
                 {
-                    prop: 'proDuctRatio',
-                    label: '生产效率',
-                    width: '100',
-                    hide: false,
-                    fixed: false,
-                    showOverFlowTooltip: true,
-                    dataType: 'default'
-                },
-                {
-                    prop: 'allTolTime',
-                    label: '总时间',
-                    subLabel: '(min)',
-                    width: '100',
-                    hide: false,
-                    fixed: false,
-                    showOverFlowTooltip: true,
-                    dataType: 'default'
-                },
-                {
-                    prop: 'planStopTime',
-                    label: '计划停机时间',
-                    subLabel: '(min)',
+                    prop: 'assNeedNum',
+                    label: '组件需求数量',
                     width: '140',
                     hide: false,
                     fixed: false,
@@ -265,9 +242,8 @@
                     dataType: 'default'
                 },
                 {
-                    prop: 'alltime',
-                    label: '实际投入时间',
-                    subLabel: '(min)',
+                    prop: 'assActualNum',
+                    label: '组件实发数量',
                     width: '140',
                     hide: false,
                     fixed: false,
@@ -275,9 +251,8 @@
                     dataType: 'default'
                 },
                 {
-                    prop: 'removeTime',
-                    label: '除外时间',
-                    subLabel: '(min)',
+                    prop: 'diffNum',
+                    label: '差异量',
                     width: '140',
                     hide: false,
                     fixed: false,
@@ -285,9 +260,8 @@
                     dataType: 'default'
                 },
                 {
-                    prop: 'excptTime',
-                    label: '异常损失时间',
-                    subLabel: '(min)',
+                    prop: 'actualLoss',
+                    label: '实际损耗率',
                     width: '140',
                     hide: false,
                     fixed: false,
@@ -295,70 +269,21 @@
                     dataType: 'default'
                 },
                 {
-                    prop: 'netOprTime',
-                    label: '净作业时间',
-                    subLabel: '(min)',
-                    width: '140',
+                    prop: 'lossReason',
+                    label: '损耗原因',
+                    width: '200',
                     hide: false,
                     fixed: false,
                     showOverFlowTooltip: true,
-                    dataType: 'default'
-                },
-                {
-                    prop: 'output',
-                    label: '产出数',
-                    subLabel: '(件)',
-                    width: '100',
-                    hide: false,
-                    fixed: false,
-                    showOverFlowTooltip: true,
-                    dataType: 'default'
-                },
-                {
-                    prop: 'allBad',
-                    label: '不良品数',
-                    subLabel: '(件)',
-                    width: '100',
-                    hide: false,
-                    fixed: false,
-                    showOverFlowTooltip: true,
-                    dataType: 'default'
-                },
-                {
-                    prop: 'effecCapacity',
-                    label: '有效效能',
-                    subLabel: '(件/h)',
-                    width: '140',
-                    hide: false,
-                    fixed: false,
-                    showOverFlowTooltip: true,
-                    dataType: 'default'
-                },
-                {
-                    prop: 'outPutTime',
-                    label: '产出时间',
-                    subLabel: '(h)',
-                    width: '100',
-                    hide: false,
-                    fixed: false,
-                    showOverFlowTooltip: true,
-                    dataType: 'default'
-                },
-                {
-                    prop: 'netOprTimeHour',
-                    label: '净作业时间',
-                    subLabel: '(h)',
-                    width: '140',
-                    hide: false,
-                    fixed: false,
-                    showOverFlowTooltip: true,
-                    dataType: 'default'
+                    custom: true,
+                    dataType: 'list'
                 }
+
             ],
             tableAttributes: {
-                isShowSummary: true // 合计
+                isShowSummary: false // 合计
             },
-            dataChangeByAPI: false, // table data change by API
+            dataChangeByAPI: false, // table data change by APIs
             tableHeightSet: 405
 
         }
@@ -366,7 +291,7 @@
         // 查询请求
         listInterface = params => {
             params.factory = JSON.parse(sessionStorage.getItem('factory') || '{}').id;
-            return REPORTS_API.REPORT_PACKAGING_OEE_API(params);
+            return REPORTS_API.REPORT_PACKAGING_LOSS_STATISTICS_QUERY_API(params);
         };
 
         /**
