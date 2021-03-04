@@ -3,7 +3,7 @@
  * @Anthor: Telliex
  * @Date: 2021-02-23 21:25:39
  * @LastEditors: Telliex
- * @LastEditTime: 2021-03-03 11:01:26
+ * @LastEditTime: 2021-03-04 14:48:43
 -->
 <template>
     <div class="header_main">
@@ -31,9 +31,9 @@
                         <el-button v-if="isAuth('roleUserCfg')" type="text" class="role__btn" @click="manageUser(scope.row.id)">
                             人员管理
                         </el-button>
-                        <el-button v-if="isAuth('')" type="text" class="role__btn" @click="manageDataAuthority(scope.row.id)">
+                        <!-- <el-button v-if="isAuth('')" type="text" class="role__btn" @click="manageDataAuthority(scope.row.id)">
                             数据权限
-                        </el-button>
+                        </el-button> -->
                         <el-button v-if="isAuth('roleDeptCfg')" type="text" class="role__btn" @click="manageDepartment(scope.row.id)">
                             部门分配
                         </el-button>
