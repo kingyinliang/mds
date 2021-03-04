@@ -120,6 +120,8 @@ export default (url: string, method: string = HTTP_METHOD.GET, data = {}, bussin
     } else if (bussiness === 'REPORT') {
         // report use
         HOST = process.env.VUE_APP_REPORT_API + process.env.VUE_APP_API_V;
+    } else if (bussiness === 'JOB') {
+        HOST = process.env.VUE_APP_JOB_API + process.env.VUE_APP_API_V;
     } else {
         HOST = process.env.VUE_APP_BASE_API + process.env.VUE_APP_API_V;
     }
