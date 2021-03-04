@@ -103,15 +103,15 @@
                         </span>
                     </div>
                     <div v-if="type === 'entry'" class="redact_btn">
-                        <el-button v-if="orderStatus !== 'submit' && orderStatus !== 'checked' && orderStatus !== 'D' && orderStatus !== '已审核' && orderStatus !== '待审核' && orderStatus !== '已过账' && isAuth(redactAuth)" type="primary" size="small" @click="setRedact">
+                        <el-button v-if="orderStatus !== 'submit' && orderStatus !== 'checked' && orderStatus !== 'D' && orderStatus !== 'M' && orderStatus !== '已提交' && orderStatus !== '已审核' && orderStatus !== '待审核' && orderStatus !== '已过账' && isAuth(redactAuth)" type="primary" size="small" @click="setRedact">
                             {{ isRedact ? '取消' : '编辑' }}
                         </el-button>
                         <template v-if="isRedact || onlySubmit">
-                            <el-button v-if="orderStatus !== 'submit' && orderStatus !== 'checked' && orderStatus !== 'D' && orderStatus !== '已审核' && orderStatus !== '待审核' && orderStatus !== '已过账' && isAuth(saveAuth)" type="primary" size="small" @click="savedData('saved')">
+                            <el-button v-if="orderStatus !== 'submit' && orderStatus !== 'checked' && orderStatus !== 'D' && orderStatus !== 'M' && orderStatus !== '已提交' && orderStatus !== '已审核' && orderStatus !== '待审核' && orderStatus !== '已过账' && isAuth(saveAuth)" type="primary" size="small" @click="savedData('saved')">
                                 保存
                             </el-button>
                         </template>
-                        <el-button v-if="orderStatus !== 'submit' && orderStatus !== 'checked' && orderStatus !== 'D' && orderStatus !== '已审核' && orderStatus !== '待审核' && orderStatus !== '已过账' && ifSubmit() && isAuth(submitAuth)" type="primary" size="small" @click="submitData">
+                        <el-button v-if="orderStatus !== 'submit' && orderStatus !== 'checked' && orderStatus !== 'D' && orderStatus !== 'M' && orderStatus !== '已提交' && orderStatus !== '已审核' && orderStatus !== '待审核' && orderStatus !== '已过账' && ifSubmit() && isAuth(submitAuth)" type="primary" size="small" @click="submitData">
                             提交
                         </el-button>
                     </div>

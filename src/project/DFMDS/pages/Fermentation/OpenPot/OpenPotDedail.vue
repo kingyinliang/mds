@@ -229,7 +229,7 @@
                 </el-table>
             </template>
             <template slot="custom_btn">
-                <el-button type="primary" size="small" @click="isRedact = !isRedact">
+                <el-button v-if="dataRule" type="primary" size="small" @click="isRedact = !isRedact">
                     {{ isRedact ? '取消' : '编辑' }}
                 </el-button>
                 <el-button v-if="isRedact" type="primary" size="small" @click="saved()">
@@ -247,6 +247,7 @@
     import { Vue, Component } from 'vue-property-decorator';
     import { COMMON_API, FER_API } from 'common/api/api';
     import _ from 'lodash';
+    import { dateFormat } from 'utils/utils';
 
     @Component
     export default class OpenPotDedail extends Vue {
@@ -254,6 +255,7 @@
             multipleTable: HTMLFormElement;
         }
 
+        dataRule = true
         isRedact = false
         mixSauceStatus = ''
         noChange = false
@@ -358,6 +360,11 @@
                 id: this.$store.state.fer.openPotObj.id
             }).then(({ data }) => {
                 this.formHeader = data.data
+                if (this.formHeader.useDate) {
+                    if (new Date(dateFormat(new Date(), 'yyyy-MM-dd')) > new Date(this.formHeader.useDate)) {
+                        this.dataRule = false
+                    }
+                }
             })
             this.getSelect()
         }
@@ -756,6 +763,7 @@
         ferOverdueMaterialList?: ListObj[];
     }
     interface HeadObj{
+        useDate?: string;
         openPotNo: string;
         mixPotNo?: string;
         mixPotName?: string;

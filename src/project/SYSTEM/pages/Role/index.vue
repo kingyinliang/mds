@@ -1,3 +1,10 @@
+<!--
+ * @Description:
+ * @Anthor: Telliex
+ * @Date: 2021-02-23 21:25:39
+ * @LastEditors: Telliex
+ * @LastEditTime: 2021-03-04 14:48:43
+-->
 <template>
     <div class="header_main">
         <mds-card title="角色信息列表" :name="'role'" :pack-up="false" style="margin-bottom: 0; background: #fff;">
@@ -24,6 +31,9 @@
                         <el-button v-if="isAuth('roleUserCfg')" type="text" class="role__btn" @click="manageUser(scope.row.id)">
                             人员管理
                         </el-button>
+                        <!-- <el-button v-if="isAuth('')" type="text" class="role__btn" @click="manageDataAuthority(scope.row.id)">
+                            数据权限
+                        </el-button> -->
                         <el-button v-if="isAuth('roleDeptCfg')" type="text" class="role__btn" @click="manageDepartment(scope.row.id)">
                             部门分配
                         </el-button>
@@ -47,6 +57,7 @@
         <user-manage v-if="isUserManageShow" ref="manageUser" @refreshDataList="getItemsList()" />
         <department-manage v-if="isDepartmentManageShow" ref="manageDepartment" @refreshDataList="getItemsList()" />
         <role-add-or-update v-if="isRoleAddOrUpdateShow" ref="addOrUpdateItem" @refreshDataList="getItemsList()" />
+        <data-authority-manage v-if="isDataAuthorityManageShow" ref="manageataAuthority" @refreshDataList="getItemsList()" />
     </div>
 </template>
 
@@ -55,6 +66,7 @@
     import UserManage from './UserManage';
     import DepartmentManage from './DepartmentManage';
     import RoleAddOrUpdate from './RoleAddAndUpdate';
+    import DataAuthorityManage from './DataAuthorityManage';
     import { COMMON_API } from 'common/api/api';
     // import { SYSTEMSETUP_API } from '@/api/api';
     export default {
@@ -63,7 +75,8 @@
             FunctionManage,
             UserManage,
             DepartmentManage,
-            RoleAddOrUpdate
+            RoleAddOrUpdate,
+            DataAuthorityManage
         },
         data() {
             return {
@@ -72,6 +85,7 @@
                 isUserManageShow: false,
                 isDepartmentManageShow: false,
                 isRoleAddOrUpdateShow: false,
+                isDataAuthorityManageShow: false,
                 controllableForm: {
                     username: ''
                 },
@@ -133,6 +147,13 @@
                 this.isFunctionManageShow = true;
                 this.$nextTick(() => {
                     this.$refs.functionManage.init(id);
+                });
+            },
+            // 数据权限管理
+            manageDataAuthority(id) {
+                this.isDataAuthorityManageShow = true;
+                this.$nextTick(() => {
+                    this.$refs.manageataAuthority.init(id);
                 });
             },
             // 部门管理
