@@ -24,7 +24,7 @@
                     <template slot="label">
                         <span class="notNull">* </span>升温结束时间：
                     </template>
-                    <el-date-picker v-model="craftInfo.riseEndDate" type="datetime" value-format="yyyy-MM-dd HH:mm" format="yyyy-MM-dd HH:mm" placeholder="请选择" :disabled="!isRedact" size="small" style="width: 175px;" />
+                    <el-date-picker v-model="craftInfo.riseEndDate" type="datetime" value-format="yyyy-MM-dd HH:mm" format="yyyy-MM-dd HH:mm" placeholder="请选择" :disabled="!isRedact" size="small" style="width: 175px;" @change="riseEndDateChange" />
                 </el-form-item>
             </el-form>
         </mds-card>
@@ -196,12 +196,13 @@ export default class Crafts extends Vue {
     dischargeManString = '';
     confirmManString = '';
     wantManString = '';
+    craftStageList: Stage[] = [];
 
     async init(formHeader) {
         this.getControlTypeList();
         STE_API.STE_DETAIL_CRAFT_INFO_API({
             potOrderNo: formHeader.potOrderNo
-        }).then(({ data }) => {
+        }).then(async({ data }) => {
             if (data.data['id'] === '') {
                 this.doAction = 'insert';
             } else {
@@ -221,10 +222,29 @@ export default class Crafts extends Vue {
                 }
                 this.craftTable = data.data.item
                 this.craftTableOrg = JSON.parse(JSON.stringify(data.data.item))
-                this.craftTable.map(item => {
-                    this.controlTypeChange(item.controlType, item, 'init');
-                })
             }
+            if (data.data.item.length === 0) {
+                await this.getStage(formHeader.materialCode)
+                const arr: CraftList[] = []
+                this.craftStageList.map(row => {
+                    arr.push({
+                        controlType: row.type,
+                        controlStage: row.stage,
+                        recordDate: '',
+                        temp: '',
+                        remark: '',
+                        changed: dateFormat(new Date(), 'yyyy-MM-dd hh:mm:ss'),
+                        changer: getUserNameNumber(),
+                        delFlag: 0,
+                        potOrderId: '',
+                        potOrderNo: ''
+                    })
+                })
+                this.craftTable = arr;
+            }
+            this.craftTable.map(item => {
+                this.controlTypeChange(item.controlType, item, 'init');
+            })
         });
         this.craftAudit = await this.getAudit(formHeader, ['CONTROL', 'TIMESHEET']);
     }
@@ -236,6 +256,21 @@ export default class Crafts extends Vue {
             verifyType: verifyType
         })
         return a.data.data
+    }
+
+    // 获取温度阶段
+    async getStage(materialCode) {
+        const res = await STE_API.STE_CRAFT_QUERY_API({ materialCode: materialCode })
+        this.craftStageList = []
+        if (res.data.data) {
+            this.craftStageList = res.data.data
+        }
+    }
+
+    riseEndDateChange() {
+        this.craftTable.map(item => {
+            this.changeStage(item.controlStage, item)
+        })
     }
 
     changeStage(val, row) {
@@ -484,6 +519,10 @@ interface CraftList {
     potOrderId?: string;
     potOrderNo?: string;
     controlStageList?: object[];
+}
+interface Stage {
+    type: string;
+    stage: string;
 }
 </script>
 
