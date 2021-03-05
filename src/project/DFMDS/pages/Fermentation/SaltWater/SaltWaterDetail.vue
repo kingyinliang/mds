@@ -427,6 +427,7 @@ export default class SaltWaterDetail extends Vue {
     }
 
     savedDatas() {
+        this.ferBrineIssueBomRemoveIdList = []
         const info = this.$store.state.fer.brineInfo;
         const issue = info.ferBrineIssue
         const obj = this.formHeader;
@@ -470,6 +471,7 @@ export default class SaltWaterDetail extends Vue {
     }
 
     submitDatas() {
+        this.ferBrineIssueBomRemoveIdList = []
         const info = this.$store.state.fer.brineInfo;
         const issue = info.ferBrineIssue;
         const obj = this.formHeader;
