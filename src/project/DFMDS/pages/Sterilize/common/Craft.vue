@@ -24,7 +24,7 @@
                     <template slot="label">
                         <span class="notNull">* </span>升温结束时间：
                     </template>
-                    <el-date-picker v-model="craftInfo.riseEndDate" type="datetime" value-format="yyyy-MM-dd HH:mm" format="yyyy-MM-dd HH:mm" placeholder="请选择" :disabled="!isRedact" size="small" style="width: 175px;" />
+                    <el-date-picker v-model="craftInfo.riseEndDate" type="datetime" value-format="yyyy-MM-dd HH:mm" format="yyyy-MM-dd HH:mm" placeholder="请选择" :disabled="!isRedact" size="small" style="width: 175px;" @change="riseEndDateChange" />
                 </el-form-item>
             </el-form>
         </mds-card>
@@ -265,6 +265,12 @@ export default class Crafts extends Vue {
         if (res.data.data) {
             this.craftStageList = res.data.data
         }
+    }
+
+    riseEndDateChange() {
+        this.craftTable.map(item => {
+            this.changeStage(item.controlStage, item)
+        })
     }
 
     changeStage(val, row) {
