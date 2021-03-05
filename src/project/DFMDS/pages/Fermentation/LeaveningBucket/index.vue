@@ -128,7 +128,7 @@
                                         <el-tooltip class="item" effect="dark" :content="item.materialName" placement="top" :disabled="item.materialName===''">
                                             <span style="overflow: hidden; white-space: nowrap; text-overflow: ellipsis;">{{ item.materialName || '未有生产物料' }}</span>
                                         </el-tooltip>
-                                        <span>{{ item.fermentDays || '0' }} 天</span>
+                                        <span v-if="item.productProcess !== 'MIX'">{{ item.fermentDays || '0' }} 天</span>
                                     </div>
                                     <div v-show="!(item.fermentorStatus==='E'||item.fermentorStatus==='C')&&item.orderNo!==''">
                                         <el-tooltip class="item" effect="dark" :content="item.orderNo" placement="top" :disabled="item.orderNo===''">
