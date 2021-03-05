@@ -61,7 +61,9 @@ export default {
     data() {
         return {
             visible: false,
-            dataForm: {},
+            dataForm: {
+                stage: ''
+            },
             rules: {
                 workShop: [
                     { required: true, message: '请选择生产车间', trigger: 'change' }
