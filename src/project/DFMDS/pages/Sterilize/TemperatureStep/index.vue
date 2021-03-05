@@ -24,14 +24,14 @@
             <el-table header-row-class-name="tableHead" class="newTable" :height="mainClientHeight - 72 - 47" :data="tableData" border tooltip-effect="dark" @selection-change="handleSelectionChange">
                 <el-table-column type="selection" width="50" fixed="left" align="center" />
                 <el-table-column type="index" :index="index => index + 1 + (Number(queryForm.current) - 1) * (Number(queryForm.size))" label="序号" width="50px" fixed />
-                <el-table-column label="生产车间" prop="workShop" min-width="120" :show-overflow-tooltip="true" />
+                <el-table-column label="生产车间" prop="workShopName" min-width="120" :show-overflow-tooltip="true" />
                 <el-table-column label="生产物料" min-width="180" :show-overflow-tooltip="true">
                     <template slot-scope="scope">
                         {{ scope.row.materialName }} {{ scope.row.materialCode }}
                     </template>
                 </el-table-column>
-                <el-table-column label="类型" prop="type" min-width="120" :show-overflow-tooltip="true" />
-                <el-table-column label="阶段" prop="stage" min-width="120" :show-overflow-tooltip="true" />
+                <el-table-column label="类型" prop="typeName" min-width="120" :show-overflow-tooltip="true" />
+                <el-table-column label="阶段" prop="stageName" min-width="120" :show-overflow-tooltip="true" />
                 <el-table-column label="排序号" prop="sort" min-width="120" :show-overflow-tooltip="true" />
                 <el-table-column label="备注" prop="remark" :show-overflow-tooltip="true" />
                 <el-table-column label="操作人" prop="changer" width="140" :show-overflow-tooltip="true" />
@@ -204,7 +204,7 @@
             this.$refs.addOrUpdate.controlStageList = []
             if (type === 'add') {
                 this.$refs.addOrUpdate.dataForm = {
-                    taskInventoryType: 'N',
+                    stage: '',
                     changer: getUserNameNumber(),
                     changed: dateFormat(new Date(), 'yyyy-MM-dd hh:mm:ss')
                 };
