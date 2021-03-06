@@ -580,6 +580,7 @@ export default {
                 materialName: row.materialName,
                 materialCode: row.materialCode,
                 unit: row.unit,
+                category: row.category,
                 planAmount: row.planAmount,
                 yunit: row.yunit,
                 yplanAmount: row.yplanAmount,
