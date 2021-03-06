@@ -171,7 +171,7 @@
                         <el-input v-else v-model="scope.row.batch" maxlength="10" :disabled="SplitStatuss(scope.row)" size="small" />
                     </template>
                 </el-table-column>
-                <!-- <el-table-column label="Y010库存" prop="currentQuantity" width="100" /> -->
+                <el-table-column label="Y010库存" prop="currentQuantity" width="100" />
                 <el-table-column label="备注" :show-overflow-tooltip="true">
                     <template slot-scope="scope">
                         <el-input v-model="scope.row.remark" :disabled="!(lineStatus !== '已提交' && lineStatus !== '审核通过' && isRedact !== false)" size="small" />
@@ -394,7 +394,7 @@ export default {
     },
     mounted() {
         headanimation(this.$);
-        this.getBatchList();
+        // this.getBatchList();
         this.Getdeptcode();
         this.GetUserList();
         this.GetHolderStatusList();
@@ -533,6 +533,7 @@ export default {
         },
         /* eslint-disenable @typescript-eslint/camelcase*/
         ShowDetail(row) {
+            this.getBatchList();
             this.Tdata = row;
             this.materialName = row.materialName;
             this.$http(
@@ -579,6 +580,7 @@ export default {
                 materialName: row.materialName,
                 materialCode: row.materialCode,
                 unit: row.unit,
+                category: row.category,
                 planAmount: row.planAmount,
                 yunit: row.yunit,
                 yplanAmount: row.yplanAmount,
