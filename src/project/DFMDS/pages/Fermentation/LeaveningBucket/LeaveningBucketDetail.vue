@@ -101,6 +101,7 @@
                             />
                         </el-form-item>
                         <el-form-item
+                            v-if="leaveningformData.productProcess !== 'MIX' && leaveningformData.productProcess"
                             label="发酵天数："
                         >
                             <el-input
@@ -113,6 +114,7 @@
                             </el-input>
                         </el-form-item>
                         <el-form-item
+                            v-if="leaveningformData.productProcess !== 'MIX' && leaveningformData.productProcess"
                             label="是否成熟："
                         >
                             <el-input
@@ -122,7 +124,10 @@
                                 :disabled="true"
                             />
                         </el-form-item>
-                        <el-form-item label="特殊资源：">
+                        <el-form-item
+                            v-if="leaveningformData.productProcess !== 'MIX' && leaveningformData.productProcess"
+                            label="特殊资源："
+                        >
                             <el-radio-group v-model="leaveningformData.brineFlag">
                                 <el-radio label="N" disabled>
                                     盐水未发

@@ -4,7 +4,7 @@
             ref="dataEntry"
             :header-base="headerBase"
             :form-header="formHeader"
-            :order-status="formHeader.mixSauceStatus"
+            :order-status="formHeader.mixSauceStatusName"
             :saved-datas="savedDatas"
             :submit-datas="submitDatas"
             @success="getOrderList"

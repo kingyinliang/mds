@@ -25,7 +25,7 @@
                 </el-table-column>
                 <el-table-column label="领用数量" prop="materialUnit" min-width="100" :show-overflow-tooltip="true">
                     <template slot-scope="scope">
-                        <el-input v-model="scope.row.realAddAmount" :disabled="!(isRedact)" size="small" placeholder="请输入" />
+                        {{ scope.row.realAddAmount = scope.row.currentStock }}
                     </template>
                 </el-table-column>
                 <el-table-column label="库存数量（KG）" prop="currentStock" min-width="140" :show-overflow-tooltip="true" />
@@ -44,7 +44,7 @@
                 </el-table-column>
             </el-table>
         </mds-card>
-        <mds-card v-if="formHeader.mixMaterialName === '调后鲜香泡豆黄豆酱'" :title="'鲜香泡豆'" :name="'list2'">
+        <mds-card v-if="formHeader.ferOpen.applyMaterialName === '黄豆酱熟酱' && formHeader.ferOpen.applyMaterialCode === 'SP03130002'" :title="'鲜香泡豆'" :name="'list2'">
             <template slot="titleBtn">
                 <div style="float: right;">
                     <el-button type="primary" :disabled="!isRedact" size="small" @click="addList2()">
@@ -228,6 +228,8 @@
             const filterArr: (any) = filterArr1[0].ferInStorageList.filter(item => item.productMaterialCode === row.addMaterialCode)// eslint-disable-line
             row.addMaterialName = filterArr[0].productMaterialName
             row.addMaterialType = filterArr[0].productMaterialType
+            row.orderId = filterArr[0].orderId
+            row.orderNo = filterArr[0].orderNo
             row.unit = filterArr[0].unit
             row.stockAmount = filterArr[0].currentStock
             row.batch = filterArr[0].inStorageBatch
