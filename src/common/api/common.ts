@@ -34,7 +34,7 @@ const COMMON_API = {
      */
     MENUSELECT_API: params => httpProxy('/sysMenu/selectMenu', 'GET', params),
     /**
-     * @property {string} MENUSELECT_API 根据角色id查功能
+     * @property {string} ROLEGETMENU_API 根据角色id查功能
      */
     ROLEGETMENU_API: params => httpProxy('/sysMenu/selectByRole', 'GET', params),
     /**
@@ -179,7 +179,7 @@ const COMMON_API = {
      */
     ORG_QUERY_WORKSHOP_API: params => httpProxy('/sysDept/getTypeDept', 'POST', params),
     /**
-     * @property {string} ORG_QUERY_WORKSHOP_API 基础数据-组织架构-按id查询下一级
+     * @property {string} ORG_QUERY_CHILDREN_API 基础数据-组织架构-按id查询下一级
      * param parentId
      */
     ORG_QUERY_CHILDREN_API: params => httpProxy('/sysDept/childList', 'GET', params),

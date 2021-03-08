@@ -6,7 +6,8 @@
                 ref="deptListTree"
                 :data="orgTree"
                 :props="{
-                    label: 'propertyName',
+                    label: 'privilegeIdentityName',
+                    children: 'children'
                 }"
                 node-key="id"
                 :default-expand-all="true"
@@ -31,7 +32,8 @@ export default {
         return {
             roleID: '',
             isDialogShow: false,
-            orgTree: []
+            orgTree: [],
+            dataListForMapping: []
         };
     },
     computed: {},
@@ -44,50 +46,57 @@ export default {
             console.log('id')
             console.log(id)
             this.roleID = id;
+            this.orgTree = [];
             SYSTEM_API.SYS_PERMISSION_ATTRIBUTE_ASSIGNMENT_QUERY_API({
             }).then(({ data }) => {
                 console.log('22222222data')
                 console.log(data)
-                // this.orgTree = data.data;
-                this.orgTree = treeDataTranslate(data.data);
+                data.data.forEach(item => {
+                    this.dataListForMapping.push({
+                        privilegeId: item.id,
+                        privilegeIdentity: item.propertyName
+                        }
+                    )
+                    this.orgTree.push({
+                        id: item.id,
+                        privilegeIdentityName: item.propertyName,
+                        children: treeDataTranslate(item.list)
+                    })
+                })
+                this.isDialogShow = true;
+            }).then(() => {
+                SYSTEM_API.SYS_PERMISSION_ATTRIBUTE_ROLE_ASSIGNMENT_QUERY_BY_ID_API({
+                    roleId: id
+                }).then(({ data: res }) => {
+                    console.log('11111111data')
+                    console.log(res)
+                    this.$refs.deptListTree.setCheckedKeys(res.data);
+                });
                 console.log('this.orgTree')
                 console.log(this.orgTree)
                 this.isDialogShow = true;
             })
 
-
-            // COMMON_API.ORGSTRUCTURE_API({
-            //     factory: 'common'
-            // })
-            //     .then(({ data }) => {
-            //         this.orgTree = data.data;
-            //         this.isDialogShow = true;
-            //     })
-            //     .then(() => {
-            //         COMMON_API.ROLE_ALLOT_QUERY_API({
-            //             factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
-            //             roleId: id
-            //         }).then(({ data }) => {
-            //             this.$refs.deptListTree.setCheckedKeys(data.data);
-            //         });
-            //     });
-
-            // SYSTEM_API.SYS_PERMISSION_ATTRIBUTE_ROLE_ASSIGNMENT_QUERY_BY_ID_API({
-            //     roleId: id
-            // }).then(({ data }) => {
-            //     console.log('11111111data')
-            //     console.log(data)
-            //     // this.$refs.deptListTree.setCheckedKeys(data.data);
-            // });
         },
         // 提交
         submitDataForm() {
+            const checkList = [].concat(this.$refs.deptListTree.getCheckedKeys()).concat(this.$refs.deptListTree.getHalfCheckedKeys())
+            const listTemp = [];
+
+            checkList.forEach(item => {
+                     listTemp.push({
+                    privilegeId: item,
+                    privilegeIdentity: 1
+                })
+            })
+
+
             SYSTEM_API.SYS_PERMISSION_ATTRIBUTE_SAVE_API({
                 // factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
                 roleId: this.roleID,
-                list: []
-                // deptId: [].concat(this.$refs.deptListTree.getCheckedKeys()).concat(this.$refs.deptListTree.getHalfCheckedKeys())
+                list: listTemp
             }).then(() => {
+                this.$successToast('设置成功');
                 this.$emit('refreshDataList');
                 this.isDialogShow = false;
             });
