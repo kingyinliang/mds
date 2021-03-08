@@ -556,6 +556,8 @@
             const filterArr: (any) = filterArr1[0].ferInStorageList.filter(item => item.productMaterialCode === row.addMaterialCode)// eslint-disable-line
             row.addMaterialName = filterArr[0].productMaterialName
             row.addMaterialType = filterArr[0].productMaterialType
+            row.orderId = filterArr[0].orderId
+            row.orderNo = filterArr[0].orderNo
             row.unit = filterArr[0].unit
             row.stockAmount = filterArr[0].currentStock
             row.batch = filterArr[0].inStorageBatch

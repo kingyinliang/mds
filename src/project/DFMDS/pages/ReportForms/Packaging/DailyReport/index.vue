@@ -12,41 +12,6 @@
             @get-data-success="setData"
             @data-action="dataAction"
         />
-
-        <el-dialog title="异常明细" :close-on-click-modal="false" :visible.sync="isDialogVisible" width="70%">
-            <div class="inner-area">
-                <div class="inner-area__title">
-                    <h3>异常汇总</h3>
-                    <el-button type="primary" size="small" :disabled="dialogDataMainTable.length===0" @click="subTableExportExcel(dialogDataMainTable)">
-                        导出
-                    </el-button>
-                </div>
-                <div class="inner-area__body">
-                    <el-table class="newTable" :data="dialogDataMainTable" header-row-class-name="tableHead" border style="width: 100%; min-height: 90px; margin-bottom: 20px;" @row-dblclick="showDetailInfo">
-                        <el-table-column label="项次" type="index" width="55px" />
-                        <el-table-column label="生产线" prop="productLineName" min-width="120px" />
-                        <el-table-column label="物料编码" prop="materialCode" min-width="120px" />
-                        <el-table-column label="生产物料" prop="materialName" min-width="120px" />
-                        <el-table-column label="月/季" prop="productDate" width="120px" />
-                        <el-table-column label="停机情况" prop="stopType" width="120px" />
-                        <el-table-column label="停机时长(min)" prop="stopTime" width="120px" />
-                    </el-table>
-                    <el-table v-if="isShowSecondTable" class="newTable" :data="dialogDataMainTable.notReachInfo" header-row-class-name="tableHead" border style="width: 100%; min-height: 90px;">
-                        <el-table-column label="项次" type="index" width="55px" />
-                        <el-table-column label="生产日期" prop="productLineName" width="120px" />
-                        <el-table-column label="停机类型" prop="stopType" min-width="120px" />
-                        <el-table-column label="停机方式" prop="stopMode" min-width="120px" />
-                        <el-table-column label="停机开始时间" prop="startDate" width="120px" />
-                        <el-table-column label="停机结束时间" prop="endDate" width="120px" />
-                        <el-table-column label="停机时长(min)" prop="stopTime" width="120px" />
-                        <el-table-column label="次数" prop="exceptionCount" width="120px" />
-                        <el-table-column label="停机情况" prop="stopSituation" min-width="120px" />
-                        <el-table-column label="停机原因" prop="stopReason" min-width="120px" />
-                    </el-table>
-                </div>
-                <div slot="footer" class="dialog-footer" />
-            </div>
-        </el-dialog>
     </div>
 </template>
 
@@ -59,9 +24,9 @@
     @Component({
         components: {
         },
-        name: 'ProductLineOEEReport'
+        name: 'DailyReport'
     })
-    export default class ProductLineOEEReport extends Vue {
+    export default class DailyReport extends Vue {
         $refs: {
             queryTable: HTMLFormElement;
         };
@@ -93,33 +58,6 @@
 
         // 查询表头
         queryFormData = [
-            {
-                type: 'select', // column type
-                hide: false, // hide column
-                label: '报表类型', // column title
-                prop: 'formType',
-                defaultValue: 'day',
-                labelWidth: '80', // default 70px
-                width: '60', // default 170px
-                clearable: false,
-                marked: false, // mark it
-                disabled: false,
-                defaultOptionsList: [ // options
-                    { value: 'day', label: '日' },
-                    { value: 'month', label: '月' },
-                    { value: 'quarter', label: '季' }
-                ],
-                defaultDisabled: ['year'],
-                changeToAction: val => {
-                    return new Promise((resolve) => {
-                        if (val === 'day') {
-                            resolve(['year'])
-                        } else {
-                            resolve(['startDate'])
-                        }
-                    })
-                }
-            },
             {
                 type: 'select', // column type
                 hide: false, // hide column
@@ -191,31 +129,43 @@
                 }
             },
             {
-                type: 'date-picker',
+                type: 'input',
                 hide: false, // hide column
-                label: '年度',
+                label: '生产订单',
+                prop: 'orderNo',
                 defaultValue: '',
-                labelWidth: '52', // default 70px
-                width: '120', // default 70px
-                dataType: 'year',
-                prop: 'year',
-                marked: false, // mark it
+                labelWidth: '80',
+                width: '160',
                 clearable: true,
+                marked: false, // mark it
                 disabled: false
             },
             {
-                type: 'date-interval',
+                type: 'date-picker',
                 hide: false, // hide column
                 label: '生产日期',
                 defaultValue: '',
                 labelWidth: '80', // default 70px
-                width: '305', // default 305px
+                width: '160', // default 70px
+                dataType: 'date',
+                prop: 'startDate',
                 marked: false, // mark it
                 clearable: true,
-                prop: 'startDate',
-                propTwo: 'endDate',
                 disabled: false
             }
+            // {
+            //     type: 'date-picker',
+            //     hide: false, // hide column
+            //     label: '生产日期',
+            //     defaultValue: '',
+            //     labelWidth: '80', // default 70px
+            //     width: '305', // default 305px
+            //     marked: false, // mark it
+            //     clearable: true,
+            //     prop: 'startDate',
+            //     propTwo: 'endDate',
+            //     disabled: false
+            // }
         ];
 
         // data table area setting
@@ -228,8 +178,8 @@
             //表格数据
             column: [
                 {
-                    prop: 'productLineName',
-                    label: '生产产线',
+                    prop: 'materialName',
+                    label: '生产物料',
                     minWidth: '120',
                     hide: false,
                     fixed: false,
@@ -238,26 +188,28 @@
                     dataType: 'default'
                 },
                 {
-                    prop: 'materialCode',
-                    label: '物料编码',
+                    prop: 'theoryNum',
+                    label: '理论量',
                     minWidth: '120',
                     hide: false,
                     fixed: false,
+                    subLabel: '(箱)',
                     showOverFlowTooltip: true,
                     dataType: 'default'
                 },
                 {
-                    prop: 'materialName',
-                    label: '物料名称',
+                    prop: 'todayNum',
+                    label: '今日产量',
                     width: '200',
                     hide: false,
                     fixed: false,
+                    subLabel: '(箱)',
                     showOverFlowTooltip: true,
                     dataType: 'default'
                 },
                 {
-                    prop: 'productDate',
-                    label: '日/月/季',
+                    prop: 'useMaterialName',
+                    label: '包材物料',
                     width: '100',
                     hide: false,
                     fixed: false,
@@ -265,8 +217,8 @@
                     dataType: 'default'
                 },
                 {
-                    prop: 'timeCropRatio',
-                    label: '时间嫁动率',
+                    prop: 'useMaterialUnit',
+                    label: '单位',
                     width: '100',
                     hide: false,
                     fixed: false,
@@ -274,8 +226,8 @@
                     dataType: 'default'
                 },
                 {
-                    prop: 'performCropRatio',
-                    label: '性能嫁动率',
+                    prop: 'bomNum',
+                    label: '订单计划量',
                     width: '100',
                     hide: false,
                     fixed: false,
@@ -283,8 +235,8 @@
                     dataType: 'default'
                 },
                 {
-                    prop: 'googRatio',
-                    label: '良品率',
+                    prop: 'batch',
+                    label: '批次',
                     width: '100',
                     hide: false,
                     fixed: false,
@@ -292,8 +244,8 @@
                     dataType: 'default'
                 },
                 {
-                    prop: 'theOEERatio',
-                    label: 'OEE',
+                    prop: 'feedNum',
+                    label: '补料量',
                     width: '100',
                     hide: false,
                     fixed: false,
@@ -301,19 +253,53 @@
                     dataType: 'default'
                 },
                 {
-                    prop: 'notReach',
-                    label: '未达成原因',
-                    minWidth: '240',
-                    width: '240',
+                    prop: 'lssueNum',
+                    label: '仓库发料量',
+                    width: '100',
                     hide: false,
                     fixed: false,
                     showOverFlowTooltip: true,
-                    custom: true,
-                    dataType: 'list'
+                    dataType: 'default'
+                },
+                {
+                    prop: 'actualNum',
+                    label: '实际用料',
+                    width: '100',
+                    hide: false,
+                    fixed: false,
+                    showOverFlowTooltip: true,
+                    dataType: 'default'
+                },
+                {
+                    prop: 'actualLossNum',
+                    label: '实际损失',
+                    width: '100',
+                    hide: false,
+                    fixed: false,
+                    showOverFlowTooltip: true,
+                    dataType: 'default'
+                },
+                {
+                    prop: 'badNum',
+                    label: '不良品',
+                    width: '100',
+                    hide: false,
+                    fixed: false,
+                    showOverFlowTooltip: true,
+                    dataType: 'default'
+                },
+                {
+                    prop: 'returnNum',
+                    label: '实退量',
+                    width: '100',
+                    hide: false,
+                    fixed: false,
+                    showOverFlowTooltip: true,
+                    dataType: 'default'
                 }
             ],
             tableAttributes: {
-                isShowSummary: true // 合计
+                isShowSummary: false // 合计
             },
             dataChangeByAPI: false, // table data change by API
             tableHeightSet: 405
@@ -324,14 +310,7 @@
         // 查询请求
         listInterface = params => {
             params.factory = JSON.parse(sessionStorage.getItem('factory') || '{}').id;
-            // search logic
-            if (params.formType === 'day') {
-                params.year = ''
-            } else {
-                params.startDate = ''
-                params.endDate = ''
-            }
-            return REPORTS_API.REPORT_PACKAGING_PRODUCTLINE_OEE_QUERY_API(params);
+            return REPORTS_API.REPORT_PACKAGING_PRODUCT_DAY_QUERY_API(params);
         };
 
 

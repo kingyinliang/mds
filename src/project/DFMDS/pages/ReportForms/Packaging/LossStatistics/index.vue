@@ -163,7 +163,7 @@
                 {
                     prop: 'productLineName',
                     label: '生产产线',
-                    minWidth: '120',
+                    width: '120',
                     hide: false,
                     fixed: true,
                     showOverFlowTooltip: true,
@@ -172,7 +172,7 @@
                 {
                     prop: 'orderNo',
                     label: '订单',
-                    minWidth: '120',
+                    width: '120',
                     hide: false,
                     fixed: true,
                     showOverFlowTooltip: true,
@@ -181,7 +181,7 @@
                 {
                     prop: 'materialCode',
                     label: '物料编码',
-                    width: '180',
+                    width: '120',
                     hide: false,
                     fixed: true,
                     showOverFlowTooltip: true,
@@ -226,7 +226,7 @@
                 {
                     prop: 'receivingNum',
                     label: '收货数量',
-                    width: '140',
+                    width: '100',
                     hide: false,
                     fixed: false,
                     showOverFlowTooltip: true,
@@ -235,7 +235,7 @@
                 {
                     prop: 'assNeedNum',
                     label: '组件需求数量',
-                    width: '140',
+                    width: '100',
                     hide: false,
                     fixed: false,
                     showOverFlowTooltip: true,
@@ -244,7 +244,7 @@
                 {
                     prop: 'assActualNum',
                     label: '组件实发数量',
-                    width: '140',
+                    width: '100',
                     hide: false,
                     fixed: false,
                     showOverFlowTooltip: true,
@@ -253,7 +253,7 @@
                 {
                     prop: 'diffNum',
                     label: '差异量',
-                    width: '140',
+                    width: '100',
                     hide: false,
                     fixed: false,
                     showOverFlowTooltip: true,
@@ -262,7 +262,7 @@
                 {
                     prop: 'actualLoss',
                     label: '实际损耗率',
-                    width: '140',
+                    width: '100',
                     hide: false,
                     fixed: false,
                     showOverFlowTooltip: true,
@@ -271,7 +271,8 @@
                 {
                     prop: 'lossReason',
                     label: '损耗原因',
-                    width: '200',
+                    minWidth: '240',
+                    width: '240',
                     hide: false,
                     fixed: false,
                     showOverFlowTooltip: true,

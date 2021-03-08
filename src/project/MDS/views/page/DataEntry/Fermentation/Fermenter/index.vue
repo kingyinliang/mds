@@ -106,7 +106,7 @@
                                 <a v-if="isAuth('fer:holderManage:detail')" @click="godetails(item)">详情>></a>
                             </div>
                             <div class="box_content">
-                                <img v-if="item.ferOrderNo.slice(0, 4) === RDorder" src="@/assets/img/RD.png" alt="" style="position: absolute; top: 10px; left: 10px;">
+                                <img v-if="item.ferOrderNo.slice(0, 4) === RDorder" src="@/assets/img/RD.png" alt="" style="position: absolute; top: 10px; left: 15px; z-index: 999; width: 40px;">
                                 <div class="box_content_itemPot">
                                     <div class="pot_border">
                                         <div class="pot" />

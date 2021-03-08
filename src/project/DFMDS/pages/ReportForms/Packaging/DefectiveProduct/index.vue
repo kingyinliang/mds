@@ -12,41 +12,6 @@
             @get-data-success="setData"
             @data-action="dataAction"
         />
-
-        <el-dialog title="异常明细" :close-on-click-modal="false" :visible.sync="isDialogVisible" width="70%">
-            <div class="inner-area">
-                <div class="inner-area__title">
-                    <h3>异常汇总</h3>
-                    <el-button type="primary" size="small" :disabled="dialogDataMainTable.length===0" @click="subTableExportExcel(dialogDataMainTable)">
-                        导出
-                    </el-button>
-                </div>
-                <div class="inner-area__body">
-                    <el-table class="newTable" :data="dialogDataMainTable" header-row-class-name="tableHead" border style="width: 100%; min-height: 90px; margin-bottom: 20px;" @row-dblclick="showDetailInfo">
-                        <el-table-column label="项次" type="index" width="55px" />
-                        <el-table-column label="生产线" prop="productLineName" min-width="120px" />
-                        <el-table-column label="物料编码" prop="materialCode" min-width="120px" />
-                        <el-table-column label="生产物料" prop="materialName" min-width="120px" />
-                        <el-table-column label="月/季" prop="productDate" width="120px" />
-                        <el-table-column label="停机情况" prop="stopType" width="120px" />
-                        <el-table-column label="停机时长(min)" prop="stopTime" width="120px" />
-                    </el-table>
-                    <el-table v-if="isShowSecondTable" class="newTable" :data="dialogDataMainTable.notReachInfo" header-row-class-name="tableHead" border style="width: 100%; min-height: 90px;">
-                        <el-table-column label="项次" type="index" width="55px" />
-                        <el-table-column label="生产日期" prop="productLineName" width="120px" />
-                        <el-table-column label="停机类型" prop="stopType" min-width="120px" />
-                        <el-table-column label="停机方式" prop="stopMode" min-width="120px" />
-                        <el-table-column label="停机开始时间" prop="startDate" width="120px" />
-                        <el-table-column label="停机结束时间" prop="endDate" width="120px" />
-                        <el-table-column label="停机时长(min)" prop="stopTime" width="120px" />
-                        <el-table-column label="次数" prop="exceptionCount" width="120px" />
-                        <el-table-column label="停机情况" prop="stopSituation" min-width="120px" />
-                        <el-table-column label="停机原因" prop="stopReason" min-width="120px" />
-                    </el-table>
-                </div>
-                <div slot="footer" class="dialog-footer" />
-            </div>
-        </el-dialog>
     </div>
 </template>
 
@@ -59,9 +24,9 @@
     @Component({
         components: {
         },
-        name: 'ProductLineOEEReport'
+        name: 'DefectiveProductReport'
     })
-    export default class ProductLineOEEReport extends Vue {
+    export default class DefectiveProductReport extends Vue {
         $refs: {
             queryTable: HTMLFormElement;
         };
@@ -229,7 +194,7 @@
             column: [
                 {
                     prop: 'productLineName',
-                    label: '生产产线',
+                    label: '生产订单',
                     minWidth: '120',
                     hide: false,
                     fixed: false,
