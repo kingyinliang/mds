@@ -3,7 +3,7 @@
  * @Anthor: Telliex,银亮,雪涵,付鑫
  * @Date: 2020-12-24 09:39:15
  * @LastEditors: Telliex
- * @LastEditTime: 2021-01-22 10:20:07
+ * @LastEditTime: 2021-03-05 10:57:34
  */
 import commonApi from './common';
 import orderApi from './order';
@@ -17,6 +17,7 @@ import kojiApi from './koji';
 import ferApi from './fer';
 import reportsApi from './reports'; // 报表
 import jobApi from './job'; // 报表
+import systemApi from './system'; // 系统基础数据
 
 export const COMMON_API = commonApi;
 export const ORDER_API = orderApi;
@@ -30,3 +31,4 @@ export const KOJI_API = kojiApi;
 export const FER_API = ferApi;
 export const REPORTS_API = reportsApi;
 export const JOB_API = jobApi;
+export const SYSTEM_API = systemApi;

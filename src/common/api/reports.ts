@@ -3,7 +3,7 @@
  * @Anthor: Telliex
  * @Date: 2021-01-27 15:06:29
  * @LastEditors: Telliex
- * @LastEditTime: 2021-03-04 14:54:30
+ * @LastEditTime: 2021-03-04 17:38:37
  */
 import httpProxy from 'utils/net/httpProxy';
 
@@ -55,7 +55,15 @@ const REPORTS_API = {
     /**
      * @property {string} REPORT_PACKAGING_LOSS_STATISTICS_QUERY_API 包装车间-损耗统计及分析
      */
-    REPORT_PACKAGING_LOSS_STATISTICS_QUERY_API: params => httpProxy('/pkgReportForm/loss/query', 'POST', params, 'REPORT')
+    REPORT_PACKAGING_LOSS_STATISTICS_QUERY_API: params => httpProxy('/pkgReportForm/loss/query', 'POST', params, 'REPORT'),
+    /**
+     * @property {string} REPORT_PACKAGING_DEFECTIVE_PRODUCT_QUERY_API 包装车间-包材不良品明细
+     */
+    REPORT_PACKAGING_DEFECTIVE_PRODUCT_QUERY_API: params => httpProxy('/pkgReportForm/pkgMaterialBad/query', 'POST', params, 'REPORT'),
+    /**
+     * @property {string} REPORT_PACKAGING_PRODUCT_DAY_QUERY_API 包装车间-包装生产日报
+     */
+    REPORT_PACKAGING_PRODUCT_DAY_QUERY_API: params => httpProxy('/pkgReportForm/pkgProduction/query', 'POST', params, 'REPORT')
 };
 
 export default REPORTS_API;
