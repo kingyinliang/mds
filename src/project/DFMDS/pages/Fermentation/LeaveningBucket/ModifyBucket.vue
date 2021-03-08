@@ -3,7 +3,7 @@
  * @Anthor: Telliex
  * @Date: 2021-01-15 23:35:23
  * @LastEditors: Telliex
- * @LastEditTime: 2021-02-22 18:08:49
+ * @LastEditTime: 2021-03-08 10:15:14
 -->
 <template>
     <div>
@@ -727,6 +727,7 @@
                     if (this.ruleSubmit()) {
                         FER_API.FER_FERMENTOR_ADJUSTION_TRANS_API({
                             batch: this.convertDataGroup.batch,
+                            moveAmount: this.convertDataGroup.moveAmount,
                             operators: this.convertDataGroup.operators,
                             orderNo: this.convertDataGroup.orderNo,
                             remark: this.convertDataGroup.remark,
