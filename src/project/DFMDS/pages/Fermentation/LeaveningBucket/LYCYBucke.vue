@@ -423,7 +423,6 @@
             selectUser(row, index) {
                 this.isLoanedPersonnelStatusDialogVisible = true;
                 this.currentRowIndex = index
-                console.log(row)
                 this.$nextTick(() => {
                     if (this.currentTab === 'LY') {
                         this.$refs.loanedPersonnel.init(row.lyMans, 'LY 操作人');

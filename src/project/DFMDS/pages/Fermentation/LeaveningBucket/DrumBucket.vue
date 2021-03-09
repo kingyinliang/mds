@@ -207,6 +207,8 @@
             this.currentCycle = item.cycle
             this.currentHolderId = item.holderId
 
+            this.arrList = [item.workShop];
+
             FER_API.FER_FERMENTOR_FLATION_BATCH_QUERY_API({
                     holderId: this.currentHolderId
                 }).then(({ data }) => {
