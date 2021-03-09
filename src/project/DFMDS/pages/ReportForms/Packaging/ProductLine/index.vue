@@ -404,7 +404,7 @@
             console.log(data);
             this.currentQueryData = []
             if (!data.data) {
-                this.$infoToast('暂无任何内容');
+                this.$infoToast('查询无结果');
                 return
             }
             this.currentQueryData = data.data

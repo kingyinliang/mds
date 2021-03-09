@@ -1,7 +1,7 @@
 <!-- 包装各品项产量  -->
 <template>
     <div class="header_main">
-        <query-table
+        <!-- <query-table
             ref="queryTable"
             :show-table="true"
             :show-index-column="false"
@@ -14,6 +14,16 @@
             :custom-data="true"
             :export-excel="true"
             :query-tabke-type="'report'"
+            @get-data-success="setData"
+        /> -->
+        <report-query-table
+            ref="queryTable"
+            :query-form-setting="queryFormSetting"
+            :query-form-data="queryFormData"
+            :data-table-setting="dataTableSetting"
+            :list-interface="listInterface"
+            :custom-data="true"
+            :query-table-type="'report'"
             @get-data-success="setData"
         />
     </div>
@@ -33,36 +43,72 @@ import { dateFormat } from 'src/utils/utils';
         name: 'EachItem'
     })
     export default class EachItem extends Vue {
-        //表格数据
-        column = [
-            {
-                prop: 'materialCode',
-                label: '物料编号',
-                width: '140'
-            },
-            {
-                prop: 'materialName',
-                label: '物料名称',
-                width: '140'
-            },
-            {
-                prop: 'unit',
-                label: '单位',
-                width: '80'
-            },
-            ...months.map((item, index) => {
-                return {
-                    prop: 'output' + (index + 1),
-                    label: item + '月',
-                    minWidth: '120'
+
+        // query header area setting
+        queryFormSetting= {
+            isQueryFormShow: true, // 标头搜寻区块是否显示
+            rules: [ // 查询必填栏位校验
+                {
+                    prop: 'year',
+                    text: '请选择年度'
+                },
+                {
+                    prop: 'unit',
+                    text: '请选择单位'
                 }
-            }),
-            {
-                prop: 'outputSummary',
-                label: '合计',
-                width: '140'
+            ],
+            queryAuth: '',
+            exportExcel: true, // 导出 excel BTN
+            exportOption: {
+                exportInterface: '',
+                auth: '',
+                text: '包装各品项产量'
             }
-        ];
+        }
+
+        // data table area setting
+        dataTableSetting={
+            showIt: true, // showit or not
+            showSelectColumn: false,
+            showIndexColumn: false,
+            showOperationColumn: false,
+            showPagination: true,
+            //表格数据
+            column: [
+                {
+                    prop: 'materialCode',
+                    label: '物料编号',
+                    width: '140'
+                },
+                {
+                    prop: 'materialName',
+                    label: '物料名称',
+                    width: '140'
+                },
+                {
+                    prop: 'unit',
+                    label: '单位',
+                    width: '80'
+                },
+                ...months.map((item, index) => {
+                    return {
+                        prop: 'output' + (index + 1),
+                        label: item + '月',
+                        minWidth: '120'
+                    }
+                }),
+                {
+                    prop: 'outputSummary',
+                    label: '合计',
+                    width: '140'
+                }
+            ],
+            tableAttributes: {
+                isShowSummary: false // 合计
+            },
+            dataChangeByAPI: false, // table data change by API
+            tableHeightSet: 405
+        }
 
         $refs: {
             queryTable: HTMLFormElement;
@@ -159,18 +205,6 @@ import { dateFormat } from 'src/utils/utils';
                 }
             }
         ];
-
-        // 查询必填栏位校验
-        queryTableFormRules = [
-            {
-                prop: 'year',
-                text: '请选择年度'
-            },
-            {
-                prop: 'unit',
-                text: '请选择单位'
-            }
-        ]
 
         // 查询请求
         listInterface = params => {

@@ -3,7 +3,7 @@
  * @Anthor: Telliex
  * @Date: 2021-02-26 10:58:05
  * @LastEditors: Telliex
- * @LastEditTime: 2021-03-04 16:54:02
+ * @LastEditTime: 2021-03-08 17:45:25
 -->
 <template>
     <div>
@@ -28,6 +28,11 @@
                                     {{ it.label }}
                                 </el-radio>
                             </el-radio-group>
+                        </el-form-item>
+                        <el-form-item v-if="item.type === 'single-checkbox'" :key="item.prop" :prop="item.prop" :rules="item.rule" :label-width="`${item.labelWidth ? item.labelWidth : 70}px`" :class="{ marked: item.marked }">
+                            <el-checkbox :ref="item.prop" v-model="queryForm[item.prop]" :disabled="item.disabled">
+                                {{ item.label }}
+                            </el-checkbox>
                         </el-form-item>
                         <el-form-item v-if="item.type === 'date-interval'" :key="item.prop" class="dateinput" :label="`${item.label}：` || ''" :rules="item.rule" :label-width="`${item.labelWidth ? item.labelWidth : 70}px`" :class="{ marked: item.marked }">
                             <el-row :style="`width: ${item.width ? item.width : 305}px;`">
@@ -61,13 +66,12 @@
                     <slot name="mds-button" />
                 </el-form-item>
             </el-form>
-            <div v-if="!tabs.length && type !== 'home'" class="toggleSearchBottom">
-                <em class="el-icon-caret-top" />
-            </div>
         </el-card>
-        <div v-if="type === 'home'">
-            <slot name="home" />
+        <!-- custom data table-->
+        <div v-if="type === 'customDataTable'" class="tableCard box-card" style="min-height: 400px; background: #fff;">
+            <slot name="customDataTable" />
         </div>
+        <!-- default data table-->
         <div v-else class="tableCard box-card" style="min-height: 400px; background: #fff;">
             <div class="toggleSearchTop">
                 <em class="el-icon-caret-bottom" />
@@ -105,25 +109,33 @@
                             {{ item.label }} <span v-if="item.subLabel" style="font-size: 10px;">{{ item.subLabel }}</span>
                         </template>
                         <template v-if="item.child">
-                            <el-table-column v-for="chind in item.child" :key="chind.prop" :prop="chind.prop" :label="chind.label" :formatter="chind.formatter" :show-overflow-tooltip="chind.showOverFlowTooltip" :width="chind.width || ''">
+                            <el-table-column v-for="child in item.child" :key="child.prop" :prop="child.prop" :label="child.label" :formatter="child.formatter" :show-overflow-tooltip="child.showOverFlowTooltip" :width="child.width || ''">
                                 <template slot="header">
-                                    {{ chind.label }} <span v-if="chind.subLabel" style="font-size: 10px;">{{ chind.subLabel }}</span>
+                                    {{ child.label }} <span v-if="child.subLabel" style="font-size: 10px;">{{ child.subLabel }}</span>
                                 </template>
                             </el-table-column>
                         </template>
                         <template slot-scope="scope">
+                            <!-- array content -->
                             <template v-if="item.dataType==='list'">
                                 <ul v-if="scope.row[item.prop].length===1">
-                                    <li v-for="(subChind,subIndex) in scope.row[item.prop]" :key="subIndex" style="cursor: pointer;" @click="goParentAction(scope.row,scope.$index)">
-                                        {{ subChind }}
+                                    <li v-for="(subChild,subIndex) in scope.row[item.prop]" :key="subIndex" style="cursor: pointer;" @click="goParentAction(scope.row,scope.$index)">
+                                        {{ subChild }}
                                     </li>
                                 </ul>
                                 <ul v-else>
-                                    <li v-for="(subChind,subIndex) in scope.row[item.prop]" :key="subIndex">
-                                        {{ subChind }}
+                                    <li v-for="(subChild,subIndex) in scope.row[item.prop]" :key="subIndex">
+                                        {{ subChild }}
                                     </li>
                                 </ul>
                             </template>
+                            <!-- multi props content -->
+                            <template v-else-if="item.dataType==='multi'">
+                                <span v-for="(subChild,subIndex) in item.data" :key="subIndex" style="margin-right: 5px;">
+                                    {{ scope.row[subChild] }}
+                                </span>
+                            </template>
+                            <!-- single props content -->
                             <template v-else>
                                 {{ scope.row[item.prop] }}
                             </template>
@@ -156,7 +168,7 @@
 </template>
 
 <script>
-    import { exportFileFor2Excel } from 'utils/utils.ts';
+    import { exportFileFor2Excel, exportFile2ExcelWithMultiHeader } from 'utils/utils.ts';
     import { creatGetPath } from 'utils/utils.ts';
     export default {
         name: 'QueryTable',
@@ -170,9 +182,9 @@
                 type: String,
                 default: ''
             },
-            type: { // home or table
+            type: { // customDataTable / normalDataTable
                 type: String,
-                default: 'queryTable'
+                default: 'normalDataTable'
             },
             resData: {
                 type: Object,
@@ -267,6 +279,10 @@
                         tableHeightSet: 405
                     };
                 }
+            },
+            multiHeader: {
+                type: Boolean,
+                default: false
             }
         },
         data() {
@@ -501,6 +517,8 @@
                 // if (this.pagePagination.currPage) {
                 //     this.queryForm[this.pagePagination.totalCount] = this.queryForm.totalCount
                 // }
+
+                this.tableData = [];
                 this.listInterface(this.queryForm).then(({ data }) => {
                     // if (this.getListField) {
                     //     const getPath = creatGetPath(this.getListField);
@@ -532,7 +550,7 @@
                     //     this.tableData = data.data.records;
                     //     this.queryForm.totalCount = data.data.total;
                     // } else if (this.queryTableType === 'report') { // 类型：报表
-                    this.tableData = JSON.parse(JSON.stringify(data.data));
+                    this.tableData = JSON.parse(JSON.stringify(data.data)) || [];
                     if (this.dataTableSetting.dataChangeByAPI) {
                         this.queryForm[this.currpageConfig] = 1;
                         this.queryForm[this.pagesizeConfig] = 10;
@@ -573,6 +591,10 @@
                         if (this.dataTableSetting.tableAttributes.isShowSummary && tableData[0].totalData) {
                             tableData[0].totalData[this.dataTableSetting.column[0].prop] = '合计';
                             tableDataTemp.push(tableData[0].totalData);
+                        }
+                        if (this.multiHeader) {
+                            exportFile2ExcelWithMultiHeader(this.dataTableSetting.column, tableDataTemp, this.queryFormSetting.exportOption.text)
+                            return
                         }
                         exportFileFor2Excel(this.dataTableSetting.column, tableDataTemp, this.queryFormSetting.exportOption.text);
                     }
