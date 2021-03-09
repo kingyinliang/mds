@@ -1,20 +1,16 @@
 <!-- 生产线产能利用率 -->
 <template>
     <div class="header_main">
-        <query-table
+        <report-query-table
             ref="queryTable"
-            :show-table="true"
-            :show-index-column="false"
-            :column="column"
             :span-method="spanMethod"
-            :show-page="true"
-            :rules="queryTableFormRules"
-            query-auth=""
+            :query-form-setting="queryFormSetting"
             :query-form-data="queryFormData"
+            :data-table-setting="dataTableSetting"
             :list-interface="listInterface"
             :custom-data="true"
-            :export-excel="true"
-            :query-tabke-type="'report'"
+            :query-table-type="'report'"
+            :multi-header="true"
             @get-data-success="setData"
         />
     </div>
@@ -36,41 +32,74 @@
         spanArr: number[] = []
         spanArr1: number[] = []
 
-        column = [
-            {
-                label: '生产车间',
-                prop: 'workShop',
-                minwidth: 120
-            },
-            {
-                label: '生产线',
-                prop: 'productLine',
-                width: 120
-            },
-            {
-                label: '生产物料',
-                prop: 'materialName',
-                minwidth: '210',
-                formatter: (row) => {
-                    return row.materialName + ' ' + row.materialCode;
+        // query header area setting
+        queryFormSetting= {
+            isQueryFormShow: true, // 标头搜寻区块是否显示
+            rules: [ // 查询必填栏位校验
+                {
+                    prop: 'year',
+                    text: '请选择年度'
                 }
+            ],
+            queryAuth: '',
+            exportExcel: true, // 导出 excel BTN
+            exportOption: {
+                exportInterface: '',
+                auth: '',
+                text: '生产线产能利用率'
+            }
+        }
+
+        // data table area setting
+        dataTableSetting={
+            showIt: true, // showit or not
+            showSelectColumn: false,
+            showIndexColumn: false,
+            showOperationColumn: false,
+            showPagination: true,
+            //表格数据
+            column: [
+                {
+                    label: '生产车间',
+                    prop: 'workShop',
+                    minwidth: 120
+                },
+                {
+                    label: '生产线',
+                    prop: 'productLine',
+                    width: 120
+                },
+                {
+                    label: '生产物料',
+                    prop: 'materialName',
+                    minwidth: '210',
+                    formatter: (row) => {
+                        return row.materialName + ' ' + row.materialCode;
+                    }
+                },
+                {
+                    label: '单位',
+                    prop: 'unitName'
+                },
+                ...months.map((item, index) => {
+                    const suffix = item === '汇总' ? 'Summary' : (index + 1)
+                    return {
+                        label: item === '汇总' ? item : (item + '月份'),
+                        child: [
+                            { label: '有效产能', prop: 'effectiveCapacity' + suffix, width: 120 },
+                            { label: '实际产量', prop: 'actualCapacity' + suffix, width: 120 },
+                            { label: '实际产量利用率', prop: 'capacityRatio' + suffix, width: 120 }
+                        ]
+                    };
+                })
+            ],
+            tableAttributes: {
+                isShowSummary: false // 合计
             },
-            {
-                label: '单位',
-                prop: 'unitName'
-            },
-            ...months.map((item, index) => {
-                const suffix = item === '汇总' ? 'Summary' : (index + 1)
-                return {
-                    label: item === '汇总' ? item : (item + '月份'),
-                    child: [
-                        { label: '有效产能', prop: 'effectiveCapacity' + suffix, width: 120 },
-                        { label: '实际产量', prop: 'actualCapacity' + suffix, width: 120 },
-                        { label: '实际产量利用率', prop: 'capacityRatio' + suffix, width: 120 }
-                    ]
-                };
-            })
-        ]
+            dataChangeByAPI: false, // table data change by API
+            tableHeightSet: 405
+
+        }
 
         // 查询表头
         queryFormData = [
@@ -124,14 +153,6 @@
                 }
             }
         ];
-
-        // 查询必填栏位校验
-        queryTableFormRules = [
-            {
-                prop: 'year',
-                text: '请选择年度'
-            }
-        ]
 
         // 查询请求
         listInterface = params => {

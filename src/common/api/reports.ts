@@ -63,7 +63,11 @@ const REPORTS_API = {
     /**
      * @property {string} REPORT_PACKAGING_PRODUCT_DAY_QUERY_API 包装车间-包装生产日报
      */
-    REPORT_PACKAGING_PRODUCT_DAY_QUERY_API: params => httpProxy('/pkgReportForm/pkgProduction/query', 'POST', params, 'REPORT')
+    REPORT_PACKAGING_PRODUCT_DAY_QUERY_API: params => httpProxy('/pkgReportForm/pkgProduction/query', 'POST', params, 'REPORT'),
+    /**
+     * @property {string} REPORT_SUB_OUTPUT_SUMMARY_QUERY_API 包装车间-产量报表-分品项产量汇总
+     */
+    REPORT_SUB_OUTPUT_SUMMARY_QUERY_API: params => httpProxy('/pkgReportForm/product/querySubOutputSummary', 'POST', params, 'REPORT')
 };
 
 export default REPORTS_API;

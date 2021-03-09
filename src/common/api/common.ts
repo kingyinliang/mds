@@ -228,6 +228,10 @@ const COMMON_API = {
      */
     UPLOADFILE_API: params => httpProxy('/sysFile/upload', 'GET', params),
     /**
+     * @property {string} UPLOADFILE_API 上传文件
+     */
+    APP_VERSION_API: params => httpProxy('/sysApp/getLastedVersion', 'GET', params),
+    /**
      * @property {string} UPLOADFILE_API 上传APK
      */
     UPLOADAPK_API: params => httpProxy('/sysApp/getUploadUrl', 'GET', params),

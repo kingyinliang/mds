@@ -10,7 +10,6 @@
             :custom-data="true"
             :query-table-type="'report'"
             @get-data-success="setData"
-            @data-action="dataAction"
         />
     </div>
 </template>
@@ -18,7 +17,7 @@
 <script lang="ts">
     import { Vue, Component } from 'vue-property-decorator';
     import { COMMON_API, REPORTS_API } from 'common/api/api';
-    import { exportFileFor2ExcelMultiSheets } from 'utils/utils.ts';
+    // import { exportFileFor2ExcelMultiSheets } from 'utils/utils.ts';
     // import { dateFormat } from 'utils/utils';
 
     @Component({
@@ -91,6 +90,7 @@
                 defaultValue: '',
                 labelWidth: '80',
                 width: '200',
+                clearable: true,
                 marked: false, // mark it
                 disabled: false,
                 optionsFn: val => {
@@ -153,19 +153,6 @@
                 clearable: true,
                 disabled: false
             }
-            // {
-            //     type: 'date-picker',
-            //     hide: false, // hide column
-            //     label: '生产日期',
-            //     defaultValue: '',
-            //     labelWidth: '80', // default 70px
-            //     width: '305', // default 305px
-            //     marked: false, // mark it
-            //     clearable: true,
-            //     prop: 'startDate',
-            //     propTwo: 'endDate',
-            //     disabled: false
-            // }
         ];
 
         // data table area setting
@@ -314,43 +301,6 @@
         };
 
 
-        dataAction(row, index) {
-            console.log(row)
-            console.log(index)
-            this.isDialogVisible = true;
-            this.dialogDataMainTable = this.currentQueryData[index].notReachInfo as DialogDataMainTable[]
-            // if (this.dialogDataMainTable.length !== 0) {
-            //     this.dialogDataSecondTable = this.dialogDataMainTable.notReachInfo as DialogDataSecondTable[]
-            // }
-
-        }
-
-         // 表格双击
-        showDetailInfo() {
-            this.isShowSecondTable = true;
-        }
-
-        subTableExportExcel(data) {
-            const excelDatas = [
-                {
-                    tHeader: ['生产线', '物料编码', '生产物料', '月/季', '停机情况', '停机时长（MIN)'],
-                    filterVal: ['productLineName', 'materialCode', 'materialName', 'productDate', 'stopType', 'stopTime'],
-                    tableDatas: data,
-                    sheetName: '异常汇总'
-                }
-            ]
-
-            data.foeEach(item => {
-                excelDatas.push({
-                    tHeader: ['生产日期', '停机类型', '停机方式', '停机时间开始', '停机结束时间', '停机时长（MIN)', '次数', '停机情况', '停机原因'],
-                    filterVal: ['productDate', 'stopType', 'stopMode', 'startDate', 'endDate', 'duration', 'exceptionCount', 'stopReason'],
-                    tableDatas: item.notReachInfo,
-                    sheetName: item.stopType
-                })
-            })
-            exportFileFor2ExcelMultiSheets(excelDatas, '异常明细', true, 'xlsx')
-        }
-
         /**
          * @description: data 表单 合计
          * @param1 {*}
@@ -383,7 +333,7 @@
             console.log(data);
             this.currentQueryData = []
             if (!data.data) {
-                this.$infoToast('暂无任何内容');
+                this.$infoToast('查询无结果');
                 return
             }
             this.currentQueryData = data.data

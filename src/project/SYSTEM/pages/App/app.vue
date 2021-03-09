@@ -7,6 +7,9 @@
             style="margin-bottom: 0; background: white;"
         >
             <el-form ref="dataForm" :model="dataForm" :rules="dataRule" label-width="120px" size="small" style="width: 550px;">
+                <el-form-item label="当前版本号：">
+                    {{ version }}
+                </el-form-item>
                 <el-form-item label="版本号：" prop="appVersion">
                     <el-input v-model="dataForm.appVersion" placeholder="请输入版本号：" style="width: 400px;" />
                 </el-form-item>
@@ -50,6 +53,7 @@ export default class AppPage extends Vue {
         dataForm: HTMLFormElement;
     }
 
+    version = '';
     FILE_API = '';
     uploadP = 0;
     dataForm = {
@@ -82,6 +86,12 @@ export default class AppPage extends Vue {
             }
         ]
     };
+
+    mounted() {
+        COMMON_API.APP_VERSION_API({}).then(({ data }) => {
+            this.version = data.data.appVersion
+        })
+    }
 
     httpRequest(options) {
         COMMON_API.UPLOADAPK_API({
