@@ -326,7 +326,7 @@
             console.log('查找回传结果');
             console.log(data);
             if (!data.data) {
-                this.$infoToast('暂无任何内容');
+                this.$infoToast('查询无结果');
             }
         }
 

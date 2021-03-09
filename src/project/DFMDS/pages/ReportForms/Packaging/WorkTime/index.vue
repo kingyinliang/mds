@@ -167,11 +167,12 @@
                 {
                     prop: 'materialName',
                     label: '品项',
-                    width: '180',
+                    width: '240',
                     hide: false,
                     fixed: false,
                     showOverFlowTooltip: true,
-                    dataType: 'default'
+                    dataType: 'multi',
+                    data: ['materialCode', 'materialName']
                 },
                 {
                     prop: 'productDate',
@@ -365,7 +366,7 @@
             console.log('查找回传结果');
             console.log(data);
             if (!data.data) {
-                this.$infoToast('暂无任何内容');
+                this.$infoToast('查询无结果');
             }
         }
 

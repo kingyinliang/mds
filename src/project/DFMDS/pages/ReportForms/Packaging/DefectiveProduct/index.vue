@@ -10,7 +10,6 @@
             :custom-data="true"
             :query-table-type="'report'"
             @get-data-success="setData"
-            @data-action="dataAction"
         />
     </div>
 </template>
@@ -18,7 +17,7 @@
 <script lang="ts">
     import { Vue, Component } from 'vue-property-decorator';
     import { COMMON_API, REPORTS_API } from 'common/api/api';
-    import { exportFileFor2ExcelMultiSheets } from 'utils/utils.ts';
+    // import { exportFileFor2ExcelMultiSheets } from 'utils/utils.ts';
     // import { dateFormat } from 'utils/utils';
 
     @Component({
@@ -58,32 +57,17 @@
 
         // 查询表头
         queryFormData = [
-            {
-                type: 'select', // column type
+             {
+                type: 'single-checkbox',
                 hide: false, // hide column
-                label: '报表类型', // column title
-                prop: 'formType',
-                defaultValue: 'day',
-                labelWidth: '80', // default 70px
-                width: '60', // default 170px
+                label: '不良品',
+                prop: 'isBadTemp',
+                defaultValue: false,
+                labelWidth: '80',
+                width: '160',
                 clearable: false,
                 marked: false, // mark it
-                disabled: false,
-                defaultOptionsList: [ // options
-                    { value: 'day', label: '日' },
-                    { value: 'month', label: '月' },
-                    { value: 'quarter', label: '季' }
-                ],
-                defaultDisabled: ['year'],
-                changeToAction: val => {
-                    return new Promise((resolve) => {
-                        if (val === 'day') {
-                            resolve(['year'])
-                        } else {
-                            resolve(['startDate'])
-                        }
-                    })
-                }
+                disabled: false
             },
             {
                 type: 'select', // column type
@@ -133,6 +117,18 @@
                 }
             },
             {
+                type: 'input',
+                hide: false, // hide column
+                label: '生产订单',
+                prop: 'orderNo',
+                defaultValue: '',
+                labelWidth: '80',
+                width: '160',
+                clearable: true,
+                marked: false, // mark it
+                disabled: false
+            },
+            {
                 type: 'select', // column type
                 hide: false, // hide column
                 label: '生产物料',
@@ -156,31 +152,30 @@
                 }
             },
             {
-                type: 'date-picker',
+                type: 'select', // column type
                 hide: false, // hide column
-                label: '年度',
+                label: '包材物料',
+                prop: 'pkgMaterialCode',
                 defaultValue: '',
-                labelWidth: '52', // default 70px
-                width: '120', // default 70px
-                dataType: 'year',
-                prop: 'year',
+                labelWidth: '80',
+                width: '160',
                 marked: false, // mark it
                 clearable: true,
-                disabled: false
-            },
-            {
-                type: 'date-interval',
-                hide: false, // hide column
-                label: '生产日期',
-                defaultValue: '',
-                labelWidth: '80', // default 70px
-                width: '305', // default 305px
-                marked: false, // mark it
-                clearable: true,
-                prop: 'startDate',
-                propTwo: 'endDate',
-                disabled: false
+                disabled: false,
+                defaultOptionsFn: () => {
+                    return COMMON_API.SEARCH_MATERIAL_API({ // /pkgReportForm/material/query
+                        factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
+                        materialType: 'ZVER'
+                    })
+                },
+                resVal: {
+                    resData: 'data',
+                    label: ['materialName', 'materialCode'],
+                    value: 'materialCode'
+                }
             }
+
+
         ];
 
         // data table area setting
@@ -193,92 +188,143 @@
             //表格数据
             column: [
                 {
-                    prop: 'productLineName',
+                    prop: 'orderNo',
                     label: '生产订单',
-                    minWidth: '120',
+                    width: '120',
                     hide: false,
-                    fixed: false,
+                    fixed: true,
                     showOverFlowTooltip: true,
                     subLabel: '',
                     dataType: 'default'
                 },
                 {
-                    prop: 'materialCode',
-                    label: '物料编码',
-                    minWidth: '120',
-                    hide: false,
-                    fixed: false,
-                    showOverFlowTooltip: true,
-                    dataType: 'default'
-                },
-                {
                     prop: 'materialName',
-                    label: '物料名称',
-                    width: '200',
-                    hide: false,
-                    fixed: false,
-                    showOverFlowTooltip: true,
-                    dataType: 'default'
-                },
-                {
-                    prop: 'productDate',
-                    label: '日/月/季',
-                    width: '100',
-                    hide: false,
-                    fixed: false,
-                    showOverFlowTooltip: true,
-                    dataType: 'default'
-                },
-                {
-                    prop: 'timeCropRatio',
-                    label: '时间嫁动率',
-                    width: '100',
-                    hide: false,
-                    fixed: false,
-                    showOverFlowTooltip: true,
-                    dataType: 'default'
-                },
-                {
-                    prop: 'performCropRatio',
-                    label: '性能嫁动率',
-                    width: '100',
-                    hide: false,
-                    fixed: false,
-                    showOverFlowTooltip: true,
-                    dataType: 'default'
-                },
-                {
-                    prop: 'googRatio',
-                    label: '良品率',
-                    width: '100',
-                    hide: false,
-                    fixed: false,
-                    showOverFlowTooltip: true,
-                    dataType: 'default'
-                },
-                {
-                    prop: 'theOEERatio',
-                    label: 'OEE',
-                    width: '100',
-                    hide: false,
-                    fixed: false,
-                    showOverFlowTooltip: true,
-                    dataType: 'default'
-                },
-                {
-                    prop: 'notReach',
-                    label: '未达成原因',
-                    minWidth: '240',
+                    label: '生产物料',
                     width: '240',
+                    hide: false,
+                    fixed: false,
+                    clearable: true,
+                    showOverFlowTooltip: true,
+                    dataType: 'multi',
+                    data: ['materialName', 'materialCode']
+                },
+                {
+                    prop: 'materialUnit',
+                    label: '单位',
+                    width: '80',
+                    hide: false,
+                    fixed: false,
+                    showOverFlowTooltip: true,
+                    dataType: 'default'
+                },
+                {
+                    prop: 'useMaterialName',
+                    label: '组件物料',
+                    width: '260',
+                    hide: false,
+                    fixed: false,
+                    showOverFlowTooltip: true,
+                    dataType: 'multi',
+                    data: ['materialName', 'useMaterialCode']
+                },
+                {
+                    prop: 'useMaterialUnit',
+                    label: '单位',
+                    width: '60',
+                    hide: false,
+                    fixed: false,
+                    showOverFlowTooltip: true,
+                    dataType: 'default'
+                },
+                {
+                    prop: 'useAmount',
+                    label: '订单领用',
+                    width: '100',
+                    hide: false,
+                    fixed: false,
+                    showOverFlowTooltip: true,
+                    dataType: 'default'
+                },
+                {
+                    prop: 'batch',
+                    label: '批次',
+                    width: '100',
+                    hide: false,
+                    fixed: false,
+                    showOverFlowTooltip: true,
+                    dataType: 'default'
+                },
+                {
+                    prop: 'productUse',
+                    label: '生产使用',
+                    width: '100',
+                    hide: false,
+                    fixed: false,
+                    showOverFlowTooltip: true,
+                    dataType: 'default'
+                },
+                {
+                    prop: 'badNum',
+                    label: '不合格数',
+                    width: '100',
+                    hide: false,
+                    fixed: false,
+                    showOverFlowTooltip: true,
+                    dataType: 'default'
+                },
+                {
+                    prop: 'actualLoss',
+                    label: '实际损耗',
+                    width: '100',
+                    hide: false,
+                    fixed: false,
+                    showOverFlowTooltip: true,
+                    dataType: 'default'
+                },
+                {
+                    prop: 'manufactor',
+                    label: '厂家',
+                    width: '100',
                     hide: false,
                     fixed: false,
                     showOverFlowTooltip: true,
                     custom: true,
-                    dataType: 'list'
+                    dataType: 'default'
+                },
+                 {
+                    prop: 'badReason',
+                    label: '不良品原因',
+                    monWidth: '200',
+                    width: '200',
+                    hide: false,
+                    fixed: false,
+                    showOverFlowTooltip: true,
+                    custom: true,
+                    dataType: 'default'
+                },
+                 {
+                    prop: 'productDate',
+                    label: '产出日期',
+                    width: '180',
+                    hide: false,
+                    fixed: false,
+                    showOverFlowTooltip: true,
+                    custom: true,
+                    dataType: 'default'
+                },
+                 {
+                    prop: 'badRate',
+                    label: '不良率',
+                    width: '80',
+                    hide: false,
+                    fixed: false,
+                    showOverFlowTooltip: true,
+                    custom: true,
+                    dataType: 'default'
                 }
             ],
             tableAttributes: {
-                isShowSummary: true // 合计
+                isShowSummary: false // 合计
             },
             dataChangeByAPI: false, // table data change by API
             tableHeightSet: 405
@@ -288,54 +334,17 @@
 
         // 查询请求
         listInterface = params => {
-            params.factory = JSON.parse(sessionStorage.getItem('factory') || '{}').id;
+            const paramsTemp = JSON.parse(JSON.stringify(params))
+            paramsTemp.factory = JSON.parse(sessionStorage.getItem('factory') || '{}').id
             // search logic
-            if (params.formType === 'day') {
-                params.year = ''
+            if (paramsTemp.isBadTemp === true) {
+                paramsTemp.isBad = 1
             } else {
-                params.startDate = ''
-                params.endDate = ''
+                paramsTemp.isBad = 0
             }
-            return REPORTS_API.REPORT_PACKAGING_PRODUCTLINE_OEE_QUERY_API(params);
+            delete paramsTemp.isBadTemp
+            return REPORTS_API.REPORT_PACKAGING_DEFECTIVE_PRODUCT_QUERY_API(paramsTemp);
         };
-
-
-        dataAction(row, index) {
-            console.log(row)
-            console.log(index)
-            this.isDialogVisible = true;
-            this.dialogDataMainTable = this.currentQueryData[index].notReachInfo as DialogDataMainTable[]
-            // if (this.dialogDataMainTable.length !== 0) {
-            //     this.dialogDataSecondTable = this.dialogDataMainTable.notReachInfo as DialogDataSecondTable[]
-            // }
-
-        }
-
-         // 表格双击
-        showDetailInfo() {
-            this.isShowSecondTable = true;
-        }
-
-        subTableExportExcel(data) {
-            const excelDatas = [
-                {
-                    tHeader: ['生产线', '物料编码', '生产物料', '月/季', '停机情况', '停机时长（MIN)'],
-                    filterVal: ['productLineName', 'materialCode', 'materialName', 'productDate', 'stopType', 'stopTime'],
-                    tableDatas: data,
-                    sheetName: '异常汇总'
-                }
-            ]
-
-            data.foeEach(item => {
-                excelDatas.push({
-                    tHeader: ['生产日期', '停机类型', '停机方式', '停机时间开始', '停机结束时间', '停机时长（MIN)', '次数', '停机情况', '停机原因'],
-                    filterVal: ['productDate', 'stopType', 'stopMode', 'startDate', 'endDate', 'duration', 'exceptionCount', 'stopReason'],
-                    tableDatas: item.notReachInfo,
-                    sheetName: item.stopType
-                })
-            })
-            exportFileFor2ExcelMultiSheets(excelDatas, '异常明细', true, 'xlsx')
-        }
 
         /**
          * @description: data 表单 合计
@@ -369,7 +378,7 @@
             console.log(data);
             this.currentQueryData = []
             if (!data.data) {
-                this.$infoToast('暂无任何内容');
+                this.$infoToast('查询无结果');
                 return
             }
             this.currentQueryData = data.data
