@@ -168,7 +168,7 @@
 </template>
 
 <script>
-    import { exportFileFor2Excel } from 'utils/utils.ts';
+    import { exportFileFor2Excel, exportFile2ExcelWithMultiHeader } from 'utils/utils.ts';
     import { creatGetPath } from 'utils/utils.ts';
     export default {
         name: 'QueryTable',
@@ -279,6 +279,10 @@
                         tableHeightSet: 405
                     };
                 }
+            },
+            multiHeader: {
+                type: Boolean,
+                default: false
             }
         },
         data() {
@@ -587,6 +591,10 @@
                         if (this.dataTableSetting.tableAttributes.isShowSummary && tableData[0].totalData) {
                             tableData[0].totalData[this.dataTableSetting.column[0].prop] = '合计';
                             tableDataTemp.push(tableData[0].totalData);
+                        }
+                        if (this.multiHeader) {
+                            exportFile2ExcelWithMultiHeader(this.dataTableSetting.column, tableDataTemp, this.queryFormSetting.exportOption.text)
+                            return
                         }
                         exportFileFor2Excel(this.dataTableSetting.column, tableDataTemp, this.queryFormSetting.exportOption.text);
                     }

@@ -1,6 +1,6 @@
 <template>
     <div class="header_main">
-        <query-table
+        <!-- <query-table
             ref="queryTable"
             :show-table="true"
             :show-index-column="false"
@@ -18,6 +18,18 @@
             :get-summaries="getSummaries"
             :export-option="exportOption"
             @get-data-success="setData"
+        /> -->
+        <report-query-table
+            ref="queryTable"
+            :span-method="spanMethod"
+            :query-form-setting="queryFormSetting"
+            :query-form-data="queryFormData"
+            :data-table-setting="dataTableSetting"
+            :list-interface="listInterface"
+            :get-summaries="getSummaries"
+            :custom-data="true"
+            :query-table-type="'report'"
+            @get-data-success="setData"
         />
     </div>
 </template>
@@ -34,44 +46,83 @@
     })
     export default class OutputSummary extends Vue {
 
-        //表格数据
-        column = [
-            {
-                prop: 'workShopName',
-                label: '生产车间',
-                minWidth: '120'
-            },
-            {
-                prop: 'unit',
-                label: '单位',
-                minWidth: '120'
-            },
-            {
-                prop: 'yearId',
-                label: '年度',
-                minWidth: '120'
-            },
-            {
-                prop: 'timeName',
-                label: '月/季',
-                minWidth: '120'
-            },
-            {
-                prop: 'effectiveCapacity',
-                label: '有效产能',
-                minWidth: '120'
-            },
-            {
-                prop: 'actualCapacity',
-                label: '实际产能',
-                minWidth: '120'
-            },
-            {
-                prop: 'capacityRatio',
-                label: '产能利用率',
-                minWidth: '120'
+        // query header area setting
+        queryFormSetting= {
+            isQueryFormShow: true, // 标头搜寻区块是否显示
+            rules: [ // 查询必填栏位校验
+                {
+                    prop: 'granularity',
+                    text: '请选择月报/季报'
+                },
+                {
+                    prop: 'workShop',
+                    text: '请选择生产车间'
+                },
+                {
+                    prop: 'year',
+                    text: '请选择年度'
+                }
+            ],
+            queryAuth: '',
+            exportExcel: true, // 导出 excel BTN
+            exportOption: {
+                exportInterface: '',
+                auth: '',
+                text: '产量汇总数据'
             }
-        ];
+        }
+
+        // data table area setting
+        dataTableSetting={
+            showIt: true, // showit or not
+            showSelectColumn: false,
+            showIndexColumn: false,
+            showOperationColumn: false,
+            showPagination: true,
+            //表格数据
+            column: [
+                {
+                    prop: 'workShopName',
+                    label: '生产车间',
+                    minWidth: '120'
+                },
+                {
+                    prop: 'unit',
+                    label: '单位',
+                    minWidth: '120'
+                },
+                {
+                    prop: 'yearId',
+                    label: '年度',
+                    minWidth: '120'
+                },
+                {
+                    prop: 'timeName',
+                    label: '月/季',
+                    minWidth: '120'
+                },
+                {
+                    prop: 'effectiveCapacity',
+                    label: '有效产能',
+                    minWidth: '120'
+                },
+                {
+                    prop: 'actualCapacity',
+                    label: '实际产能',
+                    minWidth: '120'
+                },
+                {
+                    prop: 'capacityRatio',
+                    label: '产能利用率',
+                    minWidth: '120'
+                }
+            ],
+            tableAttributes: {
+                isShowSummary: true // 合计
+            },
+            dataChangeByAPI: false, // table data change by API
+            tableHeightSet: 405
+        }
 
         $refs: {
             queryTable: HTMLFormElement;
@@ -119,22 +170,6 @@
                 valueFormat: 'yyyy'
             }
         ];
-
-        // 查询必填栏位校验
-        queryTableFormRules = [
-            {
-                prop: 'granularity',
-                text: '请选择月报/季报'
-            },
-            {
-                prop: 'workShop',
-                text: '请选择生产车间'
-            },
-            {
-                prop: 'year',
-                text: '请选择年度'
-            }
-        ]
 
         // 查询请求
         listInterface(params) {

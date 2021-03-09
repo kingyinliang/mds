@@ -290,6 +290,7 @@ function formatJson(column, jsonData) {
 interface Column {
     label: string;
     prop: string;
+    child?: Column[];
 }
 export function exportFileFor2Excel(column: Column[], tableData = [], fileName = '报表') {
     import('../vendor/Export2Excel.js').then(excel => {
@@ -307,7 +308,51 @@ export function exportFileFor2Excel(column: Column[], tableData = [], fileName =
         });
     });
 }
-
+export function exportFile2ExcelWithMultiHeader(column: Column[], tableData = [], fileName = '报表') {
+    import('../vendor/Export2Excel.js').then(excel => {
+        const tHeader: string[] = [];
+        const multiHeader: string[][] = [[]];
+        const indexList: number[] = [];
+        const dataList: Column[] = [];
+        column.forEach((item, index) => {
+            if (item.child) {
+                dataList.push(...item.child);
+                item.child.map(c => {
+                    tHeader.push(c.label);
+                    indexList.push(index);
+                })
+            } else {
+                dataList.push(item);
+                tHeader.push(item['label']);
+                indexList.push(index);
+            }
+        });
+        indexList.map((item, i) => {
+            if (i === 0) {
+                if (column[i].child) {
+                    multiHeader[0].push(column[item].label);
+                } else {
+                    multiHeader[0].push('');
+                }
+                return
+            }
+            if (item === indexList[i - 1] || !column[item].child) {
+                multiHeader[0].push('');
+                return
+            }
+            multiHeader[0].push(column[item].label);
+        })
+        const list = JSON.parse(JSON.stringify(tableData));
+        const data = formatJson(dataList, list);
+        excel.export_json_to_excel({
+            multiHeader: multiHeader, // 一级表头
+            header: tHeader, // 二级表头
+            data, //数据
+            filename: fileName, //名称
+            autoWidth: true //宽度自适应
+        });
+    });
+}
 /**
  * Parse the json to excel
  *  tableJson 导出数据 ; filenames导出表的名字; autoWidth表格宽度自动 true or false; bookTypes xlsx & csv & txt
