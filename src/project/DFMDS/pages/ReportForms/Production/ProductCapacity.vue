@@ -52,6 +52,26 @@
 
         // data table area setting
         dataTableSetting={
+            type: 'multiHeader',
+            merges: [
+                'A1:A2',
+                'B1:B2',
+                'C1:C2',
+                'D1:D2',
+                'E1:G1',
+                'H1:J1',
+                'K1:M1',
+                'N1:P1', // 4
+                'Q1:S1', // 5
+                'T1:V1', // 6
+                'W1:Y1', // 7
+                'Z1:AB1', // 8
+                'AC1:AE1', // 9
+                'AF1:AH1', // 10
+                'AI1:AK1', // 11
+                'AL1:AN1', // 12
+                'AO1:AQ1' // 12
+            ],
             showIt: true, // showit or not
             showSelectColumn: false,
             showIndexColumn: false,

@@ -308,7 +308,7 @@ export function exportFileFor2Excel(column: Column[], tableData = [], fileName =
         });
     });
 }
-export function exportFile2ExcelWithMultiHeader(column: Column[], tableData = [], fileName = '报表') {
+export function exportFile2ExcelWithMultiHeader(column: Column[], merges = [], tableData = [], fileName = '报表') {
     import('../vendor/Export2Excel.js').then(excel => {
         const tHeader: string[] = [];
         const multiHeader: string[][] = [[]];
@@ -320,35 +320,36 @@ export function exportFile2ExcelWithMultiHeader(column: Column[], tableData = []
                 item.child.map(c => {
                     tHeader.push(c.label);
                     indexList.push(index);
-                })
+                });
             } else {
                 dataList.push(item);
-                tHeader.push(item['label']);
+                tHeader.push('');
                 indexList.push(index);
             }
         });
         indexList.map((item, i) => {
             if (i === 0) {
                 if (column[i].child) {
-                    multiHeader[0].push(column[item].label);
-                } else {
                     multiHeader[0].push('');
+                } else {
+                    multiHeader[0].push(column[item].label);
                 }
-                return
+                return;
             }
-            if (item === indexList[i - 1] || !column[item].child) {
-                multiHeader[0].push('');
-                return
+            if (item !== indexList[i - 1]) {
+                multiHeader[0].push(column[item].label);
+                return;
             }
-            multiHeader[0].push(column[item].label);
-        })
+            multiHeader[0].push('');
+        });
         const list = JSON.parse(JSON.stringify(tableData));
         const data = formatJson(dataList, list);
-        excel.export_json_to_excel({
+        excel.export_json_to_excel_with_Multi_Header({
             multiHeader: multiHeader, // 一级表头
             header: tHeader, // 二级表头
             data, //数据
             filename: fileName, //名称
+            merges,
             autoWidth: true //宽度自适应
         });
     });
