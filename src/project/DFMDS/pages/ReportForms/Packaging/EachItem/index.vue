@@ -1,21 +1,6 @@
 <!-- 包装各品项产量  -->
 <template>
     <div class="header_main">
-        <!-- <query-table
-            ref="queryTable"
-            :show-table="true"
-            :show-index-column="false"
-            :column="column"
-            :show-page="true"
-            :rules="queryTableFormRules"
-            query-auth=""
-            :query-form-data="queryFormData"
-            :list-interface="listInterface"
-            :custom-data="true"
-            :export-excel="true"
-            :query-tabke-type="'report'"
-            @get-data-success="setData"
-        /> -->
         <report-query-table
             ref="queryTable"
             :query-form-setting="queryFormSetting"

@@ -1,7 +1,7 @@
 <!-- 分品项产量日报  -->
 <template>
     <div class="header_main">
-        <query-table
+        <!-- <query-table
             ref="queryTable"
             :show-table="true"
             :show-index-column="false"
@@ -18,20 +18,33 @@
             :is-show-summary="false"
             @get-data-success="setData"
             @date-change="dateChange"
+        /> -->
+        <report-query-table
+            ref="queryTable"
+            :span-method="spanMethod"
+            :query-form-setting="queryFormSetting"
+            :query-form-data="queryFormData"
+            :data-table-setting="dataTableSetting"
+            :list-interface="listInterface"
+            :custom-data="true"
+            :query-table-type="'report'"
+            @get-data-success="setData"
+            @changeSpanArr="changeSpanArr"
+            @date-change="dateChange"
         />
     </div>
 </template>
 
 <script lang="ts">
     import { Vue, Component } from 'vue-property-decorator';
-    import { COMMON_API } from 'common/api/api';
+    import { COMMON_API, REPORTS_API } from 'common/api/api';
     // import { dateFormat } from 'utils/utils';
     /**
      * 获取某月有几天
-     * @param yearAndmonth '2021-01'
+     * @param yearAndmonth '202101'
      */
     function getDays(yearAndmonth) {
-        const arr = yearAndmonth.split('-');
+        const arr = [yearAndmonth.substr(0, 4), yearAndmonth.substr(4, 2)];
         const d = new Date(arr[0], arr[1] || '', 0);
         return d.getDate();
     }
@@ -43,46 +56,79 @@
     export default class DailyOfSubItems extends Vue {
 
         currentMonth = '';
-
-        tableData: Record[] = [];
         spanArr: number[] = [];
         pos = 0;
 
-        //表格数据
-        get column() {
+        // query header area setting
+        queryFormSetting = {
+            isQueryFormShow: true, // 标头搜寻区块是否显示
+            rules: [ // 查询必填栏位校验
+                {
+                    prop: 'monthId',
+                    text: '请选择月'
+                },
+                {
+                    prop: 'unit',
+                    text: '请选择单位'
+                }
+            ],
+            queryAuth: '',
+            exportExcel: true, // 导出 excel BTN
+            exportOption: {
+                exportInterface: '',
+                auth: '',
+                text: '分品项产量日报'
+            }
+        }
+
+        // data table area setting
+        get dataTableSetting() {
             console.log(this.currentMonth)
-            return [
-                {
-                    prop: 'workShopName',
-                    label: '品项',
-                    width: '140',
-                    minWidth: '140'
-                },
-                {
-                    prop: 'holderNo',
-                    label: '单位',
-                    minWidth: '120'
-                },
-                {
-                    prop: 'holderTypeName',
-                    label: '生产物料',
-                    subLabel: '（箱）',
-                    minWidth: '120',
-                    width: 140
-                },
-                ...new Array(getDays(this.currentMonth)).fill('').map((item, index) => {
-                    return {
-                        prop: 'aaa' + (index + 1),
-                        label: index + 1 + '日',
+            return {
+                showIt: true, // showit or not
+                showSelectColumn: false,
+                showIndexColumn: false,
+                showOperationColumn: false,
+                showPagination: true,
+                //表格数据
+                column: [
+                    {
+                        prop: 'largeClassName',
+                        label: '品项',
+                        width: '140',
+                        minWidth: '140'
+                    },
+                    {
+                        prop: 'unit',
+                        label: '单位',
+                        minWidth: '120'
+                    },
+                    {
+                        prop: 'materialName',
+                        label: '生产物料',
+                        subLabel: '（箱）',
+                        minWidth: '120',
+                        width: 140
+                    },
+                    ...new Array(getDays(this.currentMonth)).fill('').map((item, index) => {
+                        return {
+                            prop: 'output' + (index + 1),
+                            label: index + 1 + '日',
+                            minWidth: '120'
+                        }
+                    }),
+                    {
+                        prop: 'outputSummary',
+                        label: '合计',
                         minWidth: '120'
                     }
-                }),
-                {
-                    prop: 'xxxx',
-                    label: '合计',
-                    minWidth: '120'
-                }
-            ]
+                ],
+                tableAttributes: {
+                    isShowSummary: false // 合计
+                },
+                dataChangeByAPI: false, // table data change by API
+                tableHeightSet: 405
+            }
         }
 
         $refs: {
@@ -112,14 +158,48 @@
                 }
             },
             {
+                type: 'select',
+                label: '品项大类',
+                prop: 'largeClass',
+                labelWidth: '100',
+                filterable: true,
+                rule: [{ required: false, message: '请选择品项大类', trigger: 'blur' }],
+                defaultOptionsFn: () => {
+                    return REPORTS_API.REPORT_LARGE_CLASS_DROP_DOWN_API({ })
+                },
+                defaultValue: '',
+                resVal: {
+                    resData: 'data',
+                    label: ['dictValue'],
+                    value: 'dictCode'
+                }
+            },
+            {
                 type: 'date-picker',
                 label: '生产月',
                 dataType: 'month',
                 defaultValue: '',
                 labelWidth: '100',
                 rule: [{ required: true, message: '请选择月', trigger: 'blur' }],
-                prop: 'oneorderProductDate',
-                valueFormat: 'yyyy-MM'
+                prop: 'monthId',
+                valueFormat: 'yyyyMM'
+            },
+            {
+                type: 'select',
+                label: '单位',
+                prop: 'unit',
+                labelWidth: '100',
+                rule: [{ required: true, message: '请选择单位', trigger: 'blur' }],
+                options: [
+                    { label: '箱', value: 'CAR' },
+                    { label: '吨', value: 'T' }
+                ],
+                defaultValue: 'CAR',
+                resVal: {
+                    // resData: 'data',
+                    label: ['label'],
+                    value: 'value'
+                }
             }
         ];
 
@@ -127,89 +207,44 @@
         listInterface(params) {
             console.log(this.queryFormData, params)
             params.factory = JSON.parse(sessionStorage.getItem('factory') || '{}').id;
-            // return REPORTS_API.REPORT_PACKAGING_OEE_API(params);
-            return new Promise((resolve) => {
-                resolve({
-                    data: {
-                        data: {
-                            records: [
-                                { workShopName: '1111111111111', holderNo: '11' },
-                                { workShopName: '1111111111111', holderNo: '1111' },
-                                { workShopName: '2222222222222', holderNo: '22' },
-                                { workShopName: '2222222222222', holderNo: '2222' }
-                            ]
-                        }
-                    }
-                })
-            })
+            return REPORTS_API.REPORT_SUB_OUTPUT_DAILY_QUERY_API(params);
         }
 
         dateChange(v) {
             this.currentMonth = v;
-            console.log(this.column)
         }
-
-        /**
-         * @description: data 表单 合计
-         * @param1 {*}
-         * @param2 {*}
-         * @param3 {*}
-         * @return {*}
-         * @example: 示例代码
-         * @param {*} getSummaries
-         */
-        getSummaries = param => {
-            const { columns, data } = param;
-            const sums: string[] = []
-            console.log('表单合计param')
-            console.log(param)
-            columns.forEach((column, index) => {
-            if (index === 0) {
-                sums[index] = '合计';
-                return;
-            }
-            const values = data.map(item => Number(item[column.property]));
-            if (!values.every(value => isNaN(value))) {
-                sums[index] = values.reduce((prev, curr) => {
-                const value = Number(curr);
-                if (!isNaN(value)) {
-                    return prev + curr;
-                }
-                    return prev;
-
-                }, 0);
-                sums[index] += ' 元';
-            } else {
-                sums[index] = 'N/A';
-            }
-            });
-            return sums
-        };
 
         // 设置数据
         setData(data) {
-            console.log(data);
-            this.tableData = data.data.records
-            this.spanArr = []
-            this.getSpanArr(this.tableData)
+            if (!data.data) {
+                this.$infoToast('暂无任何内容');
+            }
+            this.getSpanArr(data.data)
         }
 
-        getSpanArr(data) {
-            for (let i = 0; i < data.length; i++) {
-                if (i === 0) {
-                    this.spanArr.push(1);
-                    this.pos = 0;
-                    continue;
+        changeSpanArr(page, size, tableData) {
+            const arr = tableData.slice((page - 1) * size, page * size)
+            this.getSpanArr(arr)
+        }
+
+        getSpanArr(arr) {
+            this.spanArr = []
+            let pos = 0
+            if (!arr) return false;
+            arr.map((item, index) => {
+                if (index === 0) {
+                    this.spanArr.push(1)
+                } else {
+                    // 生产车间合并
+                    if (item.largeClassName === arr[index - 1].largeClassName) {
+                        this.spanArr[pos] += 1
+                        this.spanArr.push(0)
+                        return
+                    }
+                    pos = index
+                    this.spanArr.push(1)
                 }
-                // 判断当前元素与上一个元素是否相同
-                if (data[i].workShopName === data[i - 1].workShopName) {
-                    this.spanArr[this.pos] += 1;
-                    this.spanArr.push(0);
-                    continue;
-                }
-                this.spanArr.push(1);
-                this.pos = i;
-            }
+            })
         }
 
         spanMethod({ rowIndex, columnIndex }) {
@@ -224,7 +259,4 @@
         }
     }
 
-    interface Record {
-        workShopName: string;
-    }
 </script>

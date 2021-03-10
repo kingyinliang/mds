@@ -3,7 +3,7 @@
  * @Anthor: Telliex
  * @Date: 2021-02-26 10:58:05
  * @LastEditors: Telliex
- * @LastEditTime: 2021-03-08 17:45:25
+ * @LastEditTime: 2021-03-09 22:17:09
 -->
 <template>
     <div>
@@ -265,6 +265,8 @@
                 type: Object,
                 default: () => {
                     return {
+                        type: 'default', // multiHeader
+                        merges: [],
                         showIt: false,
                         showSelectColumn: false,
                         showIndexColumn: false,
@@ -279,11 +281,11 @@
                         tableHeightSet: 405
                     };
                 }
-            },
-            multiHeader: {
-                type: Boolean,
-                default: false
             }
+            // multiHeader: {
+            //     type: Boolean,
+            //     default: false
+            // }
         },
         data() {
             return {
@@ -592,8 +594,8 @@
                             tableData[0].totalData[this.dataTableSetting.column[0].prop] = '合计';
                             tableDataTemp.push(tableData[0].totalData);
                         }
-                        if (this.multiHeader) {
-                            exportFile2ExcelWithMultiHeader(this.dataTableSetting.column, tableDataTemp, this.queryFormSetting.exportOption.text)
+                        if (this.dataTableSetting.type === 'multiHeader') {
+                            exportFile2ExcelWithMultiHeader(this.dataTableSetting.column, this.dataTableSetting.merges, tableDataTemp, this.queryFormSetting.exportOption.text)
                             return
                         }
                         exportFileFor2Excel(this.dataTableSetting.column, tableDataTemp, this.queryFormSetting.exportOption.text);
@@ -685,6 +687,7 @@
                     return;
                 }
                 this.currentPage = val;
+                this.$emit('changeSpanArr', val, this.currentSize, this.tableData)
             },
             // tabClick(tab) {
             //     const tabName = JSON.parse(JSON.stringify(tab.name));
