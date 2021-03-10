@@ -3,7 +3,7 @@
  * @Anthor: Telliex
  * @Date: 2021-01-15 23:35:23
  * @LastEditors: Telliex
- * @LastEditTime: 2021-03-08 10:15:14
+ * @LastEditTime: 2021-03-10 09:19:25
 -->
 <template>
     <div>
@@ -587,7 +587,7 @@
                     this.tabType = 'move'
                 }
 
-
+                this.arrList = [item.workShop];
                 this.dialogTitle = this.currentHolderName + this.currentTab
                 // 调整 tab ＝＝＝＝＝
                 this.changeTab(this.tabType);
