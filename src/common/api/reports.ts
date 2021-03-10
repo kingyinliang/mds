@@ -67,7 +67,11 @@ const REPORTS_API = {
     /**
      * @property {string} REPORT_SUB_OUTPUT_SUMMARY_QUERY_API 包装车间-产量报表-分品项产量汇总
      */
-    REPORT_SUB_OUTPUT_SUMMARY_QUERY_API: params => httpProxy('/pkgReportForm/product/querySubOutputSummary', 'POST', params, 'REPORT')
+    REPORT_SUB_OUTPUT_SUMMARY_QUERY_API: params => httpProxy('/pkgReportForm/product/querySubOutputSummary', 'POST', params, 'REPORT'),
+    /**
+     * @property {string} REPORT_SUB_OUTPUT_DAILY_QUERY_API 包装车间-产量报表-分品项产量汇总
+     */
+    REPORT_SUB_OUTPUT_DAILY_QUERY_API: params => httpProxy('/pkgReportForm/product/querySubOutputDaily', 'POST', params, 'REPORT')
 };
 
 export default REPORTS_API;

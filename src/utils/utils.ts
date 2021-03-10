@@ -291,12 +291,13 @@ interface Column {
     label: string;
     prop: string;
     child?: Column[];
+    subLabel?: string;
 }
 export function exportFileFor2Excel(column: Column[], tableData = [], fileName = '报表') {
     import('../vendor/Export2Excel.js').then(excel => {
         const tHeader: string[] = [];
         column.forEach(item => {
-            tHeader.push(item['label']);
+            tHeader.push(item.subLabel ? item['label'] + item.subLabel : item.label);
         });
         const list = JSON.parse(JSON.stringify(tableData));
         const data = formatJson(column, list);
