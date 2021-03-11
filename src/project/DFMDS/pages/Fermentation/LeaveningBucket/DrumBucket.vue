@@ -315,7 +315,6 @@
             })
 
             if (this.ruleSubmit()) {
-                const obj = {}
                 const deleteItemsArray: string[] = []
                 const insertListArray: CurrentDataTable[] = []
                 const updateListArray: CurrentDataTable[] = []
@@ -347,7 +346,7 @@
                     updateList: updateListArray
                 }).then(() => {
                     this.$successToast('保存成功');
-                    this.$emit('drumBucketFinish', obj);
+                    this.$emit('drumBucketFinish');
                     this.isTableDialogVisible = false
                 });
 
