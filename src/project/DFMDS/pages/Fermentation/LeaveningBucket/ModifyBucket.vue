@@ -3,7 +3,7 @@
  * @Anthor: Telliex
  * @Date: 2021-01-15 23:35:23
  * @LastEditors: Telliex
- * @LastEditTime: 2021-03-08 10:15:14
+ * @LastEditTime: 2021-03-11 15:45:39
 -->
 <template>
     <div>
@@ -217,7 +217,7 @@
                                     </el-select>
                                 </el-form-item>
                                 <el-form-item label="挪入批次：" class="star">
-                                    <el-input v-model.trim="moveDataGroup.movebatch" placeholder="请输入" clearable :disabled="!moveDisabled" />
+                                    <el-input v-model.trim="moveDataGroup.movebatch" placeholder="请输入" clearable :disabled="!moveDisabled" :maxlength="10" />
                                 </el-form-item>
                                 <el-form-item label="挪罐操作人：">
                                     <div class="required" style="min-height: 32px; line-height: 32px;">
@@ -401,8 +401,8 @@
                 return new Promise((resolve) => {
                         COMMON_API.HOLDER_DROPDOWN_BY_STATUS_API({
                         holderType: [val],
-                        // holderStatus: ['E', 'U']
-                        holderStatus: ['E', 'S', 'O']
+                        holderStatus: ['E', 'U'] // 空罐,领用中
+                        // holderStatus: ['E', 'S', 'O']
                     }).then(({ data }) => {
                         console.log('打入罐容器号')
                         console.log(data.data)
@@ -587,7 +587,7 @@
                     this.tabType = 'move'
                 }
 
-
+                this.arrList = [item.workShop];
                 this.dialogTitle = this.currentHolderName + this.currentTab
                 // 调整 tab ＝＝＝＝＝
                 this.changeTab(this.tabType);
@@ -642,7 +642,7 @@
                         materialCode: this.dataOfMateriaBatch.materialCode || '',
                         materialName: this.dataOfMateriaBatch.materialName || '',
                         batch: this.dataOfMateriaBatch.batch || '',
-                        movebatch: '',
+                        movebatch: this.dataOfMateriaBatch.batch || '',
                         operators: '',
                         orderNo: this.currentItem.orderNo,
                         remark: '',
@@ -718,6 +718,7 @@
                             remark: this.modifyDataGroup.remark
                         }).then(() => {
                             this.$successToast('保存成功');
+                            this.$emit('drumBucketFinish');
                             this.isTableDialogVisible = false
                         });
                     }
@@ -736,13 +737,14 @@
                             targetHolderType: this.convertDataGroup.targetHolderType
                         }).then(() => {
                             this.$successToast('保存成功');
+                            this.$emit('drumBucketFinish');
                             this.isTableDialogVisible = false
                         });
                     }
                 } else if (this.tabType === 'move') {
                     if (this.ruleSubmit()) {
                         FER_API.FER_FERMENTOR_ADJUSTION_CHANGE_API({
-                            batch: this.moveDataGroup.batch, //x
+                            batch: this.moveDataGroup.movebatch, //x 挪入批次
                             operators: this.moveDataGroup.operators, //x
                             orderNo: this.currentItem.orderNo, //x
                             remark: this.moveDataGroup.remark, //x
@@ -751,6 +753,7 @@
                             targetHolderType: this.moveDataGroup.targetHolderType //x
                         }).then(() => {
                             this.$successToast('保存成功');
+                            this.$emit('drumBucketFinish');
                             this.isTableDialogVisible = false
                         });
                     }

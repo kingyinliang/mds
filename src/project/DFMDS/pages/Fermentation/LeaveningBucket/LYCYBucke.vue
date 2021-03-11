@@ -487,7 +487,6 @@
                 if (this.currentTab === 'LY') {
 
                     if (this.ruleSubmit()) {
-                        const obj = {}
                         const deleteItemsArray: string[] = []
                         const insertListArray: CurrentLyDataTable[] = []
                         const updateListArray: CurrentLyDataTable[] = []
@@ -518,14 +517,13 @@
                             updateList: updateListArray
                         }).then(() => {
                             this.$successToast('保存成功');
-                            this.$emit('drumBucketFinish', obj);
+                            this.$emit('drumBucketFinish');
                             this.isTableDialogVisible = false
                         });
                 }
 
 
                 } else if (this.ruleSubmit()) {
-                    const obj = {}
                     const deleteItemsArray: string[] = []
                     const insertListArray: CurrentCyDataTable[] = []
                     const updateListArray: CurrentCyDataTable[] = []
@@ -563,7 +561,7 @@
                         updateList: updateListArray
                     }).then(() => {
                         this.$successToast('保存成功');
-                        this.$emit('drumBucketFinish', obj);
+                        this.$emit('drumBucketFinish');
                         this.isTableDialogVisible = false
                     });
                 }

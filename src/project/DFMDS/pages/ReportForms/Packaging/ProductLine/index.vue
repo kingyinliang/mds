@@ -220,6 +220,7 @@
 
         // data table area setting
         dataTableSetting={
+            type: 'default', // default/multiHeader
             showIt: true, // showit or not
             showSelectColumn: false,
             showIndexColumn: false,

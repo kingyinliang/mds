@@ -3,7 +3,7 @@
  * @Anthor: Telliex
  * @Date: 2021-01-27 15:06:29
  * @LastEditors: Telliex
- * @LastEditTime: 2021-03-04 17:38:37
+ * @LastEditTime: 2021-03-11 18:15:55
  */
 import httpProxy from 'utils/net/httpProxy';
 
@@ -69,9 +69,33 @@ const REPORTS_API = {
      */
     REPORT_SUB_OUTPUT_SUMMARY_QUERY_API: params => httpProxy('/pkgReportForm/product/querySubOutputSummary', 'POST', params, 'REPORT'),
     /**
+     * @property {string} REPORT_PACKAGING_SEMI_FINISHED_PRODUCTIONS_DETAILS_QUERY_API 包装车间-半成品使用明细
+     */
+    REPORT_PACKAGING_SEMI_FINISHED_PRODUCTIONS_DETAILS_QUERY_API: params => httpProxy('/pkgReportForm/semiUse/query', 'POST', params, 'REPORT'),
+    /**
+     * @property {string} REPORT_PACKAGING_SEMI_FINISHED_PRODUCTIONS_SUMMARY_QUERY_API 包装车间-半成品使用汇总
+     */
+    REPORT_PACKAGING_SEMI_FINISHED_PRODUCTIONS_SUMMARY_QUERY_API: params => httpProxy('/pkgReportForm/semiSum/query', 'POST', params, 'REPORT'),
+    /**
+     * @property {string} REPORT_PACKAGING_LABOR_HOURS_STATISTICS_QUERY_API 包装车间-人工工时统计报表
+     */
+    REPORT_PACKAGING_LABOR_HOURS_STATISTICS_QUERY_API: params => httpProxy('/pkgReportForm/manTime/query', 'POST', params, 'REPORT'),
+    /**
      * @property {string} REPORT_SUB_OUTPUT_DAILY_QUERY_API 包装车间-产量报表-分品项产量汇总
      */
-    REPORT_SUB_OUTPUT_DAILY_QUERY_API: params => httpProxy('/pkgReportForm/product/querySubOutputDaily', 'POST', params, 'REPORT')
+    REPORT_SUB_OUTPUT_DAILY_QUERY_API: params => httpProxy('/pkgReportForm/product/querySubOutputDaily', 'POST', params, 'REPORT'),
+    /**
+     * @property {string} REPORT_PACKAGING_EQUIPMENT_EXCEPTION_DETAILS_QUERY_API 包装车间-设备异常明细
+     */
+    REPORT_PACKAGING_EQUIPMENT_EXCEPTION_DETAILS_QUERY_API: params => httpProxy('/pkgReportForm/deviceException/query', 'POST', params, 'REPORT'),
+    /**
+     * @property {string} REPORT_PACKAGING_LABOR_HOURS_DETAILS_QUERY_API 包装车间-人工工时明细报表
+     */
+    REPORT_PACKAGING_LABOR_HOURS_DETAILS_QUERY_API: params => httpProxy('/pkgReportForm/manTimeInfo/query', 'POST', params, 'REPORT'),
+    /**
+     * @property {string} REPORT_PACKAGING_LABOR_HOURS_DETAILS_QUERY_API 包装车间-生产准备明细报表
+     */
+    REPORT_PACKAGING_PRODUCE_PREPARE_DETAILS_QUERY_API: params => httpProxy('/pkgReportForm/readyInfo/query', 'POST', params, 'REPORT')
 };
 
 export default REPORTS_API;

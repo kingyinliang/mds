@@ -3,7 +3,7 @@
  * @Anthor: Telliex
  * @Date: 2021-02-23 21:25:39
  * @LastEditors: Telliex
- * @LastEditTime: 2021-03-05 16:44:00
+ * @LastEditTime: 2021-03-11 14:20:45
 -->
 <template>
     <div class="header_main">
@@ -120,7 +120,8 @@
                     type: 'warning'
                 })
                     .then(() => {
-                        SYSTEM_API.SYS_PERMISSION_ATTRIBUTE_DELETE_API({ id: id }).then(() => {
+                        SYSTEM_API.SYS_PERMISSION_ATTRIBUTE_DELETE_API([id]).then(() => {
+                            this.$successToast('删除成功');
                             this.getItemsList(true);
                         })
                     })

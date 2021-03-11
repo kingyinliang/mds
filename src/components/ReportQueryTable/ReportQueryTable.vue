@@ -3,7 +3,7 @@
  * @Anthor: Telliex
  * @Date: 2021-02-26 10:58:05
  * @LastEditors: Telliex
- * @LastEditTime: 2021-03-09 22:17:09
+ * @LastEditTime: 2021-03-11 17:35:11
 -->
 <template>
     <div>
@@ -95,7 +95,8 @@
                 border
                 size="small"
                 tooltip-effect="dark"
-                header-row-class-name="tableHead"
+                :header-row-class-name="tableHead"
+                :header-cell-style="tableHeaderCellStyle"
                 style="width: 100%; margin-bottom: 20px;"
                 :show-summary="dataTableSetting.tableAttributes.isShowSummary"
                 :summary-method="getSummaries"
@@ -583,8 +584,8 @@
                 }
 
                 this.listInterface(this.queryForm).then(({ data }) => {
-                    const tableData = data.data;
-                    if (data.data.length === 0) {
+                    const tableData = JSON.parse(JSON.stringify(data.data)) || [];
+                    if (tableData.length === 0) {
                         this.$infoToast('暂无任何内容');
                         return;
                     }
@@ -702,6 +703,14 @@
             // },
             dateChange(v) {
                 this.$emit('date-change', v.value);
+            },
+
+            // 修改 table header cell的背景色
+            tableHeaderCellStyle() {
+                return 'outline: rgb(255 255 255 / 25%) solid 1px'
+            },
+            tableHead() {
+                return ''
             }
         }
     };
