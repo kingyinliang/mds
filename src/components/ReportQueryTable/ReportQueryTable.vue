@@ -3,7 +3,7 @@
  * @Anthor: Telliex
  * @Date: 2021-02-26 10:58:05
  * @LastEditors: Telliex
- * @LastEditTime: 2021-03-10 17:28:18
+ * @LastEditTime: 2021-03-11 17:35:11
 -->
 <template>
     <div>
@@ -584,8 +584,8 @@
                 }
 
                 this.listInterface(this.queryForm).then(({ data }) => {
-                    const tableData = data.data;
-                    if (data.data.length === 0) {
+                    const tableData = JSON.parse(JSON.stringify(data.data)) || [];
+                    if (tableData.length === 0) {
                         this.$infoToast('暂无任何内容');
                         return;
                     }
