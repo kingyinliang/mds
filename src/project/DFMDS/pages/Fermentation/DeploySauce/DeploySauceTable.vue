@@ -25,7 +25,8 @@
                 </el-table-column>
                 <el-table-column label="领用数量" prop="materialUnit" min-width="100" :show-overflow-tooltip="true">
                     <template slot-scope="scope">
-                        {{ scope.row.realAddAmount = scope.row.currentStock }}
+                        <el-input v-if="formHeader.ferOpen.openType === 'MANY'" v-model="scope.row.realAddAmount" :disabled="!(isRedact)" size="small" placeholder="请输入" />
+                        <span v-else>{{ scope.row.realAddAmount? scope.row.realAddAmount : scope.row.realAddAmount = scope.row.currentStock }}</span>
                     </template>
                 </el-table-column>
                 <el-table-column label="库存数量（KG）" prop="currentStock" min-width="140" :show-overflow-tooltip="true" />

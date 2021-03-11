@@ -43,7 +43,12 @@
                         <el-table-column label="操作时间" prop="changed" width="160px" />
                         <el-table-column label="操作" fixed="right">
                             <template slot-scope="scope">
-                                <el-button type="primary" size="small" @click="determinationHandler(scope.row)">
+                                <!--
+                                    判定按钮在以下状态时不可操作
+                                    1、状态发酵中但无订单判定按钮不可操作
+                                    2、待清洗时判定按钮不可操作
+                                -->
+                                <el-button type="primary" size="small" :disabled="scope.row.fermentorStatus === 'C' || (scope.row.fermentorStatus === 'F' && !scope.row.orderNo)" @click="determinationHandler(scope.row)">
                                     判定
                                 </el-button>
                             </template>
@@ -120,9 +125,8 @@
 
 <script lang="ts">
     import { Vue, Component } from 'vue-property-decorator';
-    import { COMMON_API } from 'common/api/api';
-import FER_API from 'src/common/api/fer';
-import { dateFormat } from 'src/utils/utils';
+    import { COMMON_API, FER_API } from 'common/api/api';
+    import { dateFormat } from 'src/utils/utils';
     @Component({
         name: 'CategoryDetermination',
         components: {}

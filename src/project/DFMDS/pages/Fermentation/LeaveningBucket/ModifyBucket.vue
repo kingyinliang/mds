@@ -642,7 +642,7 @@
                         materialCode: this.dataOfMateriaBatch.materialCode || '',
                         materialName: this.dataOfMateriaBatch.materialName || '',
                         batch: this.dataOfMateriaBatch.batch || '',
-                        movebatch: '',
+                        movebatch: this.dataOfMateriaBatch.batch || '',
                         operators: '',
                         orderNo: this.currentItem.orderNo,
                         remark: '',
@@ -742,7 +742,7 @@
                 } else if (this.tabType === 'move') {
                     if (this.ruleSubmit()) {
                         FER_API.FER_FERMENTOR_ADJUSTION_CHANGE_API({
-                            batch: this.moveDataGroup.batch, //x
+                            batch: this.moveDataGroup.movebatch, //x 挪入批次
                             operators: this.moveDataGroup.operators, //x
                             orderNo: this.currentItem.orderNo, //x
                             remark: this.moveDataGroup.remark, //x

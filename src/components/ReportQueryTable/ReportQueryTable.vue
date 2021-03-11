@@ -688,6 +688,7 @@
                     return;
                 }
                 this.currentPage = val;
+                this.$emit('changeSpanArr', val, this.currentSize, this.tableData)
             },
             // tabClick(tab) {
             //     const tabName = JSON.parse(JSON.stringify(tab.name));

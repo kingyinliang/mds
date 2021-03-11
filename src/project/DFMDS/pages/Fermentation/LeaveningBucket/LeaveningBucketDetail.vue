@@ -193,7 +193,7 @@
                     </el-table-column>
                     <el-table-column label="来源车间" :show-overflow-tooltip="true" width="180">
                         <template slot-scope="scope">
-                            {{ scope.row.workShop }}
+                            {{ scope.row.workShopName }}
                         </template>
                     </el-table-column>
                     <el-table-column label="来源订单" :show-overflow-tooltip="true" width="180">
@@ -291,7 +291,7 @@
                     </el-table-column>
                     <el-table-column label="领用车间" :show-overflow-tooltip="true" width="180">
                         <template slot-scope="scope">
-                            {{ scope.row.workShop }}
+                            {{ scope.row.workShopName }}
                         </template>
                     </el-table-column>
                     <el-table-column label="领用订单" :show-overflow-tooltip="true" width="180">

@@ -153,6 +153,9 @@
                 id: this.$store.state.fer.deploySauceObj.id
             }).then(({ data }) => {
                 this.formHeader = data.data
+                if (!this.formHeader.orderFlag && this.formHeader.ferOpen.openType === 'MANY') {
+                    this.formHeader.orderFlag = 'Y'
+                }
                 this.formHeader.user = this.formHeader.mixMans.length > 0 ? this.formHeader.mixMans.split(',') : []
                 this.$refs.tables.init(this.formHeader)
                 this.formHeader['openType'] === 'MANY' ? this.headerBase[10]['disabled'] = true : this.headerBase[10]['disabled'] = false
@@ -185,6 +188,7 @@
     }
     interface HeadObj {
         openPotNo?: string;
+        orderFlag?: string;
         ferMixFermentorUpdateDtoList?: ListObj[];
         ferMixFermentorSaveDtoList?: ListObj[];
         pickledMixMaterialList?: ListObj[];
@@ -193,10 +197,11 @@
         materialRemoveIds?: string[];
         user: string[];
         mixMans: string;
-        ferOpen?: OpenObj;
+        ferOpen: OpenObj;
     }
     interface OpenObj{
         openTypeName?: string;
+        openType?: string;
     }
     interface ListObj {
         id?: string;
