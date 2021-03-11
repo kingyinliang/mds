@@ -3,7 +3,7 @@
  * @Anthor: Telliex
  * @Date: 2021-01-15 23:35:23
  * @LastEditors: Telliex
- * @LastEditTime: 2021-03-11 11:41:24
+ * @LastEditTime: 2021-03-11 15:45:39
 -->
 <template>
     <div>
@@ -401,8 +401,8 @@
                 return new Promise((resolve) => {
                         COMMON_API.HOLDER_DROPDOWN_BY_STATUS_API({
                         holderType: [val],
-                        // holderStatus: ['E', 'U']
-                        holderStatus: ['E', 'S', 'O']
+                        holderStatus: ['E', 'U'] // 空罐,领用中
+                        // holderStatus: ['E', 'S', 'O']
                     }).then(({ data }) => {
                         console.log('打入罐容器号')
                         console.log(data.data)
