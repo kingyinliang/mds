@@ -3,7 +3,7 @@
  * @Anthor: Telliex
  * @Date: 2021-01-27 15:06:29
  * @LastEditors: Telliex
- * @LastEditTime: 2021-03-11 09:34:44
+ * @LastEditTime: 2021-03-11 18:15:55
  */
 import httpProxy from 'utils/net/httpProxy';
 
@@ -83,7 +83,19 @@ const REPORTS_API = {
     /**
      * @property {string} REPORT_SUB_OUTPUT_DAILY_QUERY_API 包装车间-产量报表-分品项产量汇总
      */
-    REPORT_SUB_OUTPUT_DAILY_QUERY_API: params => httpProxy('/pkgReportForm/product/querySubOutputDaily', 'POST', params, 'REPORT')
+    REPORT_SUB_OUTPUT_DAILY_QUERY_API: params => httpProxy('/pkgReportForm/product/querySubOutputDaily', 'POST', params, 'REPORT'),
+    /**
+     * @property {string} REPORT_PACKAGING_EQUIPMENT_EXCEPTION_DETAILS_QUERY_API 包装车间-设备异常明细
+     */
+    REPORT_PACKAGING_EQUIPMENT_EXCEPTION_DETAILS_QUERY_API: params => httpProxy('/pkgReportForm/deviceException/query', 'POST', params, 'REPORT'),
+    /**
+     * @property {string} REPORT_PACKAGING_LABOR_HOURS_DETAILS_QUERY_API 包装车间-人工工时明细报表
+     */
+    REPORT_PACKAGING_LABOR_HOURS_DETAILS_QUERY_API: params => httpProxy('/pkgReportForm/manTimeInfo/query', 'POST', params, 'REPORT'),
+    /**
+     * @property {string} REPORT_PACKAGING_LABOR_HOURS_DETAILS_QUERY_API 包装车间-生产准备明细报表
+     */
+    REPORT_PACKAGING_PRODUCE_PREPARE_DETAILS_QUERY_API: params => httpProxy('/pkgReportForm/readyInfo/query', 'POST', params, 'REPORT')
 };
 
 export default REPORTS_API;
