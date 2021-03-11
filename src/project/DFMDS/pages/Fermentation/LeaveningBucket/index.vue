@@ -3,7 +3,7 @@
  * @Anthor: Telliex
  * @Date: 2021-01-15 23:35:23
  * @LastEditors: Telliex
- * @LastEditTime: 2021-03-11 11:08:36
+ * @LastEditTime: 2021-03-11 15:21:05
 -->
 <template>
     <div class="header_main">
@@ -102,8 +102,8 @@
                                                     :style="{height:((item.volumePercent)*100)+'%', background: setBucketColor(item.fermentorStatus,item.fermentDays)}"
                                                 />
                                             </div>
+                                            <span v-if="item.judgeResult==='CQ'" class="cq"><img src="../../../assets/img/icon-cq.png" alt=""></span>
                                         </div>
-                                        <span v-if="item.judgeResult==='CQ'" class="cq"><img src="../../../assets/img/icon-cq.png" alt=""></span>
                                     </div>
                                     <div class="btn-group">
                                         <el-button v-if="isAuth('')" size="small" plain :disabled="item.fermentorStatus!=='F'" @click="btnFilledBucket(item)">
@@ -476,33 +476,34 @@
                 materialCountList: []
             },
             {
-                color: '#C70909FF',
-                startColor: '#8A391BFF',
-                endColor: '#C70909FF',
-                text: '超',
-                ptext: '6个月以上',
-                numNew: 9999999999999,
-                potColor: '#8A391B',
-                middleText: '超期',
-                fermentStage: '180',
-                search: '7',
-                num: '0',
-                materialCountList: []
-            },
-            {
-                color: '#8BC34AFF',
+                color: '#602813FF',
                 startColor: '#C70909FF',
                 endColor: '#8BC34AFF',
-                text: '压',
-                ptext: ' ',
-                numNew: 0,
+                text: '?',
+                ptext: '6个月以上',
+                numNew: 181,
                 potColor: '#C70909',
-                middleText: '压榨',
-                fermentStage: 'O',
+                middleText: '酿造',
+                fermentStage: '180',
                 holderStatus: '4',
                 num: '0',
                 materialCountList: []
             },
+            {
+                color: '#C70909FF',
+                startColor: '#8A391BFF',
+                endColor: '#C70909FF',
+                text: '超',
+                ptext: '超期',
+                numNew: 9999999999999,
+                potColor: '#8A391B',
+                middleText: '超期',
+                fermentStage: 'O',
+                search: '7',
+                num: '0',
+                materialCountList: []
+            },
+
             {
                 color: '#82ab53',
                 startColor: '#999999FF',
@@ -855,25 +856,26 @@
         setBucketColor(target, num) {
             if (target === 'E') {
                 return '#ffffff'
+            } else if (target === 'F') {
+                    if (num <= 30) {
+                        return '#d5d2C3'
+                    } else if (num > 30 && num <= 60) {
+                        return '#cca785'
+                    } else if (num > 60 && num <= 90) {
+                        return '#b58150'
+                    } else if (num > 90 && num <= 120) {
+                        return '#c77C5a'
+                    } else if (num > 120 && num <= 150) {
+                        return '#ad592d'
+                    } else if (num > 150 && num <= 180) {
+                        return '#8a391b'
+                    } else if (num > 180) {
+                        return '#602813'
+                    }
+                        return '#c7090b'
             }
 
-            if (num <= 30) {
-                return '#d5d2C3'
-            } else if (num > 30 && num <= 60) {
-                return '#cca785'
-            } else if (num > 60 && num <= 90) {
-                return '#b58150'
-            } else if (num > 90 && num <= 120) {
-                return '#c77C5a'
-            } else if (num > 120 && num <= 150) {
-                return '#ad592d'
-            } else if (num > 150 && num <= 180) {
-                return '#8a391b'
-            } else if (num > 180) {
-                return '#c7090b'
-            }
-                return '#ffffff'
-
+            return '#eeeeee'
         }
 
 
@@ -1167,15 +1169,15 @@ interface CurrentDataTable{
             justify-content: center;
             .pot_border {
                 position: relative;
-                width: 87px;
-                height: 153px;
+                width: 115px;
+                height: 202px;
                 overflow: hidden;
                 .pot {
                     position: absolute;
                     top: 0;
                     z-index: 10;
-                    width: 87px;
-                    height: 153px;
+                    width: 115px;
+                    height: 202px;
                     // background: url(./assets/img/ferPotNew.png) no-repeat;
                     background: bottom center url("~@/assets/img/ferPotNew.png") no-repeat;
                     background-size: contain;
@@ -1185,8 +1187,8 @@ interface CurrentDataTable{
                     right: 0;
                     bottom: 10px;
                     left: 0;
-                    width: 87px;
-                    height: 135px;
+                    width: 115px;
+                    height: 182px;
                     margin: 0 auto;
                     overflow: hidden;
                     &_sole {
@@ -1236,10 +1238,10 @@ interface CurrentDataTable{
             .cq {
                 position: absolute;
                 top: 0;
-                left: 30px;
+                left: 0;
                 z-index: 99;
                 img {
-                    width: 40px;
+                    width: 80%;
                 }
             }
         }
@@ -1254,9 +1256,9 @@ interface CurrentDataTable{
                 box-sizing: border-box;
                 margin: 0;
                 margin-bottom: 5px;
-                padding: 8px 16px;
-                font-weight: 500;
-                font-size: 14px;
+                padding: 6px 10px;
+                font-weight: 900;
+                font-size: 12px;
                 line-height: 1;
             }
         }
