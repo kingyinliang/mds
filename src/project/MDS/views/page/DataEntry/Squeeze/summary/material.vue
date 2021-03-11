@@ -245,10 +245,10 @@ export default {
                     // console.log(this.sumAmount1)
                     if (no > 0) {
                         this.materialS = 'noPass';
-                    } else if (sub > 0) {
-                        this.materialS = 'submit';
                     } else if (sav > 0) {
                         this.materialS = 'saved';
+                    } else if (sub > 0) {
+                        this.materialS = 'submit';
                     } else if (che > 0) {
                         this.materialS = 'checked';
                     }
