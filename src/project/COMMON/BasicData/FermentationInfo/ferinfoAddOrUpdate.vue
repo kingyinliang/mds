@@ -33,6 +33,11 @@
                     <el-option v-for="(iteam, index) in hoursList" :key="index" :label="iteam.dictValue" :value="iteam.dictCode" />
                 </el-select>
             </el-form-item>
+            <el-form-item label="组织机构：" prop="deptId">
+                <el-select v-model="dataForm.deptId" placeholder="请选择" filterable style="width: 220px;" clearable>
+                    <el-option v-for="(iteam, index) in organizationList" :key="index" :label="iteam.deptName" :value="iteam.deptCode" />
+                </el-select>
+            </el-form-item>
             <el-form-item label="数量倍数：">
                 <el-input v-model.trim="dataForm.multiple" style="width: 220px;" clearable />
             </el-form-item>
@@ -63,6 +68,7 @@
         @Prop({ type: Array, default: [] }) processList;
         @Prop({ type: Array, default: [] }) material;
         @Prop({ type: Array, default: [] }) hoursList;
+        @Prop({ type: Array, default: [] }) organizationList;
 
         $refs: {
             dataForm: HTMLFormElement;
@@ -83,6 +89,7 @@
             matureDays: '',
             overdueDays: '',
             jobBookingFlag: '',
+            deptId: '',
             multiple: '',
             remark: '',
             changer: '',
@@ -95,7 +102,8 @@
             useMaterialCode: [{ required: true, message: '领用物料不能为空', trigger: 'blur' }],
             orderDays: [{ required: true, message: '订单天数不能为空', trigger: 'blur' }],
             overdueDays: [{ required: true, message: '发酵超期天数不能为空', trigger: 'blur' }],
-            jobBookingFlag: [{ required: true, message: '报工标识不能为空', trigger: 'blur' }]
+            jobBookingFlag: [{ required: true, message: '报工标识不能为空', trigger: 'blur' }],
+            deptId: [{ required: true, message: '组织机构不能为空', trigger: 'blur' }]
         };
 
         init(data) {
@@ -116,6 +124,7 @@
                     matureDays: '',
                     overdueDays: '',
                     jobBookingFlag: '',
+                    deptId: '',
                     multiple: '',
                     remark: '',
                     changer: getUserNameNumber(),
