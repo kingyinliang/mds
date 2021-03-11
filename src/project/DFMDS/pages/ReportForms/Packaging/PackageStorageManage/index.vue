@@ -22,9 +22,9 @@
     @Component({
         components: {
         },
-        name: 'WorkTimeReport'
+        name: 'PackageStorageReport'
     })
-    export default class WorkTimeReport extends Vue {
+    export default class PackageStorageReport extends Vue {
         $refs: {
             queryTable: HTMLFormElement;
         }
@@ -34,12 +34,8 @@
             isQueryFormShow: true, // 标头搜寻区块是否显示
             rules: [ // 查询必填栏位校验
                 {
-                    prop: 'workShop',
-                    text: '请输入生产车间'
-                },
-                {
                     prop: 'startDate',
-                    text: '请输入生产日期'
+                    text: '请输入生产时间'
                 }
             ],
             queryAuth: '',
@@ -47,7 +43,7 @@
             exportOption: {
                 exportInterface: '',
                 auth: '',
-                text: '工时检验及汇总报表'
+                text: 'OEE报表'
             }
         }
 
@@ -59,10 +55,10 @@
                 label: '生产车间',
                 prop: 'workShop',
                 defaultValue: '',
-                labelWidth: '90', // default 70px
+                labelWidth: '80', // default 70px
                 width: '150',
                 clearable: true,
-                marked: true, // mark it
+                marked: false, // mark it
                 disabled: false,
                 defaultOptionsFn: () => {
                     return COMMON_API.ORG_QUERY_WORKSHOP_API({
@@ -101,17 +97,28 @@
                     value: 'id'
                 }
             },
-               {
-                type: 'input',
+            {
+                type: 'select',
                 hide: false, // hide column
-                label: '生产订单',
-                prop: 'orderNo',
+                label: '组件物料',
+                prop: 'materialCode',
                 defaultValue: '',
                 labelWidth: '80',
                 width: '160',
                 clearable: true,
                 marked: false, // mark it
-                disabled: false
+                disabled: false,
+                defaultOptionsFn: () => {
+                    return REPORTS_API.REPORT_PACKAGING_OEE_MATERIAL_QUERY_API({
+                        workShop: '',
+                        productLine: ''
+                    })
+                },
+                resVal: {
+                    resData: 'data',
+                    label: ['materialName', 'materialCode'],
+                    value: 'materialCode'
+                }
             },
             {
                 type: 'date-interval',
@@ -139,45 +146,53 @@
             //表格数据
             column: [
                 {
+                    prop: 'workShopName',
+                    label: '生产车间',
+                    minWidth: '120',
+                    hide: false,
+                    fixed: true,
+                    showOverFlowTooltip: true,
+                    dataType: 'default'
+                },
+                {
                     prop: 'productLineName',
-                    label: '生产产线',
-                    width: '120',
+                    label: '产线',
+                    minWidth: '120',
                     hide: false,
                     fixed: true,
                     showOverFlowTooltip: true,
                     dataType: 'default'
                 },
                 {
-                    prop: 'orderNo',
-                    label: '订单',
-                    width: '120',
+                    prop: 'classesName',
+                    label: '班次',
+                    width: '80',
                     hide: false,
                     fixed: true,
-                    showOverFlowTooltip: true,
-                    dataType: 'default'
-                },
-                {
-                    prop: 'productDate',
-                    label: '生产日期',
-                    width: '100',
-                    hide: false,
-                    fixed: false,
                     showOverFlowTooltip: true,
                     dataType: 'default'
                 },
                 {
                     prop: 'materialName',
                     label: '品项',
-                    width: '240',
+                    width: '180',
                     hide: false,
-                    fixed: false,
+                    fixed: true,
                     showOverFlowTooltip: true,
-                    dataType: 'multi',
-                    data: ['materialCode', 'materialName']
+                    dataType: 'default'
                 },
                 {
                     prop: 'productDate',
                     label: '日期',
+                    width: '160',
+                    hide: false,
+                    fixed: false,
+                    showOverFlowTooltip: true,
+                    dataType: 'default'
+                },
+                {
+                    prop: 'avbRatio',
+                    label: '可用率',
                     width: '100',
                     hide: false,
                     fixed: false,
@@ -185,8 +200,26 @@
                     dataType: 'default'
                 },
                 {
-                    prop: 'inStaorage',
-                    label: '入库产量',
+                    prop: 'timeCropRatio',
+                    label: '时间嫁动率',
+                    width: '140',
+                    hide: false,
+                    fixed: false,
+                    showOverFlowTooltip: true,
+                    dataType: 'default'
+                },
+                {
+                    prop: 'performCropRatio',
+                    label: '性能嫁动率',
+                    width: '140',
+                    hide: false,
+                    fixed: false,
+                    showOverFlowTooltip: true,
+                    dataType: 'default'
+                },
+                {
+                    prop: 'googRatio',
+                    label: '良品率',
                     width: '100',
                     hide: false,
                     fixed: false,
@@ -194,8 +227,18 @@
                     dataType: 'default'
                 },
                 {
-                    prop: 'reportWork',
-                    label: '报工产量',
+                    prop: 'theOEERatio',
+                    label: '综合效率',
+                    subLabel: '(OEE)',
+                    width: '140',
+                    hide: false,
+                    fixed: false,
+                    showOverFlowTooltip: true,
+                    dataType: 'default'
+                },
+                {
+                    prop: 'proDuctRatio',
+                    label: '生产效率',
                     width: '100',
                     hide: false,
                     fixed: false,
@@ -203,8 +246,9 @@
                     dataType: 'default'
                 },
                 {
-                    prop: 'theoryReadyTime',
-                    label: '理论准备工时',
+                    prop: 'allTolTime',
+                    label: '总时间',
+                    subLabel: '(min)',
                     width: '100',
                     hide: false,
                     fixed: false,
@@ -212,8 +256,59 @@
                     dataType: 'default'
                 },
                 {
-                    prop: 'theoryMachineTime',
-                    label: '理论机器工时',
+                    prop: 'planStopTime',
+                    label: '计划停机时间',
+                    subLabel: '(min)',
+                    width: '140',
+                    hide: false,
+                    fixed: false,
+                    showOverFlowTooltip: true,
+                    dataType: 'default'
+                },
+                {
+                    prop: 'alltime',
+                    label: '实际投入时间',
+                    subLabel: '(min)',
+                    width: '140',
+                    hide: false,
+                    fixed: false,
+                    showOverFlowTooltip: true,
+                    dataType: 'default'
+                },
+                {
+                    prop: 'removeTime',
+                    label: '除外时间',
+                    subLabel: '(min)',
+                    width: '140',
+                    hide: false,
+                    fixed: false,
+                    showOverFlowTooltip: true,
+                    dataType: 'default'
+                },
+                {
+                    prop: 'excptTime',
+                    label: '异常损失时间',
+                    subLabel: '(min)',
+                    width: '140',
+                    hide: false,
+                    fixed: false,
+                    showOverFlowTooltip: true,
+                    dataType: 'default'
+                },
+                {
+                    prop: 'netOprTime',
+                    label: '净作业时间',
+                    subLabel: '(min)',
+                    width: '140',
+                    hide: false,
+                    fixed: false,
+                    showOverFlowTooltip: true,
+                    dataType: 'default'
+                },
+                {
+                    prop: 'output',
+                    label: '产出数',
+                    subLabel: '(件)',
                     width: '100',
                     hide: false,
                     fixed: false,
@@ -221,8 +316,9 @@
                     dataType: 'default'
                 },
                 {
-                    prop: 'theoryManTime',
-                    label: '理论人工工时',
+                    prop: 'allBad',
+                    label: '不良品数',
+                    subLabel: '(件)',
                     width: '100',
                     hide: false,
                     fixed: false,
@@ -230,8 +326,19 @@
                     dataType: 'default'
                 },
                 {
-                    prop: 'actualReadyTime',
-                    label: '实际准备工时',
+                    prop: 'effecCapacity',
+                    label: '有效效能',
+                    subLabel: '(件/h)',
+                    width: '140',
+                    hide: false,
+                    fixed: false,
+                    showOverFlowTooltip: true,
+                    dataType: 'default'
+                },
+                {
+                    prop: 'outPutTime',
+                    label: '产出时间',
+                    subLabel: '(h)',
                     width: '100',
                     hide: false,
                     fixed: false,
@@ -239,87 +346,14 @@
                     dataType: 'default'
                 },
                 {
-                    prop: 'actualMachineTime',
-                    label: '实际机器工时',
-                    width: '100',
+                    prop: 'netOprTimeHour',
+                    label: '净作业时间',
+                    subLabel: '(h)',
+                    width: '140',
                     hide: false,
                     fixed: false,
                     showOverFlowTooltip: true,
                     dataType: 'default'
-                },
-                {
-                    prop: 'actualManTime',
-                    label: '实际人工工时',
-                    width: '100',
-                    hide: false,
-                    fixed: false,
-                    showOverFlowTooltip: true,
-                    dataType: 'default'
-                },
-                {
-                    prop: 'diffReadyTime',
-                    label: '差异准备工时',
-                    width: '100',
-                    hide: false,
-                    fixed: false,
-                    showOverFlowTooltip: true,
-                    dataType: 'default'
-                },
-                {
-                    prop: 'diffMachineTime',
-                    label: '差异机器工时',
-                    width: '100',
-                    hide: false,
-                    fixed: false,
-                    showOverFlowTooltip: true,
-                    dataType: 'default'
-                },
-                {
-                    prop: 'diffManTime',
-                    label: '差异人工工时',
-                    width: '100',
-                    hide: false,
-                    fixed: false,
-                    showOverFlowTooltip: true,
-                    dataType: 'default'
-                },
-                {
-                    prop: 'standardMan',
-                    label: '标准人力',
-                    width: '100',
-                    hide: false,
-                    fixed: false,
-                    showOverFlowTooltip: true,
-                    dataType: 'default'
-                },
-                {
-                    prop: 'actualMan',
-                    label: '实际人力',
-                    width: '100',
-                    hide: false,
-                    fixed: false,
-                    showOverFlowTooltip: true,
-                    dataType: 'default'
-                },
-                {
-                    prop: 'stopTime',
-                    label: '停机时间',
-                    width: '100',
-                    hide: false,
-                    fixed: false,
-                    showOverFlowTooltip: true,
-                    dataType: 'default'
-                },
-                {
-                    prop: 'stopReason',
-                    label: '停机原因',
-                    minWidth: '240',
-                    width: '240',
-                    hide: false,
-                    fixed: false,
-                    showOverFlowTooltip: true,
-                    custom: true,
-                    dataType: 'list'
                 }
             ],
             tableAttributes: {
@@ -333,7 +367,7 @@
         // 查询请求
         listInterface = params => {
             params.factory = JSON.parse(sessionStorage.getItem('factory') || '{}').id;
-            return REPORTS_API.REPORT_PACKAGING_TIMESUM_QUERY_API(params);
+            return REPORTS_API.REPORT_PACKAGING_OEE_API(params);
         };
 
         /**

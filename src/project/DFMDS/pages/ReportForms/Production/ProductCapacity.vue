@@ -52,7 +52,7 @@
 
         // data table area setting
         dataTableSetting={
-            type: 'multiHeader',
+            type: 'multiHeader', // default/multiHeader
             merges: [
                 'A1:A2',
                 'B1:B2',

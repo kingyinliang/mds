@@ -3,7 +3,7 @@
  * @Anthor: Telliex
  * @Date: 2021-01-15 23:35:23
  * @LastEditors: Telliex
- * @LastEditTime: 2021-03-04 14:55:22
+ * @LastEditTime: 2021-03-11 11:08:36
 -->
 <template>
     <div class="header_main">
@@ -99,7 +99,7 @@
                                             <div class="pot_water">
                                                 <div
                                                     class="pot_water_sole"
-                                                    :style="{height:((item.volumePercent)*100)+'%', background: item.volumePercent===1? '#590101':item.volumePercent>=0.5? '#8A391B':'#C67C5A'}"
+                                                    :style="{height:((item.volumePercent)*100)+'%', background: setBucketColor(item.fermentorStatus,item.fermentDays)}"
                                                 />
                                             </div>
                                         </div>
@@ -849,6 +849,31 @@
         handleCurrentChange(val) {
             this.formHeader.currPage = val;
             this.getData();
+        }
+
+        //can color
+        setBucketColor(target, num) {
+            if (target === 'E') {
+                return '#ffffff'
+            }
+
+            if (num <= 30) {
+                return '#d5d2C3'
+            } else if (num > 30 && num <= 60) {
+                return '#cca785'
+            } else if (num > 60 && num <= 90) {
+                return '#b58150'
+            } else if (num > 90 && num <= 120) {
+                return '#c77C5a'
+            } else if (num > 120 && num <= 150) {
+                return '#ad592d'
+            } else if (num > 150 && num <= 180) {
+                return '#8a391b'
+            } else if (num > 180) {
+                return '#c7090b'
+            }
+                return '#ffffff'
+
         }
 
 

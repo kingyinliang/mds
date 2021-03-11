@@ -22,9 +22,9 @@
     @Component({
         components: {
         },
-        name: 'WorkTimeReport'
+        name: 'SemiFinishedProductsSummaryReport'
     })
-    export default class WorkTimeReport extends Vue {
+    export default class SemiFinishedProductsSummaryReport extends Vue {
         $refs: {
             queryTable: HTMLFormElement;
         }
@@ -37,9 +37,9 @@
                     prop: 'workShop',
                     text: '请输入生产车间'
                 },
-                {
+                            {
                     prop: 'startDate',
-                    text: '请输入生产日期'
+                    text: '请输入生产时间'
                 }
             ],
             queryAuth: '',
@@ -47,7 +47,7 @@
             exportOption: {
                 exportInterface: '',
                 auth: '',
-                text: '工时检验及汇总报表'
+                text: '半成品使用汇总报表'
             }
         }
 
@@ -59,7 +59,7 @@
                 label: '生产车间',
                 prop: 'workShop',
                 defaultValue: '',
-                labelWidth: '90', // default 70px
+                labelWidth: '100', // default 70px
                 width: '150',
                 clearable: true,
                 marked: true, // mark it
@@ -101,17 +101,52 @@
                     value: 'id'
                 }
             },
-               {
-                type: 'input',
+            {
+                type: 'select',
                 hide: false, // hide column
-                label: '生产订单',
-                prop: 'orderNo',
+                label: '生产物料',
+                prop: 'materialCode',
                 defaultValue: '',
                 labelWidth: '80',
                 width: '160',
                 clearable: true,
                 marked: false, // mark it
-                disabled: false
+                disabled: false,
+                defaultOptionsFn: () => {
+                    return REPORTS_API.REPORT_PACKAGING_OEE_MATERIAL_QUERY_API({
+                        workShop: '',
+                        productLine: ''
+                    })
+                },
+                resVal: {
+                    resData: 'data',
+                    label: ['materialName', 'materialCode'],
+                    value: 'materialCode'
+                }
+            },
+            // TODO add API
+             {
+                type: 'select',
+                hide: false, // hide column
+                label: '领用物料',
+                prop: 'useMaterial',
+                defaultValue: '',
+                labelWidth: '80',
+                width: '160',
+                clearable: true,
+                marked: false, // mark it
+                disabled: false,
+                defaultOptionsFn: () => {
+                    return REPORTS_API.REPORT_PACKAGING_OEE_MATERIAL_QUERY_API({
+                        workShop: '',
+                        productLine: ''
+                    })
+                },
+                resVal: {
+                    resData: 'data',
+                    label: ['materialName', 'materialCode'],
+                    value: 'materialCode'
+                }
             },
             {
                 type: 'date-interval',
@@ -140,190 +175,92 @@
             column: [
                 {
                     prop: 'productLineName',
-                    label: '生产产线',
+                    label: '生产线',
                     width: '120',
                     hide: false,
                     fixed: true,
-                    showOverFlowTooltip: true,
-                    dataType: 'default'
-                },
-                {
-                    prop: 'orderNo',
-                    label: '订单',
-                    width: '120',
-                    hide: false,
-                    fixed: true,
-                    showOverFlowTooltip: true,
-                    dataType: 'default'
-                },
-                {
-                    prop: 'productDate',
-                    label: '生产日期',
-                    width: '100',
-                    hide: false,
-                    fixed: false,
                     showOverFlowTooltip: true,
                     dataType: 'default'
                 },
                 {
                     prop: 'materialName',
                     label: '品项',
-                    width: '240',
+                    minWidth: '180',
                     hide: false,
-                    fixed: false,
+                    fixed: true,
                     showOverFlowTooltip: true,
                     dataType: 'multi',
-                    data: ['materialCode', 'materialName']
+                    data: ['materialName', 'materialCode']
+                },
+                {
+                    prop: 'useMaterialName',
+                    label: '领用物料',
+                    minWidth: '180',
+                    hide: false,
+                    fixed: true,
+                    showOverFlowTooltip: true,
+                    dataType: 'multi',
+                    data: ['useMaterialName', 'useMaterialCode']
+                },
+                {
+                    prop: 'useMaterialUnit',
+                    label: '单位',
+                    width: '80',
+                    hide: false,
+                    fixed: true,
+                    showOverFlowTooltip: true,
+                    dataType: 'default'
                 },
                 {
                     prop: 'productDate',
                     label: '日期',
-                    width: '100',
+                    subLabel: '',
+                    width: '180',
                     hide: false,
                     fixed: false,
                     showOverFlowTooltip: true,
                     dataType: 'default'
                 },
                 {
-                    prop: 'inStaorage',
-                    label: '入库产量',
-                    width: '100',
+                    prop: 'needNum',
+                    label: '需求用量',
+                    width: '80',
                     hide: false,
-                    fixed: false,
+                    fixed: true,
                     showOverFlowTooltip: true,
                     dataType: 'default'
                 },
                 {
-                    prop: 'reportWork',
-                    label: '报工产量',
-                    width: '100',
+                    prop: 'potOrder',
+                    label: '锅序',
+                    width: '80',
                     hide: false,
-                    fixed: false,
+                    fixed: true,
                     showOverFlowTooltip: true,
                     dataType: 'default'
                 },
                 {
-                    prop: 'theoryReadyTime',
-                    label: '理论准备工时',
-                    width: '100',
+                    prop: 'realUsed',
+                    label: '实际用量',
+                    width: '80',
                     hide: false,
-                    fixed: false,
+                    fixed: true,
                     showOverFlowTooltip: true,
                     dataType: 'default'
                 },
                 {
-                    prop: 'theoryMachineTime',
-                    label: '理论机器工时',
-                    width: '100',
+                    prop: 'duration',
+                    label: '时长',
+                    subLabel: '(min)',
+                    width: '80',
                     hide: false,
                     fixed: false,
                     showOverFlowTooltip: true,
                     dataType: 'default'
-                },
-                {
-                    prop: 'theoryManTime',
-                    label: '理论人工工时',
-                    width: '100',
-                    hide: false,
-                    fixed: false,
-                    showOverFlowTooltip: true,
-                    dataType: 'default'
-                },
-                {
-                    prop: 'actualReadyTime',
-                    label: '实际准备工时',
-                    width: '100',
-                    hide: false,
-                    fixed: false,
-                    showOverFlowTooltip: true,
-                    dataType: 'default'
-                },
-                {
-                    prop: 'actualMachineTime',
-                    label: '实际机器工时',
-                    width: '100',
-                    hide: false,
-                    fixed: false,
-                    showOverFlowTooltip: true,
-                    dataType: 'default'
-                },
-                {
-                    prop: 'actualManTime',
-                    label: '实际人工工时',
-                    width: '100',
-                    hide: false,
-                    fixed: false,
-                    showOverFlowTooltip: true,
-                    dataType: 'default'
-                },
-                {
-                    prop: 'diffReadyTime',
-                    label: '差异准备工时',
-                    width: '100',
-                    hide: false,
-                    fixed: false,
-                    showOverFlowTooltip: true,
-                    dataType: 'default'
-                },
-                {
-                    prop: 'diffMachineTime',
-                    label: '差异机器工时',
-                    width: '100',
-                    hide: false,
-                    fixed: false,
-                    showOverFlowTooltip: true,
-                    dataType: 'default'
-                },
-                {
-                    prop: 'diffManTime',
-                    label: '差异人工工时',
-                    width: '100',
-                    hide: false,
-                    fixed: false,
-                    showOverFlowTooltip: true,
-                    dataType: 'default'
-                },
-                {
-                    prop: 'standardMan',
-                    label: '标准人力',
-                    width: '100',
-                    hide: false,
-                    fixed: false,
-                    showOverFlowTooltip: true,
-                    dataType: 'default'
-                },
-                {
-                    prop: 'actualMan',
-                    label: '实际人力',
-                    width: '100',
-                    hide: false,
-                    fixed: false,
-                    showOverFlowTooltip: true,
-                    dataType: 'default'
-                },
-                {
-                    prop: 'stopTime',
-                    label: '停机时间',
-                    width: '100',
-                    hide: false,
-                    fixed: false,
-                    showOverFlowTooltip: true,
-                    dataType: 'default'
-                },
-                {
-                    prop: 'stopReason',
-                    label: '停机原因',
-                    minWidth: '240',
-                    width: '240',
-                    hide: false,
-                    fixed: false,
-                    showOverFlowTooltip: true,
-                    custom: true,
-                    dataType: 'list'
                 }
             ],
             tableAttributes: {
-                isShowSummary: true // 合计
+                isShowSummary: false // 合计
             },
             dataChangeByAPI: false, // table data change by API
             tableHeightSet: 405
@@ -333,7 +270,7 @@
         // 查询请求
         listInterface = params => {
             params.factory = JSON.parse(sessionStorage.getItem('factory') || '{}').id;
-            return REPORTS_API.REPORT_PACKAGING_TIMESUM_QUERY_API(params);
+            return REPORTS_API.REPORT_PACKAGING_SEMI_FINISHED_PRODUCTIONS_SUMMARY_QUERY_API(params);
         };
 
         /**
