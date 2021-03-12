@@ -35,7 +35,7 @@
             </el-form-item>
             <el-form-item label="组织机构：" prop="deptId">
                 <el-select v-model="dataForm.deptId" placeholder="请选择" filterable style="width: 220px;" clearable>
-                    <el-option v-for="(iteam, index) in organizationList" :key="index" :label="iteam.deptName" :value="iteam.deptCode" />
+                    <el-option v-for="(iteam, index) in organizationList" :key="index" :label="iteam.deptName" :value="iteam.id" />
                 </el-select>
             </el-form-item>
             <el-form-item label="数量倍数：">
