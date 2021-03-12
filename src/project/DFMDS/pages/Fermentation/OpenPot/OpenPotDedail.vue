@@ -61,7 +61,7 @@
                     </el-form>
                     <div class="box-card-title clearfix">
                         <h3> <em class="title-icon" style="background: #487bff;" />开罐列表</h3>
-                        <el-form :model="searchForm" size="small" :inline="true" label-position="left" label-width="70px" class="sole_row">
+                        <el-form :model="searchForm" size="small" :inline="true" label-position="left" class="sole_row">
                             <el-form-item label="生产车间：">
                                 <el-select v-model="searchForm.workShop" :disabled="!isRedact" placeholder="请选择" style="width: 120px;" clearable @change="getOpenPotList">
                                     <el-option v-for="(item, index) in workShop" :key="index" :label="item.split('&')[1]" :value="item.split('&')[0]" />
@@ -123,7 +123,7 @@
                         </el-table-column>
                         <el-table-column label="数量（KG）" prop="materialUnit" min-width="100" :show-overflow-tooltip="true">
                             <template slot-scope="scope">
-                                {{ scope.row.ferOrder.amount }}
+                                {{ scope.row.currentStock }}
                             </template>
                         </el-table-column>
                         <el-table-column label="单位" prop="unit" min-width="50" :show-overflow-tooltip="true" />
@@ -554,13 +554,13 @@
         materialChange(row) {
             const filterArr1: (any) = this.holderArr.filter(item => item.holderId === row.fermentorId)// eslint-disable-line
             const filterArr: (any) = filterArr1[0].ferInStorageList.filter(item => item.productMaterialCode === row.addMaterialCode)// eslint-disable-line
-            row.addMaterialName = filterArr[0].productMaterialName
-            row.addMaterialType = filterArr[0].productMaterialType
-            row.orderId = filterArr[0].orderId
-            row.orderNo = filterArr[0].orderNo
-            row.unit = filterArr[0].unit
-            row.stockAmount = filterArr[0].currentStock
-            row.batch = filterArr[0].inStorageBatch
+            this.$set(row, 'addMaterialName', filterArr[0].productMaterialName)
+            this.$set(row, 'addMaterialType', filterArr[0].productMaterialType)
+            this.$set(row, 'orderId', filterArr[0].orderId)
+            this.$set(row, 'orderNo', filterArr[0].orderNo)
+            this.$set(row, 'unit', filterArr[0].unit)
+            this.$set(row, 'stockAmount', filterArr[0].currentStock)
+            this.$set(row, 'batch', filterArr[0].inStorageBatch)
         }
 
         // 删除

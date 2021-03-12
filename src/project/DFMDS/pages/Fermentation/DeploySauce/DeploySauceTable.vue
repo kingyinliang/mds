@@ -45,7 +45,7 @@
                 </el-table-column>
             </el-table>
         </mds-card>
-        <mds-card v-if="formHeader.ferOpen.applyMaterialName === '黄豆酱熟酱' && formHeader.ferOpen.applyMaterialCode === 'SP03130002'" :title="'鲜香泡豆'" :name="'list2'">
+        <mds-card v-if="formHeader.ferOpen && formHeader.ferOpen.applyMaterialName === '黄豆酱熟酱' && formHeader.ferOpen.applyMaterialCode === 'SP03130002'" :title="'鲜香泡豆'" :name="'list2'">
             <template slot="titleBtn">
                 <div style="float: right;">
                     <el-button type="primary" :disabled="!isRedact" size="small" @click="addList2()">
@@ -56,6 +56,9 @@
             <el-table header-row-class-name="tableHead" class="newTable" :data="table2" :row-class-name="rowDelFlag">
                 <el-table-column type="index" label="序号" width="50" fixed align="center" />
                 <el-table-column label="容器号" prop="openFlagName" min-width="150" :show-overflow-tooltip="true">
+                    <template slot="header">
+                        <em class="reqI">*</em> 容器号
+                    </template>
                     <template slot-scope="scope">
                         <el-select v-model="scope.row.fermentorId" :disabled="!isRedact" placeholder="请选择" size="small" filterable clearable @change="fermentorNoChange(scope.row)">
                             <el-option v-for="(item, index) in holderArr" :key="index" :label="item.holderName" :value="item.holderId" />
@@ -63,6 +66,9 @@
                     </template>
                 </el-table-column>
                 <el-table-column label="添加物料" prop="addMaterialCode" min-width="150" :show-overflow-tooltip="true">
+                    <template slot="header">
+                        <em class="reqI">*</em> 添加物料
+                    </template>
                     <template slot-scope="scope">
                         <el-select v-model="scope.row.addMaterialCode" :disabled="!isRedact" placeholder="请选择" size="small" filterable clearable style="width: 100%;" @change="materialChange(scope.row)">
                             <el-option v-for="(item, index) in (holderArr.filter(it => it.holderId === scope.row.fermentorNo).length > 0 ? holderArr.filter(it => it.holderId === scope.row.fermentorNo)[0].ferInStorageList : [])" :key="index" :label="item.productMaterialName +' ' + item.productMaterialCode" :value="item.productMaterialCode" />
@@ -77,6 +83,9 @@
                 <el-table-column label="库存数量" prop="stockAmount" min-width="100" :show-overflow-tooltip="true" />
                 <el-table-column label="批次" prop="batch" min-width="100" :show-overflow-tooltip="true" />
                 <el-table-column label="计划添加数量" prop="openFlagName" min-width="100" :show-overflow-tooltip="true">
+                    <template slot="header">
+                        <em class="reqI">*</em> 计划添加数量
+                    </template>
                     <template slot-scope="scope">
                         <el-input v-model="scope.row.planAddAmount" :disabled="!isRedact" placeholder="手动输入" size="small" />
                     </template>
@@ -87,6 +96,9 @@
                     </template>
                 </el-table-column>
                 <el-table-column label="领用数量" prop="receiveMaterial" min-width="100" :show-overflow-tooltip="true">
+                    <template slot="header">
+                        <em class="reqI">*</em> 领用数量
+                    </template>
                     <template slot-scope="scope">
                         <el-input v-model="scope.row.realAddAmount" :disabled="!(isRedact)" size="small" placeholder="请输入" />
                     </template>
@@ -119,11 +131,17 @@
                     </template>
                 </el-table-column>
                 <el-table-column label="批次" prop="batch" min-width="120" :show-overflow-tooltip="true">
+                    <template slot="header">
+                        <em class="reqI">*</em> 批次
+                    </template>
                     <template slot-scope="scope">
                         <el-input v-model="scope.row.batch" maxlength="10" :disabled="!(isRedact)" size="small" placeholder="请输入" />
                     </template>
                 </el-table-column>
                 <el-table-column label="领用数量" prop="receiveMaterial" min-width="120" :show-overflow-tooltip="true">
+                    <template slot="header">
+                        <em class="reqI">*</em> 领用数量
+                    </template>
                     <template slot-scope="scope">
                         <el-input v-model="scope.row.realAddAmount" :disabled="!(isRedact)" size="small" placeholder="请输入" />
                     </template>
@@ -151,6 +169,9 @@
                 <el-table-column label="批次" prop="batch" min-width="100" :show-overflow-tooltip="true" />
                 <el-table-column label="计划添加数量" prop="planAddAmount" min-width="120" :show-overflow-tooltip="true" />
                 <el-table-column label="领用数量" prop="realAddAmount" min-width="120" :show-overflow-tooltip="true">
+                    <template slot="header">
+                        <em class="reqI">*</em> 领用数量
+                    </template>
                     <template slot-scope="scope">
                         <el-input v-model="scope.row.realAddAmount" :disabled="!(isRedact)" size="small" placeholder="请输入" />
                     </template>
@@ -288,7 +309,6 @@
 
         SplitDate(row, index) {
             this.table3.splice(index + this.table3.filter(item => item.addMaterialCode === row.addMaterialCode).length, 0, {
-                id: row.id,
                 openPotNo: row.openPotNo,
                 addMaterialCode: row.addMaterialCode,
                 addMaterialName: row.addMaterialName,

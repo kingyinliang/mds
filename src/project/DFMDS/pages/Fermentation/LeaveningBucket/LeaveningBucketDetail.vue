@@ -198,7 +198,7 @@
                     </el-table-column>
                     <el-table-column label="来源订单" :show-overflow-tooltip="true" width="180">
                         <template slot-scope="scope">
-                            {{ scope.row.preOrderNo }}
+                            {{ scope.row.preOrderNo || scope.row.orderNo }}
                         </template>
                     </el-table-column>
                     <el-table-column label="来源曲房" :show-overflow-tooltip="true" width="180">
