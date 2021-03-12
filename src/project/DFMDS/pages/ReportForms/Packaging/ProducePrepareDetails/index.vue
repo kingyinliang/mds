@@ -33,10 +33,6 @@
         queryFormSetting= {
             isQueryFormShow: true, // 标头搜寻区块是否显示
             rules: [ // 查询必填栏位校验
-                {
-                    prop: 'startDate',
-                    text: '请输入生产时间'
-                }
             ],
             queryAuth: '',
             exportExcel: true, // 导出 excel BTN
@@ -71,8 +67,7 @@
                     resData: 'data',
                     label: ['deptName'],
                     value: 'id'
-                },
-                linkageProp: ['productLine']
+                }
             },
             {
                 type: 'select',
@@ -145,7 +140,7 @@
                 {
                     prop: 'productLineName',
                     label: '生产产线',
-                    minWidth: '120',
+                    width: '200',
                     hide: false,
                     fixed: true,
                     showOverFlowTooltip: true,
@@ -154,7 +149,7 @@
                 {
                     prop: 'materialName',
                     label: '生产物料',
-                    width: '180',
+                    width: '200',
                     hide: false,
                     fixed: true,
                     showOverFlowTooltip: true,

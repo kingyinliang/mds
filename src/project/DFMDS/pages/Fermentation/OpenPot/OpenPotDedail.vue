@@ -123,7 +123,7 @@
                         </el-table-column>
                         <el-table-column label="数量（KG）" prop="materialUnit" min-width="100" :show-overflow-tooltip="true">
                             <template slot-scope="scope">
-                                {{ scope.row.ferOrder.amount }}
+                                {{ scope.row.currentStock }}
                             </template>
                         </el-table-column>
                         <el-table-column label="单位" prop="unit" min-width="50" :show-overflow-tooltip="true" />

@@ -74,7 +74,7 @@
                 hide: false, // hide column
                 label: '生产车间', // column title
                 prop: 'workShop',
-                defaultValue: '',
+                // defaultValue: '',
                 labelWidth: '90',
                 width: '140',
                 clearable: true,

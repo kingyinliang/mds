@@ -96,7 +96,7 @@
                 hide: false, // hide column
                 label: '生产日期',
                 defaultValue: '',
-                labelWidth: '100', // default 70px
+                labelWidth: '90', // default 70px
                 width: '160', // default 70px
                 dataType: 'month',
                 prop: 'startDate',
@@ -109,7 +109,7 @@
                 hide: false, // hide column
                 label: '生产车间',
                 prop: 'workShop',
-                defaultValue: '',
+                // defaultValue: '',
                 labelWidth: '80', // default 70px
                 width: '150',
                 clearable: true,
