@@ -100,6 +100,7 @@
                 width: '160', // default 70px
                 dataType: 'month',
                 prop: 'startDate',
+                valueFormat: 'yyyy-MM',
                 marked: true, // mark it
                 clearable: true,
                 disabled: false
