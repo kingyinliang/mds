@@ -113,6 +113,7 @@
                 prop: 'workShop',
                 defaultValue: '',
                 labelWidth: '100',
+                clearable: true,
                 rule: [{ required: true, message: '请选择生产车间', trigger: 'blur' }],
                 defaultOptionsFn: () => {
                     return COMMON_API.ORG_QUERY_WORKSHOP_API({
@@ -133,6 +134,7 @@
                 prop: 'largeClass',
                 labelWidth: '100',
                 filterable: true,
+                clearable: true,
                 rule: [{ required: false, message: '请选择品项大类', trigger: 'blur' }],
                 defaultOptionsFn: () => {
                     return REPORTS_API.REPORT_LARGE_CLASS_DROP_DOWN_API({ })
