@@ -58,8 +58,8 @@
                 hide: false, // hide column
                 label: '生产车间',
                 prop: 'workShop',
-                defaultValue: '',
-                labelWidth: '100', // default 70px
+                // defaultValue: '',
+                labelWidth: '90', // default 70px
                 width: '150',
                 clearable: true,
                 marked: true, // mark it
@@ -230,7 +230,6 @@
                 {
                     prop: 'materialName',
                     label: '品项',
-                    width: '180',
                     minWidth: '180',
                     hide: false,
                     fixed: true,

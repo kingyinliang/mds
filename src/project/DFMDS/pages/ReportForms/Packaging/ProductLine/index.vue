@@ -53,7 +53,7 @@
 <script lang="ts">
     import { Vue, Component } from 'vue-property-decorator';
     import { COMMON_API, REPORTS_API } from 'common/api/api';
-    import { exportFileFor2ExcelMultiSheets } from 'utils/utils.ts';
+    import { exportFileFor2ExcelMultiSheets } from 'utils/utils';
     // import { dateFormat } from 'utils/utils';
 
     @Component({
@@ -98,7 +98,7 @@
                 hide: false, // hide column
                 label: '报表类型', // column title
                 prop: 'formType',
-                defaultValue: 'day',
+                // defaultValue: 'day',
                 labelWidth: '80', // default 70px
                 width: '60', // default 170px
                 clearable: false,

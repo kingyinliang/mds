@@ -59,7 +59,7 @@
                 label: '生产车间',
                 prop: 'workShop',
                 // defaultValue: '',
-                labelWidth: '100', // default 70px
+                labelWidth: '90', // default 70px
                 width: '150',
                 clearable: true,
                 marked: true, // mark it
