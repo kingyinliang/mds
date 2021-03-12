@@ -3,7 +3,7 @@
  * @Anthor: Telliex
  * @Date: 2021-01-15 23:35:23
  * @LastEditors: Telliex
- * @LastEditTime: 2021-03-12 10:06:43
+ * @LastEditTime: 2021-03-12 14:23:10
 -->
 <template>
     <div class="header_main">
@@ -860,9 +860,9 @@
 
         //can color
         setBucketColor(target, num) {
-            if (target === 'E') {
+            if (target === 'E' || target === 'R' || target === 'C') { //E:空罐,R:投料中,C:待清洗
                 return '#ffffff'
-            } else if (target === 'F') {
+            } else if (target === 'F' || target === 'S') { // F:发酵中, S:已入库
                     if (num <= 30) {
                         return '#d5d2C3'
                     } else if (num > 30 && num <= 60) {
@@ -878,8 +878,8 @@
                     } else if (num > 180) {
                         return '#8a391b' //'#602813'
                     }
-                        return '#c7090b'
-            } else if (target === 'O' || target === 'U' || target === 'A' || target === 'T') {
+                        return '#8a391b' // 超期
+            } else if (target === 'U' || target === 'A' || target === 'T') { //T:调酱中,A:已调整,U:领料中
                 return '#8a391b'
             }
 

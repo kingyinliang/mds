@@ -107,7 +107,7 @@
                                         <span class="notNull">批次</span>
                                     </template>
                                     <template slot-scope="scope">
-                                        <el-input v-model.trim="scope.row.cyBatch" size="small" placeholder="请输入批次" :disabled="scope.row.checkStatus==='M'" />
+                                        <el-input v-model.trim="scope.row.cyBatch" size="small" placeholder="请输入批次" :disabled="scope.row.checkStatus==='M'" :maxlength="10" />
                                     </template>
                                 </el-table-column>
                                 <el-table-column min-width="200" :show-overflow-tooltip="true">
