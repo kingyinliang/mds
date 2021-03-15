@@ -137,10 +137,9 @@
                 marked: false, // mark it
                 disabled: false,
                 defaultOptionsFn: () => {
-                    return REPORTS_API.REPORT_PACKAGING_OEE_MATERIAL_QUERY_API({
-                        workShop: '',
-                        productLine: ''
-                    })
+                    return COMMON_API.ALLMATERIAL_API({
+                                materialTypes: ['ZHAL'] // 物料类型列表 - 半成品
+                            })
                 },
                 resVal: {
                     resData: 'data',
