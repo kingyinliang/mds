@@ -99,7 +99,8 @@
                     resData: 'data',
                     label: ['deptName'],
                     value: 'id'
-                }
+                },
+                linkageProp: ['bottleLine']
             },
             {
                 type: 'input',
@@ -148,24 +149,27 @@
                 clearable: true,
                 marked: false, // mark it
                 disabled: false,
-                optionsFn: val => {
-                    console.log(val)
-                    return val
+                returnValue: {
+                    findList: 'productLine',
+                    findId: 'id',
+                    findField: 'bottleLineNum'
+                },
+                optionsFn: (val, secondVal) => {
+                    return new Promise((resolve) => {
+                        const listTemp: object[] = [];
+                        for (let i = 1; i <= secondVal; i++) {
+                            listTemp.push({ value: `${i}`, label: `${i}` })
+                        }
+                        resolve({ data: { data: listTemp } });
+                    })
+                },
+                resVal: {
+                    resData: 'data',
+                    label: ['label'],
+                    value: 'value'
                 }
-                // defaultOptionsFn: () => {
-                //     return REPORTS_API.REPORT_PACKAGING_OEE_MATERIAL_QUERY_API({
-                //         workShop: '',
-                //         productLine: ''
-                //     })
-                // },
-                // resVal: {
-                //     resData: 'data',
-                //     label: ['materialName', 'materialCode'],
-                //     value: 'materialCode'
-                // }
             },
-            // TODO add API
-             {
+            {
                 type: 'select',
                 hide: false, // hide column
                 label: '领用物料',
@@ -177,9 +181,8 @@
                 marked: false, // mark it
                 disabled: false,
                 defaultOptionsFn: () => {
-                    return REPORTS_API.REPORT_PACKAGING_OEE_MATERIAL_QUERY_API({
-                        workShop: '',
-                        productLine: ''
+                    return COMMON_API.ALLMATERIAL_API({
+                        materialTypes: ['ZHAL'] // 物料类型列表 - 半成品
                     })
                 },
                 resVal: {

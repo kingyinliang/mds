@@ -176,15 +176,6 @@
                     data: ['materialCode', 'materialName']
                 },
                 {
-                    prop: 'productDate',
-                    label: '日期',
-                    width: '100',
-                    hide: false,
-                    fixed: false,
-                    showOverFlowTooltip: true,
-                    dataType: 'default'
-                },
-                {
                     prop: 'inStaorage',
                     label: '入库产量',
                     width: '100',

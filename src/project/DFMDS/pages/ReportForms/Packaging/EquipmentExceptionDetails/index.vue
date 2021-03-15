@@ -121,13 +121,11 @@
                     value: 'deviceNo'
                 }
             },
-
-            // TODO 关联灌装线下领用物料
             {
                 type: 'select',
                 hide: false, // hide column
-                label: '领用物料',
-                prop: 'useMaterial',
+                label: '生产物料',
+                prop: 'materialCode',
                 defaultValue: '',
                 labelWidth: '80',
                 width: '160',
@@ -182,7 +180,7 @@
                 {
                     prop: 'classes',
                     label: '班次',
-                    width: '120',
+                    width: '80',
                     hide: false,
                     fixed: true,
                     showOverFlowTooltip: true,
@@ -246,7 +244,6 @@
                 {
                     prop: 'endDate',
                     label: '结束时间',
-                    subLabel: '(OEE)',
                     width: '140',
                     hide: false,
                     fixed: false,
@@ -256,7 +253,7 @@
                 {
                     prop: 'duration',
                     label: '时长',
-                    sibLabel: '(min)',
+                    subLabel: '(min)',
                     width: '80',
                     hide: false,
                     fixed: false,
@@ -266,7 +263,6 @@
                 {
                     prop: 'num',
                     label: '次数',
-                    subLabel: '(min)',
                     width: '80',
                     hide: false,
                     fixed: false,
