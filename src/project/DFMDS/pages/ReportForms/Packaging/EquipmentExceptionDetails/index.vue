@@ -173,7 +173,7 @@
                 {
                     prop: 'productDate',
                     label: '生产日期',
-                    minWidth: '120',
+                    width: '120',
                     hide: false,
                     fixed: true,
                     showOverFlowTooltip: true,
@@ -182,15 +182,6 @@
                 {
                     prop: 'classes',
                     label: '班次',
-                    minWidth: '120',
-                    hide: false,
-                    fixed: true,
-                    showOverFlowTooltip: true,
-                    dataType: 'default'
-                },
-                {
-                    prop: 'materialCode',
-                    label: '物料编码',
                     width: '120',
                     hide: false,
                     fixed: true,
@@ -200,17 +191,17 @@
                 {
                     prop: 'materialName',
                     label: '物料名称',
-                    width: '180',
+                    minWidth: '240',
                     hide: false,
                     fixed: true,
                     showOverFlowTooltip: true,
                     dataType: 'multi',
-                    data: ['materialCode', 'materialName']
+                    data: ['materialName', 'materialCode']
                 },
                 {
                     prop: 'stopType',
                     label: '停机类型',
-                    width: '180',
+                    minWidth: '180',
                     hide: false,
                     fixed: false,
                     showOverFlowTooltip: true,
@@ -219,7 +210,7 @@
                 {
                     prop: 'stopMode',
                     label: '停机方式',
-                    width: '180',
+                    minWidth: '180',
                     hide: false,
                     fixed: false,
                     showOverFlowTooltip: true,
@@ -228,7 +219,7 @@
                 {
                     prop: 'stopSituation',
                     label: '停机情况',
-                    width: '180',
+                    minWidth: '180',
                     hide: false,
                     fixed: false,
                     showOverFlowTooltip: true,
@@ -237,7 +228,7 @@
                 {
                     prop: 'stopReason',
                     label: '停机原因',
-                    width: '180',
+                    minWidth: '180',
                     hide: false,
                     fixed: false,
                     showOverFlowTooltip: true,

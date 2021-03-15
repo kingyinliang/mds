@@ -178,7 +178,8 @@
                     hide: false,
                     fixed: true,
                     showOverFlowTooltip: true,
-                    dataType: 'default'
+                    dataType: 'multi',
+                    data: ['materialName', 'materialCode']
                 },
                 {
                     prop: 'productDate',

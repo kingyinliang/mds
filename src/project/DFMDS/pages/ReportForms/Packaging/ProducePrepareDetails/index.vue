@@ -131,7 +131,7 @@
                 {
                     prop: 'workShopName',
                     label: '生产车间',
-                    minWidth: '120',
+                    width: '120',
                     hide: false,
                     fixed: true,
                     showOverFlowTooltip: true,
@@ -149,7 +149,7 @@
                 {
                     prop: 'materialName',
                     label: '生产物料',
-                    width: '200',
+                    minWidth: '240',
                     hide: false,
                     fixed: true,
                     showOverFlowTooltip: true,

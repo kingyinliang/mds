@@ -148,17 +148,21 @@
                 clearable: true,
                 marked: false, // mark it
                 disabled: false,
-                defaultOptionsFn: () => {
-                    return REPORTS_API.REPORT_PACKAGING_OEE_MATERIAL_QUERY_API({
-                        workShop: '',
-                        productLine: ''
-                    })
-                },
-                resVal: {
-                    resData: 'data',
-                    label: ['materialName', 'materialCode'],
-                    value: 'materialCode'
+                optionsFn: val => {
+                    console.log(val)
+                    return val
                 }
+                // defaultOptionsFn: () => {
+                //     return REPORTS_API.REPORT_PACKAGING_OEE_MATERIAL_QUERY_API({
+                //         workShop: '',
+                //         productLine: ''
+                //     })
+                // },
+                // resVal: {
+                //     resData: 'data',
+                //     label: ['materialName', 'materialCode'],
+                //     value: 'materialCode'
+                // }
             },
             // TODO add API
              {
@@ -230,7 +234,7 @@
                 {
                     prop: 'materialName',
                     label: '品项',
-                    minWidth: '180',
+                    minWidth: '240',
                     hide: false,
                     fixed: true,
                     showOverFlowTooltip: true,
