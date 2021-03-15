@@ -140,7 +140,7 @@
                 {
                     prop: 'productDate',
                     label: '生产日期',
-                    minWidth: '120',
+                    width: '120',
                     hide: false,
                     fixed: true,
                     showOverFlowTooltip: true,
@@ -149,7 +149,7 @@
                 {
                     prop: 'productLineName',
                     label: '生产线',
-                    minWidth: '120',
+                    width: '120',
                     hide: false,
                     fixed: true,
                     showOverFlowTooltip: true,
@@ -158,7 +158,7 @@
                 {
                     prop: 'orderNo',
                     label: '订单编号',
-                    width: '100',
+                    width: '120',
                     hide: false,
                     fixed: true,
                     showOverFlowTooltip: true,
@@ -167,7 +167,7 @@
                 {
                     prop: 'materialName',
                     label: '生产物料',
-                    width: '180',
+                    minWidth: '240',
                     hide: false,
                     fixed: true,
                     showOverFlowTooltip: true,

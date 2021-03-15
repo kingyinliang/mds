@@ -51,7 +51,7 @@
             exportOption: {
                 exportInterface: '',
                 auth: '',
-                text: '产线OEE报表'
+                text: '包材不良品明细报表'
             }
         }
 
@@ -201,7 +201,7 @@
                 {
                     prop: 'materialName',
                     label: '生产物料',
-                    width: '240',
+                    minWidth: '240',
                     hide: false,
                     fixed: false,
                     clearable: true,
@@ -221,12 +221,12 @@
                 {
                     prop: 'useMaterialName',
                     label: '组件物料',
-                    width: '260',
+                    minWidth: '240',
                     hide: false,
                     fixed: false,
                     showOverFlowTooltip: true,
                     dataType: 'multi',
-                    data: ['materialName', 'useMaterialCode']
+                    data: ['useMaterialName', 'useMaterialCode']
                 },
                 {
                     prop: 'useMaterialUnit',
@@ -295,7 +295,7 @@
                  {
                     prop: 'badReason',
                     label: '不良品原因',
-                    monWidth: '200',
+                    minWidth: '200',
                     width: '200',
                     hide: false,
                     fixed: false,

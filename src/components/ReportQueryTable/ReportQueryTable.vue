@@ -3,7 +3,7 @@
  * @Anthor: Telliex
  * @Date: 2021-02-26 10:58:05
  * @LastEditors: Telliex
- * @LastEditTime: 2021-03-11 17:35:11
+ * @LastEditTime: 2021-03-12 14:46:57
 -->
 <template>
     <div>
@@ -52,7 +52,7 @@
                             </el-row>
                         </el-form-item>
                         <el-form-item v-if="item.type === 'date-picker'" :key="item.prop" :label="`${item.label}：` || ''" :prop="item.prop" :rules="item.rule" :label-width="`${item.labelWidth ? item.labelWidth : 70}px`" :class="{ marked: item.marked }">
-                            <el-date-picker :ref="item.prop" v-model="queryForm[item.prop]" :type="item.dataType" placeholder="请选择" :value-format="item.valueFormat" :style="`width: ${item.width ? item.width : 170}px;`" :disabled="item.disabled" @blur="v => dateChange(v)" />
+                            <el-date-picker :ref="item.prop" v-model="queryForm[item.prop]" :type="item.dataType" placeholder="请选择" :value-format="item.valueFormat ? item.valueFormat : 'yyyy-MM-dd'" :style="`width: ${item.width ? item.width : 170}px;`" :disabled="item.disabled" @blur="v => dateChange(v)" />
                         </el-form-item>
                     </template>
                 </template>
