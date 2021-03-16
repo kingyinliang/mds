@@ -148,7 +148,7 @@
                 </el-table-column>
                 <el-table-column label="操作" fixed="right" width="70">
                     <template slot-scope="scope">
-                        <el-button :disabled="!(isRedact)" class="delBtn" type="text" icon="el-icon-delete" size="mini" @click="del(scope.row)">
+                        <el-button v-if="scope.row.splitFlag === 'Y'" :disabled="!(isRedact)" class="delBtn" type="text" icon="el-icon-delete" size="mini" @click="del(scope.row)">
                             删除
                         </el-button>
                     </template>
@@ -309,6 +309,8 @@
 
         SplitDate(row, index) {
             this.table3.splice(index + this.table3.filter(item => item.addMaterialCode === row.addMaterialCode).length, 0, {
+                id: '',
+                mainId: row.id,
                 openPotNo: row.openPotNo,
                 addMaterialCode: row.addMaterialCode,
                 addMaterialName: row.addMaterialName,
@@ -318,7 +320,7 @@
                 remark: row.remark,
                 batch: '',
                 realAddAmount: '',
-                toBeSplit: true
+                splitFlag: 'Y'
             })
             this.spanArr = merge(this.table3, 'addMaterialCode')
             console.log(this.spanArr);
@@ -392,6 +394,7 @@
     interface LisObj {
         id?: string;
         cycle?: string;
+        mainId?: string;
         description?: string;
         experiment?: string;
         fermentDays?: string;
@@ -400,6 +403,7 @@
         holderId?: string;
         fermentorId?: string;
         toBeSplit?: boolean;
+        splitFlag?: string;
         openPotNo?: string;
         fermentorNo?: string;
         stockAmount?: string;

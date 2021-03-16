@@ -151,6 +151,9 @@
                 </el-button>
                 <el-table :data="deployMaterial" :row-class-name="rowDelFlag" header-row-class-name="tableHead" class="newTable" border tooltip-effect="dark">
                     <el-table-column label="添加物料" prop="openFlagName" min-width="50" :show-overflow-tooltip="true">
+                        <template slot="header">
+                            <em class="reqI">*</em> 添加物料
+                        </template>
                         <template slot-scope="scope">
                             <el-select v-model="scope.row.addMaterialCode" :disabled="!isRedact || mixSauceStatus === 'M'" size="small" placeholder="请选择" filterable clearable style="width: 100%;" @change="getName(scope.row)">
                                 <el-option v-for="(item, index) in deployMaterialSelect" :key="index" :label="item.dictValue + ' ' + item.dictCode" :value="item.dictCode" />
@@ -158,11 +161,17 @@
                         </template>
                     </el-table-column>
                     <el-table-column label="计划添加数量" prop="openFlagName" min-width="50" :show-overflow-tooltip="true">
+                        <template slot="header">
+                            <em class="reqI">*</em> 计划添加数量
+                        </template>
                         <template slot-scope="scope">
                             <el-input v-model="scope.row.planAddAmount" size="small" :disabled="!isRedact || mixSauceStatus === 'M'" placeholder="手动输入" style="width: 100%;" />
                         </template>
                     </el-table-column>
                     <el-table-column label="单位" prop="openFlagName" min-width="50" :show-overflow-tooltip="true">
+                        <template slot="header">
+                            <em class="reqI">*</em> 单位
+                        </template>
                         <template slot-scope="scope">
                             <el-select v-model="scope.row.unit" size="small" :disabled="!isRedact || mixSauceStatus === 'M'" placeholder="请选择" filterable clearable style="width: 100%;">
                                 <el-option v-for="(item, index) in Unit" :key="index" :label="item.dictValue" :value="item.dictCode" />
@@ -189,6 +198,9 @@
                 </el-button>
                 <el-table :data="sauce" :row-class-name="rowDelFlag" header-row-class-name="tableHead" class="newTable" border tooltip-effect="dark">
                     <el-table-column label="容器号" prop="openFlagName" min-width="150" :show-overflow-tooltip="true">
+                        <template slot="header">
+                            <em class="reqI">*</em> 容器号
+                        </template>
                         <template slot-scope="scope">
                             <el-select v-model="scope.row.fermentorId" :disabled="!isRedact || mixSauceStatus === 'M'" placeholder="请选择" size="small" filterable clearable style="width: 100%;" @change="fermentorNoChange(scope.row)">
                                 <el-option v-for="(item, index) in holderArr" :key="index" :label="item.holderName" :value="item.holderId" />
@@ -196,6 +208,9 @@
                         </template>
                     </el-table-column>
                     <el-table-column label="添加物料" prop="addMaterialCode" min-width="150" :show-overflow-tooltip="true">
+                        <template slot="header">
+                            <em class="reqI">*</em> 添加物料
+                        </template>
                         <template slot-scope="scope">
                             <el-select v-model="scope.row.addMaterialCode" :disabled="!isRedact || mixSauceStatus === 'M'" placeholder="请选择" size="small" filterable clearable style="width: 100%;" @change="materialChange(scope.row)">
                                 <el-option v-for="(item, index) in (holderArr.filter(it => it.holderId === scope.row.fermentorId).length > 0 ? holderArr.filter(it => it.holderId === scope.row.fermentorId)[0].ferInStorageList : [])" :key="index" :label="item.productMaterialName +' ' + item.productMaterialCode" :value="item.productMaterialCode" />
@@ -210,6 +225,9 @@
                     <el-table-column label="库存数量" prop="stockAmount" min-width="100" :show-overflow-tooltip="true" />
                     <el-table-column label="批次" prop="batch" min-width="100" :show-overflow-tooltip="true" />
                     <el-table-column label="计划添加数量" prop="openFlagName" min-width="100" :show-overflow-tooltip="true">
+                        <template slot="header">
+                            <em class="reqI">*</em> 计划添加数量
+                        </template>
                         <template slot-scope="scope">
                             <el-input v-model="scope.row.planAddAmount" :disabled="!isRedact || mixSauceStatus === 'M'" placeholder="手动输入" size="small" style="width: 100%;" />
                         </template>
@@ -439,7 +457,11 @@
                     this.getSauceList(row)
                 } else {
                     const hang = this.openPotListSum.findIndex(item => item.id === row.id)
-                    row.mixSauceNo = this.formHeader.openPotNo + hang
+                    if (hang < 10) {
+                        row.mixSauceNo = this.formHeader.openPotNo + '0' + hang
+                    } else {
+                        row.mixSauceNo = this.formHeader.openPotNo + hang
+                    }
                     this.mixSauceNo = row.mixSauceNo
                     this.fermentorId = row.id
                     this.mixSauceStatus = row.mixSauceStatus || ''

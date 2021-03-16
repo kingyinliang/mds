@@ -158,7 +158,7 @@
                 }
                 this.formHeader.user = this.formHeader.mixMans.length > 0 ? this.formHeader.mixMans.split(',') : []
                 this.$refs.tables.init(this.formHeader)
-                this.formHeader['openType'] === 'MANY' ? this.headerBase[10]['disabled'] = true : this.headerBase[10]['disabled'] = false
+                this.formHeader.ferOpen['openType'] === 'MANY' ? this.headerBase[10]['disabled'] = true : this.headerBase[10]['disabled'] = false
             })
         }
 
