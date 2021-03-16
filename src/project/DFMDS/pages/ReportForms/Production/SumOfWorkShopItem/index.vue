@@ -23,7 +23,7 @@
 
 <script lang="ts">
     import { Vue, Component } from 'vue-property-decorator';
-    import { COMMON_API } from 'common/api/api';
+    import { COMMON_API, REPORTS_API } from 'common/api/api';
     // import { dateFormat } from 'utils/utils';
 
     @Component({
@@ -111,7 +111,8 @@
                     resData: 'data',
                     label: ['deptName'],
                     value: 'id'
-                }
+                },
+                linkageProp: ['productLine']
             },
             {
                 type: 'select',
@@ -131,24 +132,26 @@
                     label: ['deptName'],
                     value: 'id'
                 }
+                // linkageProp: ['productMaterial']
             },
             {
                 type: 'select',
                 label: '生产物料',
                 prop: 'productMaterial',
                 labelWidth: '100',
+                filterable: true,
                 rule: [{ required: true, message: '请选择生产物料', trigger: 'blur' }],
-                optionsFn: val => {
-                    return COMMON_API.ORG_QUERY_CHILDREN_API({
-                        parentId: val || '',
-                        deptType: 'PRODUCT_LINE'
+                defaultOptionsFn: () => {
+                    return REPORTS_API.REPORT_MATERIAL_DROP_DOWN_API({
+                        // parentId: val || '',
+                        // deptType: 'PRODUCT_LINE'
                     })
                 },
                 defaultValue: '',
                 resVal: {
                     resData: 'data',
-                    label: ['deptName'],
-                    value: 'id'
+                    label: ['dictCode', 'dictValue'],
+                    value: 'dictCode'
                 }
             },
             {
