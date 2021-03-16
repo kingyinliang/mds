@@ -95,7 +95,11 @@ const REPORTS_API = {
     /**
      * @property {string} REPORT_PACKAGING_LABOR_HOURS_DETAILS_QUERY_API 包装车间-生产准备明细报表
      */
-    REPORT_PACKAGING_PRODUCE_PREPARE_DETAILS_QUERY_API: params => httpProxy('/pkgReportForm/readyInfo/query', 'POST', params, 'REPORT')
+    REPORT_PACKAGING_PRODUCE_PREPARE_DETAILS_QUERY_API: params => httpProxy('/pkgReportForm/readyInfo/query', 'POST', params, 'REPORT'),
+    /**
+     * @property {string} REPORT_PACKAGING_ORDER_FILL_RATE_QUERY_API 包装车间-产量报表-成品库存日报
+     */
+    REPORT_PACKAGING_ORDER_FILL_RATE_QUERY_API: params => httpProxy('/pkgReportForm/product/queryOrderFillRate', 'POST', params, 'REPORT')
 };
 
 export default REPORTS_API;

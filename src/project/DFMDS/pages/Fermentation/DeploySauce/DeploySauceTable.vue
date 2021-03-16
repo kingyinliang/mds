@@ -148,7 +148,7 @@
                 </el-table-column>
                 <el-table-column label="操作" fixed="right" width="70">
                     <template slot-scope="scope">
-                        <el-button :disabled="!(isRedact)" class="delBtn" type="text" icon="el-icon-delete" size="mini" @click="del(scope.row)">
+                        <el-button v-if="scope.row.splitFlag === 'Y'" :disabled="!(isRedact)" class="delBtn" type="text" icon="el-icon-delete" size="mini" @click="del(scope.row)">
                             删除
                         </el-button>
                     </template>
@@ -259,9 +259,9 @@
 
         saveData() {
             const materialRemoveIds = []
-            this.delId(this.table2, materialRemoveIds)
-            this.delId(this.table3, materialRemoveIds)
-            this.delId(this.table4, materialRemoveIds)
+            this.delId({ data: this.table2, ids: materialRemoveIds })
+            this.delId({ data: this.table3, ids: materialRemoveIds, flg: true })
+            this.delId({ data: this.table4, ids: materialRemoveIds })
             const ferMixFermentorSaveDtoList: PotObj[] = []
             const ferMixFermentorUpdateDtoList: PotObj[] = []
             this.table1.forEach(item => {
@@ -295,10 +295,19 @@
             }
         }
 
-        delId(data, ids) {
+        delId({ data, ids, flg = false }) {
             for (let i = 0; i < data.length; i++) {
                 if (data[i].delFlag === 1 && data[i].id) {
-                    ids.push(data[i].id)
+                    if (flg) {
+                        if (data[i].toBeSplit) {
+                            data.splice(i, 1)
+                            i--
+                        } else {
+                            ids.push(data[i].id)
+                        }
+                    } else {
+                        ids.push(data[i].id)
+                    }
                 }
                 if (data[i].delFlag === 1 && !data[i].id) {
                     data.splice(i, 1)
@@ -309,6 +318,7 @@
 
         SplitDate(row, index) {
             this.table3.splice(index + this.table3.filter(item => item.addMaterialCode === row.addMaterialCode).length, 0, {
+                id: row.id,
                 openPotNo: row.openPotNo,
                 addMaterialCode: row.addMaterialCode,
                 addMaterialName: row.addMaterialName,
@@ -318,6 +328,7 @@
                 remark: row.remark,
                 batch: '',
                 realAddAmount: '',
+                splitFlag: 'Y',
                 toBeSplit: true
             })
             this.spanArr = merge(this.table3, 'addMaterialCode')
@@ -392,6 +403,7 @@
     interface LisObj {
         id?: string;
         cycle?: string;
+        mainId?: string;
         description?: string;
         experiment?: string;
         fermentDays?: string;
@@ -400,6 +412,7 @@
         holderId?: string;
         fermentorId?: string;
         toBeSplit?: boolean;
+        splitFlag?: string;
         openPotNo?: string;
         fermentorNo?: string;
         stockAmount?: string;
