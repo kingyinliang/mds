@@ -3,7 +3,7 @@
  * @Anthor: Telliex
  * @Date: 2021-02-26 10:58:05
  * @LastEditors: Telliex
- * @LastEditTime: 2021-03-11 17:35:11
+ * @LastEditTime: 2021-03-15 18:38:44
 -->
 <template>
     <div>
@@ -52,7 +52,7 @@
                             </el-row>
                         </el-form-item>
                         <el-form-item v-if="item.type === 'date-picker'" :key="item.prop" :label="`${item.label}：` || ''" :prop="item.prop" :rules="item.rule" :label-width="`${item.labelWidth ? item.labelWidth : 70}px`" :class="{ marked: item.marked }">
-                            <el-date-picker :ref="item.prop" v-model="queryForm[item.prop]" :type="item.dataType" placeholder="请选择" :value-format="item.valueFormat" :style="`width: ${item.width ? item.width : 170}px;`" :disabled="item.disabled" @blur="v => dateChange(v)" />
+                            <el-date-picker :ref="item.prop" v-model="queryForm[item.prop]" :type="item.dataType" placeholder="请选择" :value-format="item.valueFormat ? item.valueFormat : 'yyyy-MM-dd'" :style="`width: ${item.width ? item.width : 170}px;`" :disabled="item.disabled" @blur="v => dateChange(v)" />
                         </el-form-item>
                     </template>
                 </template>
@@ -89,7 +89,7 @@
                 ref="table"
                 class="newTable"
                 :class="dataTableSetting.tableClass"
-                :data="tableData.slice((currentPage - 1) * currentSize, (currentPage - 1) * currentSize + currentSize)"
+                :data="dataTableSetting.showPagination ? tableData.slice((currentPage - 1) * currentSize, (currentPage - 1) * currentSize + currentSize) : tableData"
                 :height="dataTableSetting.tableHeightSet"
                 :span-method="spanMethod"
                 border
@@ -399,20 +399,23 @@
                                     if (val) {
                                         let secondVal = '';
                                         if (linkagePropItemObj.returnValue) {
+                                            console.log(this.optionLists)
                                             // 抓取其他接口返回的其他参数
                                             secondVal = this.optionLists[linkagePropItemObj.returnValue.findList].find(it => it[linkagePropItemObj.returnValue.findId] === val)[linkagePropItemObj.returnValue.findField];
                                         }
                                         linkagePropItemObj.optionsFn(val, secondVal).then(({ data }) => {
-                                            const getPath = creatGetPath(linkagePropItemObj.resVal.resData);
-                                            const dataTemp = getPath(data);
-                                            this.$set(this.optionLists, linkagePropItemObj.prop, dataTemp);
-                                            if (dataTemp.length > 0 && !linkagePropItemObj.defaultValue && linkagePropItemObj.defaultValue !== '') {
-                                                this.$set(this.queryForm, linkagePropItemObj.prop, dataTemp[0][linkagePropItemObj.resVal.value]);
-                                                this.$emit('created-end');
-                                                this.$nextTick(() => {
-                                                    this.$refs[linkagePropItemObj.prop][0].emitChange(dataTemp[0][linkagePropItemObj.resVal.value]);
-                                                });
-                                            }
+                                                const getPath = creatGetPath(linkagePropItemObj.resVal.resData);
+                                                const dataTemp = getPath(data);
+                                                this.$set(this.optionLists, linkagePropItemObj.prop, dataTemp);
+                                                if (dataTemp.length > 0 && !linkagePropItemObj.defaultValue && linkagePropItemObj.defaultValue !== '') {
+
+                                                    this.$set(this.queryForm, linkagePropItemObj.prop, dataTemp[0][linkagePropItemObj.resVal.value]);
+                                                    this.$emit('created-end');
+                                                    this.$nextTick(() => {
+                                                        this.$refs[linkagePropItemObj.prop][0].emitChange(dataTemp[0][linkagePropItemObj.resVal.value]);
+                                                    });
+                                                }
+
                                         });
                                     } else {
                                         this.$set(this.optionLists, linkagePropItemObj.prop, []);

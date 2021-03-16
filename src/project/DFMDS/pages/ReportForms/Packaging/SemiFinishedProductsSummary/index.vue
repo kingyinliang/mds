@@ -58,8 +58,8 @@
                 hide: false, // hide column
                 label: '生产车间',
                 prop: 'workShop',
-                defaultValue: '',
-                labelWidth: '100', // default 70px
+                // defaultValue: '',
+                labelWidth: '90', // default 70px
                 width: '150',
                 clearable: true,
                 marked: true, // mark it
@@ -137,10 +137,9 @@
                 marked: false, // mark it
                 disabled: false,
                 defaultOptionsFn: () => {
-                    return REPORTS_API.REPORT_PACKAGING_OEE_MATERIAL_QUERY_API({
-                        workShop: '',
-                        productLine: ''
-                    })
+                    return COMMON_API.ALLMATERIAL_API({
+                                materialTypes: ['ZHAL'] // 物料类型列表 - 半成品
+                            })
                 },
                 resVal: {
                     resData: 'data',

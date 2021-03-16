@@ -141,7 +141,7 @@
             },
             {
                 type: 'select',
-                label: '领用物料',
+                label: '生产物料',
                 prop: 'applyMaterial',
                 defaultOptionsFn: () => {
                     return COMMON_API.HOLDER_DROPDOWN_API({

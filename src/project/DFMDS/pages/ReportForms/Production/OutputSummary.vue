@@ -1,24 +1,5 @@
 <template>
     <div class="header_main">
-        <!-- <query-table
-            ref="queryTable"
-            :show-table="true"
-            :show-index-column="false"
-            :column="column"
-            :show-page="false"
-            query-auth=""
-            :query-form-data="queryFormData"
-            :list-interface="listInterface"
-            :custom-data="true"
-            :rules="queryTableFormRules"
-            :export-excel="true"
-            :query-tabke-type="'report'"
-            :span-method="spanMethod"
-            :is-show-summary="true"
-            :get-summaries="getSummaries"
-            :export-option="exportOption"
-            @get-data-success="setData"
-        /> -->
         <report-query-table
             ref="queryTable"
             :span-method="spanMethod"
@@ -78,11 +59,11 @@
             showSelectColumn: false,
             showIndexColumn: false,
             showOperationColumn: false,
-            showPagination: true,
+            showPagination: false,
             //表格数据
             column: [
                 {
-                    prop: 'workShopName',
+                    prop: 'workShop',
                     label: '生产车间',
                     minWidth: '120'
                 },
@@ -145,6 +126,7 @@
                 labelWidth: '120',
                 prop: 'workShop',
                 defaultValue: '',
+                clearable: true,
                 rule: [{ required: true, message: '请选择生产车间', trigger: 'blur' }],
                 defaultOptionsFn: () => {
                     return COMMON_API.ORG_QUERY_WORKSHOP_API({

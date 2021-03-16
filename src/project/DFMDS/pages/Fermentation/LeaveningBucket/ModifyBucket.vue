@@ -147,7 +147,7 @@
                                 <el-form-item label="打入罐号：" class="star">
                                     <el-select v-model="convertDataGroup.targetHolderId" placeholder="请选择" filterable clearable style="width: 100%;" :disabled="!convertDisabled">
                                         <el-option
-                                            v-for="item in convertHolderIdOptions"
+                                            v-for="item in convertHolderIdOptions.filter(item => item.id !== currentItem.holderId)"
                                             :key="item.id"
                                             :label="item.holderName"
                                             :value="item.id"
@@ -209,7 +209,7 @@
                                 <el-form-item label="挪入罐号：" class="star">
                                     <el-select v-model="moveDataGroup.targetHolderId" filterable placeholder="请选择" clearable style="width: 100%;" :disabled="!moveDisabled">
                                         <el-option
-                                            v-for="item in moveHolderIdOptions"
+                                            v-for="item in moveHolderIdOptions.filter(item => item.id !== currentItem.holderId)"
                                             :key="item.id"
                                             :label="item.holderName"
                                             :value="item.id"

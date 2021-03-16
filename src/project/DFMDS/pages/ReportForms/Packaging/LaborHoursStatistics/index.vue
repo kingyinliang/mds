@@ -96,10 +96,11 @@
                 hide: false, // hide column
                 label: '生产日期',
                 defaultValue: '',
-                labelWidth: '100', // default 70px
+                labelWidth: '90', // default 70px
                 width: '160', // default 70px
                 dataType: 'month',
                 prop: 'startDate',
+                valueFormat: 'yyyy-MM',
                 marked: true, // mark it
                 clearable: true,
                 disabled: false
@@ -109,7 +110,7 @@
                 hide: false, // hide column
                 label: '生产车间',
                 prop: 'workShop',
-                defaultValue: '',
+                // defaultValue: '',
                 labelWidth: '80', // default 70px
                 width: '150',
                 clearable: true,
@@ -170,22 +171,14 @@
             //表格数据
             column: [
                 {
-                    prop: 'materialCode',
-                    label: '代码',
-                    width: '120',
-                    hide: false,
-                    fixed: true,
-                    showOverFlowTooltip: true,
-                    dataType: 'default'
-                },
-                {
                     prop: 'materialName',
                     label: '品名',
-                    minWidth: '180',
+                    minWidth: '240',
                     hide: false,
                     fixed: true,
                     showOverFlowTooltip: true,
-                    dataType: 'default'
+                    dataType: 'multi',
+                    data: ['materialName', 'materialCode']
                 },
                 {
                     prop: 'useMaterialUnit',
@@ -238,7 +231,7 @@
                 REPORTS_API.REPORT_PACKAGING_LABOR_HOURS_STATISTICS_QUERY_API(params).then(res => {
                     daysList = [];
                     const resTemp = JSON.parse(JSON.stringify(res))
-                    if (resTemp.data.data.length !== 0) {
+                    if (resTemp.data.data !== null && resTemp.data.data.length !== 0) {
                         resTemp.data.data.froEach(item => {
                             item.dayData.forEach(subItem => {
                                 item[`actualYield${subItem.productDate}`] = subItem.actualYield

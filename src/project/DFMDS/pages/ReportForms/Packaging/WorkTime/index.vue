@@ -58,7 +58,7 @@
                 hide: false, // hide column
                 label: '生产车间',
                 prop: 'workShop',
-                defaultValue: '',
+                // defaultValue: '',
                 labelWidth: '90', // default 70px
                 width: '150',
                 clearable: true,
@@ -174,15 +174,6 @@
                     showOverFlowTooltip: true,
                     dataType: 'multi',
                     data: ['materialCode', 'materialName']
-                },
-                {
-                    prop: 'productDate',
-                    label: '日期',
-                    width: '100',
-                    hide: false,
-                    fixed: false,
-                    showOverFlowTooltip: true,
-                    dataType: 'default'
                 },
                 {
                     prop: 'inStaorage',

@@ -51,7 +51,7 @@
             exportOption: {
                 exportInterface: '',
                 auth: '',
-                text: '产线OEE报表'
+                text: '包装生产日报表'
             }
         }
 
@@ -62,7 +62,7 @@
                 hide: false, // hide column
                 label: '生产车间', // column title
                 prop: 'workShop',
-                defaultValue: '',
+                // defaultValue: '',
                 labelWidth: '90',
                 width: '140',
                 clearable: true,
@@ -168,17 +168,18 @@
                 {
                     prop: 'materialName',
                     label: '生产物料',
-                    minWidth: '120',
+                    minWidth: '240',
                     hide: false,
                     fixed: false,
                     showOverFlowTooltip: true,
                     subLabel: '',
-                    dataType: 'default'
+                    dataType: 'multi',
+                    data: ['materialCode', 'materialName']
                 },
                 {
                     prop: 'theoryNum',
                     label: '理论量',
-                    minWidth: '120',
+                    width: '120',
                     hide: false,
                     fixed: false,
                     subLabel: '(箱)',
@@ -198,11 +199,12 @@
                 {
                     prop: 'useMaterialName',
                     label: '包材物料',
-                    width: '100',
+                    minWidth: '240',
                     hide: false,
                     fixed: false,
                     showOverFlowTooltip: true,
-                    dataType: 'default'
+                    dataType: 'default',
+                    data: ['useMaterialName', 'useMaterialCode']
                 },
                 {
                     prop: 'useMaterialUnit',

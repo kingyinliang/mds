@@ -3,7 +3,7 @@
  * @Anthor: Telliex
  * @Date: 2021-01-15 23:35:23
  * @LastEditors: Telliex
- * @LastEditTime: 2021-03-11 15:21:05
+ * @LastEditTime: 2021-03-12 14:23:10
 -->
 <template>
     <div class="header_main">
@@ -124,13 +124,13 @@
                                     </div>
                                 </div>
                                 <div class="card-bucket__fotter" style="height: 40px;">
-                                    <div v-show="!(item.fermentorStatus==='E'||item.fermentorStatus==='C')&&item.orderNo!==''">
+                                    <div v-show="!(item.fermentorStatus==='E')&&item.orderNo!==''">
                                         <el-tooltip class="item" effect="dark" :content="item.materialName" placement="top" :disabled="item.materialName===''">
                                             <span style="overflow: hidden; white-space: nowrap; text-overflow: ellipsis;">{{ item.materialName || '未有生产物料' }}</span>
                                         </el-tooltip>
                                         <span v-if="item.productProcess !== 'MIX'">{{ item.fermentDays || '0' }} 天</span>
                                     </div>
-                                    <div v-show="!(item.fermentorStatus==='E'||item.fermentorStatus==='C')&&item.orderNo!==''">
+                                    <div v-show="!(item.fermentorStatus==='E')&&item.orderNo!==''">
                                         <el-tooltip class="item" effect="dark" :content="item.orderNo" placement="top" :disabled="item.orderNo===''">
                                             <span style="overflow: hidden; white-space: nowrap; text-overflow: ellipsis;">{{ item.orderNo || '未有订单号' }}</span>
                                         </el-tooltip>
@@ -377,7 +377,7 @@
 
         // 地铁图样式
         topBox= [
-            {
+            { //0
                 color: '#999999FF',
                 startColor: '#999999FF',
                 endColor: '#999999FF',
@@ -391,7 +391,7 @@
                 num: '0',
                 materialCountList: []
             },
-            {
+            { //1
                 color: '#D6D2C4FF',
                 startColor: '#E9E9E9FF',
                 endColor: '#D6D2C4FF',
@@ -405,7 +405,7 @@
                 num: '0',
                 materialCountList: []
             },
-            {
+            { //2
                 color: '#CDA786FF',
                 startColor: '#D6D2C4FF',
                 endColor: '#CDA786FF',
@@ -419,7 +419,7 @@
                 num: '0',
                 materialCountList: []
             },
-            {
+            { //3
                 color: '#B58150FF',
                 startColor: '#CDA786FF',
                 endColor: '#B58150FF',
@@ -433,7 +433,7 @@
                 num: '0',
                 materialCountList: []
             },
-            {
+            { //4
                 color: '#C67C5AFF',
                 startColor: '#B58150FF',
                 endColor: '#C67C5AFF',
@@ -447,7 +447,7 @@
                 num: '0',
                 materialCountList: []
             },
-            {
+            { //5
                 color: '#AD592DFF',
                 startColor: '#C67C5AFF',
                 endColor: '#AD592DFF',
@@ -461,7 +461,7 @@
                 num: '0',
                 materialCountList: []
             },
-            {
+            { //6
                 color: '#8A391BFF',
                 startColor: '#8A391BFF',
                 endColor: '#8A391BFF',
@@ -475,36 +475,35 @@
                 num: '0',
                 materialCountList: []
             },
-            {
-                color: '#602813FF',
-                startColor: '#C70909FF',
-                endColor: '#8BC34AFF',
-                text: '?',
-                ptext: '6个月以上',
-                numNew: 181,
-                potColor: '#C70909',
-                middleText: '酿造',
-                fermentStage: '180',
-                holderStatus: '4',
-                num: '0',
-                materialCountList: []
-            },
-            {
-                color: '#C70909FF',
-                startColor: '#8A391BFF',
-                endColor: '#C70909FF',
-                text: '超',
-                ptext: '超期',
-                numNew: 9999999999999,
-                potColor: '#8A391B',
-                middleText: '超期',
-                fermentStage: 'O',
-                search: '7',
-                num: '0',
-                materialCountList: []
-            },
-
-            {
+            // {
+            //     color: '#602813FF',
+            //     startColor: '#C70909FF',
+            //     endColor: '#8BC34AFF',
+            //     text: '?',
+            //     ptext: '6个月以上',
+            //     numNew: 181,
+            //     potColor: '#C70909',
+            //     middleText: '酿造',
+            //     fermentStage: '180',
+            //     holderStatus: '4',
+            //     num: '0',
+            //     materialCountList: []
+            // },
+            // {
+            //     color: '#C70909FF',
+            //     startColor: '#8A391BFF',
+            //     endColor: '#C70909FF',
+            //     text: '超',
+            //     ptext: '超期',
+            //     numNew: 9999999999999,
+            //     potColor: '#8A391B',
+            //     middleText: '超期',
+            //     fermentStage: 'O',
+            //     search: '7',
+            //     num: '0',
+            //     materialCountList: []
+            // },
+            { //7
                 color: '#82ab53',
                 startColor: '#999999FF',
                 endColor: '#999999FF',
@@ -518,7 +517,7 @@
                 num: '0',
                 materialCountList: []
             },
-            {
+            { //8
                 color: '#5b8031',
                 startColor: '#999999FF',
                 endColor: '#999999FF',
@@ -532,7 +531,7 @@
                 num: '0',
                 materialCountList: []
             },
-            {
+            { //9
                 color: '#4f5d3f',
                 startColor: '#999999FF',
                 endColor: '#999999FF',
@@ -546,7 +545,7 @@
                 num: '0',
                 materialCountList: []
             },
-            {
+            { //10
                 color: '',
                 startColor: '#999999FF',
                 endColor: '#999999FF',
@@ -718,12 +717,16 @@
             this.topBox[4].num = data.data.fermentingAmount90;
             this.topBox[5].num = data.data.fermentingAmount120;
             this.topBox[6].num = data.data.fermentingAmount150;
-            this.topBox[7].num = data.data.fermentingAmount180;
-            this.topBox[8].num = data.data.overdueAmount;
-            this.topBox[9].num = data.data.mixingAmount;
-            this.topBox[10].num = data.data.adjustAmount;
-            this.topBox[11].num = data.data.useAmount;
-            this.topBox[12].num = data.data.emptyAmount;
+            // this.topBox[7].num = data.data.fermentingAmount180;
+            // this.topBox[8].num = data.data.overdueAmount;
+            // this.topBox[9].num = data.data.mixingAmount;
+            // this.topBox[10].num = data.data.adjustAmount;
+            // this.topBox[11].num = data.data.useAmount;
+            // this.topBox[12].num = data.data.emptyAmount;
+            this.topBox[7].num = data.data.mixingAmount;
+            this.topBox[8].num = data.data.adjustAmount;
+            this.topBox[9].num = data.data.useAmount;
+            this.topBox[10].num = data.data.emptyAmount;
 
             this.topBox[1].materialCountList = data.data.materialCountList0 || [];
             this.topBox[2].materialCountList = data.data.materialCountList30 || [];
@@ -731,10 +734,13 @@
             this.topBox[4].materialCountList = data.data.materialCountList90 || [];
             this.topBox[5].materialCountList = data.data.materialCountList120 || [];
             this.topBox[6].materialCountList = data.data.materialCountList150 || [];
-            this.topBox[7].materialCountList = data.data.materialCountList180 || [];
-            this.topBox[8].materialCountList = data.data.overdueMaterialCountList || [];
-            this.topBox[9].materialCountList = data.data.mixingMaterialCountList || [];
-            this.topBox[10].materialCountList = data.data.useMaterialCountList || [];
+            // this.topBox[7].materialCountList = data.data.materialCountList180 || [];
+            // this.topBox[8].materialCountList = data.data.overdueMaterialCountList || [];
+            // this.topBox[9].materialCountList = data.data.mixingMaterialCountList || [];
+            // this.topBox[10].materialCountList = data.data.useMaterialCountList || [];
+            // // this.topBox[11].materialCountList = data.data.useAmount;
+            this.topBox[7].materialCountList = data.data.mixingMaterialCountList || [];
+            this.topBox[8].materialCountList = data.data.useMaterialCountList || [];
             // this.topBox[11].materialCountList = data.data.useAmount;
             if (data.data.data.records.length !== 0) {
                 this.isSearchResultMetroShow = true; // 地铁图区块呈现
@@ -854,9 +860,9 @@
 
         //can color
         setBucketColor(target, num) {
-            if (target === 'E') {
+            if (target === 'E' || target === 'R' || target === 'C') { //E:空罐,R:投料中,C:待清洗
                 return '#ffffff'
-            } else if (target === 'F') {
+            } else if (target === 'F' || target === 'S') { // F:发酵中, S:已入库
                     if (num <= 30) {
                         return '#d5d2C3'
                     } else if (num > 30 && num <= 60) {
@@ -870,9 +876,11 @@
                     } else if (num > 150 && num <= 180) {
                         return '#8a391b'
                     } else if (num > 180) {
-                        return '#602813'
+                        return '#8a391b' //'#602813'
                     }
-                        return '#c7090b'
+                        return '#8a391b' // 超期
+            } else if (target === 'U' || target === 'A' || target === 'T') { //T:调酱中,A:已调整,U:领料中
+                return '#8a391b'
             }
 
             return '#eeeeee'
@@ -1293,7 +1301,7 @@ interface CurrentDataTable{
 
 
 .topBox {
-    width: 1650px;
+    width: 1400px;
     margin: auto;
     padding: 10px 0;
     overflow-x: scroll;

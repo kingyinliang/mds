@@ -59,7 +59,7 @@
                 label: '生产车间',
                 prop: 'workShop',
                 // defaultValue: '',
-                labelWidth: '100', // default 70px
+                labelWidth: '90', // default 70px
                 width: '150',
                 clearable: true,
                 marked: true, // mark it
@@ -83,7 +83,7 @@
                 hide: false, // hide column
                 label: '生产产线',
                 prop: 'productLine',
-                // defaultValue: '',
+                defaultValue: '',
                 labelWidth: '80',
                 width: '200',
                 clearable: true,
@@ -140,7 +140,7 @@
                 {
                     prop: 'productDate',
                     label: '生产日期',
-                    minWidth: '120',
+                    width: '120',
                     hide: false,
                     fixed: true,
                     showOverFlowTooltip: true,
@@ -149,7 +149,7 @@
                 {
                     prop: 'productLineName',
                     label: '生产线',
-                    minWidth: '120',
+                    width: '120',
                     hide: false,
                     fixed: true,
                     showOverFlowTooltip: true,
@@ -158,7 +158,7 @@
                 {
                     prop: 'orderNo',
                     label: '订单编号',
-                    width: '100',
+                    width: '120',
                     hide: false,
                     fixed: true,
                     showOverFlowTooltip: true,
@@ -167,7 +167,7 @@
                 {
                     prop: 'materialName',
                     label: '生产物料',
-                    width: '180',
+                    minWidth: '240',
                     hide: false,
                     fixed: true,
                     showOverFlowTooltip: true,

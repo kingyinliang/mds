@@ -59,7 +59,7 @@
                 label: '生产车间',
                 prop: 'workShop',
                 // defaultValue: '',
-                labelWidth: '100', // default 70px
+                labelWidth: '90', // default 70px
                 width: '150',
                 clearable: true,
                 marked: true, // mark it
@@ -121,13 +121,11 @@
                     value: 'deviceNo'
                 }
             },
-
-            // TODO 关联灌装线下领用物料
             {
                 type: 'select',
                 hide: false, // hide column
-                label: '领用物料',
-                prop: 'useMaterial',
+                label: '生产物料',
+                prop: 'materialCode',
                 defaultValue: '',
                 labelWidth: '80',
                 width: '160',
@@ -173,7 +171,7 @@
                 {
                     prop: 'productDate',
                     label: '生产日期',
-                    minWidth: '120',
+                    width: '120',
                     hide: false,
                     fixed: true,
                     showOverFlowTooltip: true,
@@ -182,16 +180,7 @@
                 {
                     prop: 'classes',
                     label: '班次',
-                    minWidth: '120',
-                    hide: false,
-                    fixed: true,
-                    showOverFlowTooltip: true,
-                    dataType: 'default'
-                },
-                {
-                    prop: 'materialCode',
-                    label: '物料编码',
-                    width: '120',
+                    width: '80',
                     hide: false,
                     fixed: true,
                     showOverFlowTooltip: true,
@@ -200,17 +189,17 @@
                 {
                     prop: 'materialName',
                     label: '物料名称',
-                    width: '180',
+                    minWidth: '240',
                     hide: false,
                     fixed: true,
                     showOverFlowTooltip: true,
                     dataType: 'multi',
-                    data: ['materialCode', 'materialName']
+                    data: ['materialName', 'materialCode']
                 },
                 {
                     prop: 'stopType',
                     label: '停机类型',
-                    width: '180',
+                    minWidth: '180',
                     hide: false,
                     fixed: false,
                     showOverFlowTooltip: true,
@@ -219,7 +208,7 @@
                 {
                     prop: 'stopMode',
                     label: '停机方式',
-                    width: '180',
+                    minWidth: '180',
                     hide: false,
                     fixed: false,
                     showOverFlowTooltip: true,
@@ -228,7 +217,7 @@
                 {
                     prop: 'stopSituation',
                     label: '停机情况',
-                    width: '180',
+                    minWidth: '180',
                     hide: false,
                     fixed: false,
                     showOverFlowTooltip: true,
@@ -237,7 +226,7 @@
                 {
                     prop: 'stopReason',
                     label: '停机原因',
-                    width: '180',
+                    minWidth: '180',
                     hide: false,
                     fixed: false,
                     showOverFlowTooltip: true,
@@ -255,7 +244,6 @@
                 {
                     prop: 'endDate',
                     label: '结束时间',
-                    subLabel: '(OEE)',
                     width: '140',
                     hide: false,
                     fixed: false,
@@ -265,7 +253,7 @@
                 {
                     prop: 'duration',
                     label: '时长',
-                    sibLabel: '(min)',
+                    subLabel: '(min)',
                     width: '80',
                     hide: false,
                     fixed: false,
@@ -275,7 +263,6 @@
                 {
                     prop: 'num',
                     label: '次数',
-                    subLabel: '(min)',
                     width: '80',
                     hide: false,
                     fixed: false,

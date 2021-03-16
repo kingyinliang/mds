@@ -1,20 +1,14 @@
 <!-- 成品库存日报  -->
 <template>
     <div class="header_main">
-        <query-table
+        <report-query-table
             ref="queryTable"
-            :show-table="true"
-            :show-index-column="false"
-            :column="column"
-            :show-page="true"
-            query-auth=""
+            :query-form-setting="queryFormSetting"
             :query-form-data="queryFormData"
+            :data-table-setting="dataTableSetting"
             :list-interface="listInterface"
-            :get-summaries="getSummaries"
             :custom-data="true"
-            :factory-type="1"
-            :export-excel="true"
-            :is-show-summary="true"
+            :query-table-type="'report'"
             @get-data-success="setData"
         />
     </div>
@@ -31,42 +25,78 @@
         name: 'FinishedGoodsInventoryDaily'
     })
     export default class FinishedGoodsInventoryDaily extends Vue {
-        //表格数据
-        column = [
-            {
-                prop: 'workShopName',
-                label: '生产日期',
-                minWidth: '120'
-            },
-            {
-                prop: 'holderTypeName',
-                label: '物料编码',
-                minWidth: '120'
-            },
-            {
-                prop: 'holderNo',
-                label: '物料描述',
-                minWidth: '120'
-            },
-            {
-                prop: 'holderNo',
-                label: '计划量',
-                subLabel: '（箱）',
-                minWidth: '120'
-            },
-            {
-                prop: 'holderNo',
-                label: '实际量',
-                subLabel: '（箱）',
-                minWidth: '120'
-            },
-            {
-                prop: 'sssssss',
-                label: '差异量',
-                subLabel: '（箱）',
-                minWidth: '120'
+
+        // query header area setting
+        queryFormSetting= {
+            isQueryFormShow: true, // 标头搜寻区块是否显示
+            rules: [ // 查询必填栏位校验
+                {
+                    prop: 'workShop',
+                    text: '请选择生产车间'
+                },
+                {
+                    prop: 'startDate',
+                    text: '请选择生产日期'
+                }
+            ],
+            queryAuth: '',
+            exportExcel: true, // 导出 excel BTN
+            exportOption: {
+                exportInterface: '',
+                auth: '',
+                text: '成品库存日报'
             }
-        ];
+        }
+
+        // data table area setting
+        dataTableSetting = {
+            showIt: true, // showit or not
+            showSelectColumn: false,
+            showIndexColumn: false,
+            showOperationColumn: false,
+            showPagination: true,
+            //表格数据
+            column: [
+                {
+                    prop: 'productDate',
+                    label: '生产日期',
+                    minWidth: '120'
+                },
+                {
+                    prop: 'materialCode',
+                    label: '物料编码',
+                    minWidth: '120'
+                },
+                {
+                    prop: 'materialName',
+                    label: '物料描述',
+                    minWidth: '120'
+                },
+                {
+                    prop: 'planOutput',
+                    label: '计划量',
+                    subLabel: '（箱）',
+                    minWidth: '120'
+                },
+                {
+                    prop: 'actualOutput',
+                    label: '实际量',
+                    subLabel: '（箱）',
+                    minWidth: '120'
+                },
+                {
+                    prop: 'outputDifference',
+                    label: '差异量',
+                    subLabel: '（箱）',
+                    minWidth: '120'
+                }
+            ],
+            tableAttributes: {
+                isShowSummary: false // 合计
+            },
+            dataChangeByAPI: false, // table data change by API
+            tableHeightSet: 405
+        };
 
         $refs: {
             queryTable: HTMLFormElement;
@@ -100,15 +130,15 @@
                 defaultValue: '',
                 labelWidth: '100',
                 rule: [{ required: true, message: '请输入生产日期', trigger: 'blur' }],
-                prop: 'oneorderProductDate',
-                propTwo: 'twoorderProductDate'
+                prop: 'startDate',
+                propTwo: 'endDate'
             }
         ];
 
         // 查询请求
         listInterface = params => {
             params.factory = JSON.parse(sessionStorage.getItem('factory') || '{}').id;
-            return REPORTS_API.REPORT_PACKAGING_OEE_API(params);
+            return REPORTS_API.REPORT_PACKAGING_ORDER_FILL_RATE_QUERY_API(params);
         };
 
         /**

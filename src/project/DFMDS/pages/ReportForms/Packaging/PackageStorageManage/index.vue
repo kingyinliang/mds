@@ -196,7 +196,7 @@
                 labelWidth: '80',
                 width: '160',
                 clearable: true,
-                marked: false, // mark it
+                marked: true, // mark it
                 disabled: false,
                 defaultOptionsFn: () => {
                     return REPORTS_API.REPORT_PACKAGING_OEE_MATERIAL_QUERY_API({

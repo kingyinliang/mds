@@ -53,7 +53,7 @@
 <script lang="ts">
     import { Vue, Component } from 'vue-property-decorator';
     import { COMMON_API, REPORTS_API } from 'common/api/api';
-    import { exportFileFor2ExcelMultiSheets } from 'utils/utils.ts';
+    import { exportFileFor2ExcelMultiSheets } from 'utils/utils';
     // import { dateFormat } from 'utils/utils';
 
     @Component({
@@ -125,7 +125,7 @@
                 hide: false, // hide column
                 label: '生产车间', // column title
                 prop: 'workShop',
-                defaultValue: '',
+                // defaultValue: '',
                 labelWidth: '90',
                 width: '140',
                 clearable: true,
@@ -231,7 +231,7 @@
                 {
                     prop: 'productLineName',
                     label: '生产产线',
-                    minWidth: '120',
+                    width: '120',
                     hide: false,
                     fixed: false,
                     showOverFlowTooltip: true,
@@ -239,22 +239,14 @@
                     dataType: 'default'
                 },
                 {
-                    prop: 'materialCode',
-                    label: '物料编码',
-                    minWidth: '120',
-                    hide: false,
-                    fixed: false,
-                    showOverFlowTooltip: true,
-                    dataType: 'default'
-                },
-                {
                     prop: 'materialName',
-                    label: '物料名称',
-                    width: '200',
+                    label: '物料',
+                    minWidth: '240',
                     hide: false,
                     fixed: false,
                     showOverFlowTooltip: true,
-                    dataType: 'default'
+                    dataType: 'multi',
+                    data: ['materialName', 'materialCode']
                 },
                 {
                     prop: 'productDate',
