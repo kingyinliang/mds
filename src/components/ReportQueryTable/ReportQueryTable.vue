@@ -3,7 +3,7 @@
  * @Anthor: Telliex
  * @Date: 2021-02-26 10:58:05
  * @LastEditors: Telliex
- * @LastEditTime: 2021-03-15 18:38:44
+ * @LastEditTime: 2021-03-17 17:28:47
 -->
 <template>
     <div>
@@ -493,6 +493,12 @@
             },
             // [查询] 获取 table 数据
             getDataList(st) {
+
+                if (!this.isAuth(this.queryFormSetting.queryAuth) && this.queryFormSetting.queryAuth !== '') {
+                    this.$warningToast('无查询权限');
+                    return false;
+                }
+
                 if (this.queryFormSetting.rules.length !== 0) {
                     for (const item of this.queryFormSetting.rules) {
                         if (!this.queryForm[item.prop]) {
@@ -501,10 +507,8 @@
                         }
                     }
                 }
-                if (!this.isAuth(this.queryFormSetting.queryAuth) && this.queryFormSetting.queryAuth !== '') {
-                    this.$warningToast('无查询权限');
-                    return false;
-                }
+
+
                 if (st) {
                     if (this.dataTableSetting.dataChangeByAPI) {
                         this.queryForm[this.currpageConfig] = 1;
@@ -513,49 +517,8 @@
                     this.currentPage = 1;
                 }
 
-                // 外置 pagination
-                // if (this.pagePagination.currPage) {
-                //     this.queryForm[this.pagePagination.currPage] = this.queryForm[this.currpageConfig]
-                // }
-                // if (this.pagePagination.pageSize) {
-                //     this.queryForm[this.pagePagination.pageSize] = this.queryForm[this.pagesizeConfig]
-                // }
-                // if (this.pagePagination.currPage) {
-                //     this.queryForm[this.pagePagination.totalCount] = this.queryForm.totalCount
-                // }
-
                 this.tableData = [];
                 this.listInterface(this.queryForm).then(({ data }) => {
-                    // if (this.getListField) {
-                    //     const getPath = creatGetPath(this.getListField);
-                    //     this.tableData = getPath(data);
-                    // } else if (!this.customData) {
-                    //     const getPath = creatGetPath(this.returnColumnType);
-                    //     const path = getPath(data);
-                    //     if (this.resData.list) {
-                    //         this.tableData = path[this.resData.list];
-                    //     } else {
-                    //         this.tableData = path.list;
-                    //     }
-                    //     if (this.resData.currPage) {
-                    //         this.queryForm.currPage = Number(path[this.resData.currPage]);
-                    //     } else {
-                    //         this.queryForm.currPage = Number(path.currPage);
-                    //     }
-                    //     if (this.resData.pageSize) {
-                    //         this.queryForm[this.pagesizeConfig] = Number(path[this.resData.pageSize]);
-                    //     } else {
-                    //         this.queryForm[this.pagesizeConfig] = Number(path.pageSize);
-                    //     }
-                    //     if (this.resData.totalCount) {
-                    //         this.queryForm.totalCount = Number(path[this.resData.totalCount]);
-                    //     } else {
-                    //         this.queryForm.totalCount = Number(path.totalCount);
-                    //     }
-                    // } else if (this.factoryType === 1) {
-                    //     this.tableData = data.data.records;
-                    //     this.queryForm.totalCount = data.data.total;
-                    // } else if (this.queryTableType === 'report') { // 类型：报表
                     this.tableData = JSON.parse(JSON.stringify(data.data)) || [];
                     if (this.dataTableSetting.dataChangeByAPI) {
                         this.queryForm[this.currpageConfig] = 1;
@@ -572,37 +535,69 @@
             },
             // [导出] download EXCEL file
             tableExportExcel() {
+
+                if (!this.isAuth(this.queryFormSetting.exportOption.auth) && this.queryFormSetting.exportOption.auth !== '') {
+                    this.$warningToast('无导出权限');
+                    return false;
+                }
+
                 if (this.queryFormSetting.rules.length !== 0) {
                     for (const item of this.queryFormSetting.rules) {
                         if (!this.queryForm[item.prop]) {
                             this.$warningToast(item.text);
-                            return;
+                            return false;
                         }
                     }
                 }
 
-                if (!this.isAuth(this.queryFormSetting.exportOption.auth) && this.queryFormSetting.exportOption.auth !== '') {
-                    this.$warningToast('无导出权限');
-                    return;
-                }
 
                 this.listInterface(this.queryForm).then(({ data }) => {
-                    const tableData = JSON.parse(JSON.stringify(data.data)) || [];
-                    if (tableData.length === 0) {
+
+                    if (data.data.length === 0) {
                         this.$infoToast('暂无任何内容');
                         return;
                     }
+
+
+                    // 1.update table
+                    this.tableData = [];
+                    this.tableData = JSON.parse(JSON.stringify(data.data)) || []
+
+                    if (this.dataTableSetting.dataChangeByAPI) {
+                        this.queryForm[this.currpageConfig] = 1;
+                        return
+                    }
+                    this.currentPage = 1;
+
+                    if (this.dataTableSetting.dataChangeByAPI) {
+                        this.queryForm[this.currpageConfig] = 1;
+                        this.queryForm[this.pagesizeConfig] = 10;
+                        this.queryForm.totalCount = data.data.length;
+                    } else {
+                        this.currentPage = 1;
+                        this.currentSize = 10;
+                        this.totalCount = this.tableData.length;
+                    }
+
+                    this.$emit('get-data-success', data, true);
+
+
+                    // 2.update report
+                    const tableDataToReport = JSON.parse(JSON.stringify(data.data)) || [];
+
                     if (this.queryTableType === 'report') { // 类型：报表
-                        const tableDataTemp = JSON.parse(JSON.stringify(tableData));
-                        if (this.dataTableSetting.tableAttributes.isShowSummary && tableData[0].totalData) {
-                            tableData[0].totalData[this.dataTableSetting.column[0].prop] = '合计';
-                            tableDataTemp.push(tableData[0].totalData);
+                        const tableDataToReportTemp = JSON.parse(JSON.stringify(tableDataToReport));
+                        if (this.dataTableSetting.tableAttributes.isShowSummary && tableDataToReport[0].totalData) {
+                            tableDataToReport[0].totalData[this.dataTableSetting.column[0].prop] = '合计';
+                            tableDataToReportTemp.push(tableDataToReport[0].totalData);
                         }
                         if (this.dataTableSetting.type === 'multiHeader') {
-                            exportFile2ExcelWithMultiHeader(this.dataTableSetting.column, this.dataTableSetting.merges, tableDataTemp, this.queryFormSetting.exportOption.text)
+                            console.log('this.dataTableSetting.column')
+                            console.log(this.dataTableSetting.column)
+                            exportFile2ExcelWithMultiHeader(this.dataTableSetting.column, this.dataTableSetting.merges, tableDataToReportTemp, this.queryFormSetting.exportOption.text)
                             return
                         }
-                        exportFileFor2Excel(this.dataTableSetting.column, tableDataTemp, this.queryFormSetting.exportOption.text);
+                        exportFileFor2Excel(this.dataTableSetting.column, tableDataToReportTemp, this.queryFormSetting.exportOption.text);
                     }
                 });
                 // exportFileForm(`${this.queryFormSetting.exportOption.exportInterface}`, this.queryFormSetting.exportOption.text, this);
