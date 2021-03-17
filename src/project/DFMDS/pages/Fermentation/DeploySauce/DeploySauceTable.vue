@@ -229,7 +229,9 @@
 
         // 获取下拉
         getSelect() {
-            FER_API.FER_OPEN_POT_DETAIL_HOLDER_LIST_API({}).then(({ data }) => {
+            FER_API.FER_OPEN_POT_DETAIL_HOLDER_LIST_API({
+                queryPicked: true
+            }).then(({ data }) => {
                 this.holderArr = data.data
             })
         }
