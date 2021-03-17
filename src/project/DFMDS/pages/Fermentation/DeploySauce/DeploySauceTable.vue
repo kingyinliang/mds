@@ -181,13 +181,13 @@
                         <el-input v-model="scope.row.remark" :disabled="!(isRedact)" size="small" placeholder="请输入" />
                     </template>
                 </el-table-column>
-                <el-table-column label="操作" fixed="right" width="70">
+                <!--<el-table-column label="操作" fixed="right" width="70">
                     <template slot-scope="scope">
                         <el-button :disabled="!(isRedact)" class="delBtn" type="text" icon="el-icon-delete" size="mini" @click="del(scope.row)">
                             删除
                         </el-button>
                     </template>
-                </el-table-column>
+                </el-table-column>-->
             </el-table>
         </mds-card>
     </div>

@@ -2,7 +2,7 @@
     <el-dialog :title="containerID ? '修改容器' : '新增容器'" :close-on-click-modal="false" :visible.sync="isDialogShow" @close="closeDialog">
         <el-form ref="dataForm" :model="dataForm" :rules="checkRules" size="small" label-width="100px" @submit.native.prevent>
             <el-form-item label="容器类型：" prop="holderType">
-                <el-select v-model="dataForm.holderType" placeholder="请选择" style="width: 100%;">
+                <el-select v-model="dataForm.holderType" placeholder="请选择" style="width: 100%;" @change="holderTypeChange">
                     <el-option v-for="(item, index) in containerTypeList" :key="index" :label="item.dictValue" :value="item.dictCode" />
                 </el-select>
             </el-form-item>
@@ -18,9 +18,9 @@
             <el-form-item label="批数：">
                 <el-input v-model="dataForm.holderBatch" type="number" placeholder="手动输入" min="0" clearable />
             </el-form-item>
-            <el-form-item v-show="holderStatusList.length!==0" label="容器状态：">
+            <el-form-item label="容器状态：">
                 <el-select v-model="dataForm.holderStatus" placeholder="请选择" style="width: 100%;">
-                    <el-option v-for="(item, index) in holderStatusList" :key="index" :value="item.dictCode" :label="item.dictValue" />
+                    <el-option v-for="(item, index) in statusArr" :key="index" :value="item.dictCode" :label="item.dictValue" />
                 </el-select>
             </el-form-item>
             <el-form-item label="物理区域：">
@@ -109,7 +109,9 @@
                     holderName: [{ required: true, message: '容器描述不能为空', trigger: 'blur' }],
                     workshop: [{ required: true, message: '归属车间不能为空', trigger: 'change' }]
                 },
-                holderStatusList: []
+                statusArr: [],
+                holderStatusList: [],
+                holderStatusList1: []
             };
         },
         computed: {},
@@ -117,8 +119,26 @@
         },
         mounted() {
             this.getContainerStatusList()
+            this.getContainerFermStatusList()
         },
         methods: {
+            holderTypeChange() {
+                switch (this.dataForm.holderType) {
+                    case '':
+                        this.statusArr = []
+                        break
+                    case '001':
+                        this.statusArr = this.holderStatusList1
+                        break
+                    case '025':
+                        this.statusArr = this.holderStatusList1
+                        break
+                    case '028':
+                        this.statusArr = this.holderStatusList1
+                        break
+                    default: this.statusArr = this.holderStatusList
+                }
+            },
             closeDialog() {
                 document.querySelectorAll('.j_closeBtn')[0].focus(); // bug 优化
                 this.$refs.dataForm.resetFields();
@@ -180,6 +200,13 @@
                     dictType: 'COMMON_HOLDER_STATUS'
                 }).then(({ data }) => {
                     this.holderStatusList = data.data;
+                });
+            },
+            getContainerFermStatusList() {
+                COMMON_API.DICTQUERY_API({
+                    dictType: 'COMMON_FERM_STATUS'
+                }).then(({ data }) => {
+                    this.holderStatusList1 = data.data;
                 });
             },
             submitDataForm() {
