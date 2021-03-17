@@ -50,7 +50,7 @@
                     </template>
                 </template>
                 <el-form-item class="floatr">
-                    <el-button type="primary" size="small" @click="getDataList(true)">
+                    <el-button type="primary" size="small" @click="searchHandler()">
                         查询
                     </el-button>
                     <el-button v-if="exportExcel" type="primary" size="small" @click="formExportExcel">
@@ -496,6 +496,10 @@
                 // if (this.clearSearch) {
                 //     this.getDataList(true);
                 // }
+            },
+            searchHandler() {
+                this.$emit('search-init')
+                this.getDataList(true)
             },
             // 获取table数据
             getDataList(st) {
