@@ -89,7 +89,7 @@
                 ref="table"
                 class="newTable"
                 :class="dataTableSetting.tableClass"
-                :data="tableData.slice((currentPage - 1) * currentSize, (currentPage - 1) * currentSize + currentSize)"
+                :data="dataTableSetting.showPagination ? tableData.slice((currentPage - 1) * currentSize, (currentPage - 1) * currentSize + currentSize) : tableData"
                 :height="dataTableSetting.tableHeightSet"
                 :span-method="spanMethod"
                 border
