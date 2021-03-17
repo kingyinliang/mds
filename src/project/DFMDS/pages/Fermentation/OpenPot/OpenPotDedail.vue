@@ -560,6 +560,14 @@
             const filterArr: (any) = this.deployMaterialSelect.filter(item => item.dictCode === row.addMaterialCode)// eslint-disable-line
             row.addMaterialName = filterArr[0].dictValue
             row.addMaterialType = filterArr[0].productMaterialType
+            COMMON_API.SEARCH_MATERIAL_API({
+                factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
+                materialCode: row.addMaterialCode
+            }).then(({ data }) => {
+                if (data.data && data.data.length > 0) {
+                    this.$set(row, 'unit', data.data[0].basicUnitCode)
+                }
+            })
         }
 
         // 超期酱修改容器号
