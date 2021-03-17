@@ -38,7 +38,7 @@
                     <el-option v-for="(iteam, index) in organizationList" :key="index" :label="iteam.deptName" :value="iteam.id" />
                 </el-select>
             </el-form-item>
-            <el-form-item label="数量倍数：">
+            <el-form-item label="数量倍数：" prop="multiple">
                 <el-input v-model.trim="dataForm.multiple" style="width: 220px;" clearable />
             </el-form-item>
             <el-form-item label="备注：">
@@ -103,7 +103,8 @@
             orderDays: [{ required: true, message: '订单天数不能为空', trigger: 'blur' }],
             overdueDays: [{ required: true, message: '发酵超期天数不能为空', trigger: 'blur' }],
             jobBookingFlag: [{ required: true, message: '报工标识不能为空', trigger: 'blur' }],
-            deptId: [{ required: true, message: '组织机构不能为空', trigger: 'blur' }]
+            deptId: [{ required: true, message: '组织机构不能为空', trigger: 'blur' }],
+            multiple: [{ required: true, message: '数量倍数不能为空', trigger: 'blur' }]
         };
 
         init(data) {

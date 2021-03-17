@@ -10,6 +10,7 @@
             :list-interface="queryTableListInterface"
             :custom-data="true"
             :operation-column-width="90"
+            @search-init="searchInit"
             @get-data-success="returnDataFromQueryTableForm"
         >
             <template slot="home">
@@ -56,7 +57,7 @@
                     </el-table>
                 </mds-card>
                 <el-row>
-                    <el-pagination :current-page="currentPage" :page-sizes="[10, 20, 50]" :page-size="pageSize" layout="total, sizes, prev, pager, next, jumper" :total="total" @size-change="sizeChangeHandler" @current-change="currentPageChangeHanlder" />
+                    <el-pagination :current-page.sync="currentPage" :page-sizes="[10, 20, 50]" :page-size="pageSize" layout="total, sizes, prev, pager, next, jumper" :total="total" @size-change="sizeChangeHandler" @current-change="currentPageChangeHanlder" />
                 </el-row>
             </template>
         </query-table>
@@ -290,6 +291,10 @@
                 propTwo: 'endDate'
             }
         ]
+
+        searchInit() {
+            this.currentPage = 1
+        }
 
         // queryTable 查询请求
         queryTableListInterface(params) {
