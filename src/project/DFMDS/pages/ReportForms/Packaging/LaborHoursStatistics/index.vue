@@ -10,46 +10,7 @@
             :custom-data="true"
             :query-table-type="'report'"
             @get-data-success="setData"
-        >
-            <!-- <template v-slot:customDataTable>
-                <el-table
-                    ref="table"
-                    class="newTable"
-                    :data="tableData.slice((currentPage - 1) * currentSize, (currentPage - 1) * currentSize + currentSize)"
-                    :height="dataTableSetting.tableHeightSet"
-                    border
-                    size="small"
-                    tooltip-effect="dark"
-                    header-row-class-name="tableHead"
-                    :header-cell-style="tableHeaderCellStyle"
-                    style="width: 100%; margin-bottom: 20px;"
-                    :show-summary="dataTableSetting.tableAttributes.isShowSummary"
-                    :summary-method="getSummaries"
-                >
-                    <el-table-column type="index" :index="indexMethod" label="序号" width="50px" fixed />
-                    <el-table-column label="代码" prop="materialCode" width="190" show-overflow-tooltip fixed />
-                    <el-table-column label="品名" prop="materialName" width="180" show-overflow-tooltip fixed />
-                    <el-table-column label="月汇总" width="180" fixed>
-                        <el-table-column label="产出/方" prop="monthOutput" />
-                        <el-table-column label="投入/方" prop="monthInput" width="110" />
-                    </el-table-column>
-                    <el-table-column label="出品率" prop="monthProductRate" width="90" show-overflow-tooltip fixed />
-                    <el-table-column v-for="(item, index) in daySizeList" :key="index" :label="item + '日'">
-                        <el-table-column label="产出/方" :prop="`output${item}`" />
-                        <el-table-column label="投入/方" :prop="`input${item}`" />
-                    </el-table-column>
-                </el-table>
-                <el-pagination
-                    :current-page="currentPage"
-                    :page-sizes="[10, 20, 50]"
-                    :page-size="currentSize"
-                    layout="total, sizes, prev, pager, next, jumper"
-                    :total="totalCount"
-                    @size-change="handleSizeChange"
-                    @current-change="handleCurrentChange"
-                />
-            </template> -->
-        </report-query-table>
+        />
     </div>
 </template>
 
@@ -58,9 +19,8 @@
     import { COMMON_API, REPORTS_API } from 'common/api/api';
     // import { dateFormat } from 'utils/utils';
 
-    // const months = ['一', '二', '三', '四', '五', '六', '七', '八', '九', '十', '十一', '十二'];
-
     let daysList: DayData[] = [];
+    const columnOrder: string[] = ['E1:F1', 'G1:H1', 'I1:J1', 'K1:L1', 'M1:N1', 'O1:P1', 'Q1:R1', 'S1:T1', 'U1:V1', 'W1:X1', 'Y1:Z1', 'AA1:AB1', 'AC:AD', 'AE1:AF1', 'AG:AH', 'AI1:AJ1', 'AK1:AL1', 'AM1:AN1', 'AO1:AP1', 'AQ1:AR1', 'AS1:AT1', 'AU1:AV1', 'AW1:AX1', 'AY1:AZ1', 'BA1:BB1', 'BC1:BD1', 'BE1:BF1', 'BG1:BH1', 'BI1:BJ1', 'BK1:BL1', 'BM1:BN1']
     @Component({
         components: {
         },
@@ -70,6 +30,8 @@
         $refs: {
             queryTable: HTMLFormElement;
         }
+
+        columnTemp=[]
 
         // query header area setting
         queryFormSetting= {
@@ -165,15 +127,17 @@
             merges: [
                 'A1:A2',
                 'B1:B2',
-                'C1:C2',
-                'D1:E1'
+                'C1:D2',
+                ...columnOrder.map(item => {
+                    return item
+                })
             ],
             //表格数据
             column: [
                 {
                     prop: 'materialName',
                     label: '品名',
-                    minWidth: '240',
+                    width: '240',
                     hide: false,
                     fixed: true,
                     showOverFlowTooltip: true,
@@ -181,7 +145,7 @@
                     data: ['materialName', 'materialCode']
                 },
                 {
-                    prop: 'useMaterialUnit',
+                    prop: 'materialUnit',
                     label: '单位',
                     width: '80',
                     hide: false,
@@ -193,20 +157,20 @@
                     prop: '',
                     label: '月度合计',
                     subLabel: '',
-                    width: '180',
+                    minWidth: '180',
                     hide: false,
                     fixed: false,
                     showOverFlowTooltip: true,
                     dataType: 'default',
                     child: [
-                        { label: '实际产量', prop: 'actualYieldSum', width: 120 },
-                        { label: '生产工时', prop: 'productionHoursSum', width: 120 }
+                        { label: '实际产量', prop: 'actualYieldSum', minWidth: 120 },
+                        { label: '生产工时', prop: 'productionHoursSum', minWidth: 120 }
                     ]
                 },
                 ...daysList.map((item) => {
                     return {
                         prop: '',
-                        label: item,
+                        label: item.productDate,
                         child: [
                             { label: '实际产量', prop: `actualYield${item.productDate}`, width: 120 },
                             { label: '生产工时', prop: `productionHours${item.productDate}`, width: 120 }
@@ -222,6 +186,10 @@
 
         }
 
+        mounted() {
+            this.columnTemp = JSON.parse(JSON.stringify(this.dataTableSetting.column))
+        }
+
         // 查询请求
         listInterface = params => {
             params.factory = JSON.parse(sessionStorage.getItem('factory') || '{}').id;
@@ -232,13 +200,25 @@
                     daysList = [];
                     const resTemp = JSON.parse(JSON.stringify(res))
                     if (resTemp.data.data !== null && resTemp.data.data.length !== 0) {
-                        resTemp.data.data.froEach(item => {
+
+                        const totalDataTemp = {}
+
+                        resTemp.data.data.forEach(item => {
+                            item.materialUnit = '箱/小时'
                             item.dayData.forEach(subItem => {
                                 item[`actualYield${subItem.productDate}`] = subItem.actualYield
                                 item[`productionHours${subItem.productDate}`] = subItem.productionHours
                                 daysList.push(subItem)
                             })
                         })
+
+                        resTemp.data.data[0].totalData.forEach(item => {
+                            totalDataTemp[`actualYield`] = item.actualYield
+                            totalDataTemp[`productionHours`] = item.productionHours
+                            totalDataTemp[`actualYield${item.productDate}`] = item.actualYield
+                            totalDataTemp[`productionHours${item.productDate}`] = item.productionHours
+                        })
+                        resTemp.data.data[0].totalData = totalDataTemp
                     }
                     resolve(resTemp)
                 })
@@ -273,11 +253,21 @@
 
         // 设置数据
         setData(data) {
-            console.log('查找回传结果');
-            console.log(data);
             if (!data.data) {
                 this.$infoToast('查询无结果');
             }
+
+            this.dataTableSetting.column = JSON.parse(JSON.stringify(this.columnTemp))
+            daysList.map((item) => {
+                this.dataTableSetting.column.push({
+                    prop: '',
+                    label: item.productDate,
+                    child: [
+                        { label: '实际产量', prop: `actualYield${item.productDate}`, width: 120 },
+                        { label: '生产工时', prop: `productionHours${item.productDate}`, width: 120 }
+                    ]
+                })
+            })
         }
 
     }

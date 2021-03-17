@@ -3,7 +3,7 @@
  * @Anthor: Telliex
  * @Date: 2021-01-15 23:35:23
  * @LastEditors: Telliex
- * @LastEditTime: 2021-03-12 14:23:10
+ * @LastEditTime: 2021-03-17 11:10:30
 -->
 <template>
     <div class="header_main">
@@ -109,16 +109,16 @@
                                         <el-button v-if="isAuth('')" size="small" plain :disabled="item.fermentorStatus!=='F'" @click="btnFilledBucket(item)">
                                             鼓罐
                                         </el-button>
-                                        <el-button v-if="isAuth('')" size="small" plain :disabled="item.fermentorStatus!=='F' || item.orderNo===''" @click="btnLYCY(item)">
+                                        <el-button v-if="isAuth('')" size="small" plain :disabled="item.fermentorStatus!=='F' || item.orderNo===''|| item.judgeResult==='CQ'" @click="btnLYCY(item)">
                                             LY/CY
                                         </el-button>
-                                        <el-button v-if="isAuth('')" size="small" plain :disabled="! ['F','S','O','T','A','U'].includes(item.fermentorStatus) || item.orderNo===''" @click="btnAdjust(item)">
+                                        <el-button v-if="isAuth('')" size="small" plain :disabled="! ['F','S','O','T','A','U'].includes(item.fermentorStatus) || item.orderNo===''|| item.judgeResult==='CQ'" @click="btnAdjust(item)">
                                             调整
                                         </el-button>
-                                        <el-button v-if="isAuth('')" size="small" plain :disabled="item.fermentorStatus!=='U' || item.orderNo===''" @click="btnClearBucket(item)">
+                                        <el-button v-if="isAuth('')" size="small" plain :disabled="item.fermentorStatus!=='U' || item.orderNo===''|| item.judgeResult==='CQ'" @click="btnClearBucket(item)">
                                             清罐
                                         </el-button>
-                                        <el-button v-if="isAuth('')" size="small" plain :disabled="item.fermentorStatus!=='C'" @click="btnCleanBucket(item)">
+                                        <el-button v-if="isAuth('')" size="small" plain :disabled="item.fermentorStatus!=='C'|| item.judgeResult==='CQ'" @click="btnCleanBucket(item)">
                                             清洗
                                         </el-button>
                                     </div>

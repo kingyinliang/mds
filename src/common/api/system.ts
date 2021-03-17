@@ -3,7 +3,7 @@
  * @Anthor: Telliex
  * @Date: 2021-03-05 10:40:21
  * @LastEditors: Telliex
- * @LastEditTime: 2021-03-05 16:50:34
+ * @LastEditTime: 2021-03-16 17:12:00
  */
 import httpProxy from 'utils/net/httpProxy';
 
@@ -39,7 +39,19 @@ const SYSTEM_API = {
     /**
      * @property {string} SYS_PERMISSION_ATTRIBUTE_ROLE_BY_ID_API 系统管理-权限属性-查询用户有权限访问的属性节点
      */
-    SYS_PERMISSION_ATTRIBUTE_ROLE_BY_ID_API: params => httpProxy('/sysRoleProperty/queryByUserId', 'GET', params, 'SYS')
+    SYS_PERMISSION_ATTRIBUTE_ROLE_BY_ID_API: params => httpProxy('/sysRoleProperty/queryByUserId', 'GET', params, 'SYS'),
+    /**
+     * @property {string} SYS_PERMISSION_ATTRIBUTE_DATA_SAVE_API 系统管理-权限属性对应表数据-保存
+     */
+    SYS_PERMISSION_ATTRIBUTE_DATA_SAVE_API: params => httpProxy('/sysProperty/data/save', 'POST', params, 'SYS'),
+    /**
+     * @property {string} SYS_PERMISSION_ATTRIBUTE_DATA_QUERY_API 系统管理-权限属性对应表数据-列表
+     */
+    SYS_PERMISSION_ATTRIBUTE_DATA_QUERY_API: params => httpProxy('/sysProperty/data/query', 'GET', params, 'SYS'),
+    /**
+     * @property {string} SYS_PERMISSION_ATTRIBUTE_DATA_DELETE_API 系统管理-权限属性对应表数据-删除
+     */
+    SYS_PERMISSION_ATTRIBUTE_DATA_DELETE_API: params => httpProxy('/sysProperty/data/delete', 'POST', params, 'SYS')
 };
 
 export default SYSTEM_API;
