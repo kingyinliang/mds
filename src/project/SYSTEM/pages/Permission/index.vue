@@ -3,7 +3,7 @@
  * @Anthor: Telliex
  * @Date: 2021-02-23 21:25:39
  * @LastEditors: Telliex
- * @LastEditTime: 2021-03-11 14:20:45
+ * @LastEditTime: 2021-03-17 18:00:52
 -->
 <template>
     <div class="header_main">
@@ -28,13 +28,16 @@
                 <el-table-column prop="privilegeIdentity" label="属性表权限标识字段" :show-overflow-tooltip="true" width="180" />
                 <el-table-column prop="privilegeIdentityName" label="属性表权限标识名称字段" :show-overflow-tooltip="true" width="180" />
                 <el-table-column prop="remark" label="备注" :show-overflow-tooltip="true" width="150" />
-                <el-table-column label="操作" min-width="120" fixed="right">
+                <el-table-column label="操作" width="160" fixed="right">
                     <template slot-scope="scope">
                         <el-button v-if="isAuth('')" type="text" class="role__btn" @click="addOrUpdateItem(scope.row)">
                             修改
                         </el-button>
                         <el-button v-if="isAuth('')" type="text" class="role__btn" @click="removeItems(scope.row.id)">
                             删除
+                        </el-button>
+                        <el-button v-if="isAuth('')" type="text" class="role__btn" @click="dataItems(scope.row)">
+                            数据
                         </el-button>
                     </template>
                 </el-table-column>
@@ -44,24 +47,27 @@
             </el-row>
         </mds-card>
         <permission-add-or-update v-if="isPermissionAddOrUpdateShow" ref="addOrUpdateItem" @refreshDataList="getItemsList(true)" />
+        <permission-data-info v-if="isPermissionDataInfoShow" ref="dataInfo" @refreshDataList="getItemsList(true)" />
     </div>
 </template>
 
 <script>
 
     import PermissionAddOrUpdate from './PermissionAddAndUpdate';
-
+    import PermissionDataInfo from './PermissionDataInfo';
     import { SYSTEM_API } from 'common/api/api';
     // import { SYSTEMSETUP_API } from '@/api/api';
     export default {
         name: 'PermissionManages',
         components: {
-            PermissionAddOrUpdate
+            PermissionAddOrUpdate,
+            PermissionDataInfo
         },
         data() {
             return {
                 factoryID: sessionStorage.getItem('factory').id, // 工厂名称
                 isPermissionAddOrUpdateShow: false,
+                isPermissionDataInfoShow: false,
 
                 controllableForm: {
                     username: ''
@@ -128,6 +134,13 @@
                     .catch(() => {
                         //
                     });
+            },
+            // 数据
+            dataItems(item) {
+                this.isPermissionDataInfoShow = true;
+                this.$nextTick(() => {
+                    this.$refs.dataInfo.init(item);
+                });
             },
             // 改变每页条数
             handleSizeChange(val) {

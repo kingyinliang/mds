@@ -154,7 +154,7 @@
                     fixed: true,
                     showOverFlowTooltip: true,
                     dataType: 'multi',
-                    data: ['materialCode', 'materialName']
+                    data: ['materialName', 'materialCode']
                 },
                 {
                     prop: 'orderYield',
@@ -176,7 +176,7 @@
                     dataType: 'default'
                 },
                 {
-                    prop: 'unit',
+                    prop: 'manNumUnit',
                     label: '单位',
                     width: '80',
                     hide: false,
@@ -203,7 +203,7 @@
                     dataType: 'default'
                 },
                 {
-                    prop: 'dayClear',
+                    prop: 'dayPrepaired',
                     label: '生产前准备',
                     width: '80',
                     hide: false,
@@ -212,7 +212,7 @@
                     dataType: 'default'
                 },
                 {
-                    prop: 'googRatio',
+                    prop: 'dayClear',
                     label: '生产后清场',
                     width: '80',
                     hide: false,
@@ -239,7 +239,7 @@
                     dataType: 'default'
                 },
                 {
-                    prop: 'unit',
+                    prop: 'dayChangeUnit',
                     label: '单位',
                     width: '80',
                     hide: false,
@@ -257,7 +257,7 @@
                     dataType: 'default'
                 },
                 {
-                    prop: 'unit',
+                    prop: 'readyTimeUnit',
                     label: '单位',
                     width: '80',
                     hide: false,
@@ -276,8 +276,20 @@
 
         // 查询请求
         listInterface = params => {
+
             params.factory = JSON.parse(sessionStorage.getItem('factory') || '{}').id;
-            return REPORTS_API.REPORT_PACKAGING_PRODUCE_PREPARE_DETAILS_QUERY_API(params);
+
+            return new Promise((resolve) => {
+                REPORTS_API.REPORT_PACKAGING_PRODUCE_PREPARE_DETAILS_QUERY_API(params).then(res => {
+                    res.data.data.forEach(item => {
+                         item.manNumUnit = '个'
+                         item.dayChangeUnit = '分钟'
+                         item.readyTimeUnit = '小时'
+                    })
+                    resolve(res)
+                })
+            })
+            // return REPORTS_API.REPORT_PACKAGING_PRODUCE_PREPARE_DETAILS_QUERY_API(params);
         };
 
         /**
@@ -313,6 +325,7 @@
             if (!data.data) {
                 this.$infoToast('查询无结果');
             }
+
         }
 
     }

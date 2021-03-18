@@ -175,7 +175,8 @@
                 {
                     prop: 'productLineName',
                     label: '生产线',
-                    width: '120',
+                    width: '240',
+                    minWidth: '240',
                     hide: false,
                     fixed: true,
                     showOverFlowTooltip: true,
@@ -184,7 +185,8 @@
                 {
                     prop: 'materialName',
                     label: '品项',
-                    minWidth: '180',
+                    // width: '240',
+                    minWidth: '240',
                     hide: false,
                     fixed: true,
                     showOverFlowTooltip: true,
@@ -194,7 +196,8 @@
                 {
                     prop: 'useMaterialName',
                     label: '领用物料',
-                    minWidth: '180',
+                    // width: '240',
+                    minWidth: '240',
                     hide: false,
                     fixed: true,
                     showOverFlowTooltip: true,

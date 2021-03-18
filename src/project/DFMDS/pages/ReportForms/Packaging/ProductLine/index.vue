@@ -197,6 +197,7 @@
                 defaultValue: '',
                 labelWidth: '52', // default 70px
                 width: '120', // default 70px
+                valueFormat: 'yyyy',
                 dataType: 'year',
                 prop: 'year',
                 marked: false, // mark it
@@ -231,7 +232,7 @@
                 {
                     prop: 'productLineName',
                     label: '生产产线',
-                    width: '120',
+                    width: '240',
                     hide: false,
                     fixed: false,
                     showOverFlowTooltip: true,
@@ -241,7 +242,7 @@
                 {
                     prop: 'materialName',
                     label: '物料',
-                    minWidth: '240',
+                    width: '240',
                     hide: false,
                     fixed: false,
                     showOverFlowTooltip: true,
@@ -297,7 +298,6 @@
                     prop: 'notReach',
                     label: '未达成原因',
                     minWidth: '240',
-                    width: '240',
                     hide: false,
                     fixed: false,
                     showOverFlowTooltip: true,
