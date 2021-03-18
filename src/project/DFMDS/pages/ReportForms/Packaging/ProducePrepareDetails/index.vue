@@ -154,7 +154,7 @@
                     fixed: true,
                     showOverFlowTooltip: true,
                     dataType: 'multi',
-                    data: ['materialCode', 'materialName']
+                    data: ['materialName', 'materialCode']
                 },
                 {
                     prop: 'orderYield',
