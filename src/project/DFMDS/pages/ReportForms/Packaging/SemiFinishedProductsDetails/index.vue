@@ -137,7 +137,6 @@
                     value: 'materialCode'
                 }
             },
-            // TODO add API
              {
                 type: 'select',
                 hide: false, // hide column
@@ -219,7 +218,7 @@
                 {
                     prop: 'productLineName',
                     label: '生产线',
-                    width: '120',
+                    width: '240',
                     hide: false,
                     fixed: true,
                     showOverFlowTooltip: true,
@@ -228,7 +227,7 @@
                 {
                     prop: 'bottleLine',
                     label: '灌装线',
-                    width: '120',
+                    width: '80',
                     hide: false,
                     fixed: true,
                     showOverFlowTooltip: true,
@@ -237,7 +236,7 @@
                 {
                     prop: 'materialName',
                     label: '品项',
-                    minWidth: '240',
+                    width: '240',
                     hide: false,
                     fixed: true,
                     showOverFlowTooltip: true,
@@ -247,8 +246,7 @@
                 {
                     prop: 'useMaterialName',
                     label: '领用物料',
-                    width: '180',
-                    minWidth: '180',
+                    width: '240',
                     hide: false,
                     fixed: true,
                     showOverFlowTooltip: true,
@@ -260,7 +258,7 @@
                     label: '订单',
                     width: '120',
                     hide: false,
-                    fixed: true,
+                    fixed: false,
                     showOverFlowTooltip: true,
                     dataType: 'default'
                 },
@@ -269,7 +267,7 @@
                     label: '单位',
                     width: '80',
                     hide: false,
-                    fixed: true,
+                    fixed: false,
                     showOverFlowTooltip: true,
                     dataType: 'default'
                 },
@@ -277,7 +275,7 @@
                     prop: 'productDate',
                     label: '日期',
                     subLabel: '',
-                    width: '180',
+                    width: '100',
                     hide: false,
                     fixed: false,
                     showOverFlowTooltip: true,
@@ -288,7 +286,7 @@
                     label: '需求用量',
                     width: '80',
                     hide: false,
-                    fixed: true,
+                    fixed: false,
                     showOverFlowTooltip: true,
                     dataType: 'default'
                 },
@@ -297,7 +295,7 @@
                     label: '锅序',
                     width: '80',
                     hide: false,
-                    fixed: true,
+                    fixed: false,
                     showOverFlowTooltip: true,
                     dataType: 'default'
                 },
@@ -306,7 +304,7 @@
                     label: '实际用量',
                     width: '80',
                     hide: false,
-                    fixed: true,
+                    fixed: false,
                     showOverFlowTooltip: true,
                     dataType: 'default'
                 },
@@ -314,7 +312,7 @@
                     prop: 'startDate',
                     label: '开始使用时间',
                     subLabel: '',
-                    width: '80',
+                    width: '160',
                     hide: false,
                     fixed: false,
                     showOverFlowTooltip: true,
@@ -324,7 +322,7 @@
                     prop: 'endDate',
                     label: '用完时间',
                     subLabel: '',
-                    width: '80',
+                    width: '160',
                     hide: false,
                     fixed: false,
                     showOverFlowTooltip: true,
