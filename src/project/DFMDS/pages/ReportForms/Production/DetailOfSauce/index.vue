@@ -1,43 +1,45 @@
 <!-- 待处理酱料明细表 -->
 <template>
     <div class="header_main">
-        <query-table
+        <report-query-table
             ref="queryTable"
-            :show-table="true"
-            :show-index-column="false"
-            :column="column"
-            :span-method="spanMethod"
-            :show-page="true"
-            query-auth=""
+            :query-form-setting="queryFormSetting"
             :query-form-data="queryFormData"
+            :data-table-setting="dataTableSetting"
             :list-interface="listInterface"
-            :get-summaries="getSummaries"
+            :span-method="spanMethod"
             :custom-data="true"
-            :factory-type="1"
-            :export-excel="true"
-            :is-show-summary="false"
-            @get-data-success="setData"
+            :query-table-type="'report'"
+            :multi-header="true"
             @date-change="dateChange"
+            @get-data-success="setData"
         />
     </div>
 </template>
 
 <script lang="ts">
     import { Vue, Component } from 'vue-property-decorator';
-    import { COMMON_API } from 'common/api/api';
+    import { COMMON_API, REPORTS_API } from 'common/api/api';
     // import { dateFormat } from 'utils/utils';
+    const ceils: string[] = []
+    for (let i = 0; i < 26; i++) {
+        ceils.push(String.fromCharCode((65 + i)))
+    }
+    for (let i = 0; i < 26; i++) {
+        for (let j = 0; j < 26; j++) {
+            ceils.push(ceils[i] + String.fromCharCode((65 + j)))
+        }
+    }
     /**
      * 获取某月有几天
-     * @param yearAndmonth '2021-01'
+     * @param yearAndmonth '202101'
      */
     function getDays(yearAndmonth) {
-        const arr = yearAndmonth.split('-');
+        const arr = [yearAndmonth.substr(0, 4), yearAndmonth.substr(4, 2)];
         const d = new Date(arr[0], arr[1] || '', 0);
         return d.getDate();
     }
     @Component({
-        components: {
-        },
         name: 'DetailOfSauce'
     })
     export default class DetailOfSauce extends Vue {
@@ -48,82 +50,131 @@
         spanArr: number[] = [];
         pos = 0;
 
-        //表格数据
-        get column() {
-            console.log(this.currentMonth)
-            return [
+        // query header area setting
+        queryFormSetting = {
+            isQueryFormShow: true, // 标头搜寻区块是否显示
+            rules: [ // 查询必填栏位校验
                 {
-                    prop: 'workShopName',
-                    label: '品项',
-                    width: '140',
-                    minWidth: '140'
-                },
-                {
-                    prop: 'holderNo',
-                    label: '成品料号',
-                    minWidth: '120'
-                },
-                {
-                    prop: 'holderTypeName',
-                    label: '成品描述',
-                    minWidth: '120',
-                    width: 140
-                },
-                ...new Array(getDays(this.currentMonth) + 1).fill('').map((item, index) => {
-                    let i: string | number = index;
-                    if (index === 0) {
-                        i = 'Sum';
-                    }
-                    return {
-                        label: index === 0 ? '合计' : (i + '日'),
+                    prop: 'monthId',
+                    text: '请选择生产日期'
+                }
+            ],
+            queryAuth: '',
+            exportExcel: true, // 导出 excel BTN
+            exportOption: {
+                exportInterface: '',
+                auth: '',
+                text: '待处理酱料明细表'
+            }
+        }
+
+        // data table area setting
+        get dataTableSetting() {
+            // 总列数
+            const columnCount: number = (getDays(this.currentMonth) + 1) * 4 + 3;
+            const merges: string[] = []
+            let pos = 3
+            for (let i = 0; i < columnCount; i++) {
+                if (i < 3) {
+                    merges.push(`${ceils[i]}1:${ceils[i]}2`)
+                    continue;
+                }
+                if (pos === i) {
+                    merges.push(`${ceils[i]}1:${ceils[i + 3]}1`)
+                    pos = i + 4
+                }
+            }
+            return {
+                type: 'multiHeader', // default/multiHeader
+                merges: merges,
+                showIt: true, // showit or not
+                showSelectColumn: false,
+                showIndexColumn: false,
+                showOperationColumn: false,
+                showPagination: true,
+                //表格数据
+                column: [
+                    {
+                        prop: 'largeClassName',
+                        label: '品项',
+                        width: '140',
+                        minWidth: '140'
+                    },
+                    {
+                        prop: 'materialCode',
+                        label: '成品料号',
+                        minWidth: '120'
+                    },
+                    {
+                        prop: 'materialName',
+                        label: '成品描述',
                         minWidth: '120',
-                        child: [
-                            {
-                                prop: 'bbbbbbbbbbb' + i,
-                                label: '成品',
-                                subLabel: '（箱）',
-                                minWidth: '120',
-                                width: 140
-                            },
-                            {
-                                prop: 'cccccccccccc' + i,
-                                label: '挤料数量',
-                                subLabel: '（kg）',
-                                minWidth: '120',
-                                width: 140
-                            },
-                            {
-                                prop: 'dddddddddddddd' + i,
-                                label: '测密封度',
-                                subLabel: '（kg）',
-                                minWidth: '120',
-                                width: 140
-                            },
-                            {
-                                prop: 'eeeeeeeeee' + i,
-                                label: '废酱',
-                                subLabel: '（kg）',
-                                minWidth: '120',
-                                width: 140
-                            },
-                            {
-                                prop: 'fffffffffffff' + i,
-                                label: '线上不良',
-                                subLabel: '（kg）',
-                                minWidth: '120',
-                                width: 140
-                            },
-                            {
-                                prop: 'ggggggggggggggggggg' + i,
-                                label: '其他',
-                                subLabel: '（kg）',
-                                minWidth: '120',
-                                width: 140
-                            }
-                        ]
-                    }
-                })
-            ]
+                        width: 140
+                        // formatter: row => row.materialName + ' ' + row.materialCode
+                    },
+                    ...new Array(getDays(this.currentMonth) + 1).fill('').map((item, index) => {
+                        let i: string | number = index;
+                        if (index === 0) {
+                            i = 'Summary';
+                        }
+                        return {
+                            label: index === 0 ? '合计' : (i + '日'),
+                            minWidth: '120',
+                            child: [
+                                {
+                                    prop: 'output' + i,
+                                    label: '成品',
+                                    subLabel: '（箱）',
+                                    minWidth: '120',
+                                    width: 140
+                                },
+                                {
+                                    prop: 'pressMaterial' + i,
+                                    label: '挤料数量',
+                                    subLabel: '（kg）',
+                                    minWidth: '120',
+                                    width: 140
+                                },
+                                {
+                                    prop: 'sealingPlug' + i,
+                                    label: '测密封度',
+                                    subLabel: '（kg）',
+                                    minWidth: '120',
+                                    width: 140
+                                },
+                                {
+                                    prop: 'wasteSauce' + i,
+                                    label: '废酱',
+                                    subLabel: '（kg）',
+                                    minWidth: '120',
+                                    width: 140
+                                }
+                                // ,
+                                // {
+                                //     prop: 'fffffffffffff' + i,
+                                //     label: '线上不良',
+                                //     subLabel: '（kg）',
+                                //     minWidth: '120',
+                                //     width: 140
+                                // },
+                                // {
+                                //     prop: 'ggggggggggggggggggg' + i,
+                                //     label: '其他',
+                                //     subLabel: '（kg）',
+                                //     minWidth: '120',
+                                //     width: 140
+                                // }
+                            ]
+                        }
+                    })
+                ], // eslint-disable-line
+                tableAttributes: {
+                    isShowSummary: false // 合计
+                },
+                dataChangeByAPI: false, // table data change by API
+                tableHeightSet: 405
+            }
+
         }
 
         $refs: {
@@ -137,6 +188,7 @@
                 label: '生产车间',
                 prop: 'workShop',
                 labelWidth: '100',
+                clearable: true,
                 rule: [{ required: true, message: '请选择生产车间', trigger: 'blur' }],
                 defaultOptionsFn: () => {
                     return COMMON_API.ORG_QUERY_WORKSHOP_API({
@@ -149,13 +201,16 @@
                     resData: 'data',
                     label: ['deptName'],
                     value: 'id'
-                }
+                },
+                linkageProp: ['productLine']
             },
             {
                 type: 'select',
                 label: '生产产线',
                 prop: 'productLine',
                 labelWidth: '100',
+                filterable: true,
+                clearable: true,
                 rule: [{ required: true, message: '请选择生产产线', trigger: 'blur' }],
                 optionsFn: val => {
                     return COMMON_API.ORG_QUERY_CHILDREN_API({
@@ -173,20 +228,22 @@
             {
                 type: 'select',
                 label: '生产物料',
-                prop: 'productMaterial',
+                prop: 'materialCode',
                 labelWidth: '100',
                 rule: [{ required: true, message: '请选择生产物料', trigger: 'blur' }],
-                optionsFn: val => {
-                    return COMMON_API.ORG_QUERY_CHILDREN_API({
-                        parentId: val || '',
-                        deptType: 'PRODUCT_LINE'
+                filterable: true,
+                clearable: true,
+                defaultValue: '',
+                defaultOptionsFn: () => {
+                    return COMMON_API.SEARCH_MATERIAL_API({
+                        factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
+                        materialType: 'ZHAL'
                     })
                 },
-                defaultValue: '',
                 resVal: {
                     resData: 'data',
-                    label: ['deptName'],
-                    value: 'id'
+                    label: ['materialName', 'materialCode'],
+                    value: 'materialCode'
                 }
             },
             {
@@ -196,59 +253,19 @@
                 defaultValue: '',
                 labelWidth: '100',
                 rule: [{ required: true, message: '请选择月', trigger: 'blur' }],
-                prop: 'oneorderProductDate',
-                valueFormat: 'yyyy-MM'
+                prop: 'monthId',
+                valueFormat: 'yyyyMM'
             }
         ];
 
         // 查询请求
         listInterface(params) {
-            // 针对查找必填关键字进行提示
-            for (let i = 0; i < this.queryFormData.length; i++) {
-                const element = this.queryFormData[i];
-                if (element.rule) {
-                    for (let j = 0; j < element.rule.length; j++) {
-                        const item = element.rule[j];
-                        if (item.required && !params[element.prop]) {
-                            this.$warningToast(item.message);
-                            return new Promise((resolve, reject) => {
-                                reject('error') // eslint-disable-line
-                            });
-                        }
-                    }
-                }
-            }
-            // for (let index = 0; index < this.rules.length; index++) {
-            //     const element = this.rules[index];
-            //     if (!params[element.prop]) {
-            //         this.$warningToast(element.text);
-            //         return new Promise((resolve, reject) => {
-            //             reject('error') // eslint-disable-line
-            //         });
-            //     }
-            // }
-            console.log(this.queryFormData, params)
             params.factory = JSON.parse(sessionStorage.getItem('factory') || '{}').id;
-            // return REPORTS_API.REPORT_PACKAGING_OEE_API(params);
-            return new Promise((resolve) => {
-                resolve({
-                    data: {
-                        data: {
-                            records: [
-                                { workShopName: '1111111111111', holderNo: '11' },
-                                { workShopName: '1111111111111', holderNo: '1111' },
-                                { workShopName: '2222222222222', holderNo: '22' },
-                                { workShopName: '2222222222222', holderNo: '2222' }
-                            ]
-                        }
-                    }
-                })
-            })
+            return REPORTS_API.REPORT_PACKAGING_GERMS_SUMMARY_QUERY_API(params);
         }
 
         dateChange(v) {
             this.currentMonth = v;
-            console.log(this.column)
         }
 
         /**
@@ -290,10 +307,13 @@
 
         // 设置数据
         setData(data) {
-            console.log(data);
-            this.tableData = data.data.records
+            if (!data.data.length) {
+                this.$warningToast('暂无数据')
+            }
+            // console.log(data);
+            // this.tableData = data.data.records
             this.spanArr = []
-            this.getSpanArr(this.tableData)
+            this.getSpanArr(data.data)
         }
 
         getSpanArr(data) {
@@ -304,7 +324,7 @@
                     continue;
                 }
                 // 判断当前元素与上一个元素是否相同
-                if (data[i].workShopName === data[i - 1].workShopName) {
+                if (data[i].largeClassName === data[i - 1].largeClassName) {
                     this.spanArr[this.pos] += 1;
                     this.spanArr.push(0);
                     continue;
@@ -314,13 +334,19 @@
             }
         }
 
-        spanMethod({ rowIndex, columnIndex }) {
+        spanMethod({ row, rowIndex, columnIndex }) {
             if (columnIndex === 0) {
-                const row = this.spanArr[rowIndex];
-                const col = row > 0 ? 1 : 0;
+                const rowspan = this.spanArr[rowIndex];
+                const colspan = rowspan > 0 ? 1 : 0;
                 return {
-                    rowspan: row,
-                    colspan: col
+                    rowspan: rowspan,
+                    colspan: colspan
+                }
+            }
+            if ((columnIndex === 1 || columnIndex === 2) && row.materialCode === '合计') {
+                return {
+                    rowspan: 1,
+                    colspan: columnIndex === 1 ? 2 : 0
                 }
             }
         }
