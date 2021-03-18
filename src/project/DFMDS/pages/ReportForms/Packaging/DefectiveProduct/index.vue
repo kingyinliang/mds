@@ -62,7 +62,7 @@
                 hide: false, // hide column
                 label: '不良品',
                 prop: 'isBadTemp',
-                defaultValue: false,
+                defaultValue: true,
                 labelWidth: '80',
                 width: '160',
                 clearable: false,
@@ -100,6 +100,7 @@
                 label: '生产产线',
                 prop: 'productLine',
                 defaultValue: '',
+                clearable: true,
                 labelWidth: '80',
                 width: '200',
                 marked: false, // mark it

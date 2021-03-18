@@ -3,7 +3,7 @@
  * @Anthor: Telliex
  * @Date: 2021-02-26 10:58:05
  * @LastEditors: Telliex
- * @LastEditTime: 2021-03-17 17:28:47
+ * @LastEditTime: 2021-03-18 18:33:45
 -->
 <template>
     <div>
@@ -12,10 +12,10 @@
                 <template v-for="item in queryFormData">
                     <template v-if="!item.hide">
                         <el-form-item v-if="item.type === 'select'" :key="item.prop" :label="`${item.label}：` || ''" :prop="item.prop" :label-width="`${item.labelWidth ? item.labelWidth : 70}px`" :class="{ marked: item.marked }">
-                            <el-select v-if="item.defaultOptionsList" :ref="item.prop" v-model="queryForm[item.prop]" :style="`width: ${item.width ? item.width : 170}px;`" :filterable="item.filterable" :clearable="item.clearable" :disabled="item.disabled" :placeholder="'请选择' + item.label">
+                            <el-select v-if="item.defaultOptionsList" :ref="item.prop" v-model="queryForm[item.prop]" :style="`width: ${item.width ? item.width : 170}px;`" :filterable="item.filterable || true" :clearable="item.clearable" :disabled="item.disabled" :placeholder="'请选择' + item.label">
                                 <el-option v-for="(opt, optIndex) in item.defaultOptionsList" :key="optIndex" :label="opt.label" :value="opt.value" />
                             </el-select>
-                            <el-select v-else :ref="item.prop" v-model="queryForm[item.prop]" :style="`width: ${item.width ? item.width : 170}px;`" :filterable="item.filterable" :clearable="item.clearable" :disabled="item.disabled" :placeholder="'请选择' + item.label">
+                            <el-select v-else :ref="item.prop" v-model="queryForm[item.prop]" :style="`width: ${item.width ? item.width : 170}px;`" :filterable="item.filterable|| true" :clearable="item.clearable" :disabled="item.disabled" :placeholder="'请选择' + item.label">
                                 <el-option v-for="(opt, optIndex) in optionLists[item.prop]" :key="optIndex" :label="setLabel(opt, item)" :value="opt[item.resVal.value]" />
                             </el-select>
                         </el-form-item>

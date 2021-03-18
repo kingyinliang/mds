@@ -299,6 +299,9 @@
 
         delId({ data, ids, flg = false }) {
             for (let i = 0; i < data.length; i++) {
+                if (data[i].pushMark === 2) {
+                    ids.push(data[i].id)
+                }
                 if (data[i].delFlag === 1 && data[i].id) {
                     if (flg) {
                         if (data[i].toBeSplit) {
