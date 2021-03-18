@@ -103,7 +103,11 @@ const REPORTS_API = {
     /**
      * @property {string} REPORT_PACKAGING_PRODUCT_LINE_SUB_OUT_PUT_QUERY_API 包装车间-产量报表-车间品项产量汇总
      */
-    REPORT_PACKAGING_PRODUCT_LINE_SUB_OUT_PUT_QUERY_API: params => httpProxy('/pkgReportForm/product/queryProductLineSubOutput', 'POST', params, 'REPORT')
+    REPORT_PACKAGING_PRODUCT_LINE_SUB_OUT_PUT_QUERY_API: params => httpProxy('/pkgReportForm/product/queryProductLineSubOutput', 'POST', params, 'REPORT'),
+    /**
+     * @property {string} REPORT_PACKAGING_GERMS_SUMMARY_QUERY_API 包装车间-产量报表-待处理酱料明细列表
+     */
+    REPORT_PACKAGING_GERMS_SUMMARY_QUERY_API: params => httpProxy('/pkgReportForm/product/queryGermsSummary', 'POST', params, 'REPORT')
 };
 
 export default REPORTS_API;
