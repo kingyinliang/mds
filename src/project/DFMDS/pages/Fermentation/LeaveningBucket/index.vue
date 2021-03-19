@@ -3,7 +3,7 @@
  * @Anthor: Telliex
  * @Date: 2021-01-15 23:35:23
  * @LastEditors: Telliex
- * @LastEditTime: 2021-03-17 11:10:30
+ * @LastEditTime: 2021-03-19 17:07:16
 -->
 <template>
     <div class="header_main">
@@ -102,23 +102,26 @@
                                                     :style="{height:((item.volumePercent)*100)+'%', background: setBucketColor(item.fermentorStatus,item.fermentDays)}"
                                                 />
                                             </div>
-                                            <span v-if="item.judgeResult==='CQ'" class="cq"><img src="../../../assets/img/icon-cq.png" alt=""></span>
+                                            <div class="icons">
+                                                <img v-if="item.judgeResult==='CQ'" src="../../../assets/img/icon-cq.png" alt="" style="margin-bottom: 5px;">
+                                                <img v-if="item.judgeResult==='Y'" src="../../../assets/img/icon-fr.png" alt="">
+                                            </div>
                                         </div>
                                     </div>
                                     <div class="btn-group">
                                         <el-button v-if="isAuth('')" size="small" plain :disabled="item.fermentorStatus!=='F'" @click="btnFilledBucket(item)">
                                             鼓罐
                                         </el-button>
-                                        <el-button v-if="isAuth('')" size="small" plain :disabled="item.fermentorStatus!=='F' || item.orderNo===''|| item.judgeResult==='CQ'" @click="btnLYCY(item)">
+                                        <el-button v-if="isAuth('')" size="small" plain :disabled="item.fermentorStatus!=='F' || item.orderNo===''|| item.judgeResult==='Y'" @click="btnLYCY(item)">
                                             LY/CY
                                         </el-button>
-                                        <el-button v-if="isAuth('')" size="small" plain :disabled="! ['F','S','O','T','A','U'].includes(item.fermentorStatus) || item.orderNo===''|| item.judgeResult==='CQ'" @click="btnAdjust(item)">
+                                        <el-button v-if="isAuth('')" size="small" plain :disabled="! ['F','S','O','T','A','U'].includes(item.fermentorStatus) || item.orderNo===''|| item.judgeResult==='Y'" @click="btnAdjust(item)">
                                             调整
                                         </el-button>
-                                        <el-button v-if="isAuth('')" size="small" plain :disabled="item.fermentorStatus!=='U' || item.orderNo===''|| item.judgeResult==='CQ'" @click="btnClearBucket(item)">
+                                        <el-button v-if="isAuth('')" size="small" plain :disabled="item.fermentorStatus!=='U' || item.orderNo===''|| item.judgeResult==='Y'" @click="btnClearBucket(item)">
                                             清罐
                                         </el-button>
-                                        <el-button v-if="isAuth('')" size="small" plain :disabled="item.fermentorStatus!=='C'|| item.judgeResult==='CQ'" @click="btnCleanBucket(item)">
+                                        <el-button v-if="isAuth('')" size="small" plain :disabled="item.fermentorStatus!=='C'|| item.judgeResult==='Y'" @click="btnCleanBucket(item)">
                                             清洗
                                         </el-button>
                                     </div>
@@ -1243,15 +1246,25 @@ interface CurrentDataTable{
                 }
             }
 
-            .cq {
+            .icons {
                 position: absolute;
                 top: 0;
                 left: 0;
                 z-index: 99;
                 img {
+                    display: block;
                     width: 80%;
                 }
             }
+            // .fr {
+            //     position: absolute;
+            //     top: 0;
+            //     left: 0;
+            //     z-index: 99;
+            //     img {
+            //         width: 80%;
+            //     }
+            // }
         }
         .btn-group {
             display: flex;
