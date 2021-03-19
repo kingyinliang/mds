@@ -3,7 +3,7 @@
  * @Anthor: Telliex
  * @Date: 2021-01-15 23:35:23
  * @LastEditors: Telliex
- * @LastEditTime: 2021-03-11 15:45:39
+ * @LastEditTime: 2021-03-19 19:00:56
 -->
 <template>
     <div>
@@ -120,7 +120,7 @@
                                     </el-select>
                                 </el-form-item>
                                 <el-form-item label="批次：">
-                                    <el-select v-model="convertDataGroup.batch" placeholder="请选择" clearable style="width: 100%;" :disabled="!convertDisabled">
+                                    <el-select v-model="convertDataGroup.batch" placeholder="请选择" clearable style="width: 100%;" :disabled="!convertDisabled" @change="asyncBatch">
                                         <el-option
                                             v-for="item in batchOptions"
                                             :key="item.batch"
@@ -410,6 +410,13 @@
                         resolve(null)
                     })
                 })
+            }
+
+            asyncBatch(val) {
+                console.log('val')
+                console.log(val)
+                this.convertDataGroup.convertBatch = this.convertDataGroup.batch
+
             }
 
             // ＝＝挪罐＝＝
