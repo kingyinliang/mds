@@ -129,6 +129,9 @@
                 const target = this.formElementSetting.data.filter(item => item.prop === element.linkageProp[0])[0]
                 target.emitChange(val, element).then((res) => {
                     this.$set(target, 'optionList', JSON.parse(JSON.stringify(res)))
+                    if (target.defalutValue) {
+                        this.$set(this.dataForm, element.linkageProp[0], res['value']);
+                    }
                 })
             }
         }
