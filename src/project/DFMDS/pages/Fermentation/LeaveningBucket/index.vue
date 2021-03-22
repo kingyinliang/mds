@@ -3,7 +3,7 @@
  * @Anthor: Telliex
  * @Date: 2021-01-15 23:35:23
  * @LastEditors: Telliex
- * @LastEditTime: 2021-03-19 17:07:16
+ * @LastEditTime: 2021-03-22 14:08:36
 -->
 <template>
     <div class="header_main">
@@ -104,7 +104,7 @@
                                             </div>
                                             <div class="icons">
                                                 <img v-if="item.judgeResult==='CQ'" src="../../../assets/img/icon-cq.png" alt="" style="margin-bottom: 5px;">
-                                                <img v-if="item.judgeResult==='Y'" src="../../../assets/img/icon-fr.png" alt="">
+                                                <img v-if="item.freezeFlag==='Y'" src="../../../assets/img/icon-fr.png" alt="">
                                             </div>
                                         </div>
                                     </div>
@@ -112,16 +112,16 @@
                                         <el-button v-if="isAuth('')" size="small" plain :disabled="item.fermentorStatus!=='F'" @click="btnFilledBucket(item)">
                                             鼓罐
                                         </el-button>
-                                        <el-button v-if="isAuth('')" size="small" plain :disabled="item.fermentorStatus!=='F' || item.orderNo===''|| item.judgeResult==='Y'" @click="btnLYCY(item)">
+                                        <el-button v-if="isAuth('')" size="small" plain :disabled="item.fermentorStatus!=='F' || item.orderNo===''|| item.freezeFlag==='Y'" @click="btnLYCY(item)">
                                             LY/CY
                                         </el-button>
-                                        <el-button v-if="isAuth('')" size="small" plain :disabled="! ['F','S','O','T','A','U'].includes(item.fermentorStatus) || item.orderNo===''|| item.judgeResult==='Y'" @click="btnAdjust(item)">
+                                        <el-button v-if="isAuth('')" size="small" plain :disabled="! ['F','S','O','T','A','U'].includes(item.fermentorStatus) || item.orderNo===''|| item.freezeFlag==='Y'" @click="btnAdjust(item)">
                                             调整
                                         </el-button>
-                                        <el-button v-if="isAuth('')" size="small" plain :disabled="item.fermentorStatus!=='U' || item.orderNo===''|| item.judgeResult==='Y'" @click="btnClearBucket(item)">
+                                        <el-button v-if="isAuth('')" size="small" plain :disabled="item.fermentorStatus!=='U' || item.orderNo===''|| item.freezeFlag==='Y'" @click="btnClearBucket(item)">
                                             清罐
                                         </el-button>
-                                        <el-button v-if="isAuth('')" size="small" plain :disabled="item.fermentorStatus!=='C'|| item.judgeResult==='Y'" @click="btnCleanBucket(item)">
+                                        <el-button v-if="isAuth('')" size="small" plain :disabled="item.fermentorStatus!=='C'|| item.freezeFlag==='Y'" @click="btnCleanBucket(item)">
                                             清洗
                                         </el-button>
                                     </div>
