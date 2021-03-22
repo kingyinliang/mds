@@ -29,6 +29,7 @@
     export default class LaborHoursStatisticsReport extends Vue {
         $refs: {
             queryTable: HTMLFormElement;
+            table: HTMLFormElement;
         }
 
         columnTemp=[]
@@ -139,7 +140,7 @@
                     label: '品名',
                     width: '240',
                     hide: false,
-                    fixed: true,
+                    fixed: false,
                     showOverFlowTooltip: true,
                     dataType: 'multi',
                     data: ['materialName', 'materialCode']
@@ -149,7 +150,7 @@
                     label: '单位',
                     width: '80',
                     hide: false,
-                    fixed: true,
+                    fixed: false,
                     showOverFlowTooltip: true,
                     dataType: 'default'
                 },
