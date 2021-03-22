@@ -254,8 +254,11 @@
 
         // 设置数据
         setData(data) {
-            if (!data.data) {
+            console.log('查找回传结果');
+            console.log(data);
+            if (!data.data || data.data.length === 0) {
                 this.$infoToast('查询无结果');
+
             }
 
             this.dataTableSetting.column = JSON.parse(JSON.stringify(this.columnTemp))

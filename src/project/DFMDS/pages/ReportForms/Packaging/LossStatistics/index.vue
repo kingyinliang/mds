@@ -325,8 +325,9 @@
         setData(data) {
             console.log('查找回传结果');
             console.log(data);
-            if (!data.data) {
+            if (!data.data || data.data.length === 0) {
                 this.$infoToast('查询无结果');
+
             }
         }
 

@@ -202,7 +202,7 @@
                 {
                     prop: 'materialName',
                     label: '生产物料',
-                    minWidth: '240',
+                    width: '240',
                     hide: false,
                     fixed: false,
                     clearable: true,
@@ -222,7 +222,7 @@
                 {
                     prop: 'useMaterialName',
                     label: '组件物料',
-                    minWidth: '240',
+                    width: '300',
                     hide: false,
                     fixed: false,
                     showOverFlowTooltip: true,
@@ -297,7 +297,6 @@
                     prop: 'badReason',
                     label: '不良品原因',
                     minWidth: '200',
-                    width: '200',
                     hide: false,
                     fixed: false,
                     showOverFlowTooltip: true,
@@ -379,7 +378,7 @@
             console.log('查找回传结果');
             console.log(data);
             this.currentQueryData = []
-            if (!data.data) {
+            if (!data.data || data.data.length === 0) {
                 this.$infoToast('查询无结果');
                 return
             }
