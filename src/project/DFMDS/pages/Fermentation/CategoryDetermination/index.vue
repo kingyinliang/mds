@@ -126,7 +126,7 @@
 
 <script lang="ts">
     import { Vue, Component } from 'vue-property-decorator';
-    import { COMMON_API, FER_API } from 'common/api/api';
+    import { BASIC_API, COMMON_API, FER_API } from 'common/api/api';
     import { dateFormat } from 'src/utils/utils';
     @Component({
         name: 'CategoryDetermination',
@@ -231,18 +231,45 @@
                 filterable: true,
                 defaultOptionsFn: () => {
                     return new Promise((resolve) => {
-                        COMMON_API.ALLMATERIAL_API({
-                            materialTypes: ['ZHAL'] // 物料类型列表 - 半成品
-                        }).then((res) => {
+                        BASIC_API.FERINFO_LIST_API({
+                            current: 1,
+                            size: 9999
+                        }).then(res => {
+                            const arr = res.data.data.records.reduce((pre, cur) => {
+                                if (!pre.find(row => row.productMaterialCode === cur.productMaterialCode)) {
+                                    pre.push(cur)
+                                }
+                                return pre
+                            }, [])
+                            res.data.data = arr
                             resolve(res)
                         })
+                        // COMMON_API.ALLMATERIAL_API({
+                        //     materialTypes: ['ZHAL'] // 物料类型列表 - 半成品
+                        // }).then((res) => {
+                        //     resolve(res)
+                        // })
                     })
                 },
                 resVal: {
                     resData: 'data',
-                    label: ['materialName', 'materialCode'],
-                    value: 'materialCode'
+                    label: ['productMaterialName', 'productMaterialCode'],
+                    value: 'productMaterialCode'
                 }
+                // defaultOptionsFn: () => {
+                //     return new Promise((resolve) => {
+                //         COMMON_API.ALLMATERIAL_API({
+                //             materialTypes: ['ZHAL'] // 物料类型列表 - 半成品
+                //         }).then((res) => {
+                //             resolve(res)
+                //         })
+                //     })
+                // },
+                // resVal: {
+                //     resData: 'data',
+                //     label: ['materialName', 'materialCode'],
+                //     value: 'materialCode'
+                // }
             },
             {
                 type: 'select',
