@@ -3,7 +3,7 @@
  * @Anthor: Telliex
  * @Date: 2021-01-15 23:35:23
  * @LastEditors: Telliex
- * @LastEditTime: 2021-03-22 14:08:36
+ * @LastEditTime: 2021-03-23 14:14:24
 -->
 <template>
     <div class="header_main">
@@ -882,6 +882,8 @@
                         return '#8a391b' //'#602813'
                     }
                         return '#8a391b' // 超期
+            } else if (target === 'I') { //T:调酱中,A:已调整,U:领料中
+                return '#8a391b'
             } else if (target === 'U' || target === 'A' || target === 'T') { //T:调酱中,A:已调整,U:领料中
                 return '#8a391b'
             }

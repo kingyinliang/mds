@@ -207,7 +207,7 @@
                     data: ['useMaterialName', 'useMaterialCode']
                 },
                 {
-                    prop: 'useMaterialUnit',
+                    prop: 'useMaterialUnitName',
                     label: '单位',
                     width: '100',
                     hide: false,
