@@ -3,7 +3,7 @@
  * @Anthor: Telliex
  * @Date: 2021-03-16 15:22:39
  * @LastEditors: Telliex
- * @LastEditTime: 2021-03-18 20:07:24
+ * @LastEditTime: 2021-03-23 14:58:34
 -->
 <template>
     <el-dialog :title="'权限标识 '+propertyTable" :close-on-click-modal="false" :visible.sync="isDialogShow" width="80%" @close="closeDialog">
@@ -23,7 +23,7 @@
                         <el-table v-loading="loading" class="table-style-light markStyle" :data="currentDataTable" :row-class-name="rowDelFlag" header-row-class-name="tableHead" size="mini" border style="width: 100%;">
                             <el-table-column width="200" :show-overflow-tooltip="true">
                                 <template slot="header">
-                                    <span class="notNull">* </span>主键
+                                    <span class="notNull" />主键
                                 </template>
                                 <template slot-scope="scope">
                                     <el-input v-model.trim="scope.row.propertyKey" size="small" placeholder="请输入主键" :disabled="!scope.row.isRedact" />
@@ -31,7 +31,7 @@
                             </el-table-column>
                             <el-table-column min-width="200" :show-overflow-tooltip="true">
                                 <template slot="header">
-                                    <span class="notNull">* </span>父节点
+                                    <span class="notNull" />父节点
                                 </template>
                                 <template slot-scope="scope">
                                     <el-input v-model.trim="scope.row.propertyParentKey" size="small" placeholder="请输入父节点" :disabled="!scope.row.isRedact" />
@@ -110,7 +110,7 @@
             submitDataTable() {
                 const dataArr = this.currentDataTable.filter(it => it.delFlag !== 1 && it.isRedact === true)
                 for (let i = 0; i < dataArr.length; i++) {
-                    if (!dataArr[i].propertyKey || !dataArr[i].propertyParentKey || !dataArr[i].privilegeIdentity || !dataArr[i].privilegeIdentityName) {
+                    if (!dataArr[i].privilegeIdentity || !dataArr[i].privilegeIdentityName) {
                         this.$warningToast('请填写必填项');
                         return false
                     }
