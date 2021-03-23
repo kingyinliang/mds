@@ -71,7 +71,7 @@ import { dateFormat } from 'src/utils/utils';
                     width: '140'
                 },
                 {
-                    prop: 'unit',
+                    prop: 'unitName',
                     label: '单位',
                     width: '80'
                 },
