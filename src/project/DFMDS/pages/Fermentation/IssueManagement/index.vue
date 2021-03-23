@@ -26,10 +26,18 @@
                         </el-table-column>
                         <el-table-column label="生产订单" prop="orderNo" width="120px" />
                         <el-table-column label="容器号" prop="fermentorName" width="120px" />
-                        <el-table-column label="生产物料" prop="productMaterialName" width="140px" />
+                        <el-table-column label="生产物料" prop="productMaterialName" width="140px" show-overflow-tooltip>
+                            <template slot-scope="scope">
+                                {{ scope.row.productMaterialName + ' ' + scope.row.productMaterialCode }}
+                            </template>
+                        </el-table-column>
                         <el-table-column label="订单数量" prop="amount" />
                         <el-table-column label="订单单位" prop="unit" />
-                        <el-table-column label="组件物料" prop="materialName" width="120px" />
+                        <el-table-column label="组件物料" prop="materialName" width="120px" show-overflow-tooltip>
+                            <template slot-scope="scope">
+                                {{ scope.row.materialName + ' ' + scope.row.materialCode }}
+                            </template>
+                        </el-table-column>
                         <el-table-column prop="">
                             <template slot-scope="scope">
                                 <el-button type="text" size="mini" :disabled="!isRedact || (scope.row.checkStatus !== 'N' && scope.row.checkStatus !== 'R' && scope.row.checkStatus !== 'S')" @click="splitHandler(scope.row, scope.$index)">
@@ -73,7 +81,7 @@
                         </el-table-column>
                     </el-table>
                 </mds-card>
-                <el-row>
+                <el-row style="padding-bottom: 20px;">
                     <el-pagination :current-page.sync="currentPage" :page-sizes="[10, 20, 50]" :page-size="pageSize" layout="total, sizes, prev, pager, next, jumper" :total="total" @size-change="sizeChangeHandler" @current-change="currentPageChangeHanlder" />
                 </el-row>
             </template>
