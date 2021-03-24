@@ -166,6 +166,9 @@ export default {
     mounted() {
         const canvas = new LoginAnimation(this.$);
         canvas.init();
+        // if (window.location.href.indexOf('token') === -1) {} else {
+        //     window.location.href = 'http://localhost:8080/'
+        // }
         // *********** RDM CDM 跳转用  start
         if (window.location.href.indexOf('?') !== -1) {
             const url = decodeURIComponent(window.location.href.split('?')[1].split('=')[1]);

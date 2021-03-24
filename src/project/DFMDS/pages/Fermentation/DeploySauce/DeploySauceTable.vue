@@ -71,7 +71,7 @@
                     </template>
                     <template slot-scope="scope">
                         <el-select v-model="scope.row.addMaterialCode" :disabled="!isRedact" placeholder="请选择" size="small" filterable clearable style="width: 100%;" @change="materialChange(scope.row)">
-                            <el-option v-for="(item, index) in (holderArr.filter(it => it.holderId === scope.row.fermentorNo).length > 0 ? holderArr.filter(it => it.holderId === scope.row.fermentorNo)[0].ferInStorageList : [])" :key="index" :label="item.productMaterialName +' ' + item.productMaterialCode" :value="item.productMaterialCode" />
+                            <el-option v-for="(item, index) in (holderArr.filter(it => it.holderId === scope.row.fermentorId).length > 0 ? holderArr.filter(it => it.holderId === scope.row.fermentorId)[0].ferInStorageList : [])" :key="index" :label="item.productMaterialName +' ' + item.productMaterialCode" :value="item.productMaterialCode" />
                         </el-select>
                     </template>
                 </el-table-column>
