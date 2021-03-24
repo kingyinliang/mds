@@ -167,12 +167,10 @@
                         this.dataForm.holderArea = data.data.holderArea;
                         this.dataForm.material = tempMaterial;
                         this.dataForm.workshop = data.data.deptId;
-                        this.dataForm.workshopName = this.workshopList.filter(item => item.deptCode === data.data.deptId)[0].deptName;
+                        this.dataForm.workshopName = this.workshopList.filter(item => item.id === data.data.deptId)[0].deptName;
                         this.dataForm.version = data.data.version;
                         this.isDialogShow = true;
                     });
-
-
                 } else {
                     this.dataForm = Object.assign({}, this.dataFormFromAdd);
                     this.containerID = 0;
