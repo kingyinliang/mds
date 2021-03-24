@@ -3,7 +3,7 @@
  * @Anthor: Telliex
  * @Date: 2021-01-15 23:35:23
  * @LastEditors: Telliex
- * @LastEditTime: 2021-03-23 14:14:24
+ * @LastEditTime: 2021-03-24 09:36:57
 -->
 <template>
     <div class="header_main">
@@ -87,7 +87,9 @@
                         <el-col v-for="item in targetQueryTableList" :key="item.potId" :span="4" style="min-width: 200px;">
                             <div class="card-bucket">
                                 <div class="card-bucket__head">
-                                    <span>{{ item.holderName }} - {{ item.fermentorStatusName }}</span>
+                                    <el-tooltip :disabled="item.holderName===''&&item.fermentorStatusName===''" effect="dark" :content="`${item.holderName} - ${item.fermentorStatusName}`" placement="top">
+                                        <span class="subItem">{{ item.holderName }} - {{ item.fermentorStatusName }}</span>
+                                    </el-tooltip>
                                     <el-button type="text" @click="goTargetItemDetail(item)">
                                         详情
                                     </el-button>
@@ -1164,7 +1166,11 @@ interface CurrentDataTable{
         padding: 11px 10px;
         font-size: 14px;
         border-bottom: 1px #e8e8e8 solid;
-
+        .subItem {
+            overflow: hidden;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+        }
         .el-button {
             font-size: 12px;
             &::after {
