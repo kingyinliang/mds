@@ -36,10 +36,10 @@
                     prop: 'granularity',
                     text: '请选择月报/季报'
                 },
-                {
-                    prop: 'workShop',
-                    text: '请选择生产车间'
-                },
+                // {
+                //     prop: 'workShop',
+                //     text: '请选择生产车间'
+                // },
                 {
                     prop: 'year',
                     text: '请选择年度'
