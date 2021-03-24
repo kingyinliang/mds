@@ -207,7 +207,7 @@
                     data: ['useMaterialName', 'useMaterialCode']
                 },
                 {
-                    prop: 'useMaterialUnit',
+                    prop: 'useMaterialUnitName',
                     label: '单位',
                     width: '100',
                     hide: false,
@@ -335,7 +335,7 @@
             console.log('查找回传结果');
             console.log(data);
             this.currentQueryData = []
-            if (!data.data) {
+            if (!data.data || data.data.length === 0) {
                 this.$infoToast('查询无结果');
                 return
             }

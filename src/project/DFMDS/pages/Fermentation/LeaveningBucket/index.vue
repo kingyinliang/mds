@@ -3,7 +3,7 @@
  * @Anthor: Telliex
  * @Date: 2021-01-15 23:35:23
  * @LastEditors: Telliex
- * @LastEditTime: 2021-03-17 11:10:30
+ * @LastEditTime: 2021-03-24 09:36:57
 -->
 <template>
     <div class="header_main">
@@ -87,7 +87,9 @@
                         <el-col v-for="item in targetQueryTableList" :key="item.potId" :span="4" style="min-width: 200px;">
                             <div class="card-bucket">
                                 <div class="card-bucket__head">
-                                    <span>{{ item.holderName }} - {{ item.fermentorStatusName }}</span>
+                                    <el-tooltip :disabled="item.holderName===''&&item.fermentorStatusName===''" effect="dark" :content="`${item.holderName} - ${item.fermentorStatusName}`" placement="top">
+                                        <span class="subItem">{{ item.holderName }} - {{ item.fermentorStatusName }}</span>
+                                    </el-tooltip>
                                     <el-button type="text" @click="goTargetItemDetail(item)">
                                         详情
                                     </el-button>
@@ -102,23 +104,26 @@
                                                     :style="{height:((item.volumePercent)*100)+'%', background: setBucketColor(item.fermentorStatus,item.fermentDays)}"
                                                 />
                                             </div>
-                                            <span v-if="item.judgeResult==='CQ'" class="cq"><img src="../../../assets/img/icon-cq.png" alt=""></span>
+                                            <div class="icons">
+                                                <img v-if="item.judgeResult==='CQ'" src="../../../assets/img/icon-cq.png" alt="" style="margin-bottom: 5px;">
+                                                <img v-if="item.freezeFlag==='Y'" src="../../../assets/img/icon-fr.png" alt="">
+                                            </div>
                                         </div>
                                     </div>
                                     <div class="btn-group">
                                         <el-button v-if="isAuth('')" size="small" plain :disabled="item.fermentorStatus!=='F'" @click="btnFilledBucket(item)">
                                             鼓罐
                                         </el-button>
-                                        <el-button v-if="isAuth('')" size="small" plain :disabled="item.fermentorStatus!=='F' || item.orderNo===''|| item.judgeResult==='CQ'" @click="btnLYCY(item)">
+                                        <el-button v-if="isAuth('')" size="small" plain :disabled="item.fermentorStatus!=='F' || item.orderNo===''|| item.freezeFlag==='Y'" @click="btnLYCY(item)">
                                             LY/CY
                                         </el-button>
-                                        <el-button v-if="isAuth('')" size="small" plain :disabled="! ['F','S','O','T','A','U'].includes(item.fermentorStatus) || item.orderNo===''|| item.judgeResult==='CQ'" @click="btnAdjust(item)">
+                                        <el-button v-if="isAuth('')" size="small" plain :disabled="! ['F','S','O','T','A','U'].includes(item.fermentorStatus) || item.orderNo===''|| item.freezeFlag==='Y'" @click="btnAdjust(item)">
                                             调整
                                         </el-button>
-                                        <el-button v-if="isAuth('')" size="small" plain :disabled="item.fermentorStatus!=='U' || item.orderNo===''|| item.judgeResult==='CQ'" @click="btnClearBucket(item)">
+                                        <el-button v-if="isAuth('')" size="small" plain :disabled="item.fermentorStatus!=='U' || item.orderNo===''|| item.freezeFlag==='Y'" @click="btnClearBucket(item)">
                                             清罐
                                         </el-button>
-                                        <el-button v-if="isAuth('')" size="small" plain :disabled="item.fermentorStatus!=='C'|| item.judgeResult==='CQ'" @click="btnCleanBucket(item)">
+                                        <el-button v-if="isAuth('')" size="small" plain :disabled="item.fermentorStatus!=='C'|| item.freezeFlag==='Y'" @click="btnCleanBucket(item)">
                                             清洗
                                         </el-button>
                                     </div>
@@ -879,6 +884,8 @@
                         return '#8a391b' //'#602813'
                     }
                         return '#8a391b' // 超期
+            } else if (target === 'I') { //T:调酱中,A:已调整,U:领料中
+                return '#8a391b'
             } else if (target === 'U' || target === 'A' || target === 'T') { //T:调酱中,A:已调整,U:领料中
                 return '#8a391b'
             }
@@ -1159,7 +1166,11 @@ interface CurrentDataTable{
         padding: 11px 10px;
         font-size: 14px;
         border-bottom: 1px #e8e8e8 solid;
-
+        .subItem {
+            overflow: hidden;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+        }
         .el-button {
             font-size: 12px;
             &::after {
@@ -1243,15 +1254,25 @@ interface CurrentDataTable{
                 }
             }
 
-            .cq {
+            .icons {
                 position: absolute;
                 top: 0;
                 left: 0;
                 z-index: 99;
                 img {
+                    display: block;
                     width: 80%;
                 }
             }
+            // .fr {
+            //     position: absolute;
+            //     top: 0;
+            //     left: 0;
+            //     z-index: 99;
+            //     img {
+            //         width: 80%;
+            //     }
+            // }
         }
         .btn-group {
             display: flex;

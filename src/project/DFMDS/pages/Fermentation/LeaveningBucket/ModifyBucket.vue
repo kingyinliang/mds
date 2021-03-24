@@ -3,7 +3,7 @@
  * @Anthor: Telliex
  * @Date: 2021-01-15 23:35:23
  * @LastEditors: Telliex
- * @LastEditTime: 2021-03-11 15:45:39
+ * @LastEditTime: 2021-03-24 10:31:32
 -->
 <template>
     <div>
@@ -120,7 +120,7 @@
                                     </el-select>
                                 </el-form-item>
                                 <el-form-item label="批次：">
-                                    <el-select v-model="convertDataGroup.batch" placeholder="请选择" clearable style="width: 100%;" :disabled="!convertDisabled">
+                                    <el-select v-model="convertDataGroup.batch" placeholder="请选择" clearable style="width: 100%;" :disabled="!convertDisabled" @change="asyncBatch">
                                         <el-option
                                             v-for="item in batchOptions"
                                             :key="item.batch"
@@ -383,7 +383,7 @@
                     }).then(({ data }) => {
                         const holderTemp: object[] = []
                         data.data.forEach(item => {
-                            if (item.dictCode === '001' || item.dictCode === '028' || item.dictCode === '029' || item.dictCode === '027') {
+                            if (item.dictCode === '001' || item.dictCode === '028' || item.dictCode === '025' || item.dictCode === '027') {
                                 holderTemp.push({ dictCode: item.dictCode, dictValue: item.dictValue })
                             }
                         })
@@ -401,8 +401,8 @@
                 return new Promise((resolve) => {
                         COMMON_API.HOLDER_DROPDOWN_BY_STATUS_API({
                         holderType: [val],
-                        holderStatus: ['E', 'U'] // 空罐,领用中
-                        // holderStatus: ['E', 'S', 'O']
+                        // holderStatus: ['E', 'U'] // 空罐,领用中
+                        holderStatus: ['E', 'S', 'O'] // 空罐,已入库,已开罐
                     }).then(({ data }) => {
                         console.log('打入罐容器号')
                         console.log(data.data)
@@ -410,6 +410,13 @@
                         resolve(null)
                     })
                 })
+            }
+
+            asyncBatch(val) {
+                console.log('val')
+                console.log(val)
+                this.convertDataGroup.convertBatch = this.convertDataGroup.batch
+
             }
 
             // ＝＝挪罐＝＝
@@ -573,8 +580,8 @@
                 this.currentFermentorStatusName = item.fermentorStatusName //
 
                 // radio 状态
-                this.modifyDisabled = ['S', 'O', 'T', 'A', 'U'].includes(item.fermentorStatus)
-                this.convertDisabled = ['O', 'A', 'T', 'U'].includes(item.fermentorStatus)
+                this.modifyDisabled = ['S', 'O', 'T', 'A', 'U', 'I'].includes(item.fermentorStatus)
+                this.convertDisabled = ['O', 'A', 'T', 'U', 'I'].includes(item.fermentorStatus)
                 this.moveDisabled = ['S', 'F'].includes(item.fermentorStatus)
                 if (this.modifyDisabled) {
                     this.currentTab = '调整' // 当前初始 tab

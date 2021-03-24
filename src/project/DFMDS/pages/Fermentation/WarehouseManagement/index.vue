@@ -62,11 +62,12 @@
                         </el-table-column>
                         <el-table-column label="操作人员" prop="changer" width="160px" />
                         <el-table-column label="操作时间" prop="changed" width="160px" />
-                        <el-table-column label="操作" width="120px" fixed="right">
+                        <el-table-column label="操作" width="100px" fixed="right">
                             <template slot-scope="scope">
-                                <el-button v-if="Number(scope.row.inStorageType) === 531" type="text" size="small" :disabled="!isRedact || (scope.row.checkStatus !== 'N' && scope.row.checkStatus !== 'R' && scope.row.checkStatus !== 'S' && scope.row.checkStatus !== '')" @click="returnHandler(scope.row)">
+                                <!-- 此处都不允许退回 -->
+                                <!-- <el-button v-if="Number(scope.row.inStorageType) !== 531" type="text" size="small" :disabled="!isRedact || (scope.row.checkStatus !== 'N' && scope.row.checkStatus !== 'R' && scope.row.checkStatus !== 'S' && scope.row.checkStatus !== '')" @click="returnHandler(scope.row)">
                                     退回
-                                </el-button>
+                                </el-button> -->
                                 <el-button type="text" size="small" @click="showLogHandler(scope.row)">
                                     审核日志
                                 </el-button>

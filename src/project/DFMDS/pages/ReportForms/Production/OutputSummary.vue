@@ -1,3 +1,4 @@
+<!-- 产量汇总 -->
 <template>
     <div class="header_main">
         <report-query-table
@@ -35,10 +36,10 @@
                     prop: 'granularity',
                     text: '请选择月报/季报'
                 },
-                {
-                    prop: 'workShop',
-                    text: '请选择生产车间'
-                },
+                // {
+                //     prop: 'workShop',
+                //     text: '请选择生产车间'
+                // },
                 {
                     prop: 'year',
                     text: '请选择年度'
@@ -63,12 +64,12 @@
             //表格数据
             column: [
                 {
-                    prop: 'workShop',
+                    prop: 'workShopName',
                     label: '生产车间',
                     minWidth: '120'
                 },
                 {
-                    prop: 'unit',
+                    prop: 'unitName',
                     label: '单位',
                     minWidth: '120'
                 },
