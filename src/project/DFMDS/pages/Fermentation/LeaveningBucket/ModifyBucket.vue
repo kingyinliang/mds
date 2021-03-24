@@ -3,7 +3,7 @@
  * @Anthor: Telliex
  * @Date: 2021-01-15 23:35:23
  * @LastEditors: Telliex
- * @LastEditTime: 2021-03-22 13:57:43
+ * @LastEditTime: 2021-03-24 09:46:07
 -->
 <template>
     <div>
@@ -580,8 +580,8 @@
                 this.currentFermentorStatusName = item.fermentorStatusName //
 
                 // radio 状态
-                this.modifyDisabled = ['S', 'O', 'T', 'A', 'U'].includes(item.fermentorStatus)
-                this.convertDisabled = ['O', 'A', 'T', 'U'].includes(item.fermentorStatus)
+                this.modifyDisabled = ['S', 'O', 'T', 'A', 'U', 'I'].includes(item.fermentorStatus)
+                this.convertDisabled = ['O', 'A', 'T', 'U', 'I'].includes(item.fermentorStatus)
                 this.moveDisabled = ['S', 'F'].includes(item.fermentorStatus)
                 if (this.modifyDisabled) {
                     this.currentTab = '调整' // 当前初始 tab
