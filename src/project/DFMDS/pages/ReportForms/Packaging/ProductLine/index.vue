@@ -143,7 +143,7 @@
                     label: ['deptName'],
                     value: 'id'
                 },
-                linkageProp: ['productLine']
+                linkageProp: ['productLine', 'materialCode']
             },
             {
                 type: 'select', // column type
@@ -178,11 +178,11 @@
                 marked: false, // mark it
                 clearable: true,
                 disabled: false,
-                defaultOptionsFn: () => {
+                optionsFn: val => {
                     return REPORTS_API.REPORT_PACKAGING_OEE_MATERIAL_QUERY_API({ // /pkgReportForm/material/query
-                        workShop: '',
-                        productLine: ''
-                    })
+                            workShop: val || '',
+                            productLine: ''
+                        })
                 },
                 resVal: {
                     resData: 'data',
