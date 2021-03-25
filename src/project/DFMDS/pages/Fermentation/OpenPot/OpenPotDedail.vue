@@ -378,11 +378,12 @@
                 id: this.$store.state.fer.openPotObj.id
             }).then(({ data }) => {
                 this.formHeader = data.data
-                if (this.formHeader.useDate) {
-                    if (new Date(dateFormat(new Date(), 'yyyy-MM-dd')) > new Date(this.formHeader.useDate)) {
-                        this.dataRule = false
-                    }
+                if (this.formHeader.useDate && new Date(dateFormat(new Date(), 'yyyy-MM-dd')) > new Date(this.formHeader.useDate)) {
+                    this.dataRule = false
+                } else if (this.formHeader.statusName === '已撤回') {
+                    this.dataRule = false
                 }
+
             })
             this.getSelect()
         }
@@ -795,6 +796,7 @@
         ferOverdueMaterialList?: ListObj[];
     }
     interface HeadObj{
+        statusName?: string;
         useDate?: string;
         openPotNo: string;
         mixPotNo?: string;
