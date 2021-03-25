@@ -117,9 +117,16 @@
                 clearable: true,
                 disabled: false,
                 defaultOptionsFn: () => {
-                    return REPORTS_API.REPORT_PACKAGING_OEE_MATERIAL_QUERY_API({ // /pkgReportForm/material/query
-                        workShop: '',
-                        productLine: ''
+                    return new Promise(resolve => {
+                            REPORTS_API.REPORT_PACKAGING_OEE_MATERIAL_QUERY_API({ // /pkgReportForm/material/query
+                            workShop: '',
+                            productLine: ''
+                        }).then(res => {
+                            const dataTemp = JSON.parse(JSON.stringify(res.data.data))
+                            // 多余代码, 避免后端传空字串
+                            res.data.data = dataTemp.filter(item => item.materialName !== '' && item.materialCode !== '')
+                            resolve(res)
+                        })
                     })
                 },
                 resVal: {
