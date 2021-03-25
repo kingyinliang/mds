@@ -214,11 +214,13 @@
                         })
 
                         resTemp.data.data[0].totalData.forEach(item => {
-                            totalDataTemp[`actualYield`] = item.actualYield
-                            totalDataTemp[`productionHours`] = item.productionHours
                             totalDataTemp[`actualYield${item.productDate}`] = item.actualYield
                             totalDataTemp[`productionHours${item.productDate}`] = item.productionHours
                         })
+                        totalDataTemp[`productionHoursSum`] = resTemp.data.data[0].productionHoursSumTotal
+                        totalDataTemp[`actualYieldSum`] = resTemp.data.data[0].actualYieldSumTotal
+                        console.log('totalDataTemp')
+                        console.log(totalDataTemp)
                         resTemp.data.data[0].totalData = totalDataTemp
                     }
                     resolve(resTemp)
