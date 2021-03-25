@@ -87,7 +87,7 @@
         <mds-card v-show="fastS" title="原汁罐列表" name="potTotal" :pack-up="false">
             <template slot="titleBtn">
                 <div style="float: right; height: 32px; margin-bottom: 10px; line-height: 32px;">
-                    <em v-if="isAuth('juice:pot:juiceStockItem')"><a href="#/DataEntry-Juice-Pot-summary" style="color: #487bff; font-size: 14px;">原汁库存情况>></a></em>
+                    <em v-if="isAuth('juice:pot:juiceStockItem')"><a href="#/MDS-views-page-DataEntry-Juice-Pot-summary" style="color: #487bff; font-size: 14px;">原汁库存情况>></a></em>
                 </div>
             </template>
             <div>
@@ -1143,9 +1143,9 @@
             // 去详请
             godetails(row) {
                 this.$store.state.common.Juice = row;
-                this.mainTabs = this.mainTabs.filter(item => item.name !== 'DataEntry-Juice-Pot-detail');
+                this.mainTabs = this.mainTabs.filter(item => item.name !== 'MDS-views-page-DataEntry-Juice-Pot-detail');
                 setTimeout(() => {
-                    this.$router.push({ name: `DataEntry-Juice-Pot-detail` });
+                    this.$router.push({ name: `MDS-views-page-DataEntry-Juice-Pot-detail` });
                 }, 100);
             },
             // 改变每页条数

@@ -37,7 +37,7 @@
                 <el-table-column label="生产批次" :show-overflow-tooltip="true" width="140">
                     <template slot-scope="scope">
                         <div class="required">
-                            <em class="reqI">*</em>
+                            <em v-if="scope.row.materialTypeCode !== 'ZERS'" class="reqI">*</em>
                             <el-input v-if="isRedact && (Sapstatus === 'noPass' || Sapstatus === 'saved' || Sapstatus === '') && scope.row.status !== 'submit' && scope.row.status !== 'checked'" v-model="scope.row.batch" size="small" placeholder="手工录入" type="text" maxlength="10" :disabled="scope.row.delFlag === '1'" />
                             <el-input v-else v-model="scope.row.batch" size="small" placeholder="手工录入" disabled />
                         </div>
@@ -435,7 +435,12 @@ export default {
             if (st === 'submit') {
                 for (const it of this.listbomP) {
                     if (it.delFlag !== '1') {
-                        if (it.productUseNum === '' || !it.batch) {
+                        // if (it.productUseNum === '' || !it.batch) {
+                        //     ty = false;
+                        //     this.$warningToast('物料必填项未填');
+                        //     return false;
+                        // }
+                        if (it.productUseNum === '' || (it.materialTypeCode !== 'ZERS' && !it.batch)) {
                             ty = false;
                             this.$warningToast('物料必填项未填');
                             return false;
@@ -724,7 +729,9 @@ export default {
                     isSplit: '1',
                     delFlag: '0',
                     workShop: row['workShop'],
-                    orderId: row['orderId']
+                    orderId: row['orderId'],
+                    materialTypeCode: row['materialTypeCode'],
+                    productUseNum: ''
                 }
             );
         },

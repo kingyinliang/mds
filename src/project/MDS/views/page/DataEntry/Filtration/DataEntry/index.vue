@@ -196,10 +196,10 @@ export default {
             this.$store.state.common.orderNo = item.orderNo;
             // this.$store.state.common.orderId = item.orderIdList[item.orderNo]
             this.$store.state.common.orderId = item.orderNoList.find(items => items.orderNo === item.orderNo).orderId;
-            this.mainTabs = this.mainTabs.filter(subItem => subItem.name !== 'DataEntry-Filtration-DataEntry-detail');
+            this.mainTabs = this.mainTabs.filter(subItem => subItem.name !== 'MDS-views-page-DataEntry-Filtration-DataEntry-detail');
             setTimeout(() => {
                 this.$router.push({
-                    name: `DataEntry-Filtration-DataEntry-detail`
+                    name: `MDS-views-page-DataEntry-Filtration-DataEntry-detail`
                 });
             }, 100);
         }

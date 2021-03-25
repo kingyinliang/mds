@@ -418,11 +418,11 @@ export default {
                 this.FWproductLine = item.productLine;
                 this.FWproductLineName = item.productLineName;
                 if (item.orderNo && item.properties) {
-                    this.mainTabs = this.mainTabs.filter(subItem => subItem.name !== 'DataEntry-FryWheat-EnterData-dataEntryIndex');
+                    this.mainTabs = this.mainTabs.filter(subItem => subItem.name !== 'MDS-views-page-DataEntry-FryWheat-EnterData-dataEntryIndex');
                     this.FWorderId = item.orderIdList[item.orderNo];
                     setTimeout(() => {
                         this.$router.push({
-                            name: `DataEntry-FryWheat-EnterData-dataEntryIndex`
+                            name: `MDS-views-page-DataEntry-FryWheat-EnterData-dataEntryIndex`
                         });
                     }, 100);
                 } else {
@@ -437,11 +437,11 @@ export default {
                     productLineName: item.productLineName,
                     productDate: this.productDate
                 };
-                this.mainTabs = this.mainTabs.filter(subItem => subItem.name !== 'DataEntry-FryWheat-PwWheat-dataEntryIndex');
+                this.mainTabs = this.mainTabs.filter(subItem => subItem.name !== 'MDS-views-page-DataEntry-FryWheat-PwWheat-dataEntryIndex');
                 this.PWorder = order;
                 setTimeout(() => {
                     this.$router.push({
-                        name: `DataEntry-FryWheat-PwWheat-dataEntryIndex`
+                        name: `MDS-views-page-DataEntry-FryWheat-PwWheat-dataEntryIndex`
                     });
                 }, 100);
             }

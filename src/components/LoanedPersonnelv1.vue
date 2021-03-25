@@ -5,7 +5,7 @@
                 <el-row class="orgHead">
                     <span>组织架构</span>
                 </el-row>
-                <el-tree ref="orgtree" :data="orgTree" node-key="deptId" :default-expand-all="openOrgTree" :default-expanded-keys="arrList" :expand-on-click-node="false" @node-click="setdetail" />
+                <el-tree ref="orgtree" :data="orgTree" node-key="id" :highlight-current="true" :default-expand-all="openOrgTree" :default-expanded-keys="arrList" :expand-on-click-node="false" @node-click="setdetail" />
             </el-card>
             <el-transfer
                 v-model="selctId"
@@ -64,20 +64,36 @@ export default {
             this.openOrgTree = !this.openOrgTree
         },
         init(userId, userTypeName) {
-            let temp = []
+            let userIdTemp = []
             if (userId !== '') {
-                temp = userId.split(',')
+                userIdTemp = userId.split(',')
             }
 
             this.userTypeName = userTypeName;
             this.visible = true;
-            this.selctId = temp;
-            this.userlist = [];
-            // if (userId && userId.length > 0) {
-            //     userId.forEach((item) => {
-            //         this.selctId.push({ key: item.key });
-            //     });
-            // }
+            this.selctId = userIdTemp; // 已选
+            this.userlist = []; // 可选
+
+            // 预设选取该车间
+            COMMON_API.ORG_QUERY_WORKSHOP_API({
+                factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
+                deptType: ['WORK_SHOP'],
+                deptName: '发酵'
+            }).then((res) => {
+                res.data.data.forEach(item => {
+                    const name = item.deptCode === this.arrList[0] ? item.deptName : '';
+                    if (name !== '') {
+                        const tempNode = document.querySelectorAll('.el-tree-node__label')
+                        tempNode.forEach(element => {
+                            console.log(element.innerText)
+                            if (element.innerText === name) {
+                                // element.parentNode.parentNode.classList.add('is-current')
+                                element.parentNode.parentNode.click();
+                            }
+                        })
+                    }
+                })
+            })
         },
         // 根据组织架构查人
         setdetail(dataObj) {
@@ -131,13 +147,4 @@ export default {
     font-weight: 400;
     font-size: 14px;
 }
-
-/* .el-transfer__button.is-disabled,
-.el-transfer__button.is-disabled:hover {
-    width: 176px;
-    height: 264px;
-    background: rgba(255, 255, 255, 1);
-    border: 1px solid rgba(217, 217, 217, 1);
-    border-radius: 4px;
-} */
 </style>

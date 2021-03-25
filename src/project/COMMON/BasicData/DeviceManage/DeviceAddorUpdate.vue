@@ -1,3 +1,10 @@
+<!--
+ * @Description:
+ * @Anthor: Telliex
+ * @Date: 2021-02-23 21:25:39
+ * @LastEditors: Telliex
+ * @LastEditTime: 2021-03-01 10:56:04
+-->
 <template>
     <el-dialog :title="form.deviceId ? '修改设备信息' : '新增设备'" :close-on-click-modal="false" :visible.sync="visible">
         <div>
@@ -35,11 +42,12 @@
             factory: '',
             id: '',
             deptId: '',
+            deptName: '',
             deviceName: '',
             deviceNo: ''
         }
 
-        init(deptId, row) {
+        init(deptId, deptName, row) {
             console.log(row);
             this.visible = true;
             this.form = {};
@@ -47,18 +55,17 @@
                 this.form = row;
             }
             this.form.deptId = deptId;
+            this.form.deptName = deptName;
         }
 
         submitForm() {
             this.form.factory = JSON.parse(sessionStorage.getItem('factory') || '{}').id;
             let http;
             this.form.id ? http = COMMON_API.DEVICEUPDATA_API : http = COMMON_API.DEVICEADD_API;
-            http(this.form).then(({ data }) => {
-                if (data.code === 200) {
+            http(this.form).then(() => {
                     this.$successToast('操作成功');
                     this.visible = false;
                     this.$emit('refreshDataList');
-                }
             });
         }
     }
@@ -66,6 +73,7 @@
         factory?: string;
         id?: string;
         deptId?: string;
+        deptName?: string;
         deviceName?: string;
         deviceNo?: string;
     }

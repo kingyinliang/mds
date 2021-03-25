@@ -303,10 +303,10 @@ export default {
                 factory: this.plantList.factoryIDValue,
                 deptId: this.plantList.workshopIDValue
             };
-            this.mainTabs = this.mainTabs.filter(tabItem => tabItem.name !== 'DataEntry-Granary-BeanPulp-dataEntryIndex');
+            this.mainTabs = this.mainTabs.filter(tabItem => tabItem.name !== 'MDS-views-page-DataEntry-Granary-BeanPulp-dataEntryIndex');
             setTimeout(() => {
                 this.$router.push({
-                    name: `DataEntry-Granary-BeanPulp-dataEntryIndex`
+                    name: `MDS-views-page-DataEntry-Granary-BeanPulp-dataEntryIndex`
                 });
             }, 100);
         }

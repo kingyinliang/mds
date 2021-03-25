@@ -15,7 +15,7 @@
             <template slot="home">
                 <mds-card title="发料列表" :pack-up="false">
                     <el-table class="newTable markStyle" :data="targetQueryTableList.filter(item => item.delFlag !== 1)" :row-class-name="rowDelFlag" header-row-class-name="tableHead" border style="width: 100%; min-height: 90px;" @selection-change="selectionChange">
-                        <el-table-column type="selection" width="55" fixed />
+                        <el-table-column type="selection" width="55" fixed :selectable="checkBoxDisable" />
                         <el-table-column type="index" :index="index => getIndexMethod(index, targetQueryTableList.filter(item => item.delFlag !== 1))" label="序号" width="55" fixed />
                         <el-table-column label="状态" prop="checkStatus" width="120px">
                             <template slot-scope="scope">
@@ -26,10 +26,18 @@
                         </el-table-column>
                         <el-table-column label="生产订单" prop="orderNo" width="120px" />
                         <el-table-column label="容器号" prop="fermentorName" width="120px" />
-                        <el-table-column label="生产物料" prop="productMaterialName" width="140px" />
+                        <el-table-column label="生产物料" prop="productMaterialName" width="140px" show-overflow-tooltip>
+                            <template slot-scope="scope">
+                                {{ scope.row.productMaterialName + ' ' + scope.row.productMaterialCode }}
+                            </template>
+                        </el-table-column>
                         <el-table-column label="订单数量" prop="amount" />
                         <el-table-column label="订单单位" prop="unit" />
-                        <el-table-column label="组件物料" prop="materialName" width="120px" />
+                        <el-table-column label="组件物料" prop="materialName" width="120px" show-overflow-tooltip>
+                            <template slot-scope="scope">
+                                {{ scope.row.materialName + ' ' + scope.row.materialCode }}
+                            </template>
+                        </el-table-column>
                         <el-table-column prop="">
                             <template slot-scope="scope">
                                 <el-button type="text" size="mini" :disabled="!isRedact || (scope.row.checkStatus !== 'N' && scope.row.checkStatus !== 'R' && scope.row.checkStatus !== 'S')" @click="splitHandler(scope.row, scope.$index)">
@@ -73,7 +81,7 @@
                         </el-table-column>
                     </el-table>
                 </mds-card>
-                <el-row>
+                <el-row style="padding-bottom: 20px;">
                     <el-pagination :current-page.sync="currentPage" :page-sizes="[10, 20, 50]" :page-size="pageSize" layout="total, sizes, prev, pager, next, jumper" :total="total" @size-change="sizeChangeHandler" @current-change="currentPageChangeHanlder" />
                 </el-row>
             </template>
@@ -158,7 +166,7 @@
                     label: ['deptName'],
                     value: 'id'
                 },
-                linkageProp: ['holderNo']
+                linkageProp: ['fermentorId']
             },
             {
                 type: 'input',
@@ -242,7 +250,7 @@
             {
                 type: 'select',
                 label: '容器号',
-                prop: 'holderNo',
+                prop: 'fermentorId',
                 // labelWidth: 85,
                 rule: [{ required: false, message: ' ', trigger: 'change' }],
                 defaultValue: '',
@@ -325,6 +333,14 @@
             } else {
                 this.$infoToast('暂无任何内容');
             }
+        }
+
+        checkBoxDisable(row) {
+            // 发料管理/入库管理：已提交、已过账的勾选按钮灰掉，应该灰掉不允许再勾选
+            if (row.checkStatus === 'M' || row.checkStatus === 'P') {
+                return false
+            }
+            return true
         }
 
         showLogHandler(row) {

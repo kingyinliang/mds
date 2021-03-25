@@ -236,13 +236,13 @@ export default {
             // this.$store.state.common.bottle.ProOrderId = '123'
             switch (num) {
                 case 1:
-                    url = 'DataEntry-Bottle-Production-detail';
+                    url = 'MDS-views-page-DataEntry-Bottle-Production-detail';
                     break;
                 case 2:
-                    url = 'DataEntry-Bottle-craft';
+                    url = 'MDS-views-page-DataEntry-Bottle-craft';
                     break;
                 case 3:
-                    url = 'DataEntry-Bottle-qualityTest';
+                    url = 'MDS-views-page-DataEntry-Bottle-qualityTest';
                     break;
                 default:
             }

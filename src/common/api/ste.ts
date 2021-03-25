@@ -260,7 +260,23 @@ const STE_API = {
     /**
      * @property {string} STE_AUDIT_CRAFT_TEMPERATUREANDTIME_API 杀菌车间-页签状态-查询定单页签状态
      */
-    STE_INSTORAGE_QUERY_TABS_STATUS_API: params => httpProxy('/steTag/queryByOrderNo', 'POST', params)
+    STE_INSTORAGE_QUERY_TABS_STATUS_API: params => httpProxy('/steTag/queryByOrderNo', 'POST', params),
+    /**
+     * @property {string} STE_CRAFT_QUERY_API 杀菌车间-温度阶段-查询
+     */
+    STE_CRAFT_QUERY_API: params => httpProxy('/steCraft/query', 'POST', params),
+    /**
+     * @property {string} STE_CRAFT_INSERT_API 杀菌车间-温度阶段-新增
+     */
+    STE_CRAFT_INSERT_API: params => httpProxy('/steCraft/insert', 'POST', params),
+    /**
+     * @property {string} STE_CRAFT_UPDATE_API 杀菌车间-温度阶段-更新
+     */
+    STE_CRAFT_UPDATE_API: params => httpProxy('/steCraft/update', 'POST', params),
+    /**
+     * @property {string} STE_CRAFT_DEL_API 杀菌车间-温度阶段-删除
+     */
+    STE_CRAFT_DEL_API: params => httpProxy('/steCraft/del', 'POST', params)
 };
 
 export default STE_API;

@@ -27,24 +27,30 @@
                                 </el-radio>
                             </el-radio-group>
                         </el-form-item>
-                        <el-form-item v-if="item.type === 'date-interval'" :key="item.prop" class="dateinput" :label="`${item.label}：` || ''" :prop="item.prop" :rules="item.rule" :label-width="`${item.labelWidth ? item.labelWidth : 70}px`">
-                            <el-row>
-                                <el-col :span="12">
-                                    <el-date-picker :ref="item.prop" v-model="queryForm[item.prop]" :type="item.dataType ? item.dataType : 'date'" placeholder="选择日期" :value-format="item.valueFormat ? item.valueFormat : 'yyyy-MM-dd'" style="width: 140px;" />
-                                    <span style="margin-left: 5px;">-</span>
+                        <el-form-item v-if="item.type === 'date-interval'" :key="item.prop" class="dateinput" :label="`${item.label}：` || ''" :rules="item.rule" :label-width="`${item.labelWidth ? item.labelWidth : 70}px`">
+                            <el-row :style="`width: ${item.width ? item.width : 305}px;`">
+                                <el-col :span="11">
+                                    <el-form-item :prop="item.prop">
+                                        <el-date-picker :ref="item.prop" v-model="queryForm[item.prop]" :type="item.dataType ? item.dataType : 'date'" placeholder="开始日期" :value-format="item.valueFormat ? item.valueFormat : 'yyyy-MM-dd'" :style="`width: ${item.width ? (item.width/24)*11 : 140}px;`" />
+                                    </el-form-item>
                                 </el-col>
-                                <el-col :span="12">
-                                    <el-date-picker :ref="item.propTwo" v-model="queryForm[item.propTwo]" :type="item.dataType ? item.dataType : 'date'" placeholder="选择日期" :value-format="item.valueFormat ? item.valueFormat : 'yyyy-MM-dd'" style="width: 140px;" />
+                                <el-col class="line" :span="2" style="text-align: center;">
+                                    -
+                                </el-col>
+                                <el-col :span="11">
+                                    <el-form-item :prop="item.propTwo">
+                                        <el-date-picker :ref="item.propTwo" v-model="queryForm[item.propTwo]" :type="item.dataType ? item.dataType : 'date'" placeholder="结束日期" :value-format="item.valueFormat ? item.valueFormat : 'yyyy-MM-dd'" :style="`width: ${item.width ? (item.width/24)*11 : 140}px;`" />
+                                    </el-form-item>
                                 </el-col>
                             </el-row>
                         </el-form-item>
                         <el-form-item v-if="item.type === 'date-picker'" :key="item.prop" :label="`${item.label}：` || ''" :prop="item.prop" :rules="item.rule" :label-width="`${item.labelWidth ? item.labelWidth : 70}px`">
-                            <el-date-picker :ref="item.prop" v-model="queryForm[item.prop]" :type="item.dataType" placeholder="请选择" :value-format="item.valueFormat" style="width: 170px;" @blur="v => dateChange(v)" />
+                            <el-date-picker :ref="item.prop" v-model="queryForm[item.prop]" :type="item.dataType" placeholder="请选择" :value-format="item.valueFormat" :style="`width: ${item.width ? item.width : 170}px;`" @blur="v => dateChange(v)" />
                         </el-form-item>
                     </template>
                 </template>
                 <el-form-item class="floatr">
-                    <el-button type="primary" size="small" @click="getDataList(true)">
+                    <el-button type="primary" size="small" @click="searchHandler()">
                         查询
                     </el-button>
                     <el-button v-if="exportExcel" type="primary" size="small" @click="formExportExcel">
@@ -92,7 +98,9 @@
                                 <div v-if="item.type === 'clickSpan'" style="color: #45c2b5; cursor: pointer;" @click="item.onclick(scope.row)">
                                     {{ scope.row[item.prop] }}
                                 </div>
-                                <el-input v-else-if="item.redact && item.type === 'input'" v-model="scope.row[item.prop]" :disabled="!scope.row.redact" placeholder="手工录入" size="small" />
+                                <el-tooltip v-else-if="item.redact && item.type === 'input'" class="item" effect="dark" :content="scope.row[item.prop]" placement="top">
+                                    <el-input v-model="scope.row[item.prop]" :disabled="!scope.row.redact" placeholder="手工录入" size="small" />
+                                </el-tooltip>
                                 <el-date-picker v-else-if="item.redact && item.type === 'date-picker'" v-model="scope.row[item.prop]" :disabled="!scope.row.redact" :type="item.dataType" placeholder="请选择" :value-format="item.valueFormat" :style="{width: item.width - 25 + 'px'}" size="small" @change="val => selectChange(scope.row, scope.$index, val)" />
                                 <el-select v-else-if="item.redact && item.type === 'select'" v-model="scope.row[item.prop]" :disabled="!scope.row.redact || (scope.row.notEditableProp ? scope.row.notEditableProp.includes(item.prop) : false)" :type="item.dataType" placeholder="请选择" size="small">
                                     <!--<el-option label="请选择" value="" />-->
@@ -147,12 +155,16 @@
                 <el-table-column v-if="showSelectColumn" :selectable="selectableFn" type="selection" width="50px" fixed />
                 <el-table-column v-if="showIndexColumn" type="index" :index="indexMethod" label="序号" width="50px" fixed />
                 <template v-for="(item, index) in column">
-                    <el-table-column v-if="!item.hide" :key="index" :fixed="item.fixed" :prop="item.prop" :label="item.label" :width="item.width || ''" :min-width="item.minwidth || ''" :formatter="item.formatter" :show-overflow-tooltip="(item.showOverFlowTooltip? false : true)">
+                    <el-table-column v-if="!item.hide" :key="item.prop + '' + index" :fixed="item.fixed" :prop="item.prop" :label="item.label" :width="item.width || ''" :min-width="item.minwidth || ''" :formatter="item.formatter" :show-overflow-tooltip="(item.showOverFlowTooltip? false : true)">
                         <template slot="header">
                             {{ item.label }} <span v-if="item.subLabel" style="font-size: 10px;">{{ item.subLabel }}</span>
                         </template>
                         <template v-if="item.child">
-                            <el-table-column v-for="chind in item.child" :key="chind.prop" :prop="chind.prop" :label="chind.label" :formatter="chind.formatter" :show-overflow-tooltip="chind.showOverFlowTooltip" :width="chind.width || ''" />
+                            <el-table-column v-for="chind in item.child" :key="chind.prop" :prop="chind.prop" :label="chind.label" :formatter="chind.formatter" :show-overflow-tooltip="chind.showOverFlowTooltip" :width="chind.width || ''">
+                                <template slot="header">
+                                    {{ chind.label }} <span v-if="chind.subLabel" style="font-size: 10px;">{{ chind.subLabel }}</span>
+                                </template>
+                            </el-table-column>
                         </template>
                     </el-table-column>
                 </template>
@@ -164,7 +176,7 @@
             </el-table>
             <slot name="showTableOther" />
             <slot v-if="!showTable" name="card-main" />
-            <el-row v-if="showPage === true">
+            <el-row v-if="showPage === true && tableData.length!==0">
                 <el-pagination :current-page="queryForm[currpageConfig]" :page-sizes="[10, 20, 50]" :page-size="queryForm[pagesizeConfig] " layout="total, sizes, prev, pager, next, jumper" :total="queryForm.totalCount" @size-change="handleSizeChange" @current-change="handleCurrentChange" />
             </el-row>
         </div>
@@ -172,7 +184,7 @@
 </template>
 
 <script>
-    import { exportFileForm } from 'utils/utils.ts';
+    import { exportFileForm, exportFileFor2Excel } from 'utils/utils.ts';
     import { creatGetPath } from 'utils/utils.ts';
     export default {
         name: 'QueryTable',
@@ -193,6 +205,10 @@
             factoryType: {
                 type: Number,
                 default: 0
+            },
+            queryTabkeType: { // querytable 类型
+                type: String,
+                default: ''
             },
             type: {
                 type: String,
@@ -481,6 +497,10 @@
                 //     this.getDataList(true);
                 // }
             },
+            searchHandler() {
+                this.$emit('search-init')
+                this.getDataList(true)
+            },
             // 获取table数据
             getDataList(st) {
                 if (this.rules.length) {
@@ -541,6 +561,11 @@
                     } else if (this.factoryType === 1) {
                         this.tableData = data.data.records;
                         this.queryForm.totalCount = data.data.total;
+                    } else if (this.queryTabkeType === 'report') { // 类型：报表
+                        this.tableData = data.data;
+                        this.queryForm[this.currpageConfig] = 1;
+                        this.queryForm[this.pagesizeConfig] = 10;
+                        this.queryForm.totalCount = data.data.length;
                     }
                     this.$emit('get-data-success', data, st);
                 });
@@ -559,6 +584,15 @@
                     this.$warningToast('无导出权限');
                     return false;
                 }
+
+                if (this.queryTabkeType === 'report') { // 类型：报表
+                    const tableDataTemp = JSON.parse(JSON.stringify(this.tableData))
+                    this.tableData[0].totalData[this.column[0].prop] = '合计';
+                    tableDataTemp.push(this.tableData[0].totalData);
+                    exportFileFor2Excel(this.column, tableDataTemp, this.exportOption.text)
+                    return
+                }
+
                 exportFileForm(`${this.exportOption.exportInterface}`, this.exportOption.text, this);
             },
             // 显示隐藏动画

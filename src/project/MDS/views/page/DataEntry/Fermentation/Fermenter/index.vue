@@ -94,7 +94,7 @@
             <div class="box-card-title clearfix">
                 <h3> <em class="title-icon" style="background: #ffbf00;" />发酵罐列表 </h3>
                 <em v-if="isAuth('report:production:fermentation')" class="floatR" @click="goSummary()">
-                    <a href="#/DataEntry-Fermentation-Fermenter-summary">发酵罐一览表>></a>
+                    <a href="#/MDS-views-page-DataEntry-Fermentation-Fermenter-summary">发酵罐一览表>></a>
                 </em>
             </div>
             <div>
@@ -106,7 +106,7 @@
                                 <a v-if="isAuth('fer:holderManage:detail')" @click="godetails(item)">详情>></a>
                             </div>
                             <div class="box_content">
-                                <img v-if="item.ferOrderNo.slice(0, 4) === RDorder" src="@/assets/img/RD.png" alt="" style="position: absolute; top: 10px; left: 10px;">
+                                <img v-if="item.ferOrderNo.slice(0, 4) === RDorder" src="@/assets/img/RD.png" alt="" style="position: absolute; top: 10px; left: 15px; z-index: 999; width: 40px;">
                                 <div class="box_content_itemPot">
                                     <div class="pot_border">
                                         <div class="pot" />
@@ -597,10 +597,10 @@ export default {
         // 去详请
         godetails(row) {
             this.$store.state.common.Fermentation.details = row;
-            this.mainTabs = this.mainTabs.filter(item => item.name !== 'DataEntry-Fermentation-Fermenter-details');
+            this.mainTabs = this.mainTabs.filter(item => item.name !== 'MDS-views-page-DataEntry-Fermentation-Fermenter-details');
             setTimeout(() => {
                 this.$router.push({
-                    name: `DataEntry-Fermentation-Fermenter-details`
+                    name: `MDS-views-page-DataEntry-Fermentation-Fermenter-details`
                 });
             }, 100);
         },
@@ -608,10 +608,10 @@ export default {
         goSummary() {
             this.$store.state.common.Fermentation.workShop = this.formHeader.workShop;
             this.$store.state.common.Fermentation.factory = this.formHeader.factory;
-            this.mainTabs = this.mainTabs.filter(item => item.name !== 'DataEntry-Fermentation-Fermenter-summary');
+            this.mainTabs = this.mainTabs.filter(item => item.name !== 'MDS-views-page-DataEntry-Fermentation-Fermenter-summary');
             setTimeout(() => {
                 this.$router.push({
-                    name: `DataEntry-Fermentation-Fermenter-summary`
+                    name: `MDS-views-page-DataEntry-Fermentation-Fermenter-summary`
                 });
             }, 100);
         },
@@ -626,7 +626,7 @@ export default {
                 this.$store.state.common.Fermentation.materia.approveStatus = '';
                 this.$store.state.common.Fermentation.materia.productDateOne = '';
                 this.$store.state.common.Fermentation.materia.productDateTwo = '';
-                url = 'DataEntry-Fermentation-MaterialManage-index';
+                url = 'MDS-views-page-DataEntry-Fermentation-MaterialManage-index';
             } else if (str === '2') {
                 this.$store.state.common.Fermentation.category.factory = row.factory;
                 this.$store.state.common.Fermentation.category.workShop = row.workShop;
@@ -639,7 +639,7 @@ export default {
                 this.$store.state.common.Fermentation.category.pageSize = 10;
                 this.$store.state.common.Fermentation.category.totalCount = 10;
                 this.$store.state.common.Fermentation.category.isJudged = 0;
-                url = 'DataEntry-Fermentation-CategoryJudgement-index';
+                url = 'MDS-views-page-DataEntry-Fermentation-CategoryJudgement-index';
             } else if (str === '3') {
                 this.$store.state.common.FerInStockManage.factoryId = row.factory;
                 this.$store.state.common.FerInStockManage.workshopId = row.workShop;
@@ -647,7 +647,7 @@ export default {
                 this.$store.state.common.FerInStockManage.endDate = '';
                 this.$store.state.common.FerInStockManage.holderList = [row.holderId];
                 this.$store.state.common.FerInStockManage.orderList = [row.ferOrderNo];
-                url = 'DataEntry-Fermentation-InStockManage-index';
+                url = 'MDS-views-page-DataEntry-Fermentation-InStockManage-index';
             } else if (str === '4') {
                 url = '';
                 if (row.holderStatus === '5') {

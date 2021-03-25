@@ -207,6 +207,8 @@
             this.currentCycle = item.cycle
             this.currentHolderId = item.holderId
 
+            this.arrList = [item.workShop];
+
             FER_API.FER_FERMENTOR_FLATION_BATCH_QUERY_API({
                     holderId: this.currentHolderId
                 }).then(({ data }) => {
@@ -313,7 +315,6 @@
             })
 
             if (this.ruleSubmit()) {
-                const obj = {}
                 const deleteItemsArray: string[] = []
                 const insertListArray: CurrentDataTable[] = []
                 const updateListArray: CurrentDataTable[] = []
@@ -345,7 +346,7 @@
                     updateList: updateListArray
                 }).then(() => {
                     this.$successToast('保存成功');
-                    this.$emit('drumBucketFinish', obj);
+                    this.$emit('drumBucketFinish');
                     this.isTableDialogVisible = false
                 });
 

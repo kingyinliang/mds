@@ -11,7 +11,7 @@
             </el-form-item>
             <el-form-item label="单位：" prop="unit">
                 <el-select v-model="dataForm.unit" placeholder="请选择" size="small" style="width: 180px;" clearable filterable>
-                    <el-option v-for="(iteam, index) in unit" :key="index" :label="iteam.dictValue" :value="iteam.dictCode" />
+                    <el-option v-for="(item, index) in dataForm.virtualMaterialUnitArr" :key="index" :label="item.dictValue" :value="item.dictCode" />
                 </el-select>
             </el-form-item>
         </el-form>
@@ -44,7 +44,7 @@
                 </template>
                 <template slot-scope="scope">
                     <el-select v-model="scope.row.unit" placeholder="请选择" size="small" clearable filterable>
-                        <el-option v-for="(iteam, index) in unit" :key="index" :label="iteam.dictValue" :value="iteam.dictCode" />
+                        <el-option v-for="(item, index) in scope.row.ferBrineUnitArr" :key="index" :label="item.dictValue" :value="item.dictCode" />
                     </el-select>
                 </template>
             </el-table-column>
@@ -85,12 +85,13 @@
         };
 
         visible = false;
-        dataForm = {
+        dataForm: DataForm = {
             id: '',
             virtualMaterialCode: '',
             virtualMaterialName: '',
             baseAmount: '',
             unit: '',
+            virtualMaterialUnitArr: [],
             ferBrineItemList: [{
                 id: '',
                 ferBrineManageId: '',
@@ -99,6 +100,7 @@
                 useMaterialType: '',
                 useAmount: '',
                 unit: '',
+                ferBrineUnitArr: [],
                 remark: ''
             }]
         };
@@ -133,6 +135,7 @@
                     virtualMaterialName: data.ferBrineManage.virtualMaterialName,
                     baseAmount: data.ferBrineManage.baseAmount,
                     unit: data.ferBrineManage.unit,
+                    virtualMaterialUnitArr: [],
                     ferBrineItemList: [{
                         id: data.id,
                         ferBrineManageId: data.ferBrineManageId,
@@ -141,9 +144,12 @@
                         useMaterialType: data.useMaterialType,
                         useAmount: data.useAmount,
                         unit: data.unit,
+                        ferBrineUnitArr: [],
                         remark: data.remark
                     }]
                 }
+                this.setVirtual()
+                this.setUse(this.dataForm.ferBrineItemList[0])
             } else {
                 this.dataForm = {
                     id: '',
@@ -151,7 +157,8 @@
                     virtualMaterialName: '',
                     baseAmount: '',
                     unit: '',
-                    ferBrineItemList: []
+                    ferBrineItemList: [],
+                    virtualMaterialUnitArr: []
                 }
             }
             this.visible = true;
@@ -161,11 +168,48 @@
             const filterArr1: (any) = this.moduleList.filter(it => it.materialCode === row.useMaterialCode);// eslint-disable-line
             row.useMaterialName = filterArr1[0].materialName;
             row.useMaterialType = filterArr1[0].materialTypeCode;
+            row.ferBrineUnitArr = []
+            if (filterArr1[0].basicUnit) {
+                row.ferBrineUnitArr.push({
+                    dictValue: filterArr1[0].basicUnit,
+                    dictCode: filterArr1[0].basicUnitCode
+                })
+            }
+            if (filterArr1[0].productUnit) {
+                row.ferBrineUnitArr.push({
+                    dictValue: filterArr1[0].productUnit,
+                    dictCode: filterArr1[0].productUnitCode
+                })
+            }
+            if (row.ferBrineUnitArr.length) {
+                row.unit = row.ferBrineUnitArr[0].dictCode
+            } else {
+                row.unit = ''
+            }
         }
 
         setVirtual() {
             const filterArr1: (any) = this.virtualList.filter(it => it.materialCode === this.dataForm.virtualMaterialCode);// eslint-disable-line
             this.dataForm.virtualMaterialName = filterArr1[0].materialName;
+            const arr: ListObj[] = []
+            if (filterArr1[0].basicUnit) {
+                arr.push({
+                    dictValue: filterArr1[0].basicUnit,
+                    dictCode: filterArr1[0].basicUnitCode
+                })
+            }
+            if (filterArr1[0].productUnit) {
+                arr.push({
+                    dictValue: filterArr1[0].productUnit,
+                    dictCode: filterArr1[0].productUnitCode
+                })
+            }
+            this.dataForm.virtualMaterialUnitArr = arr
+            if (this.dataForm.virtualMaterialUnitArr.length) {
+                this.dataForm.unit = this.dataForm.virtualMaterialUnitArr[0].dictCode
+            } else {
+                this.dataForm.unit = ''
+            }
         }
 
         addTable() {
@@ -176,6 +220,7 @@
                 useMaterialName: '',
                 useMaterialType: '',
                 useAmount: '',
+                ferBrineUnitArr: [],
                 unit: '',
                 remark: ''
             })
@@ -207,8 +252,30 @@
             })
         }
     }
+    interface DataForm {
+        id?: string;
+        virtualMaterialCode?: string;
+        virtualMaterialName?: string;
+        baseAmount?: string;
+        unit?: string;
+        virtualMaterialUnitArr?: ListObj[];
+        ferBrineItemList: TableData[];
+    }
+    interface TableData {
+        id?: string;
+        ferBrineManageId?: string;
+        useMaterialCode?: string;
+        useMaterialName?: string;
+        useMaterialType?: string;
+        useAmount?: string;
+        unit?: string;
+        ferBrineUnitArr?: ListObj[];
+        remark?: string;
+    }
     interface ListObj {
         id?: string;
+        dictValue?: string;
+        dictCode?: string;
     }
     interface Brine {
         id?: string;

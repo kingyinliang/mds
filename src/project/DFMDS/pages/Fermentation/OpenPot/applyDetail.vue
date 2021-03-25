@@ -28,9 +28,9 @@
                             </el-select>
                         </el-form-item>
                         <el-form-item label="申请物料：" required>
-                            <el-tooltip class="item" effect="dark" :content="(formHeader.applyMaterialCode || '') + ' ' + (formHeader.applyMaterialName || '')" placement="top">
+                            <el-tooltip class="item" effect="dark" :content="(formHeader.applyMaterialName || '') + ' ' + (formHeader.applyMaterialCode || '')" placement="top">
                                 <el-select v-model="formHeader.applyMaterialCode" :disabled="!isRedact" filterable placeholder="请选择" style="width: 120px;" clearable @change="materialChange">
-                                    <el-option v-for="(item, index) in material" :key="index" :label="item.materialName+' ' + item.materialCode" :value="item.materialCode" />
+                                    <el-option v-for="(item, index) in material" :key="index" :label="item.useMaterialName+' ' + item.useMaterialCode" :value="item.useMaterialCode" />
                                 </el-select>
                             </el-tooltip>
                         </el-form-item>
@@ -118,13 +118,13 @@
                 </mds-card>
             </template>
             <template slot="custom_btn">
-                <el-button v-if="formHeader.statusName === '已保存' || !formHeader.statusName" type="primary" size="small" @click="isRedact = !isRedact">
+                <el-button v-if="formHeader.statusName === '已撤回' || formHeader.statusName === '已保存' || !formHeader.statusName" type="primary" size="small" @click="isRedact = !isRedact">
                     {{ isRedact ? '取消' : '编辑' }}
                 </el-button>
                 <el-button v-if="isRedact" type="primary" size="small" @click="saved()">
                     保存
                 </el-button>
-                <el-button v-if="formHeader.statusName === '已保存' || !formHeader.statusName" type="primary" size="small" @click="submit()">
+                <el-button v-if="formHeader.statusName === '已撤回' || formHeader.statusName === '已保存' || !formHeader.statusName" type="primary" size="small" @click="submit()">
                     提交
                 </el-button>
                 <el-button v-if="formHeader.statusName === '待处理'" type="primary" size="small" @click="withdraw()">
@@ -137,7 +137,7 @@
 
 <script lang="ts">
     import { Vue, Component } from 'vue-property-decorator';
-    import { COMMON_API, FER_API } from 'common/api/api';
+    import { BASIC_API, COMMON_API, FER_API } from 'common/api/api';
 
     @Component
     export default class ApplyDetail extends Vue {
@@ -159,6 +159,7 @@
                     id: this.$store.state.fer.applyForObj.id
                 }).then(({ data }) => {
                     this.formHeader = data.data
+                    this.formHeader.applied = true
                 })
                 FER_API.FER_OPEN_POT_APPLY_DETAIL_TABLE_API({
                     openPotNo: this.$store.state.fer.applyForObj.openPotNo
@@ -173,23 +174,30 @@
             }).then(({ data }) => {
                 this.workShop = data.data
             })
-            COMMON_API.SEARCH_MATERIAL_API({
-                factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
-                materialType: 'ZHAL'
+            BASIC_API.FERINFO_DROPDOWN_API({
+                productProcess: 'MIX'
             }).then(({ data }) => {
                 this.material = data.data
             })
+            // COMMON_API.SEARCH_MATERIAL_API({
+            //     factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
+            //     materialType: 'ZHAL'
+            // }).then(({ data }) => {
+            //     this.material = data.data
+            // })
             COMMON_API.HOLDER_DROPDOWN_API({
                 factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
-                holderType: ['001', '028']
+                holderType: ['001', '028'],
+                holderStatus: 'E'
             }).then(({ data }) => {
                 this.potArr = data.data || [];
             })
         }
 
         materialChange() {
-            const filterArr: (any) = this.material.filter(it => it['materialCode'] === this.formHeader.applyMaterialCode);// eslint-disable-line
-            this.formHeader.applyMaterialName = filterArr[0].materialName
+            const filterArr: (any) = this.material.filter(it => it['useMaterialCode'] === this.formHeader.applyMaterialCode);// eslint-disable-line
+            this.formHeader.applyMaterialName = filterArr[0].useMaterialName
+            this.formHeader.applyMaterialType = filterArr[0].useMaterialType
         }
 
         potChange() {
@@ -203,6 +211,7 @@
                 this.$warningToast('请填写必填项')
                 return false
             }
+            this.formHeader.applied = true
             FER_API.FER_OPEN_POT_APPLY_DETAIL_SAVE_API(this.formHeader).then(({ data }) => {
                 this.$successToast('保存成功')
                 if (!this.$store.state.fer.applyForObj.id) {
@@ -217,6 +226,7 @@
                 this.$warningToast('请填写必填项')
                 return false
             }
+            this.formHeader.applied = true
             FER_API.FER_OPEN_POT_APPLY_DETAIL_SUBMIT_API(this.formHeader).then(({ data }) => {
                 this.$successToast('提交成功')
                 if (!this.$store.state.fer.applyForObj.id) {
@@ -244,12 +254,15 @@
     interface FormHeader{
         id?: string;
         workShop?: string;
+        applied?: boolean;
         openPotNo?: string;
         status?: string;
         statusName?: string;
         openType?: string;
         applyMaterialCode?: string;
         applyMaterialName?: string;
+        applyMaterialType?: string;
+        applyMaterialTypeName?: string;
         mixPotId?: string;
         mixPotName?: string;
         mixPotNo?: string;

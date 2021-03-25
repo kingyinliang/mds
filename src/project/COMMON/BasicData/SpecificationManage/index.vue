@@ -277,10 +277,11 @@
                     rules: [
                         { required: true, message: '品牌不能为空', trigger: 'blur' }
                     ],
+                    defalutValue: true,
                     emitChange: (val, element) => {
                         return new Promise((resolve) => {
                             // eslint-disable-next-line no-invalid-this
-                            this.dataOfAddItem.brand = element.optionList.find(item => item.materialCode === val.split(' ')[0]).kondm
+                            // this.dataOfAddItem.brand = element.optionList.find(item => item.materialCode === val.split(' ')[0]).kondm
                             resolve({ prop: 'brand', value: element.optionList.find(item => item.materialCode === val.split(' ')[0]).kondm })
                         })
                     }

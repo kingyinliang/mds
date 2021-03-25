@@ -1,8 +1,8 @@
 <template>
     <div class="header_main">
         <div v-if="headShow" class="dataEntry-head">
-            <div v-if="orderStatusShow" class="dataEntry-head-title">
-                <em class="dataEntry-head-title__icon iconfont factory-gongchang" />
+            <div v-if="orderStatusShow" class="dataEntry-head-title" style="height: 18px;">
+                <em v-if="formHeader.factoryName && headShow" class="dataEntry-head-title__icon iconfont factory-gongchang" />
                 <span v-if="headShow" class="dataEntry-head-title__text">{{ formHeader.factoryName }}</span>
                 <span v-else class="dataEntry-head-title__text">基础信息</span>
                 <em
@@ -20,8 +20,9 @@
             </div>
             <div class="dataEntry-head-base">
                 <el-form :inline="true" :model="formHeader" size="small" class="dataEntry-head-base__form" label-width="120px">
-                    <el-form-item v-for="(item, index) in headerBase" :key="index">
+                    <el-form-item v-for="(item, index) in headerBase" :key="index" :rules="item.rules" :label-width="item.labelWidth?item.labelWidth+'px':'120px'">
                         <template slot="label">
+                            <em v-if="item.required" style="color: red;">*</em>
                             <em class="iconfont" :class="item.icon" style="margin-right: 5px; margin-left: 2px;" />
                             <span>{{ item.label }}：</span>
                         </template>
@@ -38,7 +39,7 @@
                         <el-select v-if="item.type === 'select'" v-model="formHeader[item.value]" size="mini" style="width: 120px;" :disabled="!(isRedact && item.disabled)">
                             <el-option v-for="(optionIt, subIndex) in item.option.list" :key="subIndex" :label="optionIt[item.option.label]" :value="optionIt[item.option.value]" />
                         </el-select>
-                        <el-radio-group v-if="item.type === 'radio'" v-model="formHeader[item.value]" size="mini" :disabled="!isRedact">
+                        <el-radio-group v-if="item.type === 'radio'" v-model="formHeader[item.value]" size="mini" :disabled="!(isRedact && !item.disabled)">
                             <el-radio v-for="(optionIt, subIndex) in item.option.list" :key="subIndex" :label="optionIt[item.option.value]">
                                 {{ optionIt[item.option.label] }}
                             </el-radio>
@@ -102,15 +103,15 @@
                         </span>
                     </div>
                     <div v-if="type === 'entry'" class="redact_btn">
-                        <el-button v-if="orderStatus !== 'submit' && orderStatus !== 'checked' && orderStatus !== 'D' && orderStatus !== '已审核' && orderStatus !== '待审核' && orderStatus !== '已过账' && isAuth(redactAuth)" type="primary" size="small" @click="setRedact">
+                        <el-button v-if="orderStatus !== 'submit' && orderStatus !== 'checked' && orderStatus !== 'D' && orderStatus !== 'M' && orderStatus !== '已提交' && orderStatus !== '已审核' && orderStatus !== '待审核' && orderStatus !== '已过账' && isAuth(redactAuth)" type="primary" size="small" @click="setRedact">
                             {{ isRedact ? '取消' : '编辑' }}
                         </el-button>
                         <template v-if="isRedact || onlySubmit">
-                            <el-button v-if="orderStatus !== 'submit' && orderStatus !== 'checked' && orderStatus !== 'D' && orderStatus !== '已审核' && orderStatus !== '待审核' && orderStatus !== '已过账' && isAuth(saveAuth)" type="primary" size="small" @click="savedData('saved')">
+                            <el-button v-if="orderStatus !== 'submit' && orderStatus !== 'checked' && orderStatus !== 'D' && orderStatus !== 'M' && orderStatus !== '已提交' && orderStatus !== '已审核' && orderStatus !== '待审核' && orderStatus !== '已过账' && isAuth(saveAuth)" type="primary" size="small" @click="savedData('saved')">
                                 保存
                             </el-button>
                         </template>
-                        <el-button v-if="orderStatus !== 'submit' && orderStatus !== 'checked' && orderStatus !== 'D' && orderStatus !== '已审核' && orderStatus !== '待审核' && orderStatus !== '已过账' && ifSubmit() && isAuth(submitAuth)" type="primary" size="small" @click="submitData">
+                        <el-button v-if="orderStatus !== 'submit' && orderStatus !== 'checked' && orderStatus !== 'D' && orderStatus !== 'M' && orderStatus !== '已提交' && orderStatus !== '已审核' && orderStatus !== '待审核' && orderStatus !== '已过账' && ifSubmit() && isAuth(submitAuth)" type="primary" size="small" @click="submitData">
                             提交
                         </el-button>
                     </div>

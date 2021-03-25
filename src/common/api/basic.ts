@@ -38,6 +38,10 @@ const BASIC_API = {
      */
     FERINFO_LIST_API: params => httpProxy('/fer/information/pagingQuery', 'POST', params),
     /**
+     * @property {string} FERINFO_DROPDOWN_API 发酵信息-查询
+     */
+    FERINFO_DROPDOWN_API: params => httpProxy('/fer/information/queryList', 'POST', params),
+    /**
      * @property {string} STEPKG_UPDATE_API 发酵信息-保存
      */
     FERINFO_SAVE_API: params => httpProxy('/fer/information/save', 'POST', params),
@@ -56,7 +60,23 @@ const BASIC_API = {
     /**
      * @property {string} STEPKG_UPDATE_API 盐水管理-删除
      */
-    BRINE_DEL_API: params => httpProxy('/fer/brineManage/delete', 'POST', params)
+    BRINE_DEL_API: params => httpProxy('/fer/brineManage/delete', 'POST', params),
+    /**
+     * @property {string} FER_CRAFT_PAGE_QUERY_API 工艺路线-查询
+     */
+    FER_CRAFT_PAGE_QUERY_API: params => httpProxy('/fer/craft/pageQuery', 'POST', params),
+    /**
+     * @property {string} FER_CRAFT_SAVE_API 工艺路线-保存
+     */
+    FER_CRAFT_SAVE_API: params => httpProxy('/fer/craft/save', 'POST', params),
+    /**
+     * @property {string} FER_CRAFT_UPDATE_API 工艺路线-修改
+     */
+    FER_CRAFT_UPDATE_API: params => httpProxy('/fer/craft/update', 'POST', params),
+    /**
+     * @property {string} FER_CRAFT_DELETE_API 工艺路线-批量删除
+     */
+    FER_CRAFT_DELETE_API: params => httpProxy('/fer/craft/batchDelete', 'POST', params)
 };
 
 export default BASIC_API;

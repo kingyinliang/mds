@@ -3,7 +3,7 @@
  * @Anthor: Telliex
  * @Date: 2021-01-15 23:35:23
  * @LastEditors: Telliex
- * @LastEditTime: 2021-01-19 18:15:03
+ * @LastEditTime: 2021-03-03 10:18:19
 -->
 <template>
     <div class="header_main">
@@ -11,7 +11,7 @@
             <el-col :span="4">
                 <div class="card-left" style="background: #fff;">
                     <p class="dataEntry-head-leftRight__title" style="color: #333;">
-                        罐号：{{ LeaveningformData.holderName }}
+                        罐号：{{ leaveningformData.holderName }}
                     </p>
                     <div class="dataEntry-head-leftRight-pot">
                         <img src="~DFMDS/assets/img/pot-c.png" alt="" style=" left: 0; z-index: 1;">
@@ -21,12 +21,12 @@
             </el-col>
             <el-col :span="20">
                 <div class="card-right" style="background: #fff; cursor: default;">
-                    <el-form ref="Leavening" :model="LeaveningformData" size="small" label-width="120px" :inline="true">
+                    <el-form ref="Leavening" :model="leaveningformData" size="small" label-width="120px" :inline="true">
                         <el-form-item
                             label="生产车间："
                         >
                             <el-input
-                                v-model="LeaveningformData.workShopName"
+                                :value="leaveningformData.workShopName"
                                 placeholder=""
                                 :disabled="true"
                                 style="width: 180px;"
@@ -35,9 +35,9 @@
                         <el-form-item
                             label="生产订单："
                         >
-                            <el-tooltip class="item" effect="dark" :content="LeaveningformData.orderNo" placement="top">
+                            <el-tooltip :disabled="!leaveningformData.orderNo" class="item" effect="dark" :content="leaveningformData.orderNo" placement="top">
                                 <el-input
-                                    v-model="LeaveningformData.orderNo"
+                                    :value="leaveningformData.orderNo"
                                     placeholder=""
                                     :disabled="true"
                                     style="width: 180px;"
@@ -47,9 +47,9 @@
                         <el-form-item
                             label="生产物料："
                         >
-                            <el-tooltip class="item" effect="dark" :content="LeaveningformData.material" placement="top">
+                            <el-tooltip :disabled="!leaveningformData.material" class="item" effect="dark" :content="leaveningformData.material" placement="top">
                                 <el-input
-                                    v-model="LeaveningformData.material"
+                                    :value="leaveningformData.material"
                                     placeholder=""
                                     :disabled="true"
                                     style="width: 180px;"
@@ -60,7 +60,7 @@
                             label="订单数量："
                         >
                             <el-input
-                                v-model="LeaveningformData.currentStock"
+                                :value="leaveningformData.orderAmount/1000"
                                 placeholder=""
                                 style="width: 180px;"
                                 :disabled="true"
@@ -72,7 +72,7 @@
                             label="库存数量："
                         >
                             <el-input
-                                v-model="LeaveningformData.currentStock"
+                                :value="leaveningformData.currentStock/1000"
                                 placeholder=""
                                 style="width: 180px;"
                                 :disabled="true"
@@ -84,7 +84,7 @@
                             label="状态："
                         >
                             <el-input
-                                v-model="LeaveningformData.fermentorStatusName"
+                                :value="leaveningformData.fermentorStatusName"
                                 placeholder=""
                                 style="width: 180px;"
                                 :disabled="true"
@@ -94,17 +94,18 @@
                             label="入罐日期："
                         >
                             <el-input
-                                v-model="LeaveningformData.intoDate"
+                                :value="leaveningformData.intoDate"
                                 placeholder=""
                                 style="width: 180px;"
                                 :disabled="true"
                             />
                         </el-form-item>
                         <el-form-item
+                            v-if="leaveningformData.productProcess !== 'MIX' && leaveningformData.productProcess"
                             label="发酵天数："
                         >
                             <el-input
-                                v-model="LeaveningformData.fermentDays"
+                                :value="leaveningformData.fermentDays"
                                 placeholder=""
                                 style="width: 180px;"
                                 :disabled="true"
@@ -113,17 +114,21 @@
                             </el-input>
                         </el-form-item>
                         <el-form-item
+                            v-if="leaveningformData.productProcess !== 'MIX' && leaveningformData.productProcess"
                             label="是否成熟："
                         >
                             <el-input
-                                v-model="LeaveningformData.freezeFlagnName"
+                                :value="leaveningformData.freezeFlagnName"
                                 placeholder=""
                                 style="width: 180px;"
                                 :disabled="true"
                             />
                         </el-form-item>
-                        <el-form-item label="特殊资源：">
-                            <el-radio-group v-model="LeaveningformData.brineFlag">
+                        <el-form-item
+                            v-if="leaveningformData.productProcess !== 'MIX' && leaveningformData.productProcess"
+                            label="特殊资源："
+                        >
+                            <el-radio-group v-model="leaveningformData.brineFlag">
                                 <el-radio label="N" disabled>
                                     盐水未发
                                 </el-radio>
@@ -142,9 +147,9 @@
         <el-tabs id="DaatTtabs" ref="tabs" v-model="activetTabName" class="NewDaatTtabs tabsPages" type="border-card">
             <el-tab-pane name="1">
                 <span slot="label" class="spanview">
-                    投料信息
+                    当前库存
                 </span>
-                <el-table header-row-class-name="" :data="currentInStockDataGroup" border tooltip-effect="dark" class="newTable" size="mini" max-height="500">
+                <el-table header-row-class-name="" :data="stockList" border tooltip-effect="dark" class="newTable" size="mini" max-height="500">
                     <el-table-column type="index" label="序号" width="55" fixed align="center" />
                     <el-table-column label="车间" :show-overflow-tooltip="true" width="180">
                         <template>
@@ -173,7 +178,7 @@
                     </el-table-column>
                     <el-table-column label="移动类型" :show-overflow-tooltip="true" width="180">
                         <template slot-scope="scope">
-                            {{ scope.row.moveTypeName }}
+                            {{ scope.row.moveTypeFullName }}
                         </template>
                     </el-table-column>
                     <el-table-column label="移动数量" :show-overflow-tooltip="true" width="180">
@@ -188,17 +193,32 @@
                     </el-table-column>
                     <el-table-column label="来源车间" :show-overflow-tooltip="true" width="180">
                         <template slot-scope="scope">
-                            {{ scope.row.workShop }}
+                            {{ scope.row.workShopName }}
                         </template>
                     </el-table-column>
                     <el-table-column label="来源订单" :show-overflow-tooltip="true" width="180">
                         <template slot-scope="scope">
-                            {{ scope.row.orderNo }}
+                            {{ scope.row.preOrderNo || scope.row.orderNo }}
                         </template>
                     </el-table-column>
-                    <el-table-column label="曲房号" :show-overflow-tooltip="true" width="180">
+                    <el-table-column label="来源曲房" :show-overflow-tooltip="true" width="180">
                         <template slot-scope="scope">
                             {{ scope.row.kojiHouse }}
+                        </template>
+                    </el-table-column>
+                    <el-table-column label="来源订单量" :show-overflow-tooltip="true" width="180">
+                        <template slot-scope="scope">
+                            {{ scope.row.preOrderAmount }}
+                        </template>
+                    </el-table-column>
+                    <el-table-column label="订单量" :show-overflow-tooltip="true" width="180">
+                        <template slot-scope="scope">
+                            {{ scope.row.orderAmount }}
+                        </template>
+                    </el-table-column>
+                    <el-table-column label="入库量" :show-overflow-tooltip="true" width="180">
+                        <template slot-scope="scope">
+                            {{ scope.row.inStorageAmount }}
                         </template>
                     </el-table-column>
                     <el-table-column label="来源罐号" :show-overflow-tooltip="true" width="180">
@@ -213,21 +233,21 @@
                     </el-table-column>
                     <el-table-column label="操作人员" width="160">
                         <template slot-scope="scope">
-                            {{ scope.row.operators }}
+                            {{ scope.row.changer }}
                         </template>
                     </el-table-column>
                     <el-table-column label="操作时间" width="160">
                         <template slot-scope="scope">
-                            {{ scope.row.operated }}
+                            {{ scope.row.changed }}
                         </template>
                     </el-table-column>
                 </el-table>
             </el-tab-pane>
             <el-tab-pane name="2">
                 <span slot="label" class="spanview">
-                    领用信息
+                    历史库存
                 </span>
-                <el-table header-row-class-name="" :data="currentOutStockDataGroup" border tooltip-effect="dark" class="newTable" size="mini" max-height="500">
+                <el-table header-row-class-name="" :data="historyStockList" border tooltip-effect="dark" class="newTable" size="mini" max-height="500">
                     <el-table-column type="index" label="序号" width="55" fixed />
                     <el-table-column label="车间" :show-overflow-tooltip="true" width="180">
                         <template>
@@ -256,7 +276,7 @@
                     </el-table-column>
                     <el-table-column label="移动类型" :show-overflow-tooltip="true" width="180">
                         <template slot-scope="scope">
-                            {{ scope.row.moveType }}
+                            {{ scope.row.moveTypeFullName }}
                         </template>
                     </el-table-column>
                     <el-table-column label="移动数量" :show-overflow-tooltip="true" width="180">
@@ -271,7 +291,7 @@
                     </el-table-column>
                     <el-table-column label="领用车间" :show-overflow-tooltip="true" width="180">
                         <template slot-scope="scope">
-                            {{ scope.row.workShop }}
+                            {{ scope.row.workShopName }}
                         </template>
                     </el-table-column>
                     <el-table-column label="领用订单" :show-overflow-tooltip="true" width="180">
@@ -291,12 +311,12 @@
                     </el-table-column>
                     <el-table-column label="操作人员" width="160">
                         <template slot-scope="scope">
-                            {{ scope.row.operators }}
+                            {{ scope.row.changer }}
                         </template>
                     </el-table-column>
                     <el-table-column label="操作时间" width="160">
                         <template slot-scope="scope">
-                            {{ scope.row.operated }}
+                            {{ scope.row.changed }}
                         </template>
                     </el-table-column>
                 </el-table>
@@ -318,13 +338,13 @@ export default class LeaveningBucketDetail extends Vue {
     activetTabName = '1';
 
     currentWorkShopName=''
-    // 投料信息
-    currentInStockDataGroup = [];
+    // 当前库存
+    stockList = [];
     totalDataList = [];
-    // 领用信息
-    currentOutStockDataGroup = [];
+    // 历史库存
+    historyStockList = [];
 
-    LeaveningformData: LeaveningData= {}; // 上方表单讯息
+    leaveningformData: LeaveningData= {}; // 上方表单讯息
 
     mounted() {
         this.retrieveDetail();
@@ -333,23 +353,26 @@ export default class LeaveningBucketDetail extends Vue {
     retrieveDetail() {
         console.log('取值')
         console.log(this.$store.state.fer.fermentBucketDetail)
-        this.LeaveningformData = this.$store.state.fer.fermentBucketDetail
-        this.$set(this.LeaveningformData, 'material', `${this.LeaveningformData.materialName} ${this.LeaveningformData.materialCode}`)
-        this.$set(this.LeaveningformData, 'freezeFlagnName', this.LeaveningformData.freezeFlag === 'Y' ? '已成熟' : '未成熟')
-        this.currentWorkShopName = this.LeaveningformData.workShopName as string
-
+        this.currentWorkShopName = this.$store.state.fer.fermentBucketDetail.workShopName as string
         FER_API.FER_FERMENTOR_STOCK_DETAIL_QUERY_API({
-            holderId: '96'
+            holderId: this.$store.state.fer.fermentBucketDetail.holderId
             }).then(({ data }) => {
                 console.log('详细数据')
                 console.log(data)
-                 // 投料信息
-                this.currentInStockDataGroup = [];
-                // 领用信息
-                this.currentOutStockDataGroup = [];
+
+                this.leaveningformData = data.data
+                this.$set(this.leaveningformData, 'material', `${this.leaveningformData.materialName} ${this.leaveningformData.materialCode}`.trim())
+                this.$set(this.leaveningformData, 'freezeFlagnName', this.leaveningformData.freezeFlag === 'Y' ? '已成熟' : '未成熟')
+                this.$set(this.leaveningformData, 'workShopName', this.currentWorkShopName)
+                // this.leaveningformData.orderAmount = this.leaveningformData.orderAmount ? this.leaveningformData.orderAmount / 1000 : this.leaveningformData.orderAmount
+                // this.leaveningformData.currentStock = this.leaveningformData.currentStock / 1000
+                // 当前库存
+                this.stockList = [];
+                // 历史库存
+                this.historyStockList = [];
                 if (data.data) {
-                    this.currentInStockDataGroup = data.data.inStock;
-                    this.currentOutStockDataGroup = data.data.outStock;
+                    this.stockList = data.data.stockList;
+                    this.historyStockList = data.data.historyStockList;
                 }
         });
 
@@ -386,6 +409,7 @@ interface LeaveningData{
         remark?: string;
         workShop?: string;
         workShopName?: string;
+        orderAmount?: string;
     }
 
 </script>

@@ -58,9 +58,13 @@
                                 <em class="reqI">*</em><span>批次</span>
                             </template>
                             <template slot-scope="scope">
-                                <el-input v-model="scope.row.batch" :disabled="!(isRedact && (scope.row.status === 'noPass' || (isRedact && scope.row.status !== 'submit' && scope.row.status !== 'checked' && scope.row.addStatus !== '已添加')))" placeholder="请输入" maxlength="10" size="mini" />
+                                <el-select v-if="scope.row.materialName === 'Y010'" v-model="scope.row.batch" value-key="batch" placeholder="请选择" :disabled="!(isRedact && (scope.row.status === 'noPass' || (isRedact && scope.row.status !== 'submit' && scope.row.status !== 'checked' && scope.row.addStatus !== '已添加')))" size="small" @change="changeBatch($event, scope.row)">
+                                    <el-option v-for="(item, index) in batchList" :key="index" :label="item.batch" :value="item.batch" />
+                                </el-select>
+                                <el-input v-else v-model="scope.row.batch" :disabled="!(isRedact && (scope.row.status === 'noPass' || (isRedact && scope.row.status !== 'submit' && scope.row.status !== 'checked' && scope.row.addStatus !== '已添加')))" placeholder="请输入" maxlength="10" size="mini" />
                             </template>
                         </el-table-column>
+                        <el-table-column label="Y010库存" prop="currentQuantity" width="100" />
                         <el-table-column label="领用数量" min-width="100">
                             <template slot="header">
                                 <em class="reqI">*</em><span>领用数量</span>
@@ -120,9 +124,13 @@
                                 <em class="reqI">*</em><span>批次</span>
                             </template>
                             <template slot-scope="scope">
-                                <el-input v-model="scope.row.batch" :disabled="!(isRedact && (scope.row.status === 'noPass' || (isRedact && scope.row.status !== 'submit' && scope.row.status !== 'checked' && scope.row.addStatus !== '已添加')))" placeholder="请输入" maxlength="10" size="mini" />
+                                <el-select v-if="scope.row.materialName === 'Y010'" v-model="scope.row.batch" value-key="batch" placeholder="请选择" :disabled="!(isRedact && (scope.row.status === 'noPass' || (isRedact && scope.row.status !== 'submit' && scope.row.status !== 'checked' && scope.row.addStatus !== '已添加')))" size="small" @change="changeBatch($event, scope.row)">
+                                    <el-option v-for="(item, index) in batchList" :key="index" :label="item.batch" :value="item.batch" />
+                                </el-select>
+                                <el-input v-else v-model="scope.row.batch" :disabled="!(isRedact && (scope.row.status === 'noPass' || (isRedact && scope.row.status !== 'submit' && scope.row.status !== 'checked' && scope.row.addStatus !== '已添加')))" placeholder="请输入" maxlength="10" size="mini" />
                             </template>
                         </el-table-column>
+                        <el-table-column label="Y010库存" prop="currentQuantity" width="100" />
                         <el-table-column label="领用数量" min-width="100">
                             <template slot="header">
                                 <em class="reqI">*</em><span>领用数量</span>
@@ -201,7 +209,7 @@
 <script>
     import ExcRecord from '@/views/components/ExcRecord';
     import TextRecord from '@/views/components/TextRecord';
-    import { STERILIZED_API } from '@/api/api';
+    import { STERILIZED_API, INVENTORY_API } from '@/api/api';
     import { Stesave } from '@/net/validate';
     export default {
         name: 'Index',
@@ -229,7 +237,8 @@
                 SupDate: [],
                 DataAudit: [],
                 addSupOverData: [],
-                SupOverData: []
+                SupOverData: [],
+                batchList: []
             };
         },
         computed: {
@@ -244,8 +253,20 @@
         },
         mounted() {
             this.GetOrderHead();
+            this.getBatchList();
         },
         methods: {
+            // 批次
+            getBatchList() {
+                this.$http(`${INVENTORY_API.Y010_LIST_BATCH_LIST_API}`, `POST`, {}, false, false, false).then(({ data }) => {
+                    this.batchList = data.info;
+                });
+            },
+            changeBatch(val, row) {
+                const batchSole = this.batchList.find(item => (item.batch === val));
+                row['currentQuantity'] = batchSole['currentQuantity'];
+                row['holderId'] = batchSole['holderId'];
+            },
             Refresh() {
                 this.GetOrderHead();
                 // this.mainTabs = this.mainTabs.filter(item => item.name !== 'DataEntry-Sterilized-SterilizedIndex-acceAdd-index')
@@ -505,6 +526,7 @@
                                 .then(() => {
                                     this.$notify({ title: '成功', message: '提交成功', type: 'success' });
                                     this.GetOrderHead();
+                                    this.getBatchList();
                                 })
                                 .catch(err => {
                                     this.$notify.error({ title: '错误', message: err });
@@ -524,6 +546,7 @@
                                 .then(() => {
                                     this.$notify({ title: '成功', message: '保存成功', type: 'success' });
                                     this.GetOrderHead();
+                                    this.getBatchList();
                                 })
                                 .catch(err => {
                                     this.$notify.error({ title: '错误', message: err });

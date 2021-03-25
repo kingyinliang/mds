@@ -63,7 +63,7 @@ export default {
                     filterable: true,
                     resVal: {
                         resData: 'list',
-                        label: ['sapName', 'itemCode'],
+                        label: ['itemName', 'sapCode'],
                         value: 'sapCode'
                     },
                     defaultValue: '',
@@ -198,11 +198,11 @@ export default {
             if (data.page.list.length <= 0) {
                 return false;
             }
-            const productDate = this.$refs.queryTable.queryForm.productDate;
-            const month = productDate.substring(productDate.indexOf('-') + 1).split('')[0] === '0' ? productDate.substring(productDate.indexOf('-') + 1).slice(1) : productDate.substring(productDate.indexOf('-') + 1);
+            // const productDate = this.$refs.queryTable.queryForm.productDate;
+            // const month = productDate.substring(productDate.indexOf('-') + 1).split('')[0] === '0' ? productDate.substring(productDate.indexOf('-') + 1).slice(1) : productDate.substring(productDate.indexOf('-') + 1);
             data.page.list[0].listMonth.forEach((item, index) => {
                 this.column.splice(this.column.length - 1, 0, {
-                    label: `${month}月${index + 1}日`,
+                    label: `${index + 1}日`,
                     child: [
                         {
                             prop: `listMonth[${index}].dayProduction`,

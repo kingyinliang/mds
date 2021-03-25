@@ -91,7 +91,7 @@ router.beforeEach((to, from, next) => {
     }).then(({ data }) => {
         if (data && data.code === 200) {
             const AddRoutesClass = new AddRoutes(router, mainRoutes, []);
-            AddRoutesClass.fnAddDynamicMenuRoutes(data.data.menuList, [], 'MDS');
+            AddRoutesClass.fnAddDynamicMenuRoutes(data.data.menuList, []);
             router['options']['isAddDynamicMenuRoutes'] = true;
             sessionStorage.setItem('menuList', JSON.stringify(data.data.menuList || '[]'));
             sessionStorage.setItem('permissions', JSON.stringify(data.data.permissions || '[]'));

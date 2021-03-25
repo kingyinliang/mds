@@ -826,7 +826,7 @@ export default class Index extends Vue {
         this.$store.commit('common/updateZQCheckParamsOrderNo', row.orderNo);
         this.$store.commit('common/updateZQCheckParamsOrderId', row.orderId);
         this.$store.commit('common/updateZQCheckParamsOrderStatus', row.orderStatus);
-        this.pushPage('DataEntry-KojiMaking-orderAuditing-index');
+        this.pushPage('MDS-views-page-DataEntry-KojiMaking-orderAuditing-index');
     }
 
     get totalCount() {

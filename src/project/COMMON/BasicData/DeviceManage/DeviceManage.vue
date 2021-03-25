@@ -92,6 +92,7 @@
         dialogVisible = false;
         dialogImageUrl = '';
         deptId = '';
+        deptName = '';
         deviceNo = '';
         totalCount = 0;
         currPage = 1;
@@ -103,6 +104,7 @@
 
         setDeptId(data) {
             this.deptId = data[0].id
+            this.deptName = data[0].deptName
         }
 
         getData(row = false, first = false) {
@@ -112,6 +114,7 @@
             }
             if (row) {
                 this.deptId = row['id'];
+                this.deptName = row['deptName']
             }
             if (first) {
                 this.currPage = 1;
@@ -138,8 +141,9 @@
         addOrupdate(data) {
             if (this.deptId) {
                 this.visible = true;
+
                 this.$nextTick(() => {
-                    this.$refs.addOrupdate.init(this.deptId, data);
+                    this.$refs.addOrupdate.init(this.deptId, this.deptName, data);
                 });
             } else {
                 this.$warningToast('请先选择部门');
@@ -205,7 +209,6 @@
         }
 
         setConfig(row) {
-            console.log(row);
             if (row) {
                 COMMON_API.DEVICECONFIG_API(row).then(({ data }) => {
                     this.$successToast(data.msg)

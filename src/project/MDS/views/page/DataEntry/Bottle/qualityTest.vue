@@ -52,7 +52,7 @@
                             size="small"
                             @click="
                                 $router.push({
-                                    path: '/DataEntry-Bottle-index',
+                                    path: '/MDS-views-page-DataEntry-Bottle-index',
                                 })"
                         >
                             返回

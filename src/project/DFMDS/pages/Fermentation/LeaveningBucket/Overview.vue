@@ -3,7 +3,7 @@
  * @Anthor: Telliex
  * @Date: 2020-12-01 20:33:02
  * @LastEditors: Telliex
- * @LastEditTime: 2021-01-26 10:45:25
+ * @LastEditTime: 2021-02-02 14:49:45
 -->
 <template>
     <data-entry ref="dataEntry" :tabs="tabs" :order-status-show="false" :header-area-show="false" :redact-box-show="false" class="mainForm">
@@ -190,7 +190,8 @@
 <script lang="ts">
     import { Vue, Component } from 'vue-property-decorator';
     import { FER_API } from 'common/api/api';
-    import { exportFileForm } from 'utils/utils.ts';
+    // import { exportFileForm } from 'utils/utils.ts';
+    import { getNewDate } from '@/net/validate';
 
     @Component({
         name: 'OverviewIndex',
@@ -245,13 +246,40 @@
         // TODOS 发酵一览表导出部分未处理
         // 发酵一览表 export
         exportFermentSummary() {
-            exportFileForm(`${FER_API.FER_EXPORT_FERMENTOR_SUMMARY_QUERY_API}`, '发酵一览表报表', this);
+            // exportFileForm(`${FER_API.FER_EXPORT_FERMENTOR_SUMMARY_QUERY_API}`, '发酵一览表报表', this);
+
+            FER_API.FER_EXPORT_FERMENTOR_SUMMARY_QUERY_API({}).then(({ data }) => {
+                console.log('发酵一览表报表');
+                console.log(data);
+                if (data.data.url) {
+                    const elink = document.createElement('a');
+                    elink.download = `发酵一览表报表${getNewDate()}.xls`;
+                    elink.style.display = 'none';
+                    elink.href = data.data.url;
+                    document.body.appendChild(elink);
+                    elink.click();
+                    document.body.removeChild(elink);
+                }
+            });
         }
 
         // TODOS 发酵罐库存汇总信息导出部分未处理
         // 发酵罐库存汇总信息 export
         exportFermentStockSummary() {
-            exportFileForm(`${FER_API.FER_EXPORT_FERMENTOR_STOCK_SUMMARY_QUERY_API}`, '发酵罐库存汇总信息表', this);
+            // exportFileForm(`${FER_API.FER_EXPORT_FERMENTOR_STOCK_SUMMARY_QUERY_API}`, '发酵罐库存汇总信息表', this);
+            FER_API.FER_EXPORT_FERMENTOR_STOCK_SUMMARY_QUERY_API({}).then(({ data }) => {
+                console.log('发酵罐库存汇总信息表');
+                console.log(data);
+                if (data.data.url) {
+                    const elink = document.createElement('a');
+                    elink.download = `发酵罐库存汇总信息表${getNewDate()}.xls`;
+                    elink.style.display = 'none';
+                    elink.href = data.data.url;
+                    document.body.appendChild(elink);
+                    elink.click();
+                    document.body.removeChild(elink);
+                }
+            });
         }
     }
 

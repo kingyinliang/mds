@@ -34,7 +34,9 @@
                             <p>{{ formHeader.applyAmount }}</p>
                         </el-form-item>
                         <el-form-item label="调酱容器：">
-                            <p>{{ formHeader.mixPotName }}</p>
+                            <el-select v-model="formHeader.mixPotId" :disabled="!isRedact" placeholder="请选择" style="width: 120px;" clearable filterable @change="potChange">
+                                <el-option v-for="(item, index) in mixSaucePotArr" :key="index" :label="item.holderName" :value="item.id" />
+                            </el-select>
                         </el-form-item>
                         <el-form-item label="开罐单号：">
                             <p>{{ formHeader.openPotNo }}</p>
@@ -59,7 +61,7 @@
                     </el-form>
                     <div class="box-card-title clearfix">
                         <h3> <em class="title-icon" style="background: #487bff;" />开罐列表</h3>
-                        <el-form :model="searchForm" size="small" :inline="true" label-position="left" label-width="70px" class="sole_row">
+                        <el-form :model="searchForm" size="small" :inline="true" label-position="left" class="sole_row">
                             <el-form-item label="生产车间：">
                                 <el-select v-model="searchForm.workShop" :disabled="!isRedact" placeholder="请选择" style="width: 120px;" clearable @change="getOpenPotList">
                                     <el-option v-for="(item, index) in workShop" :key="index" :label="item.split('&')[1]" :value="item.split('&')[0]" />
@@ -80,7 +82,6 @@
                     <el-table
                         ref="multipleTable"
                         :data="openPotList"
-                        height="400px"
                         :header-cell-class-name="tableHeaderClass"
                         row-key="id"
                         header-row-class-name="tableHead"
@@ -90,7 +91,7 @@
                         @selection-change="handleSelectionChange"
                         @row-dblclick="Dblckick"
                     >
-                        <el-table-column type="selection" :reserve-selection="true" :selectable="checkboxT" width="50" />
+                        <el-table-column type="selection" fixed :reserve-selection="true" :selectable="checkboxT" width="50" />
                         <el-table-column type="index" :index="index => index + 1 + (Number(searchForm.current) - 1) * (Number(searchForm.size))" label="序号" width="50px" />
                         <el-table-column label="状态" prop="openFlagName" min-width="80" :show-overflow-tooltip="true">
                             <template slot-scope="scope">
@@ -98,43 +99,44 @@
                             </template>
                         </el-table-column>
                         <el-table-column label="车间" prop="workShopName" min-width="100" :show-overflow-tooltip="true" />
-                        <el-table-column label="容器号" prop="holderName" min-width="80" :show-overflow-tooltip="true" />
+                        <el-table-column label="容器号" prop="holderName" min-width="120" :show-overflow-tooltip="true" />
                         <el-table-column label="使用说明" prop="explain" min-width="100" :show-overflow-tooltip="true">
                             <template slot-scope="scope">
-                                {{ scope.row.ferOpenFermentor.explain }}
+                                <el-input v-model="scope.row.description" :disabled="!isRedact || scope.row.mixSauceStatus === 'M'" size="mini" style="width: 100%;" />
                             </template>
                         </el-table-column>
-                        <el-table-column label="订单类型" prop="materialUnit" min-width="100" :show-overflow-tooltip="true">
+                        <el-table-column label="订单类型" prop="orderTypeName" min-width="100" :show-overflow-tooltip="true">
                             <template slot-scope="scope">
-                                <el-select v-if="scope.row.ferOrder.id" v-model="scope.row.ferOrder.orderType" disabled placeholder="请选择" size="small">
-                                    <el-option v-for="(item, index) in orderTypeList" :key="index" :label="item.dictValue" :value="item.dictCode" />
-                                </el-select>
+                                {{ scope.row.orderType + scope.row.orderTypeName }}
                             </template>
                         </el-table-column>
                         <el-table-column label="发酵天数/天" prop="fermentDays" min-width="120" :show-overflow-tooltip="true" />
-                        <el-table-column label="物料" prop="productMaterialName" min-width="120" :show-overflow-tooltip="true">
+                        <el-table-column label="物料" prop="productMaterialName" min-width="180" :show-overflow-tooltip="true">
                             <template slot-scope="scope">
-                                {{ scope.row.ferOrder.productMaterialName + ' ' + scope.row.ferOrder.productMaterialCode }}
+                                {{ scope.row.productMaterialName + ' ' + scope.row.productMaterialCode }}
                             </template>
                         </el-table-column>
                         <el-table-column label="熟酱状态" prop="materialUnit" min-width="100" :show-overflow-tooltip="true">
                             <template slot-scope="scope">
-                                {{ scope.row.ferOrder.matureFlagName }}
+                                {{ scope.row.matureFlagName === '否'? '未成熟' : '已成熟' }}
                             </template>
                         </el-table-column>
                         <el-table-column label="数量（KG）" prop="materialUnit" min-width="100" :show-overflow-tooltip="true">
                             <template slot-scope="scope">
-                                {{ scope.row.ferOrder.amount }}
+                                {{ scope.row.currentStock }}
                             </template>
                         </el-table-column>
-                        <el-table-column label="入库日期" prop="materialUnit" min-width="100" :show-overflow-tooltip="true">
+                        <el-table-column label="单位" prop="unit" min-width="50" :show-overflow-tooltip="true" />
+                        <el-table-column label="入库日期" prop="inStorageDate" min-width="120" :show-overflow-tooltip="true" />
+                        <el-table-column label="批次" prop="inStorageBatch" min-width="120" :show-overflow-tooltip="true" />
+                        <el-table-column label="实验备注" prop="explain" min-width="100" :show-overflow-tooltip="true">
                             <template slot-scope="scope">
-                                {{ scope.row.ferInStorageList > 0? scope.row.ferInStorageList[0].changed : '' }}
+                                <el-input v-model="scope.row.experiment" :disabled="!isRedact || scope.row.mixSauceStatus === 'M'" size="mini" style="width: 100%;" />
                             </template>
                         </el-table-column>
-                        <el-table-column label="批次" prop="materialUnit" min-width="100" :show-overflow-tooltip="true">
+                        <el-table-column label="备注" prop="explain" min-width="100" :show-overflow-tooltip="true">
                             <template slot-scope="scope">
-                                {{ scope.row.ferInStorageList > 0? scope.row.ferInStorageList[0].inStorageBatch : '' }}
+                                <el-input v-model="scope.row.remark" :disabled="!isRedact || scope.row.mixSauceStatus === 'M'" size="mini" style="width: 100%;" />
                             </template>
                         </el-table-column>
                     </el-table>
@@ -144,37 +146,46 @@
                 </mds-card>
             </template>
             <template slot="1">
-                <el-button type="primary" size="small" :disabled="!(isRedact && mixSauceNo !== '')" style="float: right;" @click="addTable1()">
+                <el-button type="primary" size="small" :disabled="!(isRedact && mixSauceNo !== '') || mixSauceStatus === 'M'" style="float: right;" @click="addTable1()">
                     新增
                 </el-button>
                 <el-table :data="deployMaterial" :row-class-name="rowDelFlag" header-row-class-name="tableHead" class="newTable" border tooltip-effect="dark">
                     <el-table-column label="添加物料" prop="openFlagName" min-width="50" :show-overflow-tooltip="true">
+                        <template slot="header">
+                            <em class="reqI">*</em> 添加物料
+                        </template>
                         <template slot-scope="scope">
-                            <el-select v-model="scope.row.addMaterialCode" :disabled="!isRedact" size="small" placeholder="请选择" filterable clearable @change="getName(scope.row)">
-                                <el-option v-for="(item, index) in deployMaterialSelect" :key="index" :label="item.dictValue" :value="item.dictCode" />
+                            <el-select v-model="scope.row.addMaterialCode" :disabled="!isRedact || mixSauceStatus === 'M'" size="small" placeholder="请选择" filterable clearable style="width: 100%;" @change="getName(scope.row)">
+                                <el-option v-for="(item, index) in deployMaterialSelect" :key="index" :label="item.dictValue + ' ' + item.dictCode" :value="item.dictCode" />
                             </el-select>
                         </template>
                     </el-table-column>
                     <el-table-column label="计划添加数量" prop="openFlagName" min-width="50" :show-overflow-tooltip="true">
+                        <template slot="header">
+                            <em class="reqI">*</em> 计划添加数量
+                        </template>
                         <template slot-scope="scope">
-                            <el-input v-model="scope.row.planAddAmount" size="small" :disabled="!isRedact" placeholder="手动输入" />
+                            <el-input v-model="scope.row.planAddAmount" size="small" :disabled="!isRedact || mixSauceStatus === 'M'" placeholder="手动输入" style="width: 100%;" />
                         </template>
                     </el-table-column>
                     <el-table-column label="单位" prop="openFlagName" min-width="50" :show-overflow-tooltip="true">
+                        <template slot="header">
+                            <em class="reqI">*</em> 单位
+                        </template>
                         <template slot-scope="scope">
-                            <el-select v-model="scope.row.unit" size="small" :disabled="!isRedact" placeholder="请选择" filterable clearable>
+                            <el-select v-model="scope.row.unit" size="small" :disabled="!isRedact || mixSauceStatus === 'M'" placeholder="请选择" filterable clearable style="width: 100%;">
                                 <el-option v-for="(item, index) in Unit" :key="index" :label="item.dictValue" :value="item.dictCode" />
                             </el-select>
                         </template>
                     </el-table-column>
                     <el-table-column label="备注" prop="openFlagName" min-width="50" :show-overflow-tooltip="true">
                         <template slot-scope="scope">
-                            <el-input v-model="scope.row.remark" size="small" :disabled="!isRedact" placeholder="手动输入" />
+                            <el-input v-model="scope.row.remark" size="small" :disabled="!isRedact || mixSauceStatus === 'M'" placeholder="手动输入" style="width: 100%;" />
                         </template>
                     </el-table-column>
                     <el-table-column label="操作" fixed="right" width="70">
                         <template slot-scope="scope">
-                            <el-button :disabled="!(isRedact)" class="delBtn" type="text" icon="el-icon-delete" size="mini" @click="del(scope.row)">
+                            <el-button :disabled="!(isRedact) || mixSauceStatus === 'M'" class="delBtn" type="text" icon="el-icon-delete" size="mini" @click="del(scope.row)">
                                 删除
                             </el-button>
                         </template>
@@ -182,21 +193,27 @@
                 </el-table>
             </template>
             <template slot="2">
-                <el-button type="primary" size="small" :disabled="!(isRedact && mixSauceNo !== '')" style="float: right;" @click="addTable2()">
+                <el-button type="primary" size="small" :disabled="!(isRedact && mixSauceNo !== '') || mixSauceStatus === 'M'" style="float: right;" @click="addTable2()">
                     新增
                 </el-button>
                 <el-table :data="sauce" :row-class-name="rowDelFlag" header-row-class-name="tableHead" class="newTable" border tooltip-effect="dark">
                     <el-table-column label="容器号" prop="openFlagName" min-width="150" :show-overflow-tooltip="true">
+                        <template slot="header">
+                            <em class="reqI">*</em> 容器号
+                        </template>
                         <template slot-scope="scope">
-                            <el-select v-model="scope.row.fermentorNo" :disabled="!isRedact" placeholder="请选择" size="small" filterable clearable @change="fermentorNoChange(scope.row)">
+                            <el-select v-model="scope.row.fermentorId" :disabled="!isRedact || mixSauceStatus === 'M'" placeholder="请选择" size="small" filterable clearable style="width: 100%;" @change="fermentorNoChange(scope.row)">
                                 <el-option v-for="(item, index) in holderArr" :key="index" :label="item.holderName" :value="item.holderId" />
                             </el-select>
                         </template>
                     </el-table-column>
                     <el-table-column label="添加物料" prop="addMaterialCode" min-width="150" :show-overflow-tooltip="true">
+                        <template slot="header">
+                            <em class="reqI">*</em> 添加物料
+                        </template>
                         <template slot-scope="scope">
-                            <el-select v-model="scope.row.addMaterialCode" :disabled="!isRedact" placeholder="请选择" size="small" filterable clearable @change="materialChange(scope.row)">
-                                <el-option v-for="(item, index) in scope.row.addMaterialArr" :key="index" :label="item.productMaterialName +' ' + item.productMaterialCode" :value="item.productMaterialCode" />
+                            <el-select v-model="scope.row.addMaterialCode" :disabled="!isRedact || mixSauceStatus === 'M'" placeholder="请选择" size="small" filterable clearable style="width: 100%;" @change="materialChange(scope.row)">
+                                <el-option v-for="(item, index) in (holderArr.filter(it => it.holderId === scope.row.fermentorId).length > 0 ? holderArr.filter(it => it.holderId === scope.row.fermentorId)[0].ferInStorageList : [])" :key="index" :label="item.productMaterialName +' ' + item.productMaterialCode" :value="item.productMaterialCode" />
                             </el-select>
                         </template>
                     </el-table-column>
@@ -208,19 +225,29 @@
                     <el-table-column label="库存数量" prop="stockAmount" min-width="100" :show-overflow-tooltip="true" />
                     <el-table-column label="批次" prop="batch" min-width="100" :show-overflow-tooltip="true" />
                     <el-table-column label="计划添加数量" prop="openFlagName" min-width="100" :show-overflow-tooltip="true">
+                        <template slot="header">
+                            <em class="reqI">*</em> 计划添加数量
+                        </template>
                         <template slot-scope="scope">
-                            <el-input v-model="scope.row.planAddAmount" :disabled="!isRedact" placeholder="手动输入" size="small" />
+                            <el-input v-model="scope.row.planAddAmount" :disabled="!isRedact || mixSauceStatus === 'M'" placeholder="手动输入" size="small" style="width: 100%;" />
                         </template>
                     </el-table-column>
                     <el-table-column label="备注" prop="openFlagName" min-width="50" :show-overflow-tooltip="true">
                         <template slot-scope="scope">
-                            <el-input v-model="scope.row.remark" :disabled="!isRedact" placeholder="手动输入" size="small" />
+                            <el-input v-model="scope.row.remark" :disabled="!isRedact || mixSauceStatus === 'M'" placeholder="手动输入" size="small" style="width: 100%;" />
+                        </template>
+                    </el-table-column>
+                    <el-table-column label="操作" fixed="right" width="70">
+                        <template slot-scope="scope">
+                            <el-button :disabled="!(isRedact) || mixSauceStatus === 'M'" class="delBtn" type="text" icon="el-icon-delete" size="mini" @click="del(scope.row)">
+                                删除
+                            </el-button>
                         </template>
                     </el-table-column>
                 </el-table>
             </template>
             <template slot="custom_btn">
-                <el-button type="primary" size="small" @click="isRedact = !isRedact">
+                <el-button v-if="dataRule" type="primary" size="small" @click="isRedact = !isRedact">
                     {{ isRedact ? '取消' : '编辑' }}
                 </el-button>
                 <el-button v-if="isRedact" type="primary" size="small" @click="saved()">
@@ -237,6 +264,8 @@
 <script lang="ts">
     import { Vue, Component } from 'vue-property-decorator';
     import { COMMON_API, FER_API } from 'common/api/api';
+    import _ from 'lodash';
+    import { dateFormat } from 'utils/utils';
 
     @Component
     export default class OpenPotDedail extends Vue {
@@ -244,16 +273,18 @@
             multipleTable: HTMLFormElement;
         }
 
+        dataRule = true
         isRedact = false
+        mixSauceStatus = ''
         noChange = false
         formHeader: HeadObj = { ferOpenFermentorList: [], openPotNo: '' }
 
-        orderTypeList = []
         deployMaterialSelect: ListObj[] = []
         Unit = []
         workShop: string[] = []
         material: string[] = []
         potArr: string[] = []
+        mixSaucePotArr = []
 
         searchForm = {
             workShop: '',
@@ -274,6 +305,7 @@
         ]
 
         openPotListSum: PotObj[] = []
+        orgOpenPotListSum: PotObj[] = []
         openPotList: PotObj[] = []
         multipleSelection: PotObj[] = []
 
@@ -282,29 +314,26 @@
 
         deployMaterial: ListObj[] = []
         sauce: ListObj[] = []
+        orgDeployMaterial: ListObj[] = []
+        orgSauce: ListObj[] = []
         holderArr: PotObj[] = []
 
         mounted() {
             this.init()
         }
 
-        // 根据指定规则排序
-        compare(property, rule) {
-            return function(a, b) {
-                return rule.indexOf(b[property]) - rule.indexOf(a[property]);
-            }
+        potChange() {
+            const filterArr: (any) = this.mixSaucePotArr.filter(it => it['id'] === this.formHeader.mixPotId);// eslint-disable-line
+            this.formHeader.mixPotNo = filterArr[0].holderNo
+            this.formHeader.mixPotName = filterArr[0].holderName
         }
 
         // 过滤数据
         filterData(data) {
-            let tmp = data
-            const rule: string[] = []
-            this.formHeader.ferOpenFermentorList.forEach(item => {
-                if (item.fermentorId) {
-                    rule.push(item.fermentorId)
-                }
+            let tmp = JSON.parse(JSON.stringify(data));
+            tmp.sort((a, b) => {
+                return (b['openFermentorId'] ? 1 : 0) - (a['openFermentorId'] ? 1 : 0)
             })
-            tmp.sort(this.compare('id', rule))
             if (this.searchForm.workShop) {
                 tmp = tmp.filter(item => item.workShop === this.searchForm.workShop)
             }
@@ -312,26 +341,23 @@
                 tmp = tmp.filter(item => item.holderId === this.searchForm.holderId)
             }
             if (this.searchForm.material) {
-                tmp = tmp.filter(item => item.ferOrder.productMaterialCode === this.searchForm.material)
+                tmp = tmp.filter(item => item.productMaterialCode === this.searchForm.material)
             }
             this.searchForm.total = tmp.length
             tmp = tmp.slice((this.searchForm.current - 1) * this.searchForm.size, (this.searchForm.current - 1) * this.searchForm.size + this.searchForm.size)
 
+            console.log(this.openPotListSum);
             return tmp
         }
 
         // 反选中
         initMultiple() {
             setTimeout(() => {
-                this.formHeader.ferOpenFermentorList.forEach(item => {
-                    if (item.fermentorId) {
-                        const row = this.openPotListSum.find(it => it.id === item.fermentorId)
-                        if (row) {
-                            this.noChange = true
-                            row.ferMaterialList = item.ferMaterialList
-                            row.ferOverdueMaterialList = item.ferOverdueMaterialList
-                            this.$refs.multipleTable.toggleRowSelection(row, true)
-                        }
+                this.openPotListSum.forEach(row => {
+                    if (row.openFermentorId) {
+                        this.noChange = true
+                        const item = this.openPotList.find(it => it.id === row.id)
+                        this.$refs.multipleTable.toggleRowSelection(item, true)
                     }
                 })
                 this.noChange = false
@@ -352,6 +378,12 @@
                 id: this.$store.state.fer.openPotObj.id
             }).then(({ data }) => {
                 this.formHeader = data.data
+                if (this.formHeader.useDate && new Date(dateFormat(new Date(), 'yyyy-MM-dd')) > new Date(this.formHeader.useDate)) {
+                    this.dataRule = false
+                } else if (this.formHeader.statusName === '已撤回') {
+                    this.dataRule = false
+                }
+
             })
             this.getSelect()
         }
@@ -365,8 +397,11 @@
 
         // 获取开罐列表组装下拉 调配物料下拉
         getSelect() {
-            FER_API.FER_OPEN_POT_DETAIL_LIST_API({}).then(({ data }) => {
-                this.openPotListSum = data.data
+            FER_API.FER_OPEN_POT_DETAIL_LIST_API({
+                openPotNo: this.$store.state.fer.openPotObj.openPotNo
+            }).then(({ data }) => {
+                this.openPotListSum = JSON.parse(JSON.stringify(data.data));
+                this.orgOpenPotListSum = JSON.parse(JSON.stringify(data.data));
                 this.openPotList = this.filterData(this.openPotListSum)
                 this.searchForm.total = data.data.length
                 this.initMultiple()
@@ -376,16 +411,21 @@
                 const potArrArr: string[] = []
                 this.openPotListSum.forEach(item => {
                     item['workShop']? workShopArr.push(item['workShop'] + '&' + item['workShopName']) : ''// eslint-disable-line
-                    item['ferOrder']['productMaterialCode']? materialArr.push(item['ferOrder']['productMaterialCode'] + '&' + item['ferOrder']['productMaterialName']) : ''// eslint-disable-line
+                    item['productMaterialCode']? materialArr.push(item['productMaterialCode'] + '&' + item['productMaterialName']) : ''// eslint-disable-line
                     item['holderId']? potArrArr.push(item['holderId'] + '&' + item['holderName']) : ''// eslint-disable-line
                 })
                 this.workShop = [...new Set(workShopArr)]
                 this.material = [...new Set(materialArr)]
                 this.potArr = [...new Set(potArrArr)]
             })
-            FER_API.FER_OPEN_POT_DETAIL_LIST_API({
-                judgeResult: 'CQ'
+            COMMON_API.HOLDER_DROPDOWN_API({
+                factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
+                holderType: ['001', '028'],
+                holderStatus: 'E'
             }).then(({ data }) => {
+                this.mixSaucePotArr = data.data || [];
+            })
+            FER_API.FER_OPEN_POT_DETAIL_HOLDER_LIST_API({}).then(({ data }) => {
                 this.holderArr = data.data
             })
             COMMON_API.DICTQUERY_API({
@@ -393,12 +433,6 @@
                 dictType: 'COMMON_MATERIAL_ALLO'
             }).then(({ data }) => {
                 this.deployMaterialSelect = data.data
-            })
-            COMMON_API.DICTQUERY_API({
-                factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
-                dictType: 'ORDER_TYPE'
-            }).then(({ data }) => {
-                this.orderTypeList = data.data
             })
             COMMON_API.DICTQUERY_API({
                 factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
@@ -416,28 +450,28 @@
             if (!this.multipleSelection.find(item => item.id === row.id)) {
                 this.$refs.multipleTable.toggleRowSelection(row)
             } else if (this.formHeader.openType === 'SINGLE') {
-                if (row.ferOpenFermentor.mixSauceNo && row.pushFlag === 'Y') {
-                    const hang = this.openPotListSum.findIndex(item => item.id === row.id)
-                    row.ferOpenFermentor.mixSauceNo = this.formHeader.openPotNo + hang
-                    this.mixSauceNo = row.ferOpenFermentor.mixSauceNo
+                if (row.mixSauceNo) {
+                    this.mixSauceNo = row.mixSauceNo
                     this.fermentorId = row.id
-                    this.deployMaterial = row.ferMaterialList = []
-                    this.sauce = row.ferOverdueMaterialList = []
-                } else if (row.ferOpenFermentor.mixSauceNo) {
-                    this.mixSauceNo = row.ferOpenFermentor.mixSauceNo
-                    this.fermentorId = row.id
+                    this.mixSauceStatus = row.mixSauceStatus
                     this.getDeployMaterialList(row)
                     this.getSauceList(row)
                 } else {
                     const hang = this.openPotListSum.findIndex(item => item.id === row.id)
-                    row.ferOpenFermentor.mixSauceNo = this.formHeader.openPotNo + hang
-                    this.mixSauceNo = row.ferOpenFermentor.mixSauceNo
+                    if (hang < 10) {
+                        row.mixSauceNo = this.formHeader.openPotNo + '0' + hang
+                    } else {
+                        row.mixSauceNo = this.formHeader.openPotNo + hang
+                    }
+                    this.mixSauceNo = row.mixSauceNo
                     this.fermentorId = row.id
+                    this.mixSauceStatus = row.mixSauceStatus || ''
                     this.deployMaterial = row.ferMaterialList = []
                     this.sauce = row.ferOverdueMaterialList = []
                 }
             } else if (this.formHeader.openType === 'MANY') {
                 this.mixSauceNo = this.formHeader.openPotNo + '01'
+                row.mixSauceNo = this.mixSauceNo
                 this.getDeployMaterialList(row)
                 this.getSauceList(row)
             }
@@ -450,7 +484,8 @@
                 return
             } else if (this.formHeader.openType === 'MANY') {
                 params = {
-                    openPotNo: this.formHeader.openPotNo
+                    openPotNo: this.formHeader.openPotNo,
+                    mixSauceNo: row.mixSauceNo
                 }
             } else if (row.ferMaterialList?.length && this.formHeader.openType === 'SINGLE') {
                 this.deployMaterial = row.ferMaterialList;
@@ -458,11 +493,17 @@
             } else if (this.formHeader.openType === 'SINGLE') {
                 params = {
                     openPotNo: this.formHeader.openPotNo,
-                    fermentorId: row.id
+                    mixSauceNo: row.mixSauceNo
                 }
             }
             FER_API.FER_OPEN_POT_DETAIL_DEPLOY_LIST_API(params).then(({ data }) => {
-                this.deployMaterial = row.ferMaterialList = data.data
+                if (this.formHeader.openType === 'MANY') {
+                    this.deployMaterial = JSON.parse(JSON.stringify(data.data));
+                    this.orgDeployMaterial = JSON.parse(JSON.stringify(data.data));
+                } else {
+                    this.deployMaterial = row.ferMaterialList = data.data
+                    this.orgOpenPotListSum[this.orgOpenPotListSum.findIndex(it => it.id === row.id)].ferMaterialList = JSON.parse(JSON.stringify(data.data));
+                }
             })
         }
 
@@ -473,7 +514,8 @@
                 return
             } else if (this.formHeader.openType === 'MANY') {
                 params = {
-                    openPotNo: this.formHeader.openPotNo
+                    openPotNo: this.formHeader.openPotNo,
+                    mixSauceNo: row.mixSauceNo
                 }
             } else if (row.ferOverdueMaterialList?.length && this.formHeader.openType === 'SINGLE') {
                 this.sauce = row.ferOverdueMaterialList;
@@ -481,11 +523,17 @@
             } else if (this.formHeader.openType === 'SINGLE') {
                 params = {
                     openPotNo: this.formHeader.openPotNo,
-                    fermentorId: row.id
+                    mixSauceNo: row.mixSauceNo
                 }
             }
             FER_API.FER_OPEN_POT_DETAIL_SAUCE_LIST_API(params).then(({ data }) => {
-                this.sauce = row.ferOverdueMaterialList = data.data
+                if (this.formHeader.openType === 'MANY') {
+                    this.sauce = JSON.parse(JSON.stringify(data.data));
+                    this.orgSauce = JSON.parse(JSON.stringify(data.data));
+                } else {
+                    this.sauce = row.ferOverdueMaterialList = data.data
+                    this.orgOpenPotListSum[this.orgOpenPotListSum.findIndex(it => it.id === row.id)].ferOverdueMaterialList = JSON.parse(JSON.stringify(data.data));
+                }
             })
         }
 
@@ -495,7 +543,6 @@
                 id: '',
                 remark: '',
                 mixSauceNo: this.mixSauceNo,
-                fermentorId: this.fermentorId,
                 openPotNo: this.formHeader.openPotNo
             })
         }
@@ -506,7 +553,6 @@
                 id: '',
                 remark: '',
                 mixSauceNo: this.mixSauceNo,
-                fermentorId: this.fermentorId,
                 openPotNo: this.formHeader.openPotNo
             })
         }
@@ -514,20 +560,38 @@
         getName(row) {
             const filterArr: (any) = this.deployMaterialSelect.filter(item => item.dictCode === row.addMaterialCode)// eslint-disable-line
             row.addMaterialName = filterArr[0].dictValue
+            row.addMaterialType = filterArr[0].productMaterialType
+            COMMON_API.SEARCH_MATERIAL_API({
+                factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
+                materialCode: row.addMaterialCode
+            }).then(({ data }) => {
+                if (data.data && data.data.length > 0) {
+                    this.$set(row, 'unit', data.data[0].basicUnitCode)
+                }
+            })
         }
 
         // 超期酱修改容器号
         fermentorNoChange(row) {
-            const filterArr: (any) = this.holderArr.filter(item => item.holderId === row.fermentorNo)// eslint-disable-line
+            const filterArr1: (any) = this.holderArr.filter(item => item.holderId === row.fermentorId)// eslint-disable-line
+            row.fermentorNo = filterArr1[0].holderNo
+            row.fermentorName = filterArr1[0].holderName
             row.addMaterialCode = ''
-            row.addMaterialArr = filterArr[0].ferInStorageList
+            row.unit = ''
+            row.stockAmount = ''
+            row.batch = ''
         }
 
         materialChange(row) {
-            const filterArr: (any) = row.addMaterialArr.filter(item => item.productMaterialCode === row.addMaterialCode)// eslint-disable-line
-            row.unit = filterArr[0].unit
-            row.stockAmount = filterArr[0].currentStock
-            row.batch = filterArr[0].inStorageBatch
+            const filterArr1: (any) = this.holderArr.filter(item => item.holderId === row.fermentorId)// eslint-disable-line
+            const filterArr: (any) = filterArr1[0].ferInStorageList.filter(item => item.productMaterialCode === row.addMaterialCode)// eslint-disable-line
+            this.$set(row, 'addMaterialName', filterArr[0].productMaterialName)
+            this.$set(row, 'addMaterialType', filterArr[0].productMaterialType)
+            this.$set(row, 'orderId', filterArr[0].orderId)
+            this.$set(row, 'orderNo', filterArr[0].orderNo)
+            this.$set(row, 'unit', filterArr[0].unit)
+            this.$set(row, 'stockAmount', filterArr[0].currentStock)
+            this.$set(row, 'batch', filterArr[0].inStorageBatch)
         }
 
         // 删除
@@ -554,10 +618,7 @@
             if (!this.isRedact) {
                 return 0;
             }
-            // if (row.pushFlag === 'Y') {
-            //     return 0;
-            // }
-            if (this.formHeader.ferOpenFermentorList.find(it => it.fermentorId === row.id)) {
+            if (row.mixSauceStatus === 'M' || row.mixSauceStatus === 'S') {
                 return 0;
             }
             return 1;
@@ -586,42 +647,109 @@
                     this.multipleSelection.push(item);
                 });
             }
-            console.log(this.multipleSelection);
+            console.log(val);
+        }
+
+        dataEntry(data, orgData, delArr, insertArr) {
+            data.forEach(item => {
+                if (item.delFlag === 1) {
+                    if (item.id) {
+                        delArr.push(item.id);
+                    }
+                } else if (item.id) {
+                    const orgObj = orgData.filter(it => it.id === item.id)[0];
+                    if (!_.isEqual(orgObj, item)) {
+                        insertArr.push(item)
+                    }
+                } else {
+                    insertArr.push(item)
+                }
+            })
+        }
+
+        setOpenFermentorList(openFermentorList, item) {
+            openFermentorList.push({
+                id: item.openFermentorId || '',
+                mixSauceNo: item.mixSauceNo,
+                cycle: item.cycle,
+                fermentDays: item.fermentDays,
+                description: item.description,
+                experiment: item.experiment,
+                fermentorId: item.id,
+                remark: item.remark
+            })
         }
 
         // 保存推送数据处理
         pushOrSaved() {
-            const savedData: SavedDataObj = this.formHeader
+            const openFermentorRemoveIds: string[] = [] // 要删除的开罐物料id集合
+            const materialRemoveIds: string[] = [] // 删除的物料id(物料调配、超期酱)
+            const ferMaterialList = [] // 调调配物料
+            const ferOverdueMaterialList = [] // 超期酱
+            const openFermentorList: PotObj[] = [] // 开罐罐信息
+
+            // 要删除的开罐物料id集合
+            this.openPotListSum.forEach(item => {
+                if (item.openFermentorId) {
+                    if (!this.multipleSelection.find(it => it.openFermentorId === item.openFermentorId)) {
+                        openFermentorRemoveIds.push(item.openFermentorId)
+                    }
+                }
+            })
+
             if (this.formHeader.openType === 'MANY') {
-                savedData.ferMaterialList = this.deployMaterial
-                savedData.ferOverdueMaterialList = this.sauce
-                const openFermentorList: PotObj[] = []
-                this.multipleSelection.forEach(item => {
-                    openFermentorList.push({
-                        ferFermentor: item,
-                        ferOpenFermentor: {},
-                        fermentorId: item.id,
-                        id: this.formHeader.ferOpenFermentorList?.find(it => it.fermentorId === item.id)?.id || '',
-                        mixSauceNo: this.mixSauceNo
-                    })
-                })
-                savedData.openFermentorList = openFermentorList
-            } else {
-                const openFermentorList: PotObj[] = []
-                this.multipleSelection.forEach(item => {
-                    openFermentorList.push({
-                        ferFermentor: item,
-                        ferOpenFermentor: {},
-                        ferMaterialList: item.ferMaterialList,
-                        ferOverdueMaterialList: item.ferOverdueMaterialList,
-                        fermentorId: item.id,
-                        id: this.formHeader.ferOpenFermentorList?.find(it => it.fermentorId === item.id)?.id || '',
-                        mixSauceNo: item.ferOpenFermentor.mixSauceNo
-                    })
-                })
-                savedData.openFermentorList = openFermentorList
+                this.dataEntry(this.deployMaterial, this.orgDeployMaterial, materialRemoveIds, ferMaterialList)
+                this.dataEntry(this.sauce, this.orgSauce, materialRemoveIds, ferOverdueMaterialList)
             }
-            return savedData;
+
+            this.multipleSelection.forEach(item => {
+                // 单罐单调(调配物料、超期酱)
+                if (this.formHeader.openType !== 'MANY') {
+                    if (item.ferMaterialList) {
+                        const org1 = this.orgOpenPotListSum[this.orgOpenPotListSum.findIndex(it => it.id === item.id)].ferMaterialList || []
+                        this.dataEntry(item.ferMaterialList, org1, materialRemoveIds, ferMaterialList)
+                    }
+                    if (item.ferOverdueMaterialList) {
+                        const org2 = this.orgOpenPotListSum[this.orgOpenPotListSum.findIndex(it => it.id === item.id)].ferOverdueMaterialList || []
+                        this.dataEntry(item.ferOverdueMaterialList, org2, materialRemoveIds, ferOverdueMaterialList)
+                    }
+                }
+                // openFermentorList
+                if (!item.openFermentorId) {
+                    this.setOpenFermentorList(openFermentorList, item)
+                } else if (this.formHeader.openType === 'MANY') {
+                    // 多罐混调 比对
+                    const orgObj = this.orgOpenPotListSum.filter(it => it.id === item.id)[0];
+                    if (!_.isEqual(orgObj, item)) {
+                        this.setOpenFermentorList(openFermentorList, item)
+                    }
+                } else if (this.formHeader.openType !== 'MANY') {
+                    // 单罐 比对
+                    const orgObj = this.orgOpenPotListSum.filter(it => it.id === item.id)[0];
+                    if (orgObj.remark !== item.remark || orgObj.experiment !== item.experiment || orgObj.description !== item.description) {
+                        this.setOpenFermentorList(openFermentorList, item)
+                    }
+                }
+            })
+
+            return {
+                ...this.formHeader,
+                applied: false,
+                openFermentorRemoveIds,
+                materialRemoveIds,
+                ferMaterialList,
+                ferOverdueMaterialList,
+                openFermentorList
+            }
+            /**
+             * {
+             *     ferMaterialList: '调配物料',
+             *     ferOverdueMaterialList: '超期酱',
+             *     materialRemoveIds: '删除的物料id(物料调配、超期酱)',
+             *     openFermentorRemoveIds: '要删除的开罐物料id集合(共用)',
+             *     openFermentorList: '开罐罐信息以及开罐物料信息(共用)',
+             * }
+             * **/
         }
 
         // 保存
@@ -660,13 +788,20 @@
 
     }
     interface SavedDataObj{
+        openFermentorRemoveIds?: string[];
+        materialRemoveIds?: string[];
         openPotNo?: string;
         openFermentorList?: PotObj[];
         ferMaterialList?: ListObj[];
         ferOverdueMaterialList?: ListObj[];
     }
     interface HeadObj{
+        statusName?: string;
+        useDate?: string;
         openPotNo: string;
+        mixPotNo?: string;
+        mixPotName?: string;
+        mixPotId?: string;
         openType?: string;
         ferOpenFermentorList: PotObj[];
     }
@@ -678,17 +813,19 @@
         fermentorId?: string;
         openPotNo?: string;
     }
-    interface Fobj{
-        mixSauceNo?: string;
-    }
     interface PotObj{
-        id?: string;
+        id: string;
+        cycle?: string;
         holderId?: string;
         openPotNo?: string;
+        openMaterialId?: string;
+        openFermentorId?: string;
         fermentorId?: string;
+        description?: string;
+        experiment?: string;
+        remark?: string;
         mixSauceNo?: string;
-        ferFermentor?: PotObj;
-        ferOpenFermentor: Fobj;
+        ferOpenMaterialSaveDto?: PotObj;
         ferMaterialList?: ListObj[];
         ferOverdueMaterialList?: ListObj[];
         materialRemoveIds?: string[];

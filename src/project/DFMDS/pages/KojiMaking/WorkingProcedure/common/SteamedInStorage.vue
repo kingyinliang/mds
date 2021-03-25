@@ -145,6 +145,8 @@
 
         // 初始化数据
         init(formHeader) {
+            console.log('formHeader')
+            console.log(formHeader)
             this.formHeader = formHeader;
             const { kojiOrderNo, orderNo, workShop, orderType, planOutput } = formHeader;
             // 查询蒸面记录
@@ -177,8 +179,11 @@
  */
         // 查询入库记录
         getTableList(kojiOrderNo, orderNo, workShop, orderType, planOutput) {
+            console.log('77777777')
+            console.log('kojiOrderNo')
+            console.log(kojiOrderNo)
             KOJI_API.KOJI_STEAM_INSTORAGE_LIST_API({
-                kojiOrderNo,
+                kojiOrderNo: null,
                 orderNo
             }).then(({ data }) => {
                 const queryInStorageData = data.data;

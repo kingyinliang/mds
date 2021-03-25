@@ -3,7 +3,7 @@
  * @Anthor: Telliex
  * @Date: 2020-11-18 14:53:12
  * @LastEditors: Telliex
- * @LastEditTime: 2021-01-20 18:11:36
+ * @LastEditTime: 2021-02-03 11:18:00
  */
 import httpProxy from 'utils/net/httpProxy';
 
@@ -222,18 +222,6 @@ const FER_API = {
      */
     FER_DEPLOY_SAUCE_GET_API: params => httpProxy('/fer/mix/get', 'GET', params),
     /**
-     * @property {string} FER_JOB_BOOKING_SUBMIT_API 发酵车间-调酱详情-鲜香泡豆-列表
-     */
-    FER_DEPLOY_SAUCE_DETAIL_PICKLED_LIST_API: params => httpProxy('/fer/mix/queryOfPickledMaterial', 'GET', params),
-    /**
-     * @property {string} FER_JOB_BOOKING_SUBMIT_API 发酵车间-调酱详情-调配物料-列表
-     */
-    FER_DEPLOY_SAUCE_DETAIL_MATERIAL_LIST_API: params => httpProxy('/fer/mix/queryOfReceiveMaterial', 'GET', params),
-    /**
-     * @property {string} FER_JOB_BOOKING_SUBMIT_API 发酵车间-调酱详情-超期酱-列表
-     */
-    FER_DEPLOY_SAUCE_DETAIL_SAUCE_LIST_API: params => httpProxy('/fer/mix/queryOfSauceMaterial', 'GET', params),
-    /**
      * @property {string} FER_JOB_BOOKING_SUBMIT_API 发酵车间-调酱详情-保存
      */
     FER_DEPLOY_SAUCE_DETAIL_SAVE_API: params => httpProxy('/fer/mix/save', 'POST', params),
@@ -273,6 +261,11 @@ const FER_API = {
      * @property {string} FER_OPEN_POT_DETAIL_LIST_API 发酵车间-开罐列表-详情页-查询入库
      */
     FER_OPEN_POT_DETAIL_LIST_API: params => httpProxy('/fer/open/queryOfFermentorOrderInStorage', 'POST', params),
+    /**
+     * @property {string} FER_OPEN_POT_DETAIL_LIST_API 发酵车间-开罐列表-详情页-超期酱容器
+     */
+    FER_OPEN_POT_DETAIL_HOLDER_LIST_API: params => httpProxy('/fer/open/dropDownCqMaterial', 'GET', params),
+
     /**
      * @property {string} FER_OPEN_POT_DETAIL_DEPLOY_LIST_API 发酵车间-开罐列表-详情页-调配物料
      */

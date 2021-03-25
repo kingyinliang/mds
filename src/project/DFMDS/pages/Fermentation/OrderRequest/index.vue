@@ -49,7 +49,7 @@ import { dateFormat } from 'src/utils/utils';
             queryTable: HTMLFormElement;
         }
 
-        currentTab = '';
+        currentTab = '0';
 
         // queryTable 必要变数
         queryTableFormData = [
@@ -88,7 +88,7 @@ import { dateFormat } from 'src/utils/utils';
                         COMMON_API.HOLDER_DROPDOWN_API({ // /sysHolder/query
                             deptId: val,
                             factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
-                            holderType: ['001', '029', '028'] // 发酵罐/池、泡豆罐、调酱罐/池 参数编码
+                            holderType: ['001', '025', '028'] // 发酵罐/池、鲜香泡豆泡豆罐、调酱罐/池 参数编码
                         }).then((res) => {
                             resolve(res)
                         })
@@ -333,6 +333,7 @@ import { dateFormat } from 'src/utils/utils';
                         FER_API.FER_ORDER_LIST_API(params).then(({ data }) => {
                             if (index === edit) {
                                 data.data.records.map(row => {
+                                    row.orderType = this.$refs.queryTable.optionLists.orderType[0].dictCode;
                                     // 鲜香泡豆默认01，其余物料默认为空不可编辑
                                     row.redact = true;
                                     if (row.productMaterialCode !== 'SP01130005') {
@@ -351,6 +352,7 @@ import { dateFormat } from 'src/utils/utils';
                     } else {
                         if (index === edit) {
                             datas.data.records.map(row => {
+                                row.orderType = this.$refs.queryTable.optionLists.orderType[0].dictCode;
                                 // 鲜香泡豆默认01，其余物料默认为空不可编辑
                                 row.redact = true;
                                 if (row.productMaterialCode !== 'SP01130005') {
@@ -370,6 +372,7 @@ import { dateFormat } from 'src/utils/utils';
             } else {
                 if (Number(this.$refs.queryTable.activeName) === edit) {
                     datas.data.records.map(row => {
+                        row.orderType = this.$refs.queryTable.optionLists.orderType[0].dictCode;
                         // 鲜香泡豆默认01，其余物料默认为空不可编辑
                         row.redact = true;
                         if (row.productMaterialCode !== 'SP01130005') {

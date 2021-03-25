@@ -191,13 +191,13 @@ export default {
             let name = '';
             if (page === '煮豆') {
                 this.$store.commit('common/updateZQParamsBeanHouseId', item.orderHouseId);
-                name = 'DataEntry-KojiMaking-BoiledBeans-index';
+                name = 'MDS-views-page-DataEntry-KojiMaking-BoiledBeans-index';
             } else if (page === '看曲') {
                 this.$store.commit('common/updateZQParamsLookHouseId', item.orderHouseId);
-                name = 'DataEntry-KojiMaking-Look-index';
+                name = 'MDS-views-page-DataEntry-KojiMaking-Look-index';
             } else if (page === '出曲') {
                 this.$store.commit('common/updateZQParamsOutHouseId', item.orderHouseId);
-                name = 'DataEntry-KojiMaking-Out-index';
+                name = 'MDS-views-page-DataEntry-KojiMaking-Out-index';
             }
             this.pushPage(name);
         },

@@ -39,6 +39,7 @@
                 <el-table-column label="发酵成熟天数" prop="matureDays" min-width="120" :show-overflow-tooltip="true" />
                 <el-table-column label="发酵超期天数" prop="overdueDays" min-width="120" :show-overflow-tooltip="true" />
                 <el-table-column label="报工标识" prop="jobBookingFlagName" min-width="100" :show-overflow-tooltip="true" />
+                <el-table-column label="组织名称" prop="deptName" min-width="100" :show-overflow-tooltip="true" />
                 <el-table-column label="数量倍数" prop="multiple" min-width="100" :show-overflow-tooltip="true" />
                 <el-table-column label="备注" prop="remark" :show-overflow-tooltip="true" />
                 <el-table-column label="操作人" prop="changer" :show-overflow-tooltip="true" />
@@ -95,7 +96,7 @@
                 <el-button type="primary" @click="() => { queryForm.current = 1; queryType = 2; GetData() }">确定</el-button>
             </span>
         </el-dialog>
-        <ferinfo-add-or-update v-if="addOrUpdate" ref="addOrUpdate" :process-list="processList" :material="material" :hours-list="hoursList" @refreshDataList="GetData" />
+        <ferinfo-add-or-update v-if="addOrUpdate" ref="addOrUpdate" :process-list="processList" :material="material" :hours-list="hoursList" :organization-list="organizationList" @refreshDataList="GetData" />
     </div>
 </template>
 
@@ -141,6 +142,7 @@
         processList = [];
         material = [];
         hoursList = [];
+        organizationList = [];
         multipleSelection: string[] = [];
 
         mounted() {
@@ -170,6 +172,13 @@
             }).then(({ data }) => {
                 this.hoursList = data.data
             });
+            COMMON_API.SYS_CHILDTYPE_API({
+                factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
+                deptType: ['PROCESS'],
+                deptName: '发酵'
+            }).then(({ data }) => {
+                this.organizationList = data.data
+            })
         }
 
         remove() {

@@ -3,7 +3,7 @@
  * @Anthor: Telliex
  * @Date: 2021-01-15 23:35:23
  * @LastEditors: Telliex
- * @LastEditTime: 2021-01-27 17:11:49
+ * @LastEditTime: 2021-03-24 09:36:57
 -->
 <template>
     <div class="header_main">
@@ -28,11 +28,13 @@
                                     placement="top"
                                     width="200"
                                     trigger="hover"
+                                    :disabled="item.materialCountList.length===0"
                                 >
                                     <div class="showBox">
                                         <ul>
-                                            <li><span>xxxxx</span><span>22222吨</span></li>
-                                            <li><span>xxxxx</span><span>22222吨</span></li>
+                                            <li v-for="(element, subIndex) in item.materialCountList" :key="subIndex">
+                                                <span>{{ element.materialName }}</span><span>{{ element.count }} 罐</span>
+                                            </li>
                                         </ul>
                                     </div>
                                     <template slot="reference">
@@ -82,10 +84,12 @@
                         </div>
                     </template>
                     <el-row class="home_card__main" :gutter="10">
-                        <el-col v-for="item in targetQueryTableList" :key="item.potId" :span="4" style="min-width: 203px;">
+                        <el-col v-for="item in targetQueryTableList" :key="item.potId" :span="4" style="min-width: 200px;">
                             <div class="card-bucket">
                                 <div class="card-bucket__head">
-                                    <span>{{ item.holderName }} - {{ item.fermentorStatusName }}</span>
+                                    <el-tooltip :disabled="item.holderName===''&&item.fermentorStatusName===''" effect="dark" :content="`${item.holderName} - ${item.fermentorStatusName}`" placement="top">
+                                        <span class="subItem">{{ item.holderName }} - {{ item.fermentorStatusName }}</span>
+                                    </el-tooltip>
                                     <el-button type="text" @click="goTargetItemDetail(item)">
                                         详情
                                     </el-button>
@@ -97,48 +101,51 @@
                                             <div class="pot_water">
                                                 <div
                                                     class="pot_water_sole"
-                                                    :style="{height:((item.volumePercent)*100)+'%', background: item.volumePercent===1? '#590101':item.volumePercent>=0.5? '#8A391B':'#C67C5A'}"
+                                                    :style="{height:((item.volumePercent)*100)+'%', background: setBucketColor(item.fermentorStatus,item.fermentDays)}"
                                                 />
                                             </div>
+                                            <div class="icons">
+                                                <img v-if="item.judgeResult==='CQ'" src="../../../assets/img/icon-cq.png" alt="" style="margin-bottom: 5px;">
+                                                <img v-if="item.freezeFlag==='Y'" src="../../../assets/img/icon-fr.png" alt="">
+                                            </div>
                                         </div>
-                                        <span v-if="item.judgeResult==='CQ'" class="cq"><img src="../../../assets/img/icon-cq.png" alt=""></span>
                                     </div>
                                     <div class="btn-group">
                                         <el-button v-if="isAuth('')" size="small" plain :disabled="item.fermentorStatus!=='F'" @click="btnFilledBucket(item)">
                                             鼓罐
                                         </el-button>
-                                        <el-button v-if="isAuth('')" size="small" plain :disabled="item.fermentorStatus!=='F' || item.orderNo===''" @click="btnLYCY(item)">
+                                        <el-button v-if="isAuth('')" size="small" plain :disabled="item.fermentorStatus!=='F' || item.orderNo===''|| item.freezeFlag==='Y'" @click="btnLYCY(item)">
                                             LY/CY
                                         </el-button>
-                                        <el-button v-if="isAuth('')" size="small" plain :disabled="item.fermentorStatus!=='F' || item.orderNo===''" @click="btnAdjust(item)">
+                                        <el-button v-if="isAuth('')" size="small" plain :disabled="! ['F','S','O','T','A','U'].includes(item.fermentorStatus) || item.orderNo===''|| item.freezeFlag==='Y'" @click="btnAdjust(item)">
                                             调整
                                         </el-button>
-                                        <el-button v-if="isAuth('')" size="small" plain :disabled="item.fermentorStatus!=='U' || item.orderNo===''" @click="btnClearBucket(item)">
+                                        <el-button v-if="isAuth('')" size="small" plain :disabled="item.fermentorStatus!=='U' || item.orderNo===''|| item.freezeFlag==='Y'" @click="btnClearBucket(item)">
                                             清罐
                                         </el-button>
-                                        <el-button v-if="isAuth('')" size="small" plain :disabled="item.fermentorStatus!=='C' || item.orderNo===''" @click="btnCleanBucket(item)">
+                                        <el-button v-if="isAuth('')" size="small" plain :disabled="item.fermentorStatus!=='C'|| item.freezeFlag==='Y'" @click="btnCleanBucket(item)">
                                             清洗
                                         </el-button>
                                     </div>
                                 </div>
                                 <div class="card-bucket__fotter" style="height: 40px;">
-                                    <div v-show="!(item.fermentorStatus==='E'||item.fermentorStatus==='C')&&item.orderNo!==''">
+                                    <div v-show="!(item.fermentorStatus==='E')&&item.orderNo!==''">
                                         <el-tooltip class="item" effect="dark" :content="item.materialName" placement="top" :disabled="item.materialName===''">
                                             <span style="overflow: hidden; white-space: nowrap; text-overflow: ellipsis;">{{ item.materialName || '未有生产物料' }}</span>
                                         </el-tooltip>
-                                        <span>{{ item.fermentDays || '0' }} 天</span>
+                                        <span v-if="item.productProcess !== 'MIX'">{{ item.fermentDays || '0' }} 天</span>
                                     </div>
-                                    <div v-show="!(item.fermentorStatus==='E'||item.fermentorStatus==='C')&&item.orderNo!==''">
+                                    <div v-show="!(item.fermentorStatus==='E')&&item.orderNo!==''">
                                         <el-tooltip class="item" effect="dark" :content="item.orderNo" placement="top" :disabled="item.orderNo===''">
                                             <span style="overflow: hidden; white-space: nowrap; text-overflow: ellipsis;">{{ item.orderNo || '未有订单号' }}</span>
                                         </el-tooltip>
-                                        <span>{{ item.currentStock || '0' }} 吨</span>
+                                        <span>{{ item.currentStock/1000 || '0' }} 吨</span>
                                     </div>
                                 </div>
                             </div>
                         </el-col>
                     </el-row>
-                    <el-pagination :current-page="formHeader.currPage" :page-sizes="[10, 20, 50]" :page-size="formHeader.pageSize" layout="prev, pager, next,sizes, jumper" :total="formHeader.totalCount" @size-change="handleSizeChange" @current-change="handleCurrentChange" />
+                    <el-pagination :current-page="formHeader.currPage" :page-sizes="[30, 60, 90]" :page-size="formHeader.pageSize" layout="prev, pager, next,sizes, jumper" :total="formHeader.totalCount" @size-change="handleSizeChange" @current-change="handleCurrentChange" />
                 </mds-card>
             </template>
         </query-table>
@@ -162,7 +169,7 @@
                 <el-button size="small" @click="btnCloseDialog">
                     取消
                 </el-button>
-                <el-button type="primary" size="small" @click="saveWashBucket">
+                <el-button type="primary" size="small" @click="saveClearBucket">
                     确定
                 </el-button>
             </div>
@@ -195,7 +202,7 @@
                 <el-button size="small" @click="btnCloseDialog">
                     取消
                 </el-button>
-                <el-button type="primary" size="small" @click="saveClearBucket">
+                <el-button type="primary" size="small" @click="saveWashBucket">
                     确定
                 </el-button>
             </div>
@@ -203,7 +210,6 @@
     </div>
 </template>
 <script lang="ts">
-    // TODOS mouseover 地铁图，需要接口套用
     import { Vue, Component } from 'vue-property-decorator';
     import { COMMON_API, FER_API } from 'common/api/api';
     import { dateFormat, getUserNameNumber } from 'utils/utils';
@@ -233,7 +239,7 @@
         holderStatus: Options[]=[] // 罐状态对应
 
         targetQueryTableList: BucketDataListObj[] = [] // 查询结果
-        searchSource='bar' // 查询来自哪？ search bar/ metro map
+        //searchSource='bar' // 查询来自哪？ search bar/ metro map
 
         // 清罐弹窗 data
         isClearDialogVisible = false;
@@ -262,7 +268,7 @@
             fermStatus: '',
             holderId: '',
             holderType: '',
-            pageSize: 10,
+            pageSize: 30,
             totalCount: 0,
             workShop: '',
             fermentStage: ''
@@ -376,7 +382,7 @@
 
         // 地铁图样式
         topBox= [
-            {
+            { //0
                 color: '#999999FF',
                 startColor: '#999999FF',
                 endColor: '#999999FF',
@@ -387,9 +393,10 @@
                 middleText: '空罐',
                 fermentStage: 'E',
                 holderStatus: '0',
-                num: '0'
+                num: '0',
+                materialCountList: []
             },
-            {
+            { //1
                 color: '#D6D2C4FF',
                 startColor: '#E9E9E9FF',
                 endColor: '#D6D2C4FF',
@@ -400,9 +407,10 @@
                 middleText: '酿造',
                 fermentStage: '0',
                 search: '1',
-                num: '0'
+                num: '0',
+                materialCountList: []
             },
-            {
+            { //2
                 color: '#CDA786FF',
                 startColor: '#D6D2C4FF',
                 endColor: '#CDA786FF',
@@ -413,9 +421,10 @@
                 middleText: '酿造',
                 fermentStage: '30',
                 search: '2',
-                num: '0'
+                num: '0',
+                materialCountList: []
             },
-            {
+            { //3
                 color: '#B58150FF',
                 startColor: '#CDA786FF',
                 endColor: '#B58150FF',
@@ -426,9 +435,10 @@
                 middleText: '酿造',
                 fermentStage: '60',
                 search: '3',
-                num: '0'
+                num: '0',
+                materialCountList: []
             },
-            {
+            { //4
                 color: '#C67C5AFF',
                 startColor: '#B58150FF',
                 endColor: '#C67C5AFF',
@@ -439,9 +449,10 @@
                 middleText: '酿造',
                 fermentStage: '90',
                 search: '4',
-                num: '0'
+                num: '0',
+                materialCountList: []
             },
-            {
+            { //5
                 color: '#AD592DFF',
                 startColor: '#C67C5AFF',
                 endColor: '#AD592DFF',
@@ -452,9 +463,10 @@
                 middleText: '酿造',
                 fermentStage: '120',
                 search: '5',
-                num: '0'
+                num: '0',
+                materialCountList: []
             },
-            {
+            { //6
                 color: '#8A391BFF',
                 startColor: '#8A391BFF',
                 endColor: '#8A391BFF',
@@ -465,61 +477,80 @@
                 middleText: '酿造',
                 fermentStage: '150',
                 search: '6',
-                num: '0'
+                num: '0',
+                materialCountList: []
             },
-            {
-                color: '#C70909FF',
-                startColor: '#8A391BFF',
-                endColor: '#C70909FF',
-                text: '超',
-                ptext: '6个月以上',
-                numNew: 9999999999999,
-                potColor: '#8A391B',
-                middleText: '超期',
-                fermentStage: '180',
-                search: '7',
-                num: '0'
-            },
-            {
-                color: '#8BC34AFF',
-                startColor: '#C70909FF',
-                endColor: '#8BC34AFF',
-                text: '调',
-                ptext: ' ',
-                numNew: 0,
-                potColor: '#C70909',
-                middleText: '压榨',
-                fermentStage: 'O',
-                holderStatus: '4',
-                num: '0'
-            },
-            {
+            // {
+            //     color: '#602813FF',
+            //     startColor: '#C70909FF',
+            //     endColor: '#8BC34AFF',
+            //     text: '?',
+            //     ptext: '6个月以上',
+            //     numNew: 181,
+            //     potColor: '#C70909',
+            //     middleText: '酿造',
+            //     fermentStage: '180',
+            //     holderStatus: '4',
+            //     num: '0',
+            //     materialCountList: []
+            // },
+            // {
+            //     color: '#C70909FF',
+            //     startColor: '#8A391BFF',
+            //     endColor: '#C70909FF',
+            //     text: '超',
+            //     ptext: '超期',
+            //     numNew: 9999999999999,
+            //     potColor: '#8A391B',
+            //     middleText: '超期',
+            //     fermentStage: 'O',
+            //     search: '7',
+            //     num: '0',
+            //     materialCountList: []
+            // },
+            { //7
                 color: '#82ab53',
                 startColor: '#999999FF',
                 endColor: '#999999FF',
-                text: '已调',
+                text: '调',
                 ptext: '0个月',
                 numNew: 0,
                 potColor: '#FFF',
                 middleText: '调酱',
                 fermentStage: 'T',
                 holderStatus: '0',
-                num: '0'
+                num: '0',
+                materialCountList: []
             },
-            {
+            { //8
                 color: '#5b8031',
                 startColor: '#999999FF',
                 endColor: '#999999FF',
-                text: '领',
+                text: '已调',
                 ptext: '0个月',
                 numNew: 0,
                 potColor: '#FFF',
                 middleText: '已调',
                 fermentStage: 'A',
                 holderStatus: '0',
-                num: '0'
+                num: '0',
+                materialCountList: []
             },
-            {
+            { //9
+                color: '#4f5d3f',
+                startColor: '#999999FF',
+                endColor: '#999999FF',
+                text: '领',
+                ptext: '0个月',
+                numNew: 0,
+                potColor: '#FFF',
+                middleText: '领料',
+                fermentStage: 'U',
+                holderStatus: '0',
+                num: '0',
+                materialCountList: []
+            },
+            { //10
                 color: '',
                 startColor: '#999999FF',
                 endColor: '#999999FF',
@@ -528,11 +559,16 @@
                 numNew: 0,
                 potColor: '#FFF',
                 middleText: '空罐',
-                fermentStage: 'U',
+                fermentStage: 'E',
                 holderStatus: '0',
-                num: '0'
+                num: '0',
+                materialCountList: []
             }
         ]
+
+        mounted() {
+            this.$refs.queryTable.searchSource = 'bar'
+        }
 
         // 入罐完成
         drumBucketFinish() {
@@ -544,13 +580,14 @@
         getResultBymetroItem(item) {
             console.log('地铁图传值');
             console.log(item);
-            this.searchSource = 'metro';
+            // this.searchSource = 'metro';
+            this.$refs.queryTable.searchSource = 'metro'
 
             this.formHeader.fermentStage = item.fermentStage;
             this.formHeader.currPage = 1;
-            this.formHeader.pageSize = 10;
+            this.formHeader.pageSize = 30;
             this.$refs.queryTable.queryForm.currPage = 1;
-            this.$refs.queryTable.queryForm.pageSize = 10;
+            this.$refs.queryTable.queryForm.pageSize = 30;
             this.$set(this.$refs.queryTable.queryForm, 'fermentStage', item.fermentStage);
             this.isSearchResultListShow = true;
 
@@ -571,9 +608,13 @@
 
         // 取得结果 data
         getData() {
-            if (this.searchSource === 'bar') { // 来自 search bar 查询
+            console.log('=======this.searchSource============')
+            console.log(this.$refs.queryTable.searchSource)
+            // this.searchSource = 'bar'
+            if (this.$refs.queryTable.searchSource === 'bar') { // 来自 search bar 查询
                 this.formHeader.fermentStage = '';
-                    this.queryTableListInterface({
+                this.queryTableListInterface({
+                    searchSource: 'bar',
                     factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
                     currPage: this.formHeader.currPage,
                     pageSize: this.formHeader.pageSize,
@@ -640,15 +681,20 @@
             let paramsTemp = {};
             if (params.searchSource === 'metro') {
                 console.log('我来自地图');
+                // eslint-disable-next-line no-invalid-this
+                this.$refs.queryTable.searchSource = 'metro'
                 paramsTemp = params;
             } else {
                 console.log('我来自按钮查询')
-                // eslint-disable-next-line no-invalid-this
-                this.searchSource = 'bar';
+                 // eslint-disable-next-line no-invalid-this
+                 this.$refs.queryTable.searchSource = 'bar'
                 paramsTemp = {
+                    searchSource: 'bar',
                     factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
                     current: params.currPage,
-                    size: params.pageSize,
+                    // size: params.pageSize,
+                    // eslint-disable-next-line no-invalid-this
+                    size: this.formHeader.pageSize,
                     workShop: params.workShop,
                     holderType: params.holderType,
                     holderId: params.holderId,
@@ -663,6 +709,7 @@
         returnDataFromQueryTableForm(data) {
             console.log('查询结果回传');
             console.log(data);
+            console.log(this.$refs.queryTable.searchSource)
             // 取得组件查找字段
             const queryForm = this.$refs.queryTable.queryForm;
             // 清空结果 array
@@ -675,12 +722,31 @@
             this.topBox[4].num = data.data.fermentingAmount90;
             this.topBox[5].num = data.data.fermentingAmount120;
             this.topBox[6].num = data.data.fermentingAmount150;
-            this.topBox[7].num = data.data.fermentingAmount180;
-            this.topBox[8].num = data.data.overdueAmount;
-            this.topBox[9].num = data.data.mixingAmount;
-            this.topBox[10].num = data.data.adjustAmount;
-            this.topBox[11].num = data.data.useAmount;
+            // this.topBox[7].num = data.data.fermentingAmount180;
+            // this.topBox[8].num = data.data.overdueAmount;
+            // this.topBox[9].num = data.data.mixingAmount;
+            // this.topBox[10].num = data.data.adjustAmount;
+            // this.topBox[11].num = data.data.useAmount;
+            // this.topBox[12].num = data.data.emptyAmount;
+            this.topBox[7].num = data.data.mixingAmount;
+            this.topBox[8].num = data.data.adjustAmount;
+            this.topBox[9].num = data.data.useAmount;
+            this.topBox[10].num = data.data.emptyAmount;
 
+            this.topBox[1].materialCountList = data.data.materialCountList0 || [];
+            this.topBox[2].materialCountList = data.data.materialCountList30 || [];
+            this.topBox[3].materialCountList = data.data.materialCountList60 || [];
+            this.topBox[4].materialCountList = data.data.materialCountList90 || [];
+            this.topBox[5].materialCountList = data.data.materialCountList120 || [];
+            this.topBox[6].materialCountList = data.data.materialCountList150 || [];
+            // this.topBox[7].materialCountList = data.data.materialCountList180 || [];
+            // this.topBox[8].materialCountList = data.data.overdueMaterialCountList || [];
+            // this.topBox[9].materialCountList = data.data.mixingMaterialCountList || [];
+            // this.topBox[10].materialCountList = data.data.useMaterialCountList || [];
+            // // this.topBox[11].materialCountList = data.data.useAmount;
+            this.topBox[7].materialCountList = data.data.mixingMaterialCountList || [];
+            this.topBox[8].materialCountList = data.data.useMaterialCountList || [];
+            // this.topBox[11].materialCountList = data.data.useAmount;
             if (data.data.data.records.length !== 0) {
                 this.isSearchResultMetroShow = true; // 地铁图区块呈现
                 this.isSearchResultListShow = true; // 结果区块呈现
@@ -695,7 +761,7 @@
                 this.$set(this.formHeader, 'workShop', queryForm.workShop);
 
             } else {
-                if (this.searchSource === 'bar') { //查询来自按钮
+                if (this.$refs.queryTable.searchSource === 'bar') { //查询来自按钮
                     this.isSearchResultMetroShow = false;
                     this.isSearchResultListShow = false;
                 } else { //查询来自地铁图
@@ -760,29 +826,28 @@
 
         // 保存清罐  /fer/fermentor/clear
         saveClearBucket() {
-            if (this.cleanDataForm.doit === true) {
-                FER_API.FER_FERMENTOR_CLEAR_API({
-                    holderId: this.cleanDataForm.holderId,
-                    remark: this.cleanDataForm.remark
-                }).then(() => {
-                    this.isCleanDialogVisible = false
-                    this.$successToast('清罐成功');
-                    this.getData() // 刷新结果
-                });
-            }
-            this.isCleanDialogVisible = false
+            FER_API.FER_FERMENTOR_CLEAR_API({
+                clearDate: this.clearDataForm.clearDate,
+                holderId: this.clearDataForm.holderId
+            }).then(() => {
+                this.isClearDialogVisible = false
+                this.$successToast('清罐成功');
+                this.getData() // 刷新结果
+            });
         }
 
         // 保存清洗
         saveWashBucket() {
-            FER_API.FER_FERMENTOR_CLEAN_API({
-                holderId: this.clearDataForm.holderId,
-                clearDate: this.clearDataForm.clearDate
-            }).then(() => {
-                this.isClearDialogVisible = false
-                this.$successToast('清洗成功');
-                this.getData() // 刷新结果
-            });
+            if (this.cleanDataForm.doit === true) {
+                FER_API.FER_FERMENTOR_CLEAN_API({
+                    holderId: this.cleanDataForm.holderId,
+                    remark: this.cleanDataForm.remark
+                }).then(() => {
+                    this.isCleanDialogVisible = false
+                    this.$successToast('清洗成功');
+                    this.getData() // 刷新结果
+                });
+            }
         }
 
 
@@ -796,6 +861,36 @@
         handleCurrentChange(val) {
             this.formHeader.currPage = val;
             this.getData();
+        }
+
+        //can color
+        setBucketColor(target, num) {
+            if (target === 'E' || target === 'R' || target === 'C') { //E:空罐,R:投料中,C:待清洗
+                return '#ffffff'
+            } else if (target === 'F' || target === 'S') { // F:发酵中, S:已入库
+                    if (num <= 30) {
+                        return '#d5d2C3'
+                    } else if (num > 30 && num <= 60) {
+                        return '#cca785'
+                    } else if (num > 60 && num <= 90) {
+                        return '#b58150'
+                    } else if (num > 90 && num <= 120) {
+                        return '#c77C5a'
+                    } else if (num > 120 && num <= 150) {
+                        return '#ad592d'
+                    } else if (num > 150 && num <= 180) {
+                        return '#8a391b'
+                    } else if (num > 180) {
+                        return '#8a391b' //'#602813'
+                    }
+                        return '#8a391b' // 超期
+            } else if (target === 'I') { //T:调酱中,A:已调整,U:领料中
+                return '#8a391b'
+            } else if (target === 'U' || target === 'A' || target === 'T') { //T:调酱中,A:已调整,U:领料中
+                return '#8a391b'
+            }
+
+            return '#eeeeee'
         }
 
 
@@ -863,6 +958,9 @@ interface CurrentDataTable{
 
 </script>
 <style scoped>
+.home_card__main {
+    min-width: 1200px;
+}
 
 .markStyle >>> th .notNull::before {
     margin-right: 4px;
@@ -1068,7 +1166,11 @@ interface CurrentDataTable{
         padding: 11px 10px;
         font-size: 14px;
         border-bottom: 1px #e8e8e8 solid;
-
+        .subItem {
+            overflow: hidden;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+        }
         .el-button {
             font-size: 12px;
             &::after {
@@ -1086,24 +1188,28 @@ interface CurrentDataTable{
             justify-content: center;
             .pot_border {
                 position: relative;
-                width: 100%;
-                height: 200px;
+                width: 115px;
+                height: 202px;
                 overflow: hidden;
                 .pot {
                     position: absolute;
                     top: 0;
                     z-index: 10;
-                    width: 100%;
-                    height: 200px;
+                    width: 115px;
+                    height: 202px;
                     // background: url(./assets/img/ferPotNew.png) no-repeat;
-                    background: url("~@/assets/img/ferPotNew.png") no-repeat;
+                    background: bottom center url("~@/assets/img/ferPotNew.png") no-repeat;
                     background-size: contain;
                 }
                 .pot_water {
                     position: absolute;
-                    bottom: 13px;
-                    width: 114px;
-                    height: 200px;
+                    right: 0;
+                    bottom: 10px;
+                    left: 0;
+                    width: 115px;
+                    height: 182px;
+                    margin: 0 auto;
+                    overflow: hidden;
                     &_sole {
                         position: absolute;
                         bottom: 0;
@@ -1148,15 +1254,25 @@ interface CurrentDataTable{
                 }
             }
 
-            .cq {
+            .icons {
                 position: absolute;
                 top: 0;
                 left: 0;
                 z-index: 99;
                 img {
-                    width: 40px;
+                    display: block;
+                    width: 80%;
                 }
             }
+            // .fr {
+            //     position: absolute;
+            //     top: 0;
+            //     left: 0;
+            //     z-index: 99;
+            //     img {
+            //         width: 80%;
+            //     }
+            // }
         }
         .btn-group {
             display: flex;
@@ -1169,9 +1285,9 @@ interface CurrentDataTable{
                 box-sizing: border-box;
                 margin: 0;
                 margin-bottom: 5px;
-                padding: 8px 16px;
-                font-weight: 500;
-                font-size: 14px;
+                padding: 6px 10px;
+                font-weight: 900;
+                font-size: 12px;
                 line-height: 1;
             }
         }
@@ -1206,7 +1322,7 @@ interface CurrentDataTable{
 
 
 .topBox {
-    width: 1500px;
+    width: 1400px;
     margin: auto;
     padding: 10px 0;
     overflow-x: scroll;
@@ -1296,11 +1412,12 @@ $repeat: length($icon-bg-color);  // How often you want the pattern to repeat.
         justify-content: space-between;
         margin-bottom: 3px;
         padding-left: 7px;
+        font-size: 12px;
         list-style: none;
         &::before {
             position: absolute;
-            top: 7px;
-            left: 0;
+            top: 5px;
+            left: -1px;
             width: 5px;
             height: 5px;
             border-radius: 5px;

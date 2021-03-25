@@ -133,7 +133,7 @@
                     size="small"
                     @click="
                         $router.push({
-                            path: '/DataEntry-Packaging-index',
+                            path: '/MDS-views-page-DataEntry-Packaging-index',
                         })
                     "
                 >

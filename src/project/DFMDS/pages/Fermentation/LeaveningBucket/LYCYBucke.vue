@@ -12,16 +12,6 @@
                         </el-radio>
                     </el-radio-group>
                     <el-form :inline="true" :model="headerInfo" class="markStyle">
-                        <!-- <el-form-item>
-                            <el-radio-group v-model="currentTab">
-                                <el-radio label="LY">
-                                    LY
-                                </el-radio>
-                                <el-radio label="CY">
-                                    CY
-                                </el-radio>
-                            </el-radio-group>
-                        </el-form-item> -->
                         <el-form-item label="容器号：" size="mini">
                             <el-input v-model="headerInfo.holderName" placeholder="" disabled style="width: 100px;" />
                         </el-form-item>
@@ -29,7 +19,7 @@
                             <el-input v-model="headerInfo.fermentorStatusName" placeholder="" disabled style="width: 120px;" />
                         </el-form-item>
                         <el-form-item v-if="currentTab==='CY'" label="CY 物料：" size="mini" class="star">
-                            <el-select v-model="CYProdcutMaterial" placeholder="请选择" clearable style="width: 220px;" @change="changeProdcutMaterialOption">
+                            <el-select v-model="CYProdcutMaterial" placeholder="请选择" clearable style="width: 220px;" :disabled="CYProdcutMaterialStatus" @change="changeProdcutMaterialOption">
                                 <el-option
                                     v-for="item in CYProdcutMaterialOption"
                                     :key="item.dictCode"
@@ -92,7 +82,7 @@
                                         <span class="notNull">打入罐</span>
                                     </template>
                                     <template slot-scope="scope">
-                                        <el-select v-model="scope.row.injectionPotId" size="small" clearable @change="val=>changeContainerTypeOption(val,scope.row)">
+                                        <el-select v-model="scope.row.injectionPotId" size="small" clearable :disabled="scope.row.checkStatus==='M'" @change="val=>changeContainerTypeOption(val,scope.row)">
                                             <el-option
                                                 v-for="item in containerTypeList"
                                                 :key="item.dictCode"
@@ -107,7 +97,9 @@
                                         <span class="notNull">CY 量</span>
                                     </template>
                                     <template slot-scope="scope">
-                                        <el-input v-model.trim="scope.row.cyAmount" size="small" placeholder="请输入批次" maxlength="10" />
+                                        <el-input v-model.trim="scope.row.cyAmount" size="small" placeholder="请输入CY量" maxlength="10" :disabled="scope.row.checkStatus==='M'">
+                                            <span slot="suffix">L</span>
+                                        </el-input>
                                     </template>
                                 </el-table-column>
                                 <el-table-column :show-overflow-tooltip="true" min-width="160">
@@ -115,7 +107,7 @@
                                         <span class="notNull">批次</span>
                                     </template>
                                     <template slot-scope="scope">
-                                        <el-input v-model.trim="scope.row.cyBatch" size="small" placeholder="请输入批次" />
+                                        <el-input v-model.trim="scope.row.cyBatch" size="small" placeholder="请输入批次" :disabled="scope.row.checkStatus==='M'" :maxlength="10" />
                                     </template>
                                 </el-table-column>
                                 <el-table-column min-width="200" :show-overflow-tooltip="true">
@@ -133,14 +125,14 @@
                                 </el-table-column>
                                 <el-table-column label="备注" :show-overflow-tooltip="true" min-width="200">
                                     <template slot-scope="scope">
-                                        <el-input v-model.trim="scope.row.remark" size="small" placeholder="请输入备注" />
+                                        <el-input v-model.trim="scope.row.remark" size="small" placeholder="请输入备注" :disabled="scope.row.checkStatus==='M'" />
                                     </template>
                                 </el-table-column>
                                 <el-table-column prop="changer" label="操作人" :show-overflow-tooltip="true" width="160" />
                                 <el-table-column prop="changed" label="操作时间" :show-overflow-tooltip="true" width="160" />
                                 <el-table-column fixed="right" label="操作" width="80" :show-overflow-tooltip="true">
                                     <template slot-scope="scope">
-                                        <el-button class="delBtn" type="text" icon="el-icon-delete" size="mini" @click="removeDataRow(scope.row)">
+                                        <el-button class="delBtn" type="text" icon="el-icon-delete" size="mini" :disabled="scope.row.checkStatus==='M'" @click="removeDataRow(scope.row)">
                                             删除
                                         </el-button>
                                     </template>
@@ -167,7 +159,6 @@
 
         // 空罐 E
         // 入料中 R (投料)
-
         import { Vue, Component } from 'vue-property-decorator';
         import { dateFormat, getUserNameNumber } from 'utils/utils';
         import LoanedPersonnel from 'components/LoanedPersonnelv1.vue';
@@ -207,6 +198,8 @@
                 fermentorStatusName: '',
                 holderId: ''
             }
+
+            CYProdcutMaterialStatus=false
 
             // 点击赋予 item info
             currentCycle=''
@@ -313,11 +306,15 @@
 
                 this.dialogTitle = item.holderName + 'LY/CY'
                 this.isTableDialogVisible = true
-                this.currentWorkShop = item.workshop
+                this.currentWorkShop = item.workShop
                 this.currentCycle = item.cycle
                 this.currentHolderId = item.holderId
 
+
+                this.arrList = [item.workShop];
+
                 // ly
+                // /fer/fermentorLy/batchQuery
                 await FER_API.FER_FERMENTOR_LY_BATCH_QUERY_API({
                     holderId: this.currentHolderId
                 }).then(({ data }) => {
@@ -336,6 +333,7 @@
                 })
 
                 // cy
+                // /fer/fermentorCy/batchQuery
                 await FER_API.FER_FERMENTOR_CY_BATCH_QUERY_API({
                     holderId: this.currentHolderId
                 }).then(({ data }) => {
@@ -346,6 +344,9 @@
                     if (data.data) {
                         this.cyDataGroup = data.data
                         this.cyDataGroup.forEach((element) => {
+                            if (element.checkStatus === 'M') {
+                                this.CYProdcutMaterialStatus = true
+                            }
                             this.$set(element, 'delFlag', 0)
                         })
                     }
@@ -359,30 +360,33 @@
 
             getCyMatiral() {
                 COMMON_API.DICTQUERY_API({ dictType: 'CY_COMMENT' }).then(({ data }) => {
-                    console.log('11111')
-                    console.log(data)
                     this.CYProdcutMaterialOption = []
                     if (data.data.length !== 0) {
                         data.data.forEach(item => {
                             this.CYProdcutMaterialOption.push({ dictValue: item.dictValue, dictCode: item.dictCode })
                         })
-
+                        this.CYProdcutMaterial = this.CYProdcutMaterialOption[0].dictCode as string
+                        this.cyMaterialCode = this.CYProdcutMaterialOption[0].dictCode as string
+                        this.cyMaterialName = this.CYProdcutMaterialOption[0].dictValue as string
                     }
+
                 })
             }
 
             changeProdcutMaterialOption(val) {
+                console.log(val)
 
-            if (val !== '') {
-                this.CYProdcutMaterial = this.CYProdcutMaterialOption.filter(item => item.dictCode === val)[0].dictValue as string
-                this.cyMaterialCode = val
-                this.cyMaterialName = this.CYProdcutMaterial
-            } else {
-                this.cyMaterialCode = ''
-                this.cyMaterialName = ''
+                if (val !== '') {
+                    this.cyMaterialCode = val
+                    this.cyMaterialName = this.CYProdcutMaterialOption.filter(item => item.dictCode === val)[0].dictValue as string
+                    this.CYProdcutMaterial = `${this.cyMaterialName} ${val}`
+
+                } else {
+                    this.cyMaterialCode = ''
+                    this.cyMaterialName = ''
+                }
+
             }
-
-        }
 
             // RowDelFlag
             rowDelFlag({ row }) {
@@ -422,9 +426,9 @@
                 this.$nextTick(() => {
                     if (this.currentTab === 'LY') {
                         this.$refs.loanedPersonnel.init(row.lyMans, 'LY 操作人');
-                    } else {
-                        this.$refs.loanedPersonnel.init(row.cyMans, 'CY 操作人');
-                    }
+                    } else if (row.checkStatus !== 'M') {
+                            this.$refs.loanedPersonnel.init(row.cyMans, 'CY 操作人');
+                        }
                 });
             }
 
@@ -449,7 +453,7 @@
                         checkStatus: '',
                         checkStatusName: '',
                         cyAmount: 0,
-                        cyBatch: this.getNowFormatDate() + '1' + '777',
+                        cyBatch: this.getNowFormatDate() + 'Y' + '004',
                         cyMans: '',
                         cyMaterialCode: '',
                         cyMaterialName: '',
@@ -483,45 +487,43 @@
                 if (this.currentTab === 'LY') {
 
                     if (this.ruleSubmit()) {
-                    const obj = {}
-                    const deleteItemsArray: string[] = []
-                    const insertListArray: CurrentLyDataTable[] = []
-                    const updateListArray: CurrentLyDataTable[] = []
+                        const deleteItemsArray: string[] = []
+                        const insertListArray: CurrentLyDataTable[] = []
+                        const updateListArray: CurrentLyDataTable[] = []
 
-                    this.lyDataGroup.forEach((item: CurrentLyDataTable, index) => {
+                        this.lyDataGroup.forEach((item: CurrentLyDataTable, index) => {
 
-                        if (item.delFlag === 1) {
-                            if (item.id) {
-                                deleteItemsArray.push(item.id)
+                            if (item.delFlag === 1) {
+                                if (item.id) {
+                                    deleteItemsArray.push(item.id)
+                                }
+                            } else if (item.id) {
+
+                                if (!_.isEqual(this.orgLyDataGroup[index], item)) {
+                                    // item.potStatus = this.currentPotStatu
+                                    updateListArray.push(item)
+                                }
+                            } else {
+                                // item.potStatus = this.currentPotStatus
+                                insertListArray.push(item)
                             }
-                        } else if (item.id) {
+                        })
 
-                            if (!_.isEqual(this.orgLyDataGroup[index], item)) {
-                                // item.potStatus = this.currentPotStatu
-                                updateListArray.push(item)
-                            }
-                        } else {
-                            // item.potStatus = this.currentPotStatus
-                            insertListArray.push(item)
-                        }
-                    })
-
-                    FER_API.FER_FERMENTOR_LY_SAVE_API({
-                        cycle: this.currentCycle,
-                        holderId: this.currentHolderId,
-                        deleteIds: deleteItemsArray,
-                        insertList: insertListArray,
-                        updateList: updateListArray
-                    }).then(() => {
-                        this.$successToast('保存成功');
-                        this.$emit('drumBucketFinish', obj);
-                        this.isTableDialogVisible = false
-                    });
+                        FER_API.FER_FERMENTOR_LY_SAVE_API({
+                            cycle: this.currentCycle,
+                            holderId: this.currentHolderId,
+                            deleteIds: deleteItemsArray,
+                            insertList: insertListArray,
+                            updateList: updateListArray
+                        }).then(() => {
+                            this.$successToast('保存成功');
+                            this.$emit('drumBucketFinish');
+                            this.isTableDialogVisible = false
+                        });
                 }
 
 
                 } else if (this.ruleSubmit()) {
-                    const obj = {}
                     const deleteItemsArray: string[] = []
                     const insertListArray: CurrentCyDataTable[] = []
                     const updateListArray: CurrentCyDataTable[] = []
@@ -534,7 +536,7 @@
                             }
                         } else if (item.id) {
 
-                            if (!_.isEqual(this.orgLyDataGroup[index], item)) {
+                            if (!_.isEqual(this.orgCyDataGroup[index], item)) {
                                 // item.potStatus = this.currentPotStatus
 
                                 item.cyMaterialCode = this.cyMaterialCode
@@ -550,6 +552,7 @@
                         }
                     })
 
+                    // /fer/fermentorCy/batchSave
                     FER_API.FER_FERMENTOR_CY_SAVE_API({
                         cycle: this.currentCycle,
                         holderId: this.currentHolderId,
@@ -558,7 +561,7 @@
                         updateList: updateListArray
                     }).then(() => {
                         this.$successToast('保存成功');
-                        this.$emit('drumBucketFinish', obj);
+                        this.$emit('drumBucketFinish');
                         this.isTableDialogVisible = false
                     });
                 }
@@ -734,6 +737,10 @@
 
     .inner-area__body >>> .el-tabs__header {
         display: none;
+    }
+
+    .inner-area__body >>> span.el-input__suffix span.el-input__suffix-inner span {
+        vertical-align: -webkit-baseline-middle;
     }
 </style>
 
@@ -954,6 +961,5 @@
         margin-top: 10px;
         text-align: right;
     }
-
 
 </style>

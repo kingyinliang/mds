@@ -215,10 +215,10 @@ export default {
                 this.Fermentation = {
                     orderId: item.id
                 };
-                this.mainTabs = this.mainTabs.filter(subItem => subItem.name !== 'DataEntry-Fermentation-ForRecipients-detail');
+                this.mainTabs = this.mainTabs.filter(subItem => subItem.name !== 'MDS-views-page-DataEntry-Fermentation-ForRecipients-detail');
                 setTimeout(() => {
                     this.$router.push({
-                        name: `DataEntry-Fermentation-ForRecipients-detail`
+                        name: `MDS-views-page-DataEntry-Fermentation-ForRecipients-detail`
                     });
                 }, 100);
             }

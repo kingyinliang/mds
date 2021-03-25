@@ -166,13 +166,16 @@ export default {
     mounted() {
         const canvas = new LoginAnimation(this.$);
         canvas.init();
+        // if (window.location.href.indexOf('token') === -1) {} else {
+        //     window.location.href = 'http://localhost:8080/'
+        // }
         // *********** RDM CDM 跳转用  start
         if (window.location.href.indexOf('?') !== -1) {
             const url = decodeURIComponent(window.location.href.split('?')[1].split('=')[1]);
             const urlData = JSON.parse(url);
 
-            // RDM
-            if (typeof urlData.userFactory.find(item => { return item.id === '482537131483348992' }) !== 'undefined') {
+
+            if (typeof urlData.userFactory.find(item => { return item.id === '482537131483348992' }) !== 'undefined') { // RDM
                 const systemTemp = urlData.userFactory.filter(item => { return item.id === '482537131483348992' })
                 urlData.userFactory = systemTemp
                 const loading = Loading.service({
@@ -184,12 +187,7 @@ export default {
                     this.loginSuccess(urlData)
                     loading.close();
                 }, 3000);
-            } else {
-                this.$warningToast('登入失败')
-            }
-
-            // CDN
-            if (typeof urlData.userFactory.find(item => { return item.id === '926550584766501627' }) !== 'undefined') {
+            } else if (typeof urlData.userFactory.find(item => { return item.id === '926550584766501627' }) !== 'undefined') { // CDN
                 const systemTemp = urlData.userFactory.filter(item => { return item.id === '926550584766501627' })
                 urlData.userFactory = systemTemp
                 const loading = Loading.service({

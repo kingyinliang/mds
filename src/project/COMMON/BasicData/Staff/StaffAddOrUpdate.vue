@@ -23,7 +23,7 @@
                 </el-form-item>
                 <el-form-item label="职务：">
                     <!-- <el-input v-model="dataForm.post" placeholder="手动输入" clearable /> -->
-                    <el-select v-model="dataForm.post" size="small" style="width: 100%;" filterable>
+                    <el-select v-model="dataForm.post" size="small" style="width: 100%;" filterable clearable>
                         <el-option v-for="(item) in postOptions" :key="item.dictCode" :value="item.dictCode" :label="item.dictValue" />
                     </el-select>
                 </el-form-item>
@@ -145,7 +145,7 @@ export default {
                     ids: [this.targetID]
                 }).then(({ data }) => {
                     this.dataForm = data.data[0];
-                    this.dataForm.deptName = deptName;
+                    // this.dataForm.deptName = deptName;
                 });
             } else {
                 this.targetID = '';

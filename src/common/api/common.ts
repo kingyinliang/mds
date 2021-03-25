@@ -34,7 +34,7 @@ const COMMON_API = {
      */
     MENUSELECT_API: params => httpProxy('/sysMenu/selectMenu', 'GET', params),
     /**
-     * @property {string} MENUSELECT_API 根据角色id查功能
+     * @property {string} ROLEGETMENU_API 根据角色id查功能
      */
     ROLEGETMENU_API: params => httpProxy('/sysMenu/selectByRole', 'GET', params),
     /**
@@ -179,7 +179,7 @@ const COMMON_API = {
      */
     ORG_QUERY_WORKSHOP_API: params => httpProxy('/sysDept/getTypeDept', 'POST', params),
     /**
-     * @property {string} ORG_QUERY_WORKSHOP_API 基础数据-组织架构-按id查询下一级
+     * @property {string} ORG_QUERY_CHILDREN_API 基础数据-组织架构-按id查询下一级
      * param parentId
      */
     ORG_QUERY_CHILDREN_API: params => httpProxy('/sysDept/childList', 'GET', params),
@@ -227,6 +227,10 @@ const COMMON_API = {
      * @property {string} UPLOADFILE_API 上传文件
      */
     UPLOADFILE_API: params => httpProxy('/sysFile/upload', 'GET', params),
+    /**
+     * @property {string} UPLOADFILE_API 上传文件
+     */
+    APP_VERSION_API: params => httpProxy('/sysApp/getLastedVersion', 'GET', params),
     /**
      * @property {string} UPLOADFILE_API 上传APK
      */
@@ -331,10 +335,10 @@ const COMMON_API = {
      * @property {string} METERIAL_QUERY_API 基础数据-物料管理-分页获取物料
      */
     METERIAL_QUERY_API: params => httpProxy('/sysMaterial/query', 'POST', params),
-    /**
-     * @property {string} METERIAL_SYNC_API 基础数据-物料管理-同步信息
-     */
-    METERIAL_SYNC_API: params => httpProxy('/sysMaterial/sync', 'POST', params),
+    // /**
+    //  * @property {string} METERIAL_SYNC_API 基础数据-物料管理-同步信息
+    //  */
+    // METERIAL_SYNC_API: params => httpProxy('/sysMaterial/sync', 'POST', params),
     /**
      * @property {string} METERIAL_ITEM_QUERY_API 基础数据-物料管理-根据ID查询物料明细
      */
@@ -399,10 +403,10 @@ const COMMON_API = {
      * @property {string} ORDER_LIST_QUERY_API
      */
     ORDER_LIST_QUERY_API: params => httpProxy('/order/list/query', 'POST', params),
-    /**
-     * @property {string} OREDER_SYNC_API 计划管理--计划订单-订单同步（增量）
-     */
-    OREDER_SYNC_API: params => httpProxy('/order/sync', 'POST', params),
+    // /**
+    //  * @property {string} OREDER_SYNC_API 计划管理--计划订单-订单同步（增量）
+    //  */
+    // OREDER_SYNC_API: params => httpProxy('/order/sync', 'POST', params),
     /**
      * @property {string} OREDER_QUERY_BY_NO_API 根据订单号查询
      */
