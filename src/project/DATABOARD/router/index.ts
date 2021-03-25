@@ -22,7 +22,7 @@ const mainRoutes: RouteConfig = {
 }
 
 const router = new VueRouter({
-    mode: 'hash',
+    mode: 'history',
     base: process.env.BASE_URL,
     isAddDynamicMenuRoutes: false,
     routes: globalRoutes.concat(mainRoutes)

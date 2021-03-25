@@ -76,8 +76,7 @@ const DataEchartsRoutes = {
 };
 
 const router = new Router({
-    // mode: 'history',
-    mode: 'hash',
+    mode: 'history',
     isAddDynamicMenuRoutes: false, // 是否已经添加动态(菜单)路由
     routes: globalRoutes.concat(mainRoutes).concat(DataEchartsRoutes)
 });

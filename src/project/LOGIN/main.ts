@@ -7,6 +7,7 @@ import elementUi from './elementUi'
 import { Notification } from 'element-ui';
 import 'element-ui/lib/theme-chalk/index.css'
 import 'common/icon/iconfont.css'
+import VueRouter, { RouterOptions } from 'vue-router';
 
 Vue.config.productionTip = false
 
@@ -30,7 +31,12 @@ Vue.prototype.$successToast = (str) => {
     Notification({ title: '成功', message: str, type: 'success' })
 }
 
+const router = new VueRouter({
+    mode: 'history',
+    routes: []
+} as RouterOptions);
 
 new Vue({
-  render: h => h(App)
+    router,
+    render: h => h(App)
 }).$mount('#app')

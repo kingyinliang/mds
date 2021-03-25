@@ -1,43 +1,5 @@
 <template>
     <div style="width: 100%; height: 100%;">
-        <el-row class="login_box">
-            <el-col :span="16">
-                <div class="canvas_box">
-                    <div id="canvas_box_main" class="canvas_box_main">
-                        <canvas id="loginAnimation" />
-                    </div>
-                </div>
-            </el-col>
-            <el-col :span="8">
-                <img src="@/assets/img/MDSlogo.png" alt="" class="login_icon">
-                <el-form ref="ruleForm2" :model="ruleForm2" status-icon :rules="rules2" label-width="100px" class="loginForm_ui2" @keyup.enter.native="submitForm('ruleForm2')">
-                    <p class="login_title1">
-                        欢迎使用
-                    </p>
-                    <p class="login_title2">
-                        MDS制造管理系统
-                    </p>
-                    <el-form-item prop="user">
-                        <el-input v-model="ruleForm2.user" auto-complete="off" placeholder="账户/工号">
-                            <em slot="prefix" class="iconfont factory-zhanghaodenglu" />
-                        </el-input>
-                    </el-form-item>
-                    <el-form-item prop="pass">
-                        <el-input v-model="ruleForm2.pass" type="password" auto-complete="off" placeholder="密码">
-                            <em slot="prefix" class="iconfont factory-mima" />
-                        </el-input>
-                        <el-button type="text" class="reset" @click="resetForm('ruleForm2')">
-                            <em class="iconfont factory-zhongzhi" style="font-size: 12px;" />重置
-                        </el-button>
-                    </el-form-item>
-                    <el-form-item>
-                        <el-button type="primary" class="loginBtn" @click="submitForm('ruleForm2')">
-                            登录
-                        </el-button>
-                    </el-form-item>
-                </el-form>
-            </el-col>
-        </el-row>
         <!--修改密码-->
         <el-dialog :close-on-click-modal="false" width="500px" :title="`修改密码 (${realName} ${userName})`" :visible.sync="visible">
             <div>
@@ -64,7 +26,6 @@
 
 <script>
 import { COMMON_API } from 'common/api/api';
-import { LoginAnimation } from './loginCanvas';
 import SelectFactory from 'src/layout/main/SelectFactory';
 import { Loading } from 'element-ui';
 export default {
@@ -163,9 +124,20 @@ export default {
             }
         };
     },
+    created() {
+        const token = this.$cookie.get('token')
+        const query = this.$route.query
+        if (query.token) {
+        //    有返回token
+        } else if (!token) {
+        //  cookie中没有token
+            console.log(window.location.href);
+            window.location.href = 'http://mss-dev.shinho.net.cn/?url=' + window.location.href + '&clientId=111'
+        } else {
+        //    cookie中有token验证token有效
+        }
+    },
     mounted() {
-        const canvas = new LoginAnimation(this.$);
-        canvas.init();
         // if (window.location.href.indexOf('token') === -1) {} else {
         //     window.location.href = 'http://localhost:8080/'
         // }
@@ -206,12 +178,6 @@ export default {
         // *********** RDM CDM 跳转用  end
     },
     methods: {
-        play() {
-            this.curr++;
-            if (this.curr >= this.videoList.length) this.curr = 0;
-            this.$refs.videos.load();
-            this.$refs.videos.play();
-        },
         dataFormSubmit() {
             this.$refs['dataForm'].validate(valid => {
                 if (valid) {
