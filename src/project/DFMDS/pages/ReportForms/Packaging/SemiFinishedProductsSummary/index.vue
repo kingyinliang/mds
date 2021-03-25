@@ -76,7 +76,7 @@
                     label: ['deptName'],
                     value: 'id'
                 },
-                linkageProp: ['productLine']
+                linkageProp: ['productLine', 'materialCode']
             },
             {
                 type: 'select',
@@ -112,18 +112,11 @@
                 clearable: true,
                 marked: false, // mark it
                 disabled: false,
-                defaultOptionsFn: () => {
-                    return new Promise(resolve => {
-                            REPORTS_API.REPORT_PACKAGING_OEE_MATERIAL_QUERY_API({ // /pkgReportForm/material/query
-                            workShop: '',
+                optionsFn: val => {
+                    return REPORTS_API.REPORT_PACKAGING_OEE_MATERIAL_QUERY_API({ // /pkgReportForm/material/query
+                            workShop: val || '',
                             productLine: ''
-                        }).then(res => {
-                            const dataTemp = JSON.parse(JSON.stringify(res.data.data))
-                            // 多余代码, 避免后端传空字串
-                            res.data.data = dataTemp.filter(item => item.materialName !== '' && item.materialCode !== '')
-                            resolve(res)
                         })
-                    })
                 },
                 resVal: {
                     resData: 'data',
