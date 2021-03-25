@@ -118,13 +118,13 @@
                 </mds-card>
             </template>
             <template slot="custom_btn">
-                <el-button v-if="formHeader.statusName === '已保存' || !formHeader.statusName" type="primary" size="small" @click="isRedact = !isRedact">
+                <el-button v-if="formHeader.statusName === '已撤回' || formHeader.statusName === '已保存' || !formHeader.statusName" type="primary" size="small" @click="isRedact = !isRedact">
                     {{ isRedact ? '取消' : '编辑' }}
                 </el-button>
                 <el-button v-if="isRedact" type="primary" size="small" @click="saved()">
                     保存
                 </el-button>
-                <el-button v-if="formHeader.statusName === '已保存' || !formHeader.statusName" type="primary" size="small" @click="submit()">
+                <el-button v-if="formHeader.statusName === '已撤回' || formHeader.statusName === '已保存' || !formHeader.statusName" type="primary" size="small" @click="submit()">
                     提交
                 </el-button>
                 <el-button v-if="formHeader.statusName === '待处理'" type="primary" size="small" @click="withdraw()">
