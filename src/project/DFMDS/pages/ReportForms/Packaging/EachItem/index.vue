@@ -17,14 +17,12 @@
 <script lang="ts">
     import { Vue, Component } from 'vue-property-decorator';
     import { COMMON_API, REPORTS_API } from 'common/api/api';
-import { dateFormat } from 'src/utils/utils';
+    import { dateFormat } from 'src/utils/utils';
     // import { dateFormat } from 'utils/utils';
 
     const months = ['一', '二', '三', '四', '五', '六', '七', '八', '九', '十', '十一', '十二'];
 
     @Component({
-        components: {
-        },
         name: 'EachItem'
     })
     export default class EachItem extends Vue {
@@ -140,10 +138,22 @@ import { dateFormat } from 'src/utils/utils';
                 labelWidth: '100',
                 filterable: true,
                 clearable: true,
+                multiple: true,
+                width: 180,
                 rule: [{ required: false, message: '请选择品项大类', trigger: 'blur' }],
                 defaultOptionsFn: () => {
-                    return REPORTS_API.REPORT_LARGE_CLASS_DROP_DOWN_API({
-                        // workShop: val || ''
+                    return new Promise((resolve) => {
+                        REPORTS_API.REPORT_LARGE_CLASS_DROP_DOWN_API({
+                            // workShop: val || ''
+                        }).then(res => {
+                            res.data.data.sort(item => {
+                                if (item.dictValue.length > 4) {
+                                    return -1
+                                }
+                                return 0
+                            })
+                            resolve(res)
+                        })
                     })
                 },
                 defaultValue: '',
