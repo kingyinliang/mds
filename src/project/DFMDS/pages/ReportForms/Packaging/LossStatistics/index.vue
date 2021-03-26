@@ -164,9 +164,18 @@
                 {
                     prop: 'productLineName',
                     label: '生产产线',
-                    width: '120',
+                    width: '220',
                     hide: false,
                     fixed: true,
+                    showOverFlowTooltip: true,
+                    dataType: 'default'
+                },
+                {
+                    prop: 'productDate',
+                    label: '生产日期',
+                    width: '120',
+                    hide: false,
+                    fixed: false,
                     showOverFlowTooltip: true,
                     dataType: 'default'
                 },
@@ -175,7 +184,7 @@
                     label: '订单',
                     width: '120',
                     hide: false,
-                    fixed: true,
+                    fixed: false,
                     showOverFlowTooltip: true,
                     dataType: 'default'
                 },
@@ -184,21 +193,48 @@
                     label: '物料编码',
                     width: '120',
                     hide: false,
-                    fixed: true,
+                    fixed: false,
                     showOverFlowTooltip: true,
                     dataType: 'default'
                 },
                 {
                     prop: 'materialName',
                     label: '物料名称',
-                    width: '180',
+                    width: '220',
                     hide: false,
-                    fixed: true,
+                    fixed: false,
                     showOverFlowTooltip: true,
                     dataType: 'default'
                 },
                 {
-                    prop: 'materialUnit',
+                    prop: 'materialUnitName',
+                    label: '单位',
+                    width: '80',
+                    hide: false,
+                    fixed: false,
+                    showOverFlowTooltip: true,
+                    dataType: 'default'
+                },
+                {
+                    prop: 'assMaterialCode',
+                    label: '组件物料编码',
+                    width: '120',
+                    hide: false,
+                    fixed: false,
+                    showOverFlowTooltip: true,
+                    dataType: 'default'
+                },
+                {
+                    prop: 'assMaterialName',
+                    label: '组件物料名称',
+                    width: '260',
+                    hide: false,
+                    fixed: false,
+                    showOverFlowTooltip: true,
+                    dataType: 'default'
+                },
+                {
+                    prop: 'assMaterialUnitName',
                     label: '单位',
                     width: '80',
                     hide: false,
