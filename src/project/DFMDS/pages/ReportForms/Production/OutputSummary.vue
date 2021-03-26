@@ -128,7 +128,7 @@
                 prop: 'workShop',
                 defaultValue: '',
                 clearable: true,
-                rule: [{ required: true, message: '请选择生产车间', trigger: 'blur' }],
+                rule: [{ required: false, message: '请选择生产车间', trigger: 'blur' }],
                 defaultOptionsFn: () => {
                     return COMMON_API.ORG_QUERY_WORKSHOP_API({
                         factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
@@ -167,7 +167,7 @@
         }
 
         setData(data) {
-            if (!data.data) {
+            if (!data.data.length) {
                 this.$infoToast('暂无任何内容');
             }
         }
@@ -211,6 +211,9 @@
                     }
                 });
                 sums[0] = '合计';
+                sums[1] = ''
+                sums[2] = ''
+                sums[3] = ''
             }
             return sums
         };
