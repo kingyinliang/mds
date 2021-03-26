@@ -11,11 +11,35 @@
             <el-form :model="queryForm" :inline="true" size="small" label-width="70px" class="multi_row clearfix" style="font-size: 0;" @keyup.enter.native="getDataList(true)">
                 <template v-for="item in queryFormData">
                     <template v-if="!item.hide">
-                        <el-form-item v-if="item.type === 'select'" :key="item.prop" :label="`${item.label}：` || ''" :prop="item.prop" :label-width="`${item.labelWidth ? item.labelWidth : 70}px`" :class="{ marked: item.marked }">
-                            <el-select v-if="item.defaultOptionsList" :ref="item.prop" v-model="queryForm[item.prop]" :style="`width: ${item.width ? item.width : 170}px;`" :filterable="item.filterable || true" :clearable="item.clearable" :disabled="item.disabled" :placeholder="'请选择' + item.label">
+                        <el-form-item v-if="item.type === 'select'" :key="item.prop" :label="`${item.label}：` || ''" :prop="item.prop" :label-width="`${item.labelWidth ? item.labelWidth : 70}px`" :class="{ marked: item.marked }" :rules="item.rule">
+                            <el-select
+                                v-if="item.defaultOptionsList"
+                                :ref="item.prop"
+                                v-model="queryForm[item.prop]"
+                                value-key="id"
+                                :style="`width: ${item.width ? item.width : 170}px;`"
+                                :multiple="item.multiple"
+                                :collapse-tags="item.multiple"
+                                :filterable="item.filterable || true"
+                                :clearable="item.clearable"
+                                :disabled="item.disabled"
+                                :placeholder="'请选择' + item.label"
+                            >
                                 <el-option v-for="(opt, optIndex) in item.defaultOptionsList" :key="optIndex" :label="opt.label" :value="opt.value" />
                             </el-select>
-                            <el-select v-else :ref="item.prop" v-model="queryForm[item.prop]" :style="`width: ${item.width ? item.width : 170}px;`" :filterable="item.filterable|| true" :clearable="item.clearable" :disabled="item.disabled" :placeholder="'请选择' + item.label">
+                            <el-select
+                                v-else
+                                :ref="item.prop"
+                                v-model="queryForm[item.prop]"
+                                :multiple="item.multiple"
+                                :collapse-tags="item.multiple"
+                                value-key="id"
+                                :style="`width: ${item.width ? item.width : 170}px;`"
+                                :filterable="item.filterable|| true"
+                                :clearable="item.clearable"
+                                :disabled="item.disabled"
+                                :placeholder="'请选择' + item.label"
+                            >
                                 <el-option v-for="(opt, optIndex) in optionLists[item.prop]" :key="optIndex" :label="setLabel(opt, item)" :value="opt[item.resVal.value]" />
                             </el-select>
                         </el-form-item>
