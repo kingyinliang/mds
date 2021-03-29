@@ -76,12 +76,14 @@
                 {
                     prop: 'yield',
                     label: '出成率',
-                    minWidth: '120'
+                    minWidth: '120',
+                    formatter: row => row.yield ? row.yield + '%' : ''
                 },
                 {
                     prop: 'previousYield',
                     label: '同期出成率',
-                    minWidth: '120'
+                    minWidth: '120',
+                    formatter: row => row.previousYield ? row.previousYield + '%' : ''
                 }
             ],
             tableAttributes: {

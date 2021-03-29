@@ -1,24 +1,6 @@
 <!-- 分品项产量日报  -->
 <template>
     <div class="header_main">
-        <!-- <query-table
-            ref="queryTable"
-            :show-table="true"
-            :show-index-column="false"
-            :column="column"
-            :span-method="spanMethod"
-            :show-page="true"
-            query-auth=""
-            :query-form-data="queryFormData"
-            :list-interface="listInterface"
-            :get-summaries="getSummaries"
-            :custom-data="true"
-            :factory-type="1"
-            :export-excel="true"
-            :is-show-summary="false"
-            @get-data-success="setData"
-            @date-change="dateChange"
-        /> -->
         <report-query-table
             ref="queryTable"
             :span-method="spanMethod"
@@ -83,7 +65,7 @@
 
         // data table area setting
         get dataTableSetting() {
-            console.log(this.currentMonth)
+            // console.log(this.currentMonth)
             return {
                 showIt: true, // showit or not
                 showSelectColumn: false,
@@ -99,7 +81,7 @@
                         minWidth: '140'
                     },
                     {
-                        prop: 'unit',
+                        prop: 'unitName',
                         label: '单位',
                         minWidth: '120'
                     },
@@ -144,7 +126,7 @@
                 defaultValue: '',
                 labelWidth: '100',
                 clearable: true,
-                rule: [{ required: true, message: '请选择生产车间', trigger: 'blur' }],
+                rule: [{ required: false, message: '请选择生产车间', trigger: 'blur' }],
                 defaultOptionsFn: () => {
                     return COMMON_API.ORG_QUERY_WORKSHOP_API({
                         factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
@@ -166,8 +148,23 @@
                 filterable: true,
                 clearable: true,
                 rule: [{ required: false, message: '请选择品项大类', trigger: 'blur' }],
+                multiple: true,
+                width: 180,
                 defaultOptionsFn: () => {
-                    return REPORTS_API.REPORT_LARGE_CLASS_DROP_DOWN_API({ })
+                    // return REPORTS_API.REPORT_LARGE_CLASS_DROP_DOWN_API({ })
+                    return new Promise((resolve) => {
+                        REPORTS_API.REPORT_LARGE_CLASS_DROP_DOWN_API({
+                            // workShop: val || ''
+                        }).then(res => {
+                            res.data.data.sort(item => {
+                                if (item.dictValue.length > 4) {
+                                    return -1
+                                }
+                                return 0
+                            })
+                            resolve(res)
+                        })
+                    })
                 },
                 defaultValue: '',
                 resVal: {
@@ -208,7 +205,6 @@
 
         // 查询请求
         listInterface(params) {
-            console.log(this.queryFormData, params)
             params.factory = JSON.parse(sessionStorage.getItem('factory') || '{}').id;
             return REPORTS_API.REPORT_SUB_OUTPUT_DAILY_QUERY_API(params);
         }
@@ -219,7 +215,7 @@
 
         // 设置数据
         setData(data) {
-            if (!data.data) {
+            if (!data.data.length) {
                 this.$infoToast('暂无任何内容');
             }
             this.getSpanArr(data.data)
