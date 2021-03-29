@@ -4,6 +4,7 @@ import { COMMON_API } from 'common/api/api';
 import _ from 'lodash';
 import FileSaver from 'file-saver';
 import XLSX from 'xlsx';
+import Vue from 'vue';
 
 const importTarget = process.env.NODE_ENV !== 'local' ? file => () => import('project/' + file + '.vue') : file => require('project/' + file + '.vue').default;
 
@@ -805,4 +806,19 @@ export function getNewDay(date, days) {
     let newDate = String(rDate.getDate());
     if (rDate.getDate() < 10) newDate = '0' + newDate;
     return year + '-' + month + '-' + newDate;
+}
+
+export function loginRouter(to, next) {
+    if (to.query.token) {
+        Vue['cookie'].set('token', to.query.token);
+    }
+    next()
+}
+export function loginHome() {
+    return COMMON_API.TOKEN_RULE_API({
+        accessToken: Vue['cookie'].get('token')
+    })
+}
+export function loginHttp(data) {
+    window.location.href = data.data + '&redirectUri=' + window.location.href
 }

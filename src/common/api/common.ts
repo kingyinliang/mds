@@ -6,6 +6,14 @@ const COMMON_API = {
      */
     LOGIN_API: params => httpProxy('/sysUser/login', 'POST', params),
     /**
+     * @property {string} TOKEN_RULE_API 校验token
+     */
+    TOKEN_RULE_API: params => httpProxy('/sysUser/login', 'POST', params, 'SYS'),
+    /**
+     * @property {string} TOKEN_RULE_API 校验token
+     */
+    TEST_API: params => httpProxy('/sysDept/dropDown?factory=common', 'GET', params, 'SYS'),
+    /**
      * @property {string} UPPASS_API 修改密码
      */
     UPPASS_API: params => httpProxy('/sysUser/password/update', 'POST', params),

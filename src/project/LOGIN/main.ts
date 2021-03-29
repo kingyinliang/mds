@@ -8,6 +8,7 @@ import { Notification } from 'element-ui';
 import 'element-ui/lib/theme-chalk/index.css'
 import 'common/icon/iconfont.css'
 import VueRouter, { RouterOptions } from 'vue-router';
+import { loginRouter } from 'utils/utils';
 
 Vue.config.productionTip = false
 
@@ -35,6 +36,9 @@ const router = new VueRouter({
     mode: 'history',
     routes: []
 } as RouterOptions);
+router.beforeEach((to, from, next) => {
+    loginRouter(to, next)
+})
 
 new Vue({
     router,

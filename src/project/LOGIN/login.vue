@@ -27,29 +27,13 @@
 <script>
 import { COMMON_API } from 'common/api/api';
 import SelectFactory from 'src/layout/main/SelectFactory';
-import { Loading } from 'element-ui';
+import { loginHome } from 'utils/utils';
 export default {
     name: 'Login',
     components: {
         SelectFactory
     },
     data() {
-        const validatePass = (rule, value, callback) => {
-            if (value === '') {
-                return callback(new Error('请输入密码'));
-            }
-                return callback();
-
-        };
-        const validatePass1 = (rule, value, callback) => {
-            if (value === '') {
-                return callback(new Error('请输入账号'));
-            } else if (value.length !== 8) {
-                return callback(new Error('长度为 8 个字符工号'));
-            }
-                return callback();
-
-        };
         const validatePass2 = (rule, value, callback) => {
             if (value === '') {
                 return callback(new Error('请再次输入密码'));
@@ -102,79 +86,49 @@ export default {
                 password: '',
                 newPassword: '',
                 conPassword: ''
-            },
-            // 登录用户信息
-            ruleForm2: {
-                user: '',
-                pass: ''
-            },
-            curr: 0,
-            videoList: [],
-            rules2: {
-                user: [{ validator: validatePass1, trigger: 'blur' }],
-                pass: [
-                    {
-                        min: 8,
-                        max: 12,
-                        message: '长度在 8 到 12 个字符',
-                        trigger: 'blur'
-                    },
-                    { validator: validatePass, trigger: 'blur' }
-                ]
             }
         };
     },
     created() {
-        const token = this.$cookie.get('token')
-        const query = this.$route.query
-        if (query.token) {
-        //    有返回token
-        } else if (!token) {
-        //  cookie中没有token
-            console.log(window.location.href);
-            window.location.href = 'http://mss-dev.shinho.net.cn/?url=' + window.location.href + '&clientId=111'
-        } else {
-        //    cookie中有token验证token有效
-        }
+        loginHome().then(({ data }) => {
+            this.loginSuccess(data.data)
+        })
     },
     mounted() {
-        // if (window.location.href.indexOf('token') === -1) {} else {
-        //     window.location.href = 'http://localhost:8080/'
-        // }
         // *********** RDM CDM 跳转用  start
-        if (window.location.href.indexOf('?') !== -1) {
-            const url = decodeURIComponent(window.location.href.split('?')[1].split('=')[1]);
-            const urlData = JSON.parse(url);
-
-
-            if (typeof urlData.userFactory.find(item => { return item.id === '482537131483348992' }) !== 'undefined') { // RDM
-                const systemTemp = urlData.userFactory.filter(item => { return item.id === '482537131483348992' })
-                urlData.userFactory = systemTemp
-                const loading = Loading.service({
-                    lock: true,
-                    text: '加载中……',
-                    background: 'rgba(255, 255, 255, 0.7)'
-                });
-                setTimeout(() => {
-                    this.loginSuccess(urlData)
-                    loading.close();
-                }, 3000);
-            } else if (typeof urlData.userFactory.find(item => { return item.id === '926550584766501627' }) !== 'undefined') { // CDN
-                const systemTemp = urlData.userFactory.filter(item => { return item.id === '926550584766501627' })
-                urlData.userFactory = systemTemp
-                const loading = Loading.service({
-                    lock: true,
-                    text: '加载中……',
-                    background: 'rgba(255, 255, 255, 0.7)'
-                });
-                setTimeout(() => {
-                    this.loginSuccess(urlData)
-                    loading.close();
-                }, 3000);
-            } else {
-                this.$warningToast('登入失败')
-            }
-        }
+        // if (window.location.href.indexOf('?') !== -1) {
+        //     const url = decodeURIComponent(window.location.href.split('?')[1].split('=')[1]);
+        //     const urlData = JSON.parse(url);
+        //
+        //
+        //     if (typeof urlData.userFactory.find(item => { return item.id === '482537131483348992' }) !== 'undefined') { // RDM
+        //         const systemTemp = urlData.userFactory.filter(item => { return item.id === '482537131483348992' })
+        //         urlData.userFactory = systemTemp
+        //         const loading = Loading.service({
+        //             lock: true,
+        //             text: '加载中……',
+        //             background: 'rgba(255, 255, 255, 0.7)'
+        //         });
+        //         setTimeout(() => {
+        //             this.loginSuccess(urlData)
+        //             loading.close();
+        //         }, 3000);
+        //     } else if (typeof urlData.userFactory.find(item => { return item.id === '926550584766501627' }) !== 'undefined') { // CDN
+        //         const systemTemp = urlData.userFactory.filter(item => { return item.id === '926550584766501627' })
+        //         urlData.userFactory = systemTemp
+        //         const loading = Loading.service({
+        //             lock: true,
+        //             text: '加载中……',
+        //             background: 'rgba(255, 255, 255, 0.7)'
+        //         });
+        //         setTimeout(() => {
+        //             this.loginSuccess(urlData)
+        //             loading.close();
+        //         }, 3000);
+        //     } else {
+        //         this.$warningToast('登入失败')
+        //     }
+        // }
         // *********** RDM CDM 跳转用  end
     },
     methods: {
@@ -204,25 +158,7 @@ export default {
                 }
             });
         },
-        submitForm(formName) {
-            this.$refs[formName].validate(valid => {
-                if (valid) {
-                    COMMON_API.LOGIN_API({
-                        userName: this.ruleForm2.user,
-                        password: this.ruleForm2.pass,
-                        loginSystem: 'MDS'
-                    }).then(({ data }) => {
-                        if (data.code === 200) {
-                            this.loginSuccess(data.data);
-                        }
-                    });
-                } else {
-                    return false;
-                }
-            });
-        },
         loginSuccess(data) {
-            this.$cookie.set('token', data.token);
             sessionStorage.setItem('userId', data.uid || '');
             sessionStorage.setItem('userFactory', JSON.stringify(data.userFactory || '[]'));
             sessionStorage.setItem('userName', data.userName || '');
@@ -235,17 +171,18 @@ export default {
             sessionStorage.setItem('defaultFactory', data.defaultFactory || '');
             this.userName = data.userName
             this.realName = data.realName
-            if (data.firstFlag === 'Y') {
-                this.visible = true;
-                this.factory = data.userFactory
-                this.dataForm.id = data.id
-                this.dataForm.workNum = data.userName
-            } else if (data.defaultFactory) {
-                const dfFa = data.userFactory.filter(item => item.deptCode === data.defaultFactory)[0]
-                this.$refs.selectfactory.goFa(dfFa)
-            } else {
-                this.selectFactory(data)
-            }
+            this.selectFactory(data)
+            // if (data.firstFlag === 'Y') {
+            //     this.visible = true;
+            //     this.factory = data.userFactory
+            //     this.dataForm.id = data.id
+            //     this.dataForm.workNum = data.userName
+            // } else if (data.defaultFactory) {
+            //     const dfFa = data.userFactory.filter(item => item.deptCode === data.defaultFactory)[0]
+            //     this.$refs.selectfactory.goFa(dfFa)
+            // } else {
+            //     this.selectFactory(data)
+            // }
         },
         selectFactory(data) {
             this.factory = data.userFactory
