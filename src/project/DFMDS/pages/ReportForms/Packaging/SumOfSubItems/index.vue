@@ -35,10 +35,10 @@
         queryFormSetting= {
             isQueryFormShow: true, // 标头搜寻区块是否显示
             rules: [ // 查询必填栏位校验
-                {
-                    prop: 'workShop',
-                    text: '请选择生产车间'
-                },
+                // {
+                //     prop: 'workShop',
+                //     text: '请选择生产车间'
+                // },
                 {
                     prop: 'monthId',
                     text: '请选择月'
@@ -134,7 +134,7 @@
                 defaultValue: '',
                 labelWidth: '100',
                 clearable: true,
-                rule: [{ required: true, message: '请选择生产车间', trigger: 'blur' }],
+                rule: [{ required: false, message: '请选择生产车间', trigger: 'blur' }],
                 defaultOptionsFn: () => {
                     return COMMON_API.ORG_QUERY_WORKSHOP_API({
                         factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,

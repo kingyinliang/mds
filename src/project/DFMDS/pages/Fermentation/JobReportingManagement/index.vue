@@ -85,9 +85,9 @@
 
         logList = [];
 
-        // endDate = dateFormat(new Date(), 'yyyy-MM-dd');
-        endDate = null;
-        endDate2 = null;
+        // endDate = null;
+        endDate = dateFormat(new Date(new Date().getTime() - 3600 * 1000 * 24), 'yyyy-MM-dd');
+        endDate2 = dateFormat(new Date(new Date().getTime() - 3600 * 1000 * 24), 'yyyy-MM-dd');
 
         pickerOptions = {
             disabledDate(time) {

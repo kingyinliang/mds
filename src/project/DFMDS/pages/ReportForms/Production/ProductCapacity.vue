@@ -81,12 +81,12 @@
             column: [
                 {
                     label: '生产车间',
-                    prop: 'workShop',
+                    prop: 'workShopName',
                     minwidth: 120
                 },
                 {
                     label: '生产线',
-                    prop: 'productLine',
+                    prop: 'productLineName',
                     width: 120
                 },
                 {
@@ -195,7 +195,7 @@
 
         // 设置数据
         setData(data) {
-            if (!data.data) {
+            if (!data.data.length) {
                 this.$infoToast('暂无任何内容');
             }
             this.getSpanArr(data.data)
