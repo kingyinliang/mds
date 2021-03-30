@@ -111,7 +111,7 @@
                                 保存
                             </el-button>
                         </template>
-                        <el-button v-if="orderStatus !== 'submit' && orderStatus !== 'checked' && orderStatus !== 'D' && orderStatus !== 'M' && orderStatus !== '已提交' && orderStatus !== '已审核' && orderStatus !== '待审核' && orderStatus !== '已过账' && ifSubmit() && isAuth(submitAuth)" type="primary" size="small" @click="submitData">
+                        <el-button v-if="orderStatus !== 'submit' && orderStatus !== 'checked' && orderStatus !== 'D' && orderStatus !== 'M' && orderStatus !== '已提交' && orderStatus !== '已审核' && orderStatus !== '待审核' && orderStatus !== '已过账' && ifSubmit() && isAuth(submitAuth) && showSubmit" type="primary" size="small" @click="submitData">
                             提交
                         </el-button>
                     </div>
@@ -271,6 +271,11 @@
             },
             //检测数据底部只显示取消和编辑
             redactBoxStatus: {
+                type: Boolean,
+                default: true
+            },
+            // 是否展示提交按钮
+            showSubmit: {
                 type: Boolean,
                 default: true
             }
