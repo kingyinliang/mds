@@ -6,6 +6,7 @@
             :column="column"
             :rules="rules"
             :custom-data="true"
+            :show-index-column="true"
             :query-form-data="queryFormData"
             :list-interface="listInterface"
         />

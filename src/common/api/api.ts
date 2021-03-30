@@ -18,6 +18,7 @@ import ferApi from './fer';
 import reportsApi from './reports'; // 报表
 import jobApi from './job'; // 报表
 import systemApi from './system'; // 系统基础数据
+import stockApi from './stock'; // 库存
 
 export const COMMON_API = commonApi;
 export const ORDER_API = orderApi;
@@ -32,3 +33,4 @@ export const FER_API = ferApi;
 export const REPORTS_API = reportsApi;
 export const JOB_API = jobApi;
 export const SYSTEM_API = systemApi;
+export const STOCK_API = stockApi;

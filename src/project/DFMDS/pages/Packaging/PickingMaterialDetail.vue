@@ -49,7 +49,15 @@
                                 <span class="notNull">* </span>物料批次
                             </template>
                             <template slot-scope="scope">
-                                <el-input v-model="scope.row.batch" maxlength="10" :disabled="!(isRedact)" size="small" placeholder="请输入" />
+                                <!-- <el-input v-model="scope.row.batch" maxlength="10" :disabled="!(isRedact)" size="small" placeholder="请输入" /> -->
+                                <el-select v-model="scope.row.batch" size="small" :disabled="!(isRedact)" @change="val => batchChange(scope.row, val)">
+                                    <el-option v-for="op in scope.row.stoPackageMaterialStorageResponseDtoList" :key="op.id" :label="op.batch" :value="op.batch" />
+                                </el-select>
+                            </template>
+                        </el-table-column>
+                        <el-table-column label="模具号" prop="mouldCode" min-width="140">
+                            <template slot-scope="scope">
+                                <el-input v-model="scope.row.mouldCode" :disabled="!scope.row.canEditModuleCode" size="small" />
                             </template>
                         </el-table-column>
                         <el-table-column label="厂家" min-width="140">
@@ -57,7 +65,7 @@
                                 <span class="notNull">* </span>厂家
                             </template>
                             <template slot-scope="scope">
-                                <el-select v-model="scope.row.manufactor" filterable placeholder="请选择" size="small" :disabled="!(isRedact)" clearable>
+                                <el-select v-model="scope.row.manufactor" filterable placeholder="请选择" size="small" :disabled="true" clearable>
                                     <el-option v-for="(iteam, index) in manufactor" :key="index" :label="iteam.dictValue" :value="iteam.dictCode" />
                                 </el-select>
                             </template>
@@ -188,6 +196,19 @@
             });
         }
 
+        // 批次变化
+        batchChange(row, val) {
+            const obj = row.stoPackageMaterialStorageResponseDtoList.find(item => item.batch === val)
+            row.mouldCode = obj.mouldCode
+            row.manufactor = obj.supplierCode
+            row.stoPackageMaterialStorageId = obj.id
+            if (!obj.mouldCode) {
+                row.canEditModuleCode = true
+            } else {
+                row.canEditModuleCode = false
+            }
+        }
+
         // 拆分
         SplitDate(row, index) {
             this.tableData.splice(index + this.tableData.filter(item => item.materialCode === row.materialCode).length, 0, {
@@ -199,7 +220,9 @@
                 needNum: row.needNum,
                 storage: row.storage,
                 useType: '正常领料',
-                splitFlag: 'Y'
+                splitFlag: 'Y',
+                stoPackageMaterialStorageResponseDtoList: row.stoPackageMaterialStorageResponseDtoList,
+                mouldCode: ''
             })
             this.spanArr = this.merge(this.tableData)
         }
@@ -264,6 +287,7 @@
             for (const item of this.tableData.filter(it => it.delFlag !== 1)) {
                 if (!item.useType || item.useAmount === '' || item.useAmount === null || !item.batch || !item.manufactor) {
                     this.$warningToast('请填写必填项');
+                    console.log(item)
                     return false
                 }
             }
@@ -277,7 +301,7 @@
             }
 
             const delIds: string[] = []
-            const insertDto = []
+            const insertDto: DataObj[] = []
             const updateDto = []
 
             this.tableData.forEach(item => {
@@ -293,7 +317,7 @@
             PKG_API.PKG_PICKING_MATERIAL_SAVE_API({
                 workShop: this.formHeader['workShop'],
                 delIds,
-                insertDto,
+                insertDto: insertDto.filter(it => it.delFlag !== 1),
                 updateDto
             }).then(() => {
                 this.$successToast('保存成功');
@@ -360,6 +384,13 @@
         manufactor?: string;
         splitFlag?: string;
         status?: string;
+        mouldCode?: string; // 模具号
+        stoPackageMaterialStorageResponseDtoList?: Array<StoPackageMaterialStorageResponseDto>;
+    }
+    interface StoPackageMaterialStorageResponseDto {
+        id?: string;
+        mouldCode?: string;
+        supplierCode?: string;
     }
 </script>
 
