@@ -261,6 +261,15 @@
                     dataType: 'default'
                 },
                 {
+                    prop: 'bomRate',
+                    label: 'BOM偏离率',
+                    width: '100',
+                    hide: false,
+                    fixed: false,
+                    showOverFlowTooltip: true,
+                    dataType: 'default'
+                },
+                {
                     prop: 'receivingNum',
                     label: '收货数量',
                     width: '100',
@@ -313,7 +322,8 @@
                     fixed: false,
                     showOverFlowTooltip: true,
                     custom: true,
-                    dataType: 'list'
+                    // dataType: 'list'
+                    dataType: 'default'
                 }
 
             ],

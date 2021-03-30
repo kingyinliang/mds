@@ -128,6 +128,7 @@
                 item['orderNo'] = formHeader.orderNo;
                 item['potOrderNo'] = formHeader.potOrderNo;
                 item['potOrderId'] = formHeader.id;
+                item['fermentCycle'] = Number(item.cycle)
             })
             return {
                 orderNo: this.$store.state.sterilize.SemiReceive.orderNoMap.orderNo,
