@@ -5,7 +5,8 @@ export default {
         packCheckData: {},
         auditDetail: {},
         pickingDetail: {},
-        auditDetailDetail: {}
+        auditDetailDetail: {},
+        packageInfo: {}
     },
     mutations: {
         updatePackDetail(state, packDetail) {
@@ -22,6 +23,9 @@ export default {
         },
         updateAuditDetailDetail(state, auditDetail) {
             state.auditDetailDetail = auditDetail;
+        },
+        updatePackageInfo(state, packageInfo) {
+            state.packageInfo = packageInfo;
         }
     }
 };

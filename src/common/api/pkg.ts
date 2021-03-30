@@ -148,7 +148,15 @@ const PKG_API = {
     /**
      * @property {string}  PKG_BATCH_LIST_API 包装录入批次下拉
      */
-    PKG_BATCH_LIST_API: params => httpProxy('/pkg/packageStorage/getBatch', 'POST', params)
+    PKG_BATCH_LIST_API: params => httpProxy('/pkg/packageStorage/getBatch', 'POST', params),
+    /**
+     * @property {string}  PKG_RETURN_SAVE_API 退料明细新增
+     */
+    PKG_RETURN_SAVE_API: params => httpProxy('/pkg/pkgPackageStorageItem/returnSave', 'POST', params),
+    /**
+     * @property {string}  PKG_RETURN_UPDATE_API 退料明细修改
+     */
+    PKG_RETURN_UPDATE_API: params => httpProxy('/pkg/pkgPackageStorageItem/returnUpdate', 'POST', params)
 };
 
 export default PKG_API;

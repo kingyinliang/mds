@@ -258,124 +258,133 @@
             }
         ]
 
-        Column = [
-            {
-                prop: 'checkStatusName',
-                label: '状态',
-                minwidth: '80'
-            },
-            {
-                prop: 'orderNo',
-                label: '生产订单',
-                minwidth: '120'
-            },
-            {
-                prop: 'holderName',
-                label: '发酵罐/池号',
-                minwidth: '120'
-            },
-            {
-                prop: 'productMaterialName',
-                label: '生产物料',
-                minwidth: '220',
-                formatter: row => row.productMaterialName + ' ' + row.productMaterialCode
-            },
-            {
-                prop: 'orderAmount',
-                label: '订单数量',
-                minwidth: '85'
-            },
-            {
-                prop: 'inStorageAmount',
-                label: '入库数量',
-                minwidth: '85'
-            },
-            {
-                prop: 'unit',
-                label: '单位',
-                minwidth: '80',
-                onclick: true
-            },
-            {
-                prop: 'confActivity1',
-                label: '准备工时',
-                minwidth: '85'
-            },
-            {
-                prop: 'confActiUnit1',
-                label: '单位',
-                minwidth: '80',
-                onclick: true
-            },
-            {
-                prop: 'confActivity2',
-                label: '机器工时',
-                minwidth: '85'
-            },
-            {
-                prop: 'confActiUnit2',
-                label: '单位',
-                minwidth: '80',
-                onclick: true
-            },
-            {
-                prop: 'confActivity3',
-                label: '人工工时',
-                minwidth: '85'
-            },
-            {
-                prop: 'confActiUnit3',
-                label: '单位',
-                minwidth: '80',
-                onclick: true
-            },
-            {
-                prop: 'startDate',
-                label: '执行开始日期',
-                minwidth: '160'
-            },
-            {
-                prop: 'endDate',
-                label: '执行结束日期',
-                minwidth: '160',
-                type: 'date-picker',
-                redact: true,
-                dataType: 'date',
-                valueFormat: 'yyyy-MM-dd'
-            },
-            {
-                prop: 'jobBookType',
-                label: '部分/完全',
-                minwidth: '100',
-                type: 'select',
-                redact: true,
-                resVal: {
-                    resData: 'data',
-                    label: 'label',
-                    value: 'value'
+        Column(boo) {
+            // const boo = this.$refs.queryTable.activeName !== 1;
+            return [
+                {
+                    prop: 'checkStatusName',
+                    label: '状态',
+                    minwidth: '80'
+                },
+                {
+                    prop: 'orderNo',
+                    label: '生产订单',
+                    minwidth: '120'
+                },
+                {
+                    prop: 'holderName',
+                    label: '发酵罐/池号',
+                    minwidth: '120'
+                },
+                {
+                    prop: 'productMaterialName',
+                    label: '生产物料',
+                    minwidth: '220',
+                    formatter: row => row.productMaterialName + ' ' + row.productMaterialCode
+                },
+                {
+                    prop: 'orderAmount',
+                    label: '订单数量',
+                    minwidth: '85'
+                },
+                {
+                    prop: 'inStorageAmount',
+                    label: '入库数量',
+                    minwidth: '85'
+                },
+                {
+                    prop: 'unit',
+                    label: '单位',
+                    minwidth: '80',
+                    onclick: true
+                },
+                {
+                    type: 'input',
+                    redact: boo,
+                    prop: 'confActivity1',
+                    label: '准备工时',
+                    minwidth: '140'
+                },
+                {
+                    prop: 'confActiUnit1',
+                    label: '单位',
+                    minwidth: '80',
+                    onclick: true
+                },
+                {
+                    type: 'input',
+                    redact: boo,
+                    prop: 'confActivity2',
+                    label: '机器工时',
+                    minwidth: '140'
+                },
+                {
+                    prop: 'confActiUnit2',
+                    label: '单位',
+                    minwidth: '80',
+                    onclick: true
+                },
+                {
+                    type: 'input',
+                    redact: boo,
+                    prop: 'confActivity3',
+                    label: '人工工时',
+                    minwidth: '140'
+                },
+                {
+                    prop: 'confActiUnit3',
+                    label: '单位',
+                    minwidth: '80',
+                    onclick: true
+                },
+                {
+                    prop: 'startDate',
+                    label: '执行开始日期',
+                    minwidth: '160'
+                },
+                {
+                    prop: 'endDate',
+                    label: '执行结束日期',
+                    minwidth: '160',
+                    type: 'date-picker',
+                    redact: true,
+                    dataType: 'date',
+                    valueFormat: 'yyyy-MM-dd'
+                },
+                {
+                    prop: 'jobBookType',
+                    label: '部分/完全',
+                    minwidth: '100',
+                    type: 'select',
+                    redact: true,
+                    resVal: {
+                        resData: 'data',
+                        label: 'label',
+                        value: 'value'
+                    }
+                    // formatter: (row) => {
+                    //     return row.materialName + ' ' + row.materialCode;
+                    // }
+                },
+                {
+                    prop: 'remark',
+                    label: '备注',
+                    minwidth: '160',
+                    redact: true,
+                    type: 'input'
+                },
+                {
+                    prop: 'changer',
+                    label: '操作人员',
+                    minwidth: '120'
+                },
+                {
+                    prop: 'changed',
+                    label: '操作时间',
+                    minwidth: '160'
                 }
-                // formatter: (row) => {
-                //     return row.materialName + ' ' + row.materialCode;
-                // }
-            },
-            {
-                prop: 'remark',
-                label: '备注',
-                minwidth: '160',
-                redact: true,
-                type: 'input'
-            },
-            {
-                prop: 'changer',
-                label: '操作人员',
-                minwidth: '120'
-            },
-            {
-                prop: 'changed',
-                label: '操作时间',
-                minwidth: '160'
-            }
-        ]
+            ]
+        }
 
         tabs = [
             {
@@ -388,7 +397,7 @@
                     totalCount: 0
                 },
                 showOperationColumn: true,
-                column: this.Column // eslint-disable-line
+                column: this.Column(false) // eslint-disable-line
             },
             {
                 label: '完全报工',
@@ -400,7 +409,7 @@
                     totalCount: 0
                 },
                 showOperationColumn: true,
-                column: this.Column // eslint-disable-line
+                column: this.Column(false) // eslint-disable-line
             },
             {
                 label: '返工订单',
@@ -412,7 +421,7 @@
                     totalCount: 0
                 },
                 showOperationColumn: true,
-                column: this.Column // eslint-disable-line
+                column: this.Column(true) // eslint-disable-line
             }
         ]
 
@@ -426,7 +435,8 @@
         @Watch('isRedact')
         watchRedact() {
             this.tabs[this.$refs.queryTable.activeName].tableData.map((row: JobReportingObj) => {
-                row.redact = this.isRedact && (row.checkStatus === 'N' || row.checkStatus === 'S');
+                console.log(this.$refs.queryTable.activeName)
+                row.redact = this.isRedact && (row.checkStatus === 'N' || row.checkStatus === 'S' || row.checkStatus === 'R');
             })
         }
 
@@ -633,7 +643,7 @@
                 const element = arr[index];
                 // @ts-ignore
                 const old = JSON.parse(JSON.stringify(this['oldDataList' + this.$refs.queryTable.activeName].find(item => item.id === element?.id)));
-                old.redact = this.isRedact && (old.checkStatus === 'N' || old.checkStatus === 'S');
+                old.redact = this.isRedact && (old.checkStatus === 'N' || old.checkStatus === 'S' || old.checkStatus === 'R');
                 if (!_.isEqual(old, element)) {
                     res.push(element);
                 }
