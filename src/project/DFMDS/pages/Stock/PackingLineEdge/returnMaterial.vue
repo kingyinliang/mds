@@ -277,7 +277,18 @@ export default class PackingLineEdge extends Vue {
     submit() {
         if (!this.selections.length) {
             this.$warningToast('请选择明细')
+            return
         }
+        this.$confirm('确定提交吗?', '提示', {
+            confirmButtonText: '确定',
+            cancelButtonText: '取消',
+            type: 'warning'
+        }).then(() => {
+            PKG_API.PKG_RETURN_SUBMIT_API(this.selections.map((item: { id: string }) => item.id)).then(res => {
+                this.$successToast(res.data.msg)
+                this.$refs.queryTable.getDataList(true)
+            })
+        })
     }
 
     addOrUpdate(params) {

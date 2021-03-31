@@ -156,7 +156,19 @@ const PKG_API = {
     /**
      * @property {string}  PKG_RETURN_UPDATE_API 退料明细修改
      */
-    PKG_RETURN_UPDATE_API: params => httpProxy('/pkg/pkgPackageStorageItem/returnUpdate', 'POST', params)
+    PKG_RETURN_UPDATE_API: params => httpProxy('/pkg/pkgPackageStorageItem/returnUpdate', 'POST', params),
+    /**
+     * @property {string}  PKG_RETURN_SUBMIT_API 退料明细提交
+     */
+    PKG_RETURN_SUBMIT_API: params => httpProxy('/pkg/pkgPackageStorageItem/returnSubmit', 'POST', params),
+    /**
+     * @property {string}  VERIFY_STORAGE_RETURN_PAGE_QUERY_API 分页查询库存退料审核
+     */
+    VERIFY_STORAGE_RETURN_PAGE_QUERY_API: params => httpProxy('/verifyStorageReturn/pageQuery', 'POST', params),
+    /**
+     * @property {string}  VERIFY_STORAGE_RETURN_PASS_API 库存退料审核过账
+     */
+    VERIFY_STORAGE_RETURN_PASS_API: params => httpProxy('/verifyStorageReturn/pass', 'POST', params)
 };
 
 export default PKG_API;
