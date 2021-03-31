@@ -147,7 +147,7 @@
                 {
                     prop: 'workShopName',
                     label: '生产车间',
-                    minWidth: '120',
+                    width: '120',
                     hide: false,
                     fixed: true,
                     showOverFlowTooltip: true,
@@ -156,9 +156,9 @@
                 {
                     prop: 'productLineName',
                     label: '产线',
-                    minWidth: '120',
+                    width: '220',
                     hide: false,
-                    fixed: true,
+                    fixed: false,
                     showOverFlowTooltip: true,
                     dataType: 'default'
                 },
@@ -167,16 +167,16 @@
                     label: '班次',
                     width: '80',
                     hide: false,
-                    fixed: true,
+                    fixed: false,
                     showOverFlowTooltip: true,
                     dataType: 'default'
                 },
                 {
                     prop: 'materialName',
                     label: '品项',
-                    width: '180',
+                    width: '260',
                     hide: false,
-                    fixed: true,
+                    fixed: false,
                     showOverFlowTooltip: true,
                     dataType: 'multi',
                     data: ['materialName', 'materialCode']
@@ -184,7 +184,7 @@
                 {
                     prop: 'productDate',
                     label: '日期',
-                    width: '160',
+                    width: '100',
                     hide: false,
                     fixed: false,
                     showOverFlowTooltip: true,

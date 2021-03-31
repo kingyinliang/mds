@@ -141,7 +141,7 @@
                 {
                     prop: 'productLineName',
                     label: '生产产线',
-                    width: '120',
+                    width: '260',
                     hide: false,
                     fixed: true,
                     showOverFlowTooltip: true,
@@ -176,7 +176,7 @@
                     data: ['materialCode', 'materialName']
                 },
                 {
-                    prop: 'inStaorage',
+                    prop: 'inStorage',
                     label: '入库产量',
                     width: '100',
                     hide: false,
@@ -340,6 +340,11 @@
             const { columns, data } = param;
             const sums: string[] = []
             const target = data[0]
+            if (target.totalData === null) {
+                // eslint-disable-next-line no-invalid-this
+                this.$warningToast('合计数据有误');
+                return
+            }
             if (target) {
                 columns.forEach((column, index) => {
                     if (Object.prototype.hasOwnProperty.call(target.totalData, column.property)) {
