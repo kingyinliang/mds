@@ -21,15 +21,15 @@
                 <div class="box-card-title clearfix">
                     <h3> <em class="title-icon" :style="{ background: '#487bff' }" />{{ '待过账列表' }} </h3>
                     <div class="btn-box">
-                        <el-form :model="postForm" :rules="rules" inline label-suffix="：" label-width="100px" size="small">
-                            <el-form-item label="过账日期" prop="date">
-                                <el-date-picker v-model="postForm.date" type="date" placeholder="选择日期" value-format="yyyy-MM-dd" />
+                        <el-form ref="postFormRef" :model="postForm" :rules="rules" inline label-suffix="：" label-width="100px" size="small">
+                            <el-form-item label="过账日期" prop="pstngDate">
+                                <el-date-picker v-model="postForm.pstngDate" type="date" placeholder="选择日期" value-format="yyyy-MM-dd" />
                             </el-form-item>
-                            <el-form-item label="抬头文本" prop="text">
-                                <el-input v-model="postForm.text" placeholder="请输入" />
+                            <el-form-item label="抬头文本" prop="headerText">
+                                <el-input v-model="postForm.headerText" placeholder="请输入" />
                             </el-form-item>
                             <el-form-item>
-                                <el-button type="primary" @click="requestOrderHandler">
+                                <el-button type="primary" @click="passBill">
                                     过账
                                 </el-button>
                                 <el-button type="danger" @click="requestOrderHandler">
@@ -44,12 +44,12 @@
                 <div class="box-card-title clearfix">
                     <h3> <em class="title-icon" :style="{ background: '#487bff' }" />{{ '已过账列表' }} </h3>
                     <div class="btn-box">
-                        <el-form :model="postForm" :rules="rules" inline label-suffix="：" label-width="100px" size="small">
-                            <el-form-item label="过账日期" prop="date">
-                                <el-date-picker v-model="postForm.date" type="date" placeholder="选择日期" value-format="yyyy-MM-dd" />
+                        <el-form ref="postFormRef2" :model="postForm" :rules="rules" inline label-suffix="：" label-width="100px" size="small">
+                            <el-form-item label="过账日期" prop="pstngDate">
+                                <el-date-picker v-model="postForm.pstngDate" type="date" placeholder="选择日期" value-format="yyyy-MM-dd" />
                             </el-form-item>
-                            <el-form-item label="抬头文本" prop="text">
-                                <el-input v-model="postForm.text" placeholder="请输入" />
+                            <el-form-item label="抬头文本" prop="headerText">
+                                <el-input v-model="postForm.headerText" placeholder="请输入" />
                             </el-form-item>
                             <el-form-item>
                                 <el-button type="danger" @click="requestOrderHandler">
@@ -61,23 +61,27 @@
                 </div>
             </template>
             <template slot="operation_column" slot-scope="{ scope }">
-                <el-button v-if="!scope.row.redact" type="text" size="small" @click="editHandler(scope.row)">
+                <!-- <el-button v-if="!scope.row.redact" type="text" size="small" @click="editHandler(scope.row)">
                     编辑
                 </el-button>
                 <el-button v-else type="text" size="small" @click="saveHandler(scope.row)">
                     保存
-                </el-button>
-                <el-button type="text" size="small">
+                </el-button> -->
+                <el-button type="text" size="small" @click="AuditLog(scope.row)">
                     日志
                 </el-button>
             </template>
         </query-table>
+        <el-dialog title="审核日志" width="900px" :close-on-click-modal="false" :visible.sync="visibleAuditLog">
+            <audit-log :table-data="auditLogData" :verify-man="'verifyMan'" :verify-date="'verifyDate'" :pack-up="false" :status="true" />
+            <div slot="footer" class="dialog-footer" />
+        </el-dialog>
     </div>
 </template>
 
 <script lang="ts">
     import { Vue, Component } from 'vue-property-decorator';
-    import { COMMON_API, FER_API } from 'common/api/api';
+    import { AUDIT_API, COMMON_API, PKG_API } from 'common/api/api';
     // import { dateFormat } from 'src/utils/utils';
     // import { dateFormat } from 'utils/utils';
 
@@ -88,20 +92,30 @@
     export default class PackingReturnMaterialAffirm extends Vue {
         $refs: {
             queryTable: HTMLFormElement;
+            postFormRef: HTMLFormElement;
+            postFormRef2: HTMLFormElement;
         }
 
-        postForm = {};
+        postForm = {
+            pstngDate: '',
+            headerText: ''
+        };
 
         currentTab = '0';
+
+        // 已审核、已过账、已退回
+        status = ['C', 'P', 'R'];
+
+        visibleAuditLog = false // 审核日志弹窗
+        auditLogData = [] // 审核日志
 
         // queryTable 必要变数
         queryTableFormData = [
             {
                 type: 'select',
                 label: '生产车间',
-                labelWidth: '120',
+                labelWidth: '100',
                 prop: 'workShop',
-                defaultValue: '',
                 rule: [{ required: true, message: '请选择生产车间', trigger: 'blur' }],
                 defaultOptionsFn: () => {
                     return COMMON_API.ORG_QUERY_WORKSHOP_API({
@@ -141,24 +155,7 @@
                 prop: 'material',
                 defaultValue: '',
                 filterable: true,
-                defaultOptionsFn: () => {
-                    return COMMON_API.SEARCH_MATERIAL_API({
-                        factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
-                        materialType: 'ZHAL'
-                    })
-                },
-                resVal: {
-                    resData: 'data',
-                    label: ['materialName', 'materialCode'],
-                    value: 'materialCode'
-                }
-            },
-            {
-                type: 'select',
-                label: '状态',
-                prop: 'status',
-                defaultValue: '',
-                filterable: true,
+                labelWidth: '100',
                 defaultOptionsFn: () => {
                     return COMMON_API.SEARCH_MATERIAL_API({
                         factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
@@ -182,35 +179,35 @@
 
         Column = [
             {
-                prop: 'fermentorName',
+                prop: 'statusName',
                 label: '状态',
                 minwidth: '100'
             },
             {
-                prop: 'fermentorName',
+                prop: 'factory',
                 label: '生产工厂',
                 minwidth: '100'
             },
             {
-                prop: 'productMaterialName',
+                prop: 'materialCode',
                 label: '包材物料',
                 minwidth: '160',
                 formatter(row) {
-                    return `${row.productMaterialName} ${row.productMaterialCode}`
+                    return `${row.materialName} ${row.materialCode}`
                 }
             },
             {
-                prop: 'fermentorName',
+                prop: 'batch',
                 label: '批次',
                 minwidth: '100'
             },
             {
-                prop: 'fermentorName',
+                prop: 'manufactor',
                 label: '供应商',
                 minwidth: '100'
             },
             {
-                prop: 'amount',
+                prop: 'changeAmount',
                 label: '数量',
                 minwidth: '85'
             },
@@ -221,22 +218,17 @@
                 onclick: true
             },
             {
-                prop: 'fermentorName',
-                label: '订单',
-                minwidth: '100'
-            },
-            {
-                prop: 'fermentorName',
+                prop: 'productLine',
                 label: '线别',
                 minwidth: '100'
             },
             {
-                prop: 'fermentorName',
+                prop: 'stgeLoc',
                 label: '出库库位',
                 minwidth: '100'
             },
             {
-                prop: 'orderType',
+                prop: 'moveType',
                 label: '移动类型',
                 minwidth: '160',
                 type: 'select',
@@ -249,27 +241,27 @@
                 }
             },
             {
-                prop: 'fermentorName',
+                prop: 'moveReason',
                 label: '过账移动原因',
                 minwidth: '120'
             },
             {
-                prop: 'fermentorName',
+                prop: 'receiptLoc',
                 label: '收货库位',
                 minwidth: '100'
             },
             {
-                prop: 'fermentorName',
+                prop: 'receiptBatch',
                 label: '收货批次',
                 minwidth: '100'
             },
             {
-                prop: 'fermentorName',
+                prop: 'writeoffsMoveReason',
                 label: '异动原因',
                 minwidth: '100'
             },
             {
-                prop: 'fermentorName',
+                prop: 'interfaceMsg',
                 label: '接口回写',
                 minwidth: '100'
             }
@@ -278,7 +270,7 @@
         tabs = [
             {
                 label: '待过账',
-                tableData: [{ redact: false }],
+                tableData: [],
                 multipleSelection: [],
                 showOperationColumn: true,
                 pages: {
@@ -292,7 +284,7 @@
             },
             {
                 label: '已过账',
-                tableData: [{ redact: false }],
+                tableData: [],
                 multipleSelection: [],
                 showOperationColumn: true,
                 pages: {
@@ -306,7 +298,7 @@
             },
             {
                 label: '已退回',
-                tableData: [{}],
+                tableData: [],
                 multipleSelection: [],
                 pages: {
                     currPage: 1,
@@ -320,7 +312,7 @@
         ]
 
         rules = {
-            date: [
+            pstngDate: [
                 { required: true, message: '请选择日期', triggle: 'blur' }
             ]
         }
@@ -331,6 +323,17 @@
 
         saveHandler(row) {
             row.redact = false
+        }
+
+        // 审核日志
+        AuditLog(row) {
+            AUDIT_API.AUDIT_DIALOG_LOG_LIST_API({
+                verifyId: row.id,
+                verifyType: 'STORAGE_RETURN'
+            }).then(({ data }) => {
+                this.auditLogData = data.data
+                this.visibleAuditLog = true
+            })
         }
 
         createdEnd() {
@@ -365,67 +368,31 @@
         // queryTable 查询请求
         queryTableListInterface(params) {
             params.factory = JSON.parse(sessionStorage.getItem('factory') || '{}').id;
-            if (Number(this.$refs.queryTable.activeName) === 0) {
-                params.applyFlag = 'N'; // 申请标识(Y,N)
-            } else {
-                params.applyFlag = 'Y'; // 申请标识(Y,N)
-            }
-            // console.log(params, '=-==========+++++++++++++');
+            params.status = this.status[Number(this.$refs.queryTable.activeName)];
             params.current = this.$refs.queryTable.tabs[this.$refs.queryTable.activeName].pages.currPage;// eslint-disable-line
             params.size = this.$refs.queryTable.tabs[this.$refs.queryTable.activeName].pages.pageSize;// eslint-disable-line
             params.total = this.$refs.queryTable.tabs[this.$refs.queryTable.activeName].pages.totalCount;// eslint-disable-line
-            return FER_API.FER_ORDER_LIST_API(params);
+            return PKG_API.VERIFY_STORAGE_RETURN_PAGE_QUERY_API(params);
         }
 
         // queryTable 回传 result
         returnDataFromQueryTableForm(datas, st) {
-            const edit = 0;
             if (st) {
                 this.tabs.map((item, index) => {
                     if (index !== Number(this.$refs.queryTable.activeName)) {
                         const params = JSON.parse(JSON.stringify(this.$refs.queryTable.queryForm))
                         params.factory = JSON.parse(sessionStorage.getItem('factory') || '{}').id;
-                        if (index === 0) {
-                            params.applyFlag = 'N'; // 申请标识(Y,N)
-                        } else {
-                            params.applyFlag = 'Y'; // 申请标识(Y,N)
-                        }
+                        params.status = this.status[index];
                         params.current = 1;
                         params.size = this.$refs.queryTable.tabs[index].pages.pageSize;
                         params.total = this.$refs.queryTable.tabs[index].pages.totalCount;
-                        FER_API.FER_ORDER_LIST_API(params).then(({ data }) => {
-                            if (index === edit) {
-                                data.data.records.map(row => {
-                                    row.orderType = this.$refs.queryTable.optionLists.orderType[0].dictCode;
-                                    // 鲜香泡豆默认01，其余物料默认为空不可编辑
-                                    row.redact = true;
-                                    if (row.productMaterialCode !== 'SP01130005') {
-                                        row.ver = '';
-                                        row.notEditableProp = ['ver'];
-                                    } else {
-                                        row.ver = this.$refs.queryTable.optionLists.ver[0].dictCode;
-                                    }
-                                })
-                            }
+                        PKG_API.VERIFY_STORAGE_RETURN_PAGE_QUERY_API(params).then(({ data }) => {
                             this.tabs[index].tableData = data.data.records;
                             this.$refs.queryTable.tabs[index].pages.currPage = data.data.current;
                             this.$refs.queryTable.tabs[index].pages.pageSize = data.data.size;
                             this.$refs.queryTable.tabs[index].pages.totalCount = data.data.total;
                         });
                     } else {
-                        if (index === edit) {
-                            datas.data.records.map(row => {
-                                row.orderType = this.$refs.queryTable.optionLists.orderType[0].dictCode;
-                                // 鲜香泡豆默认01，其余物料默认为空不可编辑
-                                row.redact = true;
-                                if (row.productMaterialCode !== 'SP01130005') {
-                                    row.ver = '';
-                                    row.notEditableProp = ['ver'];
-                                } else {
-                                    row.ver = this.$refs.queryTable.optionLists.ver[0].dictCode;
-                                }
-                            })
-                        }
                         this.tabs[this.$refs.queryTable.activeName].tableData = datas.data.records;
                         this.$refs.queryTable.tabs[this.$refs.queryTable.activeName].pages.currPage = datas.data.current;
                         this.$refs.queryTable.tabs[this.$refs.queryTable.activeName].pages.pageSize = datas.data.size;
@@ -433,19 +400,6 @@
                     }
                 })
             } else {
-                if (Number(this.$refs.queryTable.activeName) === edit) {
-                    datas.data.records.map(row => {
-                        row.orderType = this.$refs.queryTable.optionLists.orderType[0].dictCode;
-                        // 鲜香泡豆默认01，其余物料默认为空不可编辑
-                        row.redact = true;
-                        if (row.productMaterialCode !== 'SP01130005') {
-                            row.ver = '';
-                            row.notEditableProp = ['ver'];
-                        } else {
-                            row.ver = this.$refs.queryTable.optionLists.ver[0].dictCode;
-                        }
-                    })
-                }
                 this.tabs[this.$refs.queryTable.activeName].tableData = datas.data.records;
                 this.$refs.queryTable.tabs[this.$refs.queryTable.activeName].pages.currPage = datas.data.current;
                 this.$refs.queryTable.tabs[this.$refs.queryTable.activeName].pages.pageSize = datas.data.size;
@@ -453,26 +407,34 @@
             }
         }
 
-        requestOrderHandler() {
+        requestOrderHandler(row) {
+            console.log(row)
+        }
+
+        // 过账
+        passBill() {
             const arr = this.tabs[0].multipleSelection as OrderObj[];
             if (!arr.length) {
-                this.$warningToast('请选择订单');
+                this.$warningToast('请选择退料明细');
                 return false;
             }
-            for (const item of arr) {
-                if (!item.orderType) {
-                    this.$warningToast('请填写必填项');
-                    return false;
+            this.$refs.postFormRef.validate(valid => {
+                if (valid) {
+                    const params = {
+                        idSet: [] as string[],
+                        pstngDate: this.postForm.pstngDate,
+                        headerText: this.postForm.headerText
+                    }
+                    arr.map((item: OrderObj) => {
+                        params.idSet.push(item.id)
+                    });
+                    PKG_API.VERIFY_STORAGE_RETURN_PASS_API(params).then(res => {
+                        this.$successToast(res.data.msg);
+                        this.$refs.queryTable.getDataList(true);
+                    })
+                } else {
+                    return false
                 }
-            }
-            const params = arr.map((item: OrderObj) => ({
-                id: item.id,
-                orderType: item.orderType,
-                ver: item.ver
-            }));
-            FER_API.FER_ORDER_SEND_API(params).then(res => {
-                this.$successToast(res.data.msg);
-                this.$refs.queryTable.getDataList(true);
             })
         }
     }
