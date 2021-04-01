@@ -32,7 +32,7 @@
                                 <el-button type="primary" @click="passBill">
                                     过账
                                 </el-button>
-                                <el-button type="danger" @click="requestOrderHandler">
+                                <el-button type="danger" @click="refuseDialogShow(true)">
                                     退回
                                 </el-button>
                             </el-form-item>
@@ -52,7 +52,7 @@
                                 <el-input v-model="postForm.headerText" placeholder="请输入" />
                             </el-form-item>
                             <el-form-item>
-                                <el-button type="danger" @click="requestOrderHandler">
+                                <el-button type="danger" @click="refuseDialogShow(false)">
                                     反审
                                 </el-button>
                             </el-form-item>
@@ -72,6 +72,18 @@
                 </el-button>
             </template>
         </query-table>
+        <el-dialog :close-on-click-modal="false" :visible.sync="isRefuseOrWriteOffsDialogShow">
+            <el-input v-model="refuseOrWriteOffsText" type="textarea" :rows="6" class="textarea" style="width: 100%; height: 150px;" />
+            <span slot="title"> {{ dialogTitle }} </span>
+            <span slot="footer" class="dialog-footer">
+                <el-button @click="isRefuseOrWriteOffsDialogShow = false">
+                    取消
+                </el-button>
+                <el-button type="primary" @click="getRefuseOrWriteOffs()">
+                    确定
+                </el-button>
+            </span>
+        </el-dialog>
         <el-dialog title="审核日志" width="900px" :close-on-click-modal="false" :visible.sync="visibleAuditLog">
             <audit-log :table-data="auditLogData" :verify-man="'verifyMan'" :verify-date="'verifyDate'" :pack-up="false" :status="true" />
             <div slot="footer" class="dialog-footer" />
@@ -108,6 +120,10 @@
 
         visibleAuditLog = false // 审核日志弹窗
         auditLogData = [] // 审核日志
+
+        isRefuseOrWriteOffsDialogShow = false;
+        refuseOrWriteOffsText = '';
+        dialogTitle = '';
 
         // queryTable 必要变数
         queryTableFormData = [
@@ -407,8 +423,119 @@
             }
         }
 
-        requestOrderHandler(row) {
-            console.log(row)
+        //显示退回或反审弹窗
+        refuseDialogShow(bol) {
+            if (bol) {
+                //退回
+                if (this.$refs.queryTable.tabs[0].multipleSelection && this.$refs.queryTable.tabs[0].multipleSelection.length) {
+                    if (this.dialogTitle === '反审原因') {
+                        this.refuseOrWriteOffsText = '';
+                    }
+                    this.refuseOrWriteOffsText = '';
+                    this.dialogTitle = '退回原因';
+                    this.isRefuseOrWriteOffsDialogShow = true;
+                } else {
+                    this.$warningToast('请勾选数据')
+                }
+            } else {
+                //反审
+                // if (!this.pstngDate) {
+                //     this.$warningToast('请选择过账日期')
+                //     return false
+                // }
+                if (this.$refs.queryTable.tabs[1].multipleSelection && this.$refs.queryTable.tabs[1].multipleSelection.length) {
+                    if (this.dialogTitle === '退回原因') {
+                        this.refuseOrWriteOffsText = ''
+                    }
+                    this.refuseOrWriteOffsText = '';
+                    this.dialogTitle = '反审原因'
+                    this.isRefuseOrWriteOffsDialogShow = true
+                    return
+                }
+                this.$warningToast('请勾选数据')
+            }
+        }
+
+        //退回或反审确认
+        getRefuseOrWriteOffs() {
+            if (this.dialogTitle === '退回原因') {
+                if (this.refuseOrWriteOffsText.length <= 0) {
+                    this.$warningToast('请填写退回原因')
+                    return false;
+                }
+                this.$confirm('确认退回，是否继续', '退回确认', {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    type: 'warning'
+                }).then(() => {
+                    const list = this.$refs.queryTable.tabs[0].multipleSelection
+                    const params = {
+                        idSet: [] as string[],
+                        memo: this.refuseOrWriteOffsText
+                    }
+                    list.forEach(item => {
+                        params.idSet.push(item.id)
+                    });
+                    PKG_API.VERIFY_STORAGE_RETURN_RETURNED_API(params).then(({ data }) => {
+                        this.isRefuseOrWriteOffsDialogShow = false;
+                        this.$successToast(data.msg);
+                        this.$refs.queryTable.getDataList(true);
+                    }).catch((err) => {
+                        if (err.data.code === 201) {
+                            this.isRefuseOrWriteOffsDialogShow = false;
+                            // this.$errorToast(err.data.msg);
+                            this.$refs.queryTable.getDataList(true);
+                        }
+                    });
+                })
+            } else {
+                if (this.refuseOrWriteOffsText.length <= 0) {
+                    this.$warningToast('请填写反审原因')
+                    return false;
+                }
+                this.$confirm('数据已经调用SAP接口已发料，反审后将冲销SAP数据，是否反审?', '反审确认', {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    type: 'warning'
+                }).then(() => {
+                    const list = this.$refs.queryTable.tabs[1].multipleSelection
+                    // for (const item of list) {
+                    //     if (!item.stgeLoc || !item.moveType || !item.writeoffsMoveReason) {
+                    //         this.$warningToast('请填写必填项');
+                    //         return false;
+                    //     }
+                    //     item.factory = JSON.parse(sessionStorage.getItem('factory') || '{}').id
+                    //     item.factoryCode = JSON.parse(sessionStorage.getItem('factory') || '{}').deptCode
+                    //     item.reason = this.refuseOrWriteOffsText
+                    //     item.headerText = this.headerText
+                    //     item.pstngDate = this.pstngDate
+                    //     // if (item.batch !== '' && item.batch !== null) {
+                    //     //     if (item.batch.length !== 10) {
+                    //     //         this.$warningToast('物料批次长度为10位')
+                    //     //         return false;
+                    //     //     }
+                    //     // }
+                    // }
+                    const params = {
+                        idSet: [] as string[],
+                        reason: this.refuseOrWriteOffsText
+                    }
+                    list.map(item => {
+                        params.idSet.push(item.id)
+                    })
+                    PKG_API.VERIFY_STORAGE_RETURN_WRITE_OFFS_API(params).then(({ data }) => {
+                        this.isRefuseOrWriteOffsDialogShow = false
+                        this.$successToast(data.msg);
+                        this.$refs.queryTable.getDataList(true)
+                    }).catch((err) => {
+                        if (err.data.code === 201) {
+                            this.isRefuseOrWriteOffsDialogShow = false;
+                            // this.$errorToast(err.data.msg);
+                            this.$refs.queryTable.getDataList(true);
+                        }
+                    });
+                })
+            }
         }
 
         // 过账

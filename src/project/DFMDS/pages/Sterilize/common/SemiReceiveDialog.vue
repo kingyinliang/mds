@@ -30,12 +30,12 @@
             </el-form-item>
             <el-form-item label="物料批次：" prop="consumeBatch">
                 <!-- <el-input v-model="dataForm.consumeBatch" maxlength="10" placeholder="手动输入" /> -->
-                <el-select v-model="dataForm.consumeBatch" filterable placeholder="请选择" style="width: 100%;" clearable>
+                <el-select v-model="dataForm.consumeBatch" filterable placeholder="请选择" style="width: 100%;" clearable @change="setFermentStorage">
                     <el-option v-for="(item, index) in bitchArr" :key="index" :label="item.batch" :value="item.batch" />
                 </el-select>
             </el-form-item>
             <el-form-item v-if="dataForm.consumeType === '1'" label="发酵罐库存：">
-                <el-input v-model="dataForm.fermentStorage" type="number" placeholder="手动输入" />
+                <el-input v-model="dataForm.fermentStorage" type="number" placeholder="手动输入" disabled />
             </el-form-item>
             <el-form-item label="中转罐：">
                 <el-select v-model="dataForm.tankNo" placeholder="请选择" size="small" clearable filterable style="width: 100%;">
@@ -101,6 +101,8 @@
         }
 
         init(Data, formHeader) {
+            console.log('Data')
+            console.log(Data)
             COMMON_API.HOLDER_QUERY_BY_NOPAGE_API({
                 deptId: this.formHeader.workShop,
                 holderType: '022'
@@ -150,6 +152,17 @@
             }).then(({ data }) => {
                 this.bitchArr = data.data
             })
+
+        }
+
+        setFermentStorage(val) {
+            // this.dataForm.consumeUnit = filterArr1[0].erfme;
+            if (val !== '') {
+                this.dataForm.fermentStorage = this.bitchArr.filter(it => it.batch === val) ? this.bitchArr.filter(it => it.batch === val)[0].currentStock : '';
+            } else {
+                this.dataForm.fermentStorage = ''
+            }
+
 
         }
 
