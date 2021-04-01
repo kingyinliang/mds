@@ -340,11 +340,11 @@
             const { columns, data } = param;
             const sums: string[] = []
             const target = data[0]
-            if (target.totalData === null) {
-                // eslint-disable-next-line no-invalid-this
-                this.$warningToast('合计数据有误');
-                return
-            }
+            // if (target.totalData === null) {
+            //     // eslint-disable-next-line no-invalid-this
+            //     this.$warningToast('合计数据有误');
+            //     return
+            // }
             if (target) {
                 columns.forEach((column, index) => {
                     if (Object.prototype.hasOwnProperty.call(target.totalData, column.property)) {
