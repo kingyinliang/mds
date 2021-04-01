@@ -35,6 +35,7 @@ import { Vue, Component } from 'vue-property-decorator';
 import { COMMON_API, STOCK_API } from 'common/api/api';
 import StockCheckDialog from '../common/StockCheckDialog.vue'
 import StockEditDialog from '../common/StockEditDialog.vue'
+import PKG_API from 'src/common/api/pkg';
 @Component({
     name: 'MaterialDetail',
     components: {
@@ -52,103 +53,72 @@ export default class MaterialDetail extends Vue {
 
     moveDetail = {};
 
-    queryFormData = [
-        {
-            type: 'select',
-            label: '物料描述',
-            prop: 'materialCode',
-            labelWidth: 90,
-            filterable: true,
-            defaultValue: '',
-            rule: [
-                { required: false, message: '请选择车间', trigger: 'change' }
-            ],
-            defaultOptionsFn: () => {
-                return COMMON_API.ALLMATERIAL_API({
-                    materialTypes: ['ZVER'] // 物料类型
-                })
+    mouldCodeList = [];
+
+    supplierCodeList = [];
+
+    get queryFormData() {
+        return [
+            {
+                type: 'select',
+                label: '物料描述',
+                prop: 'materialCode',
+                labelWidth: 90,
+                filterable: true,
+                defaultValue: '',
+                rule: [
+                    { required: false, message: '请选择物料描述', trigger: 'change' }
+                ],
+                defaultOptionsFn: () => {
+                    return COMMON_API.ALLMATERIAL_API({
+                        materialTypes: ['ZVER'] // 物料类型
+                    })
+                },
+                resVal: {
+                    resData: 'data',
+                    label: ['materialName', 'materialCode'],
+                    value: 'materialCode'
+                }
             },
-            resVal: {
-                resData: 'data',
-                label: ['materialName', 'materialCode'],
-                value: 'materialCode'
-            }
-        },
-        {
-            type: 'select',
-            label: '批次',
-            prop: 'batch',
-            labelWidth: 90,
-            filterable: true,
-            defaultValue: '',
-            rule: [
-                { required: false, message: '请选择车间', trigger: 'change' }
-            ],
-            defaultOptionsFn: () => {
-                return COMMON_API.ORG_QUERY_WORKSHOP_API({
-                    factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
-                    deptType: ['WORK_SHOP'],
-                    deptName: '包装'
-                })
+            {
+                type: 'input',
+                label: '批次',
+                prop: 'batch',
+                labelWidth: 90,
+                defaultValue: ''
             },
-            resVal: {
-                resData: 'data',
-                label: ['deptName'],
-                value: 'id'
-            }
-        },
-        {
-            type: 'select',
-            label: '供应商',
-            prop: 'supplierCode',
-            labelWidth: 90,
-            filterable: true,
-            defaultValue: '',
-            rule: [
-                { required: false, message: '请选择车间', trigger: 'change' }
-            ],
-            defaultOptionsFn: () => {
-                return COMMON_API.ORG_QUERY_WORKSHOP_API({
-                    factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
-                    deptType: ['WORK_SHOP'],
-                    deptName: '包装'
-                })
+            {
+                type: 'select',
+                label: '供应商',
+                prop: 'supplierCode',
+                labelWidth: 90,
+                filterable: true,
+                defaultValue: '',
+                rule: [
+                    { required: false, message: '请选择车间', trigger: 'change' }
+                ],
+                defaultOptionsList: this.supplierCodeList
             },
-            resVal: {
-                resData: 'data',
-                label: ['deptName'],
-                value: 'id'
+            {
+                type: 'select',
+                label: '模具号',
+                prop: 'mouldCode',
+                labelWidth: 90,
+                filterable: true,
+                defaultValue: '',
+                rule: [
+                    { required: false, message: '请选择车间', trigger: 'change' }
+                ],
+                defaultOptionsList: this.mouldCodeList
             }
-        },
-        {
-            type: 'select',
-            label: '模具号',
-            prop: 'mouldCode',
-            labelWidth: 90,
-            filterable: true,
-            defaultValue: '',
-            rule: [
-                { required: false, message: '请选择车间', trigger: 'change' }
-            ],
-            defaultOptionsFn: () => {
-                return COMMON_API.ORG_QUERY_WORKSHOP_API({
-                    factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
-                    deptType: ['WORK_SHOP'],
-                    deptName: '包装'
-                })
-            },
-            resVal: {
-                resData: 'data',
-                label: ['deptName'],
-                value: 'id'
-            }
-        }
-    ]
+        ]
+    }
 
     column = [
         {
             label: '物料',
             prop: 'materialCode',
+            width: 140,
             formatter: row => row.materialName + ' ' + row.materialCode
         },
         {
@@ -216,6 +186,32 @@ export default class MaterialDetail extends Vue {
 
     createdEnd() {
         this.$refs.queryTable.getDataList(true)
+    }
+
+    created() {
+        this.getDropList()
+        this.$nextTick(() => {
+            this.$refs.queryTable.getDataList(true)
+        })
+    }
+
+    getDropList() {
+        PKG_API.STORAGE_PACKAGE_MATERIAL_GROUP_INFO({
+            materialGroupCode: this.$store.state.stock.stockInfo.materialGroupCode
+        }).then(res => {
+            this.supplierCodeList = res.data.data.supplierCodeList.map(item => {
+                return {
+                    label: item,
+                    value: item
+                }
+            })
+            this.mouldCodeList = res.data.data.mouldCodeList.map(item => {
+                return {
+                    label: item,
+                    value: item
+                }
+            })
+        })
     }
 
     getDataList(param) {
