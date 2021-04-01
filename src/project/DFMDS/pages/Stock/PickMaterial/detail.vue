@@ -39,7 +39,8 @@
                             </el-table-column>
                             <el-table-column label="订单领料量" prop="aaaaaaaaaaaa" width="140px">
                                 <template slot-scope="scope">
-                                    <el-input v-model="scope.row.amount" size="small" :disabled="!isRedact" @input="v => verifyHandler(v, scope.row)" @blur="verifyBlurHandler(scope.row)" />
+                                    <!-- <el-input v-model="scope.row.amount" size="small" :disabled="!isRedact" @input="v => verifyHandler(v, scope.row)" @blur="verifyBlurHandler(scope.row)" /> -->
+                                    <el-input v-model="scope.row.amount" size="small" type="number" :disabled="!isRedact" />
                                 </template>
                             </el-table-column>
                             <el-table-column label="物料批次" prop="batch" width="140px">
@@ -135,24 +136,24 @@
             orderStatus: 'N'
         }
 
-        // 只能是整数或小数
-        verifyHandler(v: string, row) {
-            if (v === '0') {
-                return
-            }
-            if (v === '00') {
-                row.amount = '0'
-                return
-            }
-            const reg = /(\d+\.\d+)|(\d+\.)|([1-9]+)/g
-            if (v.match(reg)) {
-                row.amount = v.match(reg)![0]
-                return
-            }
-            if (!reg.test(v)) {
-                row.amount = ''
-            }
-        }
+        // // 只能是整数或小数
+        // verifyHandler(v: string, row) {
+        //     if (v === '0') {
+        //         return
+        //     }
+        //     if (v === '00') {
+        //         row.amount = '0'
+        //         return
+        //     }
+        //     const reg = /(\d+\.\d+)|(\d+\.)|([1-9]+)/g
+        //     if (v.match(reg)) {
+        //         row.amount = v.match(reg)![0]
+        //         return
+        //     }
+        //     if (!reg.test(v)) {
+        //         row.amount = ''
+        //     }
+        // }
 
         verifyBlurHandler(row) {
             if (/\.$/.test(row.amount)) {
