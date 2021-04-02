@@ -816,7 +816,8 @@ export function loginRouter(to, next) {
 }
 export function loginHome() {
     return COMMON_API.TOKEN_RULE_API({
-        accessToken: Vue['cookie'].get('token')
+        accessToken: Vue['cookie'].get('token'),
+        tenant: 'MDS'
     })
 }
 export function loginHttp(data) {
