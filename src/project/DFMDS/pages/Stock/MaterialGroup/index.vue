@@ -223,6 +223,8 @@
         }
 
         addHandler() {
+            this.addForm = {}
+            this.imgUrl = ''
             this.addDialog = true;
             this.isAdd = true
         }

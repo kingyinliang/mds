@@ -493,7 +493,7 @@
                     this.$warningToast('请填写反审原因')
                     return false;
                 }
-                this.$confirm('数据已经调用SAP接口已发料，反审后将冲销SAP数据，是否反审?', '反审确认', {
+                this.$confirm('是否反审?', '反审确认', {
                     confirmButtonText: '确定',
                     cancelButtonText: '取消',
                     type: 'warning'
@@ -557,6 +557,8 @@
                     });
                     PKG_API.VERIFY_STORAGE_RETURN_PASS_API(params).then(res => {
                         this.$successToast(res.data.msg);
+                        this.postForm.pstngDate = ''
+                        this.postForm.headerText = ''
                         this.$refs.queryTable.getDataList(true);
                     })
                 } else {

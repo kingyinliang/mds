@@ -17,6 +17,7 @@ export default class ImageComp extends Vue {
 
     @Watch('s3Path')
     getImgByKey() {
+        if (!this.s3Path) return ''
         COMMON_API.DOWNLOADFILE_API({
             key: this.s3Path
         }).then((res) => {
