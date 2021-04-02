@@ -13,7 +13,7 @@
                         </el-button>
                     </div>
                 </div>
-                <el-table header-row-class-name="tableHead" class="newTable semi__pot_table" :data="semiTable" :row-class-name="rowDelFlag" :height="semiTable.length>4? '' : '196'" border tooltip-effect="dark" @row-dblclick="EditRow">
+                <el-table header-row-class-name="tableHead" class="newTable semi__pot_table" :data="semiTable" :row-class-name="rowDelFlag" :height="semiTable.length>4? '' : '196'" border tooltip-effect="dark" @row-dblclick="editRow">
                     <el-table-column :index="index => getIndexMethod(index, semiTable)" type="index" label="序号" width="50px" fixed />
                     <el-table-column prop="stePotNo" label="生产锅号" min-width="100" :show-overflow-tooltip="true">
                         <template slot-scope="scope">
@@ -186,11 +186,11 @@
         receive() {
             this.visible = true;
             this.$nextTick(() => {
-                this.$refs.SemiReceiveDialog.init(null, this.formHeader)
+                this.$refs.SemiReceiveDialog.init(null)
             });
         }
 
-        EditRow(row) {
+        editRow(row) {
             if (!this.isRedact) {
                 return false
             }

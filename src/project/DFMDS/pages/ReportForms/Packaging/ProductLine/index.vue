@@ -153,6 +153,7 @@
                 defaultValue: '',
                 labelWidth: '80',
                 width: '200',
+                clearable: true,
                 marked: false, // mark it
                 disabled: false,
                 optionsFn: val => {

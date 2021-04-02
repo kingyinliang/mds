@@ -40,6 +40,10 @@
                 {
                     prop: 'startDate',
                     text: '请输入生产时间'
+                },
+                {
+                    prop: 'startDate',
+                    text: '请输入属性'
                 }
             ],
             queryAuth: '',
@@ -59,10 +63,10 @@
                 label: '生产车间',
                 prop: 'workShop',
                 defaultValue: '',
-                labelWidth: '80', // default 70px
+                labelWidth: '90', // default 70px
                 width: '150',
                 clearable: true,
-                marked: false, // mark it
+                marked: true, // mark it
                 disabled: false,
                 defaultOptionsFn: () => {
                     return COMMON_API.ORG_QUERY_WORKSHOP_API({
