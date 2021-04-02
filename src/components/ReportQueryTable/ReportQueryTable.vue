@@ -3,7 +3,7 @@
  * @Anthor: Telliex
  * @Date: 2021-02-26 10:58:05
  * @LastEditors: Telliex
- * @LastEditTime: 2021-03-18 18:33:45
+ * @LastEditTime: 2021-04-02 14:01:43
 -->
 <template>
     <div>
@@ -412,7 +412,7 @@
                         this.$nextTick(() => {
                             // 添加监听
                             this.$refs[item.prop][0].emitChange = val => {
-                                this.clearTableAndPage();
+                                // this.clearTableAndPage();  //
                                 item.linkageProp.forEach(linkagePropItem => {
                                     // 联动的对象
                                     const linkagePropItemObj = this.queryFormData.filter(it => it.prop === linkagePropItem)[0];
@@ -423,7 +423,6 @@
                                     if (val) {
                                         let secondVal = '';
                                         if (linkagePropItemObj.returnValue) {
-                                            console.log(this.optionLists)
                                             // 抓取其他接口返回的其他参数
                                             secondVal = this.optionLists[linkagePropItemObj.returnValue.findList].find(it => it[linkagePropItemObj.returnValue.findId] === val)[linkagePropItemObj.returnValue.findField];
                                         }
@@ -450,11 +449,11 @@
                     } else {
                         this.$nextTick(() => {
                             this.$refs[item.prop][0].emitChange = () => {
-                                this.clearTableAndPage();
+                                // this.clearTableAndPage();
                             };
                             if (item.propTwo) {
                                 this.$refs[item.propTwo][0].emitChange = () => {
-                                    this.clearTableAndPage();
+                                    // this.clearTableAndPage();
                                 };
                             }
                         });
@@ -511,9 +510,6 @@
                     this.currentPage = 1;
                     this.totalCount = 0;
                 }
-                // if (this.clearSearch) {
-                //     this.getDataList(true);
-                // }
             },
             // [查询] 获取 table 数据
             getDataList(st) {
@@ -624,7 +620,6 @@
                         exportFileFor2Excel(this.dataTableSetting.column, tableDataToReportTemp, this.queryFormSetting.exportOption.text);
                     }
                 });
-                // exportFileForm(`${this.queryFormSetting.exportOption.exportInterface}`, this.queryFormSetting.exportOption.text, this);
             },
             // 显示隐藏动画
             /* eslint-disable no-invalid-this */
@@ -651,7 +646,6 @@
                     });
                 });
             },
-             /* eslint-enable no-invalid-this */
             // 序号
             indexMethod(index) {
                 if (this.dataTableSetting.dataChangeByAPI) {
@@ -659,13 +653,7 @@
                 }
                 return index + 1 + (Number(this.currentPage) - 1) * (Number(this.currentSize));
             },
-            // tab表格选中
-            // tabHandleSelectionChange(val, index) {
-            //     this.tabs[index].multipleSelection = [];
-            //     val.forEach((item) => {
-            //         this.tabs[index].multipleSelection.push(item);
-            //     });
-            // },
+
             // 表格选中
             handleSelectionChange(val) {
                 this.multipleSelection = [];
@@ -673,26 +661,6 @@
                     this.multipleSelection.push(item);
                 });
             },
-            // 改变每页条数
-            // tabHandleSizeChange(item, val) {
-            //     if (this.isRedact) {
-            //         this.$warningToast('请先保存数据');
-            //         return false;
-            //     }
-            //     item.pageSize = val;
-            //     this.getDataList();
-            // },
-            // 跳转页数
-            // tabHandleCurrentChange(item, val) {
-            //     if (this.isRedact) {
-            //         this.$warningToast('请先保存数据');
-            //         item.currPage = item.prePage;
-            //         return false;
-            //     }
-            //     item.prePage = item.currPage;
-            //     item.currPage = val;
-            //     this.getDataList();
-            // },
             // 改变每页条数
             handleSizeChange(val) {
                 if (this.dataTableSetting.dataChangeByAPI) {
@@ -712,17 +680,6 @@
                 this.currentPage = val;
                 this.$emit('changeSpanArr', val, this.currentSize, this.tableData)
             },
-            // tabClick(tab) {
-            //     const tabName = JSON.parse(JSON.stringify(tab.name));
-            //     this.$emit('tab-click', tabName);
-            // },
-            // lineClick(row) {
-            //     this.$emit('line-click', row);
-            // },
-            // 选择变化
-            // selectChange(row, index, val) {
-            //     this.$emit('select-change', row, index, val);
-            // },
             dateChange(v) {
                 this.$emit('date-change', v.value);
             },

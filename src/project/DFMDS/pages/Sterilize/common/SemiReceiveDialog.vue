@@ -74,7 +74,6 @@
 
         $refs: {dataForm: HTMLFormElement};
         visible = false;
-        cycle='';
         fermentPotId='';
         potArr: PotObject[] = [];
         transferTank: PotObject[] = [];
@@ -93,16 +92,7 @@
             consumeType: '1'
         };
 
-        mounted() {
-            STE_API.STE_SEMI_MATERIAL_GET_FERMENT_POT_LIST_API({
-            }).then(({ data }) => {
-                this.potArr = data.data
-            })
-        }
-
-        init(Data, formHeader) {
-            console.log('Data')
-            console.log(Data)
+        init(Data) {
             COMMON_API.HOLDER_QUERY_BY_NOPAGE_API({
                 deptId: this.formHeader.workShop,
                 holderType: '022'
@@ -110,13 +100,15 @@
                 this.transferTank = data.data
             })
             this.visible = true;
-            if (Data) {
+            if (Data) { // 编辑
                 this.dataForm = JSON.parse(JSON.stringify(Data))
-            } else {
+                this.getFermentPotList(Data.fermentPotId)
+            } else { // 领用
+                this.getFermentPotList()
                 this.dataForm = {
                     id: '',
                     stePotNo: this.$store.state.sterilize.SemiReceive.potNo,
-                    stePotName: formHeader.potName,
+                    stePotName: this.formHeader.potName,
                     potOrderId: this.$store.state.sterilize.SemiReceive.potOrderMap.id,
                     potOrderNo: this.$store.state.sterilize.SemiReceive.potOrderMap.potOrderNo,
                     cycle: '',
@@ -137,6 +129,15 @@
                 }
             }
 
+        }
+
+        // 获取 Ferment 下拉
+        getFermentPotList(val = '') {
+            STE_API.STE_SEMI_MATERIAL_GET_FERMENT_POT_LIST_API({
+                fermentPotId: val
+            }).then(({ data }) => {
+                this.potArr = data.data
+            })
         }
 
         setUtilAndBitch(val) {
@@ -170,6 +171,8 @@
             if (val !== '') {
                 this.dataForm.fermentPotId = val
                 this.dataForm.cycle = this.potArr.filter(item => item.holderId === val)[0].cycle;
+                console.log('this.dataForm')
+                console.log(this.dataForm)
                 STE_API.STE_SEMI_MATERIAL_GET_MATERIAL_LIST_API({
                     fermentorId: val
                 }).then(({ data }) => {
@@ -192,7 +195,6 @@
                         this.dataForm.fermentPotName = filterArr1[0].holderName;
                         this.dataForm.tankName = filterArr2.length ? filterArr2[0].holderName : '';
                     }
-                    this.dataForm.cycle = this.cycle
                     this.visible = false;
                     this.$emit('success', this.dataForm)
                 }
@@ -201,6 +203,7 @@
     }
     interface FormHeaderobj {
         workShop?: string;
+        potName?: string;
     }
     interface MaterialObj {
         batch: string;
