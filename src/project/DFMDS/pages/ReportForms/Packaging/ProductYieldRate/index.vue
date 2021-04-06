@@ -137,9 +137,23 @@
                 labelWidth: '100',
                 filterable: true,
                 clearable: true,
+                multiple: true,
+                width: 180,
                 rule: [{ required: false, message: '请选择品项大类', trigger: 'blur' }],
                 defaultOptionsFn: () => {
-                    return REPORTS_API.REPORT_LARGE_CLASS_DROP_DOWN_API({ })
+                    return new Promise((resolve) => {
+                        REPORTS_API.REPORT_LARGE_CLASS_DROP_DOWN_API({
+                            // workShop: val || ''
+                        }).then(res => {
+                            res.data.data.sort(item => {
+                                if (item.dictValue.length > 4) {
+                                    return -1
+                                }
+                                return 0
+                            })
+                            resolve(res)
+                        })
+                    })
                 },
                 defaultValue: '',
                 resVal: {
