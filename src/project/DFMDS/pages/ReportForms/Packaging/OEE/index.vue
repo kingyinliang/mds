@@ -218,7 +218,7 @@
                     dataType: 'default'
                 },
                 {
-                    prop: 'googRatio',
+                    prop: 'goodRatio',
                     label: '良品率',
                     width: '100',
                     hide: false,
@@ -266,7 +266,7 @@
                     dataType: 'default'
                 },
                 {
-                    prop: 'alltime',
+                    prop: 'allTime',
                     label: '实际投入时间',
                     subLabel: '(min)',
                     width: '140',
@@ -286,7 +286,7 @@
                     dataType: 'default'
                 },
                 {
-                    prop: 'excptTime',
+                    prop: 'exceptTime',
                     label: '异常损失时间',
                     subLabel: '(min)',
                     width: '140',
@@ -326,7 +326,7 @@
                     dataType: 'default'
                 },
                 {
-                    prop: 'effecCapacity',
+                    prop: 'effectCapacity',
                     label: '有效效能',
                     subLabel: '(件/h)',
                     width: '140',
