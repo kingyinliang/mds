@@ -111,7 +111,7 @@
                 prop: 'workShop',
                 labelWidth: '100',
                 clearable: true,
-                rule: [{ required: true, message: '请选择生产车间', trigger: 'blur' }],
+                rule: [{ required: false, message: '请选择生产车间', trigger: 'blur' }],
                 defaultOptionsFn: () => {
                     return COMMON_API.ORG_QUERY_WORKSHOP_API({
                         factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
@@ -132,7 +132,7 @@
                 prop: 'productLine',
                 labelWidth: '100',
                 clearable: true,
-                rule: [{ required: true, message: '请选择生产产线', trigger: 'blur' }],
+                rule: [{ required: false, message: '请选择生产产线', trigger: 'blur' }],
                 optionsFn: val => {
                     return COMMON_API.ORG_QUERY_CHILDREN_API({
                         parentId: val || '',
@@ -154,7 +154,7 @@
                 labelWidth: '100',
                 filterable: true,
                 clearable: true,
-                rule: [{ required: true, message: '请选择生产物料', trigger: 'blur' }],
+                rule: [{ required: false, message: '请选择生产物料', trigger: 'blur' }],
                 defaultOptionsFn: () => {
                     return REPORTS_API.REPORT_MATERIAL_DROP_DOWN_API({
                         // parentId: val || '',
