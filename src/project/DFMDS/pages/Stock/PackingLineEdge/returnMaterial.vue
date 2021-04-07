@@ -44,7 +44,7 @@
                         <el-table-column label="操作时间" prop="changed" width="160px" show-overflow-tooltip />
                         <el-table-column label="操作" fixed="right">
                             <template slot-scope="scope">
-                                <el-button type="text" size="small" @click="edit(scope.row)">
+                                <el-button type="text" size="small" :disabled="scope.row.status === 'M'" @click="edit(scope.row)">
                                     编辑
                                 </el-button>
                             </template>

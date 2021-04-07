@@ -450,6 +450,7 @@ export default class MaterialStock extends Vue {
             productLineOutName: row['productLineName'],
             materialCode: row['materialCode'],
             materialName: row['materialName'],
+            materialType: row['materialType'],
             amount: '',
             storageUnit: row['storageUnit'],
             batch: row['batch'],
