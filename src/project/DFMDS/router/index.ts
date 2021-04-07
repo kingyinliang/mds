@@ -45,7 +45,7 @@ const mainRoutes: RouteConfig = {
 
 const router = new VueRouter({
     mode: 'history',
-    base: process.env.BASE_URL,
+    base: process.env.BASE_URL + '/DFMDS.html',
     isAddDynamicMenuRoutes: false,
     routes: globalRoutes.concat(mainRoutes)
 } as RouterOptions);

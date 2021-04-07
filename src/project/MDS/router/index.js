@@ -77,6 +77,7 @@ const DataEchartsRoutes = {
 
 const router = new Router({
     mode: 'history',
+    base: process.env.BASE_URL + '/MDS.html',
     isAddDynamicMenuRoutes: false, // 是否已经添加动态(菜单)路由
     routes: globalRoutes.concat(mainRoutes).concat(DataEchartsRoutes)
 });
