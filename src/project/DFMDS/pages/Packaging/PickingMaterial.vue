@@ -6,7 +6,6 @@
             :column="column"
             :rules="rules"
             :custom-data="true"
-            :show-index-column="true"
             :query-form-data="queryFormData"
             :list-interface="listInterface"
         />
@@ -57,13 +56,6 @@
                 }
             },
             {
-                type: 'date-interval',
-                label: '生产日期',
-                defaultValue: dateFormat(new Date(), 'yyyy-MM-dd'),
-                prop: 'productStartDate',
-                propTwo: 'productEndDate'
-            },
-            {
                 type: 'select',
                 label: '领料状态',
                 prop: 'useMaterialStatus',
@@ -76,24 +68,31 @@
                     value: 'value'
                 }
             },
-            // {
-            //     type: 'select',
-            //     label: '订单状态',
-            //     prop: 'orderStatus',
-            //     defaultOptionsFn: () => {
-            //         return COMMON_API.DICTQUERY_API({ dictType: 'COMMON_CHECK_STATUS' });
-            //     },
-            //     defaultValue: '',
-            //     resVal: {
-            //         resData: 'data',
-            //         label: ['dictValue'],
-            //         value: 'dictCode'
-            //     }
-            // },
+            {
+                type: 'select',
+                label: '订单状态',
+                prop: 'orderStatus',
+                defaultOptionsFn: () => {
+                    return COMMON_API.DICTQUERY_API({ dictType: 'COMMON_CHECK_STATUS' });
+                },
+                defaultValue: '',
+                resVal: {
+                    resData: 'data',
+                    label: ['dictValue'],
+                    value: 'dictCode'
+                }
+            },
             {
                 type: 'input',
                 label: '生产订单',
                 prop: 'orderNo'
+            },
+            {
+                type: 'date-interval',
+                label: '生产日期',
+                defaultValue: dateFormat(new Date(), 'yyyy-MM-dd'),
+                prop: 'productStartDate',
+                propTwo: 'productEndDate'
             }
         ]
 
@@ -133,7 +132,7 @@
             },
             {
                 label: '生产订单',
-                prop: 'orderNo',
+                prop: 'productLineName',
                 formatter: (row) => {
                     const h = this.$createElement; // eslint-disable-line
                     return h('div', {
