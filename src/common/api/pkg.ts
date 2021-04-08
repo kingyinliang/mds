@@ -148,7 +148,39 @@ const PKG_API = {
     /**
      * @property {string}  PKG_BATCH_LIST_API 包装录入批次下拉
      */
-    PKG_BATCH_LIST_API: params => httpProxy('/pkg/packageStorage/getBatch', 'POST', params)
+    PKG_BATCH_LIST_API: params => httpProxy('/pkg/packageStorage/getBatch', 'POST', params),
+    /**
+     * @property {string}  PKG_RETURN_SAVE_API 退料明细新增
+     */
+    PKG_RETURN_SAVE_API: params => httpProxy('/pkg/pkgPackageStorageItem/returnSave', 'POST', params),
+    /**
+     * @property {string}  PKG_RETURN_UPDATE_API 退料明细修改
+     */
+    PKG_RETURN_UPDATE_API: params => httpProxy('/pkg/pkgPackageStorageItem/returnUpdate', 'POST', params),
+    /**
+     * @property {string}  PKG_RETURN_SUBMIT_API 退料明细提交
+     */
+    PKG_RETURN_SUBMIT_API: params => httpProxy('/pkg/pkgPackageStorageItem/returnSubmit', 'POST', params),
+    /**
+     * @property {string}  VERIFY_STORAGE_RETURN_PAGE_QUERY_API 分页查询库存退料审核
+     */
+    VERIFY_STORAGE_RETURN_PAGE_QUERY_API: params => httpProxy('/verifyStorageReturn/pageQuery', 'POST', params),
+    /**
+     * @property {string}  VERIFY_STORAGE_RETURN_PASS_API 库存退料审核过账
+     */
+    VERIFY_STORAGE_RETURN_PASS_API: params => httpProxy('/verifyStorageReturn/pass', 'POST', params),
+    /**
+     * @property {string}  VERIFY_STORAGE_RETURN_RETURNED_API 库存退料审核退回
+     */
+    VERIFY_STORAGE_RETURN_RETURNED_API: params => httpProxy('/verifyStorageReturn/returned', 'POST', params),
+    /**
+     * @property {string}  VERIFY_STORAGE_RETURN_WRITE_OFFS_API 库存退料审核反审
+     */
+    VERIFY_STORAGE_RETURN_WRITE_OFFS_API: params => httpProxy('/verifyStorageReturn/writeOffs', 'POST', params),
+    /**
+     * @property {string}  STORAGE_PACKAGE_MATERIAL_GROUP_INFO 查询包材库存分组信息
+     */
+    STORAGE_PACKAGE_MATERIAL_GROUP_INFO: params => httpProxy('/storage/packageMaterialStorage/groupInfo', 'GET', params)
 };
 
 export default PKG_API;

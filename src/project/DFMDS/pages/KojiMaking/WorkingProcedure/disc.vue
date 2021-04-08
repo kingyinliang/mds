@@ -69,31 +69,36 @@
                 type: 'p',
                 label: '生产车间',
                 icon: 'factory-shengchanchejian',
-                value: ['workShopName']
+                value: ['workShopName'],
+                labelWidth: 125
             },
             {
                 type: 'p',
                 label: '曲房编号',
                 icon: 'factory-qiyaguanjianhua',
-                value: ['kojiHouseName']
+                value: ['kojiHouseName'],
+                labelWidth: 125
             },
             {
                 type: 'tooltip',
                 icon: 'factory-pinleiguanli',
                 label: '生产物料',
-                value: ['materialCode', 'materialName']
+                value: ['materialCode', 'materialName'],
+                labelWidth: 125
             },
             {
                 type: 'p',
                 label: '生产订单',
                 icon: 'factory-bianhao',
-                value: ['orderNo']
+                value: ['orderNo'],
+                labelWidth: 125
             },
             {
                 type: 'p',
                 icon: 'factory--meirijihuachanliangpeizhi',
                 label: '制曲日期',
-                value: ['addKojiDate']
+                value: ['addKojiDate'],
+                labelWidth: 125
             },
             {
                 type: 'select',
@@ -101,29 +106,36 @@
                 label: '发酵罐/池号',
                 value: ['fermentPotNo'],
                 disabled: true,
+                rules: [
+                    { required: true, message: '请选择发酵罐/池号' }
+                ],
                 option: {
-                        list: [],
-                        label: 'optLabel',
-                        value: 'optValue'
-                    }
+                    list: [],
+                    label: 'optLabel',
+                    value: 'optValue'
+                },
+                labelWidth: 125
             },
             {
                 type: 'tooltip',
                 icon: 'factory-xianchangrenyuan',
                 label: '提交人员', // 操作人员
-                value: ['changer']
+                value: ['changer'],
+                labelWidth: 125
             },
             {
                 type: 'tooltip',
                 icon: 'factory-riqi',
                 label: '提交时间', // 操作时间
-                value: ['changed']
+                value: ['changed'],
+                labelWidth: 125
             }
         ];
 
         // 当前发酵罐/池号
         potNoNow: string|number = '';
         potNoList: OptionPotNoList[]=[]
+        potNoListReadyToCheck=false
 
 
         tabs = [
@@ -145,11 +157,8 @@
 
         @Watch('formHeader.fermentPotNo', { immediate: true, deep: true })
         onChangeValue(newVal: number| string) {
-            console.log('newVal')
-            console.log(newVal)
-            if (newVal) {
+            if (newVal && this.potNoListReadyToCheck) {
                 const obj = this.potNoList.find(item => item.optValue === newVal);
-                // console.log(newVal, this.potNoList, obj, '===============')
                 this.formHeader.fermentPotId = obj?.optId;
                 this.potNoNow = newVal
             }
@@ -167,10 +176,6 @@
 
                 this.craftControlStatus = data.data.discCraft;
                 this.productInStorageStatus = data.data.discInStorage;
-                console.log('this.craftControlStatus')
-                console.log(this.craftControlStatus)
-                console.log('this.productInStorageStatus')
-                console.log(this.productInStorageStatus)
                 this.$refs.dataEntry.updateTabs();
                 this.$set(this.formHeader, 'statusName', data.data.discStatusName);
             })
@@ -181,7 +186,7 @@
             return [this.$refs.craftControl.ruleSubmit, this.$refs.productInStorage.ruleSubmit, this.$refs.excRecord.ruleSubmit]
         }
 
-        mounted() {
+        async mounted() {
             // 跳转用
             if (typeof this.$route.params.order !== 'undefined') {
                 this.jumpFromAudit = true
@@ -190,23 +195,24 @@
                 }, 2000);
             }
 
+            // 查询表头
+            await this.getOrderList()
             // [下拉]获取溶解罐选项
             this.getFermentationHolder()
             // [下拉]获取班次选项
             this.getClassesList()
-            // 查询表头
-            this.getOrderList()
+
 
         }
 
-        // 获取溶解罐下拉选项
+        // 获取发酵罐下拉选项
         // /sysHolder/byManyStatus/dropDown
         getFermentationHolder() {
             COMMON_API.HOLDER_DROPDOWN_BY_STATUS_API({
                 factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
                 holderType: ['001']
             }).then(({ data }) => {
-                console.log('获取溶解罐下拉选项')
+                console.log('获取发酵罐下拉选项')
                 console.log(data)
                 if (this.headerBase[5].option) {
                     this.headerBase[5].option.list = []
@@ -220,9 +226,7 @@
                         }
                         this.potNoList.push({ optValue: item.holderNo, optId: item.id })
                     })
-                    console.log('this.headerBase[5].option.list')
-                    console.log(this.headerBase[5].option.list)
-
+                    this.potNoListReadyToCheck = true
                 }
             })
         }
@@ -240,11 +244,8 @@
                 // id: this.$store.state.koji.orderKojiInfo.id || ''
                 id: this.jumpFromAudit ? this.$route.params.order : this.$store.state.koji.orderKojiInfo.id || ''
             }).then(({ data }) => {
-                this.formHeader = data.data
-                console.log('this.formHeader')
-                console.log(this.formHeader)
+                this.formHeader = JSON.parse(JSON.stringify(data.data))
                 this.getHouseTag();
-
                 this.$set(this.formHeader, 'factoryName', JSON.parse(sessionStorage.getItem('factory') || '{}').deptShort)
                 this.$set(this.formHeader, 'textStage', 'YP')
 
@@ -285,19 +286,11 @@
         }
 
         submitDatas() {
-            // if (this.$refs.craftControl.ruleSubmit() && this.$refs.productInStorage.ruleSubmit() && this.$refs.excRecord.ruleSubmit()) {
+            if (this.formHeader.fermentPotNo !== '') {
                 const craftControlTemp = this.$refs.craftControl.savedData(this.formHeader);
                 const productInStorageTemp = this.$refs.productInStorage.savedData(this.formHeader);
                 const excRecordTemp = this.$refs.excRecord.getSavedOrSubmitData(this.formHeader, 'YP');
                 const textRecordTemp = this.$refs.textRecord.savedData(this.formHeader);
-                console.log('craftControlTemp')
-                console.log(craftControlTemp)
-                console.log('productInStorageTemp')
-                console.log(productInStorageTemp)
-                console.log('excRecordTemp')
-                console.log(excRecordTemp)
-                console.log('textRecordTemp')
-                console.log(textRecordTemp)
 
                 return KOJI_API.KOJI_DISC_QUERY_SUBMIT_API({
                     discEvaluate: craftControlTemp.discEvaluate,
@@ -320,7 +313,9 @@
                     orderNo: this.formHeader.orderNo, // 订单号
                     text: textRecordTemp
                 })
-            // }
+            }
+            this.$warningToast('请选择发酵罐');
+            return false
         }
     }
 
@@ -348,6 +343,8 @@
         value: string[];
         disabled?: boolean;
         option?: HeaderBaseOption;
+        rules?: object[];
+        labelWidth?: number;
     }
 
     interface TabsObj {

@@ -61,7 +61,7 @@
                     </el-form>
                     <div class="box-card-title clearfix">
                         <h3> <em class="title-icon" style="background: #487bff;" />开罐列表</h3>
-                        <el-form :model="searchForm" size="small" :inline="true" label-position="left" label-width="70px" class="sole_row">
+                        <el-form :model="searchForm" size="small" :inline="true" label-position="left" class="sole_row">
                             <el-form-item label="生产车间：">
                                 <el-select v-model="searchForm.workShop" :disabled="!isRedact" placeholder="请选择" style="width: 120px;" clearable @change="getOpenPotList">
                                     <el-option v-for="(item, index) in workShop" :key="index" :label="item.split('&')[1]" :value="item.split('&')[0]" />
@@ -123,7 +123,7 @@
                         </el-table-column>
                         <el-table-column label="数量（KG）" prop="materialUnit" min-width="100" :show-overflow-tooltip="true">
                             <template slot-scope="scope">
-                                {{ scope.row.ferOrder.amount }}
+                                {{ scope.row.currentStock }}
                             </template>
                         </el-table-column>
                         <el-table-column label="单位" prop="unit" min-width="50" :show-overflow-tooltip="true" />
@@ -151,6 +151,9 @@
                 </el-button>
                 <el-table :data="deployMaterial" :row-class-name="rowDelFlag" header-row-class-name="tableHead" class="newTable" border tooltip-effect="dark">
                     <el-table-column label="添加物料" prop="openFlagName" min-width="50" :show-overflow-tooltip="true">
+                        <template slot="header">
+                            <em class="reqI">*</em> 添加物料
+                        </template>
                         <template slot-scope="scope">
                             <el-select v-model="scope.row.addMaterialCode" :disabled="!isRedact || mixSauceStatus === 'M'" size="small" placeholder="请选择" filterable clearable style="width: 100%;" @change="getName(scope.row)">
                                 <el-option v-for="(item, index) in deployMaterialSelect" :key="index" :label="item.dictValue + ' ' + item.dictCode" :value="item.dictCode" />
@@ -158,11 +161,17 @@
                         </template>
                     </el-table-column>
                     <el-table-column label="计划添加数量" prop="openFlagName" min-width="50" :show-overflow-tooltip="true">
+                        <template slot="header">
+                            <em class="reqI">*</em> 计划添加数量
+                        </template>
                         <template slot-scope="scope">
                             <el-input v-model="scope.row.planAddAmount" size="small" :disabled="!isRedact || mixSauceStatus === 'M'" placeholder="手动输入" style="width: 100%;" />
                         </template>
                     </el-table-column>
                     <el-table-column label="单位" prop="openFlagName" min-width="50" :show-overflow-tooltip="true">
+                        <template slot="header">
+                            <em class="reqI">*</em> 单位
+                        </template>
                         <template slot-scope="scope">
                             <el-select v-model="scope.row.unit" size="small" :disabled="!isRedact || mixSauceStatus === 'M'" placeholder="请选择" filterable clearable style="width: 100%;">
                                 <el-option v-for="(item, index) in Unit" :key="index" :label="item.dictValue" :value="item.dictCode" />
@@ -189,6 +198,9 @@
                 </el-button>
                 <el-table :data="sauce" :row-class-name="rowDelFlag" header-row-class-name="tableHead" class="newTable" border tooltip-effect="dark">
                     <el-table-column label="容器号" prop="openFlagName" min-width="150" :show-overflow-tooltip="true">
+                        <template slot="header">
+                            <em class="reqI">*</em> 容器号
+                        </template>
                         <template slot-scope="scope">
                             <el-select v-model="scope.row.fermentorId" :disabled="!isRedact || mixSauceStatus === 'M'" placeholder="请选择" size="small" filterable clearable style="width: 100%;" @change="fermentorNoChange(scope.row)">
                                 <el-option v-for="(item, index) in holderArr" :key="index" :label="item.holderName" :value="item.holderId" />
@@ -196,6 +208,9 @@
                         </template>
                     </el-table-column>
                     <el-table-column label="添加物料" prop="addMaterialCode" min-width="150" :show-overflow-tooltip="true">
+                        <template slot="header">
+                            <em class="reqI">*</em> 添加物料
+                        </template>
                         <template slot-scope="scope">
                             <el-select v-model="scope.row.addMaterialCode" :disabled="!isRedact || mixSauceStatus === 'M'" placeholder="请选择" size="small" filterable clearable style="width: 100%;" @change="materialChange(scope.row)">
                                 <el-option v-for="(item, index) in (holderArr.filter(it => it.holderId === scope.row.fermentorId).length > 0 ? holderArr.filter(it => it.holderId === scope.row.fermentorId)[0].ferInStorageList : [])" :key="index" :label="item.productMaterialName +' ' + item.productMaterialCode" :value="item.productMaterialCode" />
@@ -210,6 +225,9 @@
                     <el-table-column label="库存数量" prop="stockAmount" min-width="100" :show-overflow-tooltip="true" />
                     <el-table-column label="批次" prop="batch" min-width="100" :show-overflow-tooltip="true" />
                     <el-table-column label="计划添加数量" prop="openFlagName" min-width="100" :show-overflow-tooltip="true">
+                        <template slot="header">
+                            <em class="reqI">*</em> 计划添加数量
+                        </template>
                         <template slot-scope="scope">
                             <el-input v-model="scope.row.planAddAmount" :disabled="!isRedact || mixSauceStatus === 'M'" placeholder="手动输入" size="small" style="width: 100%;" />
                         </template>
@@ -229,7 +247,7 @@
                 </el-table>
             </template>
             <template slot="custom_btn">
-                <el-button type="primary" size="small" @click="isRedact = !isRedact">
+                <el-button v-if="dataRule" type="primary" size="small" @click="isRedact = !isRedact">
                     {{ isRedact ? '取消' : '编辑' }}
                 </el-button>
                 <el-button v-if="isRedact" type="primary" size="small" @click="saved()">
@@ -247,6 +265,7 @@
     import { Vue, Component } from 'vue-property-decorator';
     import { COMMON_API, FER_API } from 'common/api/api';
     import _ from 'lodash';
+    import { dateFormat } from 'utils/utils';
 
     @Component
     export default class OpenPotDedail extends Vue {
@@ -254,6 +273,7 @@
             multipleTable: HTMLFormElement;
         }
 
+        dataRule = true
         isRedact = false
         mixSauceStatus = ''
         noChange = false
@@ -321,7 +341,7 @@
                 tmp = tmp.filter(item => item.holderId === this.searchForm.holderId)
             }
             if (this.searchForm.material) {
-                tmp = tmp.filter(item => item.ferOrder.productMaterialCode === this.searchForm.material)
+                tmp = tmp.filter(item => item.productMaterialCode === this.searchForm.material)
             }
             this.searchForm.total = tmp.length
             tmp = tmp.slice((this.searchForm.current - 1) * this.searchForm.size, (this.searchForm.current - 1) * this.searchForm.size + this.searchForm.size)
@@ -358,6 +378,12 @@
                 id: this.$store.state.fer.openPotObj.id
             }).then(({ data }) => {
                 this.formHeader = data.data
+                if (this.formHeader.useDate && new Date(dateFormat(new Date(), 'yyyy-MM-dd')) > new Date(this.formHeader.useDate)) {
+                    this.dataRule = false
+                } else if (this.formHeader.statusName === '已撤回') {
+                    this.dataRule = false
+                }
+
             })
             this.getSelect()
         }
@@ -432,7 +458,11 @@
                     this.getSauceList(row)
                 } else {
                     const hang = this.openPotListSum.findIndex(item => item.id === row.id)
-                    row.mixSauceNo = this.formHeader.openPotNo + hang
+                    if (hang < 10) {
+                        row.mixSauceNo = this.formHeader.openPotNo + '0' + hang
+                    } else {
+                        row.mixSauceNo = this.formHeader.openPotNo + hang
+                    }
                     this.mixSauceNo = row.mixSauceNo
                     this.fermentorId = row.id
                     this.mixSauceStatus = row.mixSauceStatus || ''
@@ -531,6 +561,14 @@
             const filterArr: (any) = this.deployMaterialSelect.filter(item => item.dictCode === row.addMaterialCode)// eslint-disable-line
             row.addMaterialName = filterArr[0].dictValue
             row.addMaterialType = filterArr[0].productMaterialType
+            COMMON_API.SEARCH_MATERIAL_API({
+                factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
+                materialCode: row.addMaterialCode
+            }).then(({ data }) => {
+                if (data.data && data.data.length > 0) {
+                    this.$set(row, 'unit', data.data[0].basicUnitCode)
+                }
+            })
         }
 
         // 超期酱修改容器号
@@ -547,11 +585,13 @@
         materialChange(row) {
             const filterArr1: (any) = this.holderArr.filter(item => item.holderId === row.fermentorId)// eslint-disable-line
             const filterArr: (any) = filterArr1[0].ferInStorageList.filter(item => item.productMaterialCode === row.addMaterialCode)// eslint-disable-line
-            row.addMaterialName = filterArr[0].productMaterialName
-            row.addMaterialType = filterArr[0].productMaterialType
-            row.unit = filterArr[0].unit
-            row.stockAmount = filterArr[0].currentStock
-            row.batch = filterArr[0].inStorageBatch
+            this.$set(row, 'addMaterialName', filterArr[0].productMaterialName)
+            this.$set(row, 'addMaterialType', filterArr[0].productMaterialType)
+            this.$set(row, 'orderId', filterArr[0].orderId)
+            this.$set(row, 'orderNo', filterArr[0].orderNo)
+            this.$set(row, 'unit', filterArr[0].unit)
+            this.$set(row, 'stockAmount', filterArr[0].currentStock)
+            this.$set(row, 'batch', filterArr[0].inStorageBatch)
         }
 
         // 删除
@@ -756,6 +796,8 @@
         ferOverdueMaterialList?: ListObj[];
     }
     interface HeadObj{
+        statusName?: string;
+        useDate?: string;
         openPotNo: string;
         mixPotNo?: string;
         mixPotName?: string;

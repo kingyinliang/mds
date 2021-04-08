@@ -1,7 +1,7 @@
 <template>
     <div>
         <div class="header_main">
-            <el-card class="newCard">
+            <el-card class="queryHead">
                 <el-row type="flex">
                     <el-col>
                         <el-form :model="params" size="small" :inline="true" label-position="right" label-width="70px" class="sole_row">

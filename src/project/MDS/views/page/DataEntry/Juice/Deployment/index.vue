@@ -160,7 +160,7 @@
                         <el-input v-model="scope.row.receiveAmount" :disabled="SplitStatuss(scope.row)" size="small" />
                     </template>
                 </el-table-column>
-                <el-table-column width="130">
+                <el-table-column width="150">
                     <template slot="header">
                         <em class="reqI">*</em> 批次
                     </template>

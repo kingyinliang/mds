@@ -3,7 +3,7 @@
  * @Anthor: Telliex
  * @Date: 2021-01-15 23:35:23
  * @LastEditors: Telliex
- * @LastEditTime: 2021-02-22 18:08:49
+ * @LastEditTime: 2021-03-24 10:31:32
 -->
 <template>
     <div>
@@ -120,7 +120,7 @@
                                     </el-select>
                                 </el-form-item>
                                 <el-form-item label="批次：">
-                                    <el-select v-model="convertDataGroup.batch" placeholder="请选择" clearable style="width: 100%;" :disabled="!convertDisabled">
+                                    <el-select v-model="convertDataGroup.batch" placeholder="请选择" clearable style="width: 100%;" :disabled="!convertDisabled" @change="asyncBatch">
                                         <el-option
                                             v-for="item in batchOptions"
                                             :key="item.batch"
@@ -147,7 +147,7 @@
                                 <el-form-item label="打入罐号：" class="star">
                                     <el-select v-model="convertDataGroup.targetHolderId" placeholder="请选择" filterable clearable style="width: 100%;" :disabled="!convertDisabled">
                                         <el-option
-                                            v-for="item in convertHolderIdOptions"
+                                            v-for="item in convertHolderIdOptions.filter(item => item.id !== currentItem.holderId)"
                                             :key="item.id"
                                             :label="item.holderName"
                                             :value="item.id"
@@ -209,7 +209,7 @@
                                 <el-form-item label="挪入罐号：" class="star">
                                     <el-select v-model="moveDataGroup.targetHolderId" filterable placeholder="请选择" clearable style="width: 100%;" :disabled="!moveDisabled">
                                         <el-option
-                                            v-for="item in moveHolderIdOptions"
+                                            v-for="item in moveHolderIdOptions.filter(item => item.id !== currentItem.holderId)"
                                             :key="item.id"
                                             :label="item.holderName"
                                             :value="item.id"
@@ -217,7 +217,7 @@
                                     </el-select>
                                 </el-form-item>
                                 <el-form-item label="挪入批次：" class="star">
-                                    <el-input v-model.trim="moveDataGroup.movebatch" placeholder="请输入" clearable :disabled="!moveDisabled" />
+                                    <el-input v-model.trim="moveDataGroup.movebatch" placeholder="请输入" clearable :disabled="!moveDisabled" :maxlength="10" />
                                 </el-form-item>
                                 <el-form-item label="挪罐操作人：">
                                     <div class="required" style="min-height: 32px; line-height: 32px;">
@@ -383,7 +383,7 @@
                     }).then(({ data }) => {
                         const holderTemp: object[] = []
                         data.data.forEach(item => {
-                            if (item.dictCode === '001' || item.dictCode === '028' || item.dictCode === '029' || item.dictCode === '027') {
+                            if (item.dictCode === '001' || item.dictCode === '028' || item.dictCode === '025' || item.dictCode === '027') {
                                 holderTemp.push({ dictCode: item.dictCode, dictValue: item.dictValue })
                             }
                         })
@@ -401,8 +401,8 @@
                 return new Promise((resolve) => {
                         COMMON_API.HOLDER_DROPDOWN_BY_STATUS_API({
                         holderType: [val],
-                        // holderStatus: ['E', 'U']
-                        holderStatus: ['E', 'S', 'O']
+                        // holderStatus: ['E', 'U'] // 空罐,领用中
+                        holderStatus: ['E', 'S', 'O'] // 空罐,已入库,已开罐
                     }).then(({ data }) => {
                         console.log('打入罐容器号')
                         console.log(data.data)
@@ -410,6 +410,13 @@
                         resolve(null)
                     })
                 })
+            }
+
+            asyncBatch(val) {
+                console.log('val')
+                console.log(val)
+                this.convertDataGroup.convertBatch = this.convertDataGroup.batch
+
             }
 
             // ＝＝挪罐＝＝
@@ -573,8 +580,8 @@
                 this.currentFermentorStatusName = item.fermentorStatusName //
 
                 // radio 状态
-                this.modifyDisabled = ['S', 'O', 'T', 'A', 'U'].includes(item.fermentorStatus)
-                this.convertDisabled = ['O', 'A', 'T', 'U'].includes(item.fermentorStatus)
+                this.modifyDisabled = ['S', 'O', 'T', 'A', 'U', 'I'].includes(item.fermentorStatus)
+                this.convertDisabled = ['O', 'A', 'T', 'U', 'I'].includes(item.fermentorStatus)
                 this.moveDisabled = ['S', 'F'].includes(item.fermentorStatus)
                 if (this.modifyDisabled) {
                     this.currentTab = '调整' // 当前初始 tab
@@ -587,7 +594,7 @@
                     this.tabType = 'move'
                 }
 
-
+                this.arrList = [item.workShop];
                 this.dialogTitle = this.currentHolderName + this.currentTab
                 // 调整 tab ＝＝＝＝＝
                 this.changeTab(this.tabType);
@@ -642,7 +649,7 @@
                         materialCode: this.dataOfMateriaBatch.materialCode || '',
                         materialName: this.dataOfMateriaBatch.materialName || '',
                         batch: this.dataOfMateriaBatch.batch || '',
-                        movebatch: '',
+                        movebatch: this.dataOfMateriaBatch.batch || '',
                         operators: '',
                         orderNo: this.currentItem.orderNo,
                         remark: '',
@@ -718,6 +725,7 @@
                             remark: this.modifyDataGroup.remark
                         }).then(() => {
                             this.$successToast('保存成功');
+                            this.$emit('drumBucketFinish');
                             this.isTableDialogVisible = false
                         });
                     }
@@ -727,6 +735,7 @@
                     if (this.ruleSubmit()) {
                         FER_API.FER_FERMENTOR_ADJUSTION_TRANS_API({
                             batch: this.convertDataGroup.batch,
+                            moveAmount: this.convertDataGroup.moveAmount,
                             operators: this.convertDataGroup.operators,
                             orderNo: this.convertDataGroup.orderNo,
                             remark: this.convertDataGroup.remark,
@@ -735,13 +744,14 @@
                             targetHolderType: this.convertDataGroup.targetHolderType
                         }).then(() => {
                             this.$successToast('保存成功');
+                            this.$emit('drumBucketFinish');
                             this.isTableDialogVisible = false
                         });
                     }
                 } else if (this.tabType === 'move') {
                     if (this.ruleSubmit()) {
                         FER_API.FER_FERMENTOR_ADJUSTION_CHANGE_API({
-                            batch: this.moveDataGroup.batch, //x
+                            batch: this.moveDataGroup.movebatch, //x 挪入批次
                             operators: this.moveDataGroup.operators, //x
                             orderNo: this.currentItem.orderNo, //x
                             remark: this.moveDataGroup.remark, //x
@@ -750,6 +760,7 @@
                             targetHolderType: this.moveDataGroup.targetHolderType //x
                         }).then(() => {
                             this.$successToast('保存成功');
+                            this.$emit('drumBucketFinish');
                             this.isTableDialogVisible = false
                         });
                     }

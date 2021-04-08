@@ -2,8 +2,8 @@ import { RouteConfig } from 'vue-router';
 import { VueRouter } from 'vue-router/types/router';
 import { COMMON_API } from 'common/api/api';
 import _ from 'lodash';
-import FileSaver from 'file-saver'
-import XLSX from 'xlsx'
+import FileSaver from 'file-saver';
+import XLSX from 'xlsx';
 
 const importTarget = process.env.NODE_ENV !== 'local' ? file => () => import('project/' + file + '.vue') : file => require('project/' + file + '.vue').default;
 
@@ -250,62 +250,139 @@ export function exportFileForm(url, fileName, vue) {
 }
 
 export function exportFileForElement({ id = 'out-table', fileName = '报表' }) {
-    const fix = document.querySelector('.el-table__fixed')
-    let wb
+    const fix = document.querySelector('.el-table__fixed');
+    let wb;
     if (fix) {
-        wb = XLSX.utils.table_to_book(document.querySelector(`#${id}`)?.removeChild(fix))
+        wb = XLSX.utils.table_to_book(document.querySelector(`#${id}`)?.removeChild(fix));
         // eslint-disable-next-line
-        document.querySelector(`#${id}`)?.appendChild(fix)
+        document.querySelector(`#${id}`)?.appendChild(fix);
     } else {
-        wb = XLSX.utils.table_to_book(document.querySelector(`#${id}`))
+        wb = XLSX.utils.table_to_book(document.querySelector(`#${id}`));
     }
     const WBout = XLSX.write(wb, {
         bookType: 'xlsx',
         bookSST: true,
         type: 'array'
-    })
+    });
     try {
         FileSaver.saveAs(
             new Blob([WBout], {
                 type: 'application/octet-stream'
             }),
             `${fileName}.xlsx`
-        )
+        );
     } catch (e) {
-        if (typeof console !== 'undefined') console.log(e, WBout)
+        if (typeof console !== 'undefined') console.log(e, WBout);
     }
-    return WBout
+    return WBout;
 }
 
 function formatJson(column, jsonData) {
-    return jsonData.map(v => column.map(j => {
-        if (j.formatter && typeof (j.formatter(v)) === 'string') {
-            return j.formatter(v)
-        }
-        return v[j.prop]
-    }))
+    return jsonData.map(v =>
+        column.map(j => {
+            if (j.formatter && typeof j.formatter(v) === 'string') {
+                return j.formatter(v);
+            }
+            return v[j.prop];
+        })
+    );
 }
 interface Column {
     label: string;
     prop: string;
+    child?: Column[];
+    subLabel?: string;
 }
 export function exportFileFor2Excel(column: Column[], tableData = [], fileName = '报表') {
     import('../vendor/Export2Excel.js').then(excel => {
-        const tHeader: string[] = []
+        const tHeader: string[] = [];
         column.forEach(item => {
-            tHeader.push(item['label'])
-        })
-        const list = JSON.parse(JSON.stringify(tableData))
-        const data = formatJson(column, list)
+            tHeader.push(item.subLabel ? item['label'] + item.subLabel : item.label);
+        });
+        const list = JSON.parse(JSON.stringify(tableData));
+        const data = formatJson(column, list);
         excel.export_json_to_excel({
             header: tHeader, //表头
             data, //数据
             filename: fileName, //名称
             autoWidth: true //宽度自适应
-        })
-    })
+        });
+    });
 }
-
+export function exportFile2ExcelWithMultiHeader(column: Column[], merges = [], tableData = [], fileName = '报表') {
+    import('../vendor/Export2Excel.js').then(excel => {
+        const tHeader: string[] = [];
+        const multiHeader: string[][] = [[]];
+        const indexList: number[] = [];
+        const dataList: Column[] = [];
+        column.forEach((item, index) => {
+            if (item.child) {
+                dataList.push(...item.child);
+                item.child.map(c => {
+                    tHeader.push(c.label);
+                    indexList.push(index);
+                });
+            } else {
+                dataList.push(item);
+                tHeader.push('');
+                indexList.push(index);
+            }
+        });
+        indexList.map((item, i) => {
+            if (i === 0) {
+                if (column[i].child) {
+                    multiHeader[0].push('');
+                } else {
+                    multiHeader[0].push(column[item].label);
+                }
+                return;
+            }
+            if (item !== indexList[i - 1]) {
+                multiHeader[0].push(column[item].label);
+                return;
+            }
+            multiHeader[0].push('');
+        });
+        const list = JSON.parse(JSON.stringify(tableData));
+        const data = formatJson(dataList, list);
+        excel.export_json_to_excel_with_Multi_Header({
+            multiHeader: multiHeader, // 一级表头
+            header: tHeader, // 二级表头
+            data, //数据
+            filename: fileName, //名称
+            merges,
+            autoWidth: true //宽度自适应
+        });
+    });
+}
+/**
+ * Parse the json to excel
+ *  tableJson 导出数据 ; filenames导出表的名字; autoWidth表格宽度自动 true or false; bookTypes xlsx & csv & txt
+ * @param {(Object)} tableJson
+ * @param {string} filenames
+ * @param {boolean} autoWidth
+ * @param {string} bookTypes
+ */
+export function exportFileFor2ExcelMultiSheets(tableJson, fileName = '报表', autoWidth, bookTypes) {
+    import('../vendor/Export2Excel.js').then(excel => {
+        const tHeader: string[] = [];
+        const dataArr: object[] = [];
+        const sheetNames: string[] = [];
+        for (const i in tableJson) {
+            tHeader.push(tableJson[i].tHeader);
+            dataArr.push(formatJson(tableJson[i].filterVal, tableJson[i].tableDatas));
+            sheetNames.push(tableJson[i].sheetName);
+        }
+        excel.export_json_to_excel_with_Multi_Sheet({
+            header: tHeader,
+            data: dataArr,
+            sheetname: sheetNames,
+            filename: fileName,
+            autoWidth: autoWidth,
+            bookType: bookTypes
+        });
+    });
+}
 
 export function setUserList(data) {
     const res: UserObj[] = [];
@@ -490,7 +567,7 @@ export function merge(tableData, condition: string): number[] {
             concatOne = index;
         }
     });
-    return spanOneArr
+    return spanOneArr;
 }
 
 // 浮点型加法函数

@@ -10,6 +10,7 @@
             :list-interface="queryTableListInterface"
             :custom-data="true"
             :operation-column-width="90"
+            @search-init="searchInit"
             @get-data-success="returnDataFromQueryTableForm"
         >
             <template slot="home">
@@ -43,7 +44,12 @@
                         <el-table-column label="操作时间" prop="changed" width="160px" />
                         <el-table-column label="操作" fixed="right">
                             <template slot-scope="scope">
-                                <el-button type="primary" size="small" @click="determinationHandler(scope.row)">
+                                <!--
+                                    判定按钮在以下状态时不可操作
+                                    1、状态发酵中但无订单判定按钮不可操作
+                                    2、待清洗时判定按钮不可操作
+                                -->
+                                <el-button type="primary" size="small" :disabled="scope.row.fermentorStatus === 'C' || (scope.row.fermentorStatus === 'F' && !scope.row.orderNo)" @click="determinationHandler(scope.row)">
                                     判定
                                 </el-button>
                             </template>
@@ -51,7 +57,7 @@
                     </el-table>
                 </mds-card>
                 <el-row>
-                    <el-pagination :current-page="currentPage" :page-sizes="[10, 20, 50]" :page-size="pageSize" layout="total, sizes, prev, pager, next, jumper" :total="total" @size-change="sizeChangeHandler" @current-change="currentPageChangeHanlder" />
+                    <el-pagination :current-page.sync="currentPage" :page-sizes="[10, 20, 50]" :page-size="pageSize" layout="total, sizes, prev, pager, next, jumper" :total="total" @size-change="sizeChangeHandler" @current-change="currentPageChangeHanlder" />
                 </el-row>
             </template>
         </query-table>
@@ -120,9 +126,8 @@
 
 <script lang="ts">
     import { Vue, Component } from 'vue-property-decorator';
-    import { COMMON_API } from 'common/api/api';
-import FER_API from 'src/common/api/fer';
-import { dateFormat } from 'src/utils/utils';
+    import { BASIC_API, COMMON_API, FER_API } from 'common/api/api';
+    import { dateFormat } from 'src/utils/utils';
     @Component({
         name: 'CategoryDetermination',
         components: {}
@@ -226,18 +231,45 @@ import { dateFormat } from 'src/utils/utils';
                 filterable: true,
                 defaultOptionsFn: () => {
                     return new Promise((resolve) => {
-                        COMMON_API.ALLMATERIAL_API({
-                            materialTypes: ['ZHAL'] // 物料类型列表 - 半成品
-                        }).then((res) => {
+                        BASIC_API.FERINFO_LIST_API({
+                            current: 1,
+                            size: 9999
+                        }).then(res => {
+                            const arr = res.data.data.records.reduce((pre, cur) => {
+                                if (!pre.find(row => row.productMaterialCode === cur.productMaterialCode)) {
+                                    pre.push(cur)
+                                }
+                                return pre
+                            }, [])
+                            res.data.data = arr
                             resolve(res)
                         })
+                        // COMMON_API.ALLMATERIAL_API({
+                        //     materialTypes: ['ZHAL'] // 物料类型列表 - 半成品
+                        // }).then((res) => {
+                        //     resolve(res)
+                        // })
                     })
                 },
                 resVal: {
                     resData: 'data',
-                    label: ['materialName', 'materialCode'],
-                    value: 'materialCode'
+                    label: ['productMaterialName', 'productMaterialCode'],
+                    value: 'productMaterialCode'
                 }
+                // defaultOptionsFn: () => {
+                //     return new Promise((resolve) => {
+                //         COMMON_API.ALLMATERIAL_API({
+                //             materialTypes: ['ZHAL'] // 物料类型列表 - 半成品
+                //         }).then((res) => {
+                //             resolve(res)
+                //         })
+                //     })
+                // },
+                // resVal: {
+                //     resData: 'data',
+                //     label: ['materialName', 'materialCode'],
+                //     value: 'materialCode'
+                // }
             },
             {
                 type: 'select',
@@ -286,6 +318,10 @@ import { dateFormat } from 'src/utils/utils';
                 propTwo: 'endDate'
             }
         ]
+
+        searchInit() {
+            this.currentPage = 1
+        }
 
         // queryTable 查询请求
         queryTableListInterface(params) {

@@ -77,7 +77,7 @@
 
 <script lang="ts">
 import { Vue, Component } from 'vue-property-decorator';
-import { COMMON_API } from 'common/api/api';
+import { COMMON_API, JOB_API } from 'common/api/api';
 
 @Component({})
 
@@ -137,7 +137,7 @@ export default class OrderManage extends Vue {
     }
 
     sapOrderUpdate() {
-        COMMON_API.OREDER_SYNC_API({
+        JOB_API.OREDER_SYNC_API({
             factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
             incremental: true
         }).then(({ data }) => {

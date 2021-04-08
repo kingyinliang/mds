@@ -221,11 +221,11 @@
 
         // 获取发酵罐下拉选项
         getFermentationHolder() {
-            COMMON_API.HOLDER_QUERY_BY_NOPAGE_API({
+            COMMON_API.HOLDER_DROPDOWN_API({
                 // deptId: params.workShop,
                 holderStatus: 'E',
                 factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
-                holderType: '001'
+                holderType: ['001']
             }).then(({ data }) => {
                 this.fermentPotNoOptions = []
                 data.data.forEach(item => {

@@ -45,12 +45,12 @@
                             </el-row>
                         </el-form-item>
                         <el-form-item v-if="item.type === 'date-picker'" :key="item.prop" :label="`${item.label}：` || ''" :prop="item.prop" :rules="item.rule" :label-width="`${item.labelWidth ? item.labelWidth : 70}px`">
-                            <el-date-picker :ref="item.prop" v-model="queryForm[item.prop]" :type="item.dataType" placeholder="请选择" :value-format="item.valueFormat" style="width: 170px;" @blur="v => dateChange(v)" />
+                            <el-date-picker :ref="item.prop" v-model="queryForm[item.prop]" :type="item.dataType" placeholder="请选择" :value-format="item.valueFormat" :style="`width: ${item.width ? item.width : 170}px;`" @blur="v => dateChange(v)" />
                         </el-form-item>
                     </template>
                 </template>
                 <el-form-item class="floatr">
-                    <el-button type="primary" size="small" @click="getDataList(true)">
+                    <el-button type="primary" size="small" @click="searchHandler()">
                         查询
                     </el-button>
                     <el-button v-if="exportExcel" type="primary" size="small" @click="formExportExcel">
@@ -98,7 +98,7 @@
                                 <div v-if="item.type === 'clickSpan'" style="color: #45c2b5; cursor: pointer;" @click="item.onclick(scope.row)">
                                     {{ scope.row[item.prop] }}
                                 </div>
-                                <el-tooltip v-else-if="item.redact && item.type === 'input'" class="item" effect="dark" :content="scope.row[item.prop]" placement="top">
+                                <el-tooltip v-else-if="item.redact && item.type === 'input'" class="item" effect="dark" :content="(scope.row[item.prop] || '') + ''" placement="top">
                                     <el-input v-model="scope.row[item.prop]" :disabled="!scope.row.redact" placeholder="手工录入" size="small" />
                                 </el-tooltip>
                                 <el-date-picker v-else-if="item.redact && item.type === 'date-picker'" v-model="scope.row[item.prop]" :disabled="!scope.row.redact" :type="item.dataType" placeholder="请选择" :value-format="item.valueFormat" :style="{width: item.width - 25 + 'px'}" size="small" @change="val => selectChange(scope.row, scope.$index, val)" />
@@ -496,6 +496,10 @@
                 // if (this.clearSearch) {
                 //     this.getDataList(true);
                 // }
+            },
+            searchHandler() {
+                this.$emit('search-init')
+                this.getDataList(true)
             },
             // 获取table数据
             getDataList(st) {

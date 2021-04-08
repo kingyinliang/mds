@@ -82,6 +82,7 @@ export default class CapacityAddOrUpdate extends Vue {
     Unit = [];
     CapacityId = '';
     deptId = '';
+    deptName = '';
     loading = false;
     visible = false;
     dataForm: CapacityObj = {
@@ -143,12 +144,13 @@ export default class CapacityAddOrUpdate extends Vue {
         });
     }
 
-    init(deptId, data) {
+    init(deptId, deptName, data) {
         this.deptId = deptId;
+        this.deptName = deptName;
         if (data) {
             this.CapacityId = data.id;
             this.dataForm = JSON.parse(JSON.stringify(data));
-            this.remoteMethod(this.dataForm.materialCode)
+            this.remoteMethod(this.dataForm.materialCode);
         } else {
             this.CapacityId = '';
             this.dataForm = {
@@ -157,6 +159,7 @@ export default class CapacityAddOrUpdate extends Vue {
             };
             this.dataForm.deptId = deptId;
         }
+        this.$set(this.dataForm, 'deptName', deptName)
         this.visible = true;
     }
 
@@ -187,6 +190,7 @@ export default class CapacityAddOrUpdate extends Vue {
 interface CapacityObj {
     factory: string;
     deptId?: string;
+    deptName?: string;
     materialCode?: string;
     materialName?: string;
     effectiveCapacity?: number;

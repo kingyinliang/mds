@@ -218,6 +218,18 @@ const STE_API = {
      */
     STE_AUDIT_DETAIL_DETAUL_SEMI_API: params => httpProxy('/ste/steSemiMaterial/check/query', 'GET', params),
     /**
+     * @property {string}  STE_SEMI_MATERIAL_GET_BATCH_LIST_API 杀菌车间-半成品领用-根据发酵罐查询发酵物料批次列表
+     */
+    STE_SEMI_MATERIAL_GET_BATCH_LIST_API: params => httpProxy('/ste/steSemiMaterial/getFermentMaterialBatchList', 'GET', params),
+    /**
+     * @property {string}  STE_SEMI_MATERIAL_GET_MATERIAL_LIST_API 杀菌车间-半成品领用-查询发酵罐物料列表
+     */
+    STE_SEMI_MATERIAL_GET_MATERIAL_LIST_API: params => httpProxy('/ste/steSemiMaterial/getFermentMaterialList', 'GET', params),
+    /**
+     * @property {string}  STE_SEMI_MATERIAL_GET_FERMENT_POT_LIST_API 杀菌车间-半成品领用-查询待领用发酵罐列表
+     */
+    STE_SEMI_MATERIAL_GET_FERMENT_POT_LIST_API: params => httpProxy('/ste/steSemiMaterial/getFermentPotList', 'GET', params),
+    /**
      * @property {string}  STE_AUDIT_DETAIL_DETAUL_SEMI_API 杀菌车间-杀菌审核-审核详情-辅料添加
      */
     STE_AUDIT_DETAIL_DETAUL_ACCESS_API: params => httpProxy('/ste/steCookingPot/accessoriesCheck/query', 'GET', params),
@@ -260,7 +272,23 @@ const STE_API = {
     /**
      * @property {string} STE_AUDIT_CRAFT_TEMPERATUREANDTIME_API 杀菌车间-页签状态-查询定单页签状态
      */
-    STE_INSTORAGE_QUERY_TABS_STATUS_API: params => httpProxy('/steTag/queryByOrderNo', 'POST', params)
+    STE_INSTORAGE_QUERY_TABS_STATUS_API: params => httpProxy('/steTag/queryByOrderNo', 'POST', params),
+    /**
+     * @property {string} STE_CRAFT_QUERY_API 杀菌车间-温度阶段-查询
+     */
+    STE_CRAFT_QUERY_API: params => httpProxy('/steCraft/query', 'POST', params),
+    /**
+     * @property {string} STE_CRAFT_INSERT_API 杀菌车间-温度阶段-新增
+     */
+    STE_CRAFT_INSERT_API: params => httpProxy('/steCraft/insert', 'POST', params),
+    /**
+     * @property {string} STE_CRAFT_UPDATE_API 杀菌车间-温度阶段-更新
+     */
+    STE_CRAFT_UPDATE_API: params => httpProxy('/steCraft/update', 'POST', params),
+    /**
+     * @property {string} STE_CRAFT_DEL_API 杀菌车间-温度阶段-删除
+     */
+    STE_CRAFT_DEL_API: params => httpProxy('/steCraft/del', 'POST', params)
 };
 
 export default STE_API;

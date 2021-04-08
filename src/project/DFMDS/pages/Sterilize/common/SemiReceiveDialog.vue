@@ -71,9 +71,13 @@
 
         $refs: {dataForm: HTMLFormElement};
         visible = false;
+        // cycle='';
+        // fermentPotId='';
         potArr: PotObject[] = [];
         transferTank: PotObject[] = [];
         materialArr: MaterialObj[] = [];
+        // bitchArr: Bitch[]=[]
+
         dataRule = {
             stePotNo: [{ required: true, message: '生产锅号不能为空', trigger: 'blur' }],
             fermentPotNo: [{ required: true, message: '发酵罐/池号不能为空', trigger: 'blur' }],
@@ -110,7 +114,7 @@
                 this.transferTank = data.data
             })
             this.visible = true;
-            if (Data) {
+            if (Data) { // 编辑
                 this.dataForm = JSON.parse(JSON.stringify(Data))
             } else {
                 this.dataForm = {
@@ -119,8 +123,10 @@
                     stePotName: formHeader.potName,
                     potOrderId: this.$store.state.sterilize.SemiReceive.potOrderMap.id,
                     potOrderNo: this.$store.state.sterilize.SemiReceive.potOrderMap.potOrderNo,
+                    cycle: '',
                     consumeType: '1',
                     fermentPotNo: '',
+                    fermentPotId: '',
                     materialCode: '',
                     materialType: '',
                     materialName: '',
@@ -134,7 +140,6 @@
                     changed: dateFormat(new Date(), 'yyyy-MM-dd hh:mm:ss')
                 }
             }
-
         }
 
         setUtil() {
@@ -192,24 +197,52 @@
         remark?: string;
         changer?: string;
         changed?: string;
-    }
-
-    interface PotMaterial {
-        materialCode: string;
-        materialName: string;
+        cycle?: string;
+        fermentPotId?: string;
     }
 
     interface PotObject {
-        deptId: string;
-        holderArea: string;
-        holderBatch: string;
+        brineFlag: string;
+        brineFlagName: string;
+        changed: string;
+        changer: string;
+        currentStock: number;
+        cycle: string;
+        fermentDays: number;
+        fermentorStatus: string;
+        fermentorStatusName: string;
+        freezeFlag: string;
+        fullDate: string;
+        holderId: string;
         holderName: string;
         holderNo: string;
-        holderStatus: string;
         holderType: string;
+        holderTypeName: string;
         holderVolume: number;
         id: string;
-        material: PotMaterial[];
+        intoDate: string;
+        judgeResult: string;
+        judgeResultName: string;
+        materialCode: string;
+        materialName: string;
+        matureFlag: string;
+        openFlag: string;
+        orderAmount: number;
+        orderNo: string;
+        productProcess: string;
+        remark: string;
+        stage: string;
+        volumePercent: number;
+        workShop: string;
+    }
+
+    interface Bitch {
+        batch: string;
+        currentStock: string;
+        materialCode: string;
+        materialName: string;
+        materialType: string;
+        orderNo: string;
     }
 
 </script>

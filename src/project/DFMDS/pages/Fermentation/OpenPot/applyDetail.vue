@@ -118,13 +118,13 @@
                 </mds-card>
             </template>
             <template slot="custom_btn">
-                <el-button v-if="formHeader.statusName === '已保存' || !formHeader.statusName" type="primary" size="small" @click="isRedact = !isRedact">
+                <el-button v-if="formHeader.statusName === '已撤回' || formHeader.statusName === '已保存' || !formHeader.statusName" type="primary" size="small" @click="isRedact = !isRedact">
                     {{ isRedact ? '取消' : '编辑' }}
                 </el-button>
                 <el-button v-if="isRedact" type="primary" size="small" @click="saved()">
                     保存
                 </el-button>
-                <el-button v-if="formHeader.statusName === '已保存' || !formHeader.statusName" type="primary" size="small" @click="submit()">
+                <el-button v-if="formHeader.statusName === '已撤回' || formHeader.statusName === '已保存' || !formHeader.statusName" type="primary" size="small" @click="submit()">
                     提交
                 </el-button>
                 <el-button v-if="formHeader.statusName === '待处理'" type="primary" size="small" @click="withdraw()">
@@ -174,12 +174,10 @@
             }).then(({ data }) => {
                 this.workShop = data.data
             })
-            BASIC_API.FERINFO_LIST_API({
-                productProcess: 'MIX',
-                current: 1,
-                size: 9999
+            BASIC_API.FERINFO_DROPDOWN_API({
+                productProcess: 'MIX'
             }).then(({ data }) => {
-                this.material = data.data.records
+                this.material = data.data
             })
             // COMMON_API.SEARCH_MATERIAL_API({
             //     factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
@@ -197,10 +195,9 @@
         }
 
         materialChange() {
-            const filterArr: (any) = this.material.filter(it => it['materialCode'] === this.formHeader.applyMaterialCode);// eslint-disable-line
-            this.formHeader.applyMaterialName = filterArr[0].materialName
-            this.formHeader.applyMaterialType = filterArr[0].materialTypeCode
-            this.formHeader.applyMaterialTypeName = filterArr[0].materialTypeName
+            const filterArr: (any) = this.material.filter(it => it['useMaterialCode'] === this.formHeader.applyMaterialCode);// eslint-disable-line
+            this.formHeader.applyMaterialName = filterArr[0].useMaterialName
+            this.formHeader.applyMaterialType = filterArr[0].useMaterialType
         }
 
         potChange() {

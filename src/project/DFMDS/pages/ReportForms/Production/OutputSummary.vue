@@ -1,22 +1,16 @@
+<!-- 产量汇总 -->
 <template>
     <div class="header_main">
-        <query-table
+        <report-query-table
             ref="queryTable"
-            :show-table="true"
-            :show-index-column="false"
-            :column="column"
-            :show-page="false"
-            query-auth=""
-            :query-form-data="queryFormData"
-            :list-interface="listInterface"
-            :custom-data="true"
-            :rules="queryTableFormRules"
-            :export-excel="true"
-            :query-tabke-type="'report'"
             :span-method="spanMethod"
-            :is-show-summary="true"
+            :query-form-setting="queryFormSetting"
+            :query-form-data="queryFormData"
+            :data-table-setting="dataTableSetting"
+            :list-interface="listInterface"
             :get-summaries="getSummaries"
-            :export-option="exportOption"
+            :custom-data="true"
+            :query-table-type="'report'"
             @get-data-success="setData"
         />
     </div>
@@ -34,46 +28,83 @@
     })
     export default class OutputSummary extends Vue {
 
-        tableData = [];
-
-        //表格数据
-        column = [
-            {
-                prop: 'workShopName',
-                label: '生产车间',
-                minWidth: '120'
-            },
-            {
-                prop: 'unit',
-                label: '单位',
-                minWidth: '120'
-            },
-            {
-                prop: 'yearId',
-                label: '年度',
-                minWidth: '120'
-            },
-            {
-                prop: 'timeName',
-                label: '月/季',
-                minWidth: '120'
-            },
-            {
-                prop: 'effectiveCapacity',
-                label: '有效产能',
-                minWidth: '120'
-            },
-            {
-                prop: 'actualCapacity',
-                label: '实际产能',
-                minWidth: '120'
-            },
-            {
-                prop: 'capacityRatio',
-                label: '产能利用率',
-                minWidth: '120'
+        // query header area setting
+        queryFormSetting= {
+            isQueryFormShow: true, // 标头搜寻区块是否显示
+            rules: [ // 查询必填栏位校验
+                {
+                    prop: 'granularity',
+                    text: '请选择月报/季报'
+                },
+                // {
+                //     prop: 'workShop',
+                //     text: '请选择生产车间'
+                // },
+                {
+                    prop: 'year',
+                    text: '请选择年度'
+                }
+            ],
+            queryAuth: '',
+            exportExcel: true, // 导出 excel BTN
+            exportOption: {
+                exportInterface: '',
+                auth: '',
+                text: '产量汇总数据'
             }
-        ];
+        }
+
+        // data table area setting
+        dataTableSetting={
+            showIt: true, // showit or not
+            showSelectColumn: false,
+            showIndexColumn: false,
+            showOperationColumn: false,
+            showPagination: false,
+            //表格数据
+            column: [
+                {
+                    prop: 'workShopName',
+                    label: '生产车间',
+                    minWidth: '120'
+                },
+                {
+                    prop: 'unitName',
+                    label: '单位',
+                    minWidth: '120'
+                },
+                {
+                    prop: 'yearId',
+                    label: '年度',
+                    minWidth: '120'
+                },
+                {
+                    prop: 'timeName',
+                    label: '月/季',
+                    minWidth: '120'
+                },
+                {
+                    prop: 'effectiveCapacity',
+                    label: '有效产能',
+                    minWidth: '120'
+                },
+                {
+                    prop: 'actualCapacity',
+                    label: '实际产能',
+                    minWidth: '120'
+                },
+                {
+                    prop: 'capacityRatio',
+                    label: '产能利用率',
+                    minWidth: '120'
+                }
+            ],
+            tableAttributes: {
+                isShowSummary: true // 合计
+            },
+            dataChangeByAPI: false, // table data change by API
+            tableHeightSet: 405
+        }
 
         $refs: {
             queryTable: HTMLFormElement;
@@ -96,7 +127,8 @@
                 labelWidth: '120',
                 prop: 'workShop',
                 defaultValue: '',
-                rule: [{ required: true, message: '请选择生产车间', trigger: 'blur' }],
+                clearable: true,
+                rule: [{ required: false, message: '请选择生产车间', trigger: 'blur' }],
                 defaultOptionsFn: () => {
                     return COMMON_API.ORG_QUERY_WORKSHOP_API({
                         factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
@@ -122,22 +154,6 @@
             }
         ];
 
-        // 查询必填栏位校验
-        queryTableFormRules = [
-            {
-                prop: 'granularity',
-                text: '请选择月报/季报'
-            },
-            {
-                prop: 'workShop',
-                text: '请选择生产车间'
-            },
-            {
-                prop: 'year',
-                text: '请选择年度'
-            }
-        ]
-
         // 查询请求
         listInterface(params) {
             params.factory = JSON.parse(sessionStorage.getItem('factory') || '{}').id;
@@ -151,16 +167,9 @@
         }
 
         setData(data) {
-            const tableData = data.data;
-            // tableData[tableData.length - 1] = {
-            //     ...tableData[tableData.length - 1],
-            //     isSum: true,
-            //     workShopName: '合计'
-            // }
-            // console.log(tableData)
-            const d = tableData.pop()
-            tableData[0].totalData = d
-            this.$refs.queryTable.tableData = tableData;
+            if (!data.data.length) {
+                this.$infoToast('暂无任何内容');
+            }
         }
 
         spanMethod({ row, /* column, rowIndex, */ columnIndex }) {
@@ -202,6 +211,9 @@
                     }
                 });
                 sums[0] = '合计';
+                sums[1] = ''
+                sums[2] = ''
+                sums[3] = ''
             }
             return sums
         };
