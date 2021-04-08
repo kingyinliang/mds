@@ -12,14 +12,14 @@
                     否
                 </el-radio>
             </el-form-item>
-            <el-form-item v-if="dataForm.consumeType === '1'" label="发酵罐/池号：" prop="fermentPotId">
-                <el-select v-model="dataForm.fermentPotId" filterable placeholder="请选择" style="width: 100%;" clearable @change="setMaterial">
-                    <el-option v-for="(item, index) in potArr" :key="index" :label="item.holderName" :value="item.holderId" />
+            <el-form-item v-if="dataForm.consumeType === '1'" label="发酵罐/池号：" prop="fermentPotNo">
+                <el-select v-model="dataForm.fermentPotNo" filterable placeholder="请选择" style="width: 100%;" clearable>
+                    <el-option v-for="(item, index) in potArr" :key="index" :label="item.holderName" :value="item.holderNo" />
                 </el-select>
             </el-form-item>
-            <el-form-item label="发酵物料：" prop="">
-                <el-select v-model="dataForm.materialCode" filterable placeholder="请选择" style="width: 100%;" clearable @change="setUtilAndBitch">
-                    <el-option v-for="(item, index) in materialArr" :key="index" :label="item.materialName + ' ' + item.materialCode" :value="item.materialCode" />
+            <el-form-item label="领用物料：" prop="">
+                <el-select v-model="dataForm.materialCode" filterable placeholder="请选择" style="width: 100%;" clearable @change="setUtil">
+                    <el-option v-for="(item, index) in materialArr" :key="index" :label="item.matnr + ' ' + item.materialName" :value="item.matnr" />
                 </el-select>
             </el-form-item>
             <el-form-item label="单位：" prop="consumeUnit">
@@ -28,14 +28,11 @@
             <el-form-item label="领用数量：" prop="consumeAmount">
                 <el-input v-model="dataForm.consumeAmount" type="number" placeholder="手动输入" />
             </el-form-item>
-            <el-form-item label="物料批次：" prop="consumeBatch">
-                <!-- <el-input v-model="dataForm.consumeBatch" maxlength="10" placeholder="手动输入" /> -->
-                <el-select v-model="dataForm.consumeBatch" filterable placeholder="请选择" style="width: 100%;" clearable @change="setFermentStorage">
-                    <el-option v-for="(item, index) in bitchArr" :key="index" :label="item.batch" :value="item.batch" />
-                </el-select>
+            <el-form-item label="领用批次：" prop="consumeBatch">
+                <el-input v-model="dataForm.consumeBatch" maxlength="10" placeholder="手动输入" />
             </el-form-item>
             <el-form-item v-if="dataForm.consumeType === '1'" label="发酵罐库存：">
-                <el-input v-model="dataForm.fermentStorage" type="number" placeholder="手动输入" disabled />
+                <el-input v-model="dataForm.fermentStorage" type="number" placeholder="手动输入" />
             </el-form-item>
             <el-form-item label="中转罐：">
                 <el-select v-model="dataForm.tankNo" placeholder="请选择" size="small" clearable filterable style="width: 100%;">
@@ -65,7 +62,7 @@
 
 <script lang="ts">
     import { Vue, Component, Prop } from 'vue-property-decorator';
-    import { COMMON_API, STE_API } from 'common/api/api';
+    import { COMMON_API, ORDER_API } from 'common/api/api';
     import { dateFormat, getUserNameNumber } from 'utils/utils';
 
     @Component
@@ -74,14 +71,16 @@
 
         $refs: {dataForm: HTMLFormElement};
         visible = false;
-        fermentPotId='';
+        // cycle='';
+        // fermentPotId='';
         potArr: PotObject[] = [];
         transferTank: PotObject[] = [];
         materialArr: MaterialObj[] = [];
-        bitchArr: Bitch[]=[]
+        // bitchArr: Bitch[]=[]
+
         dataRule = {
             stePotNo: [{ required: true, message: '生产锅号不能为空', trigger: 'blur' }],
-            fermentPotId: [{ required: true, message: '发酵罐/池号不能为空', trigger: 'blur' }],
+            fermentPotNo: [{ required: true, message: '发酵罐/池号不能为空', trigger: 'blur' }],
             materialCode: [{ required: true, message: '领用物料不能为空', trigger: 'blur' }],
             consumeUnit: [{ required: true, message: '单位不能为空', trigger: 'blur' }],
             consumeAmount: [{ required: true, message: '领用数量不能为空', trigger: 'blur' }],
@@ -92,7 +91,22 @@
             consumeType: '1'
         };
 
-        init(Data) {
+        mounted() {
+            COMMON_API.HOLDER_QUERY_BY_NOPAGE_API({
+                factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
+                holderType: '001'
+            }).then(({ data }) => {
+                this.potArr = data.data
+            })
+            ORDER_API.ORDER_BOOM_LIST_API({
+                materialType: 'ZHAL',
+                orderNoList: [this.$store.state.sterilize.SemiReceive.orderNoMap.orderNo]
+            }).then(({ data }) => {
+                this.materialArr = data.data
+            })
+        }
+
+        init(Data, formHeader) {
             COMMON_API.HOLDER_QUERY_BY_NOPAGE_API({
                 deptId: this.formHeader.workShop,
                 holderType: '022'
@@ -102,23 +116,21 @@
             this.visible = true;
             if (Data) { // 编辑
                 this.dataForm = JSON.parse(JSON.stringify(Data))
-                this.getFermentPotList(Data.fermentPotId)
-            } else { // 领用
-                this.getFermentPotList()
+            } else {
                 this.dataForm = {
                     id: '',
                     stePotNo: this.$store.state.sterilize.SemiReceive.potNo,
-                    stePotName: this.formHeader.potName,
+                    stePotName: formHeader.potName,
                     potOrderId: this.$store.state.sterilize.SemiReceive.potOrderMap.id,
                     potOrderNo: this.$store.state.sterilize.SemiReceive.potOrderMap.potOrderNo,
                     cycle: '',
                     consumeType: '1',
-                    // fermentPotNo: '',
+                    fermentPotNo: '',
                     fermentPotId: '',
                     materialCode: '',
                     materialType: '',
                     materialName: '',
-                    consumeUnit: 'KG',
+                    consumeUnit: '',
                     consumeAmount: '',
                     consumeBatch: '',
                     fermentStorage: '',
@@ -128,69 +140,24 @@
                     changed: dateFormat(new Date(), 'yyyy-MM-dd hh:mm:ss')
                 }
             }
-
         }
 
-        // 获取 Ferment 下拉
-        getFermentPotList(val = '') {
-            STE_API.STE_SEMI_MATERIAL_GET_FERMENT_POT_LIST_API({
-                fermentPotId: val
-            }).then(({ data }) => {
-                this.potArr = data.data
-            })
-        }
-
-        setUtilAndBitch(val) {
-            const filterArr1= this.materialArr.filter(it => it.materialCode === this.dataForm.materialCode);// eslint-disable-line
-            // this.dataForm.consumeUnit = filterArr1[0].erfme;
-            this.dataForm.consumeUnit = 'KG';
+        setUtil() {
+            const filterArr1: (any) = this.materialArr.filter(it => it.matnr === this.dataForm.materialCode);// eslint-disable-line
+            this.dataForm.consumeUnit = filterArr1[0].erfme;
             this.dataForm.materialName = filterArr1[0].materialName;
             this.dataForm.materialType = filterArr1[0].materialType
-
-            STE_API.STE_SEMI_MATERIAL_GET_BATCH_LIST_API({
-                holderId: this.dataForm.fermentPotId,
-                materialCode: val
-            }).then(({ data }) => {
-                this.bitchArr = data.data
-            })
-
-        }
-
-        setFermentStorage(val) {
-            // this.dataForm.consumeUnit = filterArr1[0].erfme;
-            if (val !== '') {
-                this.dataForm.fermentStorage = this.bitchArr.filter(it => it.batch === val) ? this.bitchArr.filter(it => it.batch === val)[0].currentStock : '';
-            } else {
-                this.dataForm.fermentStorage = ''
-            }
-
-
-        }
-
-        setMaterial(val) {
-            if (val !== '') {
-                this.dataForm.fermentPotId = val
-                this.dataForm.cycle = this.potArr.filter(item => item.holderId === val)[0].cycle;
-                console.log('this.dataForm')
-                console.log(this.dataForm)
-                STE_API.STE_SEMI_MATERIAL_GET_MATERIAL_LIST_API({
-                    fermentorId: val
-                }).then(({ data }) => {
-                    this.materialArr = data.data
-                })
-            }
-
         }
 
         dataFormSubmit() {
             this.$refs.dataForm.validate(valid => {
                 if (valid) {
                     if (this.dataForm.consumeType === '0') {
-                        this.dataForm.fermentPotId = '';
+                        this.dataForm.fermentPotNo = '';
                         this.dataForm.fermentPotName = '';
                         this.dataForm.fermentStorage = '';
                     } else {
-                        const filterArr1: (any) = this.potArr.filter(it => it.holderId === this.dataForm.fermentPotId);// eslint-disable-line
+                        const filterArr1: (any) = this.potArr.filter(it => it.holderNo === this.dataForm.fermentPotNo);// eslint-disable-line
                         const filterArr2: (any) = this.transferTank.filter(it => it.holderNo === this.dataForm.tankNo);// eslint-disable-line
                         this.dataForm.fermentPotName = filterArr1[0].holderName;
                         this.dataForm.tankName = filterArr2.length ? filterArr2[0].holderName : '';
@@ -203,15 +170,11 @@
     }
     interface FormHeaderobj {
         workShop?: string;
-        potName?: string;
     }
     interface MaterialObj {
-        batch: string;
-        currentStock: string;
-        materialCode: string;
-        materialName: string;
-        materialType: string;
-        orderNo: string;
+        matnr?: string;
+        materialName?: string;
+        erfme?: string;
     }
     interface DataObj {
         id?: string;
