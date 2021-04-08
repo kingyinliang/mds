@@ -115,8 +115,8 @@
 
         currentTab = '0';
 
-        // 已审核、已过账、已退回
-        status = ['C', 'P', 'R'];
+        // 已审核、接口失败、已过账、已退回
+        status = [['C', 'F'], ['P'], ['R']];
 
         visibleAuditLog = false // 审核日志弹窗
         auditLogData = [] // 审核日志
@@ -384,7 +384,7 @@
         // queryTable 查询请求
         queryTableListInterface(params) {
             params.factory = JSON.parse(sessionStorage.getItem('factory') || '{}').id;
-            params.status = this.status[Number(this.$refs.queryTable.activeName)];
+            params.statusSet = this.status[Number(this.$refs.queryTable.activeName)];
             params.current = this.$refs.queryTable.tabs[this.$refs.queryTable.activeName].pages.currPage;// eslint-disable-line
             params.size = this.$refs.queryTable.tabs[this.$refs.queryTable.activeName].pages.pageSize;// eslint-disable-line
             params.total = this.$refs.queryTable.tabs[this.$refs.queryTable.activeName].pages.totalCount;// eslint-disable-line
@@ -398,7 +398,7 @@
                     if (index !== Number(this.$refs.queryTable.activeName)) {
                         const params = JSON.parse(JSON.stringify(this.$refs.queryTable.queryForm))
                         params.factory = JSON.parse(sessionStorage.getItem('factory') || '{}').id;
-                        params.status = this.status[index];
+                        params.statusSet = this.status[index];
                         params.current = 1;
                         params.size = this.$refs.queryTable.tabs[index].pages.pageSize;
                         params.total = this.$refs.queryTable.tabs[index].pages.totalCount;
