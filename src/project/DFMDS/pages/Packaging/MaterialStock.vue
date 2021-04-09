@@ -11,6 +11,7 @@
             :custom-data="true"
             :show-operation-column="true"
             :operation-column-width="190"
+            :not-clear-page="true"
         >
             <template slot="tab-head-main">
                 <div class="box-card-title clearfix">

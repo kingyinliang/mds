@@ -343,6 +343,10 @@
             isRedact: {
                 type: Boolean,
                 default: false
+            },
+            notClearPage: {
+                type: Boolean,
+                default: false
             }
         },
         data() {
@@ -490,6 +494,9 @@
             },
             // 清空表格和分页
             clearTableAndPage() {
+                if (this.notClearPage) {
+                    return
+                }
                 // this.tableData = [];
                 this.queryForm[this.currpageConfig] = 1;
                 this.queryForm.totalCount = 0;
