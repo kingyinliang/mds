@@ -168,7 +168,7 @@
                 {
                     prop: 'materialName',
                     label: '生产物料',
-                    minWidth: '240',
+                    width: '240',
                     hide: false,
                     fixed: false,
                     showOverFlowTooltip: true,
@@ -189,7 +189,7 @@
                 {
                     prop: 'todayNum',
                     label: '今日产量',
-                    width: '200',
+                    width: '100',
                     hide: false,
                     fixed: false,
                     subLabel: '(箱)',
@@ -199,7 +199,7 @@
                 {
                     prop: 'useMaterialName',
                     label: '包材物料',
-                    minWidth: '240',
+                    width: '240',
                     hide: false,
                     fixed: false,
                     showOverFlowTooltip: true,
@@ -209,7 +209,7 @@
                 {
                     prop: 'useMaterialUnitName',
                     label: '单位',
-                    width: '100',
+                    width: '80',
                     hide: false,
                     fixed: false,
                     showOverFlowTooltip: true,
