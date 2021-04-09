@@ -3,7 +3,7 @@
  * @Anthor: Telliex
  * @Date: 2021-01-27 15:06:29
  * @LastEditors: Telliex
- * @LastEditTime: 2021-03-11 18:15:55
+ * @LastEditTime: 2021-04-09 16:26:50
  */
 import httpProxy from 'utils/net/httpProxy';
 
@@ -107,7 +107,19 @@ const REPORTS_API = {
     /**
      * @property {string} REPORT_PACKAGING_GERMS_SUMMARY_QUERY_API 包装车间-产量报表-待处理酱料明细列表
      */
-    REPORT_PACKAGING_GERMS_SUMMARY_QUERY_API: params => httpProxy('/pkgReportForm/product/queryGermsSummary', 'POST', params, 'REPORT')
+    REPORT_PACKAGING_GERMS_SUMMARY_QUERY_API: params => httpProxy('/pkgReportForm/product/queryGermsSummary', 'POST', params, 'REPORT'),
+    /**
+     * @property {string} REPORT_PACKAGING_STORAGE_QUERY_API 包装车间-产量报表-查询包材库存管理报表
+     */
+    REPORT_PACKAGING_STORAGE_QUERY_API: params => httpProxy('/pkgReportForm/product/queryPackingStorage', 'POST', params, 'REPORT'),
+    /**
+     * @property {string} REPORT_PACKAGING_MATERIAL_QUERY_API 包装车间-产量报表-查询线边仓物料列表
+     */
+    REPORT_PACKAGING_MATERIAL_QUERY_API: params => httpProxy('/pkgReportForm/product/queryPackingMaterialDropDown', 'GET', params, 'REPORT'),
+    /**
+     * @property {string} REPORT_PACKAGING_MATERIAL_FACTORY_QUERY_API 包装车间-产量报表-查询线边仓物料厂家列表
+     */
+    REPORT_PACKAGING_MATERIAL_FACTORY_QUERY_API: params => httpProxy('/pkgReportForm/product/queryManufactor', 'GET', params, 'REPORT')
 };
 
 export default REPORTS_API;

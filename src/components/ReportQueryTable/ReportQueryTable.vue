@@ -3,7 +3,7 @@
  * @Anthor: Telliex
  * @Date: 2021-02-26 10:58:05
  * @LastEditors: Telliex
- * @LastEditTime: 2021-04-02 14:01:43
+ * @LastEditTime: 2021-04-09 18:31:28
 -->
 <template>
     <div>
@@ -129,7 +129,7 @@
                 <el-table-column v-if="dataTableSetting.showSelectColumn" :selectable="selectableFn" type="selection" width="50px" fixed />
                 <el-table-column v-if="dataTableSetting.showIndexColumn" type="index" :index="indexMethod" label="序号" width="50px" fixed />
                 <template v-for="(item, index) in dataTableSetting.column">
-                    <el-table-column v-if="!item.hide" :key="item.prop + '' + index" :fixed="item.fixed" :prop="item.prop" :label="item.label" :width="item.width || ''" :min-width="item.minwidth || ''" :formatter="item.formatter" :show-overflow-tooltip="(item.showOverFlowTooltip? false : true)">
+                    <el-table-column v-if="!item.hide" :key="item.prop + '' + index" :fixed="item.fixed" :prop="item.prop" :label="item.label" :width="item.width || ''" :min-width="item.minWidth || ''" :formatter="item.formatter" :show-overflow-tooltip="(item.showOverFlowTooltip? false : true)">
                         <template slot="header">
                             {{ item.label }} <span v-if="item.subLabel" style="font-size: 10px;">{{ item.subLabel }}</span>
                         </template>
