@@ -14,7 +14,7 @@
             <template slot="home">
                 <div class="item-sort-container">
                     <el-row class="home_card__main" :gutter="10">
-                        <el-col v-for="item in stockInfoList" :key="item.potId" :span="12">
+                        <el-col v-for="item in stockInfoList" :key="item.potId" :span="6">
                             <div class="card-stock">
                                 <div class="card-stock__head">
                                     <span>{{ `${item.materialGroupName} ${item.materialGroupCode}` }}</span>
