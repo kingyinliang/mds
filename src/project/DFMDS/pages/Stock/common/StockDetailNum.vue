@@ -4,7 +4,7 @@
             <div class="stock-image_info">
                 <i class="iconfont factory-chejianguanli" />
                 <!-- <img src="~DFMDS/assets/img/stockScan.png" alt=""> -->
-                <image-comp :s3-path="currentData.s3Path" height="145px" />
+                <image-comp :s3-path="currentData.s3Path" height="70px" />
             </div>
         </div>
         <div class="stock-image_content stock-image_content_right">
@@ -14,7 +14,7 @@
                     <el-tooltip effect="dark" :content="totalNum+stockUnit" placement="top">
                         <span class="stock-image_info_num_toolTip">{{ totalNum&&totalNum > 999999? (totalNum+'').substr(0,6): totalNum }}</span>
                     </el-tooltip>
-                    <span class="stock-image_info_num_span">{{ totalNum&&totalNum > 999999?'...  ':'' }}{{ stockUnit }}</span>
+                    <span class="stock-image_info_num_span">{{ totalNum&&totalNum > 999999?'...  ':'' }} {{ stockUnit }}</span>
                 </div>
                 <div class="stock-image_info_title">
                     库存总量
@@ -64,24 +64,24 @@
     flex-direction: row;
     align-items: center;
     justify-content: space-between;
-    padding: 20px 20px 10px;
+    padding: 10px 10px 5px;
     .stock-image_content {
-        width: 50%;
-        height: 180px;
+        width: 45%;
+        height: 120px;
         padding-right: 10px;
         padding-left: 0;
         .stock-image_info {
             position: relative;
             width: 100%;
             height: 100%;
-            padding-left: 28px;
+            // padding-left: 28px;
             background: #ffbf00;
             border-radius: 8px;
             box-shadow: 3px 3px 5px 0 #d6d2c4;
             i {
                 position: absolute;
-                top: 16px;
-                right: 16px;
+                top: 12px;
+                right: 6px;
                 display: inline-block;
                 width: 26px;
                 height: 26px;
@@ -89,13 +89,13 @@
             }
             img {
                 position: absolute;
-                top: 50%;
+                top: 60%;
                 left: 50%;
                 transform: translate(-50%, -50%);
             }
             .stock-image_info_num {
-                height: 128px;
-                padding-top: 28px;
+                height: 64px;
+                // padding-top: 28px;
                 color: #fff;
                 font-weight: 600;
                 font-size: 12px;
@@ -105,23 +105,25 @@
                 font-size: 18px;
             }
             .stock-image_info_num_toolTip {
-                font-size: 40px;
+                font-size: 20px;
             }
             .stock-image_info_title {
                 height: 28px;
                 color: #fff;
                 font-weight: 600;
-                font-size: 20px;
+                font-size: 14px;
                 line-height: 28px;
             }
         }
         .stock-image_info_right {
+            padding-left: 15px;
             background: #487bff;
         }
     }
     .stock-image_content_right {
+        width: 55%;
         padding-right: 0;
-        padding-left: 10px;
+        // padding-left: 10px;
     }
 }
 </style>

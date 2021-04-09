@@ -14,7 +14,7 @@
             <template slot="home">
                 <div class="item-sort-container">
                     <el-row class="home_card__main" :gutter="10">
-                        <el-col v-for="item in stockInfoList" :key="item.potId" :span="12">
+                        <el-col v-for="item in stockInfoList" :key="item.potId" :span="6">
                             <div class="card-stock">
                                 <div class="card-stock__head">
                                     <span>{{ `${item.materialGroupName} ${item.materialGroupCode}` }}</span>
@@ -76,7 +76,8 @@
                 defaultOptionsFn: () => {
                     return new Promise(resolve => {
                         STOCK_API.STOCK_SYS_STORAGE_LIST_API({
-                            materialTypeCodeSet: ['ZVER', 'ZFZC', 'ZROH']
+                            // , 'ZFZC', 'ZROH'
+                            materialTypeCodeSet: ['ZVER']
                         }).then(res => {
                             res.data.data = res.data.data.reduce((pre, cur) => {
                                 !pre.find(row => row.storageLocation === cur.storageLocation) && pre.push(cur)
@@ -108,7 +109,7 @@
                 },
                 resVal: {
                     resData: 'data',
-                    label: ['materialName'],
+                    label: ['materialName', 'materialCode'],
                     value: 'materialCode'
                 }
             },

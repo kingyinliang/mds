@@ -4,18 +4,18 @@
         class="stock-detail-table-content"
     >
         <el-table height="185" :data="currentData" border tooltip-effect="dark" class="newTable" size="mini">
-            <el-table-column type="index" label="序号" width="55" fixed align="center" />
+            <el-table-column type="index" label="序号" width="45" fixed align="center" />
             <el-table-column label="物料" :show-overflow-tooltip="true" align="center">
                 <template slot-scope="scope">
                     {{ scope.row.materialName +' '+ scope.row.materialCode }}
                 </template>
             </el-table-column>
-            <el-table-column label="数量" :show-overflow-tooltip="true" prop="currentAmount" align="center">
+            <el-table-column label="数量" width="70" :show-overflow-tooltip="true" prop="currentAmount" align="center">
                 <template slot-scope="scope">
                     {{ scope.row.currentAmount }}
                 </template>
             </el-table-column>
-            <el-table-column label="单位" prop="materialUnitName" align="center" />
+            <el-table-column label="单位" width="50" prop="materialUnitName" align="center" />
         </el-table>
     </div>
 </template>

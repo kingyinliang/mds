@@ -13,7 +13,7 @@
             <template slot="home">
                 <el-table class="newTable" header-row-class-name="tableHead" :data="materialGroupList" height="405px" @selection-change="selectionChange">
                     <el-table-column type="selection" />
-                    <el-table-column type="index" />
+                    <el-table-column type="index" label="序号" />
                     <el-table-column label="物料组" align="center">
                         <template slot-scope="scope">
                             {{ scope.row.materialGroupName + ' ' + scope.row.materialGroupCode }}
@@ -52,16 +52,16 @@
         <el-row>
             <el-pagination :current-page.sync="currentPage" :page-sizes="[10, 20, 50]" :page-size="pageSize" layout="total, sizes, prev, pager, next, jumper" :total="total" @size-change="sizeChangeHandler" @current-change="currentPageChangeHanlder" />
         </el-row>
-        <el-dialog :visible.sync="addDialog" title="新增物料组" width="400px" @close="cancelHandler">
+        <el-dialog :visible.sync="addDialog" :title="isAdd ? '新增物料组' : '编辑物料组'" width="400px" @close="cancelHandler">
             <el-form ref="addFormRef" :model="addForm" :rules="rules" size="small" label-width="100px" label-suffix="：">
                 <el-form-item label="物料类型" prop="materialGroupType">
                     <el-select v-model="addForm.materialGroupType" :disabled="!isAdd" clearable filterable size="small" style="width: 238px;">
-                        <el-option v-for="item in materialTypeList" :key="item.id" :label="item.dictValue" :value="item.dictCode" />
+                        <el-option v-for="item in materialTypeList" :key="item.id" :label="`${item.dictValue} ${item.dictCode}`" :value="item.dictCode" />
                     </el-select>
                 </el-form-item>
                 <el-form-item label="物料组" prop="materialGroupCode">
                     <el-select v-model="addForm.materialGroupCode" :disabled="!isAdd" clearable filterable size="small" style="width: 238px;">
-                        <el-option v-for="item in materialGroupDropList" :key="item.materialCode" :label="item.materialName" :value="item.materialCode" />
+                        <el-option v-for="item in materialGroupDropList" :key="item.materialCode" :label="`${item.materialName} ${item.materialCode}`" :value="item.materialCode" />
                     </el-select>
                 </el-form-item>
                 <el-form-item ref="s3PathRef" label="图片上传" prop="s3Path">
@@ -153,6 +153,7 @@
                 prop: 'materialGroupType',
                 labelWidth: 90,
                 filterable: true,
+                defaultValue: '',
                 rule: [
                     { required: false, message: '请选择车间', trigger: 'change' }
                 ],
@@ -165,7 +166,7 @@
                 },
                 resVal: {
                     resData: 'data',
-                    label: ['dictValue'],
+                    label: ['dictValue', 'dictCode'],
                     value: 'dictCode'
                 }
             },
@@ -175,6 +176,7 @@
                 prop: 'materialGroupCode',
                 labelWidth: 90,
                 filterable: true,
+                defaultValue: '',
                 rule: [
                     { required: false, message: '请选择物料组', trigger: 'change' }
                 ],
@@ -183,7 +185,7 @@
                 },
                 resVal: {
                     resData: 'data',
-                    label: ['materialName'],
+                    label: ['materialName', 'materialCode'],
                     value: 'materialCode'
                 }
             }
@@ -192,10 +194,15 @@
         createdEnd() {
             this.getQueryDropList()
             // this.$nextTick(() => {
-            //     if (this.$refs.queryTable.queryForm.workShop !== '' && this.$refs.queryTable.queryForm.productDate !== '') {
-            //         this.$refs.queryTable.getDataList(true)
-            //     }
+            //     // if (this.$refs.queryTable.queryForm.workShop !== '' && this.$refs.queryTable.queryForm.productDate !== '') {
+            //     //     this.$refs.queryTable.getDataList(true)
+            //     // }
             // })
+        }
+
+        mounted() {
+            this.getQueryDropList()
+            this.$refs.queryTable.getDataList(true)
         }
 
         getQueryDropList() {
@@ -227,6 +234,9 @@
             this.imgUrl = ''
             this.addDialog = true;
             this.isAdd = true
+            this.$nextTick(() => {
+                this.$refs.imgUpload.clearFiles()
+            })
         }
 
         // 上传图片前
