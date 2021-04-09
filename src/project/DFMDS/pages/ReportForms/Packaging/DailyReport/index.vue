@@ -168,7 +168,7 @@
                 {
                     prop: 'materialName',
                     label: '生产物料',
-                    width: '240',
+                    minWidth: '300',
                     hide: false,
                     fixed: false,
                     showOverFlowTooltip: true,
@@ -199,7 +199,7 @@
                 {
                     prop: 'useMaterialName',
                     label: '包材物料',
-                    width: '240',
+                    minWidth: '300',
                     hide: false,
                     fixed: false,
                     showOverFlowTooltip: true,

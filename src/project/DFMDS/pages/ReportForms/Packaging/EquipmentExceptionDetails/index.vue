@@ -189,7 +189,7 @@
                 {
                     prop: 'materialName',
                     label: '物料名称',
-                    minWidth: '240',
+                    minWidth: '300',
                     hide: false,
                     fixed: true,
                     showOverFlowTooltip: true,
