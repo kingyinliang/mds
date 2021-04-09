@@ -76,7 +76,8 @@
                 defaultOptionsFn: () => {
                     return new Promise(resolve => {
                         STOCK_API.STOCK_SYS_STORAGE_LIST_API({
-                            materialTypeCodeSet: ['ZVER', 'ZFZC', 'ZROH']
+                            // , 'ZFZC', 'ZROH'
+                            materialTypeCodeSet: ['ZVER']
                         }).then(res => {
                             res.data.data = res.data.data.reduce((pre, cur) => {
                                 !pre.find(row => row.storageLocation === cur.storageLocation) && pre.push(cur)
@@ -108,7 +109,7 @@
                 },
                 resVal: {
                     resData: 'data',
-                    label: ['materialName'],
+                    label: ['materialName', 'materialCode'],
                     value: 'materialCode'
                 }
             },

@@ -262,7 +262,7 @@ export default class MaterialStock extends Vue {
             },
             resVal: {
                 resData: 'data',
-                label: ['materialCode', 'materialName'],
+                label: ['materialName', 'materialCode'],
                 value: 'materialCode'
             }
         }
