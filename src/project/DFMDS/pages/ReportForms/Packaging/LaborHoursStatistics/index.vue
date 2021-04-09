@@ -210,8 +210,11 @@
                             item.dayData.forEach(subItem => {
                                 item[`actualYield${subItem.productDate}`] = subItem.actualYield
                                 item[`productionHours${subItem.productDate}`] = subItem.productionHours
-                                daysList.push(subItem)
+                                // daysList.push(subItem)
                             })
+                        })
+                        resTemp.data.data[0].dayData.map(item => {
+                            daysList.push(item)
                         })
 
                         resTemp.data.data[0].totalData.forEach(item => {
