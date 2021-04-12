@@ -1272,6 +1272,15 @@
 
         // 处理小数点后两位
         oninput(val, target, prop) {
+            if (prop === 'windSpeed') {
+                if (val >= 99999.99) {
+                    this.$errorToast('超过温度限制');
+                    target[prop] = null
+                } else {
+                    target[prop] = (val.match(/^\d*(\.?\d{0,5})/g)[0]) || null
+                }
+                return
+            }
             // 通过正则过滤小数点后两位
             if (val >= 99.99) {
                 this.$errorToast('超过温度限制');
