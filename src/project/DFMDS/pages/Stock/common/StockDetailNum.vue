@@ -1,7 +1,7 @@
 <template>
     <div class="stock-image">
         <div class="stock-image_content">
-            <div class="stock-image_info">
+            <div class="stock-image_info stock-image_info_left">
                 <i class="iconfont factory-chejianguanli" />
                 <!-- <img src="~DFMDS/assets/img/stockScan.png" alt=""> -->
                 <image-comp :s3-path="currentData.s3Path" height="70px" />
@@ -118,6 +118,14 @@
         .stock-image_info_right {
             padding-left: 15px;
             background: #487bff;
+        }
+        .stock-image_info_left {
+            background: #fff;
+            border-radius: 8px;
+            box-shadow: 0 0 5px 0 #d6d2c4;
+            i {
+                color: #487bff;
+            }
         }
     }
     .stock-image_content_right {
