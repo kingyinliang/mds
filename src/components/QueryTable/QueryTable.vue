@@ -459,7 +459,7 @@
                                             // 抓取其他接口返回的其他参数
                                             secondVal = this.optionLists[linkagePropItemObj.returnValue.findList].find(it => it[linkagePropItemObj.returnValue.findId] === val)[linkagePropItemObj.returnValue.findField]
                                         }
-                                        linkagePropItemObj.optionsFn(val, secondVal).then(({ data }) => {
+                                        linkagePropItemObj.optionsFn(val, secondVal, this.optionLists[item.prop]).then(({ data }) => {
                                             const getPath = creatGetPath(linkagePropItemObj.resVal.resData);
                                             const dataTemp = getPath(data);
                                             this.$set(this.optionLists, linkagePropItemObj.prop, dataTemp);

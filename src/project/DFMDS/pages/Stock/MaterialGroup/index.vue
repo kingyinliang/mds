@@ -19,7 +19,7 @@
                             {{ scope.row.materialGroupName + ' ' + scope.row.materialGroupCode }}
                         </template>
                     </el-table-column>
-                    <el-table-column label="物料类型" prop="materialGroupType" align="center" />
+                    <el-table-column label="物料类型" prop="materialTypeName" align="center" />
                     <el-table-column label="图片" align="center">
                         <template slot-scope="scope">
                             <!-- <img :src="" alt="" style="height: 60px;"> -->
@@ -55,8 +55,8 @@
         <el-dialog :visible.sync="addDialog" :title="isAdd ? '新增物料组' : '编辑物料组'" width="400px" @close="cancelHandler">
             <el-form ref="addFormRef" :model="addForm" :rules="rules" size="small" label-width="100px" label-suffix="：">
                 <el-form-item label="物料类型" prop="materialGroupType">
-                    <el-select v-model="addForm.materialGroupType" :disabled="!isAdd" clearable filterable size="small" style="width: 238px;">
-                        <el-option v-for="item in materialTypeList" :key="item.id" :label="`${item.dictValue} ${item.dictCode}`" :value="item.dictCode" />
+                    <el-select v-model="addForm.materialGroupType" :disabled="!isAdd" clearable filterable size="small" style="width: 238px;" @change="groupChange">
+                        <el-option v-for="item in materialTypeList" :key="item.materialTypeCode" :label="`${item.materialTypeName} ${item.materialTypeCode}`" :value="item.materialTypeCode" />
                     </el-select>
                 </el-form-item>
                 <el-form-item label="物料组" prop="materialGroupCode">
@@ -158,17 +158,39 @@
                     { required: false, message: '请选择车间', trigger: 'change' }
                 ],
                 defaultOptionsFn: () => {
-                    return COMMON_API.DICTIONARY_ITEM_DROPDOWN_POST_API({
-                        // factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
-                        factory: 'common',
-                        dictType: 'COMMON_MATERIAL_TYPE'
+                    // return COMMON_API.DICTIONARY_ITEM_DROPDOWN_POST_API({
+                    //     // factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
+                    //     factory: 'common',
+                    //     dictType: 'COMMON_MATERIAL_TYPE'
+                    // })
+                    return new Promise(resolve => {
+                        STOCK_API.STOCK_MATERIAL_GROUP_STORAGE_API({}).then(res => {
+                            const result = res.data.data.reduce((pre, cur) => {
+                                const obj = pre.find(item => item.materialTypeCode === cur.materialTypeCode)
+                                if (obj) {
+                                    obj.children.push(cur)
+                                    return pre
+                                }
+                                pre.push({
+                                    ...cur,
+                                    children: [cur]
+                                })
+                                return pre
+                            }, [])
+                            resolve({
+                                data: {
+                                    data: result
+                                }
+                            })
+                        })
                     })
                 },
                 resVal: {
                     resData: 'data',
-                    label: ['dictValue', 'dictCode'],
-                    value: 'dictCode'
-                }
+                    label: ['materialTypeName', 'materialTypeCode'],
+                    value: 'materialTypeCode'
+                },
+                linkageProp: ['materialGroupCode']
             },
             {
                 type: 'select',
@@ -180,8 +202,22 @@
                 rule: [
                     { required: false, message: '请选择物料组', trigger: 'change' }
                 ],
-                defaultOptionsFn: () => {
-                    return STOCK_API.STOCK_MATERIAL_GROUP_STORAGE_API({})
+                // defaultOptionsFn: () => {
+                //     return STOCK_API.STOCK_MATERIAL_GROUP_STORAGE_API({})
+                // },
+                optionsFn: (v, v2, origin) => {
+                    return new Promise((resolve, reject) => {
+                        try {
+                            const list = origin.find(item => item.materialTypeCode === v).children
+                            resolve({
+                                data: {
+                                    data: list
+                                }
+                            })
+                        } catch (error) {
+                            reject(error)
+                        }
+                    })
                 },
                 resVal: {
                     resData: 'data',
@@ -206,15 +242,40 @@
         }
 
         getQueryDropList() {
-            COMMON_API.DICTIONARY_ITEM_DROPDOWN_POST_API({
-                factory: 'common',
-                dictType: 'COMMON_MATERIAL_TYPE'
-            }).then(res => {
-                this.materialTypeList = res.data.data;
-            })
             STOCK_API.STOCK_MATERIAL_GROUP_STORAGE_API({}).then(res => {
-                this.materialGroupDropList = res.data.data
+                const result = res.data.data.reduce((pre, cur) => {
+                    const obj = pre.find(item => item.materialTypeCode === cur.materialTypeCode)
+                    if (obj) {
+                        obj.children.push(cur)
+                        return pre
+                    }
+                    pre.push({
+                        ...cur,
+                        children: [cur]
+                    })
+                    return pre
+                }, [])
+                this.materialTypeList = result;
             })
+            // COMMON_API.DICTIONARY_ITEM_DROPDOWN_POST_API({
+            //     factory: 'common',
+            //     dictType: 'COMMON_MATERIAL_TYPE'
+            // }).then(res => {
+            //     this.materialTypeList = res.data.data;
+            // })
+            // STOCK_API.STOCK_MATERIAL_GROUP_STORAGE_API({}).then(res => {
+            //     this.materialGroupDropList = res.data.data
+            // })
+        }
+
+        groupChange(v) {
+            const obj = this.materialTypeList.find(row => row.materialTypeCode === v)
+            if (obj) {
+                this.materialGroupDropList = obj.children
+            } else {
+                this.materialGroupDropList = []
+            }
+            this.$set(this.addForm, 'materialGroupCode', '')
         }
 
         getDataList(params) {
@@ -376,9 +437,14 @@
         materialGroupType?: string;
     }
     interface MaterialTypeList {
-        id?: string;
-        dictCode?: string;
-        dictValue?: string;
+        // id?: string;
+        // dictCode?: string;
+        // dictValue?: string;
+        materialCode: string;
+        materialName: string;
+        materialTypeCode: string;
+        materialTypeName: string;
+        children: MaterialGroupDropType[];
     }
 
     interface MaterialGroupDropType {
