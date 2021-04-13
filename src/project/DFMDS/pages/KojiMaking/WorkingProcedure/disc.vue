@@ -106,6 +106,7 @@
                 label: '发酵罐/池号',
                 value: ['fermentPotNo'],
                 disabled: true,
+                filterable: true,
                 rules: [
                     { required: true, message: '请选择发酵罐/池号' }
                 ],
@@ -346,6 +347,7 @@
         option?: HeaderBaseOption;
         rules?: object[];
         labelWidth?: number;
+        filterable?: boolean;
     }
 
     interface TabsObj {
