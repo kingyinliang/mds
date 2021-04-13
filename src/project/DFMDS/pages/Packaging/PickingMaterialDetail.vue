@@ -65,9 +65,10 @@
                                 <span class="notNull">* </span>厂家
                             </template>
                             <template slot-scope="scope">
-                                <el-select v-model="scope.row.manufactor" filterable placeholder="请选择" size="small" :disabled="true" clearable>
+                                {{ scope.row.manufactorName }}
+                                <!-- <el-select v-model="scope.row.manufactor" filterable placeholder="请选择" size="small" :disabled="true" clearable>
                                     <el-option v-for="(iteam, index) in manufactor" :key="index" :label="iteam.dictValue" :value="iteam.dictCode" />
-                                </el-select>
+                                </el-select> -->
                             </template>
                         </el-table-column>
                         <el-table-column label="备注" prop="remark" min-width="140">
@@ -129,7 +130,7 @@
                 type: 'tooltip',
                 icon: 'factory-pinleiguanli',
                 label: '生产物料',
-                value: ['materialCode', 'materialName']
+                value: ['materialName', 'materialCode']
             },
             {
                 type: 'p',
@@ -201,7 +202,9 @@
             const obj = row.stoPackageMaterialStorageResponseDtoList.find(item => item.batch === val)
             row.mouldCode = obj.mouldCode
             row.manufactor = obj.supplierCode
+            row.manufactorName = obj.supplierName
             row.stoPackageMaterialStorageId = obj.id
+            row.storage = obj.currentAmount
             if (!obj.mouldCode) {
                 row.canEditModuleCode = true
             } else {
