@@ -219,6 +219,7 @@
                 posnr: row.posnr,
                 materialCode: row.materialCode,
                 materialName: row.materialName,
+                materialType: row.materialType,
                 unit: row.unit,
                 needNum: row.needNum,
                 storage: row.storage,
@@ -378,6 +379,7 @@
         posnr?: string;
         materialCode?: string;
         materialName?: string;
+        materialType?: string;
         unit?: string;
         needNum?: string;
         storage?: string;
