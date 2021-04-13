@@ -1135,6 +1135,11 @@
             this.kojiGuardData.push(sole);
         }
 
+        // 判断非0假值
+        judgeValue(val) {
+            return Boolean(val === 0 || val);
+        }
+
         ruleSubmit() {
             // 入曲情况
             if (!this.kojiInformData.addKojiMans || !this.kojiInformData.addKojiTemp || !this.kojiInformData.addKojiStart || !this.kojiInformData.addKojiEnd) {
@@ -1142,11 +1147,19 @@
                 return false
             }
 
+            const kojiGuardDataProps = ['guardDate', 'windTemp', 'roomTemp', 'windSpeed', 'prodTemp', 'outUpTemp', 'outMidTemp', 'outDownTemp', 'testTempOne', 'testTempTwo', 'windDoor'];
             for (const item of this.kojiGuardData.filter(it => it.delFlag !== 1)) {
-                if (!item.guardDate || !item.windTemp || !item.roomTemp || !item.windSpeed || !item.prodTemp || !item.outUpTemp || !item.outMidTemp || !item.outDownTemp || !item.testTempOne || !item.testTempTwo || !item.windDoor) {
-                    this.$warningToast('请填写看曲记录必填项');
-                    return false
+                for (let i = 0; i < kojiGuardDataProps.length; i++) {
+                    const element = kojiGuardDataProps[i];
+                    if (!this.judgeValue(item[element])) {
+                        this.$warningToast('请填写看曲记录必填项');
+                        return false
+                    }
                 }
+                // if (!item.guardDate || !item.windTemp || !item.roomTemp || !item.windSpeed || !item.prodTemp || !item.outUpTemp || !item.outMidTemp || !item.outDownTemp || !item.testTempOne || !item.testTempTwo || !item.windDoor) {
+                //     this.$warningToast('请填写看曲记录必填项');
+                //     return false
+                // }
             }
             for (const item of this.kojiDiscTurnData) {
                 if (!item.turnStart || !item.turnEnd || !item.turnMans) {
