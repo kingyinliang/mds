@@ -66,9 +66,13 @@ export default {
     methods: {
         // 通过menuId与动态(菜单)路由进行匹配跳转至指定路由
         gotoRouteHandle(menu) {
-            const route = this.dynamicMenuRoutes.filter(item => item.meta.menuId === menu.id);
-            if (route.length >= 1) {
-                this.$router.push({ path: route[0].path });
+            if (/^http[s]?:\/\/.*/.test(menu.menuUrl)) {
+                window.location.href = menu.menuUrl + '&token=' + this.$cookie.get('token') + '&tenant=MDS'
+            } else {
+                const route = this.dynamicMenuRoutes.filter(item => item.meta.menuId === menu.id);
+                if (route.length >= 1) {
+                    this.$router.push({ path: route[0].path });
+                }
             }
         }
     }
