@@ -97,21 +97,27 @@
             {
                 type: 'select',
                 label: '物料组',
-                prop: 'materialGroupCode',
+                prop: 'stoMaterialGroupId',
                 labelWidth: 90,
                 filterable: true,
                 defaultValue: '',
                 rule: [
-                    { required: false, message: '请选择车间', trigger: 'change' }
+                    { required: false, message: '请选择物料组', trigger: 'change' }
                 ],
                 defaultOptionsFn: () => {
-                    return STOCK_API.STOCK_MATERIAL_GROUP_STORAGE_API({})
+                    // return STOCK_API.STOCK_MATERIAL_GROUP_STORAGE_API({})
+                    return STOCK_API.STOCK_STORAGE_LIST_ALL_API({})
                 },
                 resVal: {
                     resData: 'data',
-                    label: ['materialName', 'materialCode'],
-                    value: 'materialCode'
+                    label: ['materialGroupName', 'materialGroupCode'],
+                    value: 'id'
                 }
+                // resVal: {
+                //     resData: 'data',
+                //     label: ['materialName', 'materialCode'],
+                //     value: 'materialCode'
+                // }
             },
             {
                 type: 'select',
