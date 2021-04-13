@@ -139,7 +139,7 @@
                 {
                     prop: 'materialName',
                     label: '品名',
-                    width: '240',
+                    width: '350',
                     hide: false,
                     fixed: false,
                     showOverFlowTooltip: true,

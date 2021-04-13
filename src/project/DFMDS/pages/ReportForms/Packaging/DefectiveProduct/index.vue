@@ -192,7 +192,7 @@
                 {
                     prop: 'orderNo',
                     label: '生产订单',
-                    width: '120',
+                    width: '140',
                     hide: false,
                     fixed: true,
                     showOverFlowTooltip: true,
@@ -202,7 +202,7 @@
                 {
                     prop: 'materialName',
                     label: '生产物料',
-                    width: '240',
+                    width: '350',
                     hide: false,
                     fixed: false,
                     clearable: true,
@@ -222,7 +222,7 @@
                 {
                     prop: 'useMaterialName',
                     label: '组件物料',
-                    width: '300',
+                    width: '350',
                     hide: false,
                     fixed: false,
                     showOverFlowTooltip: true,

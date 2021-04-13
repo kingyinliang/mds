@@ -143,7 +143,7 @@
                     label: '生产产线',
                     width: '260',
                     hide: false,
-                    fixed: true,
+                    fixed: false,
                     showOverFlowTooltip: true,
                     dataType: 'default'
                 },
@@ -152,14 +152,14 @@
                     label: '订单',
                     width: '120',
                     hide: false,
-                    fixed: true,
+                    fixed: false,
                     showOverFlowTooltip: true,
                     dataType: 'default'
                 },
                 {
                     prop: 'productDate',
                     label: '生产日期',
-                    width: '100',
+                    width: '140',
                     hide: false,
                     fixed: false,
                     showOverFlowTooltip: true,
@@ -168,12 +168,12 @@
                 {
                     prop: 'materialName',
                     label: '品项',
-                    width: '240',
+                    width: '350',
                     hide: false,
                     fixed: false,
                     showOverFlowTooltip: true,
                     dataType: 'multi',
-                    data: ['materialCode', 'materialName']
+                    data: ['materialName', 'materialCode']
                 },
                 {
                     prop: 'inStorage',
@@ -196,7 +196,7 @@
                 {
                     prop: 'theoryReadyTime',
                     label: '理论准备工时',
-                    width: '100',
+                    width: '120',
                     hide: false,
                     fixed: false,
                     showOverFlowTooltip: true,
@@ -205,7 +205,7 @@
                 {
                     prop: 'theoryMachineTime',
                     label: '理论机器工时',
-                    width: '100',
+                    width: '120',
                     hide: false,
                     fixed: false,
                     showOverFlowTooltip: true,
@@ -214,7 +214,7 @@
                 {
                     prop: 'theoryManTime',
                     label: '理论人工工时',
-                    width: '100',
+                    width: '120',
                     hide: false,
                     fixed: false,
                     showOverFlowTooltip: true,
@@ -223,7 +223,7 @@
                 {
                     prop: 'actualReadyTime',
                     label: '实际准备工时',
-                    width: '100',
+                    width: '120',
                     hide: false,
                     fixed: false,
                     showOverFlowTooltip: true,
@@ -232,7 +232,7 @@
                 {
                     prop: 'actualMachineTime',
                     label: '实际机器工时',
-                    width: '100',
+                    width: '120',
                     hide: false,
                     fixed: false,
                     showOverFlowTooltip: true,
@@ -241,7 +241,7 @@
                 {
                     prop: 'actualManTime',
                     label: '实际人工工时',
-                    width: '100',
+                    width: '120',
                     hide: false,
                     fixed: false,
                     showOverFlowTooltip: true,
@@ -250,7 +250,7 @@
                 {
                     prop: 'diffReadyTime',
                     label: '差异准备工时',
-                    width: '100',
+                    width: '120',
                     hide: false,
                     fixed: false,
                     showOverFlowTooltip: true,
@@ -259,7 +259,7 @@
                 {
                     prop: 'diffMachineTime',
                     label: '差异机器工时',
-                    width: '100',
+                    width: '120',
                     hide: false,
                     fixed: false,
                     showOverFlowTooltip: true,
@@ -268,7 +268,7 @@
                 {
                     prop: 'diffManTime',
                     label: '差异人工工时',
-                    width: '100',
+                    width: '120',
                     hide: false,
                     fixed: false,
                     showOverFlowTooltip: true,

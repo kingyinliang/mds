@@ -164,16 +164,16 @@
                 {
                     prop: 'productLineName',
                     label: '生产产线',
-                    width: '220',
+                    width: '260',
                     hide: false,
-                    fixed: true,
+                    fixed: false,
                     showOverFlowTooltip: true,
                     dataType: 'default'
                 },
                 {
                     prop: 'productDate',
                     label: '生产日期',
-                    width: '120',
+                    width: '140',
                     hide: false,
                     fixed: false,
                     showOverFlowTooltip: true,
@@ -189,22 +189,14 @@
                     dataType: 'default'
                 },
                 {
-                    prop: 'materialCode',
-                    label: '物料编码',
-                    width: '120',
-                    hide: false,
-                    fixed: false,
-                    showOverFlowTooltip: true,
-                    dataType: 'default'
-                },
-                {
                     prop: 'materialName',
-                    label: '物料名称',
-                    width: '220',
+                    label: '物料',
+                    width: '350',
                     hide: false,
                     fixed: false,
                     showOverFlowTooltip: true,
-                    dataType: 'default'
+                    dataType: 'multi',
+                    data: ['materialName', 'materialCode']
                 },
                 {
                     prop: 'materialUnitName',
@@ -217,21 +209,13 @@
                 },
                 {
                     prop: 'assMaterialCode',
-                    label: '组件物料编码',
-                    width: '120',
+                    label: '组件物料',
+                    width: '350',
                     hide: false,
                     fixed: false,
                     showOverFlowTooltip: true,
-                    dataType: 'default'
-                },
-                {
-                    prop: 'assMaterialName',
-                    label: '组件物料名称',
-                    width: '260',
-                    hide: false,
-                    fixed: false,
-                    showOverFlowTooltip: true,
-                    dataType: 'default'
+                    dataType: 'multi',
+                    data: ['assMaterialName', 'assMaterialCode']
                 },
                 {
                     prop: 'assMaterialUnitName',
@@ -245,7 +229,7 @@
                 {
                     prop: 'orderStartDate',
                     label: '订单开始日期',
-                    width: '100',
+                    width: '120',
                     hide: false,
                     fixed: false,
                     showOverFlowTooltip: true,
@@ -254,7 +238,7 @@
                 {
                     prop: 'orderEndDate',
                     label: '订单结束日期',
-                    width: '100',
+                    width: '120',
                     hide: false,
                     fixed: false,
                     showOverFlowTooltip: true,
@@ -281,7 +265,7 @@
                 {
                     prop: 'assNeedNum',
                     label: '组件需求数量',
-                    width: '100',
+                    width: '120',
                     hide: false,
                     fixed: false,
                     showOverFlowTooltip: true,
@@ -290,7 +274,7 @@
                 {
                     prop: 'assActualNum',
                     label: '组件实发数量',
-                    width: '100',
+                    width: '120',
                     hide: false,
                     fixed: false,
                     showOverFlowTooltip: true,

@@ -243,7 +243,7 @@
                 {
                     prop: 'materialName',
                     label: '物料',
-                    width: '240',
+                    width: '350',
                     hide: false,
                     fixed: false,
                     showOverFlowTooltip: true,
@@ -253,7 +253,7 @@
                 {
                     prop: 'productDate',
                     label: '日/月/季',
-                    width: '100',
+                    width: '160',
                     hide: false,
                     fixed: false,
                     showOverFlowTooltip: true,
