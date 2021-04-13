@@ -36,7 +36,7 @@
                         </el-tooltip>
                         <el-date-picker v-if="item.type === 'date-picker'" v-model="formHeader[item.value]" size="mini" type="date" :disabled="!isRedact" value-format="yyyy-MM-dd" format="yyyy-MM-dd" style="width: 120px;" @change="updateProductDate" />
                         <el-date-picker v-if="item.type === 'date-time'" v-model="formHeader[item.value]" size="mini" type="datetime" :disabled="!isRedact" value-format="yyyy-MM-dd HH:mm" format="yyyy-MM-dd HH:mm" style="width: 120px;" @change="updateProductDate" />
-                        <el-select v-if="item.type === 'select'" v-model="formHeader[item.value]" size="mini" style="width: 120px;" :disabled="!(isRedact && item.disabled)">
+                        <el-select v-if="item.type === 'select'" v-model="formHeader[item.value]" size="mini" style="width: 120px;" :disabled="!(isRedact && item.disabled)" :filterable="item.filterable">
                             <el-option v-for="(optionIt, subIndex) in item.option.list" :key="subIndex" :label="optionIt[item.option.label]" :value="optionIt[item.option.value]" />
                         </el-select>
                         <el-radio-group v-if="item.type === 'radio'" v-model="formHeader[item.value]" size="mini" :disabled="!(isRedact && !item.disabled)">

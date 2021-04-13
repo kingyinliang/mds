@@ -106,6 +106,7 @@
                 label: '发酵罐/池号',
                 value: ['fermentPotNo'],
                 disabled: true,
+                filterable: true,
                 rules: [
                     { required: true, message: '请选择发酵罐/池号' }
                 ],
@@ -219,10 +220,11 @@
 
                     data.data.forEach(item => {
                         if (this.headerBase[5].option) {
-                            // 是空罐或是已有的罐
-                            if (item.holderStatus === 'E' || item.holderNo === this.formHeader.fermentPotNo) {
-                                this.headerBase[5].option.list.push({ optLabel: item.holderName, optValue: item.holderNo })
-                            }
+                            // // 是空罐或是已有的罐
+                            // if (item.holderStatus === 'E' || item.holderNo === this.formHeader.fermentPotNo) {
+                            //     this.headerBase[5].option.list.push({ optLabel: item.holderName, optValue: item.holderNo })
+                            // }
+                            this.headerBase[5].option.list.push({ optLabel: item.holderName, optValue: item.holderNo })
                         }
                         this.potNoList.push({ optValue: item.holderNo, optId: item.id })
                     })
@@ -345,6 +347,7 @@
         option?: HeaderBaseOption;
         rules?: object[];
         labelWidth?: number;
+        filterable?: boolean;
     }
 
     interface TabsObj {
