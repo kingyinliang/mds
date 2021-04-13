@@ -166,7 +166,7 @@
                         </el-input>
                     </template>
                 </el-table-column>
-                <el-table-column label="风速" :show-overflow-tooltip="true" width="140">
+                <el-table-column label="风速" :show-overflow-tooltip="true" width="150">
                     <template slot="header">
                         <span class="notNull">* </span>风速
                     </template>
@@ -178,7 +178,7 @@
                             :disabled="!(isRedact&& isStatus !== 'C' && isStatus !== 'D' && isStatus !== 'P' && scope.row.status !== 'C' && scope.row.status !== 'D' && scope.row.status !== 'P')"
                             @input="(val)=>oninput(val,scope.row,'windSpeed')"
                         >
-                            <span slot="suffix">m/s</span>
+                            <span slot="suffix">r/min</span>
                         </el-input>
                     </template>
                 </el-table-column>
@@ -1272,6 +1272,15 @@
 
         // 处理小数点后两位
         oninput(val, target, prop) {
+            if (prop === 'windSpeed') {
+                if (val >= 99999.99) {
+                    this.$errorToast('超过温度限制');
+                    target[prop] = null
+                } else {
+                    target[prop] = (val.match(/^\d*(\.?\d{0,5})/g)[0]) || null
+                }
+                return
+            }
             // 通过正则过滤小数点后两位
             if (val >= 99.99) {
                 this.$errorToast('超过温度限制');
