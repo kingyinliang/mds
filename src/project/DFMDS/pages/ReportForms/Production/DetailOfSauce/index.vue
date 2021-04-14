@@ -71,11 +71,11 @@
         // data table area setting
         get dataTableSetting() {
             // 总列数
-            const columnCount: number = (getDays(this.currentMonth) + 1) * 4 + 3;
+            const columnCount: number = (getDays(this.currentMonth) + 1) * 4 + 2;
             const merges: string[] = []
-            let pos = 3
+            let pos = 2
             for (let i = 0; i < columnCount; i++) {
-                if (i < 3) {
+                if (i < 2) {
                     merges.push(`${ceils[i]}1:${ceils[i]}2`)
                     continue;
                 }
@@ -96,22 +96,34 @@
                 column: [
                     {
                         prop: 'largeClassName',
-                        label: '品项',
+                        label: '品项大类',
                         width: '140',
                         minWidth: '140'
                     },
                     {
                         prop: 'materialCode',
-                        label: '成品料号',
-                        minWidth: '120'
-                    },
-                    {
-                        prop: 'materialName',
                         label: '成品描述',
-                        minWidth: '120',
-                        width: 140
-                        // formatter: row => row.materialName + ' ' + row.materialCode
+                        minWidth: 160,
+                        showOverFlowTooltip: true,
+                        formatter: row => {
+                            if (row.materialCode !== '合计') {
+                                return row.materialName + ' ' + row.materialCode
+                            }
+                            return '合计'
+                        }
                     },
+                    // {
+                    //     prop: 'materialCode',
+                    //     label: '成品料号',
+                    //     minWidth: '120'
+                    // },
+                    // {
+                    //     prop: 'materialName',
+                    //     label: '成品描述',
+                    //     minWidth: '120',
+                    //     width: 140
+                    //     // formatter: row => row.materialName + ' ' + row.materialCode
+                    // },
                     ...new Array(getDays(this.currentMonth) + 1).fill('').map((item, index) => {
                         let i: string | number = index;
                         if (index === 0) {
@@ -343,12 +355,12 @@
                     colspan: colspan
                 }
             }
-            if ((columnIndex === 1 || columnIndex === 2) && row.materialCode === '合计') {
-                return {
-                    rowspan: 1,
-                    colspan: columnIndex === 1 ? 2 : 0
-                }
-            }
+            // if ((columnIndex === 1 || columnIndex === 2) && row.materialCode === '合计') {
+            //     return {
+            //         rowspan: 1,
+            //         colspan: columnIndex === 1 ? 2 : 0
+            //     }
+            // }
         }
     }
 
