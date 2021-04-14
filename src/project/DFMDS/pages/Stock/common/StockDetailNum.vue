@@ -2,7 +2,7 @@
     <div class="stock-image">
         <div class="stock-image_content">
             <div class="stock-image_info stock-image_info_left">
-                <i class="iconfont factory-chejianguanli" />
+                <!-- <i class="iconfont factory-chejianguanli" /> -->
                 <!-- <img src="~DFMDS/assets/img/stockScan.png" alt=""> -->
                 <image-comp :s3-path="currentData.s3Path" height="70px" />
             </div>
@@ -89,7 +89,7 @@
             }
             img {
                 position: absolute;
-                top: 60%;
+                top: 50%;
                 left: 50%;
                 transform: translate(-50%, -50%);
             }

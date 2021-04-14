@@ -184,6 +184,16 @@
                     if (!item.useType) {
                         item.useType = '正常领料'
                     }
+                    // 如果选了批次，当前库存展示当前批次的，如果没有批次，当前库存展示所有批次的总和
+                    if (item.batch) {
+                        const obj = item.stoPackageMaterialStorageResponseDtoList.find(row => row.batch === item.batch)
+                        item.storage = obj?.currentAmount
+                        return
+                    }
+                    item.storage = 0
+                    item.stoPackageMaterialStorageResponseDtoList.map(row => {
+                        item.storage += row.currentAmount
+                    })
                 })
                 this.tableData = JSON.parse(JSON.stringify(data.data));
                 this.OrgTableData = JSON.parse(JSON.stringify(data.data));

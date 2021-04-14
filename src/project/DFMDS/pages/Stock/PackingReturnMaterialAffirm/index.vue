@@ -94,6 +94,7 @@
 <script lang="ts">
     import { Vue, Component } from 'vue-property-decorator';
     import { AUDIT_API, COMMON_API, PKG_API } from 'common/api/api';
+import { dateFormat } from 'src/utils/utils';
     // import { dateFormat } from 'src/utils/utils';
     // import { dateFormat } from 'utils/utils';
 
@@ -109,7 +110,7 @@
         }
 
         postForm = {
-            pstngDate: '',
+            pstngDate: dateFormat(new Date(), 'yyyy-MM-dd'),
             headerText: ''
         };
 
@@ -230,12 +231,11 @@
             {
                 prop: 'unit',
                 label: '单位',
-                minwidth: '80',
-                onclick: true
+                minwidth: '80'
             },
             {
                 prop: 'productLine',
-                label: '线别',
+                label: '产线',
                 minwidth: '100'
             },
             {
