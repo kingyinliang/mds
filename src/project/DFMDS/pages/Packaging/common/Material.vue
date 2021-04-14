@@ -312,7 +312,8 @@
                             posnr: item.posnr,
                             receiveMaterial: item.receiveMaterial,
                             startStocks: item.startStocks,
-                            item: [item]
+                            item: [item],
+                            packageStorageId: item.packageStorageId
                         })
                     }
                 } else if (item.delFlag === 1) {
@@ -348,7 +349,8 @@
                                 posnr: item.posnr,
                                 receiveMaterial: item.receiveMaterial,
                                 startStocks: item.startStocks,
-                                item: [item]
+                                item: [item],
+                                packageStorageId: item.packageStorageId
                             })
                         }
                     }
@@ -378,7 +380,8 @@
                         posnr: item.posnr,
                         receiveMaterial: item.receiveMaterial,
                         startStocks: item.startStocks,
-                        item: [item]
+                        item: [item],
+                        packageStorageId: item.packageStorageId
                     })
                 }
             });
@@ -530,6 +533,7 @@
             row.startStocks = filterArr[0].storageAmount
             row.manufactor = filterArr[0].manufactor
             row.manufactorName = filterArr[0].manufactorName
+            row.packageStorageId = filterArr[0].packageStorageId || 'xxxxxx'
         }
 
         // 处理数据1
@@ -817,6 +821,7 @@ interface MaterialMap{
     changer?: string;
     changed?: string;
     item?: MaterialMap[];
+    packageStorageId?: string; // 包材线边库id
 }
 interface PkgMaterialObj {
     packingMaterialDelete: string[];

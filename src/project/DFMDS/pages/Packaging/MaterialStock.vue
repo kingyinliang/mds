@@ -370,7 +370,7 @@ export default class MaterialStock extends Vue {
     amout = 0
 
     mounted() {
-        this.getProductline();
+        // this.getProductline();
         // this.getMoveType();
         // this.$nextTick(() => {
         //     this.$refs.queryTable.getDataList(true)
@@ -383,16 +383,16 @@ export default class MaterialStock extends Vue {
     // createdEnd() {
     // }
 
-    // 拉取所有产线
-    getProductline() {
-        PKG_API.PKG_MATERIALSTOCK_TRANSFERDEPTNAME_API({
-            factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
-            deptType: ['PRODUCT_LINE'],
-            deptName: '包装'
-        }).then(({ data }) => {
-            this.productlineList = data.data
-        });
-    }
+    // // 拉取所有产线
+    // getProductline() {
+    //     PKG_API.PKG_MATERIALSTOCK_TRANSFERDEPTNAME_API({
+    //         factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
+    //         deptType: ['PRODUCT_LINE'],
+    //         deptName: '包装'
+    //     }).then(({ data }) => {
+    //         this.productlineList = data.data
+    //     });
+    // }
 
     // 调整类型
     getMoveType() {
@@ -444,7 +444,9 @@ export default class MaterialStock extends Vue {
     changeTransferLine(row: object) {
         this.amout = row['storageAmount']
         this.productlineListFilter = [];
-        this.productlineListFilter = this.productlineList.filter(n => n['id'] !== row['productLine']);
+        console.log(this.$refs.queryTable.optionLists.productLine)
+        // this.productlineListFilter = this.productlineList.filter(n => n['id'] !== row['productLine']);
+        this.productlineListFilter = this.$refs.queryTable.optionLists.productLine.filter(n => n['id'] !== row['productLine']);
         this.transferForm = {
             packageStorageId: row['id'],
             productLineOut: row['productLine'],

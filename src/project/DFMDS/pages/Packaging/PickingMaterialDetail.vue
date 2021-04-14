@@ -15,9 +15,12 @@
                                 {{ scope.row.materialName + ' ' + scope.row.materialCode }}
                             </template>
                         </el-table-column>
-                        <el-table-column label="单位" prop="unit" width="50" :show-overflow-tooltip="true" />
+                        <el-table-column label="单位" prop="unit" width="50" :show-overflow-tooltip="true">
+                            <template slot-scope="scope">
+                                {{ scope.row.unitName || scope.row.unit }}
+                            </template>
+                        </el-table-column>
                         <el-table-column label="需求用量" prop="needNum" width="100" :show-overflow-tooltip="true" />
-                        <el-table-column label="当前库存" prop="storage" width="100" :show-overflow-tooltip="true" />
                         <el-table-column width="70">
                             <template slot-scope="scope">
                                 <el-button :disabled="!(isRedact && scope.row.status !== '3')" type="text" @click="SplitDate(scope.row, scope.$index)">
@@ -25,6 +28,7 @@
                                 </el-button>
                             </template>
                         </el-table-column>
+                        <el-table-column label="当前库存" prop="storage" width="100" :show-overflow-tooltip="true" />
                         <el-table-column label="领料类型" min-width="140">
                             <template slot="header">
                                 <span class="notNull">* </span>领料类型
@@ -288,7 +292,7 @@
 
         //设置合并行
         spanMethod({ rowIndex, columnIndex }) {
-            if (columnIndex <= 4) {
+            if (columnIndex <= 3) {
                 return {
                     rowspan: this.spanArr[rowIndex],
                     colspan: this.spanArr[rowIndex] > 0 ? 1 : 0

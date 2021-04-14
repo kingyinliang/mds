@@ -28,6 +28,7 @@
                     <el-select v-model="formatDate.materialUse" placeholder="请选择">
                         <el-option label="发料" value="F" />
                         <el-option label="入库" value="R" />
+                        <el-option label="不良退料" value="B" />
                     </el-select>
                 </el-form-item>
             </el-form>

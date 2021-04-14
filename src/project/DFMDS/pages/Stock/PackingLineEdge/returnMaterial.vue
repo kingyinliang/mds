@@ -23,9 +23,9 @@
                             提交
                         </el-button>
                     </template>
-                    <el-table :data="tableData" class="newTable" header-row-class-name="tableHead" height="450px" @selection-change="selectHandler">
+                    <el-table :data="tableData" class="newTable" header-row-class-name="tableHead" height="450px" border @selection-change="selectHandler">
                         <el-table-column type="index" fixed="left" />
-                        <el-table-column type="selection" fixed="left" />
+                        <el-table-column type="selection" fixed="left" :selectable="selectableHandler" />
                         <el-table-column label="状态" prop="statusName" show-overflow-tooltip />
                         <el-table-column label="包材物料" prop="materialCode" width="140px" show-overflow-tooltip>
                             <template slot-scope="scope">
@@ -37,7 +37,7 @@
                         <el-table-column label="模具号" prop="mouldCode" show-overflow-tooltip />
                         <el-table-column label="移动类型" prop="moveType" width="100px" show-overflow-tooltip />
                         <el-table-column label="数量" prop="moveAmount" show-overflow-tooltip />
-                        <el-table-column label="单位" prop="moveUnit" show-overflow-tooltip />
+                        <el-table-column label="单位" prop="moveUnitName" show-overflow-tooltip />
                         <el-table-column label="订单" prop="orderNo" width="120px" show-overflow-tooltip />
                         <el-table-column label="线别" prop="productLineName" width="170px" show-overflow-tooltip />
                         <el-table-column label="操作人" prop="changer" width="140px" show-overflow-tooltip />
@@ -139,7 +139,7 @@ export default class PackingLineEdge extends Vue {
             {
                 type: 'input',
                 label: '单位',
-                prop: 'moveUnit',
+                prop: 'moveUnitName',
                 disabled: true
             },
             {
@@ -224,6 +224,10 @@ export default class PackingLineEdge extends Vue {
         this.$refs.queryTable.getDataList(true)
     }
 
+    selectableHandler(row) {
+        return row.status !== 'M'
+    }
+
     // 调整类型
     getMoveType() {
         COMMON_API.DICTQUERY_API({ dictType: 'COMMON_ADJUST_TYPE' }).then(({ data }) => {
@@ -263,7 +267,8 @@ export default class PackingLineEdge extends Vue {
         this.isAdd = true
         this.$refs.dialog.init({
             ...packageInfo,
-            moveUnit: packageInfo.storageUnit,
+            moveUnitName: packageInfo.storageUnit,
+            moveUnit: packageInfo.storageUnitCode,
             changed: dateFormat(new Date(), 'yyyy-MM-dd hh:mm:ss'),
             changer: getUserNameNumber()
         })
