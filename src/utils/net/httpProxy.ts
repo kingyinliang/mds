@@ -3,6 +3,7 @@ import axios from 'axios';
 import router from '@/router';
 import { HTTP_METHOD, HTTP_RESPONSE_STATE } from './http';
 import { Notification, Loading } from 'element-ui';
+import { loginHttp } from 'utils/utils.ts';
 const http = axios.create({
     timeout: 1000
 });
@@ -74,7 +75,8 @@ http.interceptors.response.use(
         } else if (response.data && response.data.code === HTTP_RESPONSE_STATE.EXPIRED_TOKEN) {
             Vue['cookie'].delete('token');
             router.options.isAddDynamicMenuRoutes = false;
-            window.location.href = `${process.env.VUE_APP_HOST}`;
+            // window.location.href = `${process.env.VUE_APP_HOST}`;
+            loginHttp(response.data)
             tryHideFullScreenLoading(); // 关闭遮罩
             return Promise.reject(response);
         } else if (response.data && response.data.code === HTTP_RESPONSE_STATE.WARNING) {
