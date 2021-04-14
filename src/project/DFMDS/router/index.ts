@@ -44,9 +44,8 @@ const mainRoutes: RouteConfig = {
 };
 
 const router = new VueRouter({
-    // mode: 'history',
-    mode: 'hash',
-    base: process.env.BASE_URL,
+    mode: 'history',
+    base: process.env.BASE_URL + 'DFMDS.html',
     isAddDynamicMenuRoutes: false,
     routes: globalRoutes.concat(mainRoutes)
 } as RouterOptions);
@@ -56,7 +55,8 @@ router.beforeEach((to, from, next) => {
         return next();
     }
     COMMON_API.NAV_API({
-        factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id
+        factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
+        tenant: 'MDS'
     }).then(({ data }) => {
         if (data && data.code === 200) {
             const AddRoutesClass = new AddRoutes(router, mainRoutes, []);
