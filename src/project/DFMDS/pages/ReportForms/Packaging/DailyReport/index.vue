@@ -168,13 +168,13 @@
                 {
                     prop: 'materialName',
                     label: '生产物料',
-                    minWidth: '300',
+                    minWidth: '350',
                     hide: false,
                     fixed: false,
                     showOverFlowTooltip: true,
                     subLabel: '',
                     dataType: 'multi',
-                    data: ['materialCode', 'materialName']
+                    data: ['materialName', 'materialCode']
                 },
                 {
                     prop: 'theoryNum',
@@ -199,11 +199,11 @@
                 {
                     prop: 'useMaterialName',
                     label: '包材物料',
-                    minWidth: '300',
+                    minWidth: '350',
                     hide: false,
                     fixed: false,
                     showOverFlowTooltip: true,
-                    dataType: 'default',
+                    dataType: 'multi',
                     data: ['useMaterialName', 'useMaterialCode']
                 },
                 {

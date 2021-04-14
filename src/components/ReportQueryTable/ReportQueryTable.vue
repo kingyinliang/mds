@@ -3,7 +3,7 @@
  * @Anthor: Telliex
  * @Date: 2021-02-26 10:58:05
  * @LastEditors: Telliex
- * @LastEditTime: 2021-04-09 18:31:28
+ * @LastEditTime: 2021-04-13 19:52:10
 -->
 <template>
     <div>
@@ -108,71 +108,73 @@
                     <slot name="mds-button-middle" />
                 </el-col>
             </el-row>
-            <el-table
-                v-if="dataTableSetting.showIt"
-                ref="table"
-                class="newTable"
-                :class="dataTableSetting.tableClass"
-                :data="dataTableSetting.showPagination ? tableData.slice((currentPage - 1) * currentSize, (currentPage - 1) * currentSize + currentSize) : tableData"
-                :height="dataTableSetting.tableHeightSet"
-                :span-method="spanMethod"
-                border
-                size="small"
-                tooltip-effect="dark"
-                :header-row-class-name="tableHead"
-                :header-cell-style="tableHeaderCellStyle"
-                style="width: 100%; margin-bottom: 20px;"
-                :show-summary="dataTableSetting.tableAttributes.isShowSummary"
-                :summary-method="getSummaries"
-                @selection-change="handleSelectionChange"
-            >
-                <el-table-column v-if="dataTableSetting.showSelectColumn" :selectable="selectableFn" type="selection" width="50px" fixed />
-                <el-table-column v-if="dataTableSetting.showIndexColumn" type="index" :index="indexMethod" label="序号" width="50px" fixed />
-                <template v-for="(item, index) in dataTableSetting.column">
-                    <el-table-column v-if="!item.hide" :key="item.prop + '' + index" :fixed="item.fixed" :prop="item.prop" :label="item.label" :width="item.width || ''" :min-width="item.minWidth || ''" :formatter="item.formatter" :show-overflow-tooltip="(item.showOverFlowTooltip? false : true)">
-                        <template slot="header">
-                            {{ item.label }} <span v-if="item.subLabel" style="font-size: 10px;">{{ item.subLabel }}</span>
-                        </template>
-                        <template v-if="item.child">
-                            <el-table-column v-for="child in item.child" :key="child.prop" :prop="child.prop" :label="child.label" :formatter="child.formatter" :show-overflow-tooltip="child.showOverFlowTooltip" :width="child.width || ''">
-                                <template slot="header">
-                                    {{ child.label }} <span v-if="child.subLabel" style="font-size: 10px;">{{ child.subLabel }}</span>
+            <div class="data-table">
+                <el-table
+                    v-if="dataTableSetting.showIt"
+                    ref="table"
+                    class="newTable"
+                    :class="dataTableSetting.tableClass"
+                    :data="dataTableSetting.showPagination ? tableData.slice((currentPage - 1) * currentSize, (currentPage - 1) * currentSize + currentSize) : tableData"
+                    :height="dataTableSetting.tableHeightSet"
+                    :span-method="spanMethod"
+                    border
+                    size="small"
+                    tooltip-effect="dark"
+                    :header-row-class-name="tableHead"
+                    :header-cell-style="tableHeaderCellStyle"
+                    style="width: 100%; margin-bottom: 20px; font-size: 14px;"
+                    :show-summary="dataTableSetting.tableAttributes.isShowSummary"
+                    :summary-method="getSummaries"
+                    @selection-change="handleSelectionChange"
+                >
+                    <el-table-column v-if="dataTableSetting.showSelectColumn" :selectable="selectableFn" type="selection" width="50px" fixed />
+                    <el-table-column v-if="dataTableSetting.showIndexColumn" type="index" :index="indexMethod" label="序号" width="50px" fixed />
+                    <template v-for="(item, index) in dataTableSetting.column">
+                        <el-table-column v-if="!item.hide" :key="item.prop + '' + index" :fixed="item.fixed" :prop="item.prop" :label="item.label" :width="item.width || ''" :min-width="item.minWidth || ''" :formatter="item.formatter" :show-overflow-tooltip="(item.showOverFlowTooltip)">
+                            <template slot="header">
+                                {{ item.label }} <span v-if="item.subLabel" style="font-size: 10px;">{{ item.subLabel }}</span>
+                            </template>
+                            <template v-if="item.child">
+                                <el-table-column v-for="child in item.child" :key="child.prop" :prop="child.prop" :label="child.label" :formatter="child.formatter" :show-overflow-tooltip="child.showOverFlowTooltip" :width="child.width || ''">
+                                    <template slot="header">
+                                        {{ child.label }} <span v-if="child.subLabel" style="font-size: 10px;">{{ child.subLabel }}</span>
+                                    </template>
+                                </el-table-column>
+                            </template>
+                            <template slot-scope="scope">
+                                <!-- array content -->
+                                <template v-if="item.dataType==='list'">
+                                    <ul v-if="scope.row[item.prop].length===1">
+                                        <li v-for="(subChild,subIndex) in scope.row[item.prop]" :key="subIndex" style="cursor: pointer;" @click="goParentAction(scope.row,scope.$index)">
+                                            {{ subChild }}
+                                        </li>
+                                    </ul>
+                                    <ul v-else>
+                                        <li v-for="(subChild,subIndex) in scope.row[item.prop]" :key="subIndex">
+                                            {{ subChild }}
+                                        </li>
+                                    </ul>
                                 </template>
-                            </el-table-column>
-                        </template>
+                                <!-- multi props content -->
+                                <template v-else-if="item.dataType==='multi'">
+                                    <span v-for="(subChild,subIndex) in item.data" :key="subIndex" style="margin-right: 5px;">
+                                        {{ scope.row[subChild] }}
+                                    </span>
+                                </template>
+                                <!-- single props content -->
+                                <template v-else>
+                                    {{ item.formatter ? item.formatter(scope.row, scope.column) : scope.row[item.prop] }}
+                                </template>
+                            </template>
+                        </el-table-column>
+                    </template>
+                    <el-table-column v-if="dataTableSetting.showOperationColumn" label="操作" fixed="right">
                         <template slot-scope="scope">
-                            <!-- array content -->
-                            <template v-if="item.dataType==='list'">
-                                <ul v-if="scope.row[item.prop].length===1">
-                                    <li v-for="(subChild,subIndex) in scope.row[item.prop]" :key="subIndex" style="cursor: pointer;" @click="goParentAction(scope.row,scope.$index)">
-                                        {{ subChild }}
-                                    </li>
-                                </ul>
-                                <ul v-else>
-                                    <li v-for="(subChild,subIndex) in scope.row[item.prop]" :key="subIndex">
-                                        {{ subChild }}
-                                    </li>
-                                </ul>
-                            </template>
-                            <!-- multi props content -->
-                            <template v-else-if="item.dataType==='multi'">
-                                <span v-for="(subChild,subIndex) in item.data" :key="subIndex" style="margin-right: 5px;">
-                                    {{ scope.row[subChild] }}
-                                </span>
-                            </template>
-                            <!-- single props content -->
-                            <template v-else>
-                                {{ item.formatter ? item.formatter(scope.row, scope.column) : scope.row[item.prop] }}
-                            </template>
+                            <slot :scope="scope" name="operation_column" />
                         </template>
                     </el-table-column>
-                </template>
-                <el-table-column v-if="dataTableSetting.showOperationColumn" label="操作" fixed="right">
-                    <template slot-scope="scope">
-                        <slot :scope="scope" name="operation_column" />
-                    </template>
-                </el-table-column>
-            </el-table>
+                </el-table>
+            </div>
             <slot name="showTableOther" />
             <slot v-if="!dataTableSetting.showIt" name="card-main" />
             <el-row v-if="dataTableSetting.showPagination===true && dataTableSetting.showIt === true && tableData.length!==0">
@@ -708,6 +710,23 @@
 .searchCard >>> .marked .el-form-item__label::before {
     color: #f00;
     content: "* ";
+}
+
+.dialog-footer {
+    margin-top: 10px;
+    text-align: right;
+}
+
+.data-table >>> .el-table__body-wrapper::-webkit-scrollbar-thumb {
+    width: 1px;
+    background: #ccc;
+    border: none;
+}
+
+.data-table >>> .el-table__body-wrapper::-webkit-scrollbar {
+    width: 6px;
+    height: 8px;
+    color: #ccc;
 }
 </style>
 

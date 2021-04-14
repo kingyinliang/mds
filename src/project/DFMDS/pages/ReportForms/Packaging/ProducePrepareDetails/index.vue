@@ -141,7 +141,7 @@
                 {
                     prop: 'productLineName',
                     label: '生产产线',
-                    minWidth: '300',
+                    minWidth: '260',
                     hide: false,
                     fixed: false,
                     showOverFlowTooltip: true,
@@ -150,7 +150,7 @@
                 {
                     prop: 'materialName',
                     label: '生产物料',
-                    minWidth: '300',
+                    minWidth: '350',
                     hide: false,
                     fixed: false,
                     showOverFlowTooltip: true,
@@ -206,7 +206,7 @@
                 {
                     prop: 'dayPrepaired',
                     label: '生产前准备',
-                    width: '80',
+                    width: '100',
                     hide: false,
                     fixed: false,
                     showOverFlowTooltip: true,
@@ -215,7 +215,7 @@
                 {
                     prop: 'dayClear',
                     label: '生产后清场',
-                    width: '80',
+                    width: '100',
                     hide: false,
                     fixed: false,
                     showOverFlowTooltip: true,

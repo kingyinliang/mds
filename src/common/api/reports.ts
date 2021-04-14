@@ -3,7 +3,7 @@
  * @Anthor: Telliex
  * @Date: 2021-01-27 15:06:29
  * @LastEditors: Telliex
- * @LastEditTime: 2021-04-09 16:26:50
+ * @LastEditTime: 2021-04-12 20:12:30
  */
 import httpProxy from 'utils/net/httpProxy';
 
@@ -119,7 +119,11 @@ const REPORTS_API = {
     /**
      * @property {string} REPORT_PACKAGING_MATERIAL_FACTORY_QUERY_API 包装车间-产量报表-查询线边仓物料厂家列表
      */
-    REPORT_PACKAGING_MATERIAL_FACTORY_QUERY_API: params => httpProxy('/pkgReportForm/product/queryManufactor', 'GET', params, 'REPORT')
+    REPORT_PACKAGING_MATERIAL_FACTORY_QUERY_API: params => httpProxy('/pkgReportForm/product/queryManufactor', 'GET', params, 'REPORT'),
+    /**
+     * @property {string} REPORT_PACKAGING_MATERIAL_BATCH_QUERY_API 包装车间-产量报表-查询线边仓物料批次列表
+     */
+    REPORT_PACKAGING_MATERIAL_BATCH_QUERY_API: params => httpProxy('/pkgReportForm/product/queryPackingMaterialBatchDropDown', 'GET', params, 'REPORT')
 };
 
 export default REPORTS_API;

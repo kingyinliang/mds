@@ -126,32 +126,48 @@
                     resData: 'data',
                     label: ['dictValue', 'dictCode'],
                     value: 'dictCode'
-                }
+                },
+                linkageProp: ['batch']
             },
             // TODO
-            //  {
-            //     type: 'select',
-            //     hide: false, // hide column
-            //     label: '批次',
-            //     prop: 'materialCode',
-            //     defaultValue: '',
-            //     labelWidth: '80',
-            //     width: '160',
-            //     clearable: true,
-            //     marked: false, // mark it
-            //     disabled: false,
-            //     defaultOptionsFn: () => {
-            //         return REPORTS_API.REPORT_PACKAGING_OEE_MATERIAL_QUERY_API({
-            //             workShop: '',
-            //             productLine: ''
-            //         })
-            //     },
-            //     resVal: {
-            //         resData: 'data',
-            //         label: ['materialName', 'materialCode'],
-            //         value: 'materialCode'
-            //     }
-            // },
+             {
+                type: 'select',
+                hide: false, // hide column
+                label: '批次',
+                prop: 'batch',
+                defaultValue: '',
+                labelWidth: '80',
+                width: '160',
+                clearable: true,
+                marked: false, // mark it
+                disabled: false,
+                // returnValue: {
+                //     findList: 'workShop',
+                //     findId: 'deptCode',
+                //     findField: 'deptName'
+                // },
+                optionsFn: val => {
+                    return new Promise(resolve => {
+                        REPORTS_API.REPORT_PACKAGING_MATERIAL_BATCH_QUERY_API({
+                        // eslint-disable-next-line no-invalid-this
+                        workShop: this.$refs.queryTable.queryForm.workShop,
+                        materialCode: val
+                    }).then(res => {
+                            const objTemp: object[] = []
+                            res.data.data.forEach(item => {
+                                objTemp.push({ 'batch': item })
+                            })
+                            res.data.data = objTemp
+                            resolve(res);
+                        })
+                    })
+                },
+                resVal: {
+                    resData: 'data',
+                    label: ['batch'],
+                    value: 'batch'
+                }
+            },
             // TODO
             {
                 type: 'select',
@@ -203,7 +219,7 @@
                 hide: false, // hide column
                 label: '属性',
                 prop: 'moveType',
-                defaultValue: '',
+                defaultValue: 'BAD_REJECTED',
                 labelWidth: '80',
                 width: '160',
                 clearable: true,
@@ -213,7 +229,24 @@
                     { value: 'BAD_REJECTED', label: '不良退料' },
                     { value: 'NORMAL_REJECTED', label: '正常退料' },
                     { value: 'GOOD', label: '良品' }
-                ]
+                ],
+                changeToAction: val => {
+                    return new Promise((resolve) => {
+                        if (val === 'BAD_REJECTED') {
+                            // eslint-disable-next-line no-invalid-this
+                            this.queryFormData[5].marked = true;
+                            // eslint-disable-next-line no-invalid-this
+                            this.setRules()
+                            resolve([''])
+                        } else {
+                            // eslint-disable-next-line no-invalid-this
+                            this.queryFormData[5].marked = false;
+                            // eslint-disable-next-line no-invalid-this
+                            this.setRules()
+                            resolve(['startDate'])
+                        }
+                    })
+                }
             }
         ];
 
@@ -230,29 +263,21 @@
                 {
                     prop: 'productLineName',
                     label: '生产产线',
-                    minWidth: '120',
+                    width: '160',
                     hide: false,
-                    fixed: true,
-                    showOverFlowTooltip: true,
-                    dataType: 'default'
-                },
-                {
-                    prop: 'materialCode',
-                    label: '组件物料编码',
-                    width: '180',
-                    hide: false,
-                    fixed: true,
+                    fixed: false,
                     showOverFlowTooltip: true,
                     dataType: 'default'
                 },
                 {
                     prop: 'materialName',
-                    label: '组件物料名称',
-                    width: '180',
+                    label: '组件物料',
+                    minWidth: '350',
                     hide: false,
-                    fixed: true,
+                    fixed: false,
                     showOverFlowTooltip: true,
-                    dataType: 'default'
+                    dataType: 'multi',
+                    data: ['materialName', 'materialCode']
                 },
                 {
                     prop: 'moveType',
@@ -293,7 +318,7 @@
                 {
                     prop: 'manufactor',
                     label: '厂家',
-                    width: '100',
+                    width: '120',
                     hide: false,
                     fixed: false,
                     showOverFlowTooltip: true,
@@ -302,7 +327,7 @@
                 {
                     prop: 'remark',
                     label: '原因',
-                    width: '140',
+                    width: '200',
                     hide: false,
                     fixed: false,
                     showOverFlowTooltip: true,
@@ -317,10 +342,18 @@
 
         }
 
+        mounted() {
+            this.setRules();
+        }
+
         // 查询请求
         listInterface = params => {
             params.factory = JSON.parse(sessionStorage.getItem('factory') || '{}').id;
-            return REPORTS_API.REPORT_PACKAGING_OEE_API(params);
+            if (params.moveType !== 'BAD_REJECTED') {
+                params.startDate = ''
+                params.endDate = ''
+            }
+            return REPORTS_API.REPORT_PACKAGING_STORAGE_QUERY_API(params);
         };
 
         /**
@@ -357,6 +390,18 @@
                 this.$infoToast('查询无结果');
 
             }
+        }
+
+        setRules() {
+            this.queryFormSetting.rules = [];
+            this.queryFormData.forEach(item => {
+                if (item.marked === true) {
+                    this.queryFormSetting.rules.push({
+                        prop: item.prop,
+                        text: `请输入${item.label}`
+                })
+                }
+            })
         }
 
     }

@@ -6,7 +6,7 @@
                     <el-form :model="searchForm" size="small" :inline="true" label-position="left" label-width="70px" class="sole_row">
                         <el-form-item label="生产车间：" class="must-fill" label-width="80px">
                             <el-select v-model="searchForm.workshop" class="selectwpx" style="width: 140px;" clearable @change="eventChangeWorkshopOptions">
-                                <el-option v-for="(item,index) in selectTree" :key="item.targetCode+index" :label="item.targetName" :value="item.targetCode" />
+                                <el-option v-for="(item,index) in workshopList" :key="item.targetCode+index" :label="item.targetName" :value="item.targetCode" />
                             </el-select>
                         </el-form-item>
                         <el-form-item label="产线工序：">
@@ -38,7 +38,7 @@
                 </div>
             </template>
             <el-form ref="dataFormRules" :model="dataFormRules">
-                <el-table class="newTable" :data="currentFormDataGroup" :height="mainClientHeight - 52 - 39 - 47" :row-class-name="rowDelFlag" header-row-class-name="tableHead" border style="width: 100%; min-height: 90px;" @selection-change="handleSelectionChange">
+                <el-table ref="currentFormDataGroup" class="newTable" :data="currentFormDataGroup" :row-class-name="rowDelFlag" header-row-class-name="tableHead" border style="width: 100%; min-height: 90px;" @selection-change="handleSelectionChange">
                     <el-table-column
                         v-if="currentFormDataGroup.length!==0"
                         type="selection"
@@ -55,7 +55,7 @@
                             </el-select>
                         </template>
                     </el-table-column>
-                    <el-table-column prop="productLine" label="产线/工序" min-width="220" :show-overflow-tooltip="true">
+                    <el-table-column prop="productLine" label="产线/工序" min-width="260" :show-overflow-tooltip="true">
                         <template slot-scope="scope">
                             <el-select v-model="scope.row.productLine" filterable placeholder="请选择" size="small" :disabled="!scope.row.isRedact" clearable>
                                 <el-option v-for="(item, index) in scope.row.tempProductLineList" :key="item.targetCode+index" :label="item.targetName" :value="item.targetCode" />
@@ -77,7 +77,7 @@
                             </el-select>
                         </template>
                     </el-table-column>
-                    <el-table-column prop="team" min-width="160" label="班组" :show-overflow-tooltip="true">
+                    <el-table-column prop="team" min-width="260" label="班组" :show-overflow-tooltip="true">
                         <template slot-scope="scope">
                             <el-select v-model="scope.row.team" size="small" clearable :disabled="!scope.row.isRedact">
                                 <el-option
@@ -193,7 +193,7 @@
 
 
 <script lang="ts">
-    import { Vue, Component } from 'vue-property-decorator';
+    import { Vue, Watch, Component } from 'vue-property-decorator';
     import { dateFormat, getUserNameNumber, getDateDiff } from 'utils/utils';
     import { COMMON_API } from 'common/api/api';
     // import _ from 'lodash';
@@ -214,6 +214,7 @@
     export default class Attendance extends Vue {
 
         $refs: {
+            currentFormDataGroup: HTMLFormElement;
             dataFormRules: HTMLFormElement;
             officialWorker: HTMLFormElement;
             loanedPersonnel: HTMLFormElement;
@@ -235,7 +236,6 @@
         currentProductLine=''
         currentEvaluationStartDate=''
         currentEvaluationEndDate=''
-        selectTree: OptionsTreeList[]=[] // 选单结构树
         workshopList: OptionsInList[]=[] // 车间清单
         productLineList: OptionsInList[]=[] // 产线清单
         classesOptions: OptionsInList[]=[] // 班次清单
@@ -289,56 +289,11 @@
 
     mounted() {
         // 获取车间下拉
-        COMMON_API.ORG_QUERY_WORKSHOP_API({
-            factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
-            deptType: ['WORK_SHOP']
-        }).then(({ data }) => {
-            this.workshopList = []
-            data.data.forEach(item => {
-                this.workshopList.push({ targetCode: item.deptCode, targetName: item.deptName })
-                this.selectTree.push({ targetCode: item.deptCode, targetName: item.deptName, productLine: [], team: [] })
-
-                this.selectTree.forEach(element => {
-
-                        COMMON_API.ORG_QUERY_CHILDREN_API({
-                            parentId: element.targetCode || '',
-                            deptType: 'PRODUCT_LINE'
-
-                        }).then(({ data: target }) => {
-                            element.productLine = []
-                            target.data.forEach(items => {
-                                element.productLine.push({ targetCode: items.deptCode, targetName: items.deptName })
-                            })
-                        })
-
-                        // if (element.targetName !== '发酵车间') {
-
-                            COMMON_API.SYS_CHILDTYPE_API({
-                                factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
-                                deptType: ['PRODUCT_TEAM'],
-                                deptName: element.targetName.substring(0, 2)
-
-                            }).then(({ data: target }) => {
-                                element.team = []
-                                if (target.data !== null) {
-                                    target.data.forEach(items => {
-                                        element.team.push({ targetCode: items.deptCode, targetName: items.deptName })
-                                    });
-                                }
-
-                            });
-                        // }
-                })
-            })
-
-        })
-
-
+        this.getWorkShops()
         // 获取人员属性下拉
         COMMON_API.DICTQUERY_API({ dictType: 'COMMON_USER_TYPE' }).then(({ data }) => {
             this.userTypeList = data.data
         });
-
         // 获取班次下拉
         COMMON_API.DICTQUERY_API({ dictType: 'COMMON_CLASSES' }).then(({ data }) => {
             this.classesOptions = []
@@ -352,8 +307,68 @@
 
     }
 
+        /* 重新渲染table组件 */
+        @Watch('currentFormDataGroup')
+        doLayout() {
+            this.$nextTick(() => {
+                this.$refs.currentFormDataGroup.doLayout()
+            })
+        }
+
+
         get mainClientHeight() {
+            console.log('this.$store.state.common.mainClientHeight')
+            console.log(this.$store.state.common.mainClientHeight)
             return this.$store.state.common.mainClientHeight;
+        }
+
+        // 获取车间下拉
+        getWorkShops() {
+            COMMON_API.ORG_QUERY_WORKSHOP_API({
+                factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
+                deptType: ['WORK_SHOP']
+            }).then(({ data }) => {
+                this.workshopList = []
+                data.data.forEach(item => {
+                    this.workshopList.push({ targetCode: item.deptCode, targetName: item.deptName })
+                })
+            })
+        }
+
+        // 获取生产工序下拉
+        getProductProcess(val) {
+            return new Promise(resolve => {
+                COMMON_API.ORG_QUERY_CHILDREN_API({
+                    parentId: val,
+                    deptType: 'PRODUCT_LINE'
+                }).then(({ data }) => {
+                    const tempProductLineList: OptionsInList[] = [];
+                    data.data.forEach(items => {
+                        tempProductLineList.push({ targetCode: items.deptCode, targetName: items.deptName })
+                    })
+                    resolve(tempProductLineList)
+                })
+            })
+        }
+
+        // 获取班组
+        getTeam(targetName) {
+            return new Promise(resolve => {
+                COMMON_API.SYS_CHILDTYPE_API({
+                    factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
+                    deptType: ['PRODUCT_TEAM'],
+                    deptName: targetName.substring(0, 2)
+
+                }).then(({ data: target }) => {
+                    const tempTeamList: OptionsInList[] = []
+                    if (target.data !== null) {
+                        target.data.forEach(items => {
+                            tempTeamList.push({ targetCode: items.deptCode, targetName: items.deptName })
+                        });
+                    }
+                    resolve(tempTeamList)
+                });
+            })
         }
 
         // 切换页码
@@ -373,11 +388,11 @@
                     this.currentFormDataGroup = data.data.records
 
                     // 对回传参数加工
-                    this.currentFormDataGroup.forEach(item => {
-                        item.tempWorkshopList = this.selectTree
-                        item.tempProductLineList = this.selectTree.filter(element => element.targetCode === this.currentWorkshop)[0].productLine
-                        item.tempTeamOptionsList = this.selectTree.filter(element => element.targetCode === this.currentWorkshop)[0].team
-                        item.isRedact = false
+                    this.currentFormDataGroup.forEach(async item => {
+                        this.$set(item, 'tempWorkshopList', this.workshopList)
+                        this.$set(item, 'tempProductLineList', await this.getProductProcess(item.workShop) as OptionsInList[])
+                        this.$set(item, 'tempTeamOptionsList', await this.getTeam(this.workshopList.filter(element => element.targetCode === item.workShop)[0].targetName as string) as OptionsInList[])
+                        this.$set(item, 'isRedact', false)
                     })
                     this.totalCount = data.data.total
                 }
@@ -395,19 +410,19 @@
                 current: this.currPage,
                 checkWorkDate: obj.evaluationStartDate,
                 checkWorkEndDate: obj.evaluationEndDate
-                }).then(({ data }) => {
-                    this.checkSaveStatus = false
-                    console.log('查寻结果')
-                    console.log(data)
+            }).then(({ data }) => {
+                this.checkSaveStatus = false
+                console.log('查寻结果')
+                console.log(data)
                 if (data.data.records && data.data.records.length !== 0) {
-                    this.currentFormDataGroup = data.data.records
+                    this.currentFormDataGroup = JSON.parse(JSON.stringify(data.data.records))
                     this.orgFormDataGroup = JSON.parse(JSON.stringify(this.currentFormDataGroup))
                     // 对回传参数加工
-                    this.currentFormDataGroup.forEach(item => {
-                        item.tempWorkshopList = this.selectTree
-                        item.tempProductLineList = this.selectTree.filter(element => element.targetCode === obj.workshop)[0].productLine
-                        item.tempTeamOptionsList = this.selectTree.filter(element => element.targetCode === obj.workshop)[0].team
-                        item.isRedact = false
+                    this.currentFormDataGroup.forEach(async item => {
+                        this.$set(item, 'tempWorkshopList', this.workshopList)
+                        this.$set(item, 'tempProductLineList', await this.getProductProcess(item.workShop) as OptionsInList[])
+                        this.$set(item, 'tempTeamOptionsList', await this.getTeam(this.workshopList.filter(element => element.targetCode === item.workShop)[0].targetName as string) as OptionsInList[])
+                        this.$set(item, 'isRedact', false)
                     })
                     this.totalCount = data.data.total
 
@@ -480,21 +495,13 @@
                         }).then(() => {
                             this.$successToast('操作成功');
                             this.checkSaveStatus = false
-                            // this.currPage = 1;
-                            // this.totalCount = 1
-                            // this.pageSize = 10
-                            // this.getDataList()
                             this.currentFormDataGroup.forEach(item => {
                                 item.isRedact = false
                             })
-
+                            this.btnGetResult(this.searchForm)
                     })
                 } else {
                         this.checkSaveStatus = false
-                        // this.currPage = 1;
-                        // this.totalCount = 1
-                        // this.pageSize = 10
-                        // this.getDataList()
                 }
             }
         }
@@ -508,17 +515,17 @@
         }
 
         // 标头下拉生产车间操作
-        eventChangeWorkshopOptions(val) {
+        async eventChangeWorkshopOptions(val) {
             if (val !== '') {
-                this.productLineList = this.selectTree.filter(item => item.targetCode === val)[0].productLine
+                this.productLineList = await this.getProductProcess(val) as OptionsInList[];
             }
         }
 
         // table 下拉生产车间操作
-        eventChangeRowWorkshopOptions(row) {
+        async eventChangeRowWorkshopOptions(row) {
+            row.productLine = ''
             row.tempProductLineList = []
-            row.tempProductLineList = this.selectTree.filter(item => item.targetCode === row.workShop)[0].productLine
-
+            row.tempProductLineList = await this.getProductProcess(row.workShop)
             // 获取班组
             this.getTeamList(row)
         }
@@ -540,7 +547,7 @@
         }
 
         // 新增
-        btnAddDataRow() {
+        async btnAddDataRow() {
             const sole: CurrentDataTable = {
                     classes: '',
                     jobContent: '',
@@ -561,7 +568,7 @@
                     delFlag: 0,
                     tempProductLineList: this.productLineList,
                     tempWorkshopList: this.workshopList,
-                    tempTeamOptionsList: this.searchForm.workshop !== '' ? this.selectTree.filter(item => item.targetCode === this.searchForm.workshop)[0].team : [],
+                    tempTeamOptionsList: this.searchForm.workshop !== '' ? await this.getTeam(this.workshopList.filter(item => item.targetCode === this.searchForm.workshop)[0].targetName) as OptionsInList[] : [],
                     isRedact: true
                 }
             this.currentFormDataGroup.push(sole)
@@ -615,9 +622,10 @@
 
 
         // 班组
-        getTeamList(row) {
+        async getTeamList(row) {
+            row.team = ''
             row.tempTeamOptionsList = []
-            row.tempTeamOptionsList = this.selectTree.filter(item => item.targetCode === row.workShop)[0].team
+            row.tempTeamOptionsList = await this.getTeam(this.workshopList.filter(item => item.targetCode === row.workShop)[0].targetName)
         }
 
         handleSizeChange(val) {
