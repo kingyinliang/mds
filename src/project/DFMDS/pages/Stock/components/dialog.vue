@@ -5,6 +5,7 @@
             <el-form-item v-for="(item, index) in formColumns" :key="index" :label="item.label" :prop="item.prop">
                 <el-input v-if="item.type === 'input' && !item.formatter" v-model="formModel[item.prop]" :disabled="item.disabled" size="small" :placeholder="'请输入' + item.label" style="width: 260px;" />
                 <el-input v-if="item.type === 'input' && item.formatter" :value="item.formatter(formModel)" :disabled="item.disabled" size="small" :placeholder="'请输入' + item.label" style="width: 260px;" />
+                <el-input v-if="item.type === 'number'" v-model="formModel[item.prop]" type="number" :disabled="item.disabled" size="small" :placeholder="'请输入' + item.label" style="width: 260px;" />
                 <el-select v-if="item.type === 'select'" v-model="formModel[item.prop]" :disabled="item.disabled" clearable size="small" :placeholder="'请选择' + item.label" style="width: 260px;">
                     <el-option v-for="option in item.defaultOptions" :key="option.value" :label="option.label" :value="option.value" />
                 </el-select>
@@ -72,7 +73,7 @@ export default class Dialog extends Vue {
                         this.reset()
                         this.visible = false
                     }
-                })
+                }).catch(err => console.log(err))
             } else {
                 console.log('error submit!!');
                 return false;
@@ -89,4 +90,8 @@ export default class Dialog extends Vue {
         width: 100%;
         padding: 10px 20px 20px 0;
     }
+    input::-webkit-outer-spin-button,
+    input::-webkit-inner-spin-button { -webkit-appearance: none; }
+
+    input[type="number"] { -moz-appearance: textfield; }
 </style>

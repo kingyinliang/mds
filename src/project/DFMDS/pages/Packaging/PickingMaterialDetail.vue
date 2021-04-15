@@ -64,12 +64,12 @@
                                 <el-input v-model="scope.row.mouldCode" :disabled="!scope.row.canEditModuleCode" size="small" />
                             </template>
                         </el-table-column>
-                        <el-table-column label="厂家" min-width="140">
+                        <el-table-column label="厂家" min-width="140" show-overflow-tooltip>
                             <template slot="header">
                                 <span class="notNull">* </span>厂家
                             </template>
                             <template slot-scope="scope">
-                                {{ scope.row.manufactorName }}
+                                {{ scope.row.manufactorName + ' ' + scope.row.manufactor }}
                                 <!-- <el-select v-model="scope.row.manufactor" filterable placeholder="请选择" size="small" :disabled="true" clearable>
                                     <el-option v-for="(iteam, index) in manufactor" :key="index" :label="iteam.dictValue" :value="iteam.dictCode" />
                                 </el-select> -->
@@ -80,8 +80,8 @@
                                 <el-input v-model="scope.row.remark" :disabled="!(isRedact)" size="small" placeholder="请输入" />
                             </template>
                         </el-table-column>
-                        <el-table-column label="操作人" prop="changer" width="100" :show-overflow-tooltip="true" />
-                        <el-table-column label="操作时间" prop="changed" width="100" :show-overflow-tooltip="true" />
+                        <el-table-column label="操作人" prop="changer" width="140" :show-overflow-tooltip="true" />
+                        <el-table-column label="操作时间" prop="changed" width="160" :show-overflow-tooltip="true" />
                         <el-table-column label="操作" fixed="right" width="70">
                             <template slot-scope="scope">
                                 <el-button v-if="scope.row.splitFlag === 'Y'" :disabled="!(isRedact && scope.row.status !== '3')" class="delBtn" type="text" icon="el-icon-delete" size="mini" @click="del(scope.row)">
@@ -240,7 +240,8 @@
                 useType: '正常领料',
                 splitFlag: 'Y',
                 stoPackageMaterialStorageResponseDtoList: row.stoPackageMaterialStorageResponseDtoList,
-                mouldCode: ''
+                mouldCode: '',
+                orderNo: row.orderNo
             })
             this.spanArr = this.merge(this.tableData)
         }
@@ -332,12 +333,19 @@
                 item.productLine = this.formHeader['productLine']
             });
 
-            PKG_API.PKG_PICKING_MATERIAL_SAVE_API({
+            const params = {
                 workShop: this.formHeader['workShop'],
                 delIds,
                 insertDto: insertDto.filter(it => it.delFlag !== 1),
-                updateDto
-            }).then(() => {
+                updateDto: updateDto.filter(it => !delIds.includes(it['id']))
+            }
+
+            // if (!params.delIds.length && !params.insertDto.length && !params.updateDto.length) {
+            //     this.$warningToast('请修改后再保存')
+            //     return
+            // }
+
+            PKG_API.PKG_PICKING_MATERIAL_SAVE_API(params).then(() => {
                 this.$successToast('保存成功');
                 this.int()
             })
