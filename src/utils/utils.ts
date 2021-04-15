@@ -821,5 +821,13 @@ export function loginHome() {
     })
 }
 export function loginHttp(data) {
-    window.location.href = data.data + '&redirectUri=' + window.location.href
+    if (process.env.NODE_ENV !== 'production') {
+        const url = data.data
+        const pos = url.indexOf('://')
+        const root = url.substring(pos, url.length)
+        const resUrl = 'http' + root
+        window.location.href = resUrl + '&redirectUri=' + window.location.href
+    } else {
+        window.location.href = data.data + '&redirectUri=' + window.location.href
+    }
 }

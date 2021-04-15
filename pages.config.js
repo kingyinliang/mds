@@ -41,5 +41,5 @@ module.exports = {
         template: 'public/SYSTEM.html',
         filename: 'SYSTEM.html',
         chunk: ["chunk-vendors", "chunk-common", 'SYSTEM']
-    },
+    }
 }
