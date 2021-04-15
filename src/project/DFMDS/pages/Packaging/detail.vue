@@ -211,7 +211,13 @@
             const { pkgDeviceSaveRequestDto, pkgExceptionSaveRequestDto } = this.$refs.equipment.savedData(this.formHeader);
             const { pkgPackingMaterial, pkgSemiMaterial } = this.$refs.material.savedData(this.formHeader);
             this.formHeader.orderId = this.formHeader.id;
-            console.log(pkgSemiMaterial);
+            // console.log(pkgPackingMaterial, this.$refs.dataEntry);
+            pkgPackingMaterial.packingMaterialUpdate.map(item => {
+                item.orderNo = this.$refs.dataEntry.formHeader.orderNo
+            })
+            pkgPackingMaterial.packingMaterialInsert.map(item => {
+                item.orderNo = this.$refs.dataEntry.formHeader.orderNo
+            })
 
             return PKG_API.PKG_ALL_SAVE_API({
                 pkgOrderUpdate: this.formHeader,
