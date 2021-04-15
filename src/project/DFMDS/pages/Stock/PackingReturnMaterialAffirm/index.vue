@@ -94,9 +94,7 @@
 <script lang="ts">
     import { Vue, Component } from 'vue-property-decorator';
     import { AUDIT_API, COMMON_API, PKG_API } from 'common/api/api';
-import { dateFormat } from 'src/utils/utils';
-    // import { dateFormat } from 'src/utils/utils';
-    // import { dateFormat } from 'utils/utils';
+    import { dateFormat } from 'utils/utils';
 
     @Component({
         name: 'PackingReturnMaterialAffirm',
@@ -219,9 +217,12 @@ import { dateFormat } from 'src/utils/utils';
                 minwidth: '100'
             },
             {
-                prop: 'manufactor',
+                prop: 'manufactorName',
                 label: '供应商',
-                minwidth: '100'
+                minwidth: '140',
+                formatter(row) {
+                    return `${row.manufactorName || ''} ${row.manufactor}`
+                }
             },
             {
                 prop: 'changeAmount',
@@ -234,9 +235,12 @@ import { dateFormat } from 'src/utils/utils';
                 minwidth: '80'
             },
             {
-                prop: 'productLine',
+                prop: 'productLineName',
                 label: '产线',
-                minwidth: '100'
+                minwidth: '140',
+                formatter(row) {
+                    return `${row.productLineName || ''} ${row.productLine}`
+                }
             },
             {
                 prop: 'stgeLoc',

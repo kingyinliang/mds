@@ -64,12 +64,12 @@
                                 <el-input v-model="scope.row.mouldCode" :disabled="!scope.row.canEditModuleCode" size="small" />
                             </template>
                         </el-table-column>
-                        <el-table-column label="厂家" min-width="140">
+                        <el-table-column label="厂家" min-width="140" show-overflow-tooltip>
                             <template slot="header">
                                 <span class="notNull">* </span>厂家
                             </template>
                             <template slot-scope="scope">
-                                {{ scope.row.manufactorName }}
+                                {{ scope.row.manufactorName + ' ' + scope.row.manufactor }}
                                 <!-- <el-select v-model="scope.row.manufactor" filterable placeholder="请选择" size="small" :disabled="true" clearable>
                                     <el-option v-for="(iteam, index) in manufactor" :key="index" :label="iteam.dictValue" :value="iteam.dictCode" />
                                 </el-select> -->
@@ -336,7 +336,7 @@
                 workShop: this.formHeader['workShop'],
                 delIds,
                 insertDto: insertDto.filter(it => it.delFlag !== 1),
-                updateDto
+                updateDto: updateDto.filter(it => !delIds.includes(it['id']))
             }).then(() => {
                 this.$successToast('保存成功');
                 this.int()

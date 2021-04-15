@@ -346,7 +346,7 @@
             }
         }
 
-        spanMethod({ row, rowIndex, columnIndex }) {
+        spanMethod({ rowIndex, columnIndex }) {
             if (columnIndex === 0) {
                 const rowspan = this.spanArr[rowIndex];
                 const colspan = rowspan > 0 ? 1 : 0;

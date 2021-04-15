@@ -12,6 +12,7 @@
             :show-operation-column="true"
             :operation-column-width="190"
             :not-clear-page="true"
+            :show-fold="false"
         >
             <template slot="tab-head-main">
                 <div class="box-card-title clearfix">
@@ -300,7 +301,10 @@ export default class MaterialStock extends Vue {
         {
             label: '供应商',
             prop: 'manufactor',
-            minwidth: '110'
+            minwidth: '140',
+            formatter: (row) => {
+                return row.manufactorName + ' ' + row.manufactor;
+            }
         },
         {
             label: '模具号',

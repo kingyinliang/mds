@@ -33,13 +33,21 @@
                             </template>
                         </el-table-column>
                         <el-table-column label="批次" prop="batch" show-overflow-tooltip />
-                        <el-table-column label="供应商" prop="manufactor" width="120px" show-overflow-tooltip />
+                        <el-table-column label="供应商" prop="manufactor" width="120px" show-overflow-tooltip>
+                            <template slot-scope="scope">
+                                {{ `${scope.row.manufactorName || ''} ${scope.row.manufactor}` }}
+                            </template>
+                        </el-table-column>
                         <el-table-column label="模具号" prop="mouldCode" show-overflow-tooltip />
                         <el-table-column label="移动类型" prop="moveType" width="100px" show-overflow-tooltip />
                         <el-table-column label="数量" prop="moveAmount" show-overflow-tooltip />
                         <el-table-column label="单位" prop="moveUnitName" show-overflow-tooltip />
                         <el-table-column label="订单" prop="orderNo" width="120px" show-overflow-tooltip />
-                        <el-table-column label="线别" prop="productLineName" width="170px" show-overflow-tooltip />
+                        <el-table-column label="线别" prop="productLineName" width="170px" show-overflow-tooltip>
+                            <template slot-scope="scope">
+                                {{ `${scope.row.productLineName || ''} ${scope.row.productLine}` }}
+                            </template>
+                        </el-table-column>
                         <el-table-column label="操作人" prop="changer" width="140px" show-overflow-tooltip />
                         <el-table-column label="操作时间" prop="changed" width="160px" show-overflow-tooltip />
                         <el-table-column label="操作" fixed="right">
@@ -132,7 +140,7 @@ export default class PackingLineEdge extends Vue {
                 ]
             },
             {
-                type: 'input',
+                type: 'number',
                 label: '调整量',
                 prop: 'moveAmount'
             },
@@ -297,6 +305,10 @@ export default class PackingLineEdge extends Vue {
     }
 
     addOrUpdate(params) {
+        if (params.moveAmount <= 0) {
+            this.$warningToast('调整量输入信息为正整数')
+            return Promise.reject<Error>(new Error('调整量输入信息为正整数'));
+        }
         const type = this.isAdd ? 'PKG_RETURN_SAVE_API' : 'PKG_RETURN_UPDATE_API'
         return PKG_API[type]({
             moveAmount: params.moveAmount,
