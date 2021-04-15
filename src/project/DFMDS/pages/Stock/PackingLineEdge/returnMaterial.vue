@@ -41,7 +41,7 @@
                         <el-table-column label="模具号" prop="mouldCode" show-overflow-tooltip />
                         <el-table-column label="移动类型" prop="moveType" width="100px" show-overflow-tooltip />
                         <el-table-column label="数量" prop="moveAmount" show-overflow-tooltip />
-                        <el-table-column label="单位" prop="moveUnitName" show-overflow-tooltip />
+                        <el-table-column label="单位" prop="moveUnit" show-overflow-tooltip />
                         <el-table-column label="订单" prop="orderNo" width="120px" show-overflow-tooltip />
                         <el-table-column label="线别" prop="productLineName" width="170px" show-overflow-tooltip>
                             <template slot-scope="scope">
@@ -52,7 +52,7 @@
                         <el-table-column label="操作时间" prop="changed" width="160px" show-overflow-tooltip />
                         <el-table-column label="操作" fixed="right">
                             <template slot-scope="scope">
-                                <el-button type="text" size="small" :disabled="scope.row.status === 'M'" @click="edit(scope.row)">
+                                <el-button type="text" size="small" :disabled="notEditArr.includes(scope.row.status)" @click="edit(scope.row)">
                                     编辑
                                 </el-button>
                             </template>
@@ -95,6 +95,8 @@ export default class PackingLineEdge extends Vue {
     selections = [];
     moveTypeList = [];
     isAdd = true;
+    notEditArr = ['M', 'P']; // 已提交、已过账
+    currentRow = {}; // 当前操作行
 
     get formColumns() {
         return [
@@ -133,6 +135,7 @@ export default class PackingLineEdge extends Vue {
                 type: 'select',
                 label: '调整类型',
                 prop: 'moveTypeCode',
+                disabled: Boolean(this.currentRow['orderNo']),
                 defaultOptions: [
                     ...this.moveTypeList
                     // { value: 'INVENTORY_PROFIT', label: '盘盈' },
@@ -233,7 +236,7 @@ export default class PackingLineEdge extends Vue {
     }
 
     selectableHandler(row) {
-        return row.status !== 'M'
+        return !this.notEditArr.includes(row.status)
     }
 
     // 调整类型
@@ -283,6 +286,7 @@ export default class PackingLineEdge extends Vue {
     }
 
     edit(row) {
+        this.currentRow = row;
         this.isAdd = false
         this.$refs.dialog.init({ ...row, moveAmount: String(row.moveAmount) })
     }

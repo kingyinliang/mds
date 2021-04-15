@@ -276,7 +276,7 @@
                 minwidth: '100'
             },
             {
-                prop: 'writeoffsMoveReason',
+                prop: 'moveReason',
                 label: '异动原因',
                 minwidth: '100'
             },

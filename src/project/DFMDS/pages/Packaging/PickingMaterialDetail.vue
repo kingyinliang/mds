@@ -80,8 +80,8 @@
                                 <el-input v-model="scope.row.remark" :disabled="!(isRedact)" size="small" placeholder="请输入" />
                             </template>
                         </el-table-column>
-                        <el-table-column label="操作人" prop="changer" width="100" :show-overflow-tooltip="true" />
-                        <el-table-column label="操作时间" prop="changed" width="100" :show-overflow-tooltip="true" />
+                        <el-table-column label="操作人" prop="changer" width="140" :show-overflow-tooltip="true" />
+                        <el-table-column label="操作时间" prop="changed" width="160" :show-overflow-tooltip="true" />
                         <el-table-column label="操作" fixed="right" width="70">
                             <template slot-scope="scope">
                                 <el-button v-if="scope.row.splitFlag === 'Y'" :disabled="!(isRedact && scope.row.status !== '3')" class="delBtn" type="text" icon="el-icon-delete" size="mini" @click="del(scope.row)">
@@ -332,12 +332,19 @@
                 item.productLine = this.formHeader['productLine']
             });
 
-            PKG_API.PKG_PICKING_MATERIAL_SAVE_API({
+            const params = {
                 workShop: this.formHeader['workShop'],
                 delIds,
                 insertDto: insertDto.filter(it => it.delFlag !== 1),
                 updateDto: updateDto.filter(it => !delIds.includes(it['id']))
-            }).then(() => {
+            }
+
+            // if (!params.delIds.length && !params.insertDto.length && !params.updateDto.length) {
+            //     this.$warningToast('请修改后再保存')
+            //     return
+            // }
+
+            PKG_API.PKG_PICKING_MATERIAL_SAVE_API(params).then(() => {
                 this.$successToast('保存成功');
                 this.int()
             })
