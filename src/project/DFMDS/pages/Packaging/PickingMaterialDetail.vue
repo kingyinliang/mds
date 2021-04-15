@@ -240,7 +240,8 @@
                 useType: '正常领料',
                 splitFlag: 'Y',
                 stoPackageMaterialStorageResponseDtoList: row.stoPackageMaterialStorageResponseDtoList,
-                mouldCode: ''
+                mouldCode: '',
+                orderNo: row.orderNo
             })
             this.spanArr = this.merge(this.tableData)
         }
