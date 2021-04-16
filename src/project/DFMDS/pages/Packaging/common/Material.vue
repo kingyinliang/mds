@@ -566,7 +566,7 @@
                         changer: item.changer,
                         changed: item.changed
                     };
-                    Object.assign(materialMap, listitem);
+                    // Object.assign(materialMap, listitem);
                     materialMap.mainId = item.id;
                     finalData.push(materialMap)
                 })
@@ -710,6 +710,7 @@
                 realUsed: dataArr[dataArr.length - 1].realUsed || '',
                 sterilizePotNo: '',
                 sterilizeStorageNo: sterilizeStorageNo,
+                packageStorageId: row.packageStorageId,
                 changed: dateFormat(new Date(), 'yyyy-MM-dd hh:mm:ss'),
                 changer: getUserNameNumber()
             });
