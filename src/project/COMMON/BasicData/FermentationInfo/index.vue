@@ -23,6 +23,7 @@
             <el-table header-row-class-name="tableHead" class="newTable" :height="mainClientHeight - 72 - 47" :data="tableData" border tooltip-effect="dark" @selection-change="handleSelectionChange">
                 <el-table-column type="selection" width="50" fixed="left" align="center" />
                 <el-table-column type="index" :index="index => index + 1 + (Number(queryForm.current) - 1) * (Number(queryForm.size))" label="序号" width="50px" fixed />
+                <el-table-column label="生产车间" prop="workShop" min-width="100" :show-overflow-tooltip="true" />
                 <el-table-column label="工序段" prop="productProcessName" min-width="80" :show-overflow-tooltip="true" />
                 <el-table-column label="生产物料" min-width="180" :show-overflow-tooltip="true">
                     <template slot-scope="scope">
@@ -96,7 +97,7 @@
                 <el-button type="primary" @click="() => { queryForm.current = 1; queryType = 2; GetData() }">确定</el-button>
             </span>
         </el-dialog>
-        <ferinfo-add-or-update v-if="addOrUpdate" ref="addOrUpdate" :process-list="processList" :material="material" :hours-list="hoursList" :organization-list="organizationList" @refreshDataList="GetData" />
+        <ferinfo-add-or-update v-if="addOrUpdate" ref="addOrUpdate" :work-shop-list="workShopList" :process-list="processList" :material="material" :hours-list="hoursList" :organization-list="organizationList" @refreshDataList="GetData" />
     </div>
 </template>
 
@@ -139,6 +140,7 @@
         visibleHightLevelQuery = false;
         addOrUpdate = false;
         tableData = [];
+        workShopList = [];
         processList = [];
         material = [];
         hoursList = [];
@@ -160,6 +162,13 @@
         }
 
         getOption() {
+            COMMON_API.ORG_QUERY_WORKSHOP_API({
+                factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
+                deptType: ['WORK_SHOP'],
+                deptName: ''
+            }).then(({ data }) => {
+                this.workShopList = data.data
+            })
             COMMON_API.DICTQUERY_API({
                 factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
                 dictType: 'FER_PROCESS_STAGE'
