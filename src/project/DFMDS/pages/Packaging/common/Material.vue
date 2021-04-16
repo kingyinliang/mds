@@ -19,6 +19,9 @@
                     </template>
                 </el-table-column>
                 <el-table-column label="批次" prop="batch" width="150">
+                    <template slot="header">
+                        <span class="notNull">* </span>批次
+                    </template>
                     <template slot-scope="scope">
                         <el-select v-model="scope.row.batch" :disabled="!(isRedact && scope.row.checkStatus !== 'C' && scope.row.checkStatus !== 'D' && scope.row.checkStatus !== 'P' && scope.row.materialStatus !== '3')" filterable placeholder="请选择" size="small" clearable @change="batchChange(scope.row)">
                             <template v-for="(iteam, index) in scope.row.batchData">
@@ -222,6 +225,10 @@
 
         ruleSubmit(): boolean {
             for (const item of this.currentDataTable.filter(it => it.delFlag !== 1)) {
+                if (!item.batch) {
+                    this.$warningToast('请选择物料领用页签包材领用批次');
+                    return false
+                }
                 if (!item.realUseAmount) {
                     this.$warningToast('请填写物料领用页签包材领用实际用量');
                     return false
@@ -543,6 +550,7 @@
                 const item = data[i]
                 const index = i
                 item.item.forEach((listitem) => {
+                    console.log(listitem.id)
                     const materialMap: MaterialMap = {
                         id: '',
                         merge: index,
@@ -822,6 +830,7 @@ interface MaterialMap{
     changer?: string;
     changed?: string;
     item?: MaterialMap[];
+    batch?: string; // 批次
     packageStorageId?: string; // 包材线边库id
 }
 interface PkgMaterialObj {
