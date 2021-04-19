@@ -15,9 +15,12 @@
                                 {{ scope.row.materialName + ' ' + scope.row.materialCode }}
                             </template>
                         </el-table-column>
-                        <el-table-column label="单位" prop="unit" width="50" :show-overflow-tooltip="true" />
+                        <el-table-column label="单位" prop="unit" width="50" :show-overflow-tooltip="true">
+                            <template slot-scope="scope">
+                                {{ scope.row.unitName || scope.row.unit }}
+                            </template>
+                        </el-table-column>
                         <el-table-column label="需求用量" prop="needNum" width="100" :show-overflow-tooltip="true" />
-                        <el-table-column label="当前库存" prop="storage" width="100" :show-overflow-tooltip="true" />
                         <el-table-column width="70">
                             <template slot-scope="scope">
                                 <el-button :disabled="!(isRedact && scope.row.status !== '3')" type="text" @click="SplitDate(scope.row, scope.$index)">
@@ -25,6 +28,7 @@
                                 </el-button>
                             </template>
                         </el-table-column>
+                        <el-table-column label="当前库存" prop="storage" width="100" :show-overflow-tooltip="true" />
                         <el-table-column label="领料类型" min-width="140">
                             <template slot="header">
                                 <span class="notNull">* </span>领料类型
@@ -60,12 +64,12 @@
                                 <el-input v-model="scope.row.mouldCode" :disabled="!scope.row.canEditModuleCode" size="small" />
                             </template>
                         </el-table-column>
-                        <el-table-column label="厂家" min-width="140">
+                        <el-table-column label="厂家" min-width="140" show-overflow-tooltip>
                             <template slot="header">
                                 <span class="notNull">* </span>厂家
                             </template>
                             <template slot-scope="scope">
-                                {{ scope.row.manufactorName }}
+                                {{ scope.row.manufactorName + ' ' + scope.row.manufactor }}
                                 <!-- <el-select v-model="scope.row.manufactor" filterable placeholder="请选择" size="small" :disabled="true" clearable>
                                     <el-option v-for="(iteam, index) in manufactor" :key="index" :label="iteam.dictValue" :value="iteam.dictCode" />
                                 </el-select> -->
@@ -76,8 +80,8 @@
                                 <el-input v-model="scope.row.remark" :disabled="!(isRedact)" size="small" placeholder="请输入" />
                             </template>
                         </el-table-column>
-                        <el-table-column label="操作人" prop="changer" width="100" :show-overflow-tooltip="true" />
-                        <el-table-column label="操作时间" prop="changed" width="100" :show-overflow-tooltip="true" />
+                        <el-table-column label="操作人" prop="changer" width="140" :show-overflow-tooltip="true" />
+                        <el-table-column label="操作时间" prop="changed" width="160" :show-overflow-tooltip="true" />
                         <el-table-column label="操作" fixed="right" width="70">
                             <template slot-scope="scope">
                                 <el-button v-if="scope.row.splitFlag === 'Y'" :disabled="!(isRedact && scope.row.status !== '3')" class="delBtn" type="text" icon="el-icon-delete" size="mini" @click="del(scope.row)">
@@ -184,6 +188,16 @@
                     if (!item.useType) {
                         item.useType = '正常领料'
                     }
+                    // 如果选了批次，当前库存展示当前批次的，如果没有批次，当前库存展示所有批次的总和
+                    if (item.batch) {
+                        const obj = item.stoPackageMaterialStorageResponseDtoList.find(row => row.batch === item.batch)
+                        item.storage = obj?.currentAmount
+                        return
+                    }
+                    item.storage = 0
+                    item.stoPackageMaterialStorageResponseDtoList.map(row => {
+                        item.storage += row.currentAmount
+                    })
                 })
                 this.tableData = JSON.parse(JSON.stringify(data.data));
                 this.OrgTableData = JSON.parse(JSON.stringify(data.data));
@@ -226,7 +240,8 @@
                 useType: '正常领料',
                 splitFlag: 'Y',
                 stoPackageMaterialStorageResponseDtoList: row.stoPackageMaterialStorageResponseDtoList,
-                mouldCode: ''
+                mouldCode: '',
+                orderNo: row.orderNo
             })
             this.spanArr = this.merge(this.tableData)
         }
@@ -278,7 +293,7 @@
 
         //设置合并行
         spanMethod({ rowIndex, columnIndex }) {
-            if (columnIndex <= 4) {
+            if (columnIndex <= 3) {
                 return {
                     rowspan: this.spanArr[rowIndex],
                     colspan: this.spanArr[rowIndex] > 0 ? 1 : 0
@@ -318,12 +333,19 @@
                 item.productLine = this.formHeader['productLine']
             });
 
-            PKG_API.PKG_PICKING_MATERIAL_SAVE_API({
+            const params = {
                 workShop: this.formHeader['workShop'],
                 delIds,
                 insertDto: insertDto.filter(it => it.delFlag !== 1),
-                updateDto
-            }).then(() => {
+                updateDto: updateDto.filter(it => !delIds.includes(it['id']))
+            }
+
+            // if (!params.delIds.length && !params.insertDto.length && !params.updateDto.length) {
+            //     this.$warningToast('请修改后再保存')
+            //     return
+            // }
+
+            PKG_API.PKG_PICKING_MATERIAL_SAVE_API(params).then(() => {
                 this.$successToast('保存成功');
                 this.int()
             })

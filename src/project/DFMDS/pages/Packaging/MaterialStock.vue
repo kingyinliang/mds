@@ -12,6 +12,7 @@
             :show-operation-column="true"
             :operation-column-width="190"
             :not-clear-page="true"
+            :show-fold="false"
         >
             <template slot="tab-head-main">
                 <div class="box-card-title clearfix">
@@ -37,8 +38,9 @@
             <div>
                 <el-form :model="moveDetailForm" inline label-suffix="：" label-width="100px" size="small">
                     <el-form-item label="调整类型" prop="moveType">
-                        <el-select v-model="moveDetailForm.moveType">
-                            <el-option v-for="item in typeOptions" :key="item.value" :label="item.label" :value="item.value" />
+                        <el-select v-model="moveDetailForm.moveType" clearable>
+                            <!-- <el-option v-for="item in typeOptions" :key="item.value" :label="item.label" :value="item.value" /> -->
+                            <el-option v-for="(item, index) in moveTypeList" :key="index" :label="item.dictValue" :value="item.dictCode" />
                         </el-select>
                     </el-form-item>
                     <el-form-item style="float: right;">
@@ -300,7 +302,10 @@ export default class MaterialStock extends Vue {
         {
             label: '供应商',
             prop: 'manufactor',
-            minwidth: '110'
+            minwidth: '140',
+            formatter: (row) => {
+                return row.manufactorName + ' ' + row.manufactor;
+            }
         },
         {
             label: '模具号',
@@ -320,7 +325,7 @@ export default class MaterialStock extends Vue {
     ]
 
     moveDetailForm = {
-        moveType: 'INVENTORY_PROFIT'
+        moveType: ''
     }
 
     // 调整类型下拉
@@ -370,8 +375,8 @@ export default class MaterialStock extends Vue {
     amout = 0
 
     mounted() {
-        this.getProductline();
-        // this.getMoveType();
+        // this.getProductline();
+        this.getMoveType();
         // this.$nextTick(() => {
         //     this.$refs.queryTable.getDataList(true)
         // })
@@ -383,16 +388,16 @@ export default class MaterialStock extends Vue {
     // createdEnd() {
     // }
 
-    // 拉取所有产线
-    getProductline() {
-        PKG_API.PKG_MATERIALSTOCK_TRANSFERDEPTNAME_API({
-            factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
-            deptType: ['PRODUCT_LINE'],
-            deptName: '包装'
-        }).then(({ data }) => {
-            this.productlineList = data.data
-        });
-    }
+    // // 拉取所有产线
+    // getProductline() {
+    //     PKG_API.PKG_MATERIALSTOCK_TRANSFERDEPTNAME_API({
+    //         factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
+    //         deptType: ['PRODUCT_LINE'],
+    //         deptName: '包装'
+    //     }).then(({ data }) => {
+    //         this.productlineList = data.data
+    //     });
+    // }
 
     // 调整类型
     getMoveType() {
@@ -444,7 +449,9 @@ export default class MaterialStock extends Vue {
     changeTransferLine(row: object) {
         this.amout = row['storageAmount']
         this.productlineListFilter = [];
-        this.productlineListFilter = this.productlineList.filter(n => n['id'] !== row['productLine']);
+        console.log(this.$refs.queryTable.optionLists.productLine)
+        // this.productlineListFilter = this.productlineList.filter(n => n['id'] !== row['productLine']);
+        this.productlineListFilter = this.$refs.queryTable.optionLists.productLine.filter(n => n['id'] !== row['productLine']);
         this.transferForm = {
             packageStorageId: row['id'],
             productLineOut: row['productLine'],

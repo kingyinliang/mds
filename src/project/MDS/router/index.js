@@ -76,18 +76,22 @@ const DataEchartsRoutes = {
 };
 
 const router = new Router({
-    // mode: 'history',
-    mode: 'hash',
+    mode: 'history',
+    base: process.env.BASE_URL + 'MDS.html',
     isAddDynamicMenuRoutes: false, // 是否已经添加动态(菜单)路由
     routes: globalRoutes.concat(mainRoutes).concat(DataEchartsRoutes)
 });
 
 router.beforeEach((to, from, next) => {
+    if (to.query.token) {
+        Vue['cookie'].set('token', to.query.token);
+    }
     if (router['options']['isAddDynamicMenuRoutes'] || fnCurrentRouteType(to, globalRoutes) === 'global') {
         return next();
     }
     COMMON_API.NAV_API({
-        factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id
+        factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
+        tenant: 'MDS'
     }).then(({ data }) => {
         if (data && data.code === 200) {
             const AddRoutesClass = new AddRoutes(router, mainRoutes, []);

@@ -166,6 +166,15 @@
             //表格数据
             column: [
                 {
+                    prop: 'productDate',
+                    label: '生产日期',
+                    width: '120',
+                    hide: false,
+                    fixed: false,
+                    showOverFlowTooltip: true,
+                    dataType: 'default'
+                },
+                {
                     prop: 'materialName',
                     label: '生产物料',
                     minWidth: '350',
@@ -189,7 +198,7 @@
                 {
                     prop: 'todayNum',
                     label: '今日产量',
-                    width: '100',
+                    width: '120',
                     hide: false,
                     fixed: false,
                     subLabel: '(箱)',

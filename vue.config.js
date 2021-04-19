@@ -14,6 +14,7 @@ const resolve = dir => {
 
 module.exports = {
     devServer: {
+        disableHostCheck: true,
         proxy: {
             '/hostDev': {
                 target: 'https://apimarket-dev.shinho.net.cn/', // 目标代理接口地址

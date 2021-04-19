@@ -89,8 +89,10 @@
                         prop: 'materialName',
                         label: '生产物料',
                         subLabel: '（箱）',
-                        minWidth: '120',
-                        width: 140
+                        minWidth: '160',
+                        // width: 140,
+                        showOverFlowTooltip: true,
+                        formatter: row => row.materialName + ' ' + row.materialCode
                     },
                     ...new Array(getDays(this.currentMonth)).fill('').map((item, index) => {
                         return {

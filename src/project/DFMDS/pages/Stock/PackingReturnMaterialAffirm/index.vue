@@ -94,8 +94,7 @@
 <script lang="ts">
     import { Vue, Component } from 'vue-property-decorator';
     import { AUDIT_API, COMMON_API, PKG_API } from 'common/api/api';
-    // import { dateFormat } from 'src/utils/utils';
-    // import { dateFormat } from 'utils/utils';
+    import { dateFormat } from 'utils/utils';
 
     @Component({
         name: 'PackingReturnMaterialAffirm',
@@ -109,7 +108,7 @@
         }
 
         postForm = {
-            pstngDate: '',
+            pstngDate: dateFormat(new Date(), 'yyyy-MM-dd'),
             headerText: ''
         };
 
@@ -218,9 +217,12 @@
                 minwidth: '100'
             },
             {
-                prop: 'manufactor',
+                prop: 'manufactorName',
                 label: '供应商',
-                minwidth: '100'
+                minwidth: '140',
+                formatter(row) {
+                    return `${row.manufactorName || ''} ${row.manufactor}`
+                }
             },
             {
                 prop: 'changeAmount',
@@ -230,13 +232,15 @@
             {
                 prop: 'unit',
                 label: '单位',
-                minwidth: '80',
-                onclick: true
+                minwidth: '80'
             },
             {
-                prop: 'productLine',
-                label: '线别',
-                minwidth: '100'
+                prop: 'productLineName',
+                label: '产线',
+                minwidth: '140',
+                formatter(row) {
+                    return `${row.productLineName || ''} ${row.productLine}`
+                }
             },
             {
                 prop: 'stgeLoc',
@@ -272,7 +276,7 @@
                 minwidth: '100'
             },
             {
-                prop: 'writeoffsMoveReason',
+                prop: 'moveReason',
                 label: '异动原因',
                 minwidth: '100'
             },

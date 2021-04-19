@@ -22,7 +22,7 @@ const mainRoutes: RouteConfig = {
 }
 
 const router = new VueRouter({
-    mode: 'hash',
+    mode: 'history',
     base: process.env.BASE_URL,
     isAddDynamicMenuRoutes: false,
     routes: globalRoutes.concat(mainRoutes)
@@ -33,7 +33,8 @@ router.beforeEach((to, from, next) => {
         return next();
     }
     COMMON_API.NAV_API({
-        factory: 'mds_board'
+        factory: 'mds_board',
+        tenant: 'MDS'
     }).then(({ data }) => {
         if (data && data.code === 200) {
             const AddRoutesClass = new AddRoutes(router, mainRoutes, []);

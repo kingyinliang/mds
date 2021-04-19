@@ -59,7 +59,7 @@
                     <slot name="mds-button" />
                 </el-form-item>
             </el-form>
-            <div v-if="!tabs.length && type !== 'home'" class="toggleSearchBottom">
+            <div v-if="!tabs.length && type !== 'home' && showFold" class="toggleSearchBottom">
                 <em class="el-icon-caret-top" />
             </div>
         </el-card>
@@ -347,6 +347,10 @@
             notClearPage: {
                 type: Boolean,
                 default: false
+            },
+            showFold: { // 是否展示折叠
+                type: Boolean,
+                default: true
             }
         },
         data() {

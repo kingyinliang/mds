@@ -56,7 +56,11 @@ const STOCK_API = {
     /**
      * @property {string} STOCK_SYS_STORAGE_LIST_API 库位下拉
      */
-    STOCK_SYS_STORAGE_LIST_API: params => httpProxy('/sysStorage/listStorage', 'POST', params)
+    STOCK_SYS_STORAGE_LIST_API: params => httpProxy('/sysStorage/listStorage', 'POST', params),
+    /**
+     * @property {string} STOCK_SYS_STORAGE_LIST_API 查询包材库存所有物料组
+     */
+    STOCK_STORAGE_LIST_ALL_API: params => httpProxy('/storage/materialGroup/listAll', 'POST', params)
 };
 
 export default STOCK_API;
