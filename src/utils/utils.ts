@@ -826,8 +826,8 @@ export function loginHttp(data) {
         const pos = url.indexOf('://')
         const root = url.substring(pos, url.length)
         const resUrl = 'http' + root
-        window.location.href = resUrl + '&redirectUri=' + window.location.href
+        window.location.href = resUrl + '&clientId=bab8aedd8f0111eb9c21026438001fa4&clientSecret=babce9b08f0111eb9c21026438001fa4' + '&redirectUri=' + window.location.href
     } else {
-        window.location.href = data.data + '&redirectUri=' + window.location.href
+        window.location.href = data.data + '&clientId=bab8aedd8f0111eb9c21026438001fa4&clientSecret=babce9b08f0111eb9c21026438001fa4' + '&redirectUri=' + window.location.href
     }
 }
