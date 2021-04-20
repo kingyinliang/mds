@@ -251,7 +251,7 @@
                 prop: 'moveType',
                 label: '移动类型',
                 minwidth: '160',
-                type: 'select',
+                type: 'input',
                 redact: true,
                 header: true,
                 resVal: {
@@ -561,7 +561,7 @@
                     });
                     PKG_API.VERIFY_STORAGE_RETURN_PASS_API(params).then(res => {
                         this.$successToast(res.data.msg);
-                        this.postForm.pstngDate = ''
+                        // this.postForm.pstngDate = ''
                         this.postForm.headerText = ''
                         this.$refs.queryTable.getDataList(true);
                     })

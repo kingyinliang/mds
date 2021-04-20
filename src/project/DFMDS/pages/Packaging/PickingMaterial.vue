@@ -9,6 +9,7 @@
             :show-index-column="true"
             :query-form-data="queryFormData"
             :list-interface="listInterface"
+            :show-fold="false"
         />
     </div>
 </template>
