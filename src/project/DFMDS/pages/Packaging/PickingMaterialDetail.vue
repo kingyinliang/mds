@@ -321,11 +321,11 @@
             const insertDto: DataObj[] = []
             const updateDto = []
 
-            this.tableData.forEach(item => {
-                if (item.status === '3') {
-                    delIds.push(item.id)
-                }
-            })
+            // this.tableData.forEach(item => {
+            //     if (item.status === '3') {
+            //         delIds.push(item.id)
+            //     }
+            // })
 
             this.dataEntryData(this.formHeader, this.tableData, this.OrgTableData, delIds, insertDto, updateDto, (item) => {
                 item.productLine = this.formHeader['productLine']
