@@ -64,10 +64,10 @@
                                 <el-input v-model="scope.row.mouldCode" :disabled="!scope.row.canEditModuleCode" size="small" />
                             </template>
                         </el-table-column>
-                        <el-table-column label="厂家" min-width="140" show-overflow-tooltip>
-                            <template slot="header">
+                        <el-table-column label="供应商" min-width="140" show-overflow-tooltip>
+                            <!-- <template slot="header">
                                 <span class="notNull">* </span>厂家
-                            </template>
+                            </template> -->
                             <template slot-scope="scope">
                                 {{ scope.row.manufactorName + ' ' + scope.row.manufactor }}
                                 <!-- <el-select v-model="scope.row.manufactor" filterable placeholder="请选择" size="small" :disabled="true" clearable>
@@ -241,6 +241,7 @@
                 splitFlag: 'Y',
                 stoPackageMaterialStorageResponseDtoList: row.stoPackageMaterialStorageResponseDtoList,
                 mouldCode: '',
+                productLine: row.productLine,
                 orderNo: row.orderNo
             })
             this.spanArr = this.merge(this.tableData)
@@ -254,6 +255,7 @@
                 type: 'warning'
             }).then(() => {
                 this.$set(row, 'delFlag', 1)
+                this.$set(row, 'isDel', 1)
                 this.spanArr = this.merge(this.tableData)
                 this.$successToast('删除成功');
             });
@@ -261,8 +263,8 @@
 
         //表格行名
         rowDelFlag({ row }) {
-            if (row.delFlag === 1) {
-                return 'rowDel';
+            if (row.isDel) {
+                return 'rowDel'
             } else if (row.status === '3') {
                 return 'disabled-row'
             } else if (row.status === '1') {
@@ -323,11 +325,11 @@
             const insertDto: DataObj[] = []
             const updateDto = []
 
-            this.tableData.forEach(item => {
-                if (item.status === '3') {
-                    delIds.push(item.id)
-                }
-            })
+            // this.tableData.forEach(item => {
+            //     if (item.status === '3') {
+            //         delIds.push(item.id)
+            //     }
+            // })
 
             this.dataEntryData(this.formHeader, this.tableData, this.OrgTableData, delIds, insertDto, updateDto, (item) => {
                 item.productLine = this.formHeader['productLine']
@@ -336,7 +338,7 @@
             const params = {
                 workShop: this.formHeader['workShop'],
                 delIds,
-                insertDto: insertDto.filter(it => it.delFlag !== 1),
+                insertDto: insertDto,
                 updateDto: updateDto.filter(it => !delIds.includes(it['id']))
             }
 
@@ -353,34 +355,53 @@
 
         dataEntryData(formHeader, data: DataEntryDataObj[], orgData: DataEntryDataObj[], delArr: string[], insertArr: DataEntryDataObj[], updateArr: DataEntryDataObj[], processingData?) {
             data.forEach(item => {
-                if (item.delFlag === 1) {
+                // if (item.delFlag === 1) {
+                //     if (item.id) {
+                //         delArr.push(item.id);
+                //     }
+                // }
+                if (item.status === '1') {
+                    insertArr.push(item);
+                } else if (Number(item.delFlag) === 1) {
                     if (item.id) {
                         delArr.push(item.id);
                     }
-                } if (item.status === '1') {
-                    insertArr.push(item);
-                } else if (item.id) {
-                    const orgObj = orgData.filter(it => it.id === item.id)[0];
-                    if (orgObj) {
-                        if (!_.isEqual(orgObj, item)) {
-                            item.orderId = formHeader.id;
-                            if (processingData) {
-                                processingData(item);
-                            }
-                            updateArr.push(item);
-                        }
-                    } else {
-                        insertArr.push(item);
-                    }
                 } else {
-                    item.factory = JSON.parse(sessionStorage.getItem('factory') || '{}').id;
-                    item.orderId = formHeader.id;
-                    item.orderNo = formHeader.orderNo;
-                    if (processingData) {
-                        processingData(item);
+                    if (!item.id) {
+                        insertArr.push(item);
+                        return
                     }
-                    insertArr.push(item);
+                    const orgObj = orgData.filter(it => it.id === item.id)[0];
+                    if (!_.isEqual(orgObj, item)) {
+                        item.orderId = formHeader.id;
+                        if (processingData) {
+                            processingData(item);
+                        }
+                        updateArr.push(item);
+                    }
                 }
+                // else if (item.id) {
+                //     const orgObj = orgData.filter(it => it.id === item.id)[0];
+                //     if (orgObj) {
+                //         if (!_.isEqual(orgObj, item)) {
+                //             item.orderId = formHeader.id;
+                //             if (processingData) {
+                //                 processingData(item);
+                //             }
+                //             updateArr.push(item);
+                //         }
+                //     } else {
+                //         insertArr.push(item);
+                //     }
+                // } else {
+                //     item.factory = JSON.parse(sessionStorage.getItem('factory') || '{}').id;
+                //     item.orderId = formHeader.id;
+                //     item.orderNo = formHeader.orderNo;
+                //     if (processingData) {
+                //         processingData(item);
+                //     }
+                //     insertArr.push(item);
+                // }
             });
         }
     }
@@ -412,6 +433,7 @@
         splitFlag?: string;
         status?: string;
         mouldCode?: string; // 模具号
+        productLine?: string; // 产线
         stoPackageMaterialStorageResponseDtoList?: Array<StoPackageMaterialStorageResponseDto>;
     }
     interface StoPackageMaterialStorageResponseDto {

@@ -10,6 +10,7 @@
             :custom-data="true"
             @get-data-success="setData"
             @created-end="createdEnd"
+            @search-init="searchInit"
         >
             <template slot="mds-button">
                 <el-button type="primary" size="small" @click="add">
@@ -235,6 +236,10 @@ export default class PackingLineEdge extends Vue {
         this.$refs.queryTable.getDataList(true)
     }
 
+    searchInit() {
+        this.current = 1
+    }
+
     selectableHandler(row) {
         return !this.notEditArr.includes(row.status)
     }
@@ -288,7 +293,7 @@ export default class PackingLineEdge extends Vue {
     edit(row) {
         this.currentRow = row;
         this.isAdd = false
-        this.$refs.dialog.init({ ...row, moveAmount: String(row.moveAmount) })
+        this.$refs.dialog.init({ ...row, moveAmount: String(row.moveAmount), moveUnitName: row.moveUnit })
     }
 
     submit() {
@@ -309,7 +314,7 @@ export default class PackingLineEdge extends Vue {
     }
 
     addOrUpdate(params) {
-        if (params.moveAmount <= 0) {
+        if (params.moveAmount <= 0 || String(params.moveAmount).includes('.')) {
             this.$warningToast('调整量输入信息为正整数')
             return Promise.reject<Error>(new Error('调整量输入信息为正整数'));
         }
