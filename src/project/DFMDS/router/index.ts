@@ -51,9 +51,6 @@ const router = new VueRouter({
 } as RouterOptions);
 
 router.beforeEach((to, from, next) => {
-    if (to.query.token) {
-        Vue['cookie'].set('token', to.query.token);
-    }
     if (router['options']['isAddDynamicMenuRoutes'] || fnCurrentRouteType(to, globalRoutes) === 'global') {
         return next();
     }

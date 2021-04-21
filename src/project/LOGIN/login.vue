@@ -27,7 +27,7 @@
 <script>
 import { COMMON_API } from 'common/api/api';
 import SelectFactory from 'src/layout/main/SelectFactory';
-import { loginHome } from 'utils/utils';
+import SSOLogin from 'utils/SSOLogin';
 export default {
     name: 'Login',
     components: {
@@ -90,46 +90,9 @@ export default {
         };
     },
     created() {
-        loginHome().then(({ data }) => {
+        SSOLogin.getUserInfo().then(({ data }) => {
             this.loginSuccess(data.data)
         })
-    },
-    mounted() {
-        // *********** RDM CDM 跳转用  start
-        // if (window.location.href.indexOf('?') !== -1) {
-        //     const url = decodeURIComponent(window.location.href.split('?')[1].split('=')[1]);
-        //     const urlData = JSON.parse(url);
-        //
-        //
-        //     if (typeof urlData.userFactory.find(item => { return item.id === '482537131483348992' }) !== 'undefined') { // RDM
-        //         const systemTemp = urlData.userFactory.filter(item => { return item.id === '482537131483348992' })
-        //         urlData.userFactory = systemTemp
-        //         const loading = Loading.service({
-        //             lock: true,
-        //             text: '加载中……',
-        //             background: 'rgba(255, 255, 255, 0.7)'
-        //         });
-        //         setTimeout(() => {
-        //             this.loginSuccess(urlData)
-        //             loading.close();
-        //         }, 3000);
-        //     } else if (typeof urlData.userFactory.find(item => { return item.id === '926550584766501627' }) !== 'undefined') { // CDN
-        //         const systemTemp = urlData.userFactory.filter(item => { return item.id === '926550584766501627' })
-        //         urlData.userFactory = systemTemp
-        //         const loading = Loading.service({
-        //             lock: true,
-        //             text: '加载中……',
-        //             background: 'rgba(255, 255, 255, 0.7)'
-        //         });
-        //         setTimeout(() => {
-        //             this.loginSuccess(urlData)
-        //             loading.close();
-        //         }, 3000);
-        //     } else {
-        //         this.$warningToast('登入失败')
-        //     }
-        // }
-        // *********** RDM CDM 跳转用  end
     },
     methods: {
         dataFormSubmit() {
