@@ -241,6 +241,7 @@
                 splitFlag: 'Y',
                 stoPackageMaterialStorageResponseDtoList: row.stoPackageMaterialStorageResponseDtoList,
                 mouldCode: '',
+                productLine: row.productLine,
                 orderNo: row.orderNo
             })
             this.spanArr = this.merge(this.tableData)
@@ -254,6 +255,7 @@
                 type: 'warning'
             }).then(() => {
                 this.$set(row, 'delFlag', 1)
+                this.$set(row, 'isDel', 1)
                 this.spanArr = this.merge(this.tableData)
                 this.$successToast('删除成功');
             });
@@ -261,7 +263,9 @@
 
         //表格行名
         rowDelFlag({ row }) {
-            if (row.status === '3') {
+            if (row.isDel) {
+                return 'rowDel'
+            } else if (row.status === '3') {
                 return 'disabled-row'
             } else if (row.status === '1') {
                 return 'warning-row'
@@ -429,6 +433,7 @@
         splitFlag?: string;
         status?: string;
         mouldCode?: string; // 模具号
+        productLine?: string; // 产线
         stoPackageMaterialStorageResponseDtoList?: Array<StoPackageMaterialStorageResponseDto>;
     }
     interface StoPackageMaterialStorageResponseDto {
