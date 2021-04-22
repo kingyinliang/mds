@@ -83,7 +83,7 @@
                             </el-button>
                         </div>
                     </template>
-                    <el-row class="home_card__main" :gutter="10">
+                    <el-row class="home_card__main" :gutter="10" style=" margin-right: 0; margin-left: 0;">
                         <el-col v-for="item in targetQueryTableList" :key="item.potId" :span="4" style="min-width: 200px;">
                             <div class="card-bucket">
                                 <div class="card-bucket__head">
@@ -1042,7 +1042,7 @@ interface CurrentDataTable{
 }
 .header_main >>> .fermenterTotalBox {
     width: 100%;
-    overflow: scroll;
+    overflow: auto;
 }
 </style>
 

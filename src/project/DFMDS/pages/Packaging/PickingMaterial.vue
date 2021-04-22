@@ -44,6 +44,7 @@
                 type: 'select',
                 label: '生产产线',
                 prop: 'productLine',
+                filterable: true,
                 optionsFn: val => {
                     return COMMON_API.ORG_QUERY_CHILDREN_API({
                         parentId: val || '',
@@ -67,6 +68,7 @@
             {
                 type: 'select',
                 label: '领料状态',
+                filterable: true,
                 prop: 'useMaterialStatus',
                 options: [
                     { label: '已领料', value: '1' },

@@ -151,6 +151,7 @@
                 label: '生产产线',
                 prop: 'productLine',
                 labelWidth: '100',
+                filterable: true,
                 optionsFn: val => {
                     return COMMON_API.ORG_QUERY_CHILDREN_API({
                         parentId: val || '',
@@ -174,7 +175,7 @@
                 defaultOptionsFn: () => {
                     return COMMON_API.SEARCH_MATERIAL_API({
                         factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
-                        materialType: 'ZHAL'
+                        materialType: 'ZVER'
                     })
                 },
                 resVal: {
