@@ -483,6 +483,7 @@
             this.rejectText = '';
             console.log('item')
             console.log(item)
+            this.currentRow = item;
             switch (who) {
                 case '1':
                     this.rejectProcess = this.processMapping[item.process]
@@ -653,7 +654,8 @@
                         kojiHouseId: this.rejectKojiHouseId,
                         orderNo: this.formHeader.orderNo,
                         process: this.rejectProcess,
-                        productDate: this.formHeader.productDate,
+                        // productDate: this.formHeader.productDate,
+                        productDate: this.currentRow.addKojiDate,
                         refuseSeason: this.rejectText
                     }).then(() => {
                         this.visibleRefuse = false;
@@ -666,7 +668,8 @@
                     KOJI_API.KOJI_REFUSE_INSTORAGE_API({
                         kojiHouseId: this.rejectKojiHouseId,
                         orderNo: this.formHeader.orderNo,
-                        productDate: this.formHeader.productDate,
+                        // productDate: this.formHeader.productDate,
+                        productDate: this.currentRow.addKojiDate,
                         refuseSeason: this.rejectText
                     }).then(() => {
                         this.visibleRefuse = false;
@@ -680,7 +683,8 @@
                         kojiHouseId: this.rejectKojiHouseId,
                         orderNo: this.formHeader.orderNo,
                         storageType: this.rejectMaterialStyle,
-                        productDate: this.formHeader.productDate,
+                        // productDate: this.formHeader.productDate,
+                        productDate: this.currentRow.addKojiDate,
                         refuseSeason: this.rejectText
                     }).then(() => {
                         this.visibleRefuse = false;
