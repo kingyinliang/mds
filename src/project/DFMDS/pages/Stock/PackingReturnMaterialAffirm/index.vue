@@ -168,7 +168,7 @@
             {
                 type: 'select',
                 label: '包材物料',
-                prop: 'material',
+                prop: 'materialCode',
                 defaultValue: '',
                 filterable: true,
                 labelWidth: '100',
