@@ -615,32 +615,36 @@
                                 boundaryGap: false,
                                 data: xAxisData,
                                 axisLabel: {
-                                        show: true,
-                                        interval: 0,
-                                        formatter: function(params) {
-                                            let newParamsName = '';
-                                            const paramsNameNumber = params.length;
-                                            const provideNumber = 10; //一行显示几个字
-                                            const rowNumber = Math.ceil(paramsNameNumber / provideNumber);
-                                            if (paramsNameNumber > provideNumber) {
-                                                for (let p = 0; p < rowNumber; p++) {
-                                                    let tempStr = '';
-                                                    const start = p * provideNumber;
-                                                    const end = start + provideNumber;
-                                                    if (p === rowNumber - 1) {
-                                                        tempStr = params.substring(start, paramsNameNumber);
-                                                    } else {
-                                                        tempStr = params.substring(start, end) + '\n';
-                                                    }
-                                                    newParamsName += tempStr;
+                                    show: true,
+                                    interval: 0,
+                                    rotate: 40,
+                                    textStyle: {
+                                        fontSize: 10
+                                    },
+                                    formatter: function(params) {
+                                        let newParamsName = '';
+                                        const paramsNameNumber = params.length;
+                                        const provideNumber = 10; //一行显示几个字
+                                        const rowNumber = Math.ceil(paramsNameNumber / provideNumber);
+                                        if (paramsNameNumber > provideNumber) {
+                                            for (let p = 0; p < rowNumber; p++) {
+                                                let tempStr = '';
+                                                const start = p * provideNumber;
+                                                const end = start + provideNumber;
+                                                if (p === rowNumber - 1) {
+                                                    tempStr = params.substring(start, paramsNameNumber);
+                                                } else {
+                                                    tempStr = params.substring(start, end) + '\n';
                                                 }
-
-                                            } else {
-                                                newParamsName = params;
+                                                newParamsName += tempStr;
                                             }
-                                            return newParamsName
+
+                                        } else {
+                                            newParamsName = params;
                                         }
+                                        return newParamsName
                                     }
+                                }
                             },
                             yAxis: {
                                 type: 'value',

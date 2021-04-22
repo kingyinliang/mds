@@ -120,6 +120,7 @@
         mounted() {
             this.getContainerStatusList()
             this.getContainerFermStatusList()
+            this.holderTypeChange()
         },
         methods: {
             holderTypeChange() {
@@ -169,6 +170,7 @@
                         this.dataForm.workshop = data.data.deptId;
                         this.dataForm.workshopName = this.workshopList.filter(item => item.id === data.data.deptId)[0].deptName;
                         this.dataForm.version = data.data.version;
+                        this.holderTypeChange()
                         this.isDialogShow = true;
                     });
                 } else {
@@ -183,7 +185,6 @@
                 }).then(({ data }) => {
                     this.materialList = data.data
                 });
-
 
             },
             setWorkshopName(val) {

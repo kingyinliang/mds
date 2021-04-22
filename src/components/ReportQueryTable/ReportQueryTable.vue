@@ -3,7 +3,7 @@
  * @Anthor: Telliex
  * @Date: 2021-02-26 10:58:05
  * @LastEditors: Telliex
- * @LastEditTime: 2021-04-13 19:52:10
+ * @LastEditTime: 2021-04-22 10:37:00
 -->
 <template>
     <div>
@@ -144,7 +144,7 @@
                             <template slot-scope="scope">
                                 <!-- array content -->
                                 <template v-if="item.dataType==='list'">
-                                    <ul v-if="scope.row[item.prop].length===1">
+                                    <ul v-if="scope.row[item.prop].length>=1">
                                         <li v-for="(subChild,subIndex) in scope.row[item.prop]" :key="subIndex" style="cursor: pointer;" @click="goParentAction(scope.row,scope.$index)">
                                             {{ subChild }}
                                         </li>
