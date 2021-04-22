@@ -288,6 +288,7 @@
         craftList: CraftList[] = [];
 
         processMapping={} // 工序 mapping
+        currentRow: { addKojiDate?: string } = {}
 
         async mounted() {
 
@@ -486,6 +487,7 @@
             switch (who) {
                 case '1':
                     this.rejectProcess = this.processMapping[item.process]
+                    this.currentRow = item
                 break;
                 case '2':
                     this.rejectProcess = this.processMapping[item.process]
@@ -638,7 +640,8 @@
                     KOJI_API.KOJI_REFUSE_READY_API({
                         orderNo: this.formHeader.orderNo,
                         process: this.rejectProcess,
-                        productDate: this.formHeader.productDate,
+                        // productDate: this.formHeader.productDate,
+                        productDate: this.currentRow.addKojiDate,
                         refuseSeason: this.rejectText,
                         workShop: this.formHeader.workShop
                     }).then(() => {
