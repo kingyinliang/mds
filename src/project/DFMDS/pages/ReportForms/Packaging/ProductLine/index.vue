@@ -233,7 +233,7 @@
                 {
                     prop: 'productLineName',
                     label: '生产产线',
-                    width: '240',
+                    width: '350',
                     hide: false,
                     fixed: false,
                     showOverFlowTooltip: true,
@@ -278,7 +278,7 @@
                     dataType: 'default'
                 },
                 {
-                    prop: 'googRatio',
+                    prop: 'goodRatio',
                     label: '良品率',
                     width: '100',
                     hide: false,

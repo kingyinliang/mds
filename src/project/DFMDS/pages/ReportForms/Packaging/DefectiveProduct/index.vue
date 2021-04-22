@@ -194,7 +194,7 @@
                     label: '生产订单',
                     width: '140',
                     hide: false,
-                    fixed: true,
+                    fixed: false,
                     showOverFlowTooltip: true,
                     subLabel: '',
                     dataType: 'default'
