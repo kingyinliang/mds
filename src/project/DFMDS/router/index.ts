@@ -45,15 +45,12 @@ const mainRoutes: RouteConfig = {
 
 const router = new VueRouter({
     mode: 'history',
-    base: process.env.BASE_URL + 'DFMDS.html',
+    base: process.env.BASE_URL + 'DFMDS',
     isAddDynamicMenuRoutes: false,
     routes: globalRoutes.concat(mainRoutes)
 } as RouterOptions);
 
 router.beforeEach((to, from, next) => {
-    if (to.query.token) {
-        Vue['cookie'].set('token', to.query.token);
-    }
     if (router['options']['isAddDynamicMenuRoutes'] || fnCurrentRouteType(to, globalRoutes) === 'global') {
         return next();
     }
