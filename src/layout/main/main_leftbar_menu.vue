@@ -67,7 +67,7 @@ export default {
         // 通过menuId与动态(菜单)路由进行匹配跳转至指定路由
         gotoRouteHandle(menu) {
             if (/^http[s]?:\/\/.*/.test(menu.menuUrl)) {
-                window.location.href = menu.menuUrl + '&token=' + this.$cookie.get('token') + '&tenant=MDS'
+                window.open(menu.menuUrl + '&token=' + this.$cookie.get('token') + '&tenant=MDS')
             } else {
                 const route = this.dynamicMenuRoutes.filter(item => item.meta.menuId === menu.id);
                 if (route.length >= 1) {
