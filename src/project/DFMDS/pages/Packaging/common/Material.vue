@@ -540,7 +540,7 @@
             row.startStocks = filterArr[0].storageAmount
             row.manufactor = filterArr[0].manufactor
             row.manufactorName = filterArr[0].manufactorName
-            row.packageStorageId = filterArr[0].packageStorageId || 'xxxxxx'
+            row.packageStorageId = filterArr[0].packageStorageId
         }
 
         // 处理数据1
