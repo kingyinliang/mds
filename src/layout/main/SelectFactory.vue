@@ -83,13 +83,13 @@
         goFa(item) {
             sessionStorage.setItem('vuex', '');
             if (item.deptCode === '6010' || item.deptCode === '7100' || item.deptCode === '7101') {
-                this.jumpTo(item, '/MDS.html')
+                this.jumpTo(item, '/MDS')
             } else if (item.deptCode === '9999-xn') {
-                this.jumpTo(item, '/SYSTEM.html')
+                this.jumpTo(item, '/SYSTEM')
             } else if (item.deptCode === '8888-xn') {
-                this.jumpTo(item, '/DATABOARD.html')
+                this.jumpTo(item, '/DATABOARD')
             } else {
-                this.jumpTo(item, '/DFMDS.html')
+                this.jumpTo(item, '/DFMDS')
             }
         }
 
