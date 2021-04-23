@@ -178,7 +178,7 @@
                     width: '260',
                     minWidth: '240',
                     hide: false,
-                    fixed: true,
+                    fixed: false,
                     showOverFlowTooltip: true,
                     dataType: 'default'
                 },
@@ -187,7 +187,7 @@
                     label: '品项',
                     minWidth: '350',
                     hide: false,
-                    fixed: true,
+                    fixed: false,
                     showOverFlowTooltip: true,
                     dataType: 'multi',
                     data: ['materialName', 'materialCode']
@@ -197,7 +197,7 @@
                     label: '领用物料',
                     minWidth: '350',
                     hide: false,
-                    fixed: true,
+                    fixed: false,
                     showOverFlowTooltip: true,
                     dataType: 'multi',
                     data: ['useMaterialName', 'useMaterialCode']
@@ -207,7 +207,7 @@
                     label: '单位',
                     width: '80',
                     hide: false,
-                    fixed: true,
+                    fixed: false,
                     showOverFlowTooltip: true,
                     dataType: 'default'
                 },
@@ -226,7 +226,7 @@
                     label: '需求用量',
                     width: '80',
                     hide: false,
-                    fixed: true,
+                    fixed: false,
                     showOverFlowTooltip: true,
                     dataType: 'default'
                 },
@@ -235,7 +235,7 @@
                     label: '锅序',
                     width: '80',
                     hide: false,
-                    fixed: true,
+                    fixed: false,
                     showOverFlowTooltip: true,
                     dataType: 'default'
                 },
@@ -244,7 +244,7 @@
                     label: '实际用量',
                     width: '80',
                     hide: false,
-                    fixed: true,
+                    fixed: false,
                     showOverFlowTooltip: true,
                     dataType: 'default'
                 },
