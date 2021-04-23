@@ -162,6 +162,10 @@ const PKG_API = {
      */
     PKG_RETURN_SUBMIT_API: params => httpProxy('/pkg/pkgPackageStorageItem/returnSubmit', 'POST', params),
     /**
+     * @property {string}  PKG_RETURN_DELETE_API 退料明细删除
+     */
+    PKG_RETURN_DELETE_API: params => httpProxy('/pkg/pkgPackageStorageItem/returnDelete', 'POST', params),
+    /**
      * @property {string}  VERIFY_STORAGE_RETURN_PAGE_QUERY_API 分页查询库存退料审核
      */
     VERIFY_STORAGE_RETURN_PAGE_QUERY_API: params => httpProxy('/verifyStorageReturn/pageQuery', 'POST', params),
