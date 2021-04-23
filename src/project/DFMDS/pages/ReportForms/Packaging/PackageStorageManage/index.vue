@@ -263,7 +263,7 @@
                 {
                     prop: 'productLineName',
                     label: '生产产线',
-                    width: '160',
+                    width: '250',
                     hide: false,
                     fixed: false,
                     showOverFlowTooltip: true,
@@ -280,7 +280,7 @@
                     data: ['materialName', 'materialCode']
                 },
                 {
-                    prop: 'moveType',
+                    prop: 'moveTypeName',
                     label: '属性',
                     width: '160',
                     hide: false,
@@ -309,7 +309,7 @@
                 {
                     prop: 'storageUnitName',
                     label: '单位',
-                    width: '140',
+                    width: '90',
                     hide: false,
                     fixed: false,
                     showOverFlowTooltip: true,
@@ -318,7 +318,7 @@
                 {
                     prop: 'manufactor',
                     label: '厂家',
-                    width: '120',
+                    width: '200',
                     hide: false,
                     fixed: false,
                     showOverFlowTooltip: true,
