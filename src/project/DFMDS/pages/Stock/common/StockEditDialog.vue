@@ -21,7 +21,7 @@
             <el-form-item label="物料批次：">
                 <el-input v-model="dialogForm.batch" class="stock-form_item_style" disabled size="small" placeholder="" />
             </el-form-item>
-            <el-form-item label="供应商：">
+            <el-form-item label="厂家：">
                 <el-input v-model="dialogForm.supplierName" class="stock-form_item_style" disabled size="small" placeholder="" />
             </el-form-item>
             <el-form-item label="模具编号：">

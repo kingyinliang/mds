@@ -140,7 +140,7 @@ export default class PackingLineEdge extends Vue {
             minwidth: '120px'
         },
         {
-            label: '供应商',
+            label: '厂家',
             prop: 'aaaaaaaaaaaa',
             minwidth: '120px'
         },
