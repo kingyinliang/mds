@@ -64,7 +64,7 @@
                                 <el-input v-model="scope.row.mouldCode" :disabled="!scope.row.canEditModuleCode" size="small" />
                             </template>
                         </el-table-column>
-                        <el-table-column label="供应商" min-width="140" show-overflow-tooltip>
+                        <el-table-column label="厂家" min-width="140" show-overflow-tooltip>
                             <!-- <template slot="header">
                                 <span class="notNull">* </span>厂家
                             </template> -->

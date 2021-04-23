@@ -168,7 +168,7 @@
             {
                 type: 'select',
                 label: '包材物料',
-                prop: 'material',
+                prop: 'materialCode',
                 defaultValue: '',
                 filterable: true,
                 labelWidth: '100',
@@ -219,7 +219,7 @@
             },
             {
                 prop: 'manufactorName',
-                label: '供应商',
+                label: '厂家',
                 minwidth: '140',
                 formatter(row) {
                     return `${row.manufactorName || ''} ${row.manufactor}`

@@ -34,7 +34,7 @@
                             </template>
                         </el-table-column>
                         <el-table-column label="批次" prop="batch" show-overflow-tooltip />
-                        <el-table-column label="供应商" prop="manufactor" width="120px" show-overflow-tooltip>
+                        <el-table-column label="厂家" prop="manufactor" width="120px" show-overflow-tooltip>
                             <template slot-scope="scope">
                                 {{ `${scope.row.manufactorName || ''} ${scope.row.manufactor}` }}
                             </template>
@@ -122,7 +122,7 @@ export default class PackingLineEdge extends Vue {
             },
             {
                 type: 'input',
-                label: '供应商',
+                label: '厂家',
                 prop: 'manufactor',
                 disabled: true
             },
@@ -281,6 +281,7 @@ export default class PackingLineEdge extends Vue {
     add() {
         const packageInfo = this.$store.state.packaging.packageInfo
         this.isAdd = true
+        this.currentRow = {}
         this.$refs.dialog.init({
             ...packageInfo,
             moveUnitName: packageInfo.storageUnit,
@@ -293,7 +294,7 @@ export default class PackingLineEdge extends Vue {
     edit(row) {
         this.currentRow = row;
         this.isAdd = false
-        this.$refs.dialog.init({ ...row, moveAmount: String(row.moveAmount), moveUnitName: row.moveUnit })
+        this.$refs.dialog.init({ ...row, moveAmount: String(row.moveAmount), moveUnitName: row.moveUnit, moveUnit: row.moveUnitCode })
     }
 
     submit() {
