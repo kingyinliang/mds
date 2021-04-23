@@ -34,7 +34,7 @@
                             </template>
                         </el-table-column>
                         <el-table-column label="批次" prop="batch" show-overflow-tooltip />
-                        <el-table-column label="供应商" prop="manufactor" width="120px" show-overflow-tooltip>
+                        <el-table-column label="厂家" prop="manufactor" width="120px" show-overflow-tooltip>
                             <template slot-scope="scope">
                                 {{ `${scope.row.manufactorName || ''} ${scope.row.manufactor}` }}
                             </template>
@@ -122,7 +122,7 @@ export default class PackingLineEdge extends Vue {
             },
             {
                 type: 'input',
-                label: '供应商',
+                label: '厂家',
                 prop: 'manufactor',
                 disabled: true
             },

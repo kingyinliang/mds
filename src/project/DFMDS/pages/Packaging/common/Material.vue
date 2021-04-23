@@ -63,7 +63,7 @@
                         <el-input v-model="scope.row.badReason" :disabled="!(isRedact && scope.row.checkStatus !== 'C' && scope.row.checkStatus !== 'D' && scope.row.checkStatus !== 'P' && scope.row.materialStatus !== '3')" size="small" placeholder="请输入" />
                     </template>
                 </el-table-column>
-                <el-table-column label="供应商" prop="manufactor" width="120" :show-overflow-tooltip="true">
+                <el-table-column label="厂家" prop="manufactor" width="120" :show-overflow-tooltip="true">
                     <template slot-scope="scope">
                         {{ `${scope.row.manufactorName || ''} ${scope.row.manufactor || ''}` }}
                     </template>

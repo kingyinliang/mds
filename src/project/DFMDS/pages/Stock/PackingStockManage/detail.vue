@@ -89,7 +89,7 @@ export default class MaterialDetail extends Vue {
             },
             {
                 type: 'select',
-                label: '供应商',
+                label: '厂家',
                 prop: 'supplierCode',
                 labelWidth: 90,
                 filterable: true,
@@ -127,7 +127,7 @@ export default class MaterialDetail extends Vue {
             width: 120
         },
         {
-            label: '供应商',
+            label: '厂家',
             prop: 'supplierName',
             width: 180,
             formatter: row => row.supplierName + ' ' + row.supplierCode

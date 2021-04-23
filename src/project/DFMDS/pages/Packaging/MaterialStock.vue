@@ -59,7 +59,7 @@
                     <el-table-column label="单位" prop="moveUnit" width="60" />
                     <el-table-column label="数量" prop="moveAmount" show-overflow-tooltip width="80" />
                     <el-table-column label="批次" prop="batch" width="110" />
-                    <el-table-column label="供应商" prop="manufactor" width="110" />
+                    <el-table-column label="厂家" prop="manufactor" width="110" />
                     <el-table-column label="移动类型" prop="moveType" width="80" show-overflow-tooltip />
                     <el-table-column label="订单" prop="orderNo" width="120" />
                     <el-table-column label="线别" prop="productLineName" show-overflow-tooltip width="140" />
@@ -90,7 +90,7 @@
                     <el-form-item label="模具号：">
                         <el-input v-model="transferForm.mouldCode" type="text" maxlength="10" style="width: 380px;" disabled />
                     </el-form-item>
-                    <el-form-item label="供应商：">
+                    <el-form-item label="厂家：">
                         <el-input v-model="transferForm.manufactor" type="text" style="width: 380px;" disabled />
                     </el-form-item>
                     <el-form-item label="当前库存：">
@@ -149,7 +149,7 @@
                     <el-form-item label="模具号：">
                         <el-input v-model="adjustForm.mouldCode" type="text" maxlength="10" style="width: 380px;" disabled />
                     </el-form-item>
-                    <el-form-item label="供应商：">
+                    <el-form-item label="厂家：">
                         <el-input v-model="adjustForm.manufactor" type="text" style="width: 380px;" disabled />
                     </el-form-item>
                     <el-form-item label="当前库存：">
@@ -300,7 +300,7 @@ export default class MaterialStock extends Vue {
             minwidth: '110'
         },
         {
-            label: '供应商',
+            label: '厂家',
             prop: 'manufactor',
             minwidth: '140',
             formatter: (row) => {
