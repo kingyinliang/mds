@@ -20,7 +20,10 @@
             <template slot="home">
                 <mds-card title="退料明细" :pack-up="false">
                     <template slot="titleBtn">
-                        <el-button type="primary" size="small" style="float: right;" @click="submit">
+                        <el-button type="danger" size="small" style="float: right; margin-left: 10px;" @click="submit('删除')">
+                            删除
+                        </el-button>
+                        <el-button type="primary" size="small" style="float: right;" @click="submit('提交')">
                             提交
                         </el-button>
                     </template>
@@ -297,17 +300,18 @@ export default class PackingLineEdge extends Vue {
         this.$refs.dialog.init({ ...row, moveAmount: String(row.moveAmount), moveUnitName: row.moveUnit, moveUnit: row.moveUnitCode })
     }
 
-    submit() {
+    submit(type) {
         if (!this.selections.length) {
             this.$warningToast('请选择明细')
             return
         }
-        this.$confirm('确定提交吗?', '提示', {
+        this.$confirm(`确定${type}吗?`, '提示', {
             confirmButtonText: '确定',
             cancelButtonText: '取消',
             type: 'warning'
         }).then(() => {
-            PKG_API.PKG_RETURN_SUBMIT_API(this.selections.map((item: { id: string }) => item.id)).then(res => {
+            const submitType = type === '提交' ? 'PKG_RETURN_SUBMIT_API' : 'PKG_RETURN_DELETE_API'
+            PKG_API[submitType](this.selections.map((item: { id: string }) => item.id)).then(res => {
                 this.$successToast(res.data.msg)
                 this.$refs.queryTable.getDataList(true)
             })
