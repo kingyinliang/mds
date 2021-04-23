@@ -287,6 +287,20 @@ function formatJson(column, jsonData) {
         })
     );
 }
+
+function formatJson2(filterVal, jsonData) {
+    return jsonData.map(v =>
+      filterVal.map(j => {
+        // if (j === "timestamp") {
+        //   return parseTime(v[j])
+        // } else {
+          return v[j]
+        // }
+      })
+    )
+  }
+
+
 interface Column {
     label: string;
     prop: string;
@@ -363,17 +377,18 @@ export function exportFile2ExcelWithMultiHeader(column: Column[], merges = [], t
  * @param {boolean} autoWidth
  * @param {string} bookTypes
  */
-export function exportFileFor2ExcelMultiSheets(tableJson, fileName = '报表', autoWidth, bookTypes) {
+export function exportFileFor2ExcelMultiSheets(tableJson, fileName = '报表', autoWidth = true, bookTypes = 'xlsx') {
     import('../vendor/Export2Excel.js').then(excel => {
         const tHeader: string[] = [];
         const dataArr: object[] = [];
         const sheetNames: string[] = [];
         for (const i in tableJson) {
             tHeader.push(tableJson[i].tHeader);
-            dataArr.push(formatJson(tableJson[i].filterVal, tableJson[i].tableDatas));
+            dataArr.push(formatJson2(tableJson[i].filterVal, tableJson[i].tableDatas));
             sheetNames.push(tableJson[i].sheetName);
         }
-        excel.export_json_to_excel_with_Multi_Sheet({
+
+        excel.export_json_to_excel_with_Multi_Sheets({
             header: tHeader,
             data: dataArr,
             sheetname: sheetNames,
@@ -383,6 +398,7 @@ export function exportFileFor2ExcelMultiSheets(tableJson, fileName = '报表', a
         });
     });
 }
+
 
 export function setUserList(data) {
     const res: UserObj[] = [];

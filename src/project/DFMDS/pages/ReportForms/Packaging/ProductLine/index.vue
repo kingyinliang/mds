@@ -22,7 +22,7 @@
                     </el-button>
                 </div>
                 <div class="inner-area__body">
-                    <el-table class="newTable" :data="dialogDataMainTable" header-row-class-name="tableHead" tooltip-effect="dark" border style="width: 100%; min-height: 90px; margin-bottom: 20px;" @row-dblclick="showDetailInfo">
+                    <el-table class="newTable" :data="dialogDataMainTable" header-row-class-name="tableHead" tooltip-effect="dark" border style="width: 100%; max-height: 150px; margin-bottom: 20px;" @row-dblclick="showDetailInfo">
                         <el-table-column label="项次" type="index" width="55px" />
                         <el-table-column label="生产线" prop="productLineName" min-width="120px" show-overflow-tooltip />
                         <el-table-column label="物料编码" prop="materialCode" min-width="120px" show-overflow-tooltip />
@@ -31,7 +31,7 @@
                         <el-table-column label="停机情况" prop="stopType" width="120px" show-overflow-tooltip />
                         <el-table-column label="停机时长(min)" prop="stopTime" width="120px" show-overflow-tooltip />
                     </el-table>
-                    <el-table v-if="isShowSecondTable" class="newTable" :data="notReachInfoList" header-row-class-name="tableHead" tooltip-effect="dark" border style="width: 100%; min-height: 90px;">
+                    <el-table v-if="isShowSecondTable" class="newTable" :data="notReachInfoList" header-row-class-name="tableHead" tooltip-effect="dark" border style="width: 100%; max-height: 150px;">
                         <el-table-column label="项次" type="index" width="55px" />
                         <el-table-column label="生产日期" prop="productDate" width="120px" />
                         <el-table-column label="停机类型" prop="stopTypeName" min-width="120px" show-overflow-tooltip />
@@ -351,8 +351,29 @@
         }
 
         subTableExportExcel(data) {
-            console.log('data')
-            console.log(data)
+
+            // var excelDatas = [
+            //     {
+            //     tHeader: ['Id', 'Title', 'Author', 'Readings', 'Date'], // sheet表一头部
+            //     filterVal: ['id', 'title', 'author', 'pageviews', 'display_time'], // 表一的数据字段
+            //     tableDatas: this.list, // 表一的整体json数据
+            //     sheetName: 'sheet1'// 表一的sheet名字
+            //     },
+            //     {
+            //     tHeader: ['序号', '标题', '作者', '服务'],
+            //     filterVal: ['id', 'title', 'author', 'reviewer'],
+            //     tableDatas: this.list,
+            //     sheetName: 'sheet2'
+            //     },
+            //     {
+            //     tHeader: ['序号', '名字', '描述'],
+            //     filterVal: ['userId', 'userName', 'userDescription'],
+            //     tableDatas: this.rolesList,
+            //     sheetName: 'sheet5555'
+            //     }
+            // ]
+
+
             const excelDatas = [
                 {
                     tHeader: ['生产线', '物料编码', '生产物料', '月/季', '停机情况', '停机时长（MIN)'],
@@ -362,15 +383,29 @@
                 }
             ]
 
-            data.foeEach(item => {
+
+            data.forEach(item => {
                 excelDatas.push({
                     tHeader: ['生产日期', '停机类型', '停机方式', '停机时间开始', '停机结束时间', '停机时长（MIN)', '次数', '停机情况', '停机原因'],
-                    filterVal: ['productDate', 'stopType', 'stopMode', 'startDate', 'endDate', 'duration', 'exceptionCount', 'stopReason'],
+                    filterVal: ['productDate', 'stopTypeName', 'stopModeName', 'startDate', 'endDate', 'duration', 'exceptionCount', 'stopSituationName', 'stopReasonName'],
                     tableDatas: item.notReachInfo,
                     sheetName: item.stopType
                 })
             })
+
+
             exportFileFor2ExcelMultiSheets(excelDatas, '异常明细', true, 'xlsx')
+        }
+
+        formatJson(column, jsonData) {
+            return jsonData.map(v =>
+                column.map(j => {
+                    if (j.formatter && typeof j.formatter(v) === 'string') {
+                        return j.formatter(v);
+                    }
+                    return v[j.prop];
+                })
+            );
         }
 
         /**
