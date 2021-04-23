@@ -1,5 +1,4 @@
 import SSOLogin from '@shinho-fe/ssologin'
-// import SSOLogin from './net/SSOLogin.min'
 
 export default new SSOLogin({
     NODE_ENV: process.env.NODE_ENV,

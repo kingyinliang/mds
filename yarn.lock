@@ -1075,10 +1075,10 @@
   dependencies:
     any-observable "^0.3.0"
 
-"@shinho-fe/ssologin@^1.0.1":
-  version "1.0.1"
-  resolved "https://registry.yarnpkg.com/@shinho-fe/ssologin/-/ssologin-1.0.1.tgz#983de1a7bca3dd7011a0b09ba3607fec820d1366"
-  integrity sha512-Gft9MH8HG1XPXB+Cy5NR/huBBftifj7fIcQu78UDXvkMByHvqmH9D1WxcIyAF8rSblGbdbwQfbR8AG/y9Zw3BQ==
+"@shinho-fe/ssologin@^1.0.2":
+  version "1.0.2"
+  resolved "https://registry.yarnpkg.com/@shinho-fe/ssologin/-/ssologin-1.0.2.tgz#acce761942e98d2ce51b025f9a7426705818e4bd"
+  integrity sha512-HD7uSdGPknYFOFHg7SAJLDO5xrtjGo42yrbGv5zESMxmhXXMih+J/gMWciTOSKJe/F0qd5uAPYmJZhWfsF7jbw==
   dependencies:
     axios "^0.21.1"
     clean-webpack-plugin "^4.0.0-alpha.0"
