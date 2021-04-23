@@ -58,6 +58,7 @@ export default class MaterialDetail extends Vue {
     supplierCodeList: Array<{}> = [];
 
     get queryFormData() {
+        const stockInfo = this.$store.state.stock.stockInfo;
         return [
             {
                 type: 'select',
@@ -71,6 +72,7 @@ export default class MaterialDetail extends Vue {
                 ],
                 defaultOptionsFn: () => {
                     return COMMON_API.ALLMATERIAL_API({
+                        materialGroupCode: stockInfo.materialGroupCode,
                         materialTypes: ['ZVER'] // 物料类型
                     })
                 },
