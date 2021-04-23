@@ -42,8 +42,9 @@
 </template>
 
 <script>
-    import { COMMON_API, MSG_API } from 'common/api/api';
+    import { MSG_API } from 'common/api/api';
     import * as socketApi from 'utils/net/WebSocketConnect';
+    import SSOLogin from 'utils/SSOLogin';
 
     export default {
         name: 'MainTopbar',
@@ -193,13 +194,10 @@
                     type: 'warning'
                 })
                     .then(() => {
-                        COMMON_API.LOGOUT_API({}).then(({ data }) => {
-                            if (data && data.code === 200) {
-                                this.$cookie.delete('token');
-                                this.$router.options.isAddDynamicMenuRoutes = false;
-                                window.location.href = `${process.env.VUE_APP_HOST}`;
-                            }
-                        });
+                        SSOLogin.logout().then(() => {
+                            this.$router.options.isAddDynamicMenuRoutes = false;
+                            window.location.href = `${process.env.VUE_APP_HOST}`;
+                        })
                     })
                     .catch();
             },

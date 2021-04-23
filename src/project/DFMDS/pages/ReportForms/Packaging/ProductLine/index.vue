@@ -34,14 +34,14 @@
                     <el-table v-if="isShowSecondTable" class="newTable" :data="notReachInfoList" header-row-class-name="tableHead" tooltip-effect="dark" border style="width: 100%; min-height: 90px;">
                         <el-table-column label="项次" type="index" width="55px" />
                         <el-table-column label="生产日期" prop="productDate" width="120px" />
-                        <el-table-column label="停机类型" prop="stopType" min-width="120px" show-overflow-tooltip />
-                        <el-table-column label="停机方式" prop="stopMode" min-width="120px" show-overflow-tooltip />
+                        <el-table-column label="停机类型" prop="stopTypeName" min-width="120px" show-overflow-tooltip />
+                        <el-table-column label="停机方式" prop="stopModeName" min-width="120px" show-overflow-tooltip />
                         <el-table-column label="停机开始时间" prop="startDate" width="120px" show-overflow-tooltip />
                         <el-table-column label="停机结束时间" prop="endDate" width="120px" show-overflow-tooltip />
                         <el-table-column label="停机时长(min)" prop="duration" width="120px" />
                         <el-table-column label="次数" prop="exceptionCount" width="120px" />
-                        <el-table-column label="停机情况" prop="stopSituation" min-width="120px" show-overflow-tooltip />
-                        <el-table-column label="停机原因" prop="stopReason" min-width="120px" show-overflow-tooltip />
+                        <el-table-column label="停机情况" prop="stopSituationName" min-width="120px" show-overflow-tooltip />
+                        <el-table-column label="停机原因" prop="stopReasonName" min-width="120px" show-overflow-tooltip />
                     </el-table>
                 </div>
                 <div slot="footer" class="dialog-footer" />
@@ -351,6 +351,8 @@
         }
 
         subTableExportExcel(data) {
+            console.log('data')
+            console.log(data)
             const excelDatas = [
                 {
                     tHeader: ['生产线', '物料编码', '生产物料', '月/季', '停机情况', '停机时长（MIN)'],
