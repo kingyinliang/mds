@@ -134,7 +134,6 @@ export default {
             sessionStorage.setItem('defaultFactory', data.defaultFactory || '');
             this.userName = data.userName
             this.realName = data.realName
-            this.selectFactory(data)
             if (data.firstFlag === 'Y') {
                 this.visible = true;
                 this.factory = data.userFactory

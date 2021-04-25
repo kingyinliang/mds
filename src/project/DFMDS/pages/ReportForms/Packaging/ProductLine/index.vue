@@ -24,9 +24,12 @@
                 <div class="inner-area__body">
                     <el-table class="newTable" :data="dialogDataMainTable" header-row-class-name="tableHead" tooltip-effect="dark" border style="width: 100%; max-height: 150px; margin-bottom: 20px;" @row-dblclick="showDetailInfo">
                         <el-table-column label="项次" type="index" width="55px" />
-                        <el-table-column label="生产线" prop="productLineName" min-width="120px" show-overflow-tooltip />
-                        <el-table-column label="物料编码" prop="materialCode" min-width="120px" show-overflow-tooltip />
-                        <el-table-column label="生产物料" prop="materialName" min-width="120px" show-overflow-tooltip />
+                        <el-table-column label="生产线" prop="productLineName" min-width="250px" show-overflow-tooltip />
+                        <el-table-column label="物料编码" prop="materialCode" min-width="350px" show-overflow-tooltip>
+                            <template slot-scope="scope">
+                                {{ scope.row.materialName }} {{ scope.row.materialCode }}
+                            </template>
+                        </el-table-column>
                         <el-table-column label="月/季" prop="productDate" width="120px" />
                         <el-table-column label="停机情况" prop="stopType" width="120px" show-overflow-tooltip />
                         <el-table-column label="停机时长(min)" prop="stopTime" width="120px" show-overflow-tooltip />
@@ -36,12 +39,12 @@
                         <el-table-column label="生产日期" prop="productDate" width="120px" />
                         <el-table-column label="停机类型" prop="stopTypeName" min-width="120px" show-overflow-tooltip />
                         <el-table-column label="停机方式" prop="stopModeName" min-width="120px" show-overflow-tooltip />
-                        <el-table-column label="停机开始时间" prop="startDate" width="120px" show-overflow-tooltip />
-                        <el-table-column label="停机结束时间" prop="endDate" width="120px" show-overflow-tooltip />
+                        <el-table-column label="停机开始时间" prop="startDate" width="200px" show-overflow-tooltip />
+                        <el-table-column label="停机结束时间" prop="endDate" width="200px" show-overflow-tooltip />
                         <el-table-column label="停机时长(min)" prop="duration" width="120px" />
                         <el-table-column label="次数" prop="exceptionCount" width="120px" />
                         <el-table-column label="停机情况" prop="stopSituationName" min-width="120px" show-overflow-tooltip />
-                        <el-table-column label="停机原因" prop="stopReasonName" min-width="120px" show-overflow-tooltip />
+                        <el-table-column label="停机原因" prop="stopReasonName" min-width="200px" show-overflow-tooltip />
                     </el-table>
                 </div>
                 <div slot="footer" class="dialog-footer" />

@@ -205,7 +205,7 @@
                 {
                     prop: 'manName',
                     label: '人员姓名工号',
-                    width: '140',
+                    width: '200',
                     hide: false,
                     fixed: false,
                     showOverFlowTooltip: true,
@@ -214,7 +214,7 @@
                 {
                     prop: 'startDate',
                     label: '开始时间',
-                    width: '100',
+                    width: '150',
                     hide: false,
                     fixed: false,
                     showOverFlowTooltip: true,
@@ -233,7 +233,7 @@
                 {
                     prop: 'endDate',
                     label: '结束时间',
-                    width: '100',
+                    width: '150',
                     hide: false,
                     fixed: false,
                     showOverFlowTooltip: true,
