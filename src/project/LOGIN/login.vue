@@ -135,17 +135,17 @@ export default {
             this.userName = data.userName
             this.realName = data.realName
             this.selectFactory(data)
-            // if (data.firstFlag === 'Y') {
-            //     this.visible = true;
-            //     this.factory = data.userFactory
-            //     this.dataForm.id = data.id
-            //     this.dataForm.workNum = data.userName
-            // } else if (data.defaultFactory) {
-            //     const dfFa = data.userFactory.filter(item => item.deptCode === data.defaultFactory)[0]
-            //     this.$refs.selectfactory.goFa(dfFa)
-            // } else {
-            //     this.selectFactory(data)
-            // }
+            if (data.firstFlag === 'Y') {
+                this.visible = true;
+                this.factory = data.userFactory
+                this.dataForm.id = data.id
+                this.dataForm.workNum = data.userName
+            } else if (data.defaultFactory) {
+                const dfFa = data.userFactory.filter(item => item.deptCode === data.defaultFactory)[0]
+                this.$refs.selectfactory.goFa(dfFa)
+            } else {
+                this.selectFactory(data)
+            }
         },
         selectFactory(data) {
             this.factory = data.userFactory
