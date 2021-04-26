@@ -127,7 +127,8 @@ export default class PackingLineEdge extends Vue {
                 type: 'input',
                 label: '厂家',
                 prop: 'manufactor',
-                disabled: true
+                disabled: true,
+                formatter: row => `${row.manufactorName || ''} ${row.manufactor || ''}`
             },
             {
                 type: 'input',
