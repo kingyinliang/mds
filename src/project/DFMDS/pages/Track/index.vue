@@ -23,13 +23,13 @@
 
             <template slot="home">
                 <mds-card title="物料追踪" :pack-up="false">
-                    <el-table ref="semiReceive" class="newTable" :data="semiReceiveList" row-key="id" :tree-props="{children: 'children', hasChildren: 'hasChildren'}" header-row-class-name="tableHead" border tooltip-effect="dark">
+                    <el-table ref="semiReceive" class="newTable" :data="trackMaterialData" row-key="id" :tree-props="{children: 'children', hasChildren: 'hasChildren'}" header-row-class-name="tableHead" border tooltip-effect="dark">
                         <el-table-column type="index" label="序号" width="50" align="center" fixed />
-                        <table-tree-column label="物料" prop="fermentPotName" min-width="300" tree-key="id" show-overflow-tooltip />
-                        <el-table-column label="批次" prop="stePotName" min-width="85" />
-                        <el-table-column label="数量" prop="stePotName" min-width="85" />
-                        <el-table-column label="单位" prop="stePotName" min-width="85" />
-                        <el-table-column label="入罐时间" prop="changed" min-width="100" />
+                        <table-tree-column label="物料" prop="propA" min-width="300" tree-key="id" show-overflow-tooltip />
+                        <el-table-column label="批次" prop="propB" min-width="120" />
+                        <el-table-column label="数量" prop="propC" min-width="100" />
+                        <el-table-column label="单位" prop="propD" min-width="100" />
+                        <el-table-column label="入罐时间" prop="propE" min-width="2000" />
                     </el-table>
                 </mds-card>
             </template>
@@ -54,6 +54,8 @@
         $refs: {
             reportRef: HTMLFormElement;
         };
+
+        trackMaterialData: object[]=[]
 
         queryFormData = [
             {
