@@ -82,17 +82,20 @@
                 {
                     label: '生产车间',
                     prop: 'workShopName',
-                    minwidth: 120
+                    showOverFlowTooltip: true,
+                    width: '140px'
                 },
                 {
                     label: '生产线',
                     prop: 'productLineName',
-                    width: 120
+                    showOverFlowTooltip: true,
+                    width: '140px'
                 },
                 {
                     label: '生产物料',
                     prop: 'materialName',
-                    minwidth: '210',
+                    width: '210',
+                    showOverFlowTooltip: true,
                     formatter: (row) => {
                         return row.materialName + ' ' + row.materialCode;
                     }
@@ -138,7 +141,7 @@
                 label: '生产车间',
                 labelWidth: '120',
                 prop: 'workShop',
-                defaultValue: '',
+                // defaultValue: '',
                 clearable: true,
                 rule: [{ required: false, message: '请选择生产车间', trigger: 'blur' }],
                 defaultOptionsFn: () => {

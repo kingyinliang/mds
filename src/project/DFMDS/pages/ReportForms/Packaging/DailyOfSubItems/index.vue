@@ -125,7 +125,7 @@
                 type: 'select',
                 label: '生产车间',
                 prop: 'workShop',
-                defaultValue: '',
+                // defaultValue: '',
                 labelWidth: '100',
                 clearable: true,
                 rule: [{ required: false, message: '请选择生产车间', trigger: 'blur' }],
