@@ -45,7 +45,7 @@
                 </div>
             </template>
             <template slot="operation_column" slot-scope="{ scope }">
-                <el-button v-if="isAuth('ckStgEdit') && $refs.queryTable.activeName === '0'" class="ra_btn" type="text" round size="mini" @click="addOrupdate(scope.row)">
+                <el-button v-if="isAuth('ckStgEdit') && $refs.queryTable.activeName === '0'" class="ra_btn" type="text" round size="mini" @click="addOrupdate(scope.row, scope.$index)">
                     {{ scope.row.redact ? '保存' : '编辑' }}
                 </el-button>
                 <el-button v-if="isAuth('ckStgRecord')" class="ra_btn" type="text" round size="mini" @click="AuditLog(scope.row)">
@@ -456,9 +456,10 @@
         }
 
         // 保存修改
-        addOrupdate(row) {
+        addOrupdate(row, index) {
             if (!row.redact) {
                 row.redact = true;
+                this.$set(this.tabs[this.$refs.queryTable.activeName].tableData, index, row)
             } else {
                 if (!row.stgeLoc || !row.moveType || !row.stckType) {
                     this.$warningToast('请填写必填项')
