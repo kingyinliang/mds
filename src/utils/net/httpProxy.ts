@@ -136,8 +136,8 @@ export default (url: string, method: string = HTTP_METHOD.GET, data = {}, bussin
         url: HOST + url,
         method,
         headers: {},
-        timeout: 1000 * 60 * 20,
-        withCredentials: false
+        timeout: 1000 * 60 * 20
+        // withCredentials: true
     };
 
     Vue.prototype.lodingState = londingstatus;
