@@ -11,6 +11,7 @@
             :query-table-type="'report'"
             @get-data-success="setData"
             @data-action="dataAction"
+            @value-change="valueChange"
         />
 
         <el-dialog title="异常明细" :close-on-click-modal="false" :visible.sync="isDialogVisible" width="70%" class="infoDialog">
@@ -331,6 +332,14 @@
             }
             return REPORTS_API.REPORT_PACKAGING_PRODUCTLINE_OEE_QUERY_API(params);
         };
+
+        valueChange(v) {
+            if (v === 'day') {
+                this.$refs.queryTable.clickAble = false
+                return
+            }
+            this.$refs.queryTable.clickAble = true
+        }
 
 
         dataAction(row, index) {

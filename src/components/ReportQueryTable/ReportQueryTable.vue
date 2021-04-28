@@ -144,7 +144,7 @@
                             <template slot-scope="scope">
                                 <!-- array content -->
                                 <template v-if="item.dataType==='list'">
-                                    <ul v-if="scope.row[item.prop].length>1">
+                                    <ul v-if="clickAble">
                                         <li v-for="(subChild,subIndex) in scope.row[item.prop]" :key="subIndex" style=" color: #6073f0; cursor: pointer;" @click="goParentAction(scope.row,scope.$index)">
                                             {{ subChild }}
                                         </li>
@@ -327,7 +327,8 @@
                 // prePage: 1,
                 currentPage: 1,
                 currentSize: 10,
-                totalCount: 0
+                totalCount: 0,
+                clickAble: false
             };
         },
         created() {
@@ -468,6 +469,7 @@
                                 // 获取联动的下拉
                                 if (val) {
                                     item.changeToAction(val).then((data) => {
+                                        this.$emit('value-change', val);
                                         this.queryFormData.forEach(element => {
                                             element.disabled = false;
                                             data.forEach(subItem => {
