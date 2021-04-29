@@ -158,6 +158,15 @@
                     data: ['materialName', 'materialCode']
                 },
                 {
+                    prop: 'productDate',
+                    label: '生产日期',
+                    width: '120',
+                    hide: false,
+                    fixed: false,
+                    showOverFlowTooltip: true,
+                    dataType: 'default'
+                },
+                {
                     prop: 'orderYield',
                     label: '订单产量',
                     width: '120',
