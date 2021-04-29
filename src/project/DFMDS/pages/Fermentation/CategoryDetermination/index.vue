@@ -4,7 +4,7 @@
         <query-table
             ref="queryTable"
             type="home"
-            query-auth="steCkQuery"
+            query-auth="ferJdgSdQuery"
             :factory-type="1"
             :query-form-data="queryTableFormData"
             :list-interface="queryTableListInterface"
@@ -114,7 +114,7 @@
                         <el-button type="default" size="small" @click="handleClose">
                             取消
                         </el-button>
-                        <el-button type="primary" size="small" @click="judgedHandler">
+                        <el-button v-if="isAuth('ferJdgSdSave')" type="primary" size="small" @click="judgedHandler">
                             确定
                         </el-button>
                     </div>

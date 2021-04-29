@@ -7,7 +7,7 @@
             :form-header="formHeader"
             :order-status="formHeader.orderStatus"
             status-title="状态"
-            :redact-box-show="formHeader.orderStatus !== 'M'"
+            :redact-box-show="formHeader.orderStatus !== 'M' && isAuth('ferBiSdSave')"
             :saved-datas="savedDatas"
             :submit-rules="submitRules"
             :submit-datas="submitDatas"

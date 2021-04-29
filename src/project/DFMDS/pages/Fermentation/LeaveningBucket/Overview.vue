@@ -11,7 +11,7 @@
             <mds-card title="发酵罐一览表(单位: 罐/个)" :name="'kojiGuard'">
                 <template slot="titleBtn">
                     <div style="float: right;">
-                        <el-button type="primary" size="small" @click="exportFermentSummary">
+                        <el-button v-if="isAuth('ferFmtProQuery')" type="primary" size="small" @click="exportFermentSummary">
                             导出
                         </el-button>
                     </div>
@@ -100,7 +100,7 @@
             <mds-card title="发酵库存列表" :name="'kojiGuard'">
                 <template slot="titleBtn">
                     <div style="float: right;">
-                        <el-button type="primary" size="small" @click="exportFermentStockSummary">
+                        <el-button v-if="isAuth('ferFmtProQuery')" type="primary" size="small" @click="exportFermentStockSummary">
                             导出
                         </el-button>
                     </div>

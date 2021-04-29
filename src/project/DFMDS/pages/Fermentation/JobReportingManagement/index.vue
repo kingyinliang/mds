@@ -3,7 +3,7 @@
     <div class="header_main">
         <query-table
             ref="queryTable"
-            query-auth="steCkQuery"
+            query-auth="ferJbSdQuery"
             :factory-type="1"
             :rules="queryTableFormRules"
             :query-form-data="queryTableFormData"
@@ -19,7 +19,7 @@
             @select-change="calculateHandler"
         >
             <template slot="mds-button">
-                <el-button type="primary" size="small" @click="produceHandler">
+                <el-button v-if="isAuth('ferJbCalc')" type="primary" size="small" @click="produceHandler">
                     同步
                 </el-button>
             </template>
@@ -41,7 +41,7 @@
             </template>
             <template slot="operation_column" slot-scope="scope">
                 <div>
-                    <el-button v-show="scope.scope.row.checkStatus === 'S'" class="delBtn" type="text" icon="el-icon-delete" size="mini" :disabled="!isRedact" @click="removeDataRow(scope.scope.row)">
+                    <el-button v-if="isAuth('ferJbSdDel')" v-show="scope.scope.row.checkStatus === 'S'" class="delBtn" type="text" icon="el-icon-delete" size="mini" :disabled="!isRedact" @click="removeDataRow(scope.scope.row)">
                         删除
                     </el-button>
                     <el-button type="text" size="small" @click="showLogHandler(scope.scope.row)">
@@ -50,7 +50,7 @@
                 </div>
             </template>
         </query-table>
-        <redact-box :disabled="redactBoxDisable" :is-redact.sync="isRedact" redact-auth="steStgEdit" save-auth="steStgEdit" :is-show-submit-btn="true" :saved-rules="savedRules" :submit-rules="submitRules" :saved-datas="savedDatas" :submit-datas="submitDatas" @sendSuccess="sendSuccess" />
+        <redact-box :disabled="redactBoxDisable" :is-redact.sync="isRedact" redact-auth="ferJbSdSave" save-auth="ferJbSdSave" :is-show-submit-btn="true" :saved-rules="savedRules" :submit-rules="submitRules" :saved-datas="savedDatas" :submit-datas="submitDatas" @sendSuccess="sendSuccess" />
         <el-dialog title="审核日志" width="900px" :close-on-click-modal="false" :visible.sync="dialogVisible">
             <audit-log :table-data="logList" :verify-man="'verifyMan'" :verify-date="'verifyDate'" :pack-up="false" :status="true" />
             <div slot="footer" class="dialog-footer" />

@@ -5,6 +5,7 @@
             type="audit"
             :order-status-show="false"
             :head-show="false"
+            :redact-box-show="isAuth('ferOpnSdSave')"
         >
             <template slot="headerCard">
                 <mds-card title="申请基本信息" :name="'head'">
