@@ -308,11 +308,11 @@
         goProcessDetail(item) {
             console.log('点击后 item')
             console.log(item)
-            this.goDetail(this.processMapping[item.process], item.arg)
+            this.goDetail(this.processMapping[item.process], item.arg, item)
         }
 
         // 跳转工序页面
-        goDetail(who, arg) {
+        goDetail(who, arg, row) {
             let url = '';
             let whichTab = '';
                 switch (who) {
@@ -342,6 +342,7 @@
                 }
 
             console.log(`url:${url}`)
+            this.$store.commit('koji/updateOrderKojiInfo', { ...row, orderNo: this.formHeader.orderNo });
 
             this.$store.commit(
                     'common/updateMainTabs',

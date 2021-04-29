@@ -9,7 +9,7 @@
     <div class="header_main">
         <query-table
             ref="queryTable"
-            query-auth="steDisQuery"
+            query-auth="ferFmtSdQuery"
             :type="'home'"
             :rules="queryTableFormRules"
             :query-form-data="queryTableFormData"
