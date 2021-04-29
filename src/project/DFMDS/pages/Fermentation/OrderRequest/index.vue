@@ -3,7 +3,7 @@
     <div class="header_main">
         <query-table
             ref="queryTable"
-            query-auth="steCkQuery"
+            query-auth="ferOrdSdQuery"
             :factory-type="1"
             :rules="queryTableFormRules"
             :query-form-data="queryTableFormData"
@@ -20,7 +20,7 @@
             <template v-slot:tab-head0>
                 <div class="box-card-title clearfix">
                     <h3> <em class="title-icon" :style="{ background: '#487bff' }" />{{ '未申请' }} </h3>
-                    <el-button type="primary" size="small" style="float: right;" @click="requestOrderHandler">
+                    <el-button v-if="isAuth('ferOrdSdSubmit')" type="primary" size="small" style="float: right;" @click="requestOrderHandler">
                         申请订单
                     </el-button>
                 </div>

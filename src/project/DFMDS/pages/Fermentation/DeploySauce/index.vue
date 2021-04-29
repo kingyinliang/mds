@@ -5,6 +5,7 @@
             :tabs="tabs"
             :factory-type="1"
             :query-form-data="queryFormData"
+            query-auth="ferMxSdQuery"
             :custom-data="true"
             :list-interface="listInterface"
             @get-data-success="setData"

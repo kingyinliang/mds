@@ -4,6 +4,7 @@
             ref="queryTable"
             :factory-type="1"
             :query-form-data="queryFormData"
+            query-auth="ferOpnSdQuery"
             :tabs="tabs"
             :list-interface="listInterface"
             :operation-column-width="65"

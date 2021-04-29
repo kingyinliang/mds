@@ -4,7 +4,7 @@
         <query-table
             ref="queryTable"
             type="home"
-            query-auth="steCkQuery"
+            query-auth="ferMtlSdQuery"
             :factory-type="1"
             :query-form-data="queryTableFormData"
             :list-interface="queryTableListInterface"
@@ -86,7 +86,7 @@
                 </el-row>
             </template>
         </query-table>
-        <redact-box :disabled="redactBoxDisable" :is-redact.sync="isRedact" redact-auth="steStgEdit" :is-show-submit-btn="true" :saved-rules="savedRules" :submit-rules="submitRules" :saved-datas="savedDatas" :submit-datas="submitDatas" @sendSuccess="sendSuccess" />
+        <redact-box :disabled="redactBoxDisable" :is-redact.sync="isRedact" redact-auth="ferMtlSdSave" :is-show-submit-btn="true" :saved-rules="savedRules" :submit-rules="submitRules" :saved-datas="savedDatas" :submit-datas="submitDatas" @sendSuccess="sendSuccess" />
         <el-dialog title="审核日志" width="900px" :close-on-click-modal="false" :visible.sync="dialogVisible">
             <audit-log :table-data="logList" :verify-man="'verifyMan'" :verify-date="'verifyDate'" :pack-up="false" :status="true" />
             <div slot="footer" class="dialog-footer" />

@@ -111,19 +111,19 @@
                                         </div>
                                     </div>
                                     <div class="btn-group">
-                                        <el-button v-if="isAuth('')" size="small" plain :disabled="item.fermentorStatus!=='F'" @click="btnFilledBucket(item)">
+                                        <el-button v-if="isAuth('ferFmtInnSdQuery')" size="small" plain :disabled="item.fermentorStatus!=='F'" @click="btnFilledBucket(item)">
                                             鼓罐
                                         </el-button>
-                                        <el-button v-if="isAuth('')" size="small" plain :disabled="item.fermentorStatus!=='F' || item.orderNo===''|| item.freezeFlag==='Y'" @click="btnLYCY(item)">
+                                        <el-button v-if="isAuth('ferFmtLySdQuery')" size="small" plain :disabled="item.fermentorStatus!=='F' || item.orderNo===''|| item.freezeFlag==='Y'" @click="btnLYCY(item)">
                                             LY/CY
                                         </el-button>
-                                        <el-button v-if="isAuth('')" size="small" plain :disabled="! ['F','S','O','T','A','U','I'].includes(item.fermentorStatus) || item.orderNo===''|| item.freezeFlag==='Y'" @click="btnAdjust(item)">
+                                        <el-button v-if="isAuth('ferAdtAdjust')" size="small" plain :disabled="! ['F','S','O','T','A','U','I'].includes(item.fermentorStatus) || item.orderNo===''|| item.freezeFlag==='Y'" @click="btnAdjust(item)">
                                             调整
                                         </el-button>
-                                        <el-button v-if="isAuth('')" size="small" plain :disabled="item.fermentorStatus!=='U' || item.orderNo===''|| item.freezeFlag==='Y'" @click="btnClearBucket(item)">
+                                        <el-button v-if="isAuth('ferFmtClear')" size="small" plain :disabled="item.fermentorStatus!=='U' || item.orderNo===''|| item.freezeFlag==='Y'" @click="btnClearBucket(item)">
                                             清罐
                                         </el-button>
-                                        <el-button v-if="isAuth('')" size="small" plain :disabled="item.fermentorStatus!=='C'|| item.freezeFlag==='Y'" @click="btnCleanBucket(item)">
+                                        <el-button v-if="isAuth('ferFmtClean')" size="small" plain :disabled="item.fermentorStatus!=='C'|| item.freezeFlag==='Y'" @click="btnCleanBucket(item)">
                                             清洗
                                         </el-button>
                                     </div>
