@@ -287,7 +287,9 @@
         meterialList: MeterialList[]= [];
         craftList: CraftList[] = [];
 
-        processMapping={} // 工序 mapping
+        processMapping={}; // 工序 mapping
+
+        currentRow: { addKojiDate?: string } = {};
 
         async mounted() {
 
