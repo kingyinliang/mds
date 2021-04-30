@@ -214,9 +214,15 @@
             // console.log(pkgPackingMaterial, this.$refs.dataEntry);
             pkgPackingMaterial.packingMaterialUpdate.map(item => {
                 item.orderNo = this.$refs.dataEntry.formHeader.orderNo
+                item.item.map(row => {
+                    row.orderNo = this.$refs.dataEntry.formHeader.orderNo
+                })
             })
             pkgPackingMaterial.packingMaterialInsert.map(item => {
                 item.orderNo = this.$refs.dataEntry.formHeader.orderNo
+                item.item.map(row => {
+                    row.orderNo = this.$refs.dataEntry.formHeader.orderNo
+                })
             })
             // console.log(pkgPackingMaterial, '==========')
             // return Promise.reject(null)
