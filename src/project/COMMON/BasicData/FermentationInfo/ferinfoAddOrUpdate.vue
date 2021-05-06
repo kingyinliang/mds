@@ -1,6 +1,11 @@
 <template>
     <el-dialog :close-on-click-modal="false" :visible.sync="visible" :title="dataForm.id? '修改' : '新增'" width="420px">
         <el-form ref="dataForm" :model="dataForm" :rules="dataRule" label-width="140px" size="small">
+            <el-form-item label="生产车间：" prop="workShop">
+                <el-select v-model="dataForm.workShop" placeholder="请选择" filterable style="width: 220px;" clearable>
+                    <el-option v-for="(sole, index) in workShopList" :key="index" :value="sole.deptCode" :label="sole.deptName" />
+                </el-select>
+            </el-form-item>
             <el-form-item label="工序段：" prop="productProcess">
                 <el-select v-model="dataForm.productProcess" placeholder="请选择" filterable style="width: 220px;" clearable>
                     <el-option v-for="(sole, index) in processList" :key="index" :value="sole.dictCode" :label="sole.dictValue" />
@@ -35,7 +40,7 @@
             </el-form-item>
             <el-form-item label="组织机构：" prop="deptId">
                 <el-select v-model="dataForm.deptId" placeholder="请选择" filterable style="width: 220px;" clearable>
-                    <el-option v-for="(iteam, index) in organizationList" :key="index" :label="iteam.deptName" :value="iteam.id" />
+                    <el-option v-for="(item, index) in organizationList" :key="index" :label="`${item.deptName} ${item.workShopName}`" :value="item.id" />
                 </el-select>
             </el-form-item>
             <el-form-item label="数量倍数：" prop="multiple">
@@ -65,6 +70,7 @@
 
     @Component
     export default class CraftAddOrUpdate extends Vue {
+        @Prop({ type: Array, default: [] }) workShopList;
         @Prop({ type: Array, default: [] }) processList;
         @Prop({ type: Array, default: [] }) material;
         @Prop({ type: Array, default: [] }) hoursList;
@@ -77,6 +83,7 @@
         visible = false;
         dataForm = {
             id: '',
+            workShop: '',
             productMaterialCode: '',
             productMaterialName: '',
             productMaterialType: '',
@@ -97,6 +104,7 @@
         };
 
         dataRule = {
+            workShop: [{ required: true, message: '生产车间不能未空', trigger: 'change' }],
             productProcess: [{ required: true, message: '工序段不能为空', trigger: 'blur' }],
             productMaterialCode: [{ required: true, message: '生产物料不能为空', trigger: 'blur' }],
             useMaterialCode: [{ required: true, message: '领用物料不能为空', trigger: 'blur' }],
@@ -113,6 +121,7 @@
             } else {
                 this.dataForm = {
                     id: '',
+                    workShop: '',
                     productMaterialCode: '',
                     productMaterialName: '',
                     productMaterialType: '',

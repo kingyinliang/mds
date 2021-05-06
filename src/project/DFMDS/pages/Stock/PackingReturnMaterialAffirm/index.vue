@@ -94,8 +94,7 @@
 <script lang="ts">
     import { Vue, Component } from 'vue-property-decorator';
     import { AUDIT_API, COMMON_API, PKG_API } from 'common/api/api';
-    // import { dateFormat } from 'src/utils/utils';
-    // import { dateFormat } from 'utils/utils';
+    import { dateFormat } from 'utils/utils';
 
     @Component({
         name: 'PackingReturnMaterialAffirm',
@@ -109,14 +108,14 @@
         }
 
         postForm = {
-            pstngDate: '',
+            pstngDate: dateFormat(new Date(), 'yyyy-MM-dd'),
             headerText: ''
         };
 
         currentTab = '0';
 
-        // 已审核、已过账、已退回
-        status = ['C', 'P', 'R'];
+        // 已审核、接口失败、已过账、已退回
+        status = [['C', 'F'], ['P'], ['R']];
 
         visibleAuditLog = false // 审核日志弹窗
         auditLogData = [] // 审核日志
@@ -152,6 +151,7 @@
                 label: '生产产线',
                 prop: 'productLine',
                 labelWidth: '100',
+                filterable: true,
                 optionsFn: val => {
                     return COMMON_API.ORG_QUERY_CHILDREN_API({
                         parentId: val || '',
@@ -168,14 +168,14 @@
             {
                 type: 'select',
                 label: '包材物料',
-                prop: 'material',
+                prop: 'materialCode',
                 defaultValue: '',
                 filterable: true,
                 labelWidth: '100',
                 defaultOptionsFn: () => {
                     return COMMON_API.SEARCH_MATERIAL_API({
                         factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
-                        materialType: 'ZHAL'
+                        materialType: 'ZVER'
                     })
                 },
                 resVal: {
@@ -218,9 +218,12 @@
                 minwidth: '100'
             },
             {
-                prop: 'manufactor',
-                label: '供应商',
-                minwidth: '100'
+                prop: 'manufactorName',
+                label: '厂家',
+                minwidth: '140',
+                formatter(row) {
+                    return `${row.manufactorName || ''} ${row.manufactor}`
+                }
             },
             {
                 prop: 'changeAmount',
@@ -230,13 +233,15 @@
             {
                 prop: 'unit',
                 label: '单位',
-                minwidth: '80',
-                onclick: true
+                minwidth: '80'
             },
             {
-                prop: 'productLine',
-                label: '线别',
-                minwidth: '100'
+                prop: 'productLineName',
+                label: '产线',
+                minwidth: '140',
+                formatter(row) {
+                    return `${row.productLineName || ''} ${row.productLine}`
+                }
             },
             {
                 prop: 'stgeLoc',
@@ -247,7 +252,7 @@
                 prop: 'moveType',
                 label: '移动类型',
                 minwidth: '160',
-                type: 'select',
+                type: 'input',
                 redact: true,
                 header: true,
                 resVal: {
@@ -272,7 +277,7 @@
                 minwidth: '100'
             },
             {
-                prop: 'writeoffsMoveReason',
+                prop: 'moveReason',
                 label: '异动原因',
                 minwidth: '100'
             },
@@ -384,7 +389,7 @@
         // queryTable 查询请求
         queryTableListInterface(params) {
             params.factory = JSON.parse(sessionStorage.getItem('factory') || '{}').id;
-            params.status = this.status[Number(this.$refs.queryTable.activeName)];
+            params.statusSet = this.status[Number(this.$refs.queryTable.activeName)];
             params.current = this.$refs.queryTable.tabs[this.$refs.queryTable.activeName].pages.currPage;// eslint-disable-line
             params.size = this.$refs.queryTable.tabs[this.$refs.queryTable.activeName].pages.pageSize;// eslint-disable-line
             params.total = this.$refs.queryTable.tabs[this.$refs.queryTable.activeName].pages.totalCount;// eslint-disable-line
@@ -398,7 +403,7 @@
                     if (index !== Number(this.$refs.queryTable.activeName)) {
                         const params = JSON.parse(JSON.stringify(this.$refs.queryTable.queryForm))
                         params.factory = JSON.parse(sessionStorage.getItem('factory') || '{}').id;
-                        params.status = this.status[index];
+                        params.statusSet = this.status[index];
                         params.current = 1;
                         params.size = this.$refs.queryTable.tabs[index].pages.pageSize;
                         params.total = this.$refs.queryTable.tabs[index].pages.totalCount;
@@ -557,7 +562,7 @@
                     });
                     PKG_API.VERIFY_STORAGE_RETURN_PASS_API(params).then(res => {
                         this.$successToast(res.data.msg);
-                        this.postForm.pstngDate = ''
+                        // this.postForm.pstngDate = ''
                         this.postForm.headerText = ''
                         this.$refs.queryTable.getDataList(true);
                     })

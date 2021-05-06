@@ -3,7 +3,7 @@
  * @Anthor: Telliex
  * @Date: 2021-02-23 21:25:39
  * @LastEditors: Telliex
- * @LastEditTime: 2021-03-09 14:38:49
+ * @LastEditTime: 2021-04-23 11:41:08
 -->
 <template>
     <div class="header_main">
@@ -28,15 +28,15 @@
                 <el-table-column prop="changed" label="修改时间" width="180" />
                 <el-table-column label="操作" min-width="440" fixed="right">
                     <template slot-scope="scope">
-                        <el-button v-if="isAuth('roleUserCfg')" type="text" class="role__btn" @click="manageUser(scope.row.id)">
-                            人员管理
-                        </el-button>
                         <el-button v-if="isAuth('')" type="text" class="role__btn" @click="manageDataAuthority(scope.row)">
                             数据权限
                         </el-button>
-                        <el-button v-if="isAuth('roleDeptCfg')" type="text" class="role__btn" @click="manageDepartment(scope.row.id)">
-                            部门分配
+                        <el-button v-if="isAuth('roleUserCfg')" type="text" class="role__btn" @click="manageUser(scope.row.id)">
+                            人员管理
                         </el-button>
+                        <!-- <el-button v-if="isAuth('roleDeptCfg')" type="text" class="role__btn" @click="manageDepartment(scope.row.id)">
+                            部门分配
+                        </el-button> -->
                         <el-button v-if="isAuth('roleMenuCfg')" type="text" class="role__btn" @click="manageFunction(scope.row.id)">
                             功能分配
                         </el-button>

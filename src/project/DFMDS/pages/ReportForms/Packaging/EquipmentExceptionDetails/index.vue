@@ -171,7 +171,7 @@
                 {
                     prop: 'productDate',
                     label: '生产日期',
-                    width: '120',
+                    width: '140',
                     hide: false,
                     fixed: true,
                     showOverFlowTooltip: true,
@@ -182,16 +182,16 @@
                     label: '班次',
                     width: '80',
                     hide: false,
-                    fixed: true,
+                    fixed: false,
                     showOverFlowTooltip: true,
                     dataType: 'default'
                 },
                 {
                     prop: 'materialName',
                     label: '物料名称',
-                    minWidth: '240',
+                    minWidth: '350',
                     hide: false,
-                    fixed: true,
+                    fixed: false,
                     showOverFlowTooltip: true,
                     dataType: 'multi',
                     data: ['materialName', 'materialCode']

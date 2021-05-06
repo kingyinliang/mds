@@ -218,9 +218,9 @@
                 {
                     prop: 'productLineName',
                     label: '生产线',
-                    width: '240',
+                    width: '260',
                     hide: false,
-                    fixed: true,
+                    fixed: false,
                     showOverFlowTooltip: true,
                     dataType: 'default'
                 },
@@ -229,16 +229,16 @@
                     label: '灌装线',
                     width: '80',
                     hide: false,
-                    fixed: true,
+                    fixed: false,
                     showOverFlowTooltip: true,
                     dataType: 'default'
                 },
                 {
                     prop: 'materialName',
                     label: '品项',
-                    width: '240',
+                    width: '350',
                     hide: false,
-                    fixed: true,
+                    fixed: false,
                     showOverFlowTooltip: true,
                     dataType: 'multi',
                     data: ['materialName', 'materialCode']
@@ -246,9 +246,9 @@
                 {
                     prop: 'useMaterialName',
                     label: '领用物料',
-                    width: '240',
+                    width: '350',
                     hide: false,
-                    fixed: true,
+                    fixed: false,
                     showOverFlowTooltip: true,
                     dataType: 'multi',
                     data: ['useMaterialName', 'useMaterialCode']
@@ -275,7 +275,7 @@
                     prop: 'productDate',
                     label: '日期',
                     subLabel: '',
-                    width: '100',
+                    width: '140',
                     hide: false,
                     fixed: false,
                     showOverFlowTooltip: true,

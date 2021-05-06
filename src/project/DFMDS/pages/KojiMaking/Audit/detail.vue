@@ -287,9 +287,8 @@
         meterialList: MeterialList[]= [];
         craftList: CraftList[] = [];
 
-        processMapping={}; // 工序 mapping
-
-        currentRow: { addKojiDate?: string } = {};
+        processMapping={} // 工序 mapping
+        currentRow: { addKojiDate?: string } = {}
 
         async mounted() {
 
@@ -642,7 +641,8 @@
                     KOJI_API.KOJI_REFUSE_READY_API({
                         orderNo: this.formHeader.orderNo,
                         process: this.rejectProcess,
-                        productDate: this.formHeader.productDate,
+                        // productDate: this.formHeader.productDate,
+                        productDate: this.currentRow.addKojiDate,
                         refuseSeason: this.rejectText,
                         workShop: this.formHeader.workShop
                     }).then(() => {

@@ -6,8 +6,10 @@
             :column="column"
             :rules="rules"
             :custom-data="true"
+            :show-index-column="true"
             :query-form-data="queryFormData"
             :list-interface="listInterface"
+            :show-fold="false"
         />
     </div>
 </template>
@@ -42,6 +44,7 @@
                 type: 'select',
                 label: '生产产线',
                 prop: 'productLine',
+                filterable: true,
                 optionsFn: val => {
                     return COMMON_API.ORG_QUERY_CHILDREN_API({
                         parentId: val || '',
@@ -56,8 +59,16 @@
                 }
             },
             {
+                type: 'date-interval',
+                label: '生产日期',
+                defaultValue: dateFormat(new Date(), 'yyyy-MM-dd'),
+                prop: 'productStartDate',
+                propTwo: 'productEndDate'
+            },
+            {
                 type: 'select',
                 label: '领料状态',
+                filterable: true,
                 prop: 'useMaterialStatus',
                 options: [
                     { label: '已领料', value: '1' },
@@ -68,31 +79,24 @@
                     value: 'value'
                 }
             },
-            {
-                type: 'select',
-                label: '订单状态',
-                prop: 'orderStatus',
-                defaultOptionsFn: () => {
-                    return COMMON_API.DICTQUERY_API({ dictType: 'COMMON_CHECK_STATUS' });
-                },
-                defaultValue: '',
-                resVal: {
-                    resData: 'data',
-                    label: ['dictValue'],
-                    value: 'dictCode'
-                }
-            },
+            // {
+            //     type: 'select',
+            //     label: '订单状态',
+            //     prop: 'orderStatus',
+            //     defaultOptionsFn: () => {
+            //         return COMMON_API.DICTQUERY_API({ dictType: 'COMMON_CHECK_STATUS' });
+            //     },
+            //     defaultValue: '',
+            //     resVal: {
+            //         resData: 'data',
+            //         label: ['dictValue'],
+            //         value: 'dictCode'
+            //     }
+            // },
             {
                 type: 'input',
                 label: '生产订单',
                 prop: 'orderNo'
-            },
-            {
-                type: 'date-interval',
-                label: '生产日期',
-                defaultValue: dateFormat(new Date(), 'yyyy-MM-dd'),
-                prop: 'productStartDate',
-                propTwo: 'productEndDate'
             }
         ]
 
@@ -132,7 +136,7 @@
             },
             {
                 label: '生产订单',
-                prop: 'productLineName',
+                prop: 'orderNo',
                 formatter: (row) => {
                     const h = this.$createElement; // eslint-disable-line
                     return h('div', {

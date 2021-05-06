@@ -118,6 +118,7 @@
                 type: 'select',
                 label: '生产产线',
                 prop: 'productLine',
+                filterable: true,
                 optionsFn: val => {
                     return COMMON_API.ORG_QUERY_CHILDREN_API({
                         parentId: val || '',

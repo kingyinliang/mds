@@ -89,8 +89,10 @@
                         prop: 'materialName',
                         label: '生产物料',
                         subLabel: '（箱）',
-                        minWidth: '120',
-                        width: 140
+                        minWidth: '160',
+                        // width: 140,
+                        showOverFlowTooltip: true,
+                        formatter: row => row.materialName + ' ' + row.materialCode
                     },
                     ...new Array(getDays(this.currentMonth)).fill('').map((item, index) => {
                         return {
@@ -123,7 +125,7 @@
                 type: 'select',
                 label: '生产车间',
                 prop: 'workShop',
-                defaultValue: '',
+                // defaultValue: '',
                 labelWidth: '100',
                 clearable: true,
                 rule: [{ required: false, message: '请选择生产车间', trigger: 'blur' }],

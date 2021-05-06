@@ -5,6 +5,7 @@
             :header-base="headerBase"
             :form-header="formHeader"
             :order-status="formHeader.mixSauceStatusName"
+            :redact-box-show="isAuth('ferMxSdSave')"
             :saved-datas="savedDatas"
             :submit-datas="submitDatas"
             @success="getOrderList"

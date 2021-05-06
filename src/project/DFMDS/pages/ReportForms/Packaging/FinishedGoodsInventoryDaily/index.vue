@@ -62,15 +62,17 @@
                     label: '生产日期',
                     minWidth: '120'
                 },
-                {
-                    prop: 'materialCode',
-                    label: '物料编码',
-                    minWidth: '120'
-                },
+                // {
+                //     prop: 'materialCode',
+                //     label: '物料编码',
+                //     minWidth: '120'
+                // },
                 {
                     prop: 'materialName',
                     label: '物料描述',
-                    minWidth: '120'
+                    minWidth: '160',
+                    showOverFlowTooltip: true,
+                    formatter: row => row.materialName + ' ' + row.materialCode
                 },
                 {
                     prop: 'planOutput',
@@ -108,7 +110,7 @@
                 type: 'select',
                 label: '生产车间',
                 prop: 'workShop',
-                defaultValue: '',
+                // defaultValue: '',
                 labelWidth: '100',
                 rule: [{ required: true, message: '请选择生产车间', trigger: 'blur' }],
                 defaultOptionsFn: () => {

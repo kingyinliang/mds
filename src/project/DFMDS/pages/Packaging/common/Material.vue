@@ -19,6 +19,9 @@
                     </template>
                 </el-table-column>
                 <el-table-column label="批次" prop="batch" width="150">
+                    <template slot="header">
+                        <span class="notNull">* </span>批次
+                    </template>
                     <template slot-scope="scope">
                         <el-select v-model="scope.row.batch" :disabled="!(isRedact && scope.row.checkStatus !== 'C' && scope.row.checkStatus !== 'D' && scope.row.checkStatus !== 'P' && scope.row.materialStatus !== '3')" filterable placeholder="请选择" size="small" clearable @change="batchChange(scope.row)">
                             <template v-for="(iteam, index) in scope.row.batchData">
@@ -62,7 +65,7 @@
                 </el-table-column>
                 <el-table-column label="厂家" prop="manufactor" width="120" :show-overflow-tooltip="true">
                     <template slot-scope="scope">
-                        {{ scope.row.manufactorName }}
+                        {{ `${scope.row.manufactorName || ''} ${scope.row.manufactor || ''}` }}
                     </template>
                 </el-table-column>
                 <el-table-column label="备注" prop="remark" min-width="140">
@@ -222,15 +225,19 @@
 
         ruleSubmit(): boolean {
             for (const item of this.currentDataTable.filter(it => it.delFlag !== 1)) {
+                if (!item.batch) {
+                    this.$warningToast('请选择物料领用页签包材领用批次');
+                    return false
+                }
                 if (!item.realUseAmount) {
                     this.$warningToast('请填写物料领用页签包材领用实际用量');
                     return false
                 }
-                if ((item.realLoss !== '' && item.realLoss !== 0) && !item.lossReason) {
+                if ((item.realLoss && Number(item.realLoss) > 0) && !item.lossReason) {
                     this.$warningToast('请填写物料领用页签包材领用损耗原因');
                     return false
                 }
-                if (item.unqualified !== '' && item.unqualified !== 0 && !item.badReason) {
+                if (item.unqualified && Number(item.unqualified) > 0 && !item.badReason) {
                     this.$warningToast('请填写物料领用页签包材领用不合格原因');
                     return false
                 }
@@ -289,10 +296,12 @@
                     if (filterArr2 && filterArr2[0]) {
                         item.factory = JSON.parse(sessionStorage.getItem('factory') || '{}').id;
                         item.realLoss = (item.realLoss === '' || item.realLoss === null ? 0 : item.realLoss);
+                        item.unqualified = item.unqualified || 0;
                         filterArr2[0].item.push(item)
                     } else {
                         item.factory = JSON.parse(sessionStorage.getItem('factory') || '{}').id;
                         item.realLoss = (item.realLoss === '' || item.realLoss === null ? 0 : item.realLoss);
+                        item.unqualified = item.unqualified || 0;
                         pkgPackingMaterial.packingMaterialInsert.push({
                             factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
                             merge: item.merge,
@@ -312,7 +321,8 @@
                             posnr: item.posnr,
                             receiveMaterial: item.receiveMaterial,
                             startStocks: item.startStocks,
-                            item: [item]
+                            item: [item],
+                            packageStorageId: item.packageStorageId
                         })
                     }
                 } else if (item.delFlag === 1) {
@@ -324,9 +334,11 @@
                     if (!_.isEqual(orgObj, item)) {
                         item.factory = JSON.parse(sessionStorage.getItem('factory') || '{}').id;
                         item.realLoss = (item.realLoss === '' || item.realLoss === null ? 0 : item.realLoss);
+                        item.unqualified = item.unqualified || 0;
                         if (filterArr1 && filterArr1[0]) {
                             item.factory = JSON.parse(sessionStorage.getItem('factory') || '{}').id;
                             item.realLoss = (item.realLoss === '' || item.realLoss === null ? 0 : item.realLoss);
+                            item.unqualified = item.unqualified || 0;
                             filterArr1[0].item.push(item)
                         } else {
                             pkgPackingMaterial.packingMaterialUpdate.push({
@@ -348,17 +360,20 @@
                                 posnr: item.posnr,
                                 receiveMaterial: item.receiveMaterial,
                                 startStocks: item.startStocks,
-                                item: [item]
+                                item: [item],
+                                packageStorageId: item.packageStorageId
                             })
                         }
                     }
                 } else if (filterArr2 && filterArr2[0]) {
                     item.factory = JSON.parse(sessionStorage.getItem('factory') || '{}').id;
                     item.realLoss = (item.realLoss === '' || item.realLoss === null ? 0 : item.realLoss);
+                    item.unqualified = item.unqualified || 0;
                     filterArr2[0].item.push(item)
                 } else {
                     item.factory = JSON.parse(sessionStorage.getItem('factory') || '{}').id;
                     item.realLoss = (item.realLoss === '' || item.realLoss === null ? 0 : item.realLoss);
+                    item.unqualified = item.unqualified || 0;
                     pkgPackingMaterial.packingMaterialInsert.push({
                         factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
                         merge: item.merge,
@@ -378,7 +393,8 @@
                         posnr: item.posnr,
                         receiveMaterial: item.receiveMaterial,
                         startStocks: item.startStocks,
-                        item: [item]
+                        item: [item],
+                        packageStorageId: item.packageStorageId
                     })
                 }
             });
@@ -530,6 +546,7 @@
             row.startStocks = filterArr[0].storageAmount
             row.manufactor = filterArr[0].manufactor
             row.manufactorName = filterArr[0].manufactorName
+            row.packageStorageId = filterArr[0].packageStorageId
         }
 
         // 处理数据1
@@ -539,6 +556,7 @@
                 const item = data[i]
                 const index = i
                 item.item.forEach((listitem) => {
+                    console.log(listitem.id)
                     const materialMap: MaterialMap = {
                         id: '',
                         merge: index,
@@ -562,7 +580,7 @@
                         changer: item.changer,
                         changed: item.changed
                     };
-                    Object.assign(materialMap, listitem);
+                    Object.assign(materialMap, { ...listitem, materialUnit: item.materialUnit });
                     materialMap.mainId = item.id;
                     finalData.push(materialMap)
                 })
@@ -706,6 +724,7 @@
                 realUsed: dataArr[dataArr.length - 1].realUsed || '',
                 sterilizePotNo: '',
                 sterilizeStorageNo: sterilizeStorageNo,
+                packageStorageId: row.packageStorageId,
                 changed: dateFormat(new Date(), 'yyyy-MM-dd hh:mm:ss'),
                 changer: getUserNameNumber()
             });
@@ -817,6 +836,8 @@ interface MaterialMap{
     changer?: string;
     changed?: string;
     item?: MaterialMap[];
+    batch?: string; // 批次
+    packageStorageId?: string; // 包材线边库id
 }
 interface PkgMaterialObj {
     packingMaterialDelete: string[];

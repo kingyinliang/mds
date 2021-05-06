@@ -30,7 +30,6 @@ Vue.prototype.$successToast = (str) => {
     Notification({ title: '成功', message: str, type: 'success' })
 }
 
-
 new Vue({
-  render: h => h(App)
+    render: h => h(App)
 }).$mount('#app')

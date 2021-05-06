@@ -33,6 +33,10 @@
         queryFormSetting= {
             isQueryFormShow: true, // 标头搜寻区块是否显示
             rules: [ // 查询必填栏位校验
+                {
+                    prop: 'startDate',
+                    text: '请选择生产日期'
+                }
             ],
             queryAuth: '',
             exportExcel: true, // 导出 excel BTN
@@ -134,28 +138,37 @@
                     label: '生产车间',
                     width: '120',
                     hide: false,
-                    fixed: true,
+                    fixed: false,
                     showOverFlowTooltip: true,
                     dataType: 'default'
                 },
                 {
                     prop: 'productLineName',
                     label: '生产产线',
-                    width: '200',
+                    minWidth: '260',
                     hide: false,
-                    fixed: true,
+                    fixed: false,
                     showOverFlowTooltip: true,
                     dataType: 'default'
                 },
                 {
                     prop: 'materialName',
                     label: '生产物料',
-                    minWidth: '240',
+                    minWidth: '350',
                     hide: false,
-                    fixed: true,
+                    fixed: false,
                     showOverFlowTooltip: true,
                     dataType: 'multi',
                     data: ['materialName', 'materialCode']
+                },
+                {
+                    prop: 'productDate',
+                    label: '生产日期',
+                    width: '120',
+                    hide: false,
+                    fixed: false,
+                    showOverFlowTooltip: true,
+                    dataType: 'default'
                 },
                 {
                     prop: 'orderYield',
@@ -163,7 +176,7 @@
                     width: '120',
                     subLabel: '(KG)',
                     hide: false,
-                    fixed: true,
+                    fixed: false,
                     showOverFlowTooltip: true,
                     dataType: 'default'
                 },
@@ -172,7 +185,7 @@
                     label: '参与人数',
                     width: '80',
                     hide: false,
-                    fixed: true,
+                    fixed: false,
                     showOverFlowTooltip: true,
                     dataType: 'default'
                 },
@@ -206,7 +219,7 @@
                 {
                     prop: 'dayPrepaired',
                     label: '生产前准备',
-                    width: '80',
+                    width: '100',
                     hide: false,
                     fixed: false,
                     showOverFlowTooltip: true,
@@ -215,7 +228,7 @@
                 {
                     prop: 'dayClear',
                     label: '生产后清场',
-                    width: '80',
+                    width: '100',
                     hide: false,
                     fixed: false,
                     showOverFlowTooltip: true,

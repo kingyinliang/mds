@@ -47,7 +47,7 @@
                     </el-table-column>
                     <el-table-column width="84" label="发料/入库">
                         <template slot-scope="scope">
-                            {{ scope.row.materialUse === 'F' ? '发料' : '入库' }}
+                            {{ scope.row.materialUse | materialUseFilter }}
                         </template>
                     </el-table-column>
                     <el-table-column width="54" label="操作">
@@ -105,6 +105,16 @@
         name: 'LocationManage',
         components: {
             LocationAdd
+        },
+        filters: {
+            materialUseFilter(v) {
+                const map = {
+                    'F': '发料',
+                    'R': '入库',
+                    'B': '不良退料'
+                }
+                return map[v];
+            }
         },
         data() {
             return {

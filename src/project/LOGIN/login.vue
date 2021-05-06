@@ -1,43 +1,5 @@
 <template>
     <div style="width: 100%; height: 100%;">
-        <el-row class="login_box">
-            <el-col :span="16">
-                <div class="canvas_box">
-                    <div id="canvas_box_main" class="canvas_box_main">
-                        <canvas id="loginAnimation" />
-                    </div>
-                </div>
-            </el-col>
-            <el-col :span="8">
-                <img src="@/assets/img/MDSlogo.png" alt="" class="login_icon">
-                <el-form ref="ruleForm2" :model="ruleForm2" status-icon :rules="rules2" label-width="100px" class="loginForm_ui2" @keyup.enter.native="submitForm('ruleForm2')">
-                    <p class="login_title1">
-                        欢迎使用
-                    </p>
-                    <p class="login_title2">
-                        MDS制造管理系统
-                    </p>
-                    <el-form-item prop="user">
-                        <el-input v-model="ruleForm2.user" auto-complete="off" placeholder="账户/工号">
-                            <em slot="prefix" class="iconfont factory-zhanghaodenglu" />
-                        </el-input>
-                    </el-form-item>
-                    <el-form-item prop="pass">
-                        <el-input v-model="ruleForm2.pass" type="password" auto-complete="off" placeholder="密码">
-                            <em slot="prefix" class="iconfont factory-mima" />
-                        </el-input>
-                        <el-button type="text" class="reset" @click="resetForm('ruleForm2')">
-                            <em class="iconfont factory-zhongzhi" style="font-size: 12px;" />重置
-                        </el-button>
-                    </el-form-item>
-                    <el-form-item>
-                        <el-button type="primary" class="loginBtn" @click="submitForm('ruleForm2')">
-                            登录
-                        </el-button>
-                    </el-form-item>
-                </el-form>
-            </el-col>
-        </el-row>
         <!--修改密码-->
         <el-dialog :close-on-click-modal="false" width="500px" :title="`修改密码 (${realName} ${userName})`" :visible.sync="visible">
             <div>
@@ -64,31 +26,14 @@
 
 <script>
 import { COMMON_API } from 'common/api/api';
-import { LoginAnimation } from './loginCanvas';
 import SelectFactory from 'src/layout/main/SelectFactory';
-import { Loading } from 'element-ui';
+import SSOLogin from 'utils/SSOLogin';
 export default {
     name: 'Login',
     components: {
         SelectFactory
     },
     data() {
-        const validatePass = (rule, value, callback) => {
-            if (value === '') {
-                return callback(new Error('请输入密码'));
-            }
-                return callback();
-
-        };
-        const validatePass1 = (rule, value, callback) => {
-            if (value === '') {
-                return callback(new Error('请输入账号'));
-            } else if (value.length !== 8) {
-                return callback(new Error('长度为 8 个字符工号'));
-            }
-                return callback();
-
-        };
         const validatePass2 = (rule, value, callback) => {
             if (value === '') {
                 return callback(new Error('请再次输入密码'));
@@ -141,77 +86,15 @@ export default {
                 password: '',
                 newPassword: '',
                 conPassword: ''
-            },
-            // 登录用户信息
-            ruleForm2: {
-                user: '',
-                pass: ''
-            },
-            curr: 0,
-            videoList: [],
-            rules2: {
-                user: [{ validator: validatePass1, trigger: 'blur' }],
-                pass: [
-                    {
-                        min: 8,
-                        max: 12,
-                        message: '长度在 8 到 12 个字符',
-                        trigger: 'blur'
-                    },
-                    { validator: validatePass, trigger: 'blur' }
-                ]
             }
         };
     },
-    mounted() {
-        const canvas = new LoginAnimation(this.$);
-        canvas.init();
-        // if (window.location.href.indexOf('token') === -1) {} else {
-        //     window.location.href = 'http://localhost:8080/'
-        // }
-        // *********** RDM CDM 跳转用  start
-        if (window.location.href.indexOf('?') !== -1) {
-            const url = decodeURIComponent(window.location.href.split('?')[1].split('=')[1]);
-            const urlData = JSON.parse(url);
-
-
-            if (typeof urlData.userFactory.find(item => { return item.id === '482537131483348992' }) !== 'undefined') { // RDM
-                const systemTemp = urlData.userFactory.filter(item => { return item.id === '482537131483348992' })
-                urlData.userFactory = systemTemp
-                const loading = Loading.service({
-                    lock: true,
-                    text: '加载中……',
-                    background: 'rgba(255, 255, 255, 0.7)'
-                });
-                setTimeout(() => {
-                    this.loginSuccess(urlData)
-                    loading.close();
-                }, 3000);
-            } else if (typeof urlData.userFactory.find(item => { return item.id === '926550584766501627' }) !== 'undefined') { // CDN
-                const systemTemp = urlData.userFactory.filter(item => { return item.id === '926550584766501627' })
-                urlData.userFactory = systemTemp
-                const loading = Loading.service({
-                    lock: true,
-                    text: '加载中……',
-                    background: 'rgba(255, 255, 255, 0.7)'
-                });
-                setTimeout(() => {
-                    this.loginSuccess(urlData)
-                    loading.close();
-                }, 3000);
-            } else {
-                this.$warningToast('登入失败')
-            }
-        }
-        // *********** RDM CDM 跳转用  end
+    created() {
+        SSOLogin.getUserInfo().then(({ data }) => {
+            this.loginSuccess(data.data)
+        })
     },
     methods: {
-        play() {
-            this.curr++;
-            if (this.curr >= this.videoList.length) this.curr = 0;
-            this.$refs.videos.load();
-            this.$refs.videos.play();
-        },
         dataFormSubmit() {
             this.$refs['dataForm'].validate(valid => {
                 if (valid) {
@@ -238,25 +121,7 @@ export default {
                 }
             });
         },
-        submitForm(formName) {
-            this.$refs[formName].validate(valid => {
-                if (valid) {
-                    COMMON_API.LOGIN_API({
-                        userName: this.ruleForm2.user,
-                        password: this.ruleForm2.pass,
-                        loginSystem: 'MDS'
-                    }).then(({ data }) => {
-                        if (data.code === 200) {
-                            this.loginSuccess(data.data);
-                        }
-                    });
-                } else {
-                    return false;
-                }
-            });
-        },
         loginSuccess(data) {
-            this.$cookie.set('token', data.token);
             sessionStorage.setItem('userId', data.uid || '');
             sessionStorage.setItem('userFactory', JSON.stringify(data.userFactory || '[]'));
             sessionStorage.setItem('userName', data.userName || '');

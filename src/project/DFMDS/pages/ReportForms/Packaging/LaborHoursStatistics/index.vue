@@ -20,7 +20,7 @@
     // import { dateFormat } from 'utils/utils';
 
     let daysList: DayData[] = [];
-    const columnOrder: string[] = ['E1:F1', 'G1:H1', 'I1:J1', 'K1:L1', 'M1:N1', 'O1:P1', 'Q1:R1', 'S1:T1', 'U1:V1', 'W1:X1', 'Y1:Z1', 'AA1:AB1', 'AC:AD', 'AE1:AF1', 'AG:AH', 'AI1:AJ1', 'AK1:AL1', 'AM1:AN1', 'AO1:AP1', 'AQ1:AR1', 'AS1:AT1', 'AU1:AV1', 'AW1:AX1', 'AY1:AZ1', 'BA1:BB1', 'BC1:BD1', 'BE1:BF1', 'BG1:BH1', 'BI1:BJ1', 'BK1:BL1', 'BM1:BN1']
+    const columnOrder: string[] = ['E1:F1', 'G1:H1', 'I1:J1', 'K1:L1', 'M1:N1', 'O1:P1', 'Q1:R1', 'S1:T1', 'U1:V1', 'W1:X1', 'Y1:Z1', 'AA1:AB1', 'AC1:AD1', 'AE1:AF1', 'AG1:AH1', 'AI1:AJ1', 'AK1:AL1', 'AM1:AN1', 'AO1:AP1', 'AQ1:AR1', 'AS1:AT1', 'AU1:AV1', 'AW1:AX1', 'AY1:AZ1', 'BA1:BB1', 'BC1:BD1', 'BE1:BF1', 'BG1:BH1', 'BI1:BJ1', 'BK1:BL1', 'BM1:BN1']
     @Component({
         components: {
         },
@@ -139,7 +139,7 @@
                 {
                     prop: 'materialName',
                     label: '品名',
-                    width: '240',
+                    width: '350',
                     hide: false,
                     fixed: false,
                     showOverFlowTooltip: true,
@@ -210,8 +210,11 @@
                             item.dayData.forEach(subItem => {
                                 item[`actualYield${subItem.productDate}`] = subItem.actualYield
                                 item[`productionHours${subItem.productDate}`] = subItem.productionHours
-                                daysList.push(subItem)
+                                // daysList.push(subItem)
                             })
+                        })
+                        resTemp.data.data[0].dayData.map(item => {
+                            daysList.push(item)
                         })
 
                         resTemp.data.data[0].totalData.forEach(item => {

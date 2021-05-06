@@ -59,7 +59,7 @@
                     <slot name="mds-button" />
                 </el-form-item>
             </el-form>
-            <div v-if="!tabs.length && type !== 'home'" class="toggleSearchBottom">
+            <div v-if="!tabs.length && type !== 'home' && showFold" class="toggleSearchBottom">
                 <em class="el-icon-caret-top" />
             </div>
         </el-card>
@@ -343,6 +343,14 @@
             isRedact: {
                 type: Boolean,
                 default: false
+            },
+            notClearPage: {
+                type: Boolean,
+                default: false
+            },
+            showFold: { // 是否展示折叠
+                type: Boolean,
+                default: true
             }
         },
         data() {
@@ -455,7 +463,7 @@
                                             // 抓取其他接口返回的其他参数
                                             secondVal = this.optionLists[linkagePropItemObj.returnValue.findList].find(it => it[linkagePropItemObj.returnValue.findId] === val)[linkagePropItemObj.returnValue.findField]
                                         }
-                                        linkagePropItemObj.optionsFn(val, secondVal).then(({ data }) => {
+                                        linkagePropItemObj.optionsFn(val, secondVal, this.optionLists[item.prop]).then(({ data }) => {
                                             const getPath = creatGetPath(linkagePropItemObj.resVal.resData);
                                             const dataTemp = getPath(data);
                                             this.$set(this.optionLists, linkagePropItemObj.prop, dataTemp);
@@ -490,6 +498,9 @@
             },
             // 清空表格和分页
             clearTableAndPage() {
+                if (this.notClearPage) {
+                    return
+                }
                 // this.tableData = [];
                 this.queryForm[this.currpageConfig] = 1;
                 this.queryForm.totalCount = 0;

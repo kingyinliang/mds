@@ -11,9 +11,10 @@
             :query-table-type="'report'"
             @get-data-success="setData"
             @data-action="dataAction"
+            @value-change="valueChange"
         />
 
-        <el-dialog title="异常明细" :close-on-click-modal="false" :visible.sync="isDialogVisible" width="70%">
+        <el-dialog title="异常明细" :close-on-click-modal="false" :visible.sync="isDialogVisible" width="70%" class="infoDialog">
             <div class="inner-area">
                 <div class="inner-area__title">
                     <h3>异常汇总</h3>
@@ -22,26 +23,29 @@
                     </el-button>
                 </div>
                 <div class="inner-area__body">
-                    <el-table class="newTable" :data="dialogDataMainTable" header-row-class-name="tableHead" border style="width: 100%; min-height: 90px; margin-bottom: 20px;" @row-dblclick="showDetailInfo">
+                    <el-table class="newTable" :data="dialogDataMainTable" header-row-class-name="tableHead" tooltip-effect="dark" border style="width: 100%; max-height: 150px; margin-bottom: 20px;" @row-dblclick="showDetailInfo">
                         <el-table-column label="项次" type="index" width="55px" />
-                        <el-table-column label="生产线" prop="productLineName" min-width="120px" />
-                        <el-table-column label="物料编码" prop="materialCode" min-width="120px" />
-                        <el-table-column label="生产物料" prop="materialName" min-width="120px" />
+                        <el-table-column label="生产线" prop="productLineName" min-width="250px" show-overflow-tooltip />
+                        <el-table-column label="物料编码" prop="materialCode" min-width="350px" show-overflow-tooltip>
+                            <template slot-scope="scope">
+                                {{ scope.row.materialName }} {{ scope.row.materialCode }}
+                            </template>
+                        </el-table-column>
                         <el-table-column label="月/季" prop="productDate" width="120px" />
-                        <el-table-column label="停机情况" prop="stopType" width="120px" />
-                        <el-table-column label="停机时长(min)" prop="stopTime" width="120px" />
+                        <el-table-column label="停机情况" prop="stopType" width="120px" show-overflow-tooltip />
+                        <el-table-column label="停机时长(min)" prop="stopTime" width="120px" show-overflow-tooltip />
                     </el-table>
-                    <el-table v-if="isShowSecondTable" class="newTable" :data="dialogDataMainTable.notReachInfo" header-row-class-name="tableHead" border style="width: 100%; min-height: 90px;">
+                    <el-table v-if="isShowSecondTable" class="newTable" :data="notReachInfoList" header-row-class-name="tableHead" tooltip-effect="dark" border style="width: 100%; max-height: 150px;">
                         <el-table-column label="项次" type="index" width="55px" />
-                        <el-table-column label="生产日期" prop="productLineName" width="120px" />
-                        <el-table-column label="停机类型" prop="stopType" min-width="120px" />
-                        <el-table-column label="停机方式" prop="stopMode" min-width="120px" />
-                        <el-table-column label="停机开始时间" prop="startDate" width="120px" />
-                        <el-table-column label="停机结束时间" prop="endDate" width="120px" />
-                        <el-table-column label="停机时长(min)" prop="stopTime" width="120px" />
+                        <el-table-column label="生产日期" prop="productDate" width="120px" />
+                        <el-table-column label="停机类型" prop="stopTypeName" min-width="120px" show-overflow-tooltip />
+                        <el-table-column label="停机方式" prop="stopModeName" min-width="120px" show-overflow-tooltip />
+                        <el-table-column label="停机开始时间" prop="startDate" width="200px" show-overflow-tooltip />
+                        <el-table-column label="停机结束时间" prop="endDate" width="200px" show-overflow-tooltip />
+                        <el-table-column label="停机时长(min)" prop="duration" width="120px" />
                         <el-table-column label="次数" prop="exceptionCount" width="120px" />
-                        <el-table-column label="停机情况" prop="stopSituation" min-width="120px" />
-                        <el-table-column label="停机原因" prop="stopReason" min-width="120px" />
+                        <el-table-column label="停机情况" prop="stopSituationName" min-width="120px" show-overflow-tooltip />
+                        <el-table-column label="停机原因" prop="stopReasonName" min-width="200px" show-overflow-tooltip />
                     </el-table>
                 </div>
                 <div slot="footer" class="dialog-footer" />
@@ -71,6 +75,7 @@
         currentQueryData: CurrentQueryData[]=[]
         dialogDataMainTable: DialogDataMainTable[]=[]
         dialogDataSecondTable: NotReachInfo[]=[]
+        notReachInfoList=[]
         isShowSecondTable=false
 
         // query header area setting
@@ -233,7 +238,7 @@
                 {
                     prop: 'productLineName',
                     label: '生产产线',
-                    width: '240',
+                    width: '350',
                     hide: false,
                     fixed: false,
                     showOverFlowTooltip: true,
@@ -243,7 +248,7 @@
                 {
                     prop: 'materialName',
                     label: '物料',
-                    width: '240',
+                    width: '350',
                     hide: false,
                     fixed: false,
                     showOverFlowTooltip: true,
@@ -253,7 +258,7 @@
                 {
                     prop: 'productDate',
                     label: '日/月/季',
-                    width: '100',
+                    width: '160',
                     hide: false,
                     fixed: false,
                     showOverFlowTooltip: true,
@@ -278,7 +283,7 @@
                     dataType: 'default'
                 },
                 {
-                    prop: 'googRatio',
+                    prop: 'goodRatio',
                     label: '良品率',
                     width: '100',
                     hide: false,
@@ -328,12 +333,22 @@
             return REPORTS_API.REPORT_PACKAGING_PRODUCTLINE_OEE_QUERY_API(params);
         };
 
+        valueChange(v) {
+            if (v === 'day') {
+                this.$refs.queryTable.clickAble = false
+                return
+            }
+            this.$refs.queryTable.clickAble = true
+        }
+
 
         dataAction(row, index) {
             console.log(row)
             console.log(index)
             this.isDialogVisible = true;
             this.dialogDataMainTable = this.currentQueryData[index].notReachInfo as DialogDataMainTable[]
+            console.log('this.dialogDataMainTable')
+            console.log(this.dialogDataMainTable)
             // if (this.dialogDataMainTable.length !== 0) {
             //     this.dialogDataSecondTable = this.dialogDataMainTable.notReachInfo as DialogDataSecondTable[]
             // }
@@ -341,11 +356,36 @@
         }
 
          // 表格双击
-        showDetailInfo() {
+        showDetailInfo(val) {
             this.isShowSecondTable = true;
+            console.log(val)
+            this.notReachInfoList = val.notReachInfo
         }
 
         subTableExportExcel(data) {
+
+            // var excelDatas = [
+            //     {
+            //     tHeader: ['Id', 'Title', 'Author', 'Readings', 'Date'], // sheet表一头部
+            //     filterVal: ['id', 'title', 'author', 'pageviews', 'display_time'], // 表一的数据字段
+            //     tableDatas: this.list, // 表一的整体json数据
+            //     sheetName: 'sheet1'// 表一的sheet名字
+            //     },
+            //     {
+            //     tHeader: ['序号', '标题', '作者', '服务'],
+            //     filterVal: ['id', 'title', 'author', 'reviewer'],
+            //     tableDatas: this.list,
+            //     sheetName: 'sheet2'
+            //     },
+            //     {
+            //     tHeader: ['序号', '名字', '描述'],
+            //     filterVal: ['userId', 'userName', 'userDescription'],
+            //     tableDatas: this.rolesList,
+            //     sheetName: 'sheet5555'
+            //     }
+            // ]
+
+
             const excelDatas = [
                 {
                     tHeader: ['生产线', '物料编码', '生产物料', '月/季', '停机情况', '停机时长（MIN)'],
@@ -355,15 +395,29 @@
                 }
             ]
 
-            data.foeEach(item => {
+
+            data.forEach(item => {
                 excelDatas.push({
                     tHeader: ['生产日期', '停机类型', '停机方式', '停机时间开始', '停机结束时间', '停机时长（MIN)', '次数', '停机情况', '停机原因'],
-                    filterVal: ['productDate', 'stopType', 'stopMode', 'startDate', 'endDate', 'duration', 'exceptionCount', 'stopReason'],
+                    filterVal: ['productDate', 'stopTypeName', 'stopModeName', 'startDate', 'endDate', 'duration', 'exceptionCount', 'stopSituationName', 'stopReasonName'],
                     tableDatas: item.notReachInfo,
                     sheetName: item.stopType
                 })
             })
+
+
             exportFileFor2ExcelMultiSheets(excelDatas, '异常明细', true, 'xlsx')
+        }
+
+        formatJson(column, jsonData) {
+            return jsonData.map(v =>
+                column.map(j => {
+                    if (j.formatter && typeof j.formatter(v) === 'string') {
+                        return j.formatter(v);
+                    }
+                    return v[j.prop];
+                })
+            );
         }
 
         /**
@@ -479,84 +533,91 @@
 
 <style lang="scss" scoped>
 
-    .inner-area {
-        .inner-area__title {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 10px;
-            h3 {
-                font-weight: bold;
-                font-size: 14px !important;
-                line-height: 32px;
-                .title-icon {
-                    display: inline-block;
-                    width: 4px;
-                    height: 12px;
-                    margin-top: 10px;
-                    margin-right: 5px;
-                    background: #487bff;
-                    border-radius: 2px;
-                }
-                .point-icon {
-                    width: 5px;
-                    height: 5px;
-                    margin-top: 13px;
-                    margin-right: 5px;
-                    background: #487bff;
-                    border-radius: 3px;
-                }
+.inner-area {
+    .inner-area__title {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 10px;
+        h3 {
+            font-weight: bold;
+            font-size: 14px !important;
+            line-height: 32px;
+            .title-icon {
+                display: inline-block;
+                width: 4px;
+                height: 12px;
+                margin-top: 10px;
+                margin-right: 5px;
+                background: #487bff;
+                border-radius: 2px;
+            }
+            .point-icon {
+                width: 5px;
+                height: 5px;
+                margin-top: 13px;
+                margin-right: 5px;
+                background: #487bff;
+                border-radius: 3px;
             }
         }
-        .inner-area__body {
-            .table-style-light {
-                .el-table__header {
-                    th {
-                        color: white;
-                        text-align: center;
-                        background: #e8e8e8;
-                        background-color: #e8e8e8 !important;
-                        border-top: none;
-                        border-right: none;
-                        border-bottom: none;
-                        border-left: none;
-                    }
+    }
+    .inner-area__body {
+        .table-style-light {
+            .el-table__header {
+                th {
+                    color: white;
+                    text-align: center;
+                    background: #e8e8e8;
+                    background-color: #e8e8e8 !important;
+                    border-top: none;
+                    border-right: none;
+                    border-bottom: none;
+                    border-left: none;
                 }
-                .el-table__body {
-                    td {
-                        padding: 0;
-                    }
+            }
+            .el-table__body {
+                td {
+                    padding: 0;
                 }
-                tr:nth-child(even) {
-                    background-color: #f7f7f7;
+            }
+            tr:nth-child(even) {
+                background-color: #f7f7f7;
+            }
+            .el-table__row {
+                td:first-child {
+                    border-left: 2px solid transparent;
                 }
-                .el-table__row {
-                    td:first-child {
-                        border-left: 2px solid transparent;
-                    }
+            }
+            .hover-row {
+                td:first-child {
+                    border-left: 2px solid #e8e8e8;
                 }
-                .hover-row {
-                    td:first-child {
-                        border-left: 2px solid #e8e8e8;
-                    }
+            }
+            .el-table__row:hover {
+                td:first-child {
+                    border-left: 2px solid #e8e8e8;
                 }
-                .el-table__row:hover {
-                    td:first-child {
-                        border-left: 2px solid #e8e8e8;
-                    }
-                }
+            }
 
-                .el-input.is-disabled .el-input__inner {
-                    width: 100%;
-                    overflow: hidden;
-                    color: #666 !important;
-                    background: none;
-                    border: none;
-                }
+            .el-input.is-disabled .el-input__inner {
+                width: 100%;
+                overflow: hidden;
+                color: #666 !important;
+                background: none;
+                border: none;
             }
         }
     }
-    .dialog-footer {
-        margin-top: 10px;
-        text-align: right;
-    }
+}
+.dialog-footer {
+    margin-top: 10px;
+    text-align: right;
+}
+
+
+</style>
+<style scoped>
+.infoDialog >>> .el-dialog .el-dialog__body {
+    padding: 20px;
+}
 </style>

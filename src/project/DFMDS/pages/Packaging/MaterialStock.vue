@@ -10,7 +10,9 @@
             :list-interface="listInterface"
             :custom-data="true"
             :show-operation-column="true"
-            :operation-column-width="150"
+            :operation-column-width="190"
+            :not-clear-page="true"
+            :show-fold="false"
         >
             <template slot="tab-head-main">
                 <div class="box-card-title clearfix">
@@ -18,6 +20,9 @@
                 </div>
             </template>
             <template slot="operation_column" slot-scope="{ scope }">
+                <el-button v-if="isAuth('')" class="ra_btn" type="text" round size="mini" style="margin-left: 0;" @click="returnMaterial(scope.row)">
+                    退料
+                </el-button>
                 <el-button v-if="isAuth('pkgPackQuery')" class="ra_btn" type="text" round size="mini" style="margin-left: 0;" @click="getDetailLog(scope.row, true)">
                     明细
                 </el-button>
@@ -31,6 +36,19 @@
         </query-table>
         <el-dialog title="物料移动明细" width="1300px" :close-on-click-modal="false" :visible.sync="visibleDetailLog">
             <div>
+                <el-form :model="moveDetailForm" inline label-suffix="：" label-width="100px" size="small">
+                    <el-form-item label="调整类型" prop="moveType">
+                        <el-select v-model="moveDetailForm.moveType" clearable>
+                            <!-- <el-option v-for="item in typeOptions" :key="item.value" :label="item.label" :value="item.value" /> -->
+                            <el-option v-for="(item, index) in moveTypeList" :key="index" :label="item.dictValue" :value="item.dictCode" />
+                        </el-select>
+                    </el-form-item>
+                    <el-form-item style="float: right;">
+                        <el-button type="primary" @click="getDetailLog(row, true)">
+                            查询
+                        </el-button>
+                    </el-form-item>
+                </el-form>
                 <el-table header-row-class-name="" :data="detaileLogData" border tooltip-effect="dark" class="newTable">
                     <el-table-column type="index" label="序号" width="55" align="center" fixed />
                     <el-table-column label="包材物料" show-overflow-tooltip>
@@ -41,7 +59,7 @@
                     <el-table-column label="单位" prop="moveUnit" width="60" />
                     <el-table-column label="数量" prop="moveAmount" show-overflow-tooltip width="80" />
                     <el-table-column label="批次" prop="batch" width="110" />
-                    <el-table-column label="供应商" prop="manufactor" width="110" />
+                    <el-table-column label="厂家" prop="manufactor" width="110" />
                     <el-table-column label="移动类型" prop="moveType" width="80" show-overflow-tooltip />
                     <el-table-column label="订单" prop="orderNo" width="120" />
                     <el-table-column label="线别" prop="productLineName" show-overflow-tooltip width="140" />
@@ -69,7 +87,10 @@
                     <el-form-item label="批次：">
                         <el-input v-model="transferForm.batch" type="text" maxlength="10" style="width: 380px;" disabled />
                     </el-form-item>
-                    <el-form-item label="供应商：">
+                    <el-form-item label="模具号：">
+                        <el-input v-model="transferForm.mouldCode" type="text" maxlength="10" style="width: 380px;" disabled />
+                    </el-form-item>
+                    <el-form-item label="厂家：">
                         <el-input v-model="transferForm.manufactor" type="text" style="width: 380px;" disabled />
                     </el-form-item>
                     <el-form-item label="当前库存：">
@@ -125,7 +146,10 @@
                     <el-form-item label="批次：">
                         <el-input v-model="adjustForm.batch" type="text" maxlength="10" style="width: 380px;" disabled />
                     </el-form-item>
-                    <el-form-item label="供应商：">
+                    <el-form-item label="模具号：">
+                        <el-input v-model="adjustForm.mouldCode" type="text" maxlength="10" style="width: 380px;" disabled />
+                    </el-form-item>
+                    <el-form-item label="厂家：">
                         <el-input v-model="adjustForm.manufactor" type="text" style="width: 380px;" disabled />
                     </el-form-item>
                     <el-form-item label="当前库存：">
@@ -135,7 +159,8 @@
                     </el-form-item>
                     <el-form-item label="调整类型：" prop="moveType">
                         <el-select v-model="adjustForm.moveType" filterable placeholder="请选择" style="width: 380px;">
-                            <el-option v-for="(item, index) in moveTypeList" :key="index" :label="item.dictValue" :value="item.dictCode" />
+                            <!-- <el-option v-for="(item, index) in moveTypeList" :key="index" :label="item.dictValue" :value="item.dictCode" /> -->
+                            <el-option v-for="item in typeOptions" :key="item.value" :label="item.label" :value="item.value" />
                         </el-select>
                     </el-form-item>
                     <el-form-item label="调整量：" prop="amount">
@@ -240,7 +265,7 @@ export default class MaterialStock extends Vue {
             },
             resVal: {
                 resData: 'data',
-                label: ['materialCode', 'materialName'],
+                label: ['materialName', 'materialCode'],
                 value: 'materialCode'
             }
         }
@@ -275,8 +300,16 @@ export default class MaterialStock extends Vue {
             minwidth: '110'
         },
         {
-            label: '供应商',
+            label: '厂家',
             prop: 'manufactor',
+            minwidth: '140',
+            formatter: (row) => {
+                return row.manufactorName + ' ' + row.manufactor;
+            }
+        },
+        {
+            label: '模具号',
+            prop: 'mouldCode',
             minwidth: '110'
         },
         {
@@ -289,6 +322,16 @@ export default class MaterialStock extends Vue {
             prop: 'changed',
             minwidth: '160'
         }
+    ]
+
+    moveDetailForm = {
+        moveType: ''
+    }
+
+    // 调整类型下拉
+    typeOptions: TypeOptionList[] = [
+        { value: 'INVENTORY_PROFIT', label: '盘盈' },
+        { value: 'INVENTORY_LOSSES', label: '盘亏' }
     ]
 
     transferFormRules = {
@@ -332,7 +375,7 @@ export default class MaterialStock extends Vue {
     amout = 0
 
     mounted() {
-        this.getProductline();
+        // this.getProductline();
         this.getMoveType();
         // this.$nextTick(() => {
         //     this.$refs.queryTable.getDataList(true)
@@ -345,16 +388,16 @@ export default class MaterialStock extends Vue {
     // createdEnd() {
     // }
 
-    // 拉取所有产线
-    getProductline() {
-        PKG_API.PKG_MATERIALSTOCK_TRANSFERDEPTNAME_API({
-            factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
-            deptType: ['PRODUCT_LINE'],
-            deptName: '包装'
-        }).then(({ data }) => {
-            this.productlineList = data.data
-        });
-    }
+    // // 拉取所有产线
+    // getProductline() {
+    //     PKG_API.PKG_MATERIALSTOCK_TRANSFERDEPTNAME_API({
+    //         factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
+    //         deptType: ['PRODUCT_LINE'],
+    //         deptName: '包装'
+    //     }).then(({ data }) => {
+    //         this.productlineList = data.data
+    //     });
+    // }
 
     // 调整类型
     getMoveType() {
@@ -369,6 +412,19 @@ export default class MaterialStock extends Vue {
         return PKG_API.PKG_MATERIALSTOCK_QUERY_API(params);
     }
 
+    returnMaterial(row) {
+        this.$store.commit('packaging/updatePackageInfo', row)
+        this.$store.commit(
+            'common/updateMainTabs',
+            this.$store.state.common.mainTabs.filter(subItem => subItem.name !== 'DFMDS-pages-Stock-PackingLineEdge-returnMaterial')
+        );
+        setTimeout(() => {
+            this.$router.push({
+                name: `DFMDS-pages-Stock-PackingLineEdge-returnMaterial`
+            });
+        }, 100);
+    }
+
     // 调整明细
     getDetailLog(row: object, type?: boolean) {
         this.row = row;
@@ -380,7 +436,8 @@ export default class MaterialStock extends Vue {
             pkgPackageStorageId: row['id'],
             batch: row['batch'],
             current: this.current,
-            size: this.size
+            size: this.size,
+            moveType: this.moveDetailForm.moveType
         }).then(({ data }) => {
             this.detaileLogData = data.data.records;
             this.total = data.data.total;
@@ -392,13 +449,16 @@ export default class MaterialStock extends Vue {
     changeTransferLine(row: object) {
         this.amout = row['storageAmount']
         this.productlineListFilter = [];
-        this.productlineListFilter = this.productlineList.filter(n => n['id'] !== row['productLine']);
+        console.log(this.$refs.queryTable.optionLists.productLine)
+        // this.productlineListFilter = this.productlineList.filter(n => n['id'] !== row['productLine']);
+        this.productlineListFilter = this.$refs.queryTable.optionLists.productLine.filter(n => n['id'] !== row['productLine']);
         this.transferForm = {
             packageStorageId: row['id'],
             productLineOut: row['productLine'],
             productLineOutName: row['productLineName'],
             materialCode: row['materialCode'],
             materialName: row['materialName'],
+            materialType: row['materialType'],
             amount: '',
             storageUnit: row['storageUnit'],
             batch: row['batch'],
@@ -406,6 +466,7 @@ export default class MaterialStock extends Vue {
             storageAmount: row['storageAmount'],
             productLineIn: '',
             remark: '',
+            mouldCode: row['mouldCode'],
             changer: getUserNameNumber(),
             changed: dateFormat(new Date(), 'yyyy-MM-dd hh:mm:ss')
         };
@@ -450,6 +511,7 @@ export default class MaterialStock extends Vue {
             amount: '',
             storageUnit: row['storageUnit'],
             remark: '',
+            mouldCode: row['mouldCode'],
             changer: getUserNameNumber(),
             changed: dateFormat(new Date(), 'yyyy-MM-dd hh:mm:ss')
         }
@@ -494,5 +556,9 @@ export default class MaterialStock extends Vue {
 interface FormObj{
     storageAmount?: number;
     amount?: string;
+}
+interface TypeOptionList {
+    label?: string;
+    value?: string;
 }
 </script>

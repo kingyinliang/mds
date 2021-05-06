@@ -175,20 +175,19 @@
                 {
                     prop: 'productLineName',
                     label: '生产线',
-                    width: '240',
+                    width: '260',
                     minWidth: '240',
                     hide: false,
-                    fixed: true,
+                    fixed: false,
                     showOverFlowTooltip: true,
                     dataType: 'default'
                 },
                 {
                     prop: 'materialName',
                     label: '品项',
-                    // width: '240',
-                    minWidth: '240',
+                    minWidth: '350',
                     hide: false,
-                    fixed: true,
+                    fixed: false,
                     showOverFlowTooltip: true,
                     dataType: 'multi',
                     data: ['materialName', 'materialCode']
@@ -196,10 +195,9 @@
                 {
                     prop: 'useMaterialName',
                     label: '领用物料',
-                    // width: '240',
-                    minWidth: '240',
+                    minWidth: '350',
                     hide: false,
-                    fixed: true,
+                    fixed: false,
                     showOverFlowTooltip: true,
                     dataType: 'multi',
                     data: ['useMaterialName', 'useMaterialCode']
@@ -209,7 +207,7 @@
                     label: '单位',
                     width: '80',
                     hide: false,
-                    fixed: true,
+                    fixed: false,
                     showOverFlowTooltip: true,
                     dataType: 'default'
                 },
@@ -217,7 +215,7 @@
                     prop: 'productDate',
                     label: '日期',
                     subLabel: '',
-                    width: '180',
+                    width: '140',
                     hide: false,
                     fixed: false,
                     showOverFlowTooltip: true,
@@ -228,7 +226,7 @@
                     label: '需求用量',
                     width: '80',
                     hide: false,
-                    fixed: true,
+                    fixed: false,
                     showOverFlowTooltip: true,
                     dataType: 'default'
                 },
@@ -237,7 +235,7 @@
                     label: '锅序',
                     width: '80',
                     hide: false,
-                    fixed: true,
+                    fixed: false,
                     showOverFlowTooltip: true,
                     dataType: 'default'
                 },
@@ -246,7 +244,7 @@
                     label: '实际用量',
                     width: '80',
                     hide: false,
-                    fixed: true,
+                    fixed: false,
                     showOverFlowTooltip: true,
                     dataType: 'default'
                 },

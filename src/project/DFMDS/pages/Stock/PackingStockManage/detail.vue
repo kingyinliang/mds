@@ -55,9 +55,10 @@ export default class MaterialDetail extends Vue {
 
     mouldCodeList = [];
 
-    supplierCodeList = [];
+    supplierCodeList: Array<{}> = [];
 
     get queryFormData() {
+        const stockInfo = this.$store.state.stock.stockInfo;
         return [
             {
                 type: 'select',
@@ -65,12 +66,13 @@ export default class MaterialDetail extends Vue {
                 prop: 'materialCode',
                 labelWidth: 90,
                 filterable: true,
-                defaultValue: '',
+                defaultValue: this.materialCode || '',
                 rule: [
                     { required: false, message: '请选择物料描述', trigger: 'change' }
                 ],
                 defaultOptionsFn: () => {
                     return COMMON_API.ALLMATERIAL_API({
+                        materialGroupCode: stockInfo.materialGroupCode,
                         materialTypes: ['ZVER'] // 物料类型
                     })
                 },
@@ -89,7 +91,7 @@ export default class MaterialDetail extends Vue {
             },
             {
                 type: 'select',
-                label: '供应商',
+                label: '厂家',
                 prop: 'supplierCode',
                 labelWidth: 90,
                 filterable: true,
@@ -118,16 +120,19 @@ export default class MaterialDetail extends Vue {
         {
             label: '物料',
             prop: 'materialCode',
-            width: 140,
+            width: 180,
             formatter: row => row.materialName + ' ' + row.materialCode
         },
         {
             label: '批次',
-            prop: 'batch'
+            prop: 'batch',
+            width: 120
         },
         {
-            label: '供应商',
-            prop: 'supplierName'
+            label: '厂家',
+            prop: 'supplierName',
+            width: 180,
+            formatter: row => row.supplierName + ' ' + row.supplierCode
         },
         {
             label: '模具号',
@@ -135,11 +140,13 @@ export default class MaterialDetail extends Vue {
         },
         {
             label: '入库日期',
-            prop: 'inStorageDate'
+            prop: 'inStorageDate',
+            width: 120
         },
         {
             label: '生产日期',
-            prop: 'produceDate'
+            prop: 'produceDate',
+            width: 120
         },
         {
             label: '单位',
@@ -184,12 +191,15 @@ export default class MaterialDetail extends Vue {
         }
     ]
 
+    materialCode = '';
+
     createdEnd() {
         this.$refs.queryTable.getDataList(true)
     }
 
     created() {
         this.getDropList()
+        this.materialCode = this.$store.state.stock.stockInfo.materialCode;
         this.$nextTick(() => {
             this.$refs.queryTable.getDataList(true)
         })
@@ -199,9 +209,16 @@ export default class MaterialDetail extends Vue {
         PKG_API.STORAGE_PACKAGE_MATERIAL_GROUP_INFO({
             materialGroupCode: this.$store.state.stock.stockInfo.materialGroupCode
         }).then(res => {
-            this.supplierCodeList = res.data.data.supplierCodeList.map(item => {
+            // this.supplierCodeList = res.data.data.supplierCodeList.map(item => {
+            //     return {
+            //         label: item,
+            //         value: item
+            //     }
+            // })
+            const map = res.data.data.supplierCodeNameMap;
+            this.supplierCodeList = Object.keys(map).map(item => {
                 return {
-                    label: item,
+                    label: map[item] + ' ' + item,
                     value: item
                 }
             })
@@ -216,8 +233,9 @@ export default class MaterialDetail extends Vue {
 
     getDataList(param) {
         const params = JSON.parse(JSON.stringify(param));
+        const stockInfo = this.$store.state.stock.stockInfo;
         params.factory = JSON.parse(sessionStorage.getItem('factory') || '{}').id;
-        params.materialGroupCode = this.$store.state.stock.stockInfo.materialGroupCode
+        params.materialGroupCode = stockInfo.materialGroupCode
         let getHistory = true;
         if (this.$refs.queryTable.activeName === '0') { // eslint-disable-line
             getHistory = false;

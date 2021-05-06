@@ -185,7 +185,7 @@
                     </el-table-column>
                     <el-table-column label="操作" fixed="right" width="70">
                         <template slot-scope="scope">
-                            <el-button :disabled="!(isRedact) || mixSauceStatus === 'M'" class="delBtn" type="text" icon="el-icon-delete" size="mini" @click="del(scope.row)">
+                            <el-button v-if="isAuth('ferOpnSdDel')" :disabled="!(isRedact) || mixSauceStatus === 'M'" class="delBtn" type="text" icon="el-icon-delete" size="mini" @click="del(scope.row)">
                                 删除
                             </el-button>
                         </template>
@@ -239,7 +239,7 @@
                     </el-table-column>
                     <el-table-column label="操作" fixed="right" width="70">
                         <template slot-scope="scope">
-                            <el-button :disabled="!(isRedact) || mixSauceStatus === 'M'" class="delBtn" type="text" icon="el-icon-delete" size="mini" @click="del(scope.row)">
+                            <el-button v-if="isAuth('ferOpnSdDel')" :disabled="!(isRedact) || mixSauceStatus === 'M'" class="delBtn" type="text" icon="el-icon-delete" size="mini" @click="del(scope.row)">
                                 删除
                             </el-button>
                         </template>
@@ -250,10 +250,10 @@
                 <el-button v-if="dataRule" type="primary" size="small" @click="isRedact = !isRedact">
                     {{ isRedact ? '取消' : '编辑' }}
                 </el-button>
-                <el-button v-if="isRedact" type="primary" size="small" @click="saved()">
+                <el-button v-if="isRedact && isAuth('ferOpnSdSave')" type="primary" size="small" @click="saved()">
                     保存
                 </el-button>
-                <el-button v-if="isRedact" type="primary" size="small" @click="push()">
+                <el-button v-if="isRedact && isAuth('ferOpnPush')" type="primary" size="small" @click="push()">
                     推送
                 </el-button>
             </template>

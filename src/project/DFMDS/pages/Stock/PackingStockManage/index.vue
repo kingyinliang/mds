@@ -14,7 +14,7 @@
             <template slot="home">
                 <div class="item-sort-container">
                     <el-row class="home_card__main" :gutter="10">
-                        <el-col v-for="item in stockInfoList" :key="item.potId" :span="12">
+                        <el-col v-for="item in stockInfoList" :key="item.potId" :span="6">
                             <div class="card-stock">
                                 <div class="card-stock__head">
                                     <span>{{ `${item.materialGroupName} ${item.materialGroupCode}` }}</span>
@@ -76,7 +76,8 @@
                 defaultOptionsFn: () => {
                     return new Promise(resolve => {
                         STOCK_API.STOCK_SYS_STORAGE_LIST_API({
-                            materialTypeCodeSet: ['ZVER', 'ZFZC', 'ZROH']
+                            // , 'ZFZC', 'ZROH'
+                            materialTypeCodeSet: ['ZVER']
                         }).then(res => {
                             res.data.data = res.data.data.reduce((pre, cur) => {
                                 !pre.find(row => row.storageLocation === cur.storageLocation) && pre.push(cur)
@@ -96,21 +97,27 @@
             {
                 type: 'select',
                 label: '物料组',
-                prop: 'materialGroupCode',
+                prop: 'stoMaterialGroupId',
                 labelWidth: 90,
                 filterable: true,
                 defaultValue: '',
                 rule: [
-                    { required: false, message: '请选择车间', trigger: 'change' }
+                    { required: false, message: '请选择物料组', trigger: 'change' }
                 ],
                 defaultOptionsFn: () => {
-                    return STOCK_API.STOCK_MATERIAL_GROUP_STORAGE_API({})
+                    // return STOCK_API.STOCK_MATERIAL_GROUP_STORAGE_API({})
+                    return STOCK_API.STOCK_STORAGE_LIST_ALL_API({})
                 },
                 resVal: {
                     resData: 'data',
-                    label: ['materialName'],
-                    value: 'materialCode'
+                    label: ['materialGroupName', 'materialGroupCode'],
+                    value: 'id'
                 }
+                // resVal: {
+                //     resData: 'data',
+                //     label: ['materialName', 'materialCode'],
+                //     value: 'materialCode'
+                // }
             },
             {
                 type: 'select',

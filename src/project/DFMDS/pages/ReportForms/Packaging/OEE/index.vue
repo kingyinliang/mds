@@ -149,14 +149,14 @@
                     label: '生产车间',
                     width: '120',
                     hide: false,
-                    fixed: true,
+                    fixed: false,
                     showOverFlowTooltip: true,
                     dataType: 'default'
                 },
                 {
                     prop: 'productLineName',
                     label: '产线',
-                    width: '220',
+                    width: '260',
                     hide: false,
                     fixed: false,
                     showOverFlowTooltip: true,
@@ -174,7 +174,7 @@
                 {
                     prop: 'materialName',
                     label: '品项',
-                    width: '260',
+                    width: '350',
                     hide: false,
                     fixed: false,
                     showOverFlowTooltip: true,
@@ -184,7 +184,7 @@
                 {
                     prop: 'productDate',
                     label: '日期',
-                    width: '100',
+                    width: '140',
                     hide: false,
                     fixed: false,
                     showOverFlowTooltip: true,

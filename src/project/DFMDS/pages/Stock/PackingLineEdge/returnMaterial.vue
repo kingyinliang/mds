@@ -10,6 +10,7 @@
             :custom-data="true"
             @get-data-success="setData"
             @created-end="createdEnd"
+            @search-init="searchInit"
         >
             <template slot="mds-button">
                 <el-button type="primary" size="small" @click="add">
@@ -19,13 +20,16 @@
             <template slot="home">
                 <mds-card title="退料明细" :pack-up="false">
                     <template slot="titleBtn">
-                        <el-button type="primary" size="small" style="float: right;" @click="submit">
+                        <el-button type="danger" size="small" style="float: right; margin-left: 10px;" @click="submit('删除')">
+                            删除
+                        </el-button>
+                        <el-button type="primary" size="small" style="float: right;" @click="submit('提交')">
                             提交
                         </el-button>
                     </template>
-                    <el-table :data="tableData" class="newTable" header-row-class-name="tableHead" height="450px" @selection-change="selectHandler">
+                    <el-table :data="tableData" class="newTable" header-row-class-name="tableHead" height="450px" border @selection-change="selectHandler">
                         <el-table-column type="index" fixed="left" />
-                        <el-table-column type="selection" fixed="left" />
+                        <el-table-column type="selection" fixed="left" :selectable="selectableHandler" />
                         <el-table-column label="状态" prop="statusName" show-overflow-tooltip />
                         <el-table-column label="包材物料" prop="materialCode" width="140px" show-overflow-tooltip>
                             <template slot-scope="scope">
@@ -33,18 +37,26 @@
                             </template>
                         </el-table-column>
                         <el-table-column label="批次" prop="batch" show-overflow-tooltip />
-                        <el-table-column label="供应商" prop="manufactor" width="120px" show-overflow-tooltip />
+                        <el-table-column label="厂家" prop="manufactor" width="120px" show-overflow-tooltip>
+                            <template slot-scope="scope">
+                                {{ `${scope.row.manufactorName || ''} ${scope.row.manufactor}` }}
+                            </template>
+                        </el-table-column>
                         <el-table-column label="模具号" prop="mouldCode" show-overflow-tooltip />
                         <el-table-column label="移动类型" prop="moveType" width="100px" show-overflow-tooltip />
                         <el-table-column label="数量" prop="moveAmount" show-overflow-tooltip />
                         <el-table-column label="单位" prop="moveUnit" show-overflow-tooltip />
                         <el-table-column label="订单" prop="orderNo" width="120px" show-overflow-tooltip />
-                        <el-table-column label="线别" prop="productLineName" width="170px" show-overflow-tooltip />
+                        <el-table-column label="线别" prop="productLineName" width="170px" show-overflow-tooltip>
+                            <template slot-scope="scope">
+                                {{ `${scope.row.productLineName || ''} ${scope.row.productLine}` }}
+                            </template>
+                        </el-table-column>
                         <el-table-column label="操作人" prop="changer" width="140px" show-overflow-tooltip />
                         <el-table-column label="操作时间" prop="changed" width="160px" show-overflow-tooltip />
                         <el-table-column label="操作" fixed="right">
                             <template slot-scope="scope">
-                                <el-button type="text" size="small" :disabled="scope.row.status === 'M'" @click="edit(scope.row)">
+                                <el-button type="text" size="small" :disabled="notEditArr.includes(scope.row.status)" @click="edit(scope.row)">
                                     编辑
                                 </el-button>
                             </template>
@@ -87,6 +99,8 @@ export default class PackingLineEdge extends Vue {
     selections = [];
     moveTypeList = [];
     isAdd = true;
+    notEditArr = ['M', 'P']; // 已提交、已过账
+    currentRow = {}; // 当前操作行
 
     get formColumns() {
         return [
@@ -111,9 +125,10 @@ export default class PackingLineEdge extends Vue {
             },
             {
                 type: 'input',
-                label: '供应商',
+                label: '厂家',
                 prop: 'manufactor',
-                disabled: true
+                disabled: true,
+                formatter: row => `${row.manufactorName || ''} ${row.manufactor || ''}`
             },
             {
                 type: 'input',
@@ -125,6 +140,7 @@ export default class PackingLineEdge extends Vue {
                 type: 'select',
                 label: '调整类型',
                 prop: 'moveTypeCode',
+                disabled: Boolean(this.currentRow['orderNo']),
                 defaultOptions: [
                     ...this.moveTypeList
                     // { value: 'INVENTORY_PROFIT', label: '盘盈' },
@@ -132,14 +148,14 @@ export default class PackingLineEdge extends Vue {
                 ]
             },
             {
-                type: 'input',
+                type: 'number',
                 label: '调整量',
                 prop: 'moveAmount'
             },
             {
                 type: 'input',
                 label: '单位',
-                prop: 'moveUnit',
+                prop: 'moveUnitName',
                 disabled: true
             },
             {
@@ -224,6 +240,14 @@ export default class PackingLineEdge extends Vue {
         this.$refs.queryTable.getDataList(true)
     }
 
+    searchInit() {
+        this.current = 1
+    }
+
+    selectableHandler(row) {
+        return !this.notEditArr.includes(row.status)
+    }
+
     // 调整类型
     getMoveType() {
         COMMON_API.DICTQUERY_API({ dictType: 'COMMON_ADJUST_TYPE' }).then(({ data }) => {
@@ -261,30 +285,34 @@ export default class PackingLineEdge extends Vue {
     add() {
         const packageInfo = this.$store.state.packaging.packageInfo
         this.isAdd = true
+        this.currentRow = {}
         this.$refs.dialog.init({
             ...packageInfo,
-            moveUnit: packageInfo.storageUnit,
+            moveUnitName: packageInfo.storageUnit,
+            moveUnit: packageInfo.storageUnitCode,
             changed: dateFormat(new Date(), 'yyyy-MM-dd hh:mm:ss'),
             changer: getUserNameNumber()
         })
     }
 
     edit(row) {
+        this.currentRow = row;
         this.isAdd = false
-        this.$refs.dialog.init({ ...row, moveAmount: String(row.moveAmount) })
+        this.$refs.dialog.init({ ...row, moveAmount: String(row.moveAmount), moveUnitName: row.moveUnit, moveUnit: row.moveUnitCode })
     }
 
-    submit() {
+    submit(type) {
         if (!this.selections.length) {
             this.$warningToast('请选择明细')
             return
         }
-        this.$confirm('确定提交吗?', '提示', {
+        this.$confirm(`确定${type}吗?`, '提示', {
             confirmButtonText: '确定',
             cancelButtonText: '取消',
             type: 'warning'
         }).then(() => {
-            PKG_API.PKG_RETURN_SUBMIT_API(this.selections.map((item: { id: string }) => item.id)).then(res => {
+            const submitType = type === '提交' ? 'PKG_RETURN_SUBMIT_API' : 'PKG_RETURN_DELETE_API'
+            PKG_API[submitType](this.selections.map((item: { id: string }) => item.id)).then(res => {
                 this.$successToast(res.data.msg)
                 this.$refs.queryTable.getDataList(true)
             })
@@ -292,6 +320,10 @@ export default class PackingLineEdge extends Vue {
     }
 
     addOrUpdate(params) {
+        if (params.moveAmount <= 0 || String(params.moveAmount).includes('.')) {
+            this.$warningToast('调整量输入信息为正整数')
+            return Promise.reject<Error>(new Error('调整量输入信息为正整数'));
+        }
         const type = this.isAdd ? 'PKG_RETURN_SAVE_API' : 'PKG_RETURN_UPDATE_API'
         return PKG_API[type]({
             moveAmount: params.moveAmount,

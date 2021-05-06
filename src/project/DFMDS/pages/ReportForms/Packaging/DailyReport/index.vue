@@ -166,15 +166,24 @@
             //表格数据
             column: [
                 {
+                    prop: 'productDate',
+                    label: '生产日期',
+                    width: '120',
+                    hide: false,
+                    fixed: false,
+                    showOverFlowTooltip: true,
+                    dataType: 'default'
+                },
+                {
                     prop: 'materialName',
                     label: '生产物料',
-                    minWidth: '240',
+                    minWidth: '350',
                     hide: false,
                     fixed: false,
                     showOverFlowTooltip: true,
                     subLabel: '',
                     dataType: 'multi',
-                    data: ['materialCode', 'materialName']
+                    data: ['materialName', 'materialCode']
                 },
                 {
                     prop: 'theoryNum',
@@ -189,7 +198,7 @@
                 {
                     prop: 'todayNum',
                     label: '今日产量',
-                    width: '200',
+                    width: '120',
                     hide: false,
                     fixed: false,
                     subLabel: '(箱)',
@@ -199,17 +208,17 @@
                 {
                     prop: 'useMaterialName',
                     label: '包材物料',
-                    minWidth: '240',
+                    minWidth: '350',
                     hide: false,
                     fixed: false,
                     showOverFlowTooltip: true,
-                    dataType: 'default',
+                    dataType: 'multi',
                     data: ['useMaterialName', 'useMaterialCode']
                 },
                 {
                     prop: 'useMaterialUnitName',
                     label: '单位',
-                    width: '100',
+                    width: '80',
                     hide: false,
                     fixed: false,
                     showOverFlowTooltip: true,

@@ -15,9 +15,12 @@
                                 {{ scope.row.materialName + ' ' + scope.row.materialCode }}
                             </template>
                         </el-table-column>
-                        <el-table-column label="单位" prop="unit" width="50" :show-overflow-tooltip="true" />
+                        <el-table-column label="单位" prop="unit" width="50" :show-overflow-tooltip="true">
+                            <template slot-scope="scope">
+                                {{ scope.row.unitName || scope.row.unit }}
+                            </template>
+                        </el-table-column>
                         <el-table-column label="需求用量" prop="needNum" width="100" :show-overflow-tooltip="true" />
-                        <el-table-column label="当前库存" prop="storage" width="100" :show-overflow-tooltip="true" />
                         <el-table-column width="70">
                             <template slot-scope="scope">
                                 <el-button :disabled="!(isRedact && scope.row.status !== '3')" type="text" @click="SplitDate(scope.row, scope.$index)">
@@ -25,6 +28,7 @@
                                 </el-button>
                             </template>
                         </el-table-column>
+                        <el-table-column label="当前库存" prop="storage" width="100" :show-overflow-tooltip="true" />
                         <el-table-column label="领料类型" min-width="140">
                             <template slot="header">
                                 <span class="notNull">* </span>领料类型
@@ -49,17 +53,26 @@
                                 <span class="notNull">* </span>物料批次
                             </template>
                             <template slot-scope="scope">
-                                <el-input v-model="scope.row.batch" maxlength="10" :disabled="!(isRedact)" size="small" placeholder="请输入" />
+                                <!-- <el-input v-model="scope.row.batch" maxlength="10" :disabled="!(isRedact)" size="small" placeholder="请输入" /> -->
+                                <el-select v-model="scope.row.batch" size="small" :disabled="!(isRedact)" @change="val => batchChange(scope.row, val)">
+                                    <el-option v-for="op in scope.row.stoPackageMaterialStorageResponseDtoList" :key="op.id" :label="op.batch" :value="op.batch" />
+                                </el-select>
                             </template>
                         </el-table-column>
-                        <el-table-column label="厂家" min-width="140">
-                            <template slot="header">
-                                <span class="notNull">* </span>厂家
-                            </template>
+                        <el-table-column label="模具号" prop="mouldCode" min-width="140">
                             <template slot-scope="scope">
-                                <el-select v-model="scope.row.manufactor" filterable placeholder="请选择" size="small" :disabled="!(isRedact)" clearable>
+                                <el-input v-model="scope.row.mouldCode" :disabled="!scope.row.canEditModuleCode" size="small" />
+                            </template>
+                        </el-table-column>
+                        <el-table-column label="厂家" min-width="140" show-overflow-tooltip>
+                            <!-- <template slot="header">
+                                <span class="notNull">* </span>厂家
+                            </template> -->
+                            <template slot-scope="scope">
+                                {{ `${scope.row.manufactorName || ''} ${scope.row.manufactor || ''}` }}
+                                <!-- <el-select v-model="scope.row.manufactor" filterable placeholder="请选择" size="small" :disabled="true" clearable>
                                     <el-option v-for="(iteam, index) in manufactor" :key="index" :label="iteam.dictValue" :value="iteam.dictCode" />
-                                </el-select>
+                                </el-select> -->
                             </template>
                         </el-table-column>
                         <el-table-column label="备注" prop="remark" min-width="140">
@@ -67,8 +80,8 @@
                                 <el-input v-model="scope.row.remark" :disabled="!(isRedact)" size="small" placeholder="请输入" />
                             </template>
                         </el-table-column>
-                        <el-table-column label="操作人" prop="changer" width="100" :show-overflow-tooltip="true" />
-                        <el-table-column label="操作时间" prop="changed" width="100" :show-overflow-tooltip="true" />
+                        <el-table-column label="操作人" prop="changer" width="140" :show-overflow-tooltip="true" />
+                        <el-table-column label="操作时间" prop="changed" width="160" :show-overflow-tooltip="true" />
                         <el-table-column label="操作" fixed="right" width="70">
                             <template slot-scope="scope">
                                 <el-button v-if="scope.row.splitFlag === 'Y'" :disabled="!(isRedact && scope.row.status !== '3')" class="delBtn" type="text" icon="el-icon-delete" size="mini" @click="del(scope.row)">
@@ -121,7 +134,7 @@
                 type: 'tooltip',
                 icon: 'factory-pinleiguanli',
                 label: '生产物料',
-                value: ['materialCode', 'materialName']
+                value: ['materialName', 'materialCode']
             },
             {
                 type: 'p',
@@ -175,6 +188,16 @@
                     if (!item.useType) {
                         item.useType = '正常领料'
                     }
+                    // 如果选了批次，当前库存展示当前批次的，如果没有批次，当前库存展示所有批次的总和
+                    if (item.batch) {
+                        const obj = item.stoPackageMaterialStorageResponseDtoList.find(row => row.batch === item.batch)
+                        item.storage = obj?.currentAmount
+                        return
+                    }
+                    item.storage = 0
+                    item.stoPackageMaterialStorageResponseDtoList.map(row => {
+                        item.storage += row.currentAmount
+                    })
                 })
                 this.tableData = JSON.parse(JSON.stringify(data.data));
                 this.OrgTableData = JSON.parse(JSON.stringify(data.data));
@@ -188,6 +211,21 @@
             });
         }
 
+        // 批次变化
+        batchChange(row, val) {
+            const obj = row.stoPackageMaterialStorageResponseDtoList.find(item => item.batch === val)
+            row.mouldCode = obj.mouldCode
+            row.manufactor = obj.supplierCode
+            row.manufactorName = obj.supplierName
+            row.stoPackageMaterialStorageId = obj.id
+            row.storage = obj.currentAmount
+            if (!obj.mouldCode) {
+                row.canEditModuleCode = true
+            } else {
+                row.canEditModuleCode = false
+            }
+        }
+
         // 拆分
         SplitDate(row, index) {
             this.tableData.splice(index + this.tableData.filter(item => item.materialCode === row.materialCode).length, 0, {
@@ -195,11 +233,16 @@
                 posnr: row.posnr,
                 materialCode: row.materialCode,
                 materialName: row.materialName,
+                materialType: row.materialType,
                 unit: row.unit,
                 needNum: row.needNum,
                 storage: row.storage,
                 useType: '正常领料',
-                splitFlag: 'Y'
+                splitFlag: 'Y',
+                stoPackageMaterialStorageResponseDtoList: row.stoPackageMaterialStorageResponseDtoList,
+                mouldCode: '',
+                productLine: row.productLine,
+                orderNo: row.orderNo
             })
             this.spanArr = this.merge(this.tableData)
         }
@@ -212,6 +255,7 @@
                 type: 'warning'
             }).then(() => {
                 this.$set(row, 'delFlag', 1)
+                this.$set(row, 'isDel', 1)
                 this.spanArr = this.merge(this.tableData)
                 this.$successToast('删除成功');
             });
@@ -219,8 +263,8 @@
 
         //表格行名
         rowDelFlag({ row }) {
-            if (row.delFlag === 1) {
-                return 'rowDel';
+            if (row.isDel) {
+                return 'rowDel'
             } else if (row.status === '3') {
                 return 'disabled-row'
             } else if (row.status === '1') {
@@ -251,7 +295,7 @@
 
         //设置合并行
         spanMethod({ rowIndex, columnIndex }) {
-            if (columnIndex <= 4) {
+            if (columnIndex <= 3) {
                 return {
                     rowspan: this.spanArr[rowIndex],
                     colspan: this.spanArr[rowIndex] > 0 ? 1 : 0
@@ -264,6 +308,7 @@
             for (const item of this.tableData.filter(it => it.delFlag !== 1)) {
                 if (!item.useType || item.useAmount === '' || item.useAmount === null || !item.batch || !item.manufactor) {
                     this.$warningToast('请填写必填项');
+                    console.log(item)
                     return false
                 }
             }
@@ -277,25 +322,32 @@
             }
 
             const delIds: string[] = []
-            const insertDto = []
+            const insertDto: DataObj[] = []
             const updateDto = []
 
-            this.tableData.forEach(item => {
-                if (item.status === '3') {
-                    delIds.push(item.id)
-                }
-            })
+            // this.tableData.forEach(item => {
+            //     if (item.status === '3') {
+            //         delIds.push(item.id)
+            //     }
+            // })
 
             this.dataEntryData(this.formHeader, this.tableData, this.OrgTableData, delIds, insertDto, updateDto, (item) => {
                 item.productLine = this.formHeader['productLine']
             });
 
-            PKG_API.PKG_PICKING_MATERIAL_SAVE_API({
+            const params = {
                 workShop: this.formHeader['workShop'],
                 delIds,
-                insertDto,
-                updateDto
-            }).then(() => {
+                insertDto: insertDto,
+                updateDto: updateDto.filter(it => !delIds.includes(it['id']))
+            }
+
+            // if (!params.delIds.length && !params.insertDto.length && !params.updateDto.length) {
+            //     this.$warningToast('请修改后再保存')
+            //     return
+            // }
+
+            PKG_API.PKG_PICKING_MATERIAL_SAVE_API(params).then(() => {
                 this.$successToast('保存成功');
                 this.int()
             })
@@ -303,34 +355,53 @@
 
         dataEntryData(formHeader, data: DataEntryDataObj[], orgData: DataEntryDataObj[], delArr: string[], insertArr: DataEntryDataObj[], updateArr: DataEntryDataObj[], processingData?) {
             data.forEach(item => {
-                if (item.delFlag === 1) {
+                // if (item.delFlag === 1) {
+                //     if (item.id) {
+                //         delArr.push(item.id);
+                //     }
+                // }
+                if (item.status === '1') {
+                    insertArr.push(item);
+                } else if (Number(item.delFlag) === 1) {
                     if (item.id) {
                         delArr.push(item.id);
                     }
-                } if (item.status === '1') {
-                    insertArr.push(item);
-                } else if (item.id) {
-                    const orgObj = orgData.filter(it => it.id === item.id)[0];
-                    if (orgObj) {
-                        if (!_.isEqual(orgObj, item)) {
-                            item.orderId = formHeader.id;
-                            if (processingData) {
-                                processingData(item);
-                            }
-                            updateArr.push(item);
-                        }
-                    } else {
-                        insertArr.push(item);
-                    }
                 } else {
-                    item.factory = JSON.parse(sessionStorage.getItem('factory') || '{}').id;
-                    item.orderId = formHeader.id;
-                    item.orderNo = formHeader.orderNo;
-                    if (processingData) {
-                        processingData(item);
+                    if (!item.id) {
+                        insertArr.push(item);
+                        return
                     }
-                    insertArr.push(item);
+                    const orgObj = orgData.filter(it => it.id === item.id)[0];
+                    if (!_.isEqual(orgObj, item)) {
+                        item.orderId = formHeader.id;
+                        if (processingData) {
+                            processingData(item);
+                        }
+                        updateArr.push(item);
+                    }
                 }
+                // else if (item.id) {
+                //     const orgObj = orgData.filter(it => it.id === item.id)[0];
+                //     if (orgObj) {
+                //         if (!_.isEqual(orgObj, item)) {
+                //             item.orderId = formHeader.id;
+                //             if (processingData) {
+                //                 processingData(item);
+                //             }
+                //             updateArr.push(item);
+                //         }
+                //     } else {
+                //         insertArr.push(item);
+                //     }
+                // } else {
+                //     item.factory = JSON.parse(sessionStorage.getItem('factory') || '{}').id;
+                //     item.orderId = formHeader.id;
+                //     item.orderNo = formHeader.orderNo;
+                //     if (processingData) {
+                //         processingData(item);
+                //     }
+                //     insertArr.push(item);
+                // }
             });
         }
     }
@@ -351,6 +422,7 @@
         posnr?: string;
         materialCode?: string;
         materialName?: string;
+        materialType?: string;
         unit?: string;
         needNum?: string;
         storage?: string;
@@ -360,6 +432,14 @@
         manufactor?: string;
         splitFlag?: string;
         status?: string;
+        mouldCode?: string; // 模具号
+        productLine?: string; // 产线
+        stoPackageMaterialStorageResponseDtoList?: Array<StoPackageMaterialStorageResponseDto>;
+    }
+    interface StoPackageMaterialStorageResponseDto {
+        id?: string;
+        mouldCode?: string;
+        supplierCode?: string;
     }
 </script>
 
