@@ -233,11 +233,11 @@
                     this.$warningToast('请填写物料领用页签包材领用实际用量');
                     return false
                 }
-                if ((item.realLoss !== '' && item.realLoss !== 0) && !item.lossReason) {
+                if ((item.realLoss && Number(item.realLoss) > 0) && !item.lossReason) {
                     this.$warningToast('请填写物料领用页签包材领用损耗原因');
                     return false
                 }
-                if (item.unqualified !== '' && item.unqualified !== 0 && !item.badReason) {
+                if (item.unqualified && Number(item.unqualified) > 0 && !item.badReason) {
                     this.$warningToast('请填写物料领用页签包材领用不合格原因');
                     return false
                 }
@@ -296,10 +296,12 @@
                     if (filterArr2 && filterArr2[0]) {
                         item.factory = JSON.parse(sessionStorage.getItem('factory') || '{}').id;
                         item.realLoss = (item.realLoss === '' || item.realLoss === null ? 0 : item.realLoss);
+                        item.unqualified = item.unqualified || 0;
                         filterArr2[0].item.push(item)
                     } else {
                         item.factory = JSON.parse(sessionStorage.getItem('factory') || '{}').id;
                         item.realLoss = (item.realLoss === '' || item.realLoss === null ? 0 : item.realLoss);
+                        item.unqualified = item.unqualified || 0;
                         pkgPackingMaterial.packingMaterialInsert.push({
                             factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
                             merge: item.merge,
@@ -332,9 +334,11 @@
                     if (!_.isEqual(orgObj, item)) {
                         item.factory = JSON.parse(sessionStorage.getItem('factory') || '{}').id;
                         item.realLoss = (item.realLoss === '' || item.realLoss === null ? 0 : item.realLoss);
+                        item.unqualified = item.unqualified || 0;
                         if (filterArr1 && filterArr1[0]) {
                             item.factory = JSON.parse(sessionStorage.getItem('factory') || '{}').id;
                             item.realLoss = (item.realLoss === '' || item.realLoss === null ? 0 : item.realLoss);
+                            item.unqualified = item.unqualified || 0;
                             filterArr1[0].item.push(item)
                         } else {
                             pkgPackingMaterial.packingMaterialUpdate.push({
@@ -364,10 +368,12 @@
                 } else if (filterArr2 && filterArr2[0]) {
                     item.factory = JSON.parse(sessionStorage.getItem('factory') || '{}').id;
                     item.realLoss = (item.realLoss === '' || item.realLoss === null ? 0 : item.realLoss);
+                    item.unqualified = item.unqualified || 0;
                     filterArr2[0].item.push(item)
                 } else {
                     item.factory = JSON.parse(sessionStorage.getItem('factory') || '{}').id;
                     item.realLoss = (item.realLoss === '' || item.realLoss === null ? 0 : item.realLoss);
+                    item.unqualified = item.unqualified || 0;
                     pkgPackingMaterial.packingMaterialInsert.push({
                         factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
                         merge: item.merge,

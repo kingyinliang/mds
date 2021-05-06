@@ -33,6 +33,10 @@
         queryFormSetting= {
             isQueryFormShow: true, // 标头搜寻区块是否显示
             rules: [ // 查询必填栏位校验
+                {
+                    prop: 'startDate',
+                    text: '请选择生产日期'
+                }
             ],
             queryAuth: '',
             exportExcel: true, // 导出 excel BTN

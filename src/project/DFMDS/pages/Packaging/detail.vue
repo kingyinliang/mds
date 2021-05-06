@@ -254,9 +254,15 @@
 
             pkgPackingMaterial.packingMaterialUpdate.map(item => {
                 item.orderNo = this.$refs.dataEntry.formHeader.orderNo
+                item.item.map(row => {
+                    row.orderNo = this.$refs.dataEntry.formHeader.orderNo
+                })
             })
             pkgPackingMaterial.packingMaterialInsert.map(item => {
                 item.orderNo = this.$refs.dataEntry.formHeader.orderNo
+                item.item.map(row => {
+                    row.orderNo = this.$refs.dataEntry.formHeader.orderNo
+                })
             })
 
             return PKG_API.PKG_ALL_SUBMIT_API({

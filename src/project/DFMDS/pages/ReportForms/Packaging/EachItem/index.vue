@@ -61,12 +61,14 @@
                 {
                     prop: 'materialCode',
                     label: '物料编号',
-                    width: '140'
+                    width: '140',
+                    showOverFlowTooltip: true
                 },
                 {
                     prop: 'materialName',
                     label: '物料名称',
-                    width: '140'
+                    width: '140',
+                    showOverFlowTooltip: true
                 },
                 {
                     prop: 'unitName',
