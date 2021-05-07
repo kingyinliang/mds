@@ -30,7 +30,11 @@
             </el-form-item>
             <el-form-item label="上级菜单：" prop="parentName">
                 <el-popover ref="menuListPopover" placement="bottom-start" trigger="click" style="height: 100%; overflow: auto;">
-                    <el-tree ref="menuListTree" :data="menuList" :props="menuListTreeProps" node-key="id" :default-expand-all="false" :highlight-current="true" :expand-on-click-node="false" @current-change="menuListTreeCurrentChangeHandle" />
+                    <el-tree ref="menuListTree" :data="menuList" :props="menuListTreeProps" node-key="id" :default-expand-all="false" :highlight-current="true" :expand-on-click-node="false" style="height: 250px; overflow: auto;" @current-change="menuListTreeCurrentChangeHandle">
+                        <span slot-scope="{ node }" class="custom-tree-node">
+                            {{ `${node.label} ${node.data.remark}` }}
+                        </span>
+                    </el-tree>
                 </el-popover>
                 <el-input v-model="dataForm.parentName" v-popover:menuListPopover :readonly="true" placeholder="点击选择上级菜单" class="menu-list__input" />
             </el-form-item>
