@@ -116,6 +116,8 @@ export default {
                             });
                         } else if (this.factory.length === 1) {
                             this.$refs.selectfactory.goFa(this.factory[0])
+                        } else if (this.factory.length === 0) {
+                            this.$errorToast('未分配工厂，无法进入系统，请联系管理员');
                         }
                     });
                 }
@@ -155,6 +157,8 @@ export default {
                 });
             } else if (data.userFactory.length === 1) {
                 this.$refs.selectfactory.goFa(data.userFactory[0])
+            } else if (data.userFactory.length === 0) {
+                this.$errorToast('未分配工厂，无法进入系统，请联系管理员');
             }
         },
         resetForm(formName) {
