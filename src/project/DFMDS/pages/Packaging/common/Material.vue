@@ -297,11 +297,13 @@
                         item.factory = JSON.parse(sessionStorage.getItem('factory') || '{}').id;
                         item.realLoss = (item.realLoss === '' || item.realLoss === null ? 0 : item.realLoss);
                         item.unqualified = item.unqualified || 0;
+                        item.realUseAmount = item.realUseAmount || 0;
                         filterArr2[0].item.push(item)
                     } else {
                         item.factory = JSON.parse(sessionStorage.getItem('factory') || '{}').id;
                         item.realLoss = (item.realLoss === '' || item.realLoss === null ? 0 : item.realLoss);
                         item.unqualified = item.unqualified || 0;
+                        item.realUseAmount = item.realUseAmount || 0;
                         pkgPackingMaterial.packingMaterialInsert.push({
                             factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
                             merge: item.merge,
@@ -335,10 +337,12 @@
                         item.factory = JSON.parse(sessionStorage.getItem('factory') || '{}').id;
                         item.realLoss = (item.realLoss === '' || item.realLoss === null ? 0 : item.realLoss);
                         item.unqualified = item.unqualified || 0;
+                        item.realUseAmount = item.realUseAmount || 0;
                         if (filterArr1 && filterArr1[0]) {
                             item.factory = JSON.parse(sessionStorage.getItem('factory') || '{}').id;
                             item.realLoss = (item.realLoss === '' || item.realLoss === null ? 0 : item.realLoss);
                             item.unqualified = item.unqualified || 0;
+                            item.realUseAmount = item.realUseAmount || 0;
                             filterArr1[0].item.push(item)
                         } else {
                             pkgPackingMaterial.packingMaterialUpdate.push({
@@ -369,11 +373,13 @@
                     item.factory = JSON.parse(sessionStorage.getItem('factory') || '{}').id;
                     item.realLoss = (item.realLoss === '' || item.realLoss === null ? 0 : item.realLoss);
                     item.unqualified = item.unqualified || 0;
+                    item.realUseAmount = item.realUseAmount || 0;
                     filterArr2[0].item.push(item)
                 } else {
                     item.factory = JSON.parse(sessionStorage.getItem('factory') || '{}').id;
                     item.realLoss = (item.realLoss === '' || item.realLoss === null ? 0 : item.realLoss);
                     item.unqualified = item.unqualified || 0;
+                    item.realUseAmount = item.realUseAmount || 0;
                     pkgPackingMaterial.packingMaterialInsert.push({
                         factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
                         merge: item.merge,
@@ -828,7 +834,7 @@ interface MaterialMap{
     startStocks?: number;
     endStocks?: number;
     receiveMaterial?: string;
-    realUseAmount?: string;
+    realUseAmount?: string | number;
     sterilizeStorageNo?: string;
     realUsed?: string;
     startDate?: string;
