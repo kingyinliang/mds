@@ -11,6 +11,7 @@
             :operation-column-width="140"
             :show-index-column="true"
             :custom-data="true"
+            @search-init="searchInit"
             @get-data-success="setData"
             @created-end="createdEnd"
         >
@@ -56,6 +57,10 @@ export default class MaterialDetail extends Vue {
     mouldCodeList = [];
 
     supplierCodeList: Array<{}> = [];
+
+    searchInit() {
+        this.$refs.queryTable.tabs[this.$refs.queryTable.activeName].pages.currPage = 1
+    }
 
     get queryFormData() {
         const stockInfo = this.$store.state.stock.stockInfo;
