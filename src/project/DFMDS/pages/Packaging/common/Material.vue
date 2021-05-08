@@ -229,7 +229,7 @@
                     this.$warningToast('请选择物料领用页签包材领用批次');
                     return false
                 }
-                if (!item.realUseAmount) {
+                if (!Number(item.realUseAmount)) {
                     this.$warningToast('请填写物料领用页签包材领用实际用量');
                     return false
                 }
@@ -586,7 +586,7 @@
                         changer: item.changer,
                         changed: item.changed
                     };
-                    Object.assign(materialMap, { ...listitem, materialUnit: item.materialUnit, realUseAmount: item.realUseAmount || '' });
+                    Object.assign(materialMap, { ...listitem, materialUnit: item.materialUnit, realUseAmount: listitem.realUseAmount || '' });
                     materialMap.mainId = item.id;
                     finalData.push(materialMap)
                 })
