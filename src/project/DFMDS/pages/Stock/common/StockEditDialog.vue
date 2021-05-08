@@ -89,8 +89,8 @@
         dialogFormRules = {
             type: [{ required: true, message: '请选择调整类型', trigger: 'change' }],
             changedAmount: [
-                { required: true, message: '请输入调整量', trigger: 'blur' },
-                { pattern: /^[1-9]\d*$/, message: '需为数字', trigger: 'blur' }
+                { required: true, message: '请输入调整量', trigger: 'blur' }
+                // { pattern: /^[1-9]\d*$/, message: '需为数字', trigger: 'blur' }
             ],
             remark: [{ required: true, message: '调整说明必填', trigger: 'blur' }]
         };
