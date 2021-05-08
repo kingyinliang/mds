@@ -36,7 +36,7 @@
                 </el-select>
             </el-form-item>
             <el-form-item label="调整数量：" prop="changedAmount">
-                <el-input v-model.number="dialogForm.changedAmount" class="stock-form_item_style" size="small" placeholder="请输入">
+                <el-input v-model="dialogForm.changedAmount" type="number" class="stock-form_item_style" size="small" placeholder="请输入">
                     <span slot="suffix" class="stock-form_item_input_suffix">{{ dialogForm.materialUnitName }}</span>
                 </el-input>
             </el-form-item>
