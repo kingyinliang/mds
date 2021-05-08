@@ -146,7 +146,7 @@ export default class Index extends Vue {
             minwidth: '100'
         }, {
             prop: 'childPotName',
-            label: '发酵罐/池号',
+            label: '发酵罐',
             minwidth: '100'
         }, {
             prop: 'childUsedAmount',
