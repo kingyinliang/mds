@@ -586,7 +586,7 @@
                         changer: item.changer,
                         changed: item.changed
                     };
-                    Object.assign(materialMap, { ...listitem, materialUnit: item.materialUnit });
+                    Object.assign(materialMap, { ...listitem, materialUnit: item.materialUnit, realUseAmount: item.realUseAmount || '' });
                     materialMap.mainId = item.id;
                     finalData.push(materialMap)
                 })
