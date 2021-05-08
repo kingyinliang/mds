@@ -229,7 +229,7 @@
                     this.$warningToast('请选择物料领用页签包材领用批次');
                     return false
                 }
-                if (!item.realUseAmount) {
+                if (!Number(item.realUseAmount)) {
                     this.$warningToast('请填写物料领用页签包材领用实际用量');
                     return false
                 }
@@ -297,11 +297,13 @@
                         item.factory = JSON.parse(sessionStorage.getItem('factory') || '{}').id;
                         item.realLoss = (item.realLoss === '' || item.realLoss === null ? 0 : item.realLoss);
                         item.unqualified = item.unqualified || 0;
+                        item.realUseAmount = item.realUseAmount || 0;
                         filterArr2[0].item.push(item)
                     } else {
                         item.factory = JSON.parse(sessionStorage.getItem('factory') || '{}').id;
                         item.realLoss = (item.realLoss === '' || item.realLoss === null ? 0 : item.realLoss);
                         item.unqualified = item.unqualified || 0;
+                        item.realUseAmount = item.realUseAmount || 0;
                         pkgPackingMaterial.packingMaterialInsert.push({
                             factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
                             merge: item.merge,
@@ -335,10 +337,12 @@
                         item.factory = JSON.parse(sessionStorage.getItem('factory') || '{}').id;
                         item.realLoss = (item.realLoss === '' || item.realLoss === null ? 0 : item.realLoss);
                         item.unqualified = item.unqualified || 0;
+                        item.realUseAmount = item.realUseAmount || 0;
                         if (filterArr1 && filterArr1[0]) {
                             item.factory = JSON.parse(sessionStorage.getItem('factory') || '{}').id;
                             item.realLoss = (item.realLoss === '' || item.realLoss === null ? 0 : item.realLoss);
                             item.unqualified = item.unqualified || 0;
+                            item.realUseAmount = item.realUseAmount || 0;
                             filterArr1[0].item.push(item)
                         } else {
                             pkgPackingMaterial.packingMaterialUpdate.push({
@@ -369,11 +373,13 @@
                     item.factory = JSON.parse(sessionStorage.getItem('factory') || '{}').id;
                     item.realLoss = (item.realLoss === '' || item.realLoss === null ? 0 : item.realLoss);
                     item.unqualified = item.unqualified || 0;
+                    item.realUseAmount = item.realUseAmount || 0;
                     filterArr2[0].item.push(item)
                 } else {
                     item.factory = JSON.parse(sessionStorage.getItem('factory') || '{}').id;
                     item.realLoss = (item.realLoss === '' || item.realLoss === null ? 0 : item.realLoss);
                     item.unqualified = item.unqualified || 0;
+                    item.realUseAmount = item.realUseAmount || 0;
                     pkgPackingMaterial.packingMaterialInsert.push({
                         factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
                         merge: item.merge,
@@ -580,7 +586,7 @@
                         changer: item.changer,
                         changed: item.changed
                     };
-                    Object.assign(materialMap, { ...listitem, materialUnit: item.materialUnit });
+                    Object.assign(materialMap, { ...listitem, materialUnit: item.materialUnit, realUseAmount: listitem.realUseAmount || '' });
                     materialMap.mainId = item.id;
                     finalData.push(materialMap)
                 })
@@ -828,7 +834,7 @@ interface MaterialMap{
     startStocks?: number;
     endStocks?: number;
     receiveMaterial?: string;
-    realUseAmount?: string;
+    realUseAmount?: string | number;
     sterilizeStorageNo?: string;
     realUsed?: string;
     startDate?: string;

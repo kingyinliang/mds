@@ -36,7 +36,7 @@
                 </el-select>
             </el-form-item>
             <el-form-item label="调整数量：" prop="changedAmount">
-                <el-input v-model.number="dialogForm.changedAmount" class="stock-form_item_style" size="small" placeholder="请输入">
+                <el-input v-model="dialogForm.changedAmount" type="number" class="stock-form_item_style" size="small" placeholder="请输入">
                     <span slot="suffix" class="stock-form_item_input_suffix">{{ dialogForm.materialUnitName }}</span>
                 </el-input>
             </el-form-item>
@@ -89,8 +89,8 @@
         dialogFormRules = {
             type: [{ required: true, message: '请选择调整类型', trigger: 'change' }],
             changedAmount: [
-                { required: true, message: '请输入调整量', trigger: 'blur' },
-                { pattern: /^[1-9]\d*$/, message: '需为数字', trigger: 'blur' }
+                { required: true, message: '请输入调整量', trigger: 'blur' }
+                // { pattern: /^[1-9]\d*$/, message: '需为数字', trigger: 'blur' }
             ],
             remark: [{ required: true, message: '调整说明必填', trigger: 'blur' }]
         };
