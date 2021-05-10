@@ -190,7 +190,7 @@
                 },
                 {
                     prop: 'materialName',
-                    label: '物料',
+                    label: '生产物料',
                     width: '350',
                     hide: false,
                     fixed: false,

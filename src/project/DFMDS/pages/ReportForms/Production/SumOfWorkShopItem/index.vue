@@ -55,17 +55,21 @@
                 {
                     prop: 'productLineName',
                     label: '生产线',
-                    minWidth: '140'
+                    minWidth: '140',
+                    showOverFlowTooltip: true
                 },
                 {
                     prop: 'productDate',
                     label: '日期',
-                    minWidth: '120'
+                    minWidth: '120',
+                    showOverFlowTooltip: true
                 },
                 {
                     prop: 'materialName',
                     label: '品项',
-                    minWidth: '120'
+                    minWidth: '120',
+                    showOverFlowTooltip: true,
+                    formatter: row => row.materialName + ' ' + row.materialCode
                 },
                 {
                     prop: 'outputCar',
@@ -124,7 +128,7 @@
                     label: ['deptName'],
                     value: 'id'
                 },
-                linkageProp: ['productLine']
+                linkageProp: ['productLine', 'materialCode']
             },
             {
                 type: 'select',
@@ -149,24 +153,36 @@
             },
             {
                 type: 'select',
-                label: '生产物料',
+                label: '品项',
                 prop: 'materialCode',
                 labelWidth: '100',
                 filterable: true,
                 clearable: true,
                 rule: [{ required: false, message: '请选择生产物料', trigger: 'blur' }],
-                defaultOptionsFn: () => {
-                    return REPORTS_API.REPORT_MATERIAL_DROP_DOWN_API({
-                        // parentId: val || '',
-                        // deptType: 'PRODUCT_LINE'
-                    })
+                optionsFn: val => {
+                    return REPORTS_API.REPORT_PACKAGING_OEE_MATERIAL_QUERY_API({ // /pkgReportForm/material/query
+                            workShop: val || '',
+                            productLine: ''
+                        })
                 },
                 defaultValue: '',
                 resVal: {
                     resData: 'data',
-                    label: ['dictCode', 'dictValue'],
-                    value: 'dictCode'
+                    label: ['materialName', 'materialCode'],
+                    value: 'materialCode'
                 }
+                // defaultOptionsFn: () => {
+                //     return REPORTS_API.REPORT_MATERIAL_DROP_DOWN_API({
+                //         // parentId: val || '',
+                //         // deptType: 'PRODUCT_LINE'
+                //     })
+                // },
+                // defaultValue: '',
+                // resVal: {
+                //     resData: 'data',
+                //     label: ['dictValue', 'dictCode'],
+                //     value: 'dictCode'
+                // }
             },
             {
                 type: 'date-interval',
