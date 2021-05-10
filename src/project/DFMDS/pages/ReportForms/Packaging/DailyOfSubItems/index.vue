@@ -76,7 +76,7 @@
                 column: [
                     {
                         prop: 'largeClassName',
-                        label: '品项',
+                        label: '品项大类',
                         width: '140',
                         minWidth: '140'
                     },
