@@ -3,7 +3,7 @@
     <div class="header_main">
         <query-table
             ref="queryTable"
-            query-auth="steCkQuery"
+            query-auth=""
             :factory-type="1"
             :rules="queryTableFormRules"
             :query-form-data="queryTableFormData"
