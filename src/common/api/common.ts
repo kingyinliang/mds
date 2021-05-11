@@ -358,7 +358,7 @@ const COMMON_API = {
     /**
      * @property {string} ROWMETERIAL_SYNC_API 基础数据-原料入库记录-同步信息
      */
-    ROWMETERIAL_SYNC_API: params => httpProxy('/sysRowMaterial/sync', 'POST', params),
+    ROWMETERIAL_SYNC_API: params => httpProxy('/rawMaterial/sync', 'GET', params, 'JOB'),
     /**
      * @property {string} DICTIONARY_DELETE_API 系统管理-数据字典-主表删除
      */
