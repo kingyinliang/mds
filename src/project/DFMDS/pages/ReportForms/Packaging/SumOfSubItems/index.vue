@@ -64,7 +64,7 @@
             column: [
                 {
                     prop: 'brand',
-                    label: '品项',
+                    label: '品项大类',
                     minWidth: '120'
                 },
                 {
