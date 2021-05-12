@@ -485,6 +485,10 @@ export default class MaterialStock extends Vue {
             this.$warningToast('库存不能为负')
             return
         }
+        if (this.transferForm['amount'] <= 0) {
+            this.$warningToast('调整量输入信息为正数')
+            return
+        }
         this.$refs[formName].validate((valid) => {
             if (valid) {
                 this.transferForm['factory'] = JSON.parse(sessionStorage.getItem('factory') || '{}').id;
@@ -528,6 +532,10 @@ export default class MaterialStock extends Vue {
     saveAdjustForm(formName) {
         if (this.adjustForm['storageAmount'] < 0) {
             this.$warningToast('库存不能为负')
+            return
+        }
+        if (this.adjustForm['amount'] <= 0) {
+            this.$warningToast('调整量输入信息为正数')
             return
         }
         this.$refs[formName].validate((valid) => {

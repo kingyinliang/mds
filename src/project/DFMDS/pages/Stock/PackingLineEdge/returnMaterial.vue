@@ -320,9 +320,9 @@ export default class PackingLineEdge extends Vue {
     }
 
     addOrUpdate(params) {
-        if (params.moveAmount <= 0 || String(params.moveAmount).includes('.')) {
-            this.$warningToast('调整量输入信息为正整数')
-            return Promise.reject<Error>(new Error('调整量输入信息为正整数'));
+        if (params.moveAmount <= 0) {
+            this.$warningToast('调整量输入信息为正数')
+            return Promise.reject<Error>(new Error('调整量输入信息为正数'));
         }
         const type = this.isAdd ? 'PKG_RETURN_SAVE_API' : 'PKG_RETURN_UPDATE_API'
         return PKG_API[type]({
