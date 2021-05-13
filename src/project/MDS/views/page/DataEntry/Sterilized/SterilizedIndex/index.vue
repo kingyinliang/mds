@@ -195,6 +195,7 @@ export default {
                 this.$warningToast('生产日期或订单请选填一项');
                 return false;
             }
+            this.dataList = [];
             this.$http(`${STERILIZED_API.STE_HOME_LIST_API}`, 'POST', this.formHeader).then(({ data }) => {
                 if (data.code === 0) {
                     if (data.list.length !== 0) {
