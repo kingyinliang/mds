@@ -28,6 +28,7 @@
     })
     export default class StockDetailTable extends Vue {
         @Prop({ default: [] }) currentData: object[];
+        @Prop({ default: '' }) currentLocationCode: string;
 
         private formatterProductDate(row, column, cellValue) {
             return dateFormat(new Date(cellValue), 'yyyy-MM-dd')
@@ -40,7 +41,7 @@
         toDetail(row) {
             console.log(row, '=========')
             // 保存当前点击的对象信息
-            this.$store.commit('stock/updateStockInfo', row);
+            this.$store.commit('stock/updateStockInfo', { ...row, packageMaterialLocationCode: this.currentLocationCode });
             this.$store.commit(
                 'common/updateMainTabs',
                 this.$store.state.common.mainTabs.filter(subItem => subItem.name !== 'DFMDS-pages-Stock-PackingStockManage-detail')

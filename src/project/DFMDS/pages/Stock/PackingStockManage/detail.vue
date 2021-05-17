@@ -241,6 +241,8 @@ export default class MaterialDetail extends Vue {
         const stockInfo = this.$store.state.stock.stockInfo;
         params.factory = JSON.parse(sessionStorage.getItem('factory') || '{}').id;
         params.materialGroupCode = stockInfo.materialGroupCode
+        params.packageMaterialLocationCode = stockInfo.packageMaterialLocationCode
+        params.materialType = stockInfo.materialType
         let getHistory = true;
         if (this.$refs.queryTable.activeName === '0') { // eslint-disable-line
             getHistory = false;
@@ -269,6 +271,8 @@ export default class MaterialDetail extends Vue {
                     params.current = this.$refs.queryTable.tabs[index].pages.currPage;
                     params.size = this.$refs.queryTable.tabs[index].pages.pageSize;
                     params.total = this.$refs.queryTable.tabs[index].pages.totalCount;
+                    params.packageMaterialLocationCode = this.$store.state.stock.stockInfo.packageMaterialLocationCode
+                    params.materialType = this.$store.state.stock.stockInfo.materialType
                     STOCK_API.STOCK_PACKAGE_STORAGE_PAGE_QUERY_API(params).then(({ data }) => {
                         this.tabs[index].tableData = data.data.records;
                         this.$refs.queryTable.tabs[index].pages.currPage = data.data.current;
