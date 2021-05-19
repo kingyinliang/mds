@@ -19,6 +19,7 @@ import reportsApi from './reports'; // 报表
 import jobApi from './job'; // 报表
 import systemApi from './system'; // 系统基础数据
 import stockApi from './stock'; // 库存
+import trackApi from './track'; // 物料追溯
 
 export const COMMON_API = commonApi;
 export const ORDER_API = orderApi;
@@ -34,3 +35,4 @@ export const REPORTS_API = reportsApi;
 export const JOB_API = jobApi;
 export const SYSTEM_API = systemApi;
 export const STOCK_API = stockApi;
+export const TRACK_API = trackApi;

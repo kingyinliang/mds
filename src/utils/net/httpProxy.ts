@@ -129,6 +129,14 @@ export default (url: string, method: string = HTTP_METHOD.GET, data = {}, bussin
     } else if (bussiness === 'SYS') {
         // df-system
         HOST = process.env.VUE_APP_SYSTEM_API + process.env.VUE_APP_API_V;
+    } else if (bussiness === 'TRACK') {
+        if (process.env.VUE_APP_ENV === 'production') {
+            HOST = 'http://internal-ALB0010-Shinho-Micro-PRD-1081722907.cn-north-1.elb.amazonaws.com.cn/df-trace' + process.env.VUE_APP_API_V
+        } else if (process.env.VUE_APP_ENV === 'test') {
+            HOST = 'http://internal-ALB0010-ECS-558880378.cn-north-1.elb.amazonaws.com.cn/df-trace' + process.env.VUE_APP_API_V
+        } else {
+            HOST = 'http://internal-ALB0010-ECS-558880378.cn-north-1.elb.amazonaws.com.cn/df-trace' + process.env.VUE_APP_API_V
+        }
     } else {
         HOST = process.env.VUE_APP_BASE_API + process.env.VUE_APP_API_V;
     }
