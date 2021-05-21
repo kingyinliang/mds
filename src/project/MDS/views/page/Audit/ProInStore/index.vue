@@ -132,9 +132,10 @@
                         <span v-if="!scope.row.redact">{{ scope.row.noMoreGr }}</span>
                     </template>
                 </el-table-column>
-                <el-table-column label="货架寿命到期日" width="120">
+                <el-table-column label="货架寿命到期日" width="155">
                     <template slot-scope="scope">
-                        <el-input v-if="scope.row.redact" v-model="scope.row.expirydate" placeholder="手工录入" size="small" />
+                        <!-- <el-input v-if="scope.row.redact" v-model="scope.row.expirydate" placeholder="手工录入" size="small" /> -->
+                        <el-date-picker v-if="scope.row.redact" v-model="scope.row.expirydate" type="date" style="width: 130px;" value-format="yyyy-MM-dd" size="small" placeholder="选择日期" />
                         <span v-if="!scope.row.redact">{{ scope.row.expirydate }}</span>
                     </template>
                 </el-table-column>
