@@ -264,6 +264,7 @@
         addLevelDeep(list, level) {
             list.map(item => {
                 item.level = level
+                item.showBtn = false
                 if (item.hasChildren) {
                     this.addLevelDeep(item.views, level + 1)
                 }
