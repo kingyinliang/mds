@@ -35,8 +35,8 @@
                         border
                         tooltip-effect="dark"
                     >
-                        <el-table-column type="index" label="序号" width="50" align="center" fixed />
-                        <table-tree-column label="物料" prop="materialName" child-key="views" level-key="level" min-width="500" tree-key="id" show-overflow-tooltip />
+                        <!-- <el-table-column type="index" label="序号" width="50" align="center" fixed /> -->
+                        <table-tree-column label="物料" prop="materialName" child-key="views" level-key="level" min-width="600" tree-key="id" />
                         <el-table-column label="批次" prop="batch" min-width="120" />
                         <el-table-column label="数量" prop="entryQnt" min-width="100" />
                         <el-table-column label="单位" prop="entryUom" min-width="100" />
@@ -68,6 +68,7 @@
     export default class TrackIndex extends Vue {
         $refs: {
             reportRef: HTMLFormElement;
+            queryTable: HTMLFormElement;
         };
 
         trackMaterialData: TraceDataType[] = [];
@@ -78,7 +79,7 @@
 
         loading: ElLoadingComponent | null = null;
 
-        loadingText = 'xxxx';
+        loadingText = '';
 
         timestamp = 0;
 
@@ -104,22 +105,10 @@
                 }
             },
             {
-                type: 'select',
+                type: 'input',
                 label: '物料描述',
                 prop: 'materialCode',
-                defaultValue: 'M010200001',
-                defaultOptionsFn: () => {
-                    return COMMON_API.DICTQUERY_API({
-                        factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
-                        dictType: 'FER_OPEN_STATUS'
-                    });
-                },
-                // defaultValue: '',
-                resVal: {
-                    resData: 'data',
-                    label: ['dictValue'],
-                    value: 'dictCode'
-                }
+                defaultValue: 'M010200001'
             },
             {
                 type: 'input',
@@ -153,6 +142,7 @@
 
         mounted() {
             this.websocketToLogin()
+            // this.getByKey()
         }
 
         destroyed() {
@@ -175,9 +165,9 @@
             this.timestamp = 0
             this.timer = setInterval(() => {
                 this.timestamp++
-                this.loadingText = `正在追溯... 时间 ${this.timestamp}`
+                this.loadingText = `正在追溯...  ${this.timestamp} s`
                 this.updateText(this.loadingText)
-                if (this.timestamp > 300) {
+                if (this.timestamp >= 300) {
                     this.$errorToast('追溯失败，请重新追溯')
                     tryHideFullScreenLoading()
                     this.clearTimer()
@@ -223,12 +213,12 @@
             }
             const wsObject = [
                 {
-                    url: 'wss://n2j6guq05a.execute-api.cn-north-1.amazonaws.com.cn/dev',
+                    url: 'wss://23kdu5ymdj.execute-api.cn-north-1.amazonaws.com.cn/pre',
                     appid: 'df-mds-dev',
                     channel: 'mds-trace-back-dev'
                 },
                 {
-                    url: 'wss://3nieh13pk3.execute-api.cn-north-1.amazonaws.com.cn/test',
+                    url: 'wss://23kdu5ymdj.execute-api.cn-north-1.amazonaws.com.cn/pre',
                     appid: 'df-mds-test',
                     channel: 'mds-trace-back-test'
                 },
@@ -246,6 +236,7 @@
         getConfigResult(res) {
             // 接收回调函数返回数据的方法
             // const data = JSON.parse(res.data);
+            // .replaceAll('amp;', '')
             this.trackKey = JSON.parse(res.data).url
             console.log('函数 websocket 接收', this.trackKey);
             this.getByKey()
@@ -268,13 +259,6 @@
                     this.$errorToast('获取json失败')
                     tryHideFullScreenLoading()
                 })
-            // TRACK_API.TRACK_BACK_TRACE_BACK_BY_KEY({ key: this.trackKey }).then(res => {
-            //     console.log(res)
-            //     this.addLevelDeep(res.data.data || [], 1)
-            //     this.trackMaterialData = res.data.data
-            //     // console.log(this.trackMaterialData, '++++++++++++++++++++++')
-            //     tryHideFullScreenLoading()
-            // })
         }
 
         addLevelDeep(list, level) {
@@ -301,13 +285,19 @@
 
         // 报表导出
         exportReport() {
-            // //
+            const { materialCode, batch, werks } = this.$refs.queryTable.queryForm
             TRACK_API.TRACK_BACK_QUERY_LEVEL_TRACE_BACK_EXCEL({
-                materialCode: 'PS02061605',
-                batch: '210503EM71',
-                werks: '7100'
+                materialCode,
+                batch,
+                werks
             }).then(res => {
-                window.open(res.data.data.url)
+                const elink = document.createElement('a');
+                elink.download = `${'fileName'}.xls`;
+                elink.style.display = 'none';
+                elink.href = res.data.data.url;
+                document.body.appendChild(elink);
+                elink.click();
+                document.body.removeChild(elink);
             }).catch(e => {
                 console.log(e)
             })
