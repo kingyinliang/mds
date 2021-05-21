@@ -114,7 +114,7 @@
                                     <span>风门/进风</span>
                                 </template>
                                 <template slot-scope="scope">
-                                    <el-input v-model="scope.row.windInFlag" type="number" :disabled="!(data.isRedact && tech.status !== 'submit' && tech.status !== 'checked')" size="small" />
+                                    <el-input v-model.number="scope.row.windInFlag" autocomplete="off" type="text" :maxlength="4" oninput="this.value = this.value.replace(/[^0-9]/g, '');" :disabled="!(data.isRedact && tech.status !== 'submit' && tech.status !== 'checked')" size="small" />
                                 </template>
                             </el-table-column>
                             <el-table-column label="" width="100">
@@ -123,7 +123,7 @@
                                     <span>强排/反风</span>
                                 </template>
                                 <template slot-scope="scope">
-                                    <el-input v-model="scope.row.forceOutFlag" type="number" :disabled="!(data.isRedact && tech.status !== 'submit' && tech.status !== 'checked')" size="small" />
+                                    <el-input v-model.number="scope.row.forceOutFlag" autocomplete="off" type="text" :maxlength="4" oninput="this.value = this.value.replace(/[^0-9]/g, '');" :disabled="!(data.isRedact && tech.status !== 'submit' && tech.status !== 'checked')" size="small" />
                                     <!-- <el-select v-model="scope.row.forceOutFlag" :disabled="!(data.isRedact && tech.status !== 'submit' && tech.status !== 'checked')" size="small">
                     <el-option label="强排" value="1"></el-option>
                     <el-option label="反风" value="0"></el-option>

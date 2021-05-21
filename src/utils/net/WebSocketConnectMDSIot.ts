@@ -14,8 +14,10 @@ class SocketClient {
     isConnect = false; //连接标识 避免重复连接
     // const checkMsg = 'heartbeat'; //心跳发送/返回的信息 服务器和客户端收到的信息内容如果如下 就识别为心跳信息 不要做业务处理
     targetURL: string;
+    cb: Function;
 
     constructor(url, cb) {
+        this.cb = cb;
         this.createWebSocket(url, cb)
     }
 
@@ -36,6 +38,7 @@ class SocketClient {
         console.log(e);
         this.isConnect = false; //断开后修改标识
         console.log('connection closed (' + e.code + ')');
+        this.reConnect(this.cb)
     }
 
     // 创建 websocket 连接
@@ -67,9 +70,9 @@ class SocketClient {
         }
 
         this.websock = new WebSocket(this.targetURL);
-        this.websock.onmessage = cb;
-        this.websock.onclose = this.websocketclose;
-        this.websock.onopen = this.websocketOpen;
+        this.websock.onmessage = e => this.cb(e);
+        this.websock.onclose = e => this.websocketclose(e);
+        this.websock.onopen = e => this.websocketOpen(e);
 
         // 连接发生错误的回调方法
         this.websock.onerror = () => {
