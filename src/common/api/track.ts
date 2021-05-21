@@ -20,7 +20,7 @@ const TRACK_API = {
     /**
      * 物料追溯-导出追溯数据-平铺样式
      */
-    TRACK_BACK_QUERY_TRACE_BACK_EXCEL: params => httpProxy('/traceBack/queryTraceBackExcel', 'GET', params, 'TRACK')
+    TRACK_BACK_QUERY_TRACE_BACK_EXCEL: params => httpProxy('/traceBack/queryTraceBackExcel', 'POST', params, 'TRACK')
 }
 
 export default TRACK_API
