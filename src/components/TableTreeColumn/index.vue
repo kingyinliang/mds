@@ -1,10 +1,14 @@
 <template>
-    <el-table-column :prop="prop" v-bind="$attrs">
+    <el-table-column :prop="prop" v-bind="$attrs" class-name="noPadding">
         <template slot-scope="scope">
-            <span :style="childStyles(scope.row)" @click.prevent="toggleHandle(scope.$index, scope.row)">
+            <div @click.prevent="toggleHandle(scope.$index, scope.row)">
+                <em v-for="item in (scope.row[levelKey] - 1)" :key="item" class="tree-column__em" />
                 <em :class="iconClasses(scope.row)" :style="iconStyles(scope.row)" />
-                {{ scope.row[prop] }}
-            </span>
+                <span style="display: inline-block;">
+                    <em class="tree-column__separate" />
+                    - {{ scope.row[levelKey] }} - {{ scope.row[prop] }}
+                </span>
+            </div>
         </template>
     </el-table-column>
 </template>
@@ -89,3 +93,28 @@ export default {
     }
 };
 </script>
+
+<style lang="scss">
+.el-table td.noPadding {
+    padding: 0 !important;
+    border-bottom: 0;
+    .cell {
+        line-height: 36px;
+    }
+    .tree-column__em {
+        float: left;
+        width: 1px;
+        height: 36px;
+        margin: 0 10px 0 20px;
+        background: #606266;
+    }
+    .tree-column__separate {
+        float: left;
+        width: 1px;
+        height: 36px;
+        margin-left: 6px;
+        background: #606266;
+    }
+}
+</style>
+
