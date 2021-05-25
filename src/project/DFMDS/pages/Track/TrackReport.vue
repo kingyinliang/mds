@@ -6,7 +6,7 @@
  * @LastEditTime: 2021-04-23 14:55:28
 -->
 <template>
-    <div class="floatInfo">
+    <div class="floatInfo header_main">
         <el-dialog title="成品简报" :close-on-click-modal="false" :visible.sync="isTableDialogVisible" width="70%">
             <div class="inner-area">
                 <div class="inner-area__title">
@@ -16,21 +16,21 @@
                     </el-button>
                 </div>
                 <div class="inner-area__body">
-                    <el-table ref="reportDataRef" class="table-style-light data-table" :data="reportData" header-row-class-name="tableHead" size="mini" border style="width: 100%;" max-height="300">
+                    <el-table ref="reportDataRef" class="table-style-light data-table newTable" :data="reportData" header-row-class-name="tableHead" size="mini" border style="width: 100%;" max-height="300">
                         <el-table-column type="index" label="序号" width="50" align="center" fixed />
-                        <el-table-column prop="variable1" label="生产车间" :show-overflow-tooltip="true" width="160" />
-                        <el-table-column prop="variable2" label="生产订单" :show-overflow-tooltip="true" width="160" />
+                        <el-table-column prop="workShop" label="生产车间" :show-overflow-tooltip="true" width="160" />
+                        <el-table-column prop="orderNo" label="生产订单" :show-overflow-tooltip="true" width="160" />
                         <el-table-column prop="" label="成品物料" :show-overflow-tooltip="true" min-width="200">
                             <template slot-scope="scope">
-                                {{ scope.row.variable3 }} {{ scope.row.variable4 }}
+                                {{ scope.row.materialName }} {{ scope.row.materialCode }}
                             </template>
                         </el-table-column>
-                        <el-table-column prop="variable4" label="生产日期" :show-overflow-tooltip="true" width="160" />
-                        <el-table-column prop="variable5" label="生产批次" :show-overflow-tooltip="true" width="160" />
-                        <el-table-column prop="variable6" label="入库数量" :show-overflow-tooltip="true" width="160" />
-                        <el-table-column prop="variable7" label="单位" :show-overflow-tooltip="true" width="160" />
-                        <el-table-column prop="variable8" label="样品数量" :show-overflow-tooltip="true" width="160" />
-                        <el-table-column prop="variable9" label="不良数量" :show-overflow-tooltip="true" width="160" />
+                        <el-table-column prop="productDate" label="生产日期" :show-overflow-tooltip="true" width="160" />
+                        <el-table-column prop="batch" label="生产批次" :show-overflow-tooltip="true" width="160" />
+                        <el-table-column prop="entryQnt" label="入库数量" :show-overflow-tooltip="true" width="160" />
+                        <el-table-column prop="entryUom" label="单位" :show-overflow-tooltip="true" width="160" />
+                        <el-table-column prop="sampleCount" label="样品数量" :show-overflow-tooltip="true" width="160" />
+                        <el-table-column prop="badCount" label="不良数量" :show-overflow-tooltip="true" width="160" />
                     </el-table>
                 </div>
             </div>
@@ -38,6 +38,7 @@
     </div>
 </template>
 <script lang="ts">
+    import { TRACK_API } from 'common/api/api';
     import { Vue, Component } from 'vue-property-decorator';
     // import { COMMON_API, FER_API } from 'common/api/api';
 
@@ -51,13 +52,23 @@
         }
 
         // 表单数据
-        reportData= {}
+        reportData= []
         isTableDialogVisible = false;
 
+        params = {};
+
         // 入罐
-        async init(item) {
+        async init(item, params) {
             this.isTableDialogVisible = true
             this.reportData = item
+            this.params = params
+            TRACK_API.TRACK_BACK_QUERY_FINSH_TRACE_BACK_QUERY({
+                werks: params.werks,
+                batch: params.batch,
+                materialCode: params.materialCode
+            }).then(res => {
+                this.reportData = res.data.data
+            })
             // FER_API.FER_FERMENTOR_FLATION_BATCH_QUERY_API({
             //         holderId: this.currentHolderId
             //     }).then(({ data }) => {
@@ -76,6 +87,19 @@
 
         }
 
+        exportData() {
+            TRACK_API.TRACK_BACK_QUERY_FINSH_TRACE_BACK_EXCEL(this.params).then(res => {
+                const elink = document.createElement('a');
+                elink.download = `${'fileName'}.xls`;
+                elink.style.display = 'none';
+                elink.href = res.data.data.url;
+                document.body.appendChild(elink);
+                elink.click();
+                document.body.removeChild(elink);
+            }).catch(e => {
+                console.log(e)
+            })
+        }
 
     }
 

@@ -14,13 +14,25 @@ const TRACK_API = {
      */
     TRACK_BACK_TRACE_BACK_BY_KEY: params => httpProxy('/traceBack/traceBackByKey', 'GET', params, 'TRACK'),
     /**
-     * 物料追溯-物料追溯-导出追溯数据-层级样式
+     * 物料追溯-物料追溯-导出追溯数据-正向
      */
-    TRACK_BACK_QUERY_LEVEL_TRACE_BACK_EXCEL: params => httpProxy('/traceBack/queryLevelTraceBackExcel', 'POST', params, 'TRACK'),
+    TRACE_BACK_EXCEL_FORWARD: params => httpProxy('/traceBack/forwardTraceBackExport', 'POST', params, 'TRACK'),
     /**
-     * 物料追溯-导出追溯数据-平铺样式
+     * 物料追溯-物料追溯-导出追溯数据-反向
      */
-    TRACK_BACK_QUERY_TRACE_BACK_EXCEL: params => httpProxy('/traceBack/queryTraceBackExcel', 'POST', params, 'TRACK')
+    TRACK_BACK_EXCEL_REVERSE: params => httpProxy('/traceBack/reverseTraceBackExport', 'POST', params, 'TRACK'),
+    /**
+     * 物料追溯-成品简报导出
+     */
+    TRACK_BACK_QUERY_FINSH_TRACE_BACK_EXCEL: params => httpProxy('/traceBack/queryFinishBriefingTraceBackExcel', 'POST', params, 'TRACK'),
+    /**
+     * 物料追溯-成品简报查询
+     */
+    TRACK_BACK_QUERY_FINSH_TRACE_BACK_QUERY: params => httpProxy('/traceBack/queryFinishBriefingTraceBack', 'POST', params, 'TRACK'),
+    /**
+     * 物料追溯-批次详情
+     */
+    TRACK_BACK_BATCH_DETAIL: params => httpProxy('/traceBack/queryBatchDetailsTraceBack', 'POST', params, 'TRACK')
 }
 
 export default TRACK_API
