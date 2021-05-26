@@ -3,10 +3,11 @@
         <el-dialog title="批次详情" :close-on-click-modal="false" :visible.sync="visible" width="800px">
             <div class="inner-area">
                 <div class="inner-area__title">
-                    <h3 />
                     <el-form :model="formModel" inline size="small" label-suffix="：">
                         <el-form-item label="物料描述">
-                            <el-input :value="formModel.materialName" disabled />
+                            <el-tooltip effect="dark" :content="formModel.materialName" placement="top">
+                                <el-input :value="formModel.materialName" disabled />
+                            </el-tooltip>
                         </el-form-item>
                         <el-form-item label="批次">
                             <el-input :value="formModel.batch" disabled />
@@ -14,7 +15,7 @@
                     </el-form>
                 </div>
                 <div class="inner-area__body">
-                    <el-table ref="reportDataRef" class="table-style-light data-table newTable" :data="tableData" header-row-class-name="tableHead" size="mini" border style="width: 100%;" max-height="300">
+                    <el-table ref="reportDataRef" class="table-style-light data-table newTable" :data="tableData" header-row-class-name="tableHead" size="mini" border style="width: 100%;" height="300">
                         <el-table-column type="index" label="序号" width="50" align="center" fixed />
                         <el-table-column prop="workShop" label="车间" :show-overflow-tooltip="true" />
                         <el-table-column prop="orderNo" label="订单" :show-overflow-tooltip="true" />
@@ -102,5 +103,8 @@ interface TableDataType {
 }
 </script>
 
-<style>
+<style scoped>
+.inner-area__body {
+    padding-bottom: 20px;
+}
 </style>
