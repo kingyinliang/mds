@@ -274,15 +274,21 @@
 
         getConfigResult(res) {
             // 接收回调函数返回数据的方法
-            this.trackKey = JSON.parse(res.data).url
+            const data = JSON.parse(res.data)
+            this.trackKey = data.url
             console.log('函数 websocket 接收', this.trackKey);
-            this.getByKey()
+            this.getByKey(data)
             this.clearTimer()
             this.updateText('正在解析...')
         }
 
         // 通过key获取数据
-        async getByKey() {
+        getByKey(data) {
+            if (data.code === 500) {
+                this.$warningToast(data.msg)
+                tryHideFullScreenLoading()
+                return
+            }
             axios.get(this.trackKey)
             // axios.get('/static/7100M0102000012010290201.json')
                 .then(res => {
