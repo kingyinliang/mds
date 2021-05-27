@@ -8,6 +8,7 @@ import sterilize from './modules/sterilize';
 import koji from './modules/koji';
 import fer from './modules/fer';
 import stock from './modules/stock';
+import track from './modules/track';
 
 Vue.use(Vuex);
 const vuexLocal = new VuexPersistence({
@@ -21,7 +22,8 @@ export default new Vuex.Store({
         sterilize,
         koji,
         fer,
-        stock
+        stock,
+        track
     },
     plugins: [vuexLocal.plugin]
 });
