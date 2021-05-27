@@ -129,6 +129,8 @@ export default (url: string, method: string = HTTP_METHOD.GET, data = {}, bussin
     } else if (bussiness === 'SYS') {
         // df-system
         HOST = process.env.VUE_APP_SYSTEM_API + process.env.VUE_APP_API_V;
+    } else if (bussiness === 'TRACK') {
+        HOST = process.env.VUE_APP_TRACE_API + process.env.VUE_APP_API_V;
     } else {
         HOST = process.env.VUE_APP_BASE_API + process.env.VUE_APP_API_V;
     }
