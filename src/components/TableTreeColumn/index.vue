@@ -1,7 +1,7 @@
 <template>
-    <el-table-column :prop="prop" v-bind="$attrs" class-name="noPadding">
+    <el-table-column :prop="prop" v-bind="$attrs" :class-name="!isDefault ? 'noPadding' : ''">
         <template slot-scope="scope">
-            <div @click.prevent="toggleHandle(scope.$index, scope.row)">
+            <div v-if="!isDefault" @click.prevent="toggleHandle(scope.$index, scope.row)">
                 <em v-for="item in (scope.row[levelKey] - 1)" :key="item" class="tree-column__em" />
                 <em :class="iconClasses(scope.row)" :style="iconStyles(scope.row)" />
                 <span style="display: inline-block;">
@@ -9,6 +9,10 @@
                     - {{ scope.row[levelKey] }} - {{ scope.row[prop] }}
                 </span>
             </div>
+            <span v-else :style="childStyles(scope.row)" @click.prevent="toggleHandle(scope.$index, scope.row)">
+                <em :class="iconClasses(scope.row)" :style="iconStyles(scope.row)" />
+                {{ scope.row[prop] }}
+            </span>
         </template>
     </el-table-column>
 </template>
@@ -37,6 +41,10 @@ export default {
         childKey: {
             type: String,
             default: 'children'
+        },
+        isDefault: {
+            type: Boolean,
+            default: true
         }
     },
     /* eslint-disable no-underscore-dangle*/
