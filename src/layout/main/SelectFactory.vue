@@ -19,7 +19,7 @@
                             />
                         </p>
                     </div>
-                    <div style="cursor: pointer;" @click="goFa(item)">
+                    <div v-if="item.deptCode !== '9999-xn'" style="cursor: pointer;" @click="goFa(item)">
                         <img v-if="item.deptCode === '9999-xn'" src="../assets/img/factory7.png" alt="">
                         <img v-else-if="item.deptCode === '8888-xn'" src="../assets/img/factory8.png" alt="">
                         <img v-else-if="item.deptCode === '6010'" src="../assets/img/factory0.png" alt="">
@@ -85,7 +85,7 @@
             if (item.deptCode === '6010' || item.deptCode === '7100' || item.deptCode === '7101') {
                 this.jumpTo(item, '/MDS')
             } else if (item.deptCode === '9999-xn') {
-                this.jumpTo(item, '/SYSTEM')
+                // this.jumpTo(item, '/SYSTEM')
             } else if (item.deptCode === '8888-xn') {
                 this.jumpTo(item, '/DATABOARD')
             } else {
