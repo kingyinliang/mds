@@ -3,7 +3,7 @@
         <div class="factoryBox">
             <em class="el-icon-close factory__close" @click="factoryVisible = false" />
             <div v-for="(item, index) in factory" :key="index" class="factoryItem">
-                <div v-if="item.deptCode !== '9999-xn'" class="itemBox">
+                <div class="itemBox">
                     <div class="item-title">
                         <p class="item-title-p">
                             {{ item.deptShort }}
@@ -38,6 +38,7 @@
 <script lang="ts">
     import { Vue, Component } from 'vue-property-decorator';
     import { COMMON_API } from 'common/api/api';
+    import SSOLogin from 'utils/SSOLogin';
 
     @Component({
         components: {
@@ -86,6 +87,7 @@
                 this.jumpTo(item, '/MDS')
             } else if (item.deptCode === '9999-xn') {
                 // this.jumpTo(item, '/SYSTEM')
+                window.location.href = `${process.env.VUE_APP_MSS_HOST}?clientId=${SSOLogin.option.clientId}&responseType=client&token=${Vue['cookie'].get('token')}&tenant=MDS`
             } else if (item.deptCode === '8888-xn') {
                 this.jumpTo(item, '/DATABOARD')
             } else {
