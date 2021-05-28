@@ -3,7 +3,7 @@
         <div class="factoryBox">
             <em class="el-icon-close factory__close" @click="factoryVisible = false" />
             <div v-for="(item, index) in factory" :key="index" class="factoryItem">
-                <div class="itemBox">
+                <div v-if="item.deptCode !== '9999-xn'" class="itemBox">
                     <div class="item-title">
                         <p class="item-title-p">
                             {{ item.deptShort }}
@@ -19,7 +19,7 @@
                             />
                         </p>
                     </div>
-                    <div v-if="item.deptCode !== '9999-xn'" style="cursor: pointer;" @click="goFa(item)">
+                    <div style="cursor: pointer;" @click="goFa(item)">
                         <img v-if="item.deptCode === '9999-xn'" src="../assets/img/factory7.png" alt="">
                         <img v-else-if="item.deptCode === '8888-xn'" src="../assets/img/factory8.png" alt="">
                         <img v-else-if="item.deptCode === '6010'" src="../assets/img/factory0.png" alt="">
