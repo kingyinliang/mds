@@ -19,7 +19,7 @@
                             />
                         </p>
                     </div>
-                    <div v-if="item.deptCode !== '9999-xn'" style="cursor: pointer;" @click="goFa(item)">
+                    <div style="cursor: pointer;" @click="goFa(item)">
                         <img v-if="item.deptCode === '9999-xn'" src="../assets/img/factory7.png" alt="">
                         <img v-else-if="item.deptCode === '8888-xn'" src="../assets/img/factory8.png" alt="">
                         <img v-else-if="item.deptCode === '6010'" src="../assets/img/factory0.png" alt="">
@@ -38,6 +38,7 @@
 <script lang="ts">
     import { Vue, Component } from 'vue-property-decorator';
     import { COMMON_API } from 'common/api/api';
+    import SSOLogin from 'utils/SSOLogin';
 
     @Component({
         components: {
@@ -86,6 +87,7 @@
                 this.jumpTo(item, '/MDS')
             } else if (item.deptCode === '9999-xn') {
                 // this.jumpTo(item, '/SYSTEM')
+                window.location.href = `${process.env.VUE_APP_MSS_HOST}?clientId=${SSOLogin.option.clientId}&responseType=client&token=${Vue['cookie'].get('token')}&tenant=MDS`
             } else if (item.deptCode === '8888-xn') {
                 this.jumpTo(item, '/DATABOARD')
             } else {
