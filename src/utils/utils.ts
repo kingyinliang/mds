@@ -33,6 +33,18 @@ export function throttle(fn: Function, delay: number, atleast: number) {
         }
     };
 }
+export function loginSuccess(data) {
+    sessionStorage.setItem('userId', data.uid || '');
+    sessionStorage.setItem('userFactory', JSON.stringify(data.userFactory || '[]'));
+    sessionStorage.setItem('userName', data.userName || '');
+    sessionStorage.setItem('realName', data.realName || '');
+    sessionStorage.setItem('loginUserId', data.id || '');
+    sessionStorage.setItem('gender', data.sex || 'M');
+    sessionStorage.setItem('deptId', data.deptId || '');
+    sessionStorage.setItem('staff-post', data.post || '');
+    sessionStorage.setItem('staff-location', data.deptName || '');
+    sessionStorage.setItem('defaultFactory', data.defaultFactory || '');
+}
 /**
  * 判断当前路由类型, global: 全局路由, main: 主入口路由
  * @param {*} route 当前路由
