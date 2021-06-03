@@ -77,6 +77,7 @@
             }).then(({ data }) => {
                 console.log(data);
                 sessionStorage.setItem('factory', JSON.stringify(factory || ''));
+                localStorage.setItem('factory', JSON.stringify(factory || ''));
                 window.location.href = href
             })
         }

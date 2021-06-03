@@ -89,10 +89,12 @@ router.beforeEach((to, from, next) => {
     }
     SSOLogin.getUserInfo().then((res) => {
         loginSuccess(res.data.data)
+        const factory = sessionStorage.getItem('factory') || localStorage.getItem('factory')
         COMMON_API.NAV_API({
-            factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
+            factory: JSON.parse(factory || '{}').id,
             tenant: 'MDS'
         }).then(({ data }) => {
+            sessionStorage.setItem('factory', factory || '')
             if (data && data.code === 200) {
                 const AddRoutesClass = new AddRoutes(router, mainRoutes, []);
                 AddRoutesClass.fnAddDynamicMenuRoutes(data.data.menuList, []);
