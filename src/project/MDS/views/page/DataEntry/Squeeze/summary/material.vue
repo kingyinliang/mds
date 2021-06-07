@@ -47,20 +47,15 @@
                 </el-table-column>
                 <el-table-column label="操作" width="80">
                     <template slot-scope="scope">
-                        <el-button
-                            v-if="scope.row.fumet.fullPort !== '正常'"
-                            type="text"
-                            :disabled="!(isRedact && scope.row.material.childStatus !== 'submit' && scope.row.material.childStatus !== 'checked')"
-                            @click="splitDate(scope.row.fumet, scope.$index)"
-                        >
+                        <el-button v-if="scope.row.fumet.fullPort !== '正常'" type="text" :disabled="!(isRedact && scope.row.material.childStatus !== 'submit' && scope.row.material.childStatus !== 'checked')" @click="splitDate(scope.row.fumet, scope.$index)">
                             <em class="icons iconfont factory-chaifen" />拆分
                         </el-button>
                     </template>
                 </el-table-column>
-                <el-table-column label="发发酵罐">
+                <el-table-column label="发酵罐">
                     <el-table-column width="120">
                         <template slot="header">
-                            <em class="reqI">*</em><span>发发酵罐</span>
+                            <em class="reqI">*</em><span>发酵罐</span>
                         </template>
                         <template slot-scope="scope">
                             <el-select v-model="scope.row.material.childPotNo" filterable placeholder="请选择" :disabled="!(isRedact && scope.row.material.childStatus !== 'submit' && scope.row.material.childStatus !== 'checked' && scope.row.material.isDropDown === '1')" size="small" @visible-change="PotChange($event, scope.row)">
@@ -83,17 +78,8 @@
                         <template slot="header">
                             <em class="reqI">*</em><span>当日用量</span>
                         </template>
-                        <template
-                            slot-scope="scope"
-                        >
-                            <el-input
-                                v-model="scope.row.material.childUsedAmount"
-                                size="small"
-                                placeholder="手工录入"
-                                :disabled="!(isRedact && scope.row.material.childStatus !== 'submit' && scope.row.material.childStatus !== 'checked' && scope.row.material.isDropDown === '1')"
-                                @focus="GetOldAmount(scope.row)"
-                                @blur="PostAmount(scope.row)"
-                            />
+                        <template slot-scope="scope">
+                            <el-input v-model="scope.row.material.childUsedAmount" size="small" placeholder="手工录入" :disabled="!(isRedact && scope.row.material.childStatus !== 'submit' && scope.row.material.childStatus !== 'checked' && scope.row.material.isDropDown === '1')" @focus="GetOldAmount(scope.row)" @blur="PostAmount(scope.row)" />
                         </template>
                     </el-table-column>
                     <el-table-column label="单位" width="50">
@@ -168,20 +154,18 @@ export default {
     },
     computed: {
         potSelect: function() {
-            return (row) => {
+            return row => {
                 if (row.childPotNo) {
                     if (this.potList.filter(item => item.holderId === row.childPotNo).length === 0) {
                         return true;
                     }
-                        return false;
-
-                }
                     return false;
-
+                }
+                return false;
             };
         },
         dangerIf: function() {
-            return (row) => {
+            return row => {
                 let s = 0;
                 this.SumDate.forEach(item => {
                     if (item.delFlag !== '1' && row.fumet.id === item.fumet.id) {
@@ -191,8 +175,7 @@ export default {
                 if (s > 1) {
                     return true;
                 }
-                    return false;
-
+                return false;
             };
         }
         // SqueezePot: {
@@ -281,7 +264,7 @@ export default {
         // 修改酱
         updateMaterial(str, resolve, reject, st = false) {
             const tmp = [];
-            this.SumDate.forEach((item) => {
+            this.SumDate.forEach(item => {
                 if (!item.material.childUsedAmount) {
                     item.material.childUsedAmount = '0';
                 }
@@ -361,10 +344,10 @@ export default {
                     this.$emit('PoTest', this.SqueezePot);
                 }
             } else if (row.fumet.fullPort === '正常') {
-                    row.material.type = '';
-                } else {
-                    row.material.type = '味极鲜';
-                }
+                row.material.type = '';
+            } else {
+                row.material.type = '味极鲜';
+            }
         },
         // 校验
         materialRul() {
@@ -377,10 +360,7 @@ export default {
                         this.$warningToast('物料领用必填项未填写');
                         return false;
                     }
-                        this.sumAmount2[item.material.childPotNo]
-                            ? (this.sumAmount2[item.material.childPotNo] += Number(item.material.childUsedAmount ? item.material.childUsedAmount : 0))
-                            : (this.sumAmount2[item.material.childPotNo] = Number(item.material.childUsedAmount ? item.material.childUsedAmount : 0));
-
+                    this.sumAmount2[item.material.childPotNo] ? (this.sumAmount2[item.material.childPotNo] += Number(item.material.childUsedAmount ? item.material.childUsedAmount : 0)) : (this.sumAmount2[item.material.childPotNo] = Number(item.material.childUsedAmount ? item.material.childUsedAmount : 0));
                 }
             });
             // Object.keys(this.sumAmount2).forEach(key => {
@@ -453,36 +433,37 @@ export default {
                 confirmButtonText: '确定',
                 cancelButtonText: '取消',
                 type: 'warning'
-            }).then(() => {
-                let s = 0;
-                this.SumDate.forEach(item => {
-                    if (item.delFlag !== '1' && row.fumet.id === item.fumet.id) {
-                        s++;
+            })
+                .then(() => {
+                    let s = 0;
+                    this.SumDate.forEach(item => {
+                        if (item.delFlag !== '1' && row.fumet.id === item.fumet.id) {
+                            s++;
+                        }
+                    });
+                    if (s > 1) {
+                        row.delFlag = '1';
+                        row.material.childDelFlag = '1';
+                        this.SumDate.splice(this.SumDate.length, 0, {});
+                        this.SumDate.splice(this.SumDate.length - 1, 1);
+                        // 更改库存余量
+                        const PotsumAmount = this.potList.find(item => item.holderId === row.material.childPotNo).sumAmount;
+                        const newAmount = deepClone(accAdd(PotsumAmount, row.material.childUsedAmount));
+                        this.potList.find(item => item.holderId === row.material.childPotNo).sumAmount = newAmount;
+                        this.ChangeDataListFullAmount(row.material.childPotNo, newAmount);
+                    } else {
+                        this.$warningToast('此订单最后一条了，不能删除');
                     }
+                })
+                .catch(() => {
+                    // this.$infoToast('已取消删除');
                 });
-                if (s > 1) {
-                    row.delFlag = '1';
-                    row.material.childDelFlag = '1';
-                    this.SumDate.splice(this.SumDate.length, 0, {});
-                    this.SumDate.splice(this.SumDate.length - 1, 1);
-                    // 更改库存余量
-                    const PotsumAmount = this.potList.find(item => item.holderId === row.material.childPotNo).sumAmount;
-                    const newAmount = deepClone(accAdd(PotsumAmount, row.material.childUsedAmount));
-                    this.potList.find(item => item.holderId === row.material.childPotNo).sumAmount = newAmount;
-                    this.ChangeDataListFullAmount(row.material.childPotNo, newAmount);
-                } else {
-                    this.$warningToast('此订单最后一条了，不能删除');
-                }
-            }).catch(() => {
-                // this.$infoToast('已取消删除');
-            });
         },
         RowDelFlag({ row }) {
             if (row.delFlag === '1') {
                 return 'rowDel';
             }
-                return '';
-
+            return '';
         },
         // 获取罐
         getPot(formHeader, resolve, reject) {
@@ -507,7 +488,7 @@ export default {
         mergeDate() {
             this.SumDate = [];
             if (this.materialDate.length === 0) {
-                this.fumet.forEach((item) => {
+                this.fumet.forEach(item => {
                     const tmp = {
                         childId: '',
                         midPrsOrderId: item.id,
@@ -532,7 +513,7 @@ export default {
                     });
                 });
             } else {
-                this.materialDate.forEach((item) => {
+                this.materialDate.forEach(item => {
                     if (this.potList.find(items => items.holderId === item.childPotNo)) {
                         item.childFullPotAmount = this.potList.find(items => items.holderId === item.childPotNo).sumAmount;
                     }
