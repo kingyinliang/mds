@@ -3,6 +3,8 @@
     "version": "0.1.0",
     "private": true,
     "scripts": {
+        "serve:mds": "cross-env PAGE=mds vue-cli-service serve --mode local",
+        "serve:dfmds": "cross-env PAGE=dfmds vue-cli-service serve --mode local",
         "serve": "vue-cli-service serve --mode local",
         "build:prod": "vue-cli-service build",
         "build:test": "vue-cli-service build --mode test",
@@ -19,6 +21,7 @@
         "@shinho-fe/ssologin": "^1.0.5",
         "axios": "^0.19.2",
         "core-js": "^3.6.4",
+        "cross-env": "^7.0.3",
         "echarts": "^4.6.0",
         "element-ui": "2.6.3",
         "file-saver": "^2.0.5",
