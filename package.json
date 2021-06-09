@@ -16,7 +16,7 @@
         "lint:style": "stylelint src/**/*.{css,scss} --syntax scss --fix"
     },
     "dependencies": {
-        "@shinho-fe/ssologin": "1.0.2",
+        "@shinho-fe/ssologin": "^1.0.5",
         "axios": "^0.19.2",
         "core-js": "^3.6.4",
         "echarts": "^4.6.0",
