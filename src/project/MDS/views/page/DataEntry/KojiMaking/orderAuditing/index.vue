@@ -35,10 +35,7 @@
                                     {{ scope.row.houseName }}
                                 </template>
                             </el-table-column>
-                            <el-table-column
-                                label="准备工时"
-                                min-width="100"
-                            >
+                            <el-table-column label="准备工时" min-width="100">
                                 <template slot-scope="scope">
                                     {{ scope.row.confActivity1 }}
                                 </template>
@@ -73,11 +70,7 @@
                                     {{ scope.row.remark }}
                                 </template>
                             </el-table-column>
-                            <el-table-column
-                                fixed="right"
-                                label="操作"
-                                min-width="145"
-                            >
+                            <el-table-column fixed="right" label="操作" min-width="145">
                                 <template slot-scope="scope">
                                     <el-button v-if="scope.row.disabled && isAuth('sys:midTimeSheet:udpate')" style="float: left;" type="primary" size="small" :disabled="scope.row.status === 'checked' || scope.row.status === 'submit'" @click="enbaleEdit(scope.row)">
                                         编辑
@@ -111,10 +104,7 @@
                                     {{ scope.row.pulpWeight }}
                                 </template>
                             </el-table-column>
-                            <el-table-column
-                                label="麦粉量(KG)"
-                                min-width="100"
-                            >
+                            <el-table-column label="麦粉量(KG)" min-width="100">
                                 <template slot-scope="scope">
                                     {{ scope.row.wheatWeight }}
                                 </template>
@@ -154,11 +144,7 @@
                                     {{ scope.row.changed }}
                                 </template>
                             </el-table-column>
-                            <el-table-column
-                                fixed="right"
-                                label="操作"
-                                width="80"
-                            >
+                            <el-table-column fixed="right" label="操作" width="80">
                                 <template slot-scope="scope">
                                     <el-button v-if="isAuth('sys:midTimeSheet:udpate')" style="float: right;" type="primary" size="small" :disabled="scope.row.status === 'checked' || scope.row.status === 'submit' || (scope.row.status === 'noPass' && scope.row.isVerBack === '1')" @click="goBack('生产入库', scope.row)">
                                         退回
@@ -170,7 +156,8 @@
                             <el-col>
                                 <div>
                                     <span>入库数合计：</span>{{ totalInstock }} L
-                                    <span>&nbsp;&nbsp;实际入库数：</span><el-input v-model.number="realInAmount" size="small" type="number" style="display: inline-block; width: 150px;" :disabled="!isEdit" /> L
+                                    <span>&nbsp;&nbsp;实际入库数：</span>
+                                    <el-input v-model.number="realInAmount" size="small" type="number" style="display: inline-block; width: 150px;" :disabled="!isEdit" /> L
                                 </div>
                             </el-col>
                         </el-row>
@@ -193,18 +180,14 @@
                                     {{ scope.row.materialName + ' ' + scope.row.materialCode }}
                                 </template>
                             </el-table-column>
-                            <el-table-column
-                                label="领用容器"
-                                min-width="120"
-                                :show-overflow-tooltip="true"
-                            >
+                            <el-table-column label="领用容器" min-width="120" :show-overflow-tooltip="true">
                                 <template slot-scope="scope">
                                     {{ scope.row.holderName }}
                                 </template>
                             </el-table-column>
                             <el-table-column min-width="140" label="批次">
                                 <template slot-scope="scope">
-                                    <el-input v-model.number="scope.row.batch" size="small" maxlength="10" placeholder="手工录入" :disabled="scope.row.disabled" />
+                                    <el-input v-model.number="scope.row.batch" maxlength="10" placeholder="手工录入" :disabled="scope.row.disabled" />
                                 </template>
                             </el-table-column>
                             <el-table-column min-width="90" label="数量">
@@ -268,11 +251,10 @@ import { AsyncHook } from '@/utils/index.js';
     }
 })
 export default class OrderAuditing extends Vue {
-
     $refs: {
         dataEntry: HTMLFormElement;
         tabs: HTMLFormElement;
-    }
+    };
 
     headerBase = [
         {
@@ -329,7 +311,7 @@ export default class OrderAuditing extends Vue {
             label: '提交时间',
             value: 'changed'
         }
-    ]
+    ];
 
     tabs = [
         {
@@ -347,9 +329,9 @@ export default class OrderAuditing extends Vue {
         {
             label: '文本记录'
         }
-    ]
+    ];
 
-    notPermitSubmitStatus = ['已同步', '已拆分', 'saved', 'submit', 'checked']
+    notPermitSubmitStatus = ['已同步', '已拆分', 'saved', 'submit', 'checked'];
 
     formHeader = {
         orderId: '',
@@ -368,7 +350,7 @@ export default class OrderAuditing extends Vue {
         inKjmDate: '',
         // 实际入库值
         realInAmount: 0
-    }
+    };
 
     newForHeader = [];
     workHourList: WorkHour[] = [];
@@ -759,27 +741,29 @@ export default class OrderAuditing extends Vue {
             confirmButtonText: '确定',
             cancelButtonText: '取消',
             type: 'warning'
-        }).then(() => {
-            if (!this.validateTime()) {
-                return;
-            }
-            if (this.realInAmount === 0 || !this.realInAmount) {
-                Vue.prototype.$errorToast('请确认实际入库数');
-                return false;
-            }
-            // Promise.all([this.timeSubmit(), this.storageSubmit(), this.materialSubmit()]).then(() => {
-            //     Promise.all([this.headSubmit()]).then(() => {
-            //         this.$notify({
-            //             title: '成功',
-            //             message: '提交成功',
-            //             type: 'success'
-            //         });
-            //         this.getList();
-            //     });
-            // });
-        }).catch(() => {
-            // this.$infoToast('已取消删除');
-        });
+        })
+            .then(() => {
+                if (!this.validateTime()) {
+                    return;
+                }
+                if (this.realInAmount === 0 || !this.realInAmount) {
+                    Vue.prototype.$errorToast('请确认实际入库数');
+                    return false;
+                }
+                // Promise.all([this.timeSubmit(), this.storageSubmit(), this.materialSubmit()]).then(() => {
+                //     Promise.all([this.headSubmit()]).then(() => {
+                //         this.$notify({
+                //             title: '成功',
+                //             message: '提交成功',
+                //             type: 'success'
+                //         });
+                //         this.getList();
+                //     });
+                // });
+            })
+            .catch(() => {
+                // this.$infoToast('已取消删除');
+            });
     }
 
     validateTime() {
@@ -984,9 +968,7 @@ export default class OrderAuditing extends Vue {
                 [this.storageSubmit, []],
                 [this.materialSubmit, []]
             ],
-            [
-                [this.headSubmit, []]
-            ]
+            [[this.headSubmit, []]]
         );
     }
 
