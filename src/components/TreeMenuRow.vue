@@ -12,13 +12,13 @@
 
                         <div class="fold_button" :style="{ width: lineHeight + 'px', position: 'relative' }" @click="toggle(item)">
                             <div class="fold_button_line_up" :style="{ height: lineHeight / 2 + 'px', left: lineHeight / 2 - 1 + 'px' }" />
-                            <div v-if="!item.lastFlag && item.hasNextFlag" class="fold_button_line_down" :style="{ top: lineHeight / 2 + 'px', height: lineHeight / 2 + 'px', left: lineHeight / 2 - 1 + 'px' }" />
+                            <div v-if="(item.sign) || (!item.lastFlag && item.hasNextFlag)|| item.fix" class="fold_button_line_down" :style="{ top: lineHeight / 2 + 'px', height: lineHeight / 2 + 'px', left: lineHeight / 2 - 1 + 'px' }" />
                             <div class="fold_button_line_right" :style="{ top: lineHeight / 2 - 1 + 'px', width: tabSpace / 2 + 'px', left: lineHeight / 2 + 'px' }" />
                             <div v-if="item.hasChildren && !item.unfoldFlag" class="fold_button_arrow_right" :style="{ left: lineHeight / 2 - 1 + 'px', top: lineHeight / 2 - 8 + 'px' }" />
-                            <div v-if="item.hasChildren && item.unfoldFlag" class="fold_button_arrow_down" :style="{ left: lineHeight / 2 - 7 + 'px', top: lineHeight / 2 - 1 + 'px' }" />
+                            <div v-if="!item.sign&&item.hasChildren && item.unfoldFlag" class="fold_button_arrow_down" :style="{ left: lineHeight / 2 - 7 + 'px', top: lineHeight / 2 - 1 + 'px' }" />
                         </div>
 
-                        <div class="fold_button" :style="{ width: lineHeight + 'px' }" style="position: relative;">
+                        <div v-if="!item.sign" class="fold_button" :style="{ width: lineHeight + 'px' }" style="position: relative;">
                             <div v-if="item.hasChildren && item.unfoldFlag && item.allChildrenShowFlag" class="fold_button_line_down" :style="{ top: lineHeight / 2 + 'px', height: lineHeight / 2 + 'px', left: lineHeight / 2 - 1 + 'px' }" />
                             <div class="fold_button_line_right" :style="{ top: lineHeight / 2 - 1 + 'px', width: tabSpace / 2 + 'px', left: lineHeight / 2 + 'px' }" />
                             <div class="fold_button_line_left" :style="{ top: lineHeight / 2 - 1 + 'px', width: tabSpace / 2 + 'px' }" />
@@ -93,11 +93,11 @@ export default {
         },
         hideItem(_item) {
             _item.hiddenFlag = true;
-            this.reloadItem();
+            // this.reloadItem();
         },
         showItem(_item) {
             _item.hiddenFlag = false;
-            this.reloadItem();
+            // this.reloadItem();
         },
         reloadItem() {
             if (this.views[0].level === 1) {
@@ -143,7 +143,6 @@ export default {
                 }
             })
         }
-
     }
 };
 </script>
