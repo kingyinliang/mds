@@ -172,7 +172,6 @@ import _ from 'lodash';
         LoanedPersonnel
     }
 })
-
 export default class Crafts extends Vue {
     @Prop({ default: false }) isRedact: boolean;
 
@@ -207,25 +206,25 @@ export default class Crafts extends Vue {
                 this.doAction = 'insert';
             } else {
                 this.doAction = 'update';
-                this.craftInfo = data.data
-                const dischargeMan = this.craftInfo.dischargeMan
+                this.craftInfo = data.data;
+                const dischargeMan = this.craftInfo.dischargeMan;
                 if (dischargeMan) {
                     this.dischargeManString = dischargeMan.join(',');
                 }
-                const confirmMan = this.craftInfo.confirmMan
+                const confirmMan = this.craftInfo.confirmMan;
                 if (confirmMan) {
                     this.confirmManString = confirmMan.join(',');
                 }
-                const wantMan = this.craftInfo.wantMan
+                const wantMan = this.craftInfo.wantMan;
                 if (wantMan) {
                     this.wantManString = wantMan.join(',');
                 }
-                this.craftTable = data.data.item
-                this.craftTableOrg = JSON.parse(JSON.stringify(data.data.item))
+                this.craftTable = data.data.item;
+                this.craftTableOrg = JSON.parse(JSON.stringify(data.data.item));
             }
             if (data.data.item.length === 0) {
-                await this.getStage(formHeader.materialCode)
-                const arr: CraftList[] = []
+                await this.getStage(formHeader.materialCode, formHeader.workShop);
+                const arr: CraftList[] = [];
                 this.craftStageList.map(row => {
                     arr.push({
                         controlType: row.type,
@@ -238,13 +237,13 @@ export default class Crafts extends Vue {
                         delFlag: 0,
                         potOrderId: '',
                         potOrderNo: ''
-                    })
-                })
+                    });
+                });
                 this.craftTable = arr;
             }
             this.craftTable.map(item => {
                 this.controlTypeChange(item.controlType, item, 'init');
-            })
+            });
         });
         this.craftAudit = await this.getAudit(formHeader, ['CONTROL', 'TIMESHEET']);
     }
@@ -254,31 +253,33 @@ export default class Crafts extends Vue {
             orderNo: formHeader.orderNo,
             splitOrderNo: formHeader.potOrderNo,
             verifyType: verifyType
-        })
-        return a.data.data
+        });
+        return a.data.data;
     }
 
     // 获取温度阶段
-    async getStage(materialCode) {
-        const res = await STE_API.STE_CRAFT_QUERY_API({ materialCode: materialCode })
-        this.craftStageList = []
+    async getStage(materialCode, workShop) {
+        const res = await STE_API.STE_CRAFT_QUERY_API({ materialCode: materialCode, workShop: workShop });
+        this.craftStageList = [];
         if (res.data.data) {
-            this.craftStageList = res.data.data
+            this.craftStageList = res.data.data;
         }
     }
 
     riseEndDateChange() {
         this.craftTable.map(item => {
-            this.changeStage(item.controlStage, item)
-        })
+            this.changeStage(item.controlStage, item);
+        });
     }
 
     changeStage(val, row) {
         console.log(val);
         console.log('记录时间');
         console.log(row.recordDate);
-        if (row.controlType === 'HEAT') { // 保温
-            if (val === 'HEAT_START') { // 保温开始 默认 = 升温结束
+        if (row.controlType === 'HEAT') {
+            // 保温
+            if (val === 'HEAT_START') {
+                // 保温开始 默认 = 升温结束
                 if (!row.recordDate && this.craftInfo.riseEndDate) {
                     row.recordDate = this.craftInfo.riseEndDate;
                 }
@@ -296,7 +297,8 @@ export default class Crafts extends Vue {
                     // eslint-disable-next-line
                     if (sole[number]['recordDate'] && test !== undefined) {
                         const finalTimes = new Date(test).getTime();
-                        if (val === 'HEAT_10MIN' && !row.recordDate) { // 保温10分钟
+                        if (val === 'HEAT_10MIN' && !row.recordDate) {
+                            // 保温10分钟
                             const newTime = new Date(finalTimes + 1000 * 60 * 10);
                             row.recordDate = dateFormat(newTime, 'yyyy-MM-dd hh:mm');
                         } else if (val === 'HEAT_15MIN' && !row.recordDate) {
@@ -315,8 +317,10 @@ export default class Crafts extends Vue {
                     }
                 }
             }
-        } else if (row.controlType === 'DISCHARGE' || row.controlType === 'COOL') { // 降温 & 出料
-            if (val === 'COOL_START' && !row.recordDate) { // 降温开始 = 保温结束
+        } else if (row.controlType === 'DISCHARGE' || row.controlType === 'COOL') {
+            // 降温 & 出料
+            if (val === 'COOL_START' && !row.recordDate) {
+                // 降温开始 = 保温结束
                 let sole: CraftList[] = [];
                 sole = this.craftTable.filter(item => item.controlStage === 'HEAT_END' && item.recordDate !== '' && item.delFlag !== 1);
                 if (sole.length !== 0) {
@@ -329,7 +333,8 @@ export default class Crafts extends Vue {
                         row.recordDate = finalTimes;
                     }
                 }
-            } else if (val === 'DISCHARGE_START') { // 出料开始 = 降温结束
+            } else if (val === 'DISCHARGE_START') {
+                // 出料开始 = 降温结束
                 let sole: CraftList[] = [];
                 sole = this.craftTable.filter(item => item.controlStage === 'COOL_END' && item.recordDate !== '' && item.delFlag !== 1);
                 if (sole.length !== 0) {
@@ -377,7 +382,7 @@ export default class Crafts extends Vue {
     // 类型拉取
     getControlTypeList() {
         COMMON_API.DICTQUERY_API({ dictType: 'CRAFT_PHASE' }).then(({ data }) => {
-            this.controlTypeList = data.data
+            this.controlTypeList = data.data;
         });
     }
 
@@ -388,7 +393,7 @@ export default class Crafts extends Vue {
         }
         if (dictType) {
             COMMON_API.DICTQUERY_API({ dictType: dictType }).then(({ data }) => {
-                row.controlStageList = data.data
+                row.controlStageList = data.data;
             });
         }
     }
@@ -410,9 +415,9 @@ export default class Crafts extends Vue {
     }
 
     getSavedOrSubmitData(formHeader) {
-        this.craftTable.map((item) => {
-            item.potOrderNo = formHeader.potOrderNo
-        })
+        this.craftTable.map(item => {
+            item.potOrderNo = formHeader.potOrderNo;
+        });
         // this.craftInfo['steItem'] = this.craftTable;
         this.craftInfo['potOrderId'] = formHeader.id;
         this.craftInfo['potOrderNo'] = formHeader.potOrderNo;
@@ -424,16 +429,16 @@ export default class Crafts extends Vue {
         this.craftTable.forEach((item, index) => {
             if (item.delFlag === 1) {
                 if (item.id) {
-                    ids.push(item.id)
+                    ids.push(item.id);
                 }
             } else if (item.id) {
                 if (!_.isEqual(this.craftTableOrg[index], item)) {
-                    updateItem.push(item)
+                    updateItem.push(item);
                 }
             } else {
-                insertItem.push(item)
+                insertItem.push(item);
             }
-        })
+        });
         if (this.doAction === 'insert') {
             steControlInsertDto = this.craftInfo;
             insertItem = this.craftTable;
@@ -447,7 +452,7 @@ export default class Crafts extends Vue {
             ids,
             insertItem,
             updateItem
-        }
+        };
     }
 
     removeRow(row) {
@@ -456,9 +461,9 @@ export default class Crafts extends Vue {
             cancelButtonText: '取消',
             type: 'warning'
         }).then(() => {
-            this.$set(row, 'delFlag', 1)
+            this.$set(row, 'delFlag', 1);
             this.$successToast('删除成功');
-        })
+        });
     }
 
     RowDelFlag({ row }) {
