@@ -125,7 +125,7 @@
                 type: 'select',
                 label: '工厂',
                 prop: 'werks',
-                defaultValue: '7100',
+                // defaultValue: '7100',
                 defaultOptionsFn: () => {
                     return COMMON_API.ORG_QUERY_WORKSHOP_API({
                         deptType: ['FACTORY']
@@ -140,14 +140,14 @@
             {
                 type: 'input',
                 label: '物料描述',
-                prop: 'materialCode',
-                defaultValue: 'PS01080166'
+                prop: 'materialCode'
+                // defaultValue: 'PS01080166'
             },
             {
                 type: 'input',
                 label: '批次',
-                prop: 'batch',
-                defaultValue: '210414KT71'
+                prop: 'batch'
+                // defaultValue: '210414KT71'
             },
             {
                 type: 'radio',
