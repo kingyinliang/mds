@@ -359,6 +359,7 @@ export default class MaterialStock extends Vue {
     adjustForm = {};
 
     amout = 0;
+    storageUnitCode = '';
 
     mounted() {
         // this.getProductline();
@@ -434,6 +435,7 @@ export default class MaterialStock extends Vue {
     // 转线
     changeTransferLine(row: object) {
         this.amout = row['storageAmount'];
+        this.storageUnitCode = row['storageUnitCode'];
         this.productlineListFilter = [];
         console.log(this.$refs.queryTable.optionLists.productLine);
         // this.productlineListFilter = this.productlineList.filter(n => n['id'] !== row['productLine']);
@@ -446,7 +448,7 @@ export default class MaterialStock extends Vue {
             materialName: row['materialName'],
             materialType: row['materialType'],
             amount: '',
-            storageUnit: row['storageUnitCode'],
+            storageUnit: row['storageUnit'],
             batch: row['batch'],
             manufactor: row['manufactor'],
             storageAmount: row['storageAmount'],
@@ -475,6 +477,7 @@ export default class MaterialStock extends Vue {
             this.$warningToast('调整量输入信息为正数');
             return;
         }
+        this.transferForm['storageUnit'] = this.storageUnitCode;
         this.$refs[formName].validate(valid => {
             if (valid) {
                 this.transferForm['factory'] = JSON.parse(sessionStorage.getItem('factory') || '{}').id;
