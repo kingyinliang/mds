@@ -36,7 +36,7 @@
                                         </el-form-item>
                                         <el-form-item label="生产物料：">
                                             <div class="disabled-input el-input el-input--small is-disabled">
-                                                <el-tooltip class="item" effect="dark" :content="item.activeOrderMap? `${item.activeOrderMap.materialCode} ${item.activeOrderMap.materialName}` : ''" placement="top">
+                                                <el-tooltip class="item" effect="dark" :disabled="item.activeOrderMap===''" :content="item.activeOrderMap? `${item.activeOrderMap.materialCode} ${item.activeOrderMap.materialName}` : ''" placement="top">
                                                     <span class="el-input__inner">{{ item.activeOrderMap? `${item.activeOrderMap.materialCode} ${item.activeOrderMap.materialName}` : '' }}</span>
                                                 </el-tooltip>
                                             </div>
