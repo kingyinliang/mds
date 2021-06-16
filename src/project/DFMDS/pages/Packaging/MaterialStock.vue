@@ -201,17 +201,15 @@
 <script lang="ts">
 import { Vue, Component } from 'vue-property-decorator';
 import { COMMON_API, PKG_API } from 'common/api/api';
-    import { dateFormat, getUserNameNumber } from 'utils/utils';
+import { dateFormat, getUserNameNumber } from 'utils/utils';
 
 @Component
-
 export default class MaterialStock extends Vue {
-
     $refs: {
         transferForm: HTMLFormElement;
         queryTable: HTMLFormElement;
         adjustForm: HTMLFormElement;
-    }
+    };
 
     queryFormData = [
         {
@@ -223,7 +221,7 @@ export default class MaterialStock extends Vue {
                     factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
                     deptType: ['WORK_SHOP'],
                     deptName: '包装'
-                })
+                });
             },
             resVal: {
                 resData: 'data',
@@ -243,7 +241,7 @@ export default class MaterialStock extends Vue {
                 return COMMON_API.ORG_QUERY_CHILDREN_API({
                     parentId: val || '',
                     deptType: 'PRODUCT_LINE'
-                })
+                });
             },
             resVal: {
                 resData: 'data',
@@ -261,7 +259,7 @@ export default class MaterialStock extends Vue {
                 return COMMON_API.SEARCH_MATERIAL_API({
                     factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
                     materialType: 'ZVER'
-                })
+                });
             },
             resVal: {
                 resData: 'data',
@@ -269,7 +267,7 @@ export default class MaterialStock extends Vue {
                 value: 'materialCode'
             }
         }
-    ]
+    ];
 
     column = [
         {
@@ -280,7 +278,7 @@ export default class MaterialStock extends Vue {
         {
             label: '包材物料',
             prop: 'materialName',
-            formatter: (row) => {
+            formatter: row => {
                 return row.materialName + ' ' + row.materialCode;
             },
             minwidth: '270'
@@ -303,7 +301,7 @@ export default class MaterialStock extends Vue {
             label: '厂家',
             prop: 'manufactor',
             minwidth: '140',
-            formatter: (row) => {
+            formatter: row => {
                 return row.manufactorName + ' ' + row.manufactor;
             }
         },
@@ -322,40 +320,28 @@ export default class MaterialStock extends Vue {
             prop: 'changed',
             minwidth: '160'
         }
-    ]
+    ];
 
     moveDetailForm = {
         moveType: ''
-    }
+    };
 
     // 调整类型下拉
     typeOptions: TypeOptionList[] = [
         { value: 'INVENTORY_PROFIT', label: '盘盈' },
         { value: 'INVENTORY_LOSSES', label: '盘亏' }
-    ]
+    ];
 
     transferFormRules = {
-        amount: [
-            { required: true, message: '请输入数量', trigger: 'blur' }
-        ],
-        storageUnit: [
-            { required: true, message: '请选择单位', trigger: 'change' }
-        ],
-        productLineIn: [
-            { required: true, message: '请选择转入线', trigger: 'change' }
-        ]
+        amount: [{ required: true, message: '请输入数量', trigger: 'blur' }],
+        storageUnit: [{ required: true, message: '请选择单位', trigger: 'change' }],
+        productLineIn: [{ required: true, message: '请选择转入线', trigger: 'change' }]
     };
 
     adjustFormRules = {
-        moveType: [
-            { required: true, message: '请选择调整类型', trigger: 'change' }
-        ],
-        amount: [
-            { required: true, message: '请输入数量', trigger: 'blur' }
-        ],
-        storageUnit: [
-            { required: true, message: '请选择单位', trigger: 'change' }
-        ]
+        moveType: [{ required: true, message: '请选择调整类型', trigger: 'change' }],
+        amount: [{ required: true, message: '请输入数量', trigger: 'blur' }],
+        storageUnit: [{ required: true, message: '请选择单位', trigger: 'change' }]
     };
 
     productlineList = [];
@@ -368,11 +354,12 @@ export default class MaterialStock extends Vue {
     size = 10;
     total = 0;
     visibleTransferLine = false; // 转线弹窗
-    transferForm = {}
+    transferForm = {};
     visibleAdjust = false; // 调整弹窗
-    adjustForm = {}
+    adjustForm = {};
 
-    amout = 0
+    amout = 0;
+    storageUnitCode = '';
 
     mounted() {
         // this.getProductline();
@@ -402,7 +389,7 @@ export default class MaterialStock extends Vue {
     // 调整类型
     getMoveType() {
         COMMON_API.DICTQUERY_API({ dictType: 'COMMON_ADJUST_TYPE' }).then(({ data }) => {
-            this.moveTypeList = data.data
+            this.moveTypeList = data.data;
         });
     }
 
@@ -413,7 +400,7 @@ export default class MaterialStock extends Vue {
     }
 
     returnMaterial(row) {
-        this.$store.commit('packaging/updatePackageInfo', row)
+        this.$store.commit('packaging/updatePackageInfo', row);
         this.$store.commit(
             'common/updateMainTabs',
             this.$store.state.common.mainTabs.filter(subItem => subItem.name !== 'DFMDS-pages-Stock-PackingLineEdge-returnMaterial')
@@ -442,14 +429,15 @@ export default class MaterialStock extends Vue {
             this.detaileLogData = data.data.records;
             this.total = data.data.total;
             this.visibleDetailLog = true;
-        })
+        });
     }
 
     // 转线
     changeTransferLine(row: object) {
-        this.amout = row['storageAmount']
+        this.amout = row['storageAmount'];
+        this.storageUnitCode = row['storageUnitCode'];
         this.productlineListFilter = [];
-        console.log(this.$refs.queryTable.optionLists.productLine)
+        console.log(this.$refs.queryTable.optionLists.productLine);
         // this.productlineListFilter = this.productlineList.filter(n => n['id'] !== row['productLine']);
         this.productlineListFilter = this.$refs.queryTable.optionLists.productLine.filter(n => n['id'] !== row['productLine']);
         this.transferForm = {
@@ -482,28 +470,29 @@ export default class MaterialStock extends Vue {
     // 保存 转线
     saveTransferLine(formName) {
         if (this.transferForm['storageAmount'] < 0) {
-            this.$warningToast('库存不能为负')
-            return
+            this.$warningToast('库存不能为负');
+            return;
         }
         if (this.transferForm['amount'] <= 0) {
-            this.$warningToast('调整量输入信息为正数')
-            return
+            this.$warningToast('调整量输入信息为正数');
+            return;
         }
-        this.$refs[formName].validate((valid) => {
+        this.transferForm['storageUnit'] = this.storageUnitCode;
+        this.$refs[formName].validate(valid => {
             if (valid) {
                 this.transferForm['factory'] = JSON.parse(sessionStorage.getItem('factory') || '{}').id;
                 PKG_API.PKG_MATERIALSTOCK_TRANSFER_API(this.transferForm).then(({ data }) => {
                     this.$successToast(data.msg);
                     this.visibleTransferLine = false;
                     this.$refs.queryTable.getDataList();
-                })
+                });
             }
         });
     }
 
     // 调整
     doAdjust(row: object) {
-        this.amout = row['storageAmount']
+        this.amout = row['storageAmount'];
         this.adjustForm = {
             packageStorageId: row['id'],
             materialCode: row['materialCode'],
@@ -518,7 +507,7 @@ export default class MaterialStock extends Vue {
             mouldCode: row['mouldCode'],
             changer: getUserNameNumber(),
             changed: dateFormat(new Date(), 'yyyy-MM-dd hh:mm:ss')
-        }
+        };
         this.visibleAdjust = true;
     }
 
@@ -531,21 +520,21 @@ export default class MaterialStock extends Vue {
     // 保存 调整
     saveAdjustForm(formName) {
         if (this.adjustForm['storageAmount'] < 0) {
-            this.$warningToast('库存不能为负')
-            return
+            this.$warningToast('库存不能为负');
+            return;
         }
         if (this.adjustForm['amount'] <= 0) {
-            this.$warningToast('调整量输入信息为正数')
-            return
+            this.$warningToast('调整量输入信息为正数');
+            return;
         }
-        this.$refs[formName].validate((valid) => {
+        this.$refs[formName].validate(valid => {
             if (valid) {
                 this.adjustForm['factory'] = JSON.parse(sessionStorage.getItem('factory') || '{}').id;
                 PKG_API.PKG_MATERIALSTOCK_ADJUST_API(this.adjustForm).then(({ data }) => {
                     this.$successToast(data.msg);
                     this.visibleAdjust = false;
                     this.$refs.queryTable.getDataList();
-                })
+                });
             }
         });
     }
@@ -561,7 +550,7 @@ export default class MaterialStock extends Vue {
         this.getDetailLog(this.row);
     }
 }
-interface FormObj{
+interface FormObj {
     storageAmount?: number;
     amount?: string;
 }
