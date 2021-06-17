@@ -227,12 +227,12 @@ export default {
             }
             const wsObject = [
                 {
-                    url: 'wss://n2j6guq05a.execute-api.cn-north-1.amazonaws.com.cn/dev',
+                    url: 'wss://n2j6guq05a.execute-api.cn-north-1.amazonaws.com.cn/pre',
                     appid: 'df-mds-dev',
                     channel: 'df-mds-iot-msg-dev'
                 },
                 {
-                    url: 'wss://3nieh13pk3.execute-api.cn-north-1.amazonaws.com.cn/test',
+                    url: 'wss://3nieh13pk3.execute-api.cn-north-1.amazonaws.com.cn/pre',
                     appid: 'df-mds-test',
                     channel: 'df-mds-iot-msg-test'
                 },
