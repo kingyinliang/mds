@@ -609,7 +609,7 @@ export default class ProInStore extends Vue {
                     this.$warningToast('请填写必填项');
                     return false;
                 }
-                item.workShop = this.$refs.queryTable.queryForm.workShop;
+                // item.workShop = this.$refs.queryTable.queryForm.workShop;
 
                 // if (item.batch !== '' && item.batch !== null) {
                 //     if (item.batch.length !== 10) {

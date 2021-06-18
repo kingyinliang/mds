@@ -500,7 +500,7 @@ export default class ProInStore extends Vue {
                         this.$warningToast('请填写数据必填项');
                         return false;
                     }
-                    item.workshop = this.$refs.queryTable.queryForm.workshop;
+                    // item.workshop = this.$refs.queryTable.queryForm.workshop;
                 }
                 AUDIT_API.HOURS_PASS_API({
                     factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,

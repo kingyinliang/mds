@@ -523,7 +523,7 @@ export default class ProInStore extends Vue {
                         this.$warningToast('请填写数据必填项');
                         return false;
                     }
-                    item.workShop = this.$refs.queryTable.queryForm.workShop;
+                    // item.workShop = this.$refs.queryTable.queryForm.workShop;
                 }
                 AUDIT_API.INPASS_API(list)
                     .then(({ data }) => {
