@@ -121,13 +121,13 @@ export default {
         }
     },
     mounted() {
-        this.notification({
-                        message: 'message1',
-                        msgUrl: 'url1',
-                        // workShop: 'workShop1',
-                        orderNo: 'orderNo1',
-                        orderStatus: 'orderStatus1'
-                    })
+        // this.notification({
+        //                 message: 'message1',
+        //                 msgUrl: 'url1',
+        //                 // workShop: 'workShop1',
+        //                 orderNo: 'orderNo1',
+        //                 orderStatus: 'orderStatus1'
+        //             })
     },
     methods: {
         notification(obj) {
