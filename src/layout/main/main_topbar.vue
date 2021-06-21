@@ -210,16 +210,24 @@
             // 呼叫  message message notification API
             triggerMessageNotification(data) {
                 // TODO wait 浩哥's API
-                // MSG_API.MSG_UNREAD_TOTAL_API().then(({ data }) => {
-                    this.$store.commit('common/enterNotification', {
-                        // title: data.title,
-                        message: data.msgContent,
-                        msgUrl: data.msgUrl,
-                        // workShop: data.workShop,
-                        orderNo: data.orderNo,
-                        orderStatus: data.orderStatus
-                    });
-                // });
+
+                    // this.$store.commit('common/enterNotification', {
+                    //     // title: data.title,
+                    //     message: data.msgContent,
+                    //     msgUrl: data.msgUrl,
+                    //     // workShop: data.workShop,
+                    //     orderNo: data.orderNo,
+                    //     orderStatus: data.orderStatus
+                    // });
+            this.$notify.info({
+                title: '过账失败',
+                customClass: 'notifyMessageBox',
+                duration: 3000,
+                dangerouslyUseHTMLString: true,
+                message: '<strong>' + data + '</strong>',
+                position: 'bottom-right'
+            });
+
             },
             // 退出
             logoutHandle() {
