@@ -246,11 +246,11 @@
                     key = 2
                 }
                 const wsObject = [{
-                        url: 'wss://n2j6guq05a.execute-api.cn-north-1.amazonaws.com.cn/pre',
+                        url: 'wss://23kdu5ymdj.execute-api.cn-north-1.amazonaws.com.cn/pre',
                         appid: 'df-mds-dev',
                         channel: 'df-mds-business-msg-dev'
                     }, {
-                        url: 'wss://3nieh13pk3.execute-api.cn-north-1.amazonaws.com.cn/pre',
+                        url: 'wss://23kdu5ymdj.execute-api.cn-north-1.amazonaws.com.cn/pre',
                         appid: 'df-mds-test',
                         channel: 'df-mds-business-msg-test'
                     }, {
