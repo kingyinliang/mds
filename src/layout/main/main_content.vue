@@ -115,7 +115,7 @@ export default {
         },
         showNotication(value) {
             console.log('showNotication')
-            if (value !== {}) {
+            if (Object.keys(value).length !== 0) {
                 this.notification(value)
             }
         }
