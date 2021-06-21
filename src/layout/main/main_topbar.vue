@@ -145,6 +145,7 @@
                 this.$store.commit('common/updateMsg', true)
                 // 获取消息数字
                 this.getMsgNum()
+
             }
 
 
@@ -183,8 +184,41 @@
                 // 接收回调函数返回数据的方法
                 console.log('函数 websocket 接收')
                 console.log(res)
-                //this.messageNum = res.data
                 this.getMsgNum()
+                // notification
+
+                // notification data structure
+                // {
+                // "msgId":"612583276485296128",
+                // "msgStatus":0,
+                // "msgContent":"订单：851000031149入库过账失败！只能在公司代码 8500 的期间 2021/06 和 2021/05 中记帐",
+                // "msgUrl":"",
+                // "operation":"I",
+                // "productLine":"",
+                // "productTeam":"",
+                // "orderNo":"851000031149",
+                // "splitNo":"","orderStatus":"F",
+                // "icon":"",
+                // "created":"Jun 18, 2021 9:47:14 AM"
+                // }
+                // 触发 message nitification pop
+                if (res.popFlag === 'Y') {
+                    this.triggerMessageNotification(res)
+                }
+            },
+            // 呼叫  message message notification API
+            triggerMessageNotification(data) {
+                // TODO wait 浩哥's API
+                // MSG_API.MSG_UNREAD_TOTAL_API().then(({ data }) => {
+                    this.$store.commit('common/enterNotification', {
+                        // title: data.title,
+                        message: data.msgContent,
+                        msgUrl: data.msgUrl,
+                        // workShop: data.workShop,
+                        orderNo: data.orderNo,
+                        orderStatus: data.orderStatus
+                    });
+                // });
             },
             // 退出
             logoutHandle() {
@@ -212,11 +246,11 @@
                     key = 2
                 }
                 const wsObject = [{
-                        url: 'wss://n2j6guq05a.execute-api.cn-north-1.amazonaws.com.cn/pre',
+                        url: 'wss://23kdu5ymdj.execute-api.cn-north-1.amazonaws.com.cn/pre',
                         appid: 'df-mds-dev',
                         channel: 'df-mds-business-msg-dev'
                     }, {
-                        url: 'wss://3nieh13pk3.execute-api.cn-north-1.amazonaws.com.cn/pre',
+                        url: 'wss://23kdu5ymdj.execute-api.cn-north-1.amazonaws.com.cn/pre',
                         appid: 'df-mds-test',
                         channel: 'df-mds-business-msg-test'
                     }, {
