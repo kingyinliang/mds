@@ -19,7 +19,10 @@ export default {
         mainTabs: [],
         mainTabsActiveName: '',
         msgTabAlive: false,
-        updateMsg: false
+        updateMsg: false,
+        // message notification
+        enterNotificationObject: {
+        }
     },
     mutations: {
         updateDocumentClientHeight(state, height) {
@@ -59,6 +62,10 @@ export default {
         // [消息管理] 更新未读消息数字
         updateMsg(state, target) {
             state.updateMsg = target;
+        },
+        // [消息管理] notification 弹出
+        enterNotification(state, target) {
+            state.enterNotificationObject = target;
         }
     }
 };
