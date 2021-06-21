@@ -203,34 +203,23 @@
                 // }
                 // 触发 message nitification pop
                 // const data = JSON.parse(res.data);
-                // if (res.popFlag === 'Y') {
+                if (res.popFlag === 'Y') {
                     this.triggerMessageNotification(res)
-                // }
+                 }
             },
             // 呼叫  message message notification API
             triggerMessageNotification(data) {
                 // TODO wait 浩哥's API
 
-                    // this.$store.commit('common/enterNotification', {
-                    //     // title: data.title,
-                    //     message: data.msgContent,
-                    //     msgUrl: data.msgUrl,
-                    //     // workShop: data.workShop,
-                    //     orderNo: data.orderNo,
-                    //     orderStatus: data.orderStatus
-                    // });
-            const targetNotify = this.$notify.info({
-                title: '过账失败',
-                customClass: 'notifyMessageBox',
-                duration: 10000,
-                dangerouslyUseHTMLString: true,
-                message: '<strong>' + data.msgContent + '</strong>',
-                position: 'bottom-right',
-                onClick: () => {
-                    // targetNotify.close();
-                    targetNotify.close();
-                }
-            });
+                    this.$store.commit('common/enterNotification', {
+                        // title: data.title,
+                        message: data.msgContent,
+                        msgUrl: data.msgUrl,
+                        // workShop: data.workShop,
+                        orderNo: data.orderNo,
+                        orderStatus: data.orderStatus
+                    });
+
 
             },
             // 退出

@@ -59,7 +59,7 @@ export default {
         },
         showNotication: {
             get() {
-                return this.$store.state.enterNotificationObject;
+                return this.$store.state.common.enterNotificationObject;
             },
             set(val) {
                 this.$store.commit('common/enterNotification', val);
