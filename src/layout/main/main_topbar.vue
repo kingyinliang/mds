@@ -219,13 +219,17 @@
                     //     orderNo: data.orderNo,
                     //     orderStatus: data.orderStatus
                     // });
-            this.$notify.info({
+            const targetNotify = this.$notify.info({
                 title: '过账失败',
                 customClass: 'notifyMessageBox',
-                duration: 3000,
+                duration: 10000,
                 dangerouslyUseHTMLString: true,
-                message: '<strong>' + data + '</strong>',
-                position: 'bottom-right'
+                message: '<strong>' + data.msgContent + '</strong>',
+                position: 'bottom-right',
+                onClick: () => {
+                    // targetNotify.close();
+                    targetNotify.close();
+                }
             });
 
             },
