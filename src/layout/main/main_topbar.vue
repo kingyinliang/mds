@@ -184,7 +184,6 @@
                 // 接收回调函数返回数据的方法
                 console.log('函数 websocket 接收')
                 console.log(res)
-                const data = JSON.parse(res.data);
                 this.getMsgNum()
                 // notification
 
@@ -203,9 +202,10 @@
                 // "created":"Jun 18, 2021 9:47:14 AM"
                 // }
                 // 触发 message nitification pop
-                if (data.popFlag === 'Y') {
-                    this.triggerMessageNotification(data)
-                }
+                // const data = JSON.parse(res.data);
+                // if (res.popFlag === 'Y') {
+                    this.triggerMessageNotification(res)
+                // }
             },
             // 呼叫  message message notification API
             triggerMessageNotification(data) {
