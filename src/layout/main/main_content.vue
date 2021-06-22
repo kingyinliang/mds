@@ -131,10 +131,11 @@ export default {
     },
     methods: {
         notification(obj) {
-            const targetNotify = this.$notify.info({
+            const targetNotify = this.$notify.error({
                 title: '过账失败',
                 customClass: 'notifyMessageBox',
-                duration: 3000,
+                duration: 60000,
+                showClose: true,
                 dangerouslyUseHTMLString: true,
                 message: '<strong>' + obj.message + '</strong>',
                 position: 'bottom-right',
@@ -159,7 +160,9 @@ export default {
                             });
                             targetNotify.close();
                         }, 100);
+                        return
                     }
+                    targetNotify.close();
                 },
                 onClose: () => {
                     // 归零
