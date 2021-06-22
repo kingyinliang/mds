@@ -106,7 +106,7 @@ export class AddRoutes {
                 if (/^http[s]?:\/\/.*/.test(menuList[i].menuUrl)) {
                     route['path'] = `i-${menuList[i].id}`;
                     route['name'] = `i-${menuList[i].id}`;
-                    route['meta']['iframeUrl'] = menuList[i].menuUrl;
+                    // route['meta']['iframeUrl'] = menuList[i].menuUrl;
                 } else {
                     try {
                         route['component'] = importTarget(`${menuList[i].menuUrl}`) || null;
