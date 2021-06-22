@@ -244,7 +244,7 @@
             // 【agentData：发送的参数；this.getConfigResult：回调方法】
             let key;
             if (process.env.VUE_APP_ENV === 'development') {
-                key = 1;
+                key = 0;
             } else if (process.env.VUE_APP_ENV === 'test') {
                 key = 1;
             } else {
