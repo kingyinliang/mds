@@ -3,6 +3,9 @@ export default {
     state: {
         msgTabAlive: false,
         updateMsg: false,
+        // message notification
+        enterNotificationObject: {
+        },
         // 页面文档可视高度(随窗口改变大小)
         documentClientHeight: 0,
         // 主体高度(随窗口改变大小)
@@ -301,6 +304,10 @@ export default {
         // [消息管理] 更新未读消息数字
         updateMsg(state, target) {
             state.updateMsg = target;
+        },
+        // [消息管理] notification 弹出
+        enterNotification(state, target) {
+            state.enterNotificationObject = target;
         },
         updateDocumentClientHeight(state, height) {
             state.documentClientHeight = height;

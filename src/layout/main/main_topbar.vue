@@ -216,11 +216,6 @@
                     orderNo: data.orderNo,
                     orderStatus: data.orderStatus
                 });
-                this.$notify({
-                    title: 'test1',
-                    message: this.$store.state.common.enterNotificationObject.popFlag,
-                    type: 'success'
-                });
             },
             // 退出
             logoutHandle() {

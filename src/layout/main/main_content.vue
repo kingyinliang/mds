@@ -51,11 +51,6 @@ export default {
         // 消息管理用 - 关闭当前页签
         closeTab: {
             get() {
-                this.$notify({
-                        title: 'closeTab',
-                        message: this.$store.state.common.msgTabAlive,
-                        type: 'success'
-                });
                 return this.$store.state.common.msgTabAlive;
             },
             set(val) {
@@ -64,11 +59,6 @@ export default {
         },
         showNotication: {
             get() {
-                this.$notify({
-                        title: 'showNotication',
-                        message: this.$store.state.common.enterNotificationObject,
-                        type: 'success'
-                });
                 return this.$store.state.common.enterNotificationObject;
             },
             set(val) {
@@ -125,11 +115,6 @@ export default {
         },
         showNotication(value) {
             console.log('showNotication')
-            this.$notify({
-                    title: 'test2',
-                    message: value.message,
-                    type: 'success'
-            });
             if (Object.keys(value).length !== 0) {
                 this.notification(value)
             }
