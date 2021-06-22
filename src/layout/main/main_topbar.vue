@@ -202,14 +202,9 @@
                 // "created":"Jun 18, 2021 9:47:14 AM"
                 // }
                 // 触发 message nitification pop
-                this.$notify({
-                    title: 'test1',
-                    message: res.popFlag,
-                    type: 'success'
-                });
-                // if (res.popFlag === 'Y') {
+                if (res.popFlag === 'Y') {
                     this.triggerMessageNotification(res)
-                //  }
+                 }
             },
             // 呼叫  message message notification API
             triggerMessageNotification(data) {
@@ -220,6 +215,11 @@
                     // workShop: data.workShop,
                     orderNo: data.orderNo,
                     orderStatus: data.orderStatus
+                });
+                this.$notify({
+                    title: 'test1',
+                    message: this.$store.state.common.enterNotificationObject.popFlag,
+                    type: 'success'
                 });
             },
             // 退出
