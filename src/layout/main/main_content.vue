@@ -115,9 +115,14 @@ export default {
         },
         showNotication(value) {
             console.log('showNotication')
-            if (Object.keys(value).length !== 0) {
+            this.$notify({
+                    title: 'test2',
+                    message: value.message,
+                    type: 'success'
+            });
+            // if (Object.keys(value).length !== 0) {
                 this.notification(value)
-            }
+            // }
         }
     },
     mounted() {

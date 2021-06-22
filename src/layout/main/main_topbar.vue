@@ -202,25 +202,25 @@
                 // "created":"Jun 18, 2021 9:47:14 AM"
                 // }
                 // 触发 message nitification pop
-                // const data = JSON.parse(res.data);
-                if (res.popFlag === 'Y') {
+                this.$notify({
+                    title: 'test1',
+                    message: res.popFlag,
+                    type: 'success'
+                });
+                // if (res.popFlag === 'Y') {
                     this.triggerMessageNotification(res)
-                 }
+                //  }
             },
             // 呼叫  message message notification API
             triggerMessageNotification(data) {
-                // TODO wait 浩哥's API
-
-                    this.$store.commit('common/enterNotification', {
-                        // title: data.title,
-                        message: data.msgContent,
-                        msgUrl: data.msgUrl,
-                        // workShop: data.workShop,
-                        orderNo: data.orderNo,
-                        orderStatus: data.orderStatus
-                    });
-
-
+                this.$store.commit('common/enterNotification', {
+                    // title: data.title,
+                    message: data.msgContent,
+                    msgUrl: data.msgUrl,
+                    // workShop: data.workShop,
+                    orderNo: data.orderNo,
+                    orderStatus: data.orderStatus
+                });
             },
             // 退出
             logoutHandle() {
