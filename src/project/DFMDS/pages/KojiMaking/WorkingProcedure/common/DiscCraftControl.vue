@@ -1295,7 +1295,7 @@
                 return
             }
             // 通过正则过滤小数点后两位
-            if (val >= 99.99) {
+            if (val >= 100) {
                 this.$errorToast('超过温度限制');
                 target[prop] = null
             } else {
