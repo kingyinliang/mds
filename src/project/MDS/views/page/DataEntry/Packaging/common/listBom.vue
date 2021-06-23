@@ -440,7 +440,7 @@ export default {
                         //     this.$warningToast('物料必填项未填');
                         //     return false;
                         // }
-                        if (it.productUseNum === '' || (it.materialTypeCode !== 'ZERS' && !it.batch)) {
+                        if (it.productUseNum === '' || it.productUseNum === 0 || it.productUseNum === '0' || (it.materialTypeCode !== 'ZERS' && !it.batch)) {
                             ty = false;
                             this.$warningToast('物料必填项未填');
                             return false;
