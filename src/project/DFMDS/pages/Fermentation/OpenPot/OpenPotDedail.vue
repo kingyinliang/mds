@@ -331,6 +331,15 @@
         // 过滤数据
         filterData(data) {
             let tmp = JSON.parse(JSON.stringify(data));
+            const open = tmp.filter(item => item.openFlagName === '是')
+            open.sort((a, b) => {
+                return Number(a['holderNo']) - Number(b['holderNo'])
+            })
+            const noOpen = tmp.filter(item => item.openFlagName === '否')
+            noOpen.sort((a, b) => {
+                return Number(a['holderNo']) - Number(b['holderNo'])
+            })
+            tmp = open.concat(noOpen)
             tmp.sort((a, b) => {
                 return (b['openFermentorId'] ? 1 : 0) - (a['openFermentorId'] ? 1 : 0)
             })
