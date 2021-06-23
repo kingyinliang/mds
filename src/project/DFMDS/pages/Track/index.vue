@@ -244,7 +244,7 @@
             // 【agentData：发送的参数；this.getConfigResult：回调方法】
             let key;
             if (process.env.VUE_APP_ENV === 'development') {
-                key = 1;
+                key = 0;
             } else if (process.env.VUE_APP_ENV === 'test') {
                 key = 1;
             } else {
@@ -355,7 +355,7 @@
                     item.sign = true // 原辅包等 不显示 number
 
                     levelTemp = level // 原辅包等 以下的节点 number - 1
-                    item.unfoldFlag = true; // 原辅包等 自动战开
+                    item.unfoldFlag = false; // 原辅包等 自动战开
                     // item.lastFlag = false; // 原辅包等 已非最后节点
                     // if (lastFlagArray.length >= 1) {
                         // nextLastFlagArray.splice(lastFlagArray.length - 1, 1)

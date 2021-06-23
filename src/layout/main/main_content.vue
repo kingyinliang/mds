@@ -121,13 +121,7 @@ export default {
         }
     },
     mounted() {
-        // this.notification({
-        //                 message: 'message1',
-        //                 msgUrl: 'url1',
-        //                 // workShop: 'workShop1',
-        //                 orderNo: 'orderNo1',
-        //                 orderStatus: 'orderStatus1'
-        //             })
+        //
     },
     methods: {
         notification(obj) {
@@ -140,7 +134,6 @@ export default {
                 message: '<strong>' + obj.message + '</strong>',
                 position: 'bottom-right',
                 onClick: () => {
-                    // targetNotify.close();
                     if (obj.msgUrl !== '') {
                         const targetURL = obj.msgUrl.replace(/\//g, '-')
 
