@@ -12,7 +12,7 @@
                             <div style=" height: 28px; margin-top: 2px; color: rgba(0, 0, 0, 0.85); font-weight: 600; font-size: 16px; line-height: 28px;">
                                 {{ realName }}, 祝你开心每一天
                             </div>
-                            <div style=" height: 22px; padding-top: 12px; color: rgba(0, 0, 0, 0.45); font-size: 12px; line-height: 22px;">
+                            <div style="display: initial; height: 22px; padding-top: 12px; color: rgba(0, 0, 0, 0.45); font-size: 12px; line-height: 22px;">
                                 {{ post }} <span v-if="post!==''"> |</span> {{ deptName }}
                             </div>
                         </div>
@@ -184,8 +184,6 @@
          * @return: no
          */
         seeMessage(item) {
-            console.log('item')
-            console.log(item)
             if (!item.readed) {
                 this.markThisReaded(item.msgId)
             }

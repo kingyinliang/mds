@@ -12,6 +12,19 @@ const resolve = dir => {
     return path.join(__dirname, './', dir);
 };
 
+let pages={};
+if (process.env.PAGE === 'mds') {
+    pages.index = pagesInfo.index
+    pages.MDS = pagesInfo.MDS
+} else if (process.env.PAGE === 'dfmds') {
+    pages.index = pagesInfo.index
+    pages.DFMDS = pagesInfo.DFMDS
+} else {
+    pages = pagesInfo
+}
+
+console.log(pages)
+
 module.exports = {
     devServer: {
         disableHostCheck: true,
@@ -65,7 +78,7 @@ module.exports = {
     },
     productionSourceMap: !IS_PROD, // 生产环境的 source map
     lintOnSave: 'warning',
-    pages: pagesInfo,
+    pages,
     // css: {
     //     extract: true,
     //     sourceMap: false,
