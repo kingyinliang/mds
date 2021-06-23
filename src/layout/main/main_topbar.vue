@@ -160,12 +160,12 @@
             },
 
             goMessage() {
-                if (this.$store.state.common.mainTabs.find(tabItem => tabItem.name === 'DFMDS-pages-Message-index')) {
+                if (this.$store.state.common.mainTabs.find(tabItem => tabItem.name === 'COMMON-Message-index')) {
                     this.$store.commit('common/updateMsgTabAlive', true);
                 } else {
                     setTimeout(() => {
                         this.$router.push({
-                            name: `DFMDS-pages-Message-index`
+                            name: `COMMON-Message-index`
                         });
                     }, 500);
                 }
