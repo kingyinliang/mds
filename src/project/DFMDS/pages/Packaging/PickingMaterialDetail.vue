@@ -1,12 +1,6 @@
 <template>
     <div class="header_main">
-        <data-entry
-            ref="dataEntry"
-            type="audit"
-            :header-base="headerBase"
-            :form-header="formHeader"
-            :order-status="formHeader.orderStatusName"
-        >
+        <data-entry ref="dataEntry" type="audit" :header-base="headerBase" :form-header="formHeader" :order-status="formHeader.orderStatusName">
             <template slot="contentBox">
                 <mds-card title="包材领用" :name="'outputworker'">
                     <el-table ref="materialS" header-row-class-name="tableHead" class="newTable" :data="tableData" :row-class-name="rowDelFlag" :span-method="spanMethod" border tooltip-effect="dark">
@@ -40,14 +34,6 @@
                                 </el-select>
                             </template>
                         </el-table-column>
-                        <el-table-column label="订单领料量" min-width="140">
-                            <template slot="header">
-                                <span class="notNull">* </span>订单领料量
-                            </template>
-                            <template slot-scope="scope">
-                                <el-input v-model="scope.row.useAmount" :disabled="!(isRedact)" size="small" placeholder="请输入" @blur="useAmountBlurHandler(scope.row.useAmount, scope.row)" />
-                            </template>
-                        </el-table-column>
                         <el-table-column label="物料批次" min-width="140">
                             <template slot="header">
                                 <span class="notNull">* </span>物料批次
@@ -59,6 +45,15 @@
                                 </el-select>
                             </template>
                         </el-table-column>
+                        <el-table-column label="订单领料量" min-width="140">
+                            <template slot="header">
+                                <span class="notNull">* </span>订单领料量
+                            </template>
+                            <template slot-scope="scope">
+                                <el-input v-model="scope.row.useAmount" :disabled="!(isRedact)" size="small" placeholder="请输入" @blur="useAmountBlurHandler(scope.row.useAmount, scope.row)" />
+                            </template>
+                        </el-table-column>
+
                         <el-table-column label="模具号" prop="mouldCode" min-width="140">
                             <template slot-scope="scope">
                                 <el-input v-model="scope.row.mouldCode" :disabled="!scope.row.canEditModuleCode" size="small" />
@@ -105,360 +100,360 @@
 </template>
 
 <script lang="ts">
-    import { Vue, Component } from 'vue-property-decorator';
-    import { COMMON_API, PKG_API } from 'common/api/api';
-    import _ from 'lodash';
+import { Vue, Component } from 'vue-property-decorator';
+import { COMMON_API, PKG_API } from 'common/api/api';
+import _ from 'lodash';
 
-    @Component
-    export default class PickingMaterialDetail extends Vue {
-        isRedact = false;
-        tableData: DataObj[] = [];
-        OrgTableData = [];
-        manufactor = [];
-        orderStatus = '';
-        spanArr: number[] = [];
-        headerBase = [
-            {
-                type: 'p',
-                icon: 'factory-shengchanchejian',
-                label: '生产车间',
-                value: 'workShopName'
-            },
-            {
-                type: 'tooltip',
-                icon: 'factory-shengchanxian',
-                label: '生产产线',
-                value: 'productLineName'
-            },
-            {
-                type: 'tooltip',
-                icon: 'factory-pinleiguanli',
-                label: '生产物料',
-                value: ['materialName', 'materialCode']
-            },
-            {
-                type: 'p',
-                icon: 'factory-bianhao',
-                label: '生产订单',
-                value: 'orderNo'
-            },
-            {
-                type: 'p',
-                icon: 'factory--meirijihuachanliangpeizhi',
-                label: '订单产量',
-                value: ['planOutput', 'outputUnit']
-            },
-            {
-                type: 'p',
-                icon: 'factory-riqi1',
-                label: '订单日期',
-                value: 'orderStartDate'
-            },
-            {
-                type: 'date-picker',
-                icon: 'factory-riqi1',
-                label: '生产日期',
-                value: 'productDate'
+@Component
+export default class PickingMaterialDetail extends Vue {
+    isRedact = false;
+    tableData: DataObj[] = [];
+    OrgTableData = [];
+    manufactor = [];
+    orderStatus = '';
+    spanArr: number[] = [];
+    headerBase = [
+        {
+            type: 'p',
+            icon: 'factory-shengchanchejian',
+            label: '生产车间',
+            value: 'workShopName'
+        },
+        {
+            type: 'tooltip',
+            icon: 'factory-shengchanxian',
+            label: '生产产线',
+            value: 'productLineName'
+        },
+        {
+            type: 'tooltip',
+            icon: 'factory-pinleiguanli',
+            label: '生产物料',
+            value: ['materialName', 'materialCode']
+        },
+        {
+            type: 'p',
+            icon: 'factory-bianhao',
+            label: '生产订单',
+            value: 'orderNo'
+        },
+        {
+            type: 'p',
+            icon: 'factory--meirijihuachanliangpeizhi',
+            label: '订单产量',
+            value: ['planOutput', 'outputUnit']
+        },
+        {
+            type: 'p',
+            icon: 'factory-riqi1',
+            label: '订单日期',
+            value: 'orderStartDate'
+        },
+        {
+            type: 'date-picker',
+            icon: 'factory-riqi1',
+            label: '生产日期',
+            value: 'productDate'
+        }
+    ];
+
+    formHeader = {
+        orderStatusName: '已同步'
+    };
+
+    mounted() {
+        this.int();
+    }
+
+    //初始化表头表格和厂家
+    int() {
+        this.isRedact = false;
+        PKG_API.PKG_HOME_QUERY_BY_NO_API({
+            // 基础数据-订单管理-根据订单号查询
+            factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
+            orderNo: this.$store.state.packaging.pickingDetail.orderNo
+        }).then(({ data }) => {
+            this.formHeader = data.data;
+            this.orderStatus = this.formHeader.orderStatusName;
+        });
+        PKG_API.PKG_PICKING_MATERIAL_DETAIL_API({
+            orderNo: this.$store.state.packaging.pickingDetail.orderNo,
+            productLine: this.$store.state.packaging.pickingDetail.productLine
+        }).then(({ data }) => {
+            data.data.forEach(item => {
+                if (!item.useType) {
+                    item.useType = '正常领料';
+                }
+                // 如果选了批次，当前库存展示当前批次的，如果没有批次，当前库存展示所有批次的总和
+                if (item.batch) {
+                    const obj = item.stoPackageMaterialStorageResponseDtoList.find(row => row.batch === item.batch);
+                    item.storage = obj?.currentAmount;
+                    return;
+                }
+                // 如果没有id，就增加一个标识，修改为0的标识
+                if (!item.id) {
+                    item.isFirst = true;
+                }
+                item.storage = 0;
+                item.stoPackageMaterialStorageResponseDtoList.map(row => {
+                    item.storage += row.currentAmount;
+                });
+            });
+            this.tableData = JSON.parse(JSON.stringify(data.data));
+            this.OrgTableData = JSON.parse(JSON.stringify(data.data));
+            this.spanArr = this.merge(this.tableData);
+        });
+        COMMON_API.DICTQUERY_API({
+            factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
+            dictType: 'PKG_SUPPLIER'
+        }).then(({ data }) => {
+            this.manufactor = data.data;
+        });
+    }
+
+    // 批次变化
+    batchChange(row, val) {
+        const obj = row.stoPackageMaterialStorageResponseDtoList.find(item => item.batch === val);
+        row.mouldCode = obj.mouldCode;
+        row.manufactor = obj.supplierCode;
+        row.manufactorName = obj.supplierName;
+        row.stoPackageMaterialStorageId = obj.id;
+        row.storage = obj.currentAmount;
+        if (!obj.mouldCode) {
+            row.canEditModuleCode = true;
+        } else {
+            row.canEditModuleCode = false;
+        }
+    }
+
+    useAmountBlurHandler(val, row) {
+        if (!row.id) {
+            if (val === '0' && row.isFirst) {
+                row.batch = row.stoPackageMaterialStorageResponseDtoList[0]?.batch;
+                this.batchChange(row, row.batch);
             }
-        ];
+            if (val) {
+                row.isFirst = false;
+            }
+        }
+    }
 
-        formHeader = {
-            orderStatusName: '已同步'
+    // 拆分
+    SplitDate(row, index) {
+        this.tableData.splice(index + this.tableData.filter(item => item.materialCode === row.materialCode).length, 0, {
+            id: '',
+            posnr: row.posnr,
+            materialCode: row.materialCode,
+            materialName: row.materialName,
+            materialType: row.materialType,
+            unit: row.unit,
+            needNum: row.needNum,
+            storage: row.storage,
+            useType: '正常领料',
+            splitFlag: 'Y',
+            stoPackageMaterialStorageResponseDtoList: row.stoPackageMaterialStorageResponseDtoList,
+            mouldCode: '',
+            productLine: row.productLine,
+            orderNo: row.orderNo
+        });
+        this.spanArr = this.merge(this.tableData);
+    }
+
+    //删除
+    del(row) {
+        this.$confirm('是否删除?', '提示', {
+            confirmButtonText: '确定',
+            cancelButtonText: '取消',
+            type: 'warning'
+        }).then(() => {
+            this.$set(row, 'delFlag', 1);
+            this.$set(row, 'isDel', 1);
+            this.spanArr = this.merge(this.tableData);
+            this.$successToast('删除成功');
+        });
+    }
+
+    //表格行名
+    rowDelFlag({ row }) {
+        if (row.isDel) {
+            return 'rowDel';
+        } else if (row.status === '3') {
+            return 'disabled-row';
+        } else if (row.status === '1') {
+            return 'warning-row';
+        }
+        return '';
+    }
+
+    //设置合并行
+    merge(tableData): number[] {
+        const spanOneArr: number[] = [];
+        let concatOne = 0;
+        tableData.forEach((item, index) => {
+            if (index === 0) {
+                spanOneArr.push(1);
+            } else if (item.materialCode === tableData[index - 1].materialCode) {
+                if (item.delFlag !== 1) {
+                    spanOneArr[concatOne] += 1;
+                }
+                spanOneArr.push(0);
+            } else {
+                spanOneArr.push(1);
+                concatOne = index;
+            }
+        });
+        return spanOneArr;
+    }
+
+    //设置合并行
+    spanMethod({ rowIndex, columnIndex }) {
+        if (columnIndex <= 3) {
+            return {
+                rowspan: this.spanArr[rowIndex],
+                colspan: this.spanArr[rowIndex] > 0 ? 1 : 0
+            };
+        }
+    }
+
+    //保存校验
+    ruleFn(): boolean {
+        for (const item of this.tableData.filter(it => it.delFlag !== 1)) {
+            if (!item.useType || item.useAmount === '' || item.useAmount === null || !item.batch || !item.manufactor) {
+                this.$warningToast('请填写必填项');
+                console.log(item);
+                return false;
+            }
+        }
+        return true;
+    }
+
+    //保存
+    saved() {
+        if (!this.ruleFn()) {
+            return false;
+        }
+
+        const delIds: string[] = [];
+        const insertDto: DataObj[] = [];
+        const updateDto = [];
+
+        // this.tableData.forEach(item => {
+        //     if (item.status === '3') {
+        //         delIds.push(item.id)
+        //     }
+        // })
+
+        this.dataEntryData(this.formHeader, this.tableData, this.OrgTableData, delIds, insertDto, updateDto, item => {
+            item.productLine = this.formHeader['productLine'];
+        });
+
+        const params = {
+            workShop: this.formHeader['workShop'],
+            delIds,
+            insertDto: insertDto,
+            updateDto: updateDto.filter(it => !delIds.includes(it['id']))
         };
 
-        mounted() {
-            this.int()
-        }
+        // if (!params.delIds.length && !params.insertDto.length && !params.updateDto.length) {
+        //     this.$warningToast('请修改后再保存')
+        //     return
+        // }
 
-        //初始化表头表格和厂家
-        int() {
-            this.isRedact = false
-            PKG_API.PKG_HOME_QUERY_BY_NO_API({ // 基础数据-订单管理-根据订单号查询
-                factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
-                orderNo: this.$store.state.packaging.pickingDetail.orderNo
-            }).then(({ data }) => {
-                this.formHeader = data.data;
-                this.orderStatus = this.formHeader.orderStatusName
-            })
-            PKG_API.PKG_PICKING_MATERIAL_DETAIL_API({
-                orderNo: this.$store.state.packaging.pickingDetail.orderNo,
-                productLine: this.$store.state.packaging.pickingDetail.productLine
-            }).then(({ data }) => {
-                data.data.forEach(item => {
-                    if (!item.useType) {
-                        item.useType = '正常领料'
-                    }
-                    // 如果选了批次，当前库存展示当前批次的，如果没有批次，当前库存展示所有批次的总和
-                    if (item.batch) {
-                        const obj = item.stoPackageMaterialStorageResponseDtoList.find(row => row.batch === item.batch)
-                        item.storage = obj?.currentAmount
-                        return
-                    }
-                    // 如果没有id，就增加一个标识，修改为0的标识
-                    if (!item.id) {
-                        item.isFirst = true
-                    }
-                    item.storage = 0
-                    item.stoPackageMaterialStorageResponseDtoList.map(row => {
-                        item.storage += row.currentAmount
-                    })
-                })
-                this.tableData = JSON.parse(JSON.stringify(data.data));
-                this.OrgTableData = JSON.parse(JSON.stringify(data.data));
-                this.spanArr = this.merge(this.tableData)
-            })
-            COMMON_API.DICTQUERY_API({
-                factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
-                dictType: 'PKG_SUPPLIER'
-            }).then(({ data }) => {
-                this.manufactor = data.data
-            });
-        }
+        PKG_API.PKG_PICKING_MATERIAL_SAVE_API(params).then(() => {
+            this.$successToast('保存成功');
+            this.int();
+        });
+    }
 
-        // 批次变化
-        batchChange(row, val) {
-            const obj = row.stoPackageMaterialStorageResponseDtoList.find(item => item.batch === val)
-            row.mouldCode = obj.mouldCode
-            row.manufactor = obj.supplierCode
-            row.manufactorName = obj.supplierName
-            row.stoPackageMaterialStorageId = obj.id
-            row.storage = obj.currentAmount
-            if (!obj.mouldCode) {
-                row.canEditModuleCode = true
-            } else {
-                row.canEditModuleCode = false
-            }
-        }
-
-        useAmountBlurHandler(val, row) {
-            if (!row.id) {
-                if (val === '0' && row.isFirst) {
-                    row.batch = row.stoPackageMaterialStorageResponseDtoList[0]?.batch
-                    this.batchChange(row, row.batch)
-                }
-                if (val) {
-                    row.isFirst = false
-                }
-            }
-        }
-
-        // 拆分
-        SplitDate(row, index) {
-            this.tableData.splice(index + this.tableData.filter(item => item.materialCode === row.materialCode).length, 0, {
-                id: '',
-                posnr: row.posnr,
-                materialCode: row.materialCode,
-                materialName: row.materialName,
-                materialType: row.materialType,
-                unit: row.unit,
-                needNum: row.needNum,
-                storage: row.storage,
-                useType: '正常领料',
-                splitFlag: 'Y',
-                stoPackageMaterialStorageResponseDtoList: row.stoPackageMaterialStorageResponseDtoList,
-                mouldCode: '',
-                productLine: row.productLine,
-                orderNo: row.orderNo
-            })
-            this.spanArr = this.merge(this.tableData)
-        }
-
-        //删除
-        del(row) {
-            this.$confirm('是否删除?', '提示', {
-                confirmButtonText: '确定',
-                cancelButtonText: '取消',
-                type: 'warning'
-            }).then(() => {
-                this.$set(row, 'delFlag', 1)
-                this.$set(row, 'isDel', 1)
-                this.spanArr = this.merge(this.tableData)
-                this.$successToast('删除成功');
-            });
-        }
-
-        //表格行名
-        rowDelFlag({ row }) {
-            if (row.isDel) {
-                return 'rowDel'
-            } else if (row.status === '3') {
-                return 'disabled-row'
-            } else if (row.status === '1') {
-                return 'warning-row'
-            }
-            return '';
-        }
-
-        //设置合并行
-        merge(tableData): number[] {
-            const spanOneArr: number[] = [];
-            let concatOne = 0;
-            tableData.forEach((item, index) => {
-                if (index === 0) {
-                    spanOneArr.push(1);
-                } else if (item.materialCode === tableData[index - 1].materialCode) {
-                    if (item.delFlag !== 1) {
-                        spanOneArr[concatOne] += 1;
-                    }
-                    spanOneArr.push(0);
-                } else {
-                    spanOneArr.push(1);
-                    concatOne = index;
-                }
-            });
-            return spanOneArr
-        }
-
-        //设置合并行
-        spanMethod({ rowIndex, columnIndex }) {
-            if (columnIndex <= 3) {
-                return {
-                    rowspan: this.spanArr[rowIndex],
-                    colspan: this.spanArr[rowIndex] > 0 ? 1 : 0
-                };
-            }
-        }
-
-        //保存校验
-        ruleFn(): boolean {
-            for (const item of this.tableData.filter(it => it.delFlag !== 1)) {
-                if (!item.useType || item.useAmount === '' || item.useAmount === null || !item.batch || !item.manufactor) {
-                    this.$warningToast('请填写必填项');
-                    console.log(item)
-                    return false
-                }
-            }
-            return true
-        }
-
-        //保存
-        saved() {
-            if (!this.ruleFn()) {
-                return false
-            }
-
-            const delIds: string[] = []
-            const insertDto: DataObj[] = []
-            const updateDto = []
-
-            // this.tableData.forEach(item => {
-            //     if (item.status === '3') {
-            //         delIds.push(item.id)
+    dataEntryData(formHeader, data: DataEntryDataObj[], orgData: DataEntryDataObj[], delArr: string[], insertArr: DataEntryDataObj[], updateArr: DataEntryDataObj[], processingData?) {
+        data.forEach(item => {
+            // if (item.delFlag === 1) {
+            //     if (item.id) {
+            //         delArr.push(item.id);
             //     }
-            // })
-
-            this.dataEntryData(this.formHeader, this.tableData, this.OrgTableData, delIds, insertDto, updateDto, (item) => {
-                item.productLine = this.formHeader['productLine']
-            });
-
-            const params = {
-                workShop: this.formHeader['workShop'],
-                delIds,
-                insertDto: insertDto,
-                updateDto: updateDto.filter(it => !delIds.includes(it['id']))
-            }
-
-            // if (!params.delIds.length && !params.insertDto.length && !params.updateDto.length) {
-            //     this.$warningToast('请修改后再保存')
-            //     return
             // }
-
-            PKG_API.PKG_PICKING_MATERIAL_SAVE_API(params).then(() => {
-                this.$successToast('保存成功');
-                this.int()
-            })
-        }
-
-        dataEntryData(formHeader, data: DataEntryDataObj[], orgData: DataEntryDataObj[], delArr: string[], insertArr: DataEntryDataObj[], updateArr: DataEntryDataObj[], processingData?) {
-            data.forEach(item => {
-                // if (item.delFlag === 1) {
-                //     if (item.id) {
-                //         delArr.push(item.id);
-                //     }
-                // }
-                if (item.status === '1') {
-                    insertArr.push(item);
-                } else if (Number(item.delFlag) === 1) {
-                    if (item.id) {
-                        delArr.push(item.id);
-                    }
-                } else {
-                    if (!item.id) {
-                        insertArr.push(item);
-                        return
-                    }
-                    const orgObj = orgData.filter(it => it.id === item.id)[0];
-                    if (!_.isEqual(orgObj, item)) {
-                        item.orderId = formHeader.id;
-                        if (processingData) {
-                            processingData(item);
-                        }
-                        updateArr.push(item);
-                    }
+            if (item.status === '1') {
+                insertArr.push(item);
+            } else if (Number(item.delFlag) === 1) {
+                if (item.id) {
+                    delArr.push(item.id);
                 }
-                // else if (item.id) {
-                //     const orgObj = orgData.filter(it => it.id === item.id)[0];
-                //     if (orgObj) {
-                //         if (!_.isEqual(orgObj, item)) {
-                //             item.orderId = formHeader.id;
-                //             if (processingData) {
-                //                 processingData(item);
-                //             }
-                //             updateArr.push(item);
-                //         }
-                //     } else {
-                //         insertArr.push(item);
-                //     }
-                // } else {
-                //     item.factory = JSON.parse(sessionStorage.getItem('factory') || '{}').id;
-                //     item.orderId = formHeader.id;
-                //     item.orderNo = formHeader.orderNo;
-                //     if (processingData) {
-                //         processingData(item);
-                //     }
-                //     insertArr.push(item);
-                // }
-            });
-        }
+            } else {
+                if (!item.id) {
+                    insertArr.push(item);
+                    return;
+                }
+                const orgObj = orgData.filter(it => it.id === item.id)[0];
+                if (!_.isEqual(orgObj, item)) {
+                    item.orderId = formHeader.id;
+                    if (processingData) {
+                        processingData(item);
+                    }
+                    updateArr.push(item);
+                }
+            }
+            // else if (item.id) {
+            //     const orgObj = orgData.filter(it => it.id === item.id)[0];
+            //     if (orgObj) {
+            //         if (!_.isEqual(orgObj, item)) {
+            //             item.orderId = formHeader.id;
+            //             if (processingData) {
+            //                 processingData(item);
+            //             }
+            //             updateArr.push(item);
+            //         }
+            //     } else {
+            //         insertArr.push(item);
+            //     }
+            // } else {
+            //     item.factory = JSON.parse(sessionStorage.getItem('factory') || '{}').id;
+            //     item.orderId = formHeader.id;
+            //     item.orderNo = formHeader.orderNo;
+            //     if (processingData) {
+            //         processingData(item);
+            //     }
+            //     insertArr.push(item);
+            // }
+        });
     }
-    interface DataEntryDataObj {
-        delFlag?: number;
-        id?: string;
-        status?: string;
-        orderId?: string;
-        factory?: string;
-        orderNo?: string;
-    }
-    interface DataObj{
-        delFlag?: number;
-        id: string;
-        orderId?: string;
-        factory?: string;
-        orderNo?: string;
-        posnr?: string;
-        materialCode?: string;
-        materialName?: string;
-        materialType?: string;
-        unit?: string;
-        needNum?: string;
-        storage?: string;
-        useType?: string;
-        useAmount?: string;
-        batch?: string;
-        manufactor?: string;
-        splitFlag?: string;
-        status?: string;
-        mouldCode?: string; // 模具号
-        productLine?: string; // 产线
-        stoPackageMaterialStorageResponseDtoList?: Array<StoPackageMaterialStorageResponseDto>;
-    }
-    interface StoPackageMaterialStorageResponseDto {
-        id?: string;
-        mouldCode?: string;
-        supplierCode?: string;
-    }
+}
+interface DataEntryDataObj {
+    delFlag?: number;
+    id?: string;
+    status?: string;
+    orderId?: string;
+    factory?: string;
+    orderNo?: string;
+}
+interface DataObj {
+    delFlag?: number;
+    id: string;
+    orderId?: string;
+    factory?: string;
+    orderNo?: string;
+    posnr?: string;
+    materialCode?: string;
+    materialName?: string;
+    materialType?: string;
+    unit?: string;
+    needNum?: string;
+    storage?: string;
+    useType?: string;
+    useAmount?: string;
+    batch?: string;
+    manufactor?: string;
+    splitFlag?: string;
+    status?: string;
+    mouldCode?: string; // 模具号
+    productLine?: string; // 产线
+    stoPackageMaterialStorageResponseDtoList?: Array<StoPackageMaterialStorageResponseDto>;
+}
+interface StoPackageMaterialStorageResponseDto {
+    id?: string;
+    mouldCode?: string;
+    supplierCode?: string;
+}
 </script>
 
 <style scoped>
-
 </style>
