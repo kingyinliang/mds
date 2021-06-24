@@ -35,7 +35,7 @@
                         </el-tooltip>
                     </div>
                     <div class="table_td" :style="{ lineHeight: lineHeight + 'px' }">
-                        <el-tooltip class="item" effect="dark" :content="item.entryQnt" placement="top" :disabled="!item.ntryQnt">
+                        <el-tooltip class="item" effect="dark" :content="item.entryQnt" placement="top" :disabled="!item.entryQnt">
                             <span class="one_line" style="width: 100px;">{{ item.entryQnt }}</span>
                         </el-tooltip>
                     </div>
