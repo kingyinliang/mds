@@ -1,7 +1,8 @@
 import Vue from 'vue';
 import Router from 'vue-router';
-import { fnCurrentRouteType, AddRoutes } from 'utils/utils';
+import { fnCurrentRouteType, AddRoutes, loginSuccess } from 'utils/utils';
 import { COMMON_API } from '../../../common/api/api';
+import SSOLogin from 'utils/SSOLogin';
 
 Vue.use(Router);
 /* eslint-disable @typescript-eslint/no-var-requires */
@@ -86,22 +87,27 @@ router.beforeEach((to, from, next) => {
     if (router['options']['isAddDynamicMenuRoutes'] || fnCurrentRouteType(to, globalRoutes) === 'global') {
         return next();
     }
-    COMMON_API.NAV_API({
-        factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
-        tenant: 'MDS'
-    }).then(({ data }) => {
-        if (data && data.code === 200) {
-            const AddRoutesClass = new AddRoutes(router, mainRoutes, []);
-            AddRoutesClass.fnAddDynamicMenuRoutes(data.data.menuList, []);
-            router['options']['isAddDynamicMenuRoutes'] = true;
-            sessionStorage.setItem('menuList', JSON.stringify(data.data.menuList || '[]'));
-            sessionStorage.setItem('permissions', JSON.stringify(data.data.permissions || '[]'));
-            return next(Object.assign({}, to, { replace: true }));
-        }
-        sessionStorage.setItem('menuList', '[]');
-        sessionStorage.setItem('permissions', '[]');
-        return next();
-    });
+    SSOLogin.getUserInfo().then((res) => {
+        loginSuccess(res.data.data)
+        const factory = sessionStorage.getItem('factory') || localStorage.getItem('factory')
+        COMMON_API.NAV_API({
+            factory: JSON.parse(factory || '{}').id,
+            tenant: 'MDS'
+        }).then(({ data }) => {
+            sessionStorage.setItem('factory', factory || '')
+            if (data && data.code === 200) {
+                const AddRoutesClass = new AddRoutes(router, mainRoutes, []);
+                AddRoutesClass.fnAddDynamicMenuRoutes(data.data.menuList, []);
+                router['options']['isAddDynamicMenuRoutes'] = true;
+                sessionStorage.setItem('menuList', JSON.stringify(data.data.menuList || '[]'));
+                sessionStorage.setItem('permissions', JSON.stringify(data.data.permissions || '[]'));
+                return next(Object.assign({}, to, { replace: true }));
+            }
+            sessionStorage.setItem('menuList', '[]');
+            sessionStorage.setItem('permissions', '[]');
+            return next();
+        });
+    })
 });
 
 export default router;

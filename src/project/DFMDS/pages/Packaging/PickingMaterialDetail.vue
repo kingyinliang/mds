@@ -45,7 +45,7 @@
                                 <span class="notNull">* </span>订单领料量
                             </template>
                             <template slot-scope="scope">
-                                <el-input v-model="scope.row.useAmount" :disabled="!(isRedact)" size="small" placeholder="请输入" />
+                                <el-input v-model="scope.row.useAmount" :disabled="!(isRedact)" size="small" placeholder="请输入" @blur="useAmountBlurHandler(scope.row.useAmount, scope.row)" />
                             </template>
                         </el-table-column>
                         <el-table-column label="物料批次" min-width="140">
@@ -194,6 +194,10 @@
                         item.storage = obj?.currentAmount
                         return
                     }
+                    // 如果没有id，就增加一个标识，修改为0的标识
+                    if (!item.id) {
+                        item.isFirst = true
+                    }
                     item.storage = 0
                     item.stoPackageMaterialStorageResponseDtoList.map(row => {
                         item.storage += row.currentAmount
@@ -223,6 +227,18 @@
                 row.canEditModuleCode = true
             } else {
                 row.canEditModuleCode = false
+            }
+        }
+
+        useAmountBlurHandler(val, row) {
+            if (!row.id) {
+                if (val === '0' && row.isFirst) {
+                    row.batch = row.stoPackageMaterialStorageResponseDtoList[0]?.batch
+                    this.batchChange(row, row.batch)
+                }
+                if (val) {
+                    row.isFirst = false
+                }
             }
         }
 

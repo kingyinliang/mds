@@ -23,7 +23,7 @@
                                 <div class="card-stock__content">
                                     <stock-detail-num :current-data="item" />
                                     <mds-card class="box-card" title="库存明细" :pack-up="false" :name="'fermenterTotal'">
-                                        <stock-detail-table :current-data="item.detailsList" />
+                                        <stock-detail-table :current-data="item.detailsList.filter(row => row.currentAmount !== 0)" />
                                     </mds-card>
                                 </div>
                             </div>

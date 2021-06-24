@@ -161,7 +161,8 @@ export default {
         // 数据同步
         syncData() {
             COMMON_API.ROWMETERIAL_SYNC_API({
-                factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id
+                // factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
+                // incremental: true
             })
                 .then(() => {
                     this.getItemsList()

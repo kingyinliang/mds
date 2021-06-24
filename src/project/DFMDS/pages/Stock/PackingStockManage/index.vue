@@ -8,6 +8,7 @@
             :query-form-data="queryFormData"
             :list-interface="getDataList"
             :custom-data="true"
+            @search-init="searchInit"
             @get-data-success="FnCallBackHandle"
             @created-end="createdEnd"
         >
@@ -25,7 +26,7 @@
                                 <div class="card-stock__content">
                                     <stock-detail-num :current-data="item" />
                                     <mds-card class="box-card" title="物料明细" :pack-up="false" :name="'fermenterTotal'">
-                                        <stock-detail-table :current-data="item.materialStorageResponseDtoList" />
+                                        <stock-detail-table :current-data="item.materialStorageResponseDtoList" :current-location-code="currentLocationCode" />
                                     </mds-card>
                                 </div>
                             </div>
@@ -56,6 +57,10 @@
         $refs: {
             queryTable: HTMLFormElement;
         };
+
+        currentLocationCode = '';
+
+        currentMaterialGroup: { materialGroupCode?: string; materialGroupType?: string } = {};
 
         // 车间详情列表
         stockInfoList: object[] = [];
@@ -150,6 +155,11 @@
             // })
         }
 
+        searchInit() {
+            const currentMaterialGroup = this.$refs.queryTable.optionLists.stoMaterialGroupId.find(row => row.id === this.$refs.queryTable.queryForm.stoMaterialGroupId)
+            this.currentMaterialGroup = currentMaterialGroup || {}
+        }
+
         // 统一车间具体信息请求成功处理
         FnCallBackHandle(data) {
             this.stockInfoList = data.data || [];
@@ -158,9 +168,15 @@
             }
         }
 
-        getDataList(params) {
+        getDataList(params1) {
             // params.current = this.currentPage
             // params.size = this.pageSize
+            const params = JSON.parse(JSON.stringify(params1))
+            console.log(this.$refs.queryTable.queryForm, '++++++++++')
+            this.currentLocationCode = this.$refs.queryTable.queryForm.packageMaterialLocationCode
+            params.materialGroupCode = this.currentMaterialGroup.materialGroupCode
+            params.materialGroupType = this.currentMaterialGroup.materialGroupType
+            delete params.stoMaterialGroupId
             return STOCK_API.STOCK_PACKAGE_STORAGE_SUMMARY_QUERY_API(params)
         }
 
@@ -168,7 +184,7 @@
         goDetail(row) {
             console.log(row, '=========')
             // 保存当前点击的对象信息
-            this.$store.commit('stock/updateStockInfo', row);
+            this.$store.commit('stock/updateStockInfo', { ...row, packageMaterialLocationCode: this.currentLocationCode });
             this.$store.commit(
                 'common/updateMainTabs',
                 this.$store.state.common.mainTabs.filter(subItem => subItem.name !== 'DFMDS-pages-Stock-PackingStockManage-detail')
