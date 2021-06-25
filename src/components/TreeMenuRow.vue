@@ -23,7 +23,7 @@
                             <div class="fold_button_line_right" :style="{ top: lineHeight / 2 - 1 + 'px', width: tabSpace / 2 + 'px', left: lineHeight / 2 + 'px' }" />
                             <div class="fold_button_line_left" :style="{ top: lineHeight / 2 - 1 + 'px', width: tabSpace / 2 + 'px' }" />
                             <div class="fold_level" :style="{ top: '8px', left: tabSpace * 0.5 - 11 + 'px' }">
-                                <span class="one_line">{{ item.level }}</span>
+                                {{ item.level }}
                             </div>
                         </div>
                         <span>{{ item.materialName }}</span>
@@ -35,7 +35,7 @@
                         </el-tooltip>
                     </div>
                     <div class="table_td" :style="{ lineHeight: lineHeight + 'px' }">
-                        <el-tooltip class="item" effect="dark" :content="item.entryQnt" placement="top" :disabled="!item.ntryQnt">
+                        <el-tooltip class="item" effect="dark" :content="item.entryQnt" placement="top" :disabled="!item.entryQnt">
                             <span class="one_line" style="width: 100px;">{{ item.entryQnt }}</span>
                         </el-tooltip>
                     </div>
