@@ -18,10 +18,10 @@
                 <!-- <el-select v-model="dataForm.taskInventoryCode" placeholder="请选择" filterable style="width: 283px;" clearable>
                     <el-option v-for="(sole, index) in productMaterialList" :key="index" :value="sole.materialCode" :label="`${sole.materialName} ${sole.materialCode}`" />
                 </el-select> -->
-                <el-input v-model="dataForm.taskInventoryCode" placeholder="请输入" filterable style="width: 283px;" />
+                <el-input v-model="dataForm.taskInventoryCode" placeholder="请输入" filterable style="width: 283px;" @input="changeTaskInventoryCode(dataForm)" />
             </el-form-item>
             <el-form-item label="组计数器：" prop="groupCounter">
-                <el-input v-model="dataForm.groupCounter" placeholder="请输入" style="width: 283px;" />
+                <el-input v-model="dataForm.groupCounter" placeholder="请输入" style="width: 283px;" @input="changeGroupCounter(dataForm)" />
             </el-form-item>
             <el-form-item label="生产版本：">
                 <el-input v-model="dataForm.produceVersion" placeholder="请输入" style="width: 283px;" />
@@ -53,7 +53,7 @@ export default {
         },
         productMaterialList: {
             type: Array,
-            default: () => ([])
+            default: () => []
         }
     },
     data() {
@@ -61,36 +61,34 @@ export default {
             visible: false,
             dataForm: {},
             rules: {
-                workShop: [
-                    { required: true, message: '请选择生产车间', trigger: 'change' }
-                ],
-                productMaterialCode: [
-                    { required: true, message: '请选择生产物料', trigger: 'change' }
-                ],
-                taskInventoryType: [
-                    { required: true, message: '请输入任务清单类型', trigger: 'blur' }
-                ],
-                taskInventoryCode: [
-                    { required: true, message: '请输入任务清单组码', trigger: 'blur' }
-                ],
-                groupCounter: [
-                    { required: true, message: '请输入组计数器', trigger: 'blur' }
-                ]
+                workShop: [{ required: true, message: '请选择生产车间', trigger: 'change' }],
+                productMaterialCode: [{ required: true, message: '请选择生产物料', trigger: 'change' }],
+                taskInventoryType: [{ required: true, message: '请输入任务清单类型', trigger: 'blur' }],
+                taskInventoryCode: [{ required: true, message: '请输入任务清单组码', trigger: 'blur' }],
+                groupCounter: [{ required: true, message: '请输入组计数器', trigger: 'blur' }]
             }
-        }
+        };
     },
     methods: {
+        //组计数器 验证
+        changeGroupCounter(val) {
+            val.groupCounter = val.groupCounter.match(/^[1-9]\d{0,10}$/) ? val.groupCounter.match(/^[1-9]\d{0,10}$/)[0] : '';
+        },
+        //任务清单组码 验证
+        changeTaskInventoryCode(val) {
+            val.taskInventoryCode = val.taskInventoryCode.match(/^[1-9]\d{0,10}$/) ? val.taskInventoryCode.match(/^[1-9]\d{0,10}$/)[0] : '';
+        },
         productMaterialChange(v) {
-            console.log(v, '===============')
+            console.log(v, '===============');
             this.productMaterialList.map(item => {
                 if (item.materialCode === v) {
                     this.dataForm.productMaterialName = item.materialName;
                     this.dataForm.productMaterialType = item.materialTypeCode;
                 }
-            })
+            });
         },
         addHandler() {
-            this.$refs.addForm.validate((valid) => {
+            this.$refs.addForm.validate(valid => {
                 if (valid) {
                     BASIC_API[this.dataForm.id ? 'FER_CRAFT_UPDATE_API' : 'FER_CRAFT_SAVE_API'](this.dataForm).then(({ data }) => {
                         this.visible = false;
@@ -102,9 +100,8 @@ export default {
             });
         }
     }
-}
+};
 </script>
 
 <style>
-
 </style>
