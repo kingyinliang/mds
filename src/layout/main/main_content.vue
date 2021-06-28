@@ -112,13 +112,13 @@ export default {
                     this.$router.push({ name: 'DFMDS-pages-Message-index' });
                 });
             }
+        },
+        showNotication(value) {
+            console.log('showNotication')
+            if (Object.keys(value).length !== 0) {
+                this.notification(value)
+            }
         }
-        // showNotication(value) {
-        //     console.log('showNotication')
-        //     if (Object.keys(value).length !== 0) {
-        //         this.notification(value)
-        //     }
-        // }
     },
     mounted() {
         //

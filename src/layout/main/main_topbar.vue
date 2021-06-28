@@ -204,9 +204,9 @@
                 // 触发 message nitification pop
                 // const data = JSON.parse(res.data);
                 // TODOS DFMDS-4528
-                // if (res.popFlag === 'Y') {
-                //     this.triggerMessageNotification(res)
-                //  }
+                if (res.popFlag === 'Y') {
+                    this.triggerMessageNotification(res)
+                 }
             },
             // 呼叫  message message notification API
             triggerMessageNotification(data) {
@@ -247,11 +247,11 @@
                 const wsObject = [{
                         // TODOS DFMDS-4528
                         // wss://23kdu5ymdj.execute-api.cn-north-1.amazonaws.com.cn/pre
-                        url: 'wss://n2j6guq05a.execute-api.cn-north-1.amazonaws.com.cn/dev',
+                        url: 'wss://23kdu5ymdj.execute-api.cn-north-1.amazonaws.com.cn/pre',
                         appid: 'df-mds-dev',
                         channel: 'df-mds-business-msg-dev'
                     }, {
-                        url: 'wss://3nieh13pk3.execute-api.cn-north-1.amazonaws.com.cn/test',
+                        url: 'wss://23kdu5ymdj.execute-api.cn-north-1.amazonaws.com.cn/pre',
                         appid: 'df-mds-test',
                         channel: 'df-mds-business-msg-test'
                     }, {
