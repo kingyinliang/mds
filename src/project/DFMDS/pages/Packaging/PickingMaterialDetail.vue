@@ -23,6 +23,16 @@
                             </template>
                         </el-table-column>
                         <el-table-column label="当前库存" prop="storage" width="100" :show-overflow-tooltip="true" />
+                        <el-table-column label="库位" min-width="140">
+                            <template slot="header">
+                                <span class="notNull">* </span>库位
+                            </template>
+                            <template slot-scope="scope">
+                                <el-select v-model="scope.row.stgeLoc" :disabled="!(isRedact)" placeholder="请选择" size="small">
+                                    <el-option v-for="(list,index) in scope.row.stgeLocList" :key="index" :label="list.stgeLoc" :value="list.stgeLoc" />
+                                </el-select>
+                            </template>
+                        </el-table-column>
                         <el-table-column label="领料类型" min-width="140">
                             <template slot="header">
                                 <span class="notNull">* </span>领料类型
@@ -39,8 +49,8 @@
                                 <span class="notNull">* </span>物料批次
                             </template>
                             <template slot-scope="scope">
-                                <!-- <el-input v-model="scope.row.batch" maxlength="10" :disabled="!(isRedact)" size="small" placeholder="请输入" /> -->
-                                <el-select v-model="scope.row.batch" size="small" :disabled="!(isRedact)" @change="val => batchChange(scope.row, val)">
+                                <el-input v-if="scope.row.materialType!=='ZVER'" v-model="scope.row.batch" maxlength="10" :disabled="!(isRedact)" size="small" placeholder="请输入" />
+                                <el-select v-else v-model="scope.row.batch" size="small" :disabled="!(isRedact)" @change="val => batchChange(scope.row, val)">
                                     <el-option v-for="op in scope.row.stoPackageMaterialStorageResponseDtoList" :key="op.id" :label="op.batch" :value="op.batch" />
                                 </el-select>
                             </template>
@@ -181,6 +191,8 @@ export default class PickingMaterialDetail extends Vue {
             productLine: this.$store.state.packaging.pickingDetail.productLine
         }).then(({ data }) => {
             data.data.forEach(item => {
+                /**
+               * //以前的逻辑
                 if (!item.useType) {
                     item.useType = '正常领料';
                 }
@@ -198,6 +210,29 @@ export default class PickingMaterialDetail extends Vue {
                 item.stoPackageMaterialStorageResponseDtoList.map(row => {
                     item.storage += row.currentAmount;
                 });
+                 */
+                if (!item.useType) {
+                    item.useType = '正常领料';
+                }
+                item.stoPackageMaterialStorageResponseDtoList = [];
+                // 如果选了批次，当前库存展示当前批次的，如果没有批次，当前库存展示所有批次的总和
+                if (item.batch) {
+                    if (item.stgeLocList.length > 0) {
+                        const stgeLocList = item.stgeLocList.find(list => list.stgeLoc === item.stgeLoc);
+                        const obj = stgeLocList.stoPackageMaterialStorageResponseDtoList.find(row => row.batch === item.batch);
+                        item.storage = obj?.currentAmount;
+                        item.stoPackageMaterialStorageResponseDtoList = stgeLocList.stoPackageMaterialStorageResponseDtoList;
+                    }
+                    return;
+                }
+                item.storage = 0;
+                item.stoPackageMaterialStorageResponseDtoList.map(row => {
+                    item.storage += row.currentAmount;
+                });
+                // 如果没有id，就增加一个标识，修改为0的标识
+                if (!item.id) {
+                    item.isFirst = true;
+                }
             });
             this.tableData = JSON.parse(JSON.stringify(data.data));
             this.OrgTableData = JSON.parse(JSON.stringify(data.data));
@@ -254,7 +289,9 @@ export default class PickingMaterialDetail extends Vue {
             stoPackageMaterialStorageResponseDtoList: row.stoPackageMaterialStorageResponseDtoList,
             mouldCode: '',
             productLine: row.productLine,
-            orderNo: row.orderNo
+            orderNo: row.orderNo,
+            stgeLoc: row.stgeLoc,
+            stgeLocList: row.stgeLocList
         });
         this.spanArr = this.merge(this.tableData);
     }
@@ -346,6 +383,10 @@ export default class PickingMaterialDetail extends Vue {
         this.dataEntryData(this.formHeader, this.tableData, this.OrgTableData, delIds, insertDto, updateDto, item => {
             item.productLine = this.formHeader['productLine'];
         });
+        for (let index = 0; index < insertDto.length; index++) {
+            const element = insertDto[index];
+            delete element.stoPackageMaterialStorageResponseDtoList;
+        }
 
         const params = {
             workShop: this.formHeader['workShop'],
@@ -446,6 +487,8 @@ interface DataObj {
     status?: string;
     mouldCode?: string; // 模具号
     productLine?: string; // 产线
+    stgeLoc: string;
+    stgeLocList: any;
     stoPackageMaterialStorageResponseDtoList?: Array<StoPackageMaterialStorageResponseDto>;
 }
 interface StoPackageMaterialStorageResponseDto {
