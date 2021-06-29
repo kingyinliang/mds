@@ -203,6 +203,10 @@ export default {
         },
         // 获取列表
         GetList() {
+            if (this.plantList.statDate === null) {
+                this.$errorToast('请选择查询月份');
+                return;
+            }
             this.$http(`${ECP_API.ENERGYCONSUMOPTION_LIST}`, 'GET', this.plantList).then(({ data }) => {
                 if (data.code === 200) {
                     this.datalist = data.data;
