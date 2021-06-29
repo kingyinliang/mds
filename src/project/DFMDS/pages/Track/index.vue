@@ -141,13 +141,13 @@
                 type: 'input',
                 label: '物料描述',
                 prop: 'materialCode'
-                // defaultValue: 'M010200001'
+                // defaultValue: 'PS01080166'
             },
             {
                 type: 'input',
                 label: '批次',
                 prop: 'batch'
-                // defaultValue: '2010290201'
+                // defaultValue: '210414KT71'
             },
             {
                 type: 'radio',
@@ -244,7 +244,7 @@
             // 【agentData：发送的参数；this.getConfigResult：回调方法】
             let key;
             if (process.env.VUE_APP_ENV === 'development') {
-                key = 1;
+                key = 0;
             } else if (process.env.VUE_APP_ENV === 'test') {
                 key = 1;
             } else {
@@ -292,8 +292,14 @@
             axios.get(this.trackKey)
             // axios.get('/static/7100M0102000012010290201.json')
                 .then(res => {
-                    this.initLevel(res.data, 1, [])
-                    this.trackMaterialData = res.data
+                    console.log('res.data')
+                    console.log(res.data)
+                    const dataTemp = JSON.parse(JSON.stringify(res.data));
+                    this.initLevel(dataTemp, 1, [])
+                    this.trackMaterialData = dataTemp
+                    console.log('this.trackMaterialData')
+                    console.log(this.trackMaterialData)
+
                     tryHideFullScreenLoading()
                 })
                 .catch(e => {
@@ -308,14 +314,13 @@
          * @param list 原始数据
          * @param level 层级
          */
-        initLevel(list, level, lastFlagArray, expand = false) {
+        initLevel(list, level, lastFlagArray, expand = false, spc = false) {
             list.map((item, index) => {
                 item.level = level
                 item.lastFlagArray = lastFlagArray
                 //隐藏标志默认为false
                 item.hiddenFlag = false
-                //展开标志默认为false
-                item.unfoldFlag = expand
+
                 item.allChildrenShowFlag = true
                 let hasNextFlag = false
                 for (let i = index + 1; i < list.length; i++) {
@@ -337,14 +342,52 @@
                 } else {
                     item.firstFlag = false
                 }
+
                 const nextLastFlagArray: boolean[] = [];
                 lastFlagArray.map(flag => {
                     nextLastFlagArray.push(flag)
                 })
-                nextLastFlagArray.push(item.lastFlag)
+
+
+                // 原辅包等 special type
+                let levelTemp = 0 // 下层 levelnumber
+                if (item.materialName === '原辅包等') {
+                    item.sign = true // 原辅包等 不显示 number
+
+                    levelTemp = level // 原辅包等 以下的节点 number - 1
+                    item.unfoldFlag = false; // 原辅包等 自动战开
+                    // item.lastFlag = false; // 原辅包等 已非最后节点
+                    // if (lastFlagArray.length >= 1) {
+                        // nextLastFlagArray.splice(lastFlagArray.length - 1, 1)
+                        //nextLastFlagArray.pop()
+                    // }
+
+                } else {
+                    item.sign = false
+                    levelTemp = level + 1
+                    //展开标志默认为false
+                    item.unfoldFlag = expand
+                    nextLastFlagArray.push(item.lastFlag)
+                }
+
+                item.fix = false
+                if (list.length - 1 === index && spc === true) {
+                    item.fix = true
+                }
+
+
                 //递归
                 if (item.hasChildren) {
-                    this.initLevel(item.views, level + 1, nextLastFlagArray, expand)
+                     if (item.materialName === '原辅包等') {
+                         if (list.length - 1 === index) {
+                             this.initLevel(item.views, levelTemp, nextLastFlagArray, expand, spc)
+                         } else {
+                             this.initLevel(item.views, levelTemp, nextLastFlagArray, expand, true)
+                         }
+                     } else {
+                         this.initLevel(item.views, levelTemp, nextLastFlagArray, expand, spc)
+                     }
+
                 }
             })
         }
