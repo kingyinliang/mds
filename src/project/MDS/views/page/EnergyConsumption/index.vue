@@ -245,7 +245,7 @@ export default {
                 if (oldEle.dataValue !== newEle.dataValue && newEle.dataValue !== '') {
                     this.saveList.push(newEle);
                 }
-                if (newEle.dataValue === '' && newEle.freezeState !== '') {
+                if (newEle.dataValue === '' && newEle.dataValue !== oldEle.dataValue && newEle.freezeState !== '1') {
                     indexArr.push(index + 1);
                 }
             }
@@ -307,7 +307,8 @@ export default {
                 .then(() => {
                     this.$http(`${ECP_API.ENERGYCONSUMOPTION_SAVE}`, 'POST', arrInfo).then(({ data }) => {
                         if (data.code === 200) {
-                            this.datalist = data.page.list;
+                            // this.datalist = data.page.list;
+                            this.GetList();
                         } else {
                             this.$errorToast(data.msg);
                         }
