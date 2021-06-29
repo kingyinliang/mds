@@ -42,7 +42,7 @@
                         <el-table-column prop="dataValue" label="数值" :show-overflow-tooltip="true">
                             <template slot-scope="scope">
                                 <div>
-                                    <el-input v-model="scope.row.dataValue" type="text" :disabled="scope.row.freezeState !== '0'" @input="changeVal(scope.row)" />
+                                    <el-input v-model="scope.row.dataValue" type="text" :disabled="scope.row.freezeState === '1'" @input="changeVal(scope.row)" />
                                 </div>
                             </template>
                         </el-table-column>
