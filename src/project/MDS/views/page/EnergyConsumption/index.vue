@@ -20,15 +20,13 @@
                     </div>
                 </template>
                 <el-row>
-                    <el-table ref="table1" header-row-class-name="tableHead" :data="datalist" class="newTable" border tooltip-effect="dark" style="width: 100%; margin-bottom: 20px;">
+                    <el-table ref="table1" header-row-class-name="tableHead" :cell-style="{'text-align':'center'}" :data="datalist" class="newTable" border tooltip-effect="dark" style="width: 100%; margin-bottom: 20px;">
                         <el-table-column label="行号" type="index" />
                         <el-table-column prop="dataCode" label="编码" :show-overflow-tooltip="true" />
                         <el-table-column prop="name" label="名称" :show-overflow-tooltip="true" />
                         <el-table-column prop="freezeState" label="冻结状态" :show-overflow-tooltip="true">
                             <template slot-scope="scope">
-                                <div>
-                                    {{ scope.row.freezeState === "0" ? '未冻结':'冻结' }}
-                                </div>
+                                {{ scope.row.freezeState === "0" ? '未冻结':'冻结' }}
                             </template>
                         </el-table-column>
                         <el-table-column prop="uploadDate" label="时间" :show-overflow-tooltip="true" />
@@ -184,7 +182,6 @@ export default {
         };
     },
     mounted() {
-        console.log('!1');
         this.GetList();
     },
     methods: {
