@@ -26,7 +26,7 @@
                         <el-table-column prop="name" label="名称" :show-overflow-tooltip="true" />
                         <el-table-column prop="freezeState" label="冻结状态" :show-overflow-tooltip="true">
                             <template slot-scope="scope">
-                                {{ scope.row.freezeState === "0" ? '未冻结':'冻结' }}
+                                {{ scope.row.freezeState === "1" ? '冻结':"未冻结" }}
                             </template>
                         </el-table-column>
                         <el-table-column prop="uploadDate" label="时间" :show-overflow-tooltip="true" />
@@ -48,7 +48,7 @@
                         </el-table-column>
                         <el-table-column label="操作" width="100">
                             <template slot-scope="scope">
-                                <div v-if="isAuth('sys:att:updateAtt') && scope.row.freezeState ==='0'">
+                                <div v-if="isAuth('sys:att:updateAtt') && scope.row.freezeState !=='1'">
                                     <el-button style="padding: 0;" type="text" @click="saveDateItem(scope.row,scope.$index)">
                                         保存
                                     </el-button>
@@ -223,7 +223,7 @@ export default {
                     for (let index = 0; index < this.datalist.length; index++) {
                         const nowEle = this.datalist[index];
                         const beforeEle = data.data[index];
-                        if (nowEle.freezeState !== '') {
+                        if (nowEle.freezeState !== '1') {
                             nowEle.dataValue = beforeEle.dataValue;
                         }
                     }
