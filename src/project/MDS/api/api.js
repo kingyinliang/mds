@@ -1897,3 +1897,11 @@ export const INVENTORY_API = {
     Y010_INVENTORY_DEPT_DELETE_API: HOST + '/gra/dept/delete', // 部门领用删除
     Y010_INVENTORY_DEPT_LOG_LIST_API: HOST + '/gra/dept/logInfo' // 部门领用审核日志
 }
+/**
+ * 能耗管理Api EnergyConsumption
+ */
+export const ECP_API = {
+    ENERGYCONSUMOPTION_LIST: HOST_DFMDS + '/v1/energy/getDataList', // 获取能耗列表
+    ENERGYCONSUMOPTION_SAVE: HOST_DFMDS + '/v1/energy/uploadEnergyData', // 数值修改
+    ENERGYCONSUMOPTION_BEFORE: HOST_DFMDS + '/v1/energy/getPreviousDataList' // 上月数据
+}
