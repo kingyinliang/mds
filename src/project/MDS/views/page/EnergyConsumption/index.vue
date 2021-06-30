@@ -5,16 +5,16 @@
                 <template slot="titleBtn">
                     <div style="float: right; margin-bottom: 5px;">
                         <el-date-picker v-model="plantList.statDate" size="small" style="margin-right: 10px;" type="month" value-format="yyyy-MM" placeholder="选择月" />
-                        <el-button v-if="isAuth('sys:att:listAtt')" icon="el-icon-search" type="primary" size="small" @click="GetList(true)">
+                        <el-button v-if="isAuth('energyQuery')" icon="el-icon-search" type="primary" size="small" @click="GetList(true)">
                             查询
                         </el-button>
-                        <el-button v-if="isAuth('sys:att:listAtt')" icon="el-icon-document" type="primary" size="small" @click="setDate">
+                        <el-button v-if="isAuth('energyRefer')" icon="el-icon-document" type="primary" size="small" @click="setDate">
                             参考上期
                         </el-button>
-                        <el-button v-if="isAuth('sys:att:listAtt')" icon="el-icon-tickets" type="primary" size="small" @click="saveDate">
+                        <el-button v-if="isAuth('energySave')" icon="el-icon-tickets" type="primary" size="small" @click="saveDate">
                             全部保存
                         </el-button>
-                        <el-button v-if="isAuth('sys:att:listAtt')" icon="el-icon-refresh" type="primary" size="small" @click="GetList(true)">
+                        <el-button v-if="isAuth('energyRefresh')" icon="el-icon-refresh" type="primary" size="small" @click="GetList(true)">
                             刷新
                         </el-button>
                     </div>
@@ -48,7 +48,7 @@
                         </el-table-column>
                         <el-table-column label="操作" width="100">
                             <template slot-scope="scope">
-                                <div v-if="isAuth('sys:att:updateAtt') && scope.row.freezeState !=='1'">
+                                <div v-if="isAuth('energySave') && scope.row.freezeState !=='1'">
                                     <el-button style="padding: 0;" type="text" @click="saveDateItem(scope.row,scope.$index)">
                                         保存
                                     </el-button>
