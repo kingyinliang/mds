@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
+import { Notification } from 'element-ui';
 // 连接状态的枚举
 const readyStateMap = {
     0: '正在连接,连接尚未建立',
@@ -77,6 +78,7 @@ class SocketClient {
         // 连接发生错误的回调方法
         this.websock.onerror = () => {
             console.log('WebSocket连接发生错误');
+            Notification({ title: '错误', message: 'websocket 连接失败，请重新查询', type: 'error' });
             this.isConnect = false; //连接断开修改标识
             this.reConnect(cb); //连接错误 需要重连
         };
