@@ -12,13 +12,13 @@
 
                         <div class="fold_button" :style="{ width: lineHeight + 'px', position: 'relative' }" @click="toggle(item)">
                             <div class="fold_button_line_up" :style="{ height: lineHeight / 2 + 'px', left: lineHeight / 2 - 1 + 'px' }" />
-                            <div v-if="!item.lastFlag && item.hasNextFlag" class="fold_button_line_down" :style="{ top: lineHeight / 2 + 'px', height: lineHeight / 2 + 'px', left: lineHeight / 2 - 1 + 'px' }" />
+                            <div v-if="(item.sign) || (!item.lastFlag && item.hasNextFlag)|| item.fix" class="fold_button_line_down" :style="{ top: lineHeight / 2 + 'px', height: lineHeight / 2 + 'px', left: lineHeight / 2 - 1 + 'px' }" />
                             <div class="fold_button_line_right" :style="{ top: lineHeight / 2 - 1 + 'px', width: tabSpace / 2 + 'px', left: lineHeight / 2 + 'px' }" />
                             <div v-if="item.hasChildren && !item.unfoldFlag" class="fold_button_arrow_right" :style="{ left: lineHeight / 2 - 1 + 'px', top: lineHeight / 2 - 8 + 'px' }" />
-                            <div v-if="item.hasChildren && item.unfoldFlag" class="fold_button_arrow_down" :style="{ left: lineHeight / 2 - 7 + 'px', top: lineHeight / 2 - 1 + 'px' }" />
+                            <div v-if="!item.sign&&item.hasChildren && item.unfoldFlag" class="fold_button_arrow_down" :style="{ left: lineHeight / 2 - 7 + 'px', top: lineHeight / 2 - 1 + 'px' }" />
                         </div>
 
-                        <div class="fold_button" :style="{ width: lineHeight + 'px' }" style="position: relative;">
+                        <div v-if="!item.sign" class="fold_button" :style="{ width: lineHeight + 'px' }" style="position: relative;">
                             <div v-if="item.hasChildren && item.unfoldFlag && item.allChildrenShowFlag" class="fold_button_line_down" :style="{ top: lineHeight / 2 + 'px', height: lineHeight / 2 + 'px', left: lineHeight / 2 - 1 + 'px' }" />
                             <div class="fold_button_line_right" :style="{ top: lineHeight / 2 - 1 + 'px', width: tabSpace / 2 + 'px', left: lineHeight / 2 + 'px' }" />
                             <div class="fold_button_line_left" :style="{ top: lineHeight / 2 - 1 + 'px', width: tabSpace / 2 + 'px' }" />
@@ -30,16 +30,24 @@
                         <div class="hide_btn" @click="hideItem(item)" />
                     </div>
                     <div class="table_td" :style="{ lineHeight: lineHeight + 'px' }">
-                        <span class="custom_td" @click="batchClickHandler(item)">{{ item.batch }}</span>
+                        <el-tooltip class="item" effect="dark" :content="item.batch" placement="top" :disabled="!item.batch">
+                            <span class="one_line" :style="{width: '100px',color: '#487bff',cursor: !item.batch? 'default':'pointer'}" @click="batchClickHandler(item)">{{ item.batch }}</span>
+                        </el-tooltip>
                     </div>
                     <div class="table_td" :style="{ lineHeight: lineHeight + 'px' }">
-                        <span>{{ item.entryQnt }}</span>
+                        <el-tooltip class="item" effect="dark" :content="item.entryQnt" placement="top" :disabled="!item.entryQnt">
+                            <span class="one_line" style="width: 100px;">{{ item.entryQnt }}</span>
+                        </el-tooltip>
                     </div>
                     <div class="table_td" :style="{ lineHeight: lineHeight + 'px' }">
-                        <span>{{ item.entryUom }}</span>
+                        <el-tooltip class="item" effect="dark" :content="item.entryUom" placement="top" :disabled="!item.entryUom">
+                            <span class="one_line" style="width: 100px;">{{ item.entryUom }}</span>
+                        </el-tooltip>
                     </div>
                     <div class="table_td" :style="{ lineHeight: lineHeight + 'px' }">
-                        <span>{{ item.changePotDate }}</span>
+                        <el-tooltip class="item" effect="dark" :content="item.changePotDate" placement="top" :disabled="!item.changePotDate">
+                            <span class="one_line" style="width: 100px;">{{ item.changePotDate }}</span>
+                        </el-tooltip>
                     </div>
                 </div>
                 <tree-menu-row v-if="item.unfoldFlag" :views="item.views" />
@@ -93,11 +101,11 @@ export default {
         },
         hideItem(_item) {
             _item.hiddenFlag = true;
-            this.reloadItem();
+            // this.reloadItem();
         },
         showItem(_item) {
             _item.hiddenFlag = false;
-            this.reloadItem();
+            // this.reloadItem();
         },
         reloadItem() {
             if (this.views[0].level === 1) {
@@ -143,7 +151,6 @@ export default {
                 }
             })
         }
-
     }
 };
 </script>
@@ -270,5 +277,10 @@ div.table_td:hover div.hide_btn {
 .custom_td {
     color: #409eff;
     cursor: pointer;
+}
+.one_line {
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
 }
 </style>
