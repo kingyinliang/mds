@@ -195,11 +195,11 @@ export default {
         //参考上期
         setDate() {
             // 给当前月份的日期减一月
-            const sdtime = new Date(this.plantList.statDate).setMonth(new Date(this.plantList.statDate).getMonth() - 1); //一个月
-            const time = dateFormat(new Date(sdtime), 'yyyy-MM');
-            console.log(sdtime);
-            console.log(time);
-            this.GetBeforeList(time);
+            // const sdtime = new Date(this.plantList.statDate).setMonth(new Date(this.plantList.statDate).getMonth() - 1); //一个月
+            // const time = dateFormat(new Date(sdtime), 'yyyy-MM');
+            // console.log(sdtime);
+            // console.log(time);
+            this.GetBeforeList(this.plantList.statDate);
         },
         // 获取列表
         GetList() {
