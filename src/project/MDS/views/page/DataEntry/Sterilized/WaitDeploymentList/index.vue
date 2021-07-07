@@ -53,12 +53,29 @@
                 <span slot="label" class="spanview">
                     <el-button>待调配</el-button>
                 </span>
-                <mds-card title="待调配报表" name="dataList" :pack-up="false">
+                <mds-card title="推荐列表" name="dataList" :pack-up="false">
                     <template slot="titleBtn">
                         <el-button type="primary" style="float: right;" size="small" :disabled="!isRedact" @click="DoDeploy">
                             调配
                         </el-button>
                     </template>
+                    <el-table :data="dataList" class="newTable" border header-row-class-name="tableHead" style="margin-top: 10px;">
+                        <el-table-column label="订单号" prop="orderNo" min-width="120" />
+                        <el-table-column label="物料" :show-overflow-tooltip="true" min-width="220">
+                            <template slot-scope="scope">
+                                {{ scope.row.materialName }} {{ scope.row.materialCode }}
+                            </template>
+                        </el-table-column>
+                        <el-table-column label="订单数量" prop="planOutput" min-width="80" />
+                        <el-table-column label="订单单位" prop="outputUnit" min-width="80" />
+                        <el-table-column label="订单开始日期" prop="productDate" min-width="160" />
+                        <!-- <el-table-column label="订单结束日期"></el-table-column> -->
+                        <el-table-column label="生产调度员" prop="dispatchMan" min-width="160" />
+                        <el-table-column label="订单备注" prop="remark" :show-overflow-tooltip="true" min-width="160" />
+                        <el-table-column label="操作" min-width="160" />
+                    </el-table>
+                </mds-card>
+                <mds-card title="待调配报表" name="dataList" :pack-up="false">
                     <el-table :data="dataList" :row-key="getRowKeys" class="newTable" border header-row-class-name="tableHead" style="margin-top: 10px;" @selection-change="handleSelectionChange">
                         <el-table-column type="selection" width="50" :selectable="CheckBoxInit" />
                         <el-table-column label="订单号" prop="orderNo" min-width="120" />

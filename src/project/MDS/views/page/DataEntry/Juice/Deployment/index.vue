@@ -80,7 +80,7 @@
                         <em class="reqI">*</em> 调配罐
                     </template>
                     <template slot-scope="scope">
-                        <el-select v-model="scope.row.holderId" size="small" :disabled="!isRedact">
+                        <el-select v-model="scope.row.holderId" size="small" :disabled="true">
                             <el-option value="">
                                 请选择
                             </el-option>
@@ -93,7 +93,7 @@
                         <em class="reqI">*</em> 调配日期
                     </template>
                     <template slot-scope="scope">
-                        <el-date-picker v-model="scope.row.allocateTime" :disabled="!isRedact" type="date" placeholder="请选择" format="yyyy-MM-dd" value-format="yyyy-MM-dd" style="width: 150px;" size="small" />
+                        <el-date-picker v-model="scope.row.allocateTime" :disabled="true" type="date" placeholder="请选择" format="yyyy-MM-dd" value-format="yyyy-MM-dd" style="width: 150px;" size="small" />
                     </template>
                 </el-table-column>
                 <el-table-column label="调配单备注" prop="remark" width="100" :show-overflow-tooltip="true" />
@@ -118,6 +118,22 @@
             <div slot="title">
                 调配列表
             </div>
+            <el-form :model="formHeader" :inline="true" size="small" label-width="70px" class="multi_row">
+                <el-form-item label="调配罐号：">
+                    <el-select v-model="holderId" size="small">
+                        <el-option value="">
+                            请选择
+                        </el-option>
+                        <el-option v-for="(item, index) in holderList" :key="index" :label="item.holderName" :value="item.holderId" />
+                    </el-select>
+                </el-form-item>
+                <el-form-item label="调配日期：">
+                    <el-date-picker v-model="allocateTime" type="date" placeholder="请选择" format="yyyy-MM-dd" value-format="yyyy-MM-dd" style="width: 150px;" size="small" />
+                </el-form-item>
+                <el-form-item label="调配顺序：">
+                    <span>11</span>
+                </el-form-item>
+            </el-form>
             <el-table style="margin-bottom: 20px;" :data="ItemList" border header-row-class-name="tableHead" :row-class-name="RowDelFlag1">
                 <el-table-column label="物料" :show-overflow-tooltip="true" width="180">
                     <template slot-scope="scope">
@@ -133,6 +149,11 @@
                 <el-table-column label="计划领料" prop="planAmount" width="120">
                     <template slot-scope="scope">
                         {{ scope.row.planAmount }}<span v-if="scope.row.materialName === 'Y010'">/{{ scope.row.yplanAmount }}</span>
+                    </template>
+                </el-table-column>
+                <el-table-column label="实际调配数量" prop="planAmount" width="120">
+                    <template slot-scope="scope">
+                        {{ scope.row.unit }}
                     </template>
                 </el-table-column>
                 <el-table-column width="70">
@@ -303,9 +324,7 @@
                     {{ isRedact ? '取消' : '编辑' }}
                 </el-button>
                 <template v-if="isRedact" style="float: right;">
-                    <el-button type="primary" size="small" @click="SavedForm()">
-                        保存
-                    </el-button>
+                    <!--<el-button type="primary" size="small" @click="SavedForm()">保存</el-button>-->
                     <el-button type="primary" size="small" @click="SubmitForm()">
                         提交
                     </el-button>
@@ -362,6 +381,8 @@ export default {
                 currentPage: 1, // 当前页数
                 pageSize: 10
             },
+            holderId: '',
+            allocateTime: '',
             factory: [],
             workshop: [],
             isRedact: false,
