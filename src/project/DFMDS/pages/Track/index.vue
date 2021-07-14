@@ -286,6 +286,8 @@
             this.getByKey(data)
             this.clearTimer()
             this.updateText('正在解析...')
+            // 断开 websocket
+            this.destroyed()
         }
 
         // 通过key获取数据
