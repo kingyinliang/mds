@@ -247,7 +247,9 @@ export default class OrgStructure extends Vue {
             if (data.code === 200) {
                 this.OrgDetail = data.data;
                 if (this.OrgDetail.imgUrl) {
-                    this.$refs.orgImgUpload.clearFiles();
+                    this.$nextTick(() => {
+                        this.$refs.orgImgUpload.clearFiles();
+                    })
                     COMMON_API.DOWNLOADFILE_API({
                         key: this.OrgDetail.imgUrl
                     }).then((res) => {
