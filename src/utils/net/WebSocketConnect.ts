@@ -82,13 +82,6 @@ function websocketonmessage(e) {
     // }
 }
 
-// 关闭
-function websocketclose(e) {
-    console.log(e);
-    isConnect = false; //断开后修改标识
-    console.log('connection closed (' + e.code + ')');
-}
-
 // 创建 websocket 连接
 function websocketOpen(e) {
     console.log('连接成功');
@@ -105,6 +98,16 @@ const reConnect = () => {
         createWebSocket(targetURL);
     }, 5000);
 };
+
+// 关闭
+function websocketclose(e) {
+    console.log(e);
+    isConnect = false; //断开后修改标识
+    console.log('connection closed (' + e.code + ')');
+    if (e.code === 1001) {
+        reConnect(); //连接错误 需要重连
+    }
+}
 
 // 初始化websocket
 function initWebSocket() {
