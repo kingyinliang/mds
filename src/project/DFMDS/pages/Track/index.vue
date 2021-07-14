@@ -174,7 +174,7 @@
         }
 
         mounted() {
-            this.websocketToLogin()
+            // this.websocketToLogin()
             // this.getByKey()
             this.queryTableRefForm = this.$refs.queryTable.queryForm
         }
@@ -216,8 +216,12 @@
 
         // 查询
         listInterface(params) {
+            // params
+            // call websocket
+            this.websocketToLogin();
+
             // params['factory'] = JSON.parse(sessionStorage.getItem('factory') || '{}').id;
-            showFullScreenLoading()
+            showFullScreenLoading();
             return new Promise((resolve) => {
                 TRACK_API[params.mixType](params)
                     .then(() => {
@@ -235,6 +239,8 @@
                         tryHideFullScreenLoading()
                     })
             });
+
+
         }
 
         websocketToLogin() {
@@ -280,6 +286,8 @@
             this.getByKey(data)
             this.clearTimer()
             this.updateText('正在解析...')
+            // 断开 websocket
+            this.destroyed()
         }
 
         // 通过key获取数据
