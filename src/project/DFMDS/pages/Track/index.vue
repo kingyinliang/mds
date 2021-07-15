@@ -87,7 +87,6 @@
     import axios from 'axios'
     import { ElLoadingComponent } from 'element-ui/types/loading';
     // import { dateFormat } from 'utils/utils';
-    // 乱糟糟，哎
 
     @Component({
         name: 'TrackIndex',
@@ -179,7 +178,7 @@
             this.queryTableRefForm = this.$refs.queryTable.queryForm
         }
 
-        destroyed() {
+        destroyedWebSocket() {
             this.socketClient && this.socketClient.closeWebSocket();
             this.clearTimer()
         }
@@ -187,6 +186,7 @@
         searchInit() {
             const { materialCode, batch, werks } = this.$refs.queryTable.queryForm
             this.$store.commit('track/updateSearchInfo', { materialCode, batch, werks })
+
         }
 
         clearTimer() {
@@ -217,14 +217,15 @@
         // 查询
         listInterface(params) {
             // params
-            // call websocket
-            this.websocketToLogin();
-
             // params['factory'] = JSON.parse(sessionStorage.getItem('factory') || '{}').id;
+            // call websocket
+
+
             showFullScreenLoading();
             return new Promise((resolve) => {
                 TRACK_API[params.mixType](params)
                     .then(() => {
+                        this.websocketToLogin();
                         this.satrtTime()
                         resolve({
                             data: {
@@ -236,6 +237,7 @@
                     })
                     .catch(() => {
                         this.clearTimer()
+                        this.destroyedWebSocket()
                         tryHideFullScreenLoading()
                     })
             });
@@ -287,11 +289,12 @@
             this.clearTimer()
             this.updateText('正在解析...')
             // 断开 websocket
-            this.destroyed()
+            this.destroyedWebSocket()
         }
 
         // 通过key获取数据
         getByKey(data) {
+
             if (data.code === 500) {
                 this.$warningToast(data.msg)
                 tryHideFullScreenLoading()
@@ -405,7 +408,7 @@
         }
 
         drumBucketFinish() {
-            console.log(111)
+            // console.log(111)
         }
 
         // 成品简报
