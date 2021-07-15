@@ -13,6 +13,7 @@ class SocketClient {
     websock: WebSocket; // websock 本体
     rec; // 断线重连后，延迟5秒重新创建 WebSocket 连接  rec 用来存储延迟请求的代码
     isConnect = false; //连接标识 避免重复连接
+    isManualCloseConnect=false;
     // const checkMsg = 'heartbeat'; //心跳发送/返回的信息 服务器和客户端收到的信息内容如果如下 就识别为心跳信息 不要做业务处理
     targetURL: string;
     cb: Function;
@@ -25,6 +26,7 @@ class SocketClient {
     //设置关闭连接
     closeWebSocket() {
         console.log('closed', this);
+        this.isManualCloseConnect = true
         this.websock.close();
     }
 
@@ -39,7 +41,10 @@ class SocketClient {
         console.log(e);
         this.isConnect = false; //断开后修改标识
         console.log('connection closed (' + e.code + ')');
-        this.reConnect(this.cb)
+        if (this.isManualCloseConnect === false) {
+            this.reConnect(this.cb)
+        }
+
     }
 
     // 创建 websocket 连接

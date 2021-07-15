@@ -141,7 +141,7 @@ export default {
                 this.factory = data.userFactory
                 this.dataForm.id = data.id
                 this.dataForm.workNum = data.userName
-            } else if (data.defaultFactory) {
+            } else if (data.defaultFactory && data.userFactory.filter(item => item.deptCode === data.defaultFactory).length) {
                 const dfFa = data.userFactory.filter(item => item.deptCode === data.defaultFactory)[0]
                 this.$refs.selectfactory.goFa(dfFa)
             } else {
