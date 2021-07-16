@@ -219,13 +219,13 @@
             // params
             // params['factory'] = JSON.parse(sessionStorage.getItem('factory') || '{}').id;
             // call websocket
-
-
+            this.websocketToLogin();
             showFullScreenLoading();
             return new Promise((resolve) => {
                 TRACK_API[params.mixType](params)
                     .then(() => {
-                        this.websocketToLogin();
+                        // call websocket
+                        // this.websocketToLogin();
                         this.satrtTime()
                         resolve({
                             data: {
