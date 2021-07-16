@@ -218,20 +218,23 @@
         listInterface(params) {
             // params
             // params['factory'] = JSON.parse(sessionStorage.getItem('factory') || '{}').id;
+            this.websocketToLogin()
             showFullScreenLoading();
             return new Promise((resolve) => {
                 TRACK_API[params.mixType](params)
                     .then(() => {
                         // call websocket
-                        this.websocketToLogin();
+                        // this.websocketToLogin();
                         this.satrtTime()
-                        resolve({
+
+                            resolve({
                             data: {
                                 data: {
                                     records: []
                                 }
                             }
                         })
+
                     })
                     .catch(() => {
                         this.clearTimer()
