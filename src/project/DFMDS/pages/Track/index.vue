@@ -105,7 +105,7 @@
 
         trackMaterialData: TraceDataType[] = [];
 
-        socketClient: { closeWebSocket: Function } | null = null;
+        socketClient: { closeWebSocket: Function; isConnect: boolean } | null = null;
 
         trackKey = '';
 
@@ -173,8 +173,7 @@
         }
 
         mounted() {
-            // this.websocketToLogin()
-            // this.getByKey()
+            // this.websocketToLogin();
             this.queryTableRefForm = this.$refs.queryTable.queryForm
         }
 
@@ -216,33 +215,38 @@
 
         // 查询
         listInterface(params) {
-            // params
-            // params['factory'] = JSON.parse(sessionStorage.getItem('factory') || '{}').id;
-            // call websocket
-            this.websocketToLogin();
+
             showFullScreenLoading();
             return new Promise((resolve) => {
-                TRACK_API[params.mixType](params)
-                    .then(() => {
-                        // call websocket
-                        // this.websocketToLogin();
-                        this.satrtTime()
-                        resolve({
-                            data: {
+                this.websocketToLogin();
+                const aa = setInterval(() => {
+
+                    if (this.socketClient && this.socketClient.isConnect) {
+                        console.log('WS connect status')
+                        console.log(this.socketClient && this.socketClient.isConnect)
+                        clearInterval(aa)
+
+                        TRACK_API[params.mixType](params) // 物料追溯-正向追溯 or 物料追溯-反向追溯
+                        .then(() => {
+                            console.log('9999999')
+                            this.satrtTime()
+                            resolve({
                                 data: {
-                                    records: []
+                                    data: {
+                                        records: []
+                                    }
                                 }
-                            }
+                            })
                         })
-                    })
-                    .catch(() => {
-                        this.clearTimer()
-                        this.destroyedWebSocket()
-                        tryHideFullScreenLoading()
-                    })
+                        .catch(() => {
+                            console.log('00000000')
+                            this.clearTimer()
+                            this.destroyedWebSocket()
+                            tryHideFullScreenLoading()
+                        })
+                    }
+                }, 1000)
             });
-
-
         }
 
         websocketToLogin() {
@@ -275,7 +279,6 @@
                     channel: 'mds-trace-back-prod'
                 }
             ];
-
             const url = `${wsObject[key].url}?appid=${wsObject[key].appid}&channel=${wsObject[key].channel}&flag=${sessionStorage.getItem('loginUserId')}`;
             this.socketClient = new SocketClient(url, this.getConfigResult);
         }
@@ -284,7 +287,7 @@
             // 接收回调函数返回数据的方法
             const data = JSON.parse(res.data)
             this.trackKey = data.url
-            console.log('函数 websocket 接收', this.trackKey);
+            console.log('material-track WS 函数 websocket 接收', this.trackKey);
             this.getByKey(data)
             this.clearTimer()
             this.updateText('正在解析...')
@@ -408,7 +411,7 @@
         }
 
         drumBucketFinish() {
-            // console.log(111)
+            //
         }
 
         // 成品简报
