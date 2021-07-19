@@ -42,9 +42,12 @@ class SocketClient {
         console.log(e);
         this.isConnect = false; //断开后修改标识
         console.log('connection closed (' + e.code + ')');
-        if (this.isManualCloseConnect === false) {
+        if (e.code === 1001) {
             this.reConnect(this.onmessageFN)
         }
+        // if (this.isManualCloseConnect === false) {
+        //     this.reConnect(this.onmessageFN)
+        // }
 
     }
 
@@ -79,7 +82,7 @@ class SocketClient {
 
         this.websock = new WebSocket(this.targetURL);
         this.websock.onmessage = e => this.onmessageFN(e);
-        // this.websock.onclose = e => this.websocketclose(e);
+        this.websock.onclose = e => this.websocketclose(e);
         this.websock.onopen = e => this.websocketOpen(e);
 
 
