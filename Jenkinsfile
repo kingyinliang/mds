@@ -1,7 +1,7 @@
 @Library('ops-pipeline-library') _
 VueNewCI {
     //Jenkins Slave Node
-    jenkins_node = 'ecs-agent-szanode'
+    jenkins_node = 'ecs-agent-szanode15'
     //Project Name
     project = 'mds-web'
     //UAT ALB ARN
