@@ -177,6 +177,10 @@
             this.queryTableRefForm = this.$refs.queryTable.queryForm
         }
 
+        beforeDestroy() {
+            this.destroyedWebSocket()
+        }
+
         destroyedWebSocket() {
             this.socketClient && this.socketClient.closeWebSocket();
             this.clearTimer()
