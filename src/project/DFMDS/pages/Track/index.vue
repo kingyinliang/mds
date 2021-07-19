@@ -87,7 +87,6 @@
     import axios from 'axios'
     import { ElLoadingComponent } from 'element-ui/types/loading';
     // import { dateFormat } from 'utils/utils';
-    // 乱糟糟，哎
 
     @Component({
         name: 'TrackIndex',
@@ -106,7 +105,7 @@
 
         trackMaterialData: TraceDataType[] = [];
 
-        socketClient: { closeWebSocket: Function } | null = null;
+        socketClient: { closeWebSocket: Function; isConnect: boolean } | null = null;
 
         trackKey = '';
 
@@ -174,12 +173,15 @@
         }
 
         mounted() {
-            this.websocketToLogin()
-            // this.getByKey()
+            this.websocketToLogin();
             this.queryTableRefForm = this.$refs.queryTable.queryForm
         }
 
-        destroyed() {
+        beforeDestroy() {
+            this.destroyedWebSocket()
+        }
+
+        destroyedWebSocket() {
             this.socketClient && this.socketClient.closeWebSocket();
             this.clearTimer()
         }
@@ -187,6 +189,7 @@
         searchInit() {
             const { materialCode, batch, werks } = this.$refs.queryTable.queryForm
             this.$store.commit('track/updateSearchInfo', { materialCode, batch, werks })
+
         }
 
         clearTimer() {
@@ -210,30 +213,33 @@
                     this.$errorToast('追溯失败，请重新追溯')
                     tryHideFullScreenLoading()
                     this.clearTimer()
+                    // 断开 websocket
+                    // this.destroyedWebSocket()
                 }
             }, 1000)
         }
 
         // 查询
         listInterface(params) {
-            // params['factory'] = JSON.parse(sessionStorage.getItem('factory') || '{}').id;
-            showFullScreenLoading()
+            // console.log('WS connect status')
+            // console.log(this.socketClient && this.socketClient.isConnect)
+            // this.destroyedWebSocket()
+            showFullScreenLoading();
             return new Promise((resolve) => {
-                TRACK_API[params.mixType](params)
-                    .then(() => {
-                        this.satrtTime()
-                        resolve({
+                // this.websocketToLogin();
+                TRACK_API[params.mixType](params).then(() => {
+                    this.satrtTime()
+                    resolve({
+                        data: {
                             data: {
-                                data: {
-                                    records: []
-                                }
+                                records: []
                             }
-                        })
+                        }
                     })
-                    .catch(() => {
-                        this.clearTimer()
-                        tryHideFullScreenLoading()
-                    })
+                }).catch(() => {
+                    this.clearTimer()
+                    tryHideFullScreenLoading()
+                })
             });
         }
 
@@ -267,7 +273,6 @@
                     channel: 'mds-trace-back-prod'
                 }
             ];
-
             const url = `${wsObject[key].url}?appid=${wsObject[key].appid}&channel=${wsObject[key].channel}&flag=${sessionStorage.getItem('loginUserId')}`;
             this.socketClient = new SocketClient(url, this.getConfigResult);
         }
@@ -276,14 +281,16 @@
             // 接收回调函数返回数据的方法
             const data = JSON.parse(res.data)
             this.trackKey = data.url
-            console.log('函数 websocket 接收', this.trackKey);
+            console.log('material-track WS 函数 websocket 接收', this.trackKey);
             this.getByKey(data)
             this.clearTimer()
             this.updateText('正在解析...')
+
         }
 
         // 通过key获取数据
         getByKey(data) {
+
             if (data.code === 500) {
                 this.$warningToast(data.msg)
                 tryHideFullScreenLoading()
@@ -299,7 +306,6 @@
                     this.trackMaterialData = dataTemp
                     console.log('this.trackMaterialData')
                     console.log(this.trackMaterialData)
-
                     tryHideFullScreenLoading()
                 })
                 .catch(e => {
@@ -397,7 +403,7 @@
         }
 
         drumBucketFinish() {
-            console.log(111)
+            //
         }
 
         // 成品简报

@@ -57,6 +57,14 @@ export default {
                 this.$store.commit('common/updateMsgTabAlive', val);
             }
         },
+        showNotication: {
+            get() {
+                return this.$store.state.common.enterNotificationObject;
+            },
+            set(val) {
+                this.$store.commit('common/enterNotification', val);
+            }
+        },
         documentClientHeight: {
             get() {
                 return this.$store.state.common.documentClientHeight;
@@ -104,9 +112,56 @@ export default {
                     this.$router.push({ name: 'DFMDS-pages-Message-index' });
                 });
             }
+        },
+        showNotication(value) {
+            if (Object.keys(value).length !== 0) {
+                this.notification(value)
+            }
         }
     },
+    mounted() {
+        //
+    },
     methods: {
+        notification(obj) {
+            const targetNotify = this.$notify.error({
+                title: '过账失败',
+                customClass: 'notifyMessageBox',
+                duration: 60000,
+                showClose: true,
+                dangerouslyUseHTMLString: true,
+                message: '<strong>' + obj.message + '</strong>',
+                position: 'bottom-right',
+                onClick: () => {
+                    if (obj.msgUrl !== '') {
+                        const targetURL = obj.msgUrl.replace(/\//g, '-')
+
+                        if (this.$store.state.common.mainTabs.filter(element => element.name === targetURL).length !== 0) {
+                            this.$store.commit('common/updateMainTabs', this.$store.state.common.mainTabs.filter(element => element.name !== targetURL));
+                        }
+
+                        setTimeout(() => {
+                            // this.$store.commit('common/updateMsg', true);
+                            this.$router.push({
+                                path: targetURL,
+                                query: {
+                                    // workShop: obj.workShop,
+                                    orderNo: obj.orderNo,
+                                    orderStatus: obj.orderStatus
+                                }
+                            });
+                            targetNotify.close();
+                        }, 100);
+                        return
+                    }
+                    targetNotify.close();
+                },
+                onClose: () => {
+                    // 归零
+                    this.$store.commit('common/enterNotification', {})
+                }
+            });
+        },
         // tabs, 选中tab
         selectedTabHandle(tab) {
             const finalTab = this.mainTabs.filter(item => item.name === tab.name);
@@ -235,4 +290,10 @@ export default {
     animation-duration: 0.75s;
 }
 
+
+</style>
+<style >
+.notifyMessageBox{
+    cursor: pointer;
+}
 </style>
