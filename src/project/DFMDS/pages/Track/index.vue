@@ -209,22 +209,26 @@
                     this.$errorToast('追溯失败，请重新追溯')
                     tryHideFullScreenLoading()
                     this.clearTimer()
+                    // 断开 websocket
+                    this.destroyedWebSocket()
                 }
             }, 1000)
         }
 
         // 查询
         listInterface(params) {
-
+            console.log('WS connect status')
+            console.log(this.socketClient && this.socketClient.isConnect)
+            this.destroyedWebSocket()
             showFullScreenLoading();
             return new Promise((resolve) => {
                 this.websocketToLogin();
-                const aa = setInterval(() => {
-
+                const timer = setInterval(() => {
+                    console.log('call+++++')
                     if (this.socketClient && this.socketClient.isConnect) {
                         console.log('WS connect status')
                         console.log(this.socketClient && this.socketClient.isConnect)
-                        clearInterval(aa)
+                        clearInterval(timer)
 
                         TRACK_API[params.mixType](params) // 物料追溯-正向追溯 or 物料追溯-反向追溯
                         .then(() => {
@@ -241,6 +245,7 @@
                         .catch(() => {
                             console.log('00000000')
                             this.clearTimer()
+                            // 断开 websocket
                             this.destroyedWebSocket()
                             tryHideFullScreenLoading()
                         })
@@ -291,8 +296,7 @@
             this.getByKey(data)
             this.clearTimer()
             this.updateText('正在解析...')
-            // 断开 websocket
-            this.destroyedWebSocket()
+
         }
 
         // 通过key获取数据
@@ -300,6 +304,8 @@
 
             if (data.code === 500) {
                 this.$warningToast(data.msg)
+                // 断开 websocket
+                this.destroyedWebSocket()
                 tryHideFullScreenLoading()
                 return
             }
@@ -313,12 +319,15 @@
                     this.trackMaterialData = dataTemp
                     console.log('this.trackMaterialData')
                     console.log(this.trackMaterialData)
-
+                    // 断开 websocket
+                    this.destroyedWebSocket()
                     tryHideFullScreenLoading()
                 })
                 .catch(e => {
                     console.log(e)
                     this.$errorToast('获取json失败')
+                    // 断开 websocket
+                    this.destroyedWebSocket()
                     tryHideFullScreenLoading()
                 })
         }
