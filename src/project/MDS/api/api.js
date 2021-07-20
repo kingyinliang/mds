@@ -1626,6 +1626,8 @@ export const STERILIZED_API = {
      * 待领用
      */
     WAITDEPLOYMENTLIST_API: HOST + '/ste/order/orderList',
+    NEW_WAITDEPLOYMENTLIST_API: HOST + '/ste/order/v2/toBeAllocateList',
+    NEW_WAITDEPLOYMENT_API: HOST + '/ste/order/v2/toBeAllocateStayList',
     WAITDEPLOYMENTMATERIALISTAPI: HOST + '/ste/order/productsList',
     /**
      *  调配

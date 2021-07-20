@@ -131,7 +131,7 @@
                     <el-date-picker v-model="allocateTime" type="date" placeholder="请选择" format="yyyy-MM-dd" value-format="yyyy-MM-dd" style="width: 150px;" size="small" />
                 </el-form-item>
                 <el-form-item label="调配顺序：">
-                    <span>11</span>
+                    <span>{{ allocateSequence }}</span>
                 </el-form-item>
             </el-form>
             <el-table style="margin-bottom: 20px;" :data="ItemList" border header-row-class-name="tableHead" :row-class-name="RowDelFlag1">
@@ -153,7 +153,7 @@
                 </el-table-column>
                 <el-table-column label="实际调配数量" prop="planAmount" width="120">
                     <template slot-scope="scope">
-                        {{ scope.row.unit }}
+                        {{ scope.row.distributeAmount }}
                     </template>
                 </el-table-column>
                 <el-table-column width="70">
@@ -383,6 +383,8 @@ export default {
             },
             holderId: '',
             allocateTime: '',
+            allocateId: '',
+            allocateSequence: '',
             factory: [],
             workshop: [],
             isRedact: false,
@@ -555,6 +557,10 @@ export default {
         /* eslint-disenable @typescript-eslint/camelcase*/
         ShowDetail(row) {
             this.getBatchList();
+            this.holderId = row.holderId
+            this.allocateTime = row.allocateTime
+            this.allocateId = row.id
+            this.allocateSequence = row.allocateSequence
             this.Tdata = row;
             this.materialName = row.materialName;
             this.$http(
@@ -722,7 +728,10 @@ export default {
             });
             if (this.ItemList.length) {
                 this.$http(`${STERILIZED_API.JUICEDEPLOYMENTITEMSAVE}`, 'POST', {
-                    tiaoHolder: this.dataList,
+                    // tiaoHolder: this.dataList,
+                    holderId: this.holderId,
+                    allocateTime: this.allocateTime,
+                    allocateId: this.allocateId,
                     params: this.ItemList
                 }).then(({ data }) => {
                     if (data.code === 0) {

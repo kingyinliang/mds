@@ -55,7 +55,7 @@
                 </span>
                 <mds-card title="推荐列表" name="dataList" :pack-up="false">
                     <template slot="titleBtn">
-                        <el-button type="primary" style="float: right;" size="small" :disabled="!isRedact" @click="DoDeploy">
+                        <el-button type="primary" style="float: right;" size="small" @click="DoDeploy">
                             调配
                         </el-button>
                     </template>
@@ -72,12 +72,17 @@
                         <!-- <el-table-column label="订单结束日期"></el-table-column> -->
                         <el-table-column label="生产调度员" prop="dispatchMan" min-width="160" />
                         <el-table-column label="订单备注" prop="remark" :show-overflow-tooltip="true" min-width="160" />
-                        <el-table-column label="操作" min-width="160" />
+                        <el-table-column label="操作" min-width="80">
+                            <template slot-scope="scope">
+                                <el-button class="delBtn" type="text" size="mini" @click="operationRow(scope.row, 'del')">
+                                    移除
+                                </el-button>
+                            </template>
+                        </el-table-column>
                     </el-table>
                 </mds-card>
                 <mds-card title="待调配报表" name="dataList" :pack-up="false">
-                    <el-table :data="dataList" :row-key="getRowKeys" class="newTable" border header-row-class-name="tableHead" style="margin-top: 10px;" @selection-change="handleSelectionChange">
-                        <el-table-column type="selection" width="50" :selectable="CheckBoxInit" />
+                    <el-table :data="dataList1" :row-key="getRowKeys" class="newTable" border header-row-class-name="tableHead" style="margin-top: 10px;" @selection-change="handleSelectionChange">
                         <el-table-column label="订单号" prop="orderNo" min-width="120" />
                         <el-table-column label="物料" :show-overflow-tooltip="true" min-width="220">
                             <template slot-scope="scope">
@@ -90,7 +95,13 @@
                         <!-- <el-table-column label="订单结束日期"></el-table-column> -->
                         <el-table-column label="生产调度员" prop="dispatchMan" min-width="160" />
                         <el-table-column label="订单备注" prop="remark" :show-overflow-tooltip="true" min-width="160" />
-                        <el-table-column label="操作" min-width="160" />
+                        <el-table-column label="操作" min-width="80">
+                            <template slot-scope="scope">
+                                <el-button class="delBtn" type="text" size="mini" @click="operationRow(scope.row, 'add')">
+                                    选中
+                                </el-button>
+                            </template>
+                        </el-table-column>
                     </el-table>
                     <el-pagination
                         :current-page="formHeader.currPage"
@@ -107,13 +118,41 @@
                 <span slot="label" class="spanview">
                     <el-button>待分配</el-button>
                 </span>
+                <mds-card title="推荐列表" name="dataList" :pack-up="false">
+                    <template slot="titleBtn">
+                        <el-button type="primary" style="float: right;" size="small" @click="DoDeploy">
+                            分配
+                        </el-button>
+                    </template>
+                    <el-table :data="dataList" class="newTable" border header-row-class-name="tableHead" style="margin-top: 10px;">
+                        <el-table-column label="订单号" prop="orderNo" min-width="120" />
+                        <el-table-column label="物料" :show-overflow-tooltip="true" min-width="220">
+                            <template slot-scope="scope">
+                                {{ scope.row.materialName }} {{ scope.row.materialCode }}
+                            </template>
+                        </el-table-column>
+                        <el-table-column label="订单数量" prop="planOutput" min-width="80" />
+                        <el-table-column label="订单单位" prop="outputUnit" min-width="80" />
+                        <el-table-column label="订单开始日期" prop="productDate" min-width="160" />
+                        <!-- <el-table-column label="订单结束日期"></el-table-column> -->
+                        <el-table-column label="生产调度员" prop="dispatchMan" min-width="160" />
+                        <el-table-column label="订单备注" prop="remark" :show-overflow-tooltip="true" min-width="160" />
+                        <el-table-column label="操作" min-width="80">
+                            <template slot-scope="scope">
+                                <el-button class="delBtn" type="text" size="mini" @click="operationRow(scope.row, 'del')">
+                                    移除
+                                </el-button>
+                            </template>
+                        </el-table-column>
+                    </el-table>
+                </mds-card>
                 <mds-card title="待分配报表" name="dataList" :pack-up="false">
                     <template slot="titleBtn">
                         <el-button type="primary" size="small" style="float: right;" :disabled="!isRedact" @click="DoDeploy">
                             分配
                         </el-button>
                     </template>
-                    <el-table :data="dataList" border header-row-class-name="tableHead" class="newTable" style="margin-top: 10px;" @selection-change="handleSelectionChange">
+                    <el-table :data="dataList1" border header-row-class-name="tableHead" class="newTable" style="margin-top: 10px;" @selection-change="handleSelectionChange">
                         <el-table-column type="selection" width="50" :selectable="CheckBoxInit" />
                         <el-table-column label="订单号" prop="orderNo" min-width="120" />
                         <el-table-column label="物料" :show-overflow-tooltip="true" min-width="220">
@@ -126,7 +165,13 @@
                         <el-table-column label="订单开始日期" prop="productDate" min-width="160" />
                         <el-table-column label="生产调度员" prop="dispatchMan" min-width="90" />
                         <el-table-column label="订单备注" prop="remark" min-width="160" :show-overflow-tooltip="true" />
-                        <el-table-column label="操作" min-width="160" />
+                        <el-table-column label="操作" min-width="80">
+                            <template slot-scope="scope">
+                                <el-button class="delBtn" type="text" size="mini" @click="operationRow(scope.row, 'add')">
+                                    选中
+                                </el-button>
+                            </template>
+                        </el-table-column>
                     </el-table>
                     <el-pagination
                         :current-page="formHeader.currPage"
@@ -140,13 +185,6 @@
                 </mds-card>
             </el-tab-pane>
         </el-tabs>
-        <redact-box>
-            <template slot="button">
-                <el-button v-if="isAuth('ste:allocate:allocateOrderSave')" type="primary" size="small" @click="isRedact = !isRedact">
-                    {{ isRedact === false? '编辑' : '取消' }}
-                </el-button>
-            </template>
-        </redact-box>
     </div>
 </template>
 
@@ -173,7 +211,9 @@ export default {
             materialList: [],
             multipleSelection: [],
             dataList: [],
-            checkList: []
+            dataList1: [],
+            checkList: [],
+            checkList1: []
         };
     },
     computed: {
@@ -274,6 +314,7 @@ export default {
                 });
             }
         },
+        // 查询
         GetList(st) {
             if (this.formHeader.factory === '') {
                 this.$warningToast('请选择工厂');
@@ -286,63 +327,111 @@ export default {
             if (st) {
                 this.formHeader.currPage = 1;
             }
+            this.formHeader.excludeOrders = []
             this.formHeader.type = this.activeName;
-            this.$http(`${STERILIZED_API.WAITDEPLOYMENTLIST_API}`, 'POST', this.formHeader).then(({ data }) => {
+            this.$http(`${STERILIZED_API.NEW_WAITDEPLOYMENTLIST_API}`, 'POST', this.formHeader).then(({ data }) => {
                 if (data.code === 0) {
-                    this.dataList = data.orderInfo.list;
+                    if (st) {
+                        this.dataList = data.data.recommendList;
+                    }
+                    this.dataList1 = data.data.optionalList.list;
+                    this.formHeader.totalCount = data.data.optionalList.totalCount;
                     // this.dataList = data.orderInfo.list.slice((this.formHeader.currPage - 1) * this.formHeader.pageSize, Number((this.formHeader.currPage - 1) * this.formHeader.pageSize) + Number(this.formHeader.pageSize))
-                    this.formHeader.totalCount = data.orderInfo.totalCount;
+                    // this.formHeader.totalCount = data.orderInfo.totalCount;
                 } else {
                     this.$errorToast(data.msg);
                 }
             });
         },
+        // 选中 移除
+        operationRow(row, st) {
+            if (st === 'add') {
+                this.dataList.push(row)
+            } else if (st === 'del') {
+                this.dataList = this.dataList.filter(it => it.orderNo !== row.orderNo)
+            }
+            const arr = this.dataList.map(it => {
+                return it.orderNo
+            })
+            console.log(arr)
+            this.formHeader.excludeOrders = arr
+            this.$http(`${STERILIZED_API.NEW_WAITDEPLOYMENT_API}`, 'POST', this.formHeader).then(({ data }) => {
+                console.log(data)
+            })
+        },
         // 调配
         DoDeploy() {
-            if (this.multipleSelection.length === 0) {
-                this.$warningToast('请勾选订单');
-            } else {
-                const materialCode = this.multipleSelection[0].materialCode;
-                const dispatchMan = this.multipleSelection[0].dispatchMan;
-                for (const item of this.multipleSelection) {
-                    if (materialCode !== item.materialCode) {
-                        this.$warningToast('物料冲突，请重新选择订单！');
-                        return false;
-                    }
-                    if (this.multipleSelection.filter(subItem => subItem.orderNo.slice(0, 4) === this.multipleSelection[0].orderNo.slice(0, 4)).length !== this.multipleSelection.length) {
-                        this.$warningToast('请选择相同的订单类型的订单！');
-                        return false;
-                    }
-                    if (dispatchMan !== item.dispatchMan) {
-                        this.$warningToast('调度人员冲突，请重新选择订单！');
-                        return false;
-                    }
-                }
-                let planOutputTotal = 0;
-                this.checkList.map(item => {
-                    planOutputTotal = planOutputTotal + this.dataList.find(items => item === items.orderNo)['planOutput'];
-                });
-                this.Sterilized = {
-                    factory: this.factory.find(item => item.deptId === this.formHeader.factory)['deptName'],
-                    workshop: this.workshop.find(item => item.deptId === this.formHeader.workShop)['deptName'],
-                    factoryId: this.formHeader.factory,
-                    workshopId: this.formHeader.workShop,
-                    orderNoList: this.checkList,
-                    orderNo: '',
-                    planOutputTotal: planOutputTotal,
-                    materialCode: materialCode,
-                    materialName: this.multipleSelection[0].materialName,
-                    type: this.activeName,
-                    isRedact: true
-                };
-                // console.log(this.Sterilized);
-                this.mainTabs = this.mainTabs.filter(item => item.name !== 'MDS-views-page-DataEntry-Sterilized-WaitDeploymentList-doDeployment');
-                setTimeout(() => {
-                    this.$router.push({
-                        name: `MDS-views-page-DataEntry-Sterilized-WaitDeploymentList-doDeployment`
-                    });
-                }, 100);
+            if (this.dataList.length === 0) {
+                this.$warningToast('无推荐列表');
+                return
             }
+            const checkList = this.dataList.map(it => it.orderNo)
+            const planOutputTotal = this.dataList.reduce((prev, next) => prev + next.planOutput, 0)
+            const materialCode = this.dataList[0].materialCode || ''
+            const materialName = this.dataList[0].materialName || ''
+            this.Sterilized = {
+                factory: this.factory.find(item => item.deptId === this.formHeader.factory)['deptName'],
+                workshop: this.workshop.find(item => item.deptId === this.formHeader.workShop)['deptName'],
+                factoryId: this.formHeader.factory,
+                workshopId: this.formHeader.workShop,
+                orderNoList: checkList,
+                orderNo: '',
+                planOutputTotal: planOutputTotal,
+                materialCode: materialCode,
+                materialName: materialName,
+                type: this.activeName,
+                isRedact: true
+            };
+            this.mainTabs = this.mainTabs.filter(item => item.name !== 'MDS-views-page-DataEntry-Sterilized-WaitDeploymentList-doDeployment');
+            setTimeout(() => {
+                this.$router.push({
+                    name: `MDS-views-page-DataEntry-Sterilized-WaitDeploymentList-doDeployment`
+                });
+            }, 100);
+            // if (this.multipleSelection.length === 0) {
+            //     this.$warningToast('请勾选订单');
+            // } else {
+            //     const materialCode = this.multipleSelection[0].materialCode;
+            //     const dispatchMan = this.multipleSelection[0].dispatchMan;
+            //     for (const item of this.multipleSelection) {
+            //         if (materialCode !== item.materialCode) {
+            //             this.$warningToast('物料冲突，请重新选择订单！');
+            //             return false;
+            //         }
+            //         if (this.multipleSelection.filter(subItem => subItem.orderNo.slice(0, 4) === this.multipleSelection[0].orderNo.slice(0, 4)).length !== this.multipleSelection.length) {
+            //             this.$warningToast('请选择相同的订单类型的订单！');
+            //             return false;
+            //         }
+            //         if (dispatchMan !== item.dispatchMan) {
+            //             this.$warningToast('调度人员冲突，请重新选择订单！');
+            //             return false;
+            //         }
+            //     }
+            //     let planOutputTotal = 0;
+            //     this.checkList.map(item => {
+            //         planOutputTotal = planOutputTotal + this.dataList.find(items => item === items.orderNo)['planOutput'];
+            //     });
+            //     this.Sterilized = {
+            //         factory: this.factory.find(item => item.deptId === this.formHeader.factory)['deptName'],
+            //         workshop: this.workshop.find(item => item.deptId === this.formHeader.workShop)['deptName'],
+            //         factoryId: this.formHeader.factory,
+            //         workshopId: this.formHeader.workShop,
+            //         orderNoList: this.checkList,
+            //         orderNo: '',
+            //         planOutputTotal: planOutputTotal,
+            //         materialCode: materialCode,
+            //         materialName: this.multipleSelection[0].materialName,
+            //         type: this.activeName,
+            //         isRedact: true
+            //     };
+            //     // console.log(this.Sterilized);
+            //     this.mainTabs = this.mainTabs.filter(item => item.name !== 'MDS-views-page-DataEntry-Sterilized-WaitDeploymentList-doDeployment');
+            //     setTimeout(() => {
+            //         this.$router.push({
+            //             name: `MDS-views-page-DataEntry-Sterilized-WaitDeploymentList-doDeployment`
+            //         });
+            //     }, 100);
+            // }
         },
         handleSizeChange(val) {
             this.formHeader.pageSize = val;
