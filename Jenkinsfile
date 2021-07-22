@@ -1,5 +1,5 @@
-@Library('ops-pipeline-library') _
-VueNewCI {
+@Library('opsdev-pipeline-library') _
+VueNewCInodemodules {
     //Jenkins Slave Node
     jenkins_node = 'ecs-agent-szanodemodules'
     //Project Name
