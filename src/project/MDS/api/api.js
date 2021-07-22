@@ -1626,6 +1626,11 @@ export const STERILIZED_API = {
      * 待领用
      */
     WAITDEPLOYMENTLIST_API: HOST + '/ste/order/orderList',
+    NEW_WAITDEPLOYMENTLIST_API: HOST + '/ste/order/v2/toBeAllocateList',
+    NEW_WAITDEPLOYMENT_MATERIAL_LIST_API: HOST + '/ste/allocate/v2/allocateMaterialQuery',
+    NEW_WAITDEPLOYMENT_MATERIAL_SAVE_API: HOST + '/ste/allocate/v2/allocateSave',
+    NEW_WAITDEPLOYMENT_MATERIAL_UPDATE_API: HOST + '/ste/allocate/v2/allocateOrderAdjust',
+    NEW_WAITDEPLOYMENT_API: HOST + '/ste/order/v2/toBeAllocateStayList',
     WAITDEPLOYMENTMATERIALISTAPI: HOST + '/ste/order/productsList',
     /**
      *  调配
@@ -1670,6 +1675,7 @@ export const STERILIZED_API = {
     JUICEDEPLOYMENTLIST: HOST + '/ste/allocate/allocateList',
     JUICEDEPLOYMENTLISTTP: HOST + '/ste/allocate/allocateListTp',
     JUICEDEPLOYMENTCREATE: HOST + '/ste/allocate/allocatecreate',
+    NEW_JUICEDEPLOYMENTCREATE: HOST + '/ste/allocate/v2/allocateCreate',
     JUICEDEPLOYMENTCREATETP: HOST + '/ste/allocate/allocateCreateTp',
     /**
      *  工艺控制提交
