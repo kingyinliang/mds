@@ -1,7 +1,7 @@
-@Library('ops-pipeline-library') _
-VueNewCI {
+@Library('opsdev-pipeline-library') _
+VueNewCInodemodules {
     //Jenkins Slave Node
-    jenkins_node = 'ecs-agent-szanode'
+    jenkins_node = 'ecs-agent-szanodemodules'
     //Project Name
     project = 'mds-web'
     //UAT ALB ARN
@@ -21,3 +21,4 @@ VueNewCI {
     //PRD URL
     prod_service_url = 'mds.shinho.net.cn'
 }
+
