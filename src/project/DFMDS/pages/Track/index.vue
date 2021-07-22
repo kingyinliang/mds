@@ -215,7 +215,10 @@
 
         // 查询
         listInterface(params) {
-
+            // params
+            // params['factory'] = JSON.parse(sessionStorage.getItem('factory') || '{}').id;
+            // call websocket
+            this.websocketToLogin();
             showFullScreenLoading();
             return new Promise((resolve) => {
                 this.websocketToLogin();
