@@ -1,3 +1,10 @@
+/*
+ * @Description:
+ * @Anthor: Telliex
+ * @Date: 2021-07-16 18:18:50
+ * @LastEditors: Telliex
+ * @LastEditTime: 2021-07-16 18:31:19
+ */
 export default {
     namespaced: true,
     state: {

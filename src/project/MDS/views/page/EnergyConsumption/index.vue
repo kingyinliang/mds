@@ -195,14 +195,18 @@ export default {
         //参考上期
         setDate() {
             // 给当前月份的日期减一月
-            const sdtime = new Date(this.plantList.statDate).setMonth(new Date(this.plantList.statDate).getMonth() - 1); //一个月
-            const time = dateFormat(new Date(sdtime), 'yyyy-MM');
-            console.log(sdtime);
-            console.log(time);
-            this.GetBeforeList(time);
+            // const sdtime = new Date(this.plantList.statDate).setMonth(new Date(this.plantList.statDate).getMonth() - 1); //一个月
+            // const time = dateFormat(new Date(sdtime), 'yyyy-MM');
+            // console.log(sdtime);
+            // console.log(time);
+            this.GetBeforeList(this.plantList.statDate);
         },
         // 获取列表
         GetList() {
+            if (this.plantList.statDate === null) {
+                this.$errorToast('请选择查询月份');
+                return;
+            }
             this.$http(`${ECP_API.ENERGYCONSUMOPTION_LIST}`, 'GET', this.plantList).then(({ data }) => {
                 if (data.code === 200) {
                     this.datalist = data.data;

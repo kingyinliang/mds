@@ -1,10 +1,3 @@
-/*
- * @Description:
- * @Anthor: Telliex
- * @Date: 2021-06-21 15:24:30
- * @LastEditors: Telliex
- * @LastEditTime: 2021-07-15 11:41:39
- */
 import Vue from 'vue';
 import Vuex from 'vuex';
 import VuexPersistence from 'vuex-persist';

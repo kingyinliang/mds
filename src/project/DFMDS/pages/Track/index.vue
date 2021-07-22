@@ -173,8 +173,12 @@
         }
 
         mounted() {
-            // this.websocketToLogin();
+            this.websocketToLogin();
             this.queryTableRefForm = this.$refs.queryTable.queryForm
+        }
+
+        beforeDestroy() {
+            this.destroyedWebSocket()
         }
 
         destroyedWebSocket() {
@@ -209,46 +213,33 @@
                     this.$errorToast('追溯失败，请重新追溯')
                     tryHideFullScreenLoading()
                     this.clearTimer()
+                    // 断开 websocket
+                    // this.destroyedWebSocket()
                 }
             }, 1000)
         }
 
         // 查询
         listInterface(params) {
-            // params
-            // params['factory'] = JSON.parse(sessionStorage.getItem('factory') || '{}').id;
-            // call websocket
-            this.websocketToLogin();
+            // console.log('WS connect status')
+            // console.log(this.socketClient && this.socketClient.isConnect)
+            // this.destroyedWebSocket()
             showFullScreenLoading();
             return new Promise((resolve) => {
-                this.websocketToLogin();
-                const aa = setInterval(() => {
-
-                    if (this.socketClient && this.socketClient.isConnect) {
-                        console.log('WS connect status')
-                        console.log(this.socketClient && this.socketClient.isConnect)
-                        clearInterval(aa)
-
-                        TRACK_API[params.mixType](params) // 物料追溯-正向追溯 or 物料追溯-反向追溯
-                        .then(() => {
-                            console.log('9999999')
-                            this.satrtTime()
-                            resolve({
-                                data: {
-                                    data: {
-                                        records: []
-                                    }
-                                }
-                            })
-                        })
-                        .catch(() => {
-                            console.log('00000000')
-                            this.clearTimer()
-                            this.destroyedWebSocket()
-                            tryHideFullScreenLoading()
-                        })
-                    }
-                }, 1000)
+                // this.websocketToLogin();
+                TRACK_API[params.mixType](params).then(() => {
+                    this.satrtTime()
+                    resolve({
+                        data: {
+                            data: {
+                                records: []
+                            }
+                        }
+                    })
+                }).catch(() => {
+                    this.clearTimer()
+                    tryHideFullScreenLoading()
+                })
             });
         }
 
@@ -294,8 +285,7 @@
             this.getByKey(data)
             this.clearTimer()
             this.updateText('正在解析...')
-            // 断开 websocket
-            this.destroyedWebSocket()
+
         }
 
         // 通过key获取数据
@@ -316,7 +306,6 @@
                     this.trackMaterialData = dataTemp
                     console.log('this.trackMaterialData')
                     console.log(this.trackMaterialData)
-
                     tryHideFullScreenLoading()
                 })
                 .catch(e => {
