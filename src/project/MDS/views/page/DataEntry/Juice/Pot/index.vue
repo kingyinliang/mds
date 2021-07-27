@@ -87,7 +87,7 @@
         <mds-card v-show="fastS" title="原汁罐列表" name="potTotal" :pack-up="false">
             <template slot="titleBtn">
                 <div style="float: right; height: 32px; margin-bottom: 10px; line-height: 32px;">
-                    <em v-if="isAuth('juice:pot:juiceStockItem')"><a href="MDS-views-page-DataEntry-Juice-Pot-summary" style="color: #487bff; font-size: 14px;">原汁库存情况>></a></em>
+                    <em v-if="isAuth('juice:pot:juiceStockItem')"><a style="color: #487bff; font-size: 14px;" @click="go">原汁库存情况>></a></em>
                 </div>
             </template>
             <div>
@@ -668,6 +668,12 @@
             this.ani();
         },
         methods: {
+            go() {
+                this.mainTabs = this.mainTabs.filter(item => item.name !== 'MDS-views-page-DataEntry-Juice-Pot-summary');
+                setTimeout(() => {
+                    this.$router.push({ name: `MDS-views-page-DataEntry-Juice-Pot-summary` });
+                }, 100);
+            },
             setPot(val) {
                 this.formBringOut.factoryHolder = '';
                 this.formBringOutLable = '';
