@@ -11,7 +11,7 @@
             @get-data-success="setData"
         >
             <template slot="home">
-                <el-table class="newTable" header-row-class-name="tableHead" :data="materialGroupList" height="405px" @selection-change="selectionChange">
+                <el-table class="newTable" header-row-class-name="tableHead" :data="materialGroupList" @selection-change="selectionChange">
                     <el-table-column type="selection" />
                     <el-table-column type="index" label="序号" />
                     <el-table-column label="物料组" align="center">

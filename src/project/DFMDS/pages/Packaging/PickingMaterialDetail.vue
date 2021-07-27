@@ -51,7 +51,7 @@
                             <template slot-scope="scope">
                                 <el-input v-if="scope.row.materialType!=='ZVER'" v-model="scope.row.batch" maxlength="10" :disabled="!(isRedact)" size="small" placeholder="请输入" />
                                 <el-select v-else v-model="scope.row.batch" size="small" :disabled="!(isRedact)" @change="val => batchChange(scope.row, val)">
-                                    <el-option v-for="op in scope.row.stoPackageMaterialStorageResponseDtoList" :key="op.id" :label="op.batch" :value="op.batch" />
+                                    <el-option v-for="op in (scope.row.stgeLocList.filter(it => it.stgeLoc === scope.row.stgeLoc).length? scope.row.stgeLocList.filter(it => it.stgeLoc === scope.row.stgeLoc)[0].stoPackageMaterialStorageResponseDtoList : [])" :key="op.id" :label="op.batch" :value="op.batch" />
                                 </el-select>
                             </template>
                         </el-table-column>
@@ -488,6 +488,7 @@ interface DataObj {
     mouldCode?: string; // 模具号
     productLine?: string; // 产线
     stgeLoc: string;
+    // eslint-disable-next-line
     stgeLocList: any;
     stoPackageMaterialStorageResponseDtoList?: Array<StoPackageMaterialStorageResponseDto>;
 }
