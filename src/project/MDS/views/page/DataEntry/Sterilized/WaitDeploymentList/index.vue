@@ -346,8 +346,8 @@ export default {
         // 选中 移除
         operationRow(row, st) {
             if (st === 'add') {
-                if (this.dataList.length && row.materialCode !== this.dataList[0].materialCode) {
-                    this.$warningToast('请选择相同物料');
+                if (this.dataList.length && (row.materialCode !== this.dataList[0].materialCode || row.productDate !== this.dataList[0].productDate || row.workShop !== this.dataList[0].workShop)) {
+                    this.$warningToast('请选择同一个物料、同一个生产日期、同一个车间下的订单');
                     return
                 }
                 this.dataList.push(row)

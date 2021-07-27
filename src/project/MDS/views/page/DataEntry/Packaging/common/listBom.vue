@@ -21,7 +21,7 @@
                             class="delBtn"
                             @click="delLine(scope.row)"
                         >
-                            删除
+                            <span style="font-size: 14px;">删除</span>
                         </el-button>
                         <el-button
                             v-else
@@ -30,7 +30,7 @@
                             size="small"
                             @click="spliteLine(scope.row, scope.$index)"
                         >
-                            <i class="icons iconfont factory-chaifen" /> 拆分
+                            <i class="icons iconfont factory-chaifen" /><span style="font-size: 14px;">拆分</span>
                         </el-button>
                     </template>
                 </el-table-column>

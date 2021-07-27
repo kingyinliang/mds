@@ -26,6 +26,12 @@
             <el-form-item label="发酵超期天数：" prop="outDays">
                 <el-input v-model="dataForm.outDays" placeholder="请输入" />
             </el-form-item>
+            <el-form-item label="默认物料标识：" prop="outDays">
+                <el-select v-model="dataForm.outDays" placeholder="请选择" filterable style="width: 100%;">
+                    <el-option value="Y" label="默认" />
+                    <el-option value="N" label="非默认" />
+                </el-select>
+            </el-form-item>
         </el-form>
         <span slot="footer" class="dialog-footer">
             <el-button @click="closeDialog">取消</el-button>

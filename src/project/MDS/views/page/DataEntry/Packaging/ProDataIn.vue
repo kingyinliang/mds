@@ -562,4 +562,8 @@ export default {
 };
 </script>
 
-<style scoped></style>
+<style>
+    .el-input--small {
+        font-size: 14px !important;
+    }
+</style>
