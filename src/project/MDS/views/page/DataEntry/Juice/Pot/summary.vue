@@ -95,14 +95,19 @@
                     </el-button>
                 </div>
                 <el-table header-row-class-name="tableHead" class="newTable" :data="formRightData" border tooltip-effect="dark">
-                    <el-table-column label="味极鲜" :show-overflow-tooltip="true" prop="weijixian" />
+                    <el-table-column v-for="item in juiceStockItemHead" :key="item.type" :label="item.type" :show-overflow-tooltip="true">
+                        <template>
+                            {{ item.amount }}
+                        </template>
+                    </el-table-column>
+                    <!--<el-table-column label="味极鲜" :show-overflow-tooltip="true" prop="weijixian" />
                     <el-table-column label="六月鲜" :show-overflow-tooltip="true" prop="liuyuexian" />
                     <el-table-column label="JY" :show-overflow-tooltip="true" prop="jy" />
                     <el-table-column label="TB" :show-overflow-tooltip="true" prop="tb" />
                     <el-table-column label="JYTB" :show-overflow-tooltip="true" prop="jytb" />
                     <el-table-column label="F0" :show-overflow-tooltip="true" prop="f0" />
                     <el-table-column label="JBS" :show-overflow-tooltip="true" prop="jbs" />
-                    <el-table-column label="原汁总库存量" :show-overflow-tooltip="true" prop="sum" />
+                    <el-table-column label="原汁总库存量" :show-overflow-tooltip="true" prop="sum" />-->
                 </el-table>
                 <div class="titleLeft">
                     <em class="iconfont factory-icon_function_keyongkucun" style=" margin-right: 10px; color: #666;" />可用原汁列表（单位:方）
@@ -157,6 +162,7 @@ export default {
             dataLeftCurrPage: 1,
             dataLeftTotalCount: 0,
             formRightData: [],
+            juiceStockItemHead: [],
             dataRightListOrderTotal: [],
             dataRightListOrder: [],
             dataPageSizeRight: 10,
@@ -188,7 +194,8 @@ export default {
                 TYPE: 'alls'
             }).then(({ data }) => {
                 if (data.code === 0) {
-                    this.formRightData = [data.juiceStockItem.juiceStockItemHead];
+                    this.juiceStockItemHead = data.juiceStockItem.juiceStockItemHead
+                    this.formRightData[0] = {}
                     this.dataRightTotalCount = data.juiceStockItem.juiceStockItemPot.length;
                     this.dataRightListOrderTotal = data.juiceStockItem.juiceStockItemPot;
                     this.changeRightDataList();

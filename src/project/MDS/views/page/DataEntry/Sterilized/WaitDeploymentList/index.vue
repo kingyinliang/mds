@@ -346,8 +346,14 @@ export default {
         // 选中 移除
         operationRow(row, st) {
             if (st === 'add') {
+                if (this.dataList.length && row.materialCode !== this.dataList[0].materialCode) {
+                    this.$warningToast('请选择相同物料');
+                    return
+                }
                 this.dataList.push(row)
+                this.dataList1 = this.dataList1.filter(it => it.orderNo !== row.orderNo)
             } else if (st === 'del') {
+                this.dataList1.push(row)
                 this.dataList = this.dataList.filter(it => it.orderNo !== row.orderNo)
             }
             const arr = this.dataList.map(it => {

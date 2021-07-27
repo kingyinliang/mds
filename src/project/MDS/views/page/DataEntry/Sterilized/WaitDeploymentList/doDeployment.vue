@@ -107,6 +107,7 @@
             <mds-card title="调配物料详情" :pack-up="false" name="materialVisible1">
                 <template slot="titleBtn">
                     <div style="float: right;">
+                        <span style="color: red;">*</span>
                         <span>调配顺序：</span>
                         <el-input v-model="formHeaders.ALLOCATE_SEQUENCE" size="small" placeholder="调配顺序" style="width: 160px;" />
                     </div>
@@ -123,6 +124,10 @@
                     <el-table-column label="原汁类别" prop="category" />
                     <el-table-column label="订单领料" prop="planAmount" />
                     <el-table-column label="实际调配量" prop="distributeAmount">
+                        <template slot="header">
+                            <span style="color: red;">*</span>
+                            <span>实际调配量</span>
+                        </template>
                         <template slot-scope="scope">
                             <el-input v-model="scope.row.distributeAmount" size="small" />
                         </template>
@@ -313,6 +318,9 @@ export default {
                     this.prepareMaterialList = []
                     data.data.forEach(it => {
                         if (it.type === 'BL') {
+                            if (it.distributeAmount === '' || it.distributeAmount === null) {
+                                it.distributeAmount = it.planAmount
+                            }
                             this.materialList.push(it)
                         } else {
                             this.prepareMaterialList.push(it)
@@ -327,6 +335,14 @@ export default {
             if (!this.formHeaders.ALLOCATE_SEQUENCE) {
                 this.$warningToast('请填写必填项')
                 return
+            }
+            console.log(this.materialList)
+            for (const item of this.materialList) {
+                console.log(item.distributeAmount)
+                if (item.distributeAmount === '' || item.distributeAmount === null) {
+                    this.$warningToast('请填写必填项')
+                    return
+                }
             }
             const steAllocateOrders = this.orderList.map(it => {
                 return {

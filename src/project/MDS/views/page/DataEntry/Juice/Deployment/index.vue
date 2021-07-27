@@ -64,7 +64,13 @@
                         >{{ scope.row.status }}</span>
                     </template>
                 </el-table-column>
-                <el-table-column label="调配单号" prop="orderNo" width="130" />
+                <el-table-column label="调配单号" prop="orderNo" width="130">
+                    <template slot-scope="scope">
+                        <el-button type="text" @click="GetInfo(scope.row)">
+                            {{ scope.row.orderNo }}
+                        </el-button>
+                    </template>
+                </el-table-column>
                 <el-table-column label="生产车间" prop="workShopName" width="100" :show-overflow-tooltip="true" />
                 <el-table-column label="调配单日期" prop="allocateDate" width="115" />
                 <el-table-column label="杀菌物料" width="190" :show-overflow-tooltip="true">
@@ -318,6 +324,27 @@
                 </template>
             </span>
         </el-dialog>
+        <el-dialog :close-on-click-modal="false" :visible.sync="orderInfoVisible" width="1000px" custom-class="dialog__class">
+            <div slot="title">
+                调配订单信息
+            </div>
+            <el-table :data="orderInfoList" border class="newTable" header-row-class-name="tableHead" style="margin-top: 10px;">
+                <el-table-column label="订单号" prop="orderNo" width="120" />
+                <el-table-column label="物料" :show-overflow-tooltip="true" width="180">
+                    <template slot-scope="scope">
+                        {{ scope.row.materialName }}
+                        {{ scope.row.materialCode }}
+                    </template>
+                </el-table-column>
+                <el-table-column label="订单数量" prop="planOutput" width="80" />
+                <el-table-column label="订单单位" prop="outputUnit" width="80" />
+                <el-table-column label="订单开始日期" prop="productDate" />
+                <el-table-column label="订单结束日期" />
+                <el-table-column label="生产调度员" prop="dispatchMan" />
+                <el-table-column label="订单备注" prop="remark" :show-overflow-tooltip="true" />
+            </el-table>
+            <div style="height: 20px;" />
+        </el-dialog>
         <redact-box>
             <template slot="button">
                 <el-button v-if="isAuth('ste:allocate:allocateUpdate')" type="primary" class="button" size="small" @click="isRedact = !isRedact">
@@ -381,6 +408,8 @@ export default {
                 currentPage: 1, // 当前页数
                 pageSize: 10
             },
+            orderInfoVisible: false,
+            orderInfoList: [],
             holderId: '',
             allocateTime: '',
             allocateId: '',
@@ -423,6 +452,18 @@ export default {
         this.GetHolderStatusList();
     },
     methods: {
+        GetInfo(row) {
+            this.$http(`${STERILIZED_API.DODEPLOYMENTALLOCATELIST}`, 'POST', {
+                orderNo: row.id
+            }).then(({ data }) => {
+                if (data.code === 0) {
+                    this.orderInfoVisible = true
+                    this.orderInfoList = data.allocateInfo.orderInfo;
+                } else {
+                    this.$errorToast(data.msg);
+                }
+            });
+        },
         // 批次
         getBatchList() {
             this.$http(`${INVENTORY_API.Y010_LIST_BATCH_LIST_API}`, `POST`, {}, false, false, false).then(({ data }) => {
