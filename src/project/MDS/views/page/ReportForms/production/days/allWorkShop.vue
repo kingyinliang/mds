@@ -109,6 +109,21 @@
                     </el-table-column>
                     <el-table-column label="酱渣板数/板" prop="tbplateNums" />
                     <el-table-column label="出油率/%" prop="tboilYield" width="120" />
+                    <el-table-column label="名称" prop="tb2days" show-overflow-tooltip />
+                    <el-table-column label="领用/方">
+                        <el-table-column label="JYTB酱醪" prop="tb2collarUse" />
+                    </el-table-column>
+                    <el-table-column label="产出/方">
+                        <el-table-column label="TB原汁" prop="tb2produce" />
+                    </el-table-column>
+                    <el-table-column label="生产笼数/笼">
+                        <el-table-column label="一期" prop="tb2oneNums" />
+                        <el-table-column label="二期" prop="tb2twoNums" />
+                        <el-table-column label="三期" prop="tb2threeNums" />
+                        <el-table-column label="四期" prop="tb2fourNums" />
+                    </el-table-column>
+                    <el-table-column label="酱渣板数/板" prop="tb2plateNums" />
+                    <el-table-column label="出油率/%" prop="tb2oilYield" width="120" />
                 </el-table>
             </template>
             <template slot="tab-head3">
@@ -320,6 +335,15 @@ export default {
                         it.tbfourNums = data.prsDays.oneTb[index].fourNums;
                         it.tbplateNums = data.prsDays.oneTb[index].plateNums;
                         it.tboilYield = data.prsDays.oneTb[index].oilYield;
+                        it.tb2days = data.prsDays.oneTb2[index].days;
+                        it.tb2collarUse = data.prsDays.oneTb2[index].collarUse;
+                        it.tb2produce = data.prsDays.oneTb2[index].produce;
+                        it.tb2oneNums = data.prsDays.oneTb2[index].oneNums;
+                        it.tb2twoNums = data.prsDays.oneTb2[index].twoNums;
+                        it.tb2threeNums = data.prsDays.oneTb2[index].threeNums;
+                        it.tb2fourNums = data.prsDays.oneTb2[index].fourNums;
+                        it.tb2plateNums = data.prsDays.oneTb2[index].plateNums;
+                        it.tb2oilYield = data.prsDays.oneTb2[index].oilYield;
                     });
                     this.squeezeDataList1 = data.prsDays.one;
                     this.squeezeDataList2 = data.prsDays.two;
@@ -327,6 +351,7 @@ export default {
                         this.squeezeDataList1.unshift({
                             days: '月计',
                             tbdays: '月计',
+                            tb2days: '月计',
                             collarUse: data.prsDays.one[0].collarUseSum,
                             produce: data.prsDays.one[0].produceSum,
                             oneNums: data.prsDays.one[0].oneNumsSum,
@@ -342,7 +367,15 @@ export default {
                             tbthreeNums: data.prsDays.oneTb[0].threeNumsSum,
                             tbfourNums: data.prsDays.oneTb[0].fourNumsSum,
                             tbplateNums: data.prsDays.oneTb[0].plateNumsSum,
-                            tboilYield: data.prsDays.oneTb[0].monthOilYield
+                            tboilYield: data.prsDays.oneTb[0].monthOilYield,
+                            tb2collarUse: data.prsDays.oneTb2[0].collarUseSum,
+                            tb2produce: data.prsDays.oneTb2[0].produceSum,
+                            tb2oneNums: data.prsDays.oneTb2[0].oneNumsSum,
+                            tb2twoNums: data.prsDays.oneTb2[0].twoNumsSum,
+                            tb2threeNums: data.prsDays.oneTb2[0].threeNumsSum,
+                            tb2fourNums: data.prsDays.oneTb2[0].fourNumsSum,
+                            tb2plateNums: data.prsDays.oneTb2[0].plateNumsSum,
+                            tb2oilYield: data.prsDays.oneTb2[0].monthOilYield
                         });
                     }
                     if (data.prsDays.two.length) {

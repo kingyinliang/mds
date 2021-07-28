@@ -45,12 +45,12 @@
                         <span class="notNull">* </span>领用数量
                     </template>
                     <template slot-scope="scope">
-                        <el-input v-model="scope.row.realUseAmount" :disabled="!(isRedact && scope.row.checkStatus !== 'C' && scope.row.checkStatus !== 'D' && scope.row.checkStatus !== 'P' && scope.row.materialStatus !== '3')" size="small" placeholder="请输入" />
+                        <el-input v-model="scope.row.realUseAmount" :disabled="!(isRedact && scope.row.checkStatus !== 'C' && scope.row.checkStatus !== 'D' && scope.row.checkStatus !== 'P' && scope.row.materialStatus !== '3')" size="small" placeholder="请输入" @input="getStartStocks(scope.row)" />
                     </template>
                 </el-table-column>
                 <el-table-column label="实际损耗" prop="realLoss" width="120">
                     <template slot-scope="scope">
-                        <el-input v-model="scope.row.realLoss" :disabled="!(isRedact && scope.row.checkStatus !== 'C' && scope.row.checkStatus !== 'D' && scope.row.checkStatus !== 'P' && scope.row.materialStatus !== '3')" size="small" placeholder="请输入" />
+                        <el-input v-model="scope.row.realLoss" :disabled="!(isRedact && scope.row.checkStatus !== 'C' && scope.row.checkStatus !== 'D' && scope.row.checkStatus !== 'P' && scope.row.materialStatus !== '3')" size="small" placeholder="请输入" @input="getStartStocks(scope.row)" />
                     </template>
                 </el-table-column>
                 <el-table-column label="损耗原因" prop="lossReason" min-width="140">
@@ -60,7 +60,7 @@
                 </el-table-column>
                 <el-table-column label="不合格数" prop="unqualified" width="120">
                     <template slot-scope="scope">
-                        <el-input v-model="scope.row.unqualified" :disabled="!(isRedact && scope.row.checkStatus !== 'C' && scope.row.checkStatus !== 'D' && scope.row.checkStatus !== 'P' && scope.row.materialStatus !== '3')" size="small" placeholder="请输入" />
+                        <el-input v-model="scope.row.unqualified" :disabled="!(isRedact && scope.row.checkStatus !== 'C' && scope.row.checkStatus !== 'D' && scope.row.checkStatus !== 'P' && scope.row.materialStatus !== '3')" size="small" placeholder="请输入" @input="getStartStocks(scope.row)" />
                     </template>
                 </el-table-column>
                 <el-table-column label="不合格原因" prop="badReason" min-width="140">
@@ -207,9 +207,40 @@ export default class Material extends Vue {
     orgMaterialS: MaterialArr[] = [];
 
     currentDataTable: MaterialMap[] = [];
+    oldCurrentDataTable: MaterialMap[] = [];
     orgDataTable: MaterialMap[] = [];
 
     spanOneArr: number[] = [];
+    // 编辑领用数量  实际损耗 不合格数时  获取未变化时数据
+    getOldCurrentDataTable(id): MaterialMap | undefined {
+        for (let index = 0; index < this.oldCurrentDataTable.length; index++) {
+            const element = this.oldCurrentDataTable[index];
+            if (id === element.id) return element;
+        }
+    }
+
+    //领用数量  实际损耗 不合格数时 编辑时 当前库存实时变化
+    /**
+     * 先保存 原始数据
+     * 计算原始数据总和 oldStartStocksNumber
+     * 计算除去库存的 领用数量  实际损耗 不合格数 的和 oldOtherNum
+     * 计算更新后数据的总和 newStartStocksNumber
+     * 计算需要减去的值 difference
+     * 得到最新库存 row.startStocks
+     */
+    getStartStocks(row) {
+        console.log(row);
+        const oldInfo = this.getOldCurrentDataTable(row.id);
+        let oldStartStocksNumber;
+        if (oldInfo) {
+            row.startStocks = oldInfo.startStocks;
+            oldStartStocksNumber = Number(oldInfo.startStocks) + Number(oldInfo.realLoss) + Number(oldInfo.unqualified) + Number(oldInfo.realUseAmount);
+            const newStartStocksNumber = Number(row.startStocks) + Number(row.realLoss) + Number(row.unqualified) + Number(row.realUseAmount);
+            const oldOtherNum = Number(oldInfo.realLoss) + Number(oldInfo.unqualified) + Number(oldInfo.realUseAmount);
+            const difference = -(oldStartStocksNumber - newStartStocksNumber);
+            row.startStocks = oldStartStocksNumber - difference - oldOtherNum;
+        }
+    }
 
     ruleSaved(): boolean {
         for (const data of this.materialSArr) {
@@ -485,6 +516,7 @@ export default class Material extends Vue {
             productLine: formHeader.productLine
         }).then(({ data }) => {
             this.processData1(data.data, 'currentDataTable');
+
             // this.currentDataTable = this.processData(data.data, 'currentDataTable');
             // this.spanOneArr = this.merge(this.currentDataTable);
             // this.orgDataTable = JSON.parse(JSON.stringify(this.currentDataTable));
@@ -596,6 +628,7 @@ export default class Material extends Vue {
             });
         }
         this.currentDataTable = JSON.parse(JSON.stringify(finalData));
+        this.oldCurrentDataTable = JSON.parse(JSON.stringify(finalData));
         this.orgDataTable = JSON.parse(JSON.stringify(finalData));
         this.spanOneArr = this.merge(this.currentDataTable);
     }
