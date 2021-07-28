@@ -248,7 +248,7 @@ export default class PickingMaterialDetail extends Vue {
 
     // 批次变化
     batchChange(row, val) {
-        const obj = row.stoPackageMaterialStorageResponseDtoList.find(item => item.batch === val);
+        const obj = row.stgeLocList.filter(it => it.stgeLoc === row.stgeLoc)[0].stoPackageMaterialStorageResponseDtoList.find(item => item.batch === val);
         row.mouldCode = obj.mouldCode;
         row.manufactor = obj.supplierCode;
         row.manufactorName = obj.supplierName;

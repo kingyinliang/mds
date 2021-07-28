@@ -41,12 +41,12 @@
                         <span class="notNull">* </span>领用数量
                     </template>
                     <template slot-scope="scope">
-                        <el-input v-model="scope.row.realUseAmount" :disabled="!(isRedact && scope.row.checkStatus !== 'C' && scope.row.checkStatus !== 'D' && scope.row.checkStatus !== 'P' && scope.row.materialStatus !== '3')" size="small" placeholder="请输入" @change="getStartStocks(scope.row)" />
+                        <el-input v-model="scope.row.realUseAmount" :disabled="!(isRedact && scope.row.checkStatus !== 'C' && scope.row.checkStatus !== 'D' && scope.row.checkStatus !== 'P' && scope.row.materialStatus !== '3')" size="small" placeholder="请输入" @input="getStartStocks(scope.row)" />
                     </template>
                 </el-table-column>
                 <el-table-column label="实际损耗" prop="realLoss" width="120">
                     <template slot-scope="scope">
-                        <el-input v-model="scope.row.realLoss" :disabled="!(isRedact && scope.row.checkStatus !== 'C' && scope.row.checkStatus !== 'D' && scope.row.checkStatus !== 'P' && scope.row.materialStatus !== '3')" size="small" placeholder="请输入" @change="getStartStocks(scope.row)" />
+                        <el-input v-model="scope.row.realLoss" :disabled="!(isRedact && scope.row.checkStatus !== 'C' && scope.row.checkStatus !== 'D' && scope.row.checkStatus !== 'P' && scope.row.materialStatus !== '3')" size="small" placeholder="请输入" @input="getStartStocks(scope.row)" />
                     </template>
                 </el-table-column>
                 <el-table-column label="损耗原因" prop="lossReason" min-width="140">
@@ -56,7 +56,7 @@
                 </el-table-column>
                 <el-table-column label="不合格数" prop="unqualified" width="120">
                     <template slot-scope="scope">
-                        <el-input v-model="scope.row.unqualified" :disabled="!(isRedact && scope.row.checkStatus !== 'C' && scope.row.checkStatus !== 'D' && scope.row.checkStatus !== 'P' && scope.row.materialStatus !== '3')" size="small" placeholder="请输入" @change="getStartStocks(scope.row)" />
+                        <el-input v-model="scope.row.unqualified" :disabled="!(isRedact && scope.row.checkStatus !== 'C' && scope.row.checkStatus !== 'D' && scope.row.checkStatus !== 'P' && scope.row.materialStatus !== '3')" size="small" placeholder="请输入" @input="getStartStocks(scope.row)" />
                     </template>
                 </el-table-column>
                 <el-table-column label="不合格原因" prop="badReason" min-width="140">

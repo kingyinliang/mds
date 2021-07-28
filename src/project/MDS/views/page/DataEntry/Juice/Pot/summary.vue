@@ -43,14 +43,11 @@
                     </el-button>
                 </div>
                 <el-table header-row-class-name="tableHead" class="newTable" :data="formLeftData" border tooltip-effect="dark">
-                    <el-table-column label="味极鲜" :show-overflow-tooltip="true" prop="weijixian" />
-                    <el-table-column label="六月鲜" :show-overflow-tooltip="true" prop="liuyuexian" />
-                    <el-table-column label="JY" :show-overflow-tooltip="true" prop="jy" />
-                    <el-table-column label="TB" :show-overflow-tooltip="true" prop="tb" />
-                    <el-table-column label="JYTB" :show-overflow-tooltip="true" prop="jytb" />
-                    <el-table-column label="F0" :show-overflow-tooltip="true" prop="f0" />
-                    <el-table-column label="JBS" :show-overflow-tooltip="true" prop="jbs" />
-                    <el-table-column label="原汁总库存量" :show-overflow-tooltip="true" prop="sum" />
+                    <el-table-column v-for="item in juiceStockItemHead1" :key="item.type" :label="item.type" :show-overflow-tooltip="true">
+                        <template>
+                            {{ item.amount }}
+                        </template>
+                    </el-table-column>
                 </el-table>
                 <div class="titleLeft">
                     <em class="iconfont factory-icon_function_keyongkucun" style=" margin-right: 10px; color: #666;" />原汁总库存列表（单位:方）
@@ -163,6 +160,7 @@ export default {
             dataLeftTotalCount: 0,
             formRightData: [],
             juiceStockItemHead: [],
+            juiceStockItemHead1: [],
             dataRightListOrderTotal: [],
             dataRightListOrder: [],
             dataPageSizeRight: 10,
@@ -182,7 +180,8 @@ export default {
                 TYPE: 'all'
             }).then(({ data }) => {
                 if (data.code === 0) {
-                    this.formLeftData = [data.juiceStockItem.juiceStockItemHead];
+                    this.formLeftData[0] = {};
+                    this.juiceStockItemHead1 = data.juiceStockItem.juiceStockItemHead
                     this.dataLeftTotalCount = data.juiceStockItem.juiceStockItemPot.length;
                     this.dataLeftListOrderTotal = data.juiceStockItem.juiceStockItemPot;
                     this.changeLeftDataList();
