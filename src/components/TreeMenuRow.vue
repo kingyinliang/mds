@@ -116,7 +116,7 @@ export default {
         },
         batchClickHandler(row) {
             if (this.views[0].level === 1) {
-                this.$parent.$parent.$parent.$parent.batchInit(row)
+                this.$parent.$parent.$parent.batchInit(row)
                 return
             }
             this.$parent.batchClickHandler(row)
