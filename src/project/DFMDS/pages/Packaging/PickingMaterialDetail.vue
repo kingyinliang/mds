@@ -23,16 +23,6 @@
                             </template>
                         </el-table-column>
                         <el-table-column label="当前库存" prop="storage" width="100" :show-overflow-tooltip="true" />
-                        <el-table-column label="库位" min-width="140">
-                            <template slot="header">
-                                <span class="notNull">* </span>库位
-                            </template>
-                            <template slot-scope="scope">
-                                <el-select v-model="scope.row.stgeLoc" :disabled="!(isRedact)" placeholder="请选择" size="small">
-                                    <el-option v-for="(list,index) in scope.row.stgeLocList" :key="index" :label="list.stgeLoc" :value="list.stgeLoc" />
-                                </el-select>
-                            </template>
-                        </el-table-column>
                         <el-table-column label="领料类型" min-width="140">
                             <template slot="header">
                                 <span class="notNull">* </span>领料类型
@@ -41,6 +31,16 @@
                                 <el-select v-model="scope.row.useType" :disabled="!(isRedact)" placeholder="请选择" size="small">
                                     <el-option label="正常领料" value="正常领料" />
                                     <el-option label="补领" value="补领" />
+                                </el-select>
+                            </template>
+                        </el-table-column>
+                        <el-table-column label="库位" min-width="140">
+                            <template slot="header">
+                                <span class="notNull">* </span>领用库位
+                            </template>
+                            <template slot-scope="scope">
+                                <el-select v-model="scope.row.stgeLoc" :disabled="!(isRedact)" placeholder="请选择" size="small">
+                                    <el-option v-for="(list,index) in scope.row.stgeLocList" :key="index" :label="list.stgeLoc" :value="list.stgeLoc" />
                                 </el-select>
                             </template>
                         </el-table-column>

@@ -329,7 +329,7 @@
                 调配订单信息
             </div>
             <el-table :data="orderInfoList" border class="newTable" header-row-class-name="tableHead" style="margin-top: 10px;">
-                <el-table-column label="订单号" prop="orderNo" width="120" />
+                <el-table-column label="订单号" prop="orderNo" width="140" />
                 <el-table-column label="物料" :show-overflow-tooltip="true" width="180">
                     <template slot-scope="scope">
                         {{ scope.row.materialName }}
