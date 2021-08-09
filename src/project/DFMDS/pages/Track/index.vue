@@ -304,6 +304,12 @@
                     const dataTemp = JSON.parse(JSON.stringify(res.data));
                     this.initLevel(dataTemp, 1, [])
                     this.trackMaterialData = dataTemp
+                    if (this.trackMaterialData.length) {
+                        this.trackMaterialData = this.trackMaterialData.map(it => {
+                            it.root = true
+                            return it
+                        })
+                    }
                     console.log('this.trackMaterialData')
                     console.log(this.trackMaterialData)
                     tryHideFullScreenLoading()
@@ -445,6 +451,7 @@
     }
 
     interface TraceDataType {
+        root?: boolean;
         materialName?: string;
         batch?: string;
         entryQnt?: string;
