@@ -115,7 +115,7 @@ export default {
             this.$parent.reloadItem();
         },
         batchClickHandler(row) {
-            if (this.views[0].level === 1) {
+            if (this.views[0].level === 1 && this.views[0].root) {
                 this.$parent.$parent.$parent.batchInit(row)
                 return
             }
