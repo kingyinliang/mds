@@ -203,22 +203,21 @@
                 // }
                 // 触发 message nitification pop
                 // const data = JSON.parse(res.data);
+                // TODOS DFMDS-4528
                 if (res.popFlag === 'Y') {
                     this.triggerMessageNotification(res)
                  }
             },
             // 呼叫  message message notification API
             triggerMessageNotification(data) {
-                    this.$store.commit('common/enterNotification', {
-                        // title: data.title,
-                        message: data.msgContent,
-                        msgUrl: data.msgUrl,
-                        // workShop: data.workShop,
-                        orderNo: data.orderNo,
-                        orderStatus: data.orderStatus
-                    });
-
-
+                this.$store.commit('common/enterNotification', {
+                    // title: data.title,
+                    message: data.msgContent,
+                    msgUrl: data.msgUrl,
+                    // workShop: data.workShop,
+                    orderNo: data.orderNo,
+                    orderStatus: data.orderStatus
+                });
             },
             // 退出
             logoutHandle() {

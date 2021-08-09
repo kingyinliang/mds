@@ -16,12 +16,13 @@ class SocketClient {
     isManualCloseConnect=false;
     // const checkMsg = 'heartbeat'; //心跳发送/返回的信息 服务器和客户端收到的信息内容如果如下 就识别为心跳信息 不要做业务处理
     targetURL: string;
-    cb: Function;
+    onmessageFN: Function;
 
-    constructor(url, cb) {
-        this.cb = cb;
-        this.createWebSocket(url, cb)
+    constructor(url, onmessageFN) {
+        this.onmessageFN = onmessageFN;
+        this.createWebSocket(url, onmessageFN)
     }
+
 
     //设置关闭连接
     closeWebSocket() {
@@ -41,31 +42,35 @@ class SocketClient {
         console.log(e);
         this.isConnect = false; //断开后修改标识
         console.log('connection closed (' + e.code + ')');
-        if (this.isManualCloseConnect === false) {
-            this.reConnect(this.cb)
+        if (e.code === 1001) {
+            this.reConnect(this.onmessageFN)
         }
+        // if (this.isManualCloseConnect === false) {
+        //     this.reConnect(this.onmessageFN)
+        // }
 
     }
 
     // 创建 websocket 连接
     websocketOpen(e) {
-        console.log('连接成功');
+        console.log('material-track WS 连接成功');
+        this.isConnect = true
     }
 
     //定义重连函数
-    reConnect(cb) {
+    reConnect(onmessageFN) {
         console.log('尝试重新连接');
         if (this.isConnect) return; //如果已经连上就不在重连了
         this.rec && clearTimeout(this.rec);
         this.rec = setTimeout(() => {
             // 延迟5秒重连  避免过多次过频繁请求重连
             // eslint-disable-next-line @typescript-eslint/no-use-before-define
-            this.createWebSocket(this.targetURL, cb);
+            this.createWebSocket(this.targetURL, onmessageFN);
         }, 5000);
     }
 
     // 初始化websocket
-    private initWebSocket(cb) {
+    private initWebSocket(onmessageFN) {
         // ws地址 -->这里是你的请求路径
         // const uName = localStorage.getItem('uName');
         // const ws = 'ws://192.168.1.22:18308/chat?username=' + uName;
@@ -76,27 +81,28 @@ class SocketClient {
         }
 
         this.websock = new WebSocket(this.targetURL);
-        this.websock.onmessage = e => this.cb(e);
+        this.websock.onmessage = e => this.onmessageFN(e);
         this.websock.onclose = e => this.websocketclose(e);
         this.websock.onopen = e => this.websocketOpen(e);
+
 
         // 连接发生错误的回调方法
         this.websock.onerror = () => {
             console.log('WebSocket连接发生错误');
             Notification({ title: '错误', message: 'websocket 连接失败，请重新查询', type: 'error' });
             this.isConnect = false; //连接断开修改标识
-            this.reConnect(cb); //连接错误 需要重连
+            this.reConnect(onmessageFN); //连接错误 需要重连
         };
     }
 
-    createWebSocket(url, cb) {
+    createWebSocket(url, onmessageFN) {
         try {
             // websock = new WebSocket(targetURL);
             this.targetURL = url; // websocket地址
-            this.initWebSocket(cb); //初始化websocket连接
+            this.initWebSocket(onmessageFN); //初始化websocket连接
         } catch (e) {
             console.log('尝试创建连接失败');
-            this.reConnect(cb); //如果无法连接上webSocket 那么重新连接！可能会因为服务器重新部署，或者短暂断网等导致无法创建连接
+            this.reConnect(onmessageFN); //如果无法连接上webSocket 那么重新连接！可能会因为服务器重新部署，或者短暂断网等导致无法创建连接
         }
     }
 }

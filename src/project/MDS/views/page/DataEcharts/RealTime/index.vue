@@ -237,7 +237,7 @@ export default {
                     channel: 'df-mds-iot-msg-test'
                 },
                 {
-                    url: 'wss://95po8swao3.execute-api.cn-north-1.amazonaws.com.cn/prod',
+                    url: 'wss://23kdu5ymdj.execute-api.cn-north-1.amazonaws.com.cn/pre',
                     appid: 'df-mds-prod',
                     channel: 'df-mds-iot-msg-prod'
                 }
