@@ -44,7 +44,11 @@
                 <el-table-column label="报工成熟天数" prop="matureDays" width="115" />
                 <el-table-column label="发酵成熟天数" prop="fermentationMatureDays" width="115" />
                 <el-table-column label="发酵超期天数" prop="outDays" width="115" />
-                <el-table-column label="默认物料标识" prop="defaultFlag" width="115" />
+                <el-table-column label="默认物料标识" prop="defaultFlag" width="115">
+                    <template slot-scope="scope">
+                        {{ scope.row.defaultFlag === 1 ? '默认' : '非默认' }}
+                    </template>
+                </el-table-column>
                 <el-table-column label="操作人员" prop="changer" width="120" :show-overflow-tooltip="true" />
                 <el-table-column label="操作时间" prop="changed" width="140" :show-overflow-tooltip="true" />
                 <el-table-column label="操作" width="50" fixed="right">
