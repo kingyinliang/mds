@@ -74,7 +74,7 @@
                 <el-button type="primary" size="small" :disabled="!isRedact" style="float: right;" @click="AddOrderNo">
                     新增
                 </el-button>
-                <el-button type="primary" size="small" :disabled="!isRedact" style="float: right; margin-right: 20px;" @click="materialDetail">
+                <el-button v-if="typeString === '调配'" type="primary" size="small" :disabled="!isRedact" style="float: right; margin-right: 20px;" @click="materialDetail">
                     调配详情
                 </el-button>
             </template>
@@ -109,7 +109,7 @@
                     <div style="float: right;">
                         <span style="color: red;">*</span>
                         <span>调配顺序：</span>
-                        <el-input v-model="formHeaders.ALLOCATE_SEQUENCE" size="small" placeholder="调配顺序" style="width: 160px;" />
+                        <el-input v-model="formHeaders.ALLOCATE_SEQUENCE" type="number" size="small" placeholder="调配顺序" style="width: 160px;" />
                     </div>
                 </template>
                 <el-table :data="materialList" border class="newTable" header-row-class-name="tableHead">
@@ -378,6 +378,8 @@ export default {
                         type: this.$store.state.common.Sterilized.type,
                         orderNo: this.allocateId
                     };
+                } else {
+                    this.$errorToast(data.msg);
                 }
             })
         },
@@ -519,10 +521,29 @@ export default {
                 cancelButtonText: '取消',
                 type: 'warning'
             }).then(() => {
+                const steAllocateOrders = this.orderList.map(it => {
+                    return {
+                        orderId: it.orderNo,
+                        remark: it.remark
+                    }
+                })
                 this.$http(`${STERILIZED_API.NEW_JUICEDEPLOYMENTCREATE}`, 'POST', {
-                    allocateId: this.allocateId,
-                    allocateTime: this.formHeaders.ALLOCATE_DATE,
-                    remark: this.remark
+                    steAllocate: {
+                        allocateDate: this.formHeaders.ALLOCATE_DATE,
+                        allocateSequence: this.formHeaders.ALLOCATE_SEQUENCE,
+                        factory: this.formHeaders.FACTORY,
+                        workShop: this.formHeaders.WORK_SHOP,
+                        id: this.formHeaders.ID,
+                        materialCode: this.formHeaders.MATERIAL_CODE,
+                        materialName: this.formHeaders.MATERIAL_NAME,
+                        orderNo: this.formHeaders.ORDER_NO,
+                        planAmount: this.planOutputTotal,
+                        remark: this.remark,
+                        type: this.$store.state.common.Sterilized.type,
+                        unit: this.orderList[0].outputUnit
+                    },
+                    steAllocateOrders: steAllocateOrders,
+                    type: this.typeString === '分配' ? 'LY' : 'BL'
                 }).then(({ data }) => {
                     if (data.code === 0) {
                         this.$notify({ title: '成功', message: '生成成功', type: 'success' });
