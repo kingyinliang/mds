@@ -580,7 +580,7 @@ export default {
                 this.$warningToast('生产入库没有数据');
                 return false;
             }
-            this.InDate.forEach(item => {
+            for (const item of this.InDate) {
                 if (item.delFlag !== '1') {
                     item.aiShelves = String(item.aiShelves);
                     // if (!this.UnitRul(item)) {
@@ -628,7 +628,7 @@ export default {
                         }
                     }
                 }
-            });
+            }
             if (this.order.properties !== '二合一&礼盒产线' && this.order.workShopName !== '包装三车间' && this.order.factoryCode !== '6010') {
                 Object.keys(obj).forEach(key => {
                     let tmp = true;
