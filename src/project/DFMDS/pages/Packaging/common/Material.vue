@@ -230,19 +230,40 @@ export default class Material extends Vue {
      */
     getStartStocks(row) {
         console.log(row);
-        const oldInfo = this.getOldCurrentDataTable(row.id);
-        let oldStartStocksNumber;
-        if (oldInfo) {
-            row.startStocks = oldInfo.startStocks;
-            oldStartStocksNumber = Number(oldInfo.startStocks) + Number(oldInfo.realLoss) + Number(oldInfo.unqualified) + Number(oldInfo.realUseAmount);
-            const newStartStocksNumber = Number(row.startStocks) + Number(row.realLoss) + Number(row.unqualified) + Number(row.realUseAmount);
-            const oldOtherNum = Number(oldInfo.realLoss) + Number(oldInfo.unqualified) + Number(oldInfo.realUseAmount);
-            const difference = -(oldStartStocksNumber - newStartStocksNumber);
-            row.startStocks = oldStartStocksNumber - difference - oldOtherNum;
+        const data = this.currentDataTable.filter(it => it.materialCode === row.materialCode && it.batch === row.batch);
+        if (data.length > 1) {
+            this.$warningToast('相同物料下禁止使用相同批次')
         }
+        const oldInfo = this.getOldCurrentDataTable(row.id);
+        const filterArr: any = row.batchData.filter(it => it.batch === row.batch); // eslint-disable-line
+        if (oldInfo && filterArr.length) {
+            const selectStocks = filterArr[0].storageAmount
+            const oldOtherNum = Number(oldInfo.realLoss) + Number(oldInfo.unqualified) + Number(oldInfo.realUseAmount);
+            const newOtherNum = Number(row.realLoss) + Number(row.unqualified) + Number(row.realUseAmount);
+            if (row.batch === oldInfo.batch) {
+                row.startStocks = Number(selectStocks) + oldOtherNum - newOtherNum
+            } else {
+                row.startStocks = Number(selectStocks) - newOtherNum
+            }
+        } else if (filterArr.length) {
+            const selectStocks = filterArr[0].storageAmount
+            const newOtherNum = Number(row.realLoss) + Number(row.unqualified) + Number(row.realUseAmount);
+            row.startStocks = Number(selectStocks) - newOtherNum
+        }
+        if (row.startStocks < 0) this.$warningToast('库存不能为负数')
     }
 
     ruleSaved(): boolean {
+        for (const data of this.currentDataTable) {
+            if (data.startStocks && data.startStocks < 0) {
+                this.$warningToast('物料领用：当前库存不能为负数');
+                return false;
+            }
+            const filterData = this.currentDataTable.filter(it => it.materialCode === data.materialCode && it.batch === data.batch);
+            if (filterData.length > 1) {
+                this.$warningToast('物料领用：相同物料下禁止使用相同批次')
+            }
+        }
         for (const data of this.materialSArr) {
             const rule: string[] = [];
             for (const item of data.data.filter(it => it.delFlag !== 1)) {
@@ -260,6 +281,14 @@ export default class Material extends Vue {
 
     ruleSubmit(): boolean {
         for (const item of this.currentDataTable.filter(it => it.delFlag !== 1)) {
+            if (item.startStocks && item.startStocks < 0) {
+                this.$warningToast('物料领用：当前库存不能为负数');
+                return false;
+            }
+            const filterData = this.currentDataTable.filter(it => it.materialCode === item.materialCode && it.batch === item.batch);
+            if (filterData.length > 1) {
+                this.$warningToast('物料领用：相同物料下禁止使用相同批次')
+            }
             if (!item.batch) {
                 this.$warningToast('请选择物料领用页签包材领用批次');
                 return false;
@@ -585,7 +614,8 @@ export default class Material extends Vue {
 
     batchChange(row) {
         const filterArr: any = row.batchData.filter(it => it.batch === row.batch); // eslint-disable-line
-        row.startStocks = filterArr[0].storageAmount;
+        // row.startStocks = filterArr[0].storageAmount;
+        this.getStartStocks(row)
         row.manufactor = filterArr[0].manufactor;
         row.manufactorName = filterArr[0].manufactorName;
         row.packageStorageId = filterArr[0].packageStorageId;
@@ -726,6 +756,8 @@ export default class Material extends Vue {
             needNum: row.needNum,
             endStocks: row.endStocks,
             startStocks: '',
+            realLoss: '',
+            unqualified: '',
             receiveMaterial: row.receiveMaterial,
             splitFlag: 'Y',
             delFlag: 0,
