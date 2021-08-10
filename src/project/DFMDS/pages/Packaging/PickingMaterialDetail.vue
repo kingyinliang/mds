@@ -168,6 +168,7 @@ export default class PickingMaterialDetail extends Vue {
     ];
 
     formHeader = {
+        workShop: '',
         orderStatusName: '已同步'
     };
 
@@ -182,61 +183,65 @@ export default class PickingMaterialDetail extends Vue {
             // 基础数据-订单管理-根据订单号查询
             factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
             orderNo: this.$store.state.packaging.pickingDetail.orderNo
-        }).then(({ data }) => {
-            this.formHeader = data.data;
+        }).then((res) => {
+            this.formHeader = res.data.data;
             this.orderStatus = this.formHeader.orderStatusName;
-        });
-        PKG_API.PKG_PICKING_MATERIAL_DETAIL_API({
-            orderNo: this.$store.state.packaging.pickingDetail.orderNo,
-            productLine: this.$store.state.packaging.pickingDetail.productLine
-        }).then(({ data }) => {
-            data.data.forEach(item => {
-                /**
-               * //以前的逻辑
-                if (!item.useType) {
-                    item.useType = '正常领料';
-                }
-                // 如果选了批次，当前库存展示当前批次的，如果没有批次，当前库存展示所有批次的总和
-                if (item.batch) {
-                    const obj = item.stoPackageMaterialStorageResponseDtoList.find(row => row.batch === item.batch);
-                    item.storage = obj?.currentAmount;
-                    return;
-                }
-                // 如果没有id，就增加一个标识，修改为0的标识
-                if (!item.id) {
-                    item.isFirst = true;
-                }
-                item.storage = 0;
-                item.stoPackageMaterialStorageResponseDtoList.map(row => {
-                    item.storage += row.currentAmount;
-                });
-                 */
-                if (!item.useType) {
-                    item.useType = '正常领料';
-                }
-                item.stoPackageMaterialStorageResponseDtoList = [];
-                // 如果选了批次，当前库存展示当前批次的，如果没有批次，当前库存展示所有批次的总和
-                if (item.batch) {
-                    if (item.stgeLocList.length > 0) {
-                        const stgeLocList = item.stgeLocList.find(list => list.stgeLoc === item.stgeLoc);
-                        const obj = stgeLocList.stoPackageMaterialStorageResponseDtoList.find(row => row.batch === item.batch);
-                        item.storage = obj?.currentAmount;
-                        item.stoPackageMaterialStorageResponseDtoList = stgeLocList.stoPackageMaterialStorageResponseDtoList;
+            PKG_API.PKG_PICKING_MATERIAL_DETAIL_API({
+                orderNo: this.$store.state.packaging.pickingDetail.orderNo,
+                workShop: this.formHeader.workShop,
+                productLine: this.$store.state.packaging.pickingDetail.productLine
+            }).then(({ data }) => {
+                data.data.forEach(item => {
+                    /**
+                   * //以前的逻辑
+                    if (!item.useType) {
+                        item.useType = '正常领料';
                     }
-                    return;
-                }
-                item.storage = 0;
-                item.stoPackageMaterialStorageResponseDtoList.map(row => {
-                    item.storage += row.currentAmount;
+                    // 如果选了批次，当前库存展示当前批次的，如果没有批次，当前库存展示所有批次的总和
+                    if (item.batch) {
+                        const obj = item.stoPackageMaterialStorageResponseDtoList.find(row => row.batch === item.batch);
+                        item.storage = obj?.currentAmount;
+                        return;
+                    }
+                    // 如果没有id，就增加一个标识，修改为0的标识
+                    if (!item.id) {
+                        item.isFirst = true;
+                    }
+                    item.storage = 0;
+                    item.stoPackageMaterialStorageResponseDtoList.map(row => {
+                        item.storage += row.currentAmount;
+                    });
+                     */
+                    if (!item.useType) {
+                        item.useType = '正常领料';
+                    }
+                    item.stoPackageMaterialStorageResponseDtoList = [];
+                    // 如果选了批次，当前库存展示当前批次的，如果没有批次，当前库存展示所有批次的总和
+                    if (item.batch) {
+                        if (item.stgeLocList.length > 0) {
+                            const stgeLocList = item.stgeLocList.find(list => list.stgeLoc === item.stgeLoc);
+                            const obj = stgeLocList.stoPackageMaterialStorageResponseDtoList.find(row => row.batch === item.batch);
+                            item.storage = obj?.currentAmount;
+                            item.stoPackageMaterialStorageResponseDtoList = stgeLocList.stoPackageMaterialStorageResponseDtoList;
+                        }
+                        return;
+                    }
+                        const stgeLocList = item.stgeLocList.find(it => it.defaultFlag === '1')
+                        stgeLocList ? item.stgeLoc = stgeLocList.stgeLoc : item.stgeLoc = ''
+
+                    item.storage = 0;
+                    item.stoPackageMaterialStorageResponseDtoList.map(row => {
+                        item.storage += row.currentAmount;
+                    });
+                    // 如果没有id，就增加一个标识，修改为0的标识
+                    if (!item.id) {
+                        item.isFirst = true;
+                    }
                 });
-                // 如果没有id，就增加一个标识，修改为0的标识
-                if (!item.id) {
-                    item.isFirst = true;
-                }
+                this.tableData = JSON.parse(JSON.stringify(data.data));
+                this.OrgTableData = JSON.parse(JSON.stringify(data.data));
+                this.spanArr = this.merge(this.tableData);
             });
-            this.tableData = JSON.parse(JSON.stringify(data.data));
-            this.OrgTableData = JSON.parse(JSON.stringify(data.data));
-            this.spanArr = this.merge(this.tableData);
         });
         COMMON_API.DICTQUERY_API({
             factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
