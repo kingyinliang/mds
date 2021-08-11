@@ -548,6 +548,7 @@ export default {
                     if (data.code === 0) {
                         this.$notify({ title: '成功', message: '生成成功', type: 'success' });
                         this.isRedact = false;
+                        this.allocateId = data.allocateId
                         this.GetInfoList(this.allocateId);
                     } else {
                         this.$errorToast(data.msg);

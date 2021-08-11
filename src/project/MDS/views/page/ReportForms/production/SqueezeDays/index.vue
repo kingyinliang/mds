@@ -182,7 +182,7 @@
                                 child: [
                                     {
                                         prop: 'tb2collarUse',
-                                        label: 'JYTB酱醪'
+                                        label: '丸大豆酱醪'
                                     }
                                 ]
                             },
@@ -191,7 +191,7 @@
                                 child: [
                                     {
                                         prop: 'tb2produce',
-                                        label: 'TB原汁'
+                                        label: '丸大豆原汁'
                                     }
                                 ]
                             },

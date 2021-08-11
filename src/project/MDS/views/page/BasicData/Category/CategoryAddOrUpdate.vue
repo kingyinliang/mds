@@ -117,6 +117,7 @@ export default {
             if (data) {
                 this.dataForm = JSON.parse(JSON.stringify(data));
                 this.id = this.dataForm.id;
+                this.dataForm.defaultFlag = String(this.dataForm.defaultFlag)
             } else {
                 this.dataForm = {};
                 this.id = '';
