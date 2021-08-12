@@ -312,6 +312,9 @@ export default {
                             item.batch = this.dataForm.batch;
                         }
                     });
+                    if (this.dataForm.isFull === '1') {
+                        this.dataForm.fullAmount = this.dataForm.inTankAmount
+                    }
                     if (this.isUpdate) {
                         Reflect.ownKeys(this.dataForm).forEach(key => {
                             this.rowData[key] = this.dataForm[key];

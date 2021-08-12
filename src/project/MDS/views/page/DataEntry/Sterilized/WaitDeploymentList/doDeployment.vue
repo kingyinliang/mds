@@ -7,13 +7,13 @@
                         <el-form-item label="生产工厂：">
                             <el-tooltip class="item" effect="dark" :content="formHeader.factory" placement="top-start">
                                 <p class="input_bottom">
-                                    {{ formHeader.factory }}
+                                    {{ formHeaders.FACTORYNAME }}
                                 </p>
                             </el-tooltip>
                         </el-form-item>
                         <el-form-item label="生产车间：">
                             <p class="input_bottom">
-                                {{ formHeader.workshop }}
+                                {{ formHeaders.WORK_SHOPNAME }}
                             </p>
                         </el-form-item>
                         <el-form-item :label="typeString + '单号：'">
@@ -40,9 +40,9 @@
                             <el-date-picker v-model="formHeaders.ALLOCATE_DATE" type="date" :disabled="!isRedact" format="yyyy-MM-dd" value-format="yyyy-MM-dd" placeholder="选择日期" style="width: 145px;" />
                         </el-form-item>
                         <el-form-item label="杀菌物料：">
-                            <el-tooltip class="item" effect="dark" :content="formHeader.materialName + `${formHeader.materialCode}`" placement="top-start">
+                            <el-tooltip class="item" effect="dark" :content="formHeaders.MATERIAL_NAME + `${formHeaders.MATERIAL_CODE}`" placement="top-start">
                                 <p class="input_bottom">
-                                    {{ formHeader.materialName }}{{ formHeader.materialCode }}
+                                    {{ formHeaders.MATERIAL_NAME }}{{ formHeaders.MATERIAL_CODE }}
                                 </p>
                             </el-tooltip>
                         </el-form-item>
@@ -74,6 +74,9 @@
                 <el-button type="primary" size="small" :disabled="!isRedact" style="float: right;" @click="AddOrderNo">
                     新增
                 </el-button>
+                <el-button v-if="typeString === '调配'" type="primary" size="small" :disabled="!isRedact" style="float: right; margin-right: 20px;" @click="materialDetail">
+                    调配详情
+                </el-button>
             </template>
             <el-table :data="orderList" border class="newTable" header-row-class-name="tableHead">
                 <el-table-column label="序号" type="index" width="50" fixed />
@@ -97,6 +100,69 @@
                 </el-table-column>
             </el-table>
         </mds-card>
+        <el-dialog :close-on-click-modal="false" :visible.sync="materialVisible" width="900px">
+            <div slot="title">
+                调配详情
+            </div>
+            <mds-card title="调配物料详情" :pack-up="false" name="materialVisible1">
+                <template slot="titleBtn">
+                    <div style="float: right;">
+                        <span style="color: red;">*</span>
+                        <span>调配顺序：</span>
+                        <el-input v-model="formHeaders.ALLOCATE_SEQUENCE" type="number" size="small" placeholder="调配顺序" style="width: 160px;" />
+                    </div>
+                </template>
+                <el-table :data="materialList" border class="newTable" header-row-class-name="tableHead">
+                    <el-table-column label="调配物料" :show-overflow-tooltip="true" width="180">
+                        <template slot-scope="scope">
+                            {{ scope.row.materialName }}{{ scope.row.materialCode }}
+                        </template>
+                    </el-table-column>
+                    <el-table-column label="物料单位" prop="unit" />
+                    <el-table-column label="计划领料" prop="planAmount" />
+                    <el-table-column label="领用批次" prop="batch" />
+                    <el-table-column label="原汁类别" prop="category" />
+                    <el-table-column label="订单领料" prop="planAmount" />
+                    <el-table-column label="实际调配量" prop="distributeAmount">
+                        <template slot="header">
+                            <span style="color: red;">*</span>
+                            <span>实际调配量</span>
+                        </template>
+                        <template slot-scope="scope">
+                            <el-input v-model="scope.row.distributeAmount" size="small" />
+                        </template>
+                    </el-table-column>
+                    <el-table-column label="备注" prop="remark">
+                        <template slot-scope="scope">
+                            <el-input v-model="scope.row.remark" size="small" />
+                        </template>
+                    </el-table-column>
+                </el-table>
+            </mds-card>
+            <mds-card title="调配备料详情" :pack-up="false" name="materialVisible2">
+                <el-table :data="prepareMaterialList" border class="newTable" header-row-class-name="tableHead">
+                    <el-table-column label="准备物料" :show-overflow-tooltip="true" width="180">
+                        <template slot-scope="scope">
+                            {{ scope.row.materialName }}{{ scope.row.materialCode }}
+                        </template>
+                    </el-table-column>
+                    <el-table-column label="物料单位" prop="unit" />
+                    <el-table-column label="数量" prop="planAmount" />
+                    <el-table-column label="订单备注" prop="orderRemark" />
+                    <el-table-column label="备注" prop="category" />
+                </el-table>
+            </mds-card>
+            <div class="clearfix">
+                <div style="float: right; margin-bottom: 10px;">
+                    <el-button size="small" @click="materialVisible = false">
+                        取 消
+                    </el-button>
+                    <el-button type="primary" size="small" @click="determine()">
+                        确 定
+                    </el-button>
+                </div>
+            </div>
+        </el-dialog>
         <el-dialog :close-on-click-modal="false" :visible.sync="dialogTableVisible" width="1000px" custom-class="dialog__class">
             <div slot="title">
                 订单分配
@@ -139,9 +205,6 @@
                     撤回
                 </el-button>
                 <template v-if="isRedact">
-                    <el-button type="primary" size="small" @click="SaveOrderNo(true)">
-                        保存
-                    </el-button>
                     <el-button type="primary" size="small" @click="CreateOrder(true)">
                         生成
                     </el-button>
@@ -166,12 +229,27 @@ export default {
                 factoryId: this.$store.state.common.Sterilized.factoryId,
                 workshopId: this.$store.state.common.Sterilized.workshopId,
                 materialCode: this.$store.state.common.Sterilized.materialCode,
-                materialName: this.$store.state.common.Sterilized.materialName
+                materialName: this.$store.state.common.Sterilized.materialName,
+                allocateSequence: ''
             },
             formHeaders: {
+                ID: '',
+                ALLOCATE_SEQUENCE: '',
+                ALLOCATE_DATE: '',
+                ORDER_NO: '',
+                HOLDER_ID: '',
+                FACTORYNAME: this.$store.state.common.Sterilized.factory,
+                FACTORY: this.$store.state.common.Sterilized.factoryId,
+                WORK_SHOPNAME: this.$store.state.common.Sterilized.workshop,
+                WORK_SHOP: this.$store.state.common.Sterilized.workshopId,
+                MATERIAL_NAME: this.$store.state.common.Sterilized.materialName,
+                MATERIAL_CODE: this.$store.state.common.Sterilized.materialCode,
                 STATUS: ''
             },
             isRedact: false,
+            materialVisible: false,
+            materialList: [],
+            prepareMaterialList: [],
             dialogTableVisible: false,
             orderArray: this.$store.state.common.Sterilized.orderNoList,
             planOutputTotal: this.$store.state.common.Sterilized.planOutputTotal,
@@ -227,9 +305,84 @@ export default {
         if (this.$store.state.common.Sterilized.isRedact === true) {
             this.isRedact = this.$store.state.common.Sterilized.isRedact
         }
-        // this.GetInfoList('C57A2AE171024496AD26B0BEE8B0ACAD')
     },
     methods: {
+        materialDetail() {
+            this.materialVisible = true
+            this.$http(`${STERILIZED_API.NEW_WAITDEPLOYMENT_MATERIAL_LIST_API}`, 'POST', {
+                factory: this.formHeaders.FACTORY,
+                orderNoList: this.orderArray
+            }).then(({ data }) => {
+                if (data.code === 0) {
+                    this.materialList = []
+                    this.prepareMaterialList = []
+                    data.data.forEach(it => {
+                        if (it.type === 'BL') {
+                            if (it.distributeAmount === '' || it.distributeAmount === null) {
+                                it.distributeAmount = it.planAmount
+                            }
+                            this.materialList.push(it)
+                        } else {
+                            this.prepareMaterialList.push(it)
+                        }
+                    })
+                } else {
+                    this.$warningToast(data.msg);
+                }
+            })
+        },
+        determine() {
+            if (!this.formHeaders.ALLOCATE_SEQUENCE) {
+                this.$warningToast('请填写必填项')
+                return
+            }
+            console.log(this.materialList)
+            for (const item of this.materialList) {
+                console.log(item.distributeAmount)
+                if (item.distributeAmount === '' || item.distributeAmount === null) {
+                    this.$warningToast('请填写必填项')
+                    return
+                }
+            }
+            const steAllocateOrders = this.orderList.map(it => {
+                return {
+                    orderId: it.orderNo,
+                    remark: it.remark
+                }
+            })
+            this.$http(`${STERILIZED_API.NEW_WAITDEPLOYMENT_MATERIAL_SAVE_API}`, 'POST', {
+                steAllocate: {
+                    allocateDate: this.formHeaders.ALLOCATE_DATE,
+                    allocateSequence: this.formHeaders.ALLOCATE_SEQUENCE,
+                    factory: this.formHeaders.FACTORY,
+                    workShop: this.formHeaders.WORK_SHOP,
+                    id: this.formHeaders.ID,
+                    materialCode: this.formHeaders.MATERIAL_CODE,
+                    materialName: this.formHeaders.MATERIAL_NAME,
+                    orderNo: this.formHeaders.ORDER_NO,
+                    planAmount: this.planOutputTotal,
+                    remark: this.remark,
+                    type: this.$store.state.common.Sterilized.type,
+                    unit: this.orderList[0].outputUnit
+                },
+                steAllocateMaterials: this.materialList,
+                steAllocateOrders: steAllocateOrders
+            }).then(({ data }) => {
+                if (data.code === 0) {
+                    this.materialVisible = false
+                    this.allocateId = data.allocateId
+                    this.GetInfoList(this.allocateId);
+                    this.isRedact = false;
+                    this.Sterilized = {
+                        orderNoList: [],
+                        type: this.$store.state.common.Sterilized.type,
+                        orderNo: this.allocateId
+                    };
+                } else {
+                    this.$errorToast(data.msg);
+                }
+            })
+        },
         GetInfoList(orderNo) {
             this.orderArray = [];
             this.$http(`${STERILIZED_API.DODEPLOYMENTALLOCATELIST}`, 'POST', {
@@ -238,19 +391,12 @@ export default {
                 if (data.code === 0) {
                     this.formHeaders = data.allocateInfo;
                     this.revocation = data.revocation;
-                    this.formHeader.factory = this.formHeaders.FACTORYNAME;
-                    this.formHeader.workshop = this.formHeaders.WORK_SHOPNAME;
-                    this.formHeader.factoryId = this.formHeaders.FACTORY;
-                    this.formHeader.workshopId = this.formHeaders.WORK_SHOP;
-                    this.formHeader.materialCode = this.formHeaders.MATERIAL_CODE;
-                    this.formHeader.materialName = this.formHeaders.MATERIAL_NAME;
                     this.planOutputTotal = this.formHeaders.PLAN_AMOUNT;
                     this.remark = this.formHeaders.REMARK;
                     this.orderList = data.allocateInfo.orderInfo;
                     data.allocateInfo.orderInfo.map(item => {
                         this.orderArray.push(item.orderNo);
                     });
-                    // this.GetorderNo(this.orderArray)
                 } else {
                     this.$errorToast(data.msg);
                 }
@@ -259,9 +405,9 @@ export default {
         // 拉取订单
         GetorderNo(orderArray) {
             const params = {
-                factory: this.formHeader.factoryId,
-                workShop: this.formHeader.workshopId,
-                materialCode: this.formHeader.materialCode,
+                factory: this.formHeaders.FACTORY,
+                workShop: this.formHeaders.WORK_SHOP,
+                materialCode: this.formHeaders.MATERIAL_CODE,
                 orderNo: orderArray,
                 currPage: '1',
                 pageSize: '9000',
@@ -279,9 +425,9 @@ export default {
         // 新增订单
         AddOrderNo() {
             const params = {
-                factory: this.formHeader.factoryId,
-                workShop: this.formHeader.workshopId,
-                materialCode: this.formHeader.materialCode,
+                factory: this.formHeaders.FACTORY,
+                workShop: this.formHeaders.WORK_SHOP,
+                materialCode: this.formHeaders.MATERIAL_CODE,
                 orderNo: this.orderArray
             };
             this.$http(`${STERILIZED_API.DODEPLOYMENTORDERLIST_API}`, 'POST', params).then(({ data }) => {
@@ -295,14 +441,6 @@ export default {
                 }
             });
         },
-        // handleSizeChange (val) {
-        //   this.pagesForm.pageSize = val
-        //   this.orderPropList = this.DataProcessing()
-        // },
-        // handleCurrentChange (val) {
-        //   this.pagesForm.currPage = val
-        //   this.orderPropList = this.DataProcessing()
-        // },
         DataProcessing() {
             return this.orderPropAllList.slice((this.pagesForm.currPage - 1) * this.pagesForm.pageSize, Number((this.pagesForm.currPage - 1) * this.pagesForm.pageSize) + Number(this.pagesForm.pageSize));
         },
@@ -343,6 +481,13 @@ export default {
                 this.orderList.map(item => {
                     this.planOutputTotal = this.planOutputTotal + item.planOutput;
                 });
+                if (this.allocateId) {
+                    this.$http(`${STERILIZED_API.NEW_WAITDEPLOYMENT_MATERIAL_UPDATE_API}`, 'GET', {
+                        allocateId: this.allocateId
+                    }).then(({ data }) => {
+                        console.log(data)
+                    })
+                }
             }
         },
         // 删除
@@ -353,59 +498,15 @@ export default {
             this.orderList.map(item => {
                 this.planOutputTotal = this.planOutputTotal + item.planOutput;
             });
-        },
-        /* eslint-disable no-shadow */
-        SaveOrderNo() {
-            if (this.orderList.length === 0) {
-                this.$warningToast('请添加订单');
-            } else {
-                if (this.orderList.filter(item => item.orderNo.slice(0, 4) === this.orderList[0].orderNo.slice(0, 4)).length !== this.orderList.length) {
-                    this.$warningToast('请选择相同的订单类型的订单！');
-                    return false;
-                }
-                const params = {
-                    factory: this.$store.state.common.Sterilized.factoryId,
-                    workShop: this.$store.state.common.Sterilized.workshopId,
-                    materialCode: this.orderList[0].materialCode,
-                    materialName: this.orderList[0].materialName,
-                    planAmount: this.planOutputTotal,
-                    unit: this.orderList[0].outputUnit,
-                    remark: this.remark,
-                    id: this.allocateId,
-                    type: this.$store.state.common.Sterilized.type,
-                    allocateDate: this.formHeaders.ALLOCATE_DATE
-                };
-                this.$http(`${STERILIZED_API.DODEPLOYMENTHEADERSAVE}`, 'POST', params).then(({ data }) => {
-                    if (data.code === 0) {
-                        this.allocateId = data.allocateId;
-                        this.orderList.map(item => {
-                            item.allocateId = data.allocateId;
-                            item.remark = this.remark;
-                            item.orderId = item.orderNo;
-                        });
-                        this.$http(`${STERILIZED_API.DODEPLOYMENTLISTSAVE}`, 'POST', this.orderList).then(({ data }) => {
-                            if (data.code === 0) {
-                                this.$notify({
-                                    title: '成功',
-                                    message: '保存成功',
-                                    type: 'success'
-                                });
-                                this.GetInfoList(this.allocateId);
-                                this.isRedact = false;
-                                this.Sterilized = {
-                                    orderNoList: [],
-                                    orderNo: this.allocateId
-                                };
-                            } else {
-                                this.$errorToast(data.msg);
-                            }
-                        });
-                    } else {
-                        this.$errorToast(data.msg);
-                    }
-                });
+            if (this.allocateId) {
+                this.$http(`${STERILIZED_API.NEW_WAITDEPLOYMENT_MATERIAL_UPDATE_API}`, 'GET', {
+                    allocateId: this.allocateId
+                }).then(({ data }) => {
+                    console.log(data)
+                })
             }
         },
+        // 生成
         CreateOrder() {
             if (this.orderList.length === 0) {
                 this.$warningToast('请添加订单');
@@ -420,87 +521,40 @@ export default {
                 cancelButtonText: '取消',
                 type: 'warning'
             }).then(() => {
-                if (this.allocateId === '') {
-                    const params = {
-                        factory: this.$store.state.common.Sterilized.factoryId,
-                        workShop: this.$store.state.common.Sterilized.workshopId,
-                        materialCode: this.orderList[0].materialCode,
-                        materialName: this.orderList[0].materialName,
+                const steAllocateOrders = this.orderList.map(it => {
+                    return {
+                        orderId: it.orderNo,
+                        remark: it.remark
+                    }
+                })
+                this.$http(`${STERILIZED_API.NEW_JUICEDEPLOYMENTCREATE}`, 'POST', {
+                    steAllocate: {
+                        allocateDate: this.formHeaders.ALLOCATE_DATE,
+                        allocateSequence: this.formHeaders.ALLOCATE_SEQUENCE,
+                        factory: this.formHeaders.FACTORY,
+                        workShop: this.formHeaders.WORK_SHOP,
+                        id: this.formHeaders.ID,
+                        materialCode: this.formHeaders.MATERIAL_CODE,
+                        materialName: this.formHeaders.MATERIAL_NAME,
+                        orderNo: this.formHeaders.ORDER_NO,
                         planAmount: this.planOutputTotal,
-                        unit: this.orderList[0].outputUnit,
                         remark: this.remark,
-                        id: this.allocateId,
-                        type: this.$store.state.common.Sterilized.type
-                    };
-                    this.$http(`${STERILIZED_API.DODEPLOYMENTHEADERSAVE}`, 'POST', params).then(({ data }) => {
-                        if (data.code === 0) {
-                            this.allocateId = data.allocateId;
-                            this.orderList.map(item => {
-                                item.allocateId = data.allocateId;
-                                item.remark = this.remark;
-                                item.orderId = item.orderNo;
-                            });
-                            this.$http(`${STERILIZED_API.DODEPLOYMENTLISTSAVE}`, 'POST', this.orderList).then(({ data }) => {
-                                if (data.code === 0) {
-                                    this.formHeaders.id = this.allocateId;
-                                    const paras = [this.formHeaders];
-                                    this.$http(`${STERILIZED_API.JUICEDEPLOYMENTCREATE}`, 'POST', paras).then(({ data }) => {
-                                        if (data.code === 0) {
-                                            this.$notify({
-                                                title: '成功',
-                                                message: '生成成功',
-                                                type: 'success'
-                                            });
-                                            this.GetInfoList(this.allocateId);
-                                            this.isRedact = false;
-                                            this.Sterilized = {
-                                                orderNoList: [],
-                                                orderNo: this.allocateId
-                                            };
-                                        } else {
-                                            this.$errorToast(data.msg);
-                                        }
-                                    });
-                                } else {
-                                    this.$errorToast(data.msg);
-                                }
-                            });
-                        } else {
-                            this.$errorToast(data.msg);
-                        }
-                    });
-                } else {
-                    this.orderList.map(item => {
-                        item.allocateId = this.allocateId;
-                        item.remark = this.remark;
-                        item.orderId = item.orderNo;
-                    });
-                    this.$http(`${STERILIZED_API.DODEPLOYMENTLISTSAVE}`, 'POST', this.orderList).then(({ data }) => {
-                        if (data.code === 0) {
-                            this.formHeaders.id = this.formHeaders.ID;
-                            this.formHeaders.remark = this.remark;
-                            const params = [this.formHeaders];
-                            this.$http(`${STERILIZED_API.JUICEDEPLOYMENTCREATE}`, 'POST', params).then(({ data }) => {
-                                if (data.code === 0) {
-                                    this.$notify({
-                                        title: '成功',
-                                        message: '生成成功',
-                                        type: 'success'
-                                    });
-                                    this.isRedact = false;
-                                    this.GetInfoList(this.allocateId);
-                                } else {
-                                    this.$errorToast(data.msg);
-                                }
-                            });
-                        } else {
-                            this.$errorToast(data.msg);
-                        }
-                    });
-                }
-            }).catch(() => {
-                // this.$infoToast('已取消删除');
-            });
+                        type: this.$store.state.common.Sterilized.type,
+                        unit: this.orderList[0].outputUnit
+                    },
+                    steAllocateOrders: steAllocateOrders,
+                    type: this.typeString === '分配' ? 'LY' : 'BL'
+                }).then(({ data }) => {
+                    if (data.code === 0) {
+                        this.$notify({ title: '成功', message: '生成成功', type: 'success' });
+                        this.isRedact = false;
+                        this.allocateId = data.allocateId
+                        this.GetInfoList(this.allocateId);
+                    } else {
+                        this.$errorToast(data.msg);
+                    }
+                });
+            })
         },
         /* eslint-enable no-shadow */
         // 撤回

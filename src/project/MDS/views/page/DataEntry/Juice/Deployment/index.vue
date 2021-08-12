@@ -64,7 +64,13 @@
                         >{{ scope.row.status }}</span>
                     </template>
                 </el-table-column>
-                <el-table-column label="调配单号" prop="orderNo" width="130" />
+                <el-table-column label="调配单号" prop="orderNo" width="130">
+                    <template slot-scope="scope">
+                        <el-button type="text" @click="GetInfo(scope.row)">
+                            {{ scope.row.orderNo }}
+                        </el-button>
+                    </template>
+                </el-table-column>
                 <el-table-column label="生产车间" prop="workShopName" width="100" :show-overflow-tooltip="true" />
                 <el-table-column label="调配单日期" prop="allocateDate" width="115" />
                 <el-table-column label="杀菌物料" width="190" :show-overflow-tooltip="true">
@@ -80,7 +86,7 @@
                         <em class="reqI">*</em> 调配罐
                     </template>
                     <template slot-scope="scope">
-                        <el-select v-model="scope.row.holderId" size="small" :disabled="!isRedact">
+                        <el-select v-model="scope.row.holderId" size="small" :disabled="true">
                             <el-option value="">
                                 请选择
                             </el-option>
@@ -93,7 +99,7 @@
                         <em class="reqI">*</em> 调配日期
                     </template>
                     <template slot-scope="scope">
-                        <el-date-picker v-model="scope.row.allocateTime" :disabled="!isRedact" type="date" placeholder="请选择" format="yyyy-MM-dd" value-format="yyyy-MM-dd" style="width: 150px;" size="small" />
+                        <el-date-picker v-model="scope.row.allocateTime" :disabled="true" type="date" placeholder="请选择" format="yyyy-MM-dd" value-format="yyyy-MM-dd" style="width: 150px;" size="small" />
                     </template>
                 </el-table-column>
                 <el-table-column label="调配单备注" prop="remark" width="100" :show-overflow-tooltip="true" />
@@ -118,7 +124,23 @@
             <div slot="title">
                 调配列表
             </div>
-            <el-table style="margin-bottom: 20px;" :data="ItemList" border header-row-class-name="tableHead" :row-class-name="RowDelFlag1">
+            <el-form :model="formHeader" :inline="true" size="small" label-width="70px" class="multi_row">
+                <el-form-item label="调配罐号：">
+                    <el-select v-model="holderId" size="small">
+                        <el-option value="">
+                            请选择
+                        </el-option>
+                        <el-option v-for="(item, index) in holderList" :key="index" :label="item.holderName" :value="item.holderId" />
+                    </el-select>
+                </el-form-item>
+                <el-form-item label="调配日期：">
+                    <el-date-picker v-model="allocateTime" type="date" placeholder="请选择" format="yyyy-MM-dd" value-format="yyyy-MM-dd" style="width: 150px;" size="small" />
+                </el-form-item>
+                <el-form-item label="调配顺序：">
+                    <span>{{ allocateSequence }}</span>
+                </el-form-item>
+            </el-form>
+            <el-table style="margin-bottom: 20px;" :data="ItemList" :span-method="spanMethod" border header-row-class-name="tableHead" :row-class-name="RowDelFlag1">
                 <el-table-column label="物料" :show-overflow-tooltip="true" width="180">
                     <template slot-scope="scope">
                         {{ scope.row.materialName }}
@@ -133,6 +155,11 @@
                 <el-table-column label="计划领料" prop="planAmount" width="120">
                     <template slot-scope="scope">
                         {{ scope.row.planAmount }}<span v-if="scope.row.materialName === 'Y010'">/{{ scope.row.yplanAmount }}</span>
+                    </template>
+                </el-table-column>
+                <el-table-column label="实际调配数量" prop="planAmount" width="120">
+                    <template slot-scope="scope">
+                        {{ scope.row.distributeAmount }}
                     </template>
                 </el-table-column>
                 <el-table-column width="70">
@@ -297,15 +324,34 @@
                 </template>
             </span>
         </el-dialog>
+        <el-dialog :close-on-click-modal="false" :visible.sync="orderInfoVisible" width="1000px" custom-class="dialog__class">
+            <div slot="title">
+                调配订单信息
+            </div>
+            <el-table :data="orderInfoList" border class="newTable" header-row-class-name="tableHead" style="margin-top: 10px;">
+                <el-table-column label="订单号" prop="orderNo" width="140" />
+                <el-table-column label="物料" :show-overflow-tooltip="true" width="180">
+                    <template slot-scope="scope">
+                        {{ scope.row.materialName }}
+                        {{ scope.row.materialCode }}
+                    </template>
+                </el-table-column>
+                <el-table-column label="订单数量" prop="planOutput" width="80" />
+                <el-table-column label="订单单位" prop="outputUnit" width="80" />
+                <el-table-column label="订单开始日期" prop="productDate" />
+                <el-table-column label="订单结束日期" />
+                <el-table-column label="生产调度员" prop="dispatchMan" />
+                <el-table-column label="订单备注" prop="remark" :show-overflow-tooltip="true" />
+            </el-table>
+            <div style="height: 20px;" />
+        </el-dialog>
         <redact-box>
             <template slot="button">
                 <el-button v-if="isAuth('ste:allocate:allocateUpdate')" type="primary" class="button" size="small" @click="isRedact = !isRedact">
                     {{ isRedact ? '取消' : '编辑' }}
                 </el-button>
                 <template v-if="isRedact" style="float: right;">
-                    <el-button type="primary" size="small" @click="SavedForm()">
-                        保存
-                    </el-button>
+                    <!--<el-button type="primary" size="small" @click="SavedForm()">保存</el-button>-->
                     <el-button type="primary" size="small" @click="SubmitForm()">
                         提交
                     </el-button>
@@ -362,6 +408,12 @@ export default {
                 currentPage: 1, // 当前页数
                 pageSize: 10
             },
+            orderInfoVisible: false,
+            orderInfoList: [],
+            holderId: '',
+            allocateTime: '',
+            allocateId: '',
+            allocateSequence: '',
             factory: [],
             workshop: [],
             isRedact: false,
@@ -379,7 +431,8 @@ export default {
             strList1: [],
             strList2: [],
             Tdata: '',
-            batchList: []
+            batchList: [],
+            spanOneArr: []
         };
     },
     watch: {
@@ -400,6 +453,46 @@ export default {
         this.GetHolderStatusList();
     },
     methods: {
+        // 合并行
+        spanMethod({ rowIndex, columnIndex }) {
+            if (columnIndex <= 4) {
+                return {
+                    rowspan: this.spanOneArr[rowIndex],
+                    colspan: this.spanOneArr[rowIndex] > 0 ? 1 : 0
+                };
+            }
+        },
+        // 设置合并行
+        merge(tableData) {
+            const spanOneArr = [];
+            let concatOne = 0;
+            tableData.forEach((item, index) => {
+                if (index === 0) {
+                    spanOneArr.push(1);
+                } else if (item.materialCode === tableData[index - 1].materialCode) {
+                    if (item.delFlag !== 1) {
+                        spanOneArr[concatOne] += 1;
+                    }
+                    spanOneArr.push(0);
+                } else {
+                    spanOneArr.push(1);
+                    concatOne = index;
+                }
+            });
+            return spanOneArr;
+        },
+        GetInfo(row) {
+            this.$http(`${STERILIZED_API.DODEPLOYMENTALLOCATELIST}`, 'POST', {
+                orderNo: row.id
+            }).then(({ data }) => {
+                if (data.code === 0) {
+                    this.orderInfoVisible = true
+                    this.orderInfoList = data.allocateInfo.orderInfo;
+                } else {
+                    this.$errorToast(data.msg);
+                }
+            });
+        },
         // 批次
         getBatchList() {
             this.$http(`${INVENTORY_API.Y010_LIST_BATCH_LIST_API}`, `POST`, {}, false, false, false).then(({ data }) => {
@@ -534,6 +627,10 @@ export default {
         /* eslint-disenable @typescript-eslint/camelcase*/
         ShowDetail(row) {
             this.getBatchList();
+            this.holderId = row.holderId
+            this.allocateTime = row.allocateTime
+            this.allocateId = row.id
+            this.allocateSequence = row.allocateSequence
             this.Tdata = row;
             this.materialName = row.materialName;
             this.$http(
@@ -562,6 +659,7 @@ export default {
                             item.receiveAmount = item.planAmount;
                         }
                     });
+                    this.spanOneArr = this.merge(this.ItemList);
                     this.dialogTableVisible = true;
                     this.lineStatus = row.status;
                     this.ID = row.id;
@@ -592,6 +690,7 @@ export default {
                 delFlag: '0',
                 id: ''
             });
+            this.spanOneArr = this.merge(this.ItemList);
         },
         // 调配 确定
         SaveSplit() {
@@ -701,7 +800,10 @@ export default {
             });
             if (this.ItemList.length) {
                 this.$http(`${STERILIZED_API.JUICEDEPLOYMENTITEMSAVE}`, 'POST', {
-                    tiaoHolder: this.dataList,
+                    // tiaoHolder: this.dataList,
+                    holderId: this.holderId,
+                    allocateTime: this.allocateTime,
+                    allocateId: this.allocateId,
                     params: this.ItemList
                 }).then(({ data }) => {
                     if (data.code === 0) {

@@ -172,6 +172,57 @@
                             {
                                 prop: 'tboilYield',
                                 label: '出油率/%'
+                            },
+                            {
+                                prop: 'tb2days',
+                                label: '名称'
+                            },
+                            {
+                                label: '领用/方',
+                                child: [
+                                    {
+                                        prop: 'tb2collarUse',
+                                        label: '丸大豆酱醪'
+                                    }
+                                ]
+                            },
+                            {
+                                label: '产出/方',
+                                child: [
+                                    {
+                                        prop: 'tb2produce',
+                                        label: '丸大豆原汁'
+                                    }
+                                ]
+                            },
+                            {
+                                label: '生产笼数/笼',
+                                child: [
+                                    {
+                                        prop: 'tb2oneNums',
+                                        label: '一期'
+                                    },
+                                    {
+                                        prop: 'tb2twoNums',
+                                        label: '二期'
+                                    },
+                                    {
+                                        prop: 'tb2threeNums',
+                                        label: '三期'
+                                    },
+                                    {
+                                        prop: 'tb2fourNums',
+                                        label: '四期'
+                                    }
+                                ]
+                            },
+                            {
+                                prop: 'tb2plateNums',
+                                label: '酱渣板数/板'
+                            },
+                            {
+                                prop: 'tb2oilYield',
+                                label: '出油率/%'
                             }
                         ]
                     },
@@ -247,7 +298,16 @@
                     it.tbthreeNums = data.prsDays.oneTb[index].threeNums;
                     it.tbfourNums = data.prsDays.oneTb[index].fourNums;
                     it.tbplateNums = data.prsDays.oneTb[index].plateNums;
-                    it.tboilYield = data.prsDays.oneTb[index].oilYield;
+                    it.tboilYield = data.prsDays.oneTb2[index].oilYield;
+                    it.tb2days = data.prsDays.oneTb2[index].days;
+                    it.tb2collarUse = data.prsDays.oneTb2[index].collarUse;
+                    it.tb2produce = data.prsDays.oneTb2[index].produce;
+                    it.tb2oneNums = data.prsDays.oneTb2[index].oneNums;
+                    it.tb2twoNums = data.prsDays.oneTb2[index].twoNums;
+                    it.tb2threeNums = data.prsDays.oneTb2[index].threeNums;
+                    it.tb2fourNums = data.prsDays.oneTb2[index].fourNums;
+                    it.tb2plateNums = data.prsDays.oneTb2[index].plateNums;
+                    it.tb2oilYield = data.prsDays.oneTb2[index].oilYield;
                 });
                 this.tabs[0].tableData = data.prsDays.one;
                 this.tabs[1].tableData = data.prsDays.two;
@@ -255,6 +315,7 @@
                     this.tabs[0].tableData.unshift({
                         days: '月计',
                         tbdays: '月计',
+                        tb2days: '月计',
                         collarUse: data.prsDays.one[0].collarUseSum,
                         produce: data.prsDays.one[0].produceSum,
                         oneNums: data.prsDays.one[0].oneNumsSum,
@@ -270,7 +331,15 @@
                         tbthreeNums: data.prsDays.oneTb[0].threeNumsSum,
                         tbfourNums: data.prsDays.oneTb[0].fourNumsSum,
                         tbplateNums: data.prsDays.oneTb[0].plateNumsSum,
-                        tboilYield: data.prsDays.oneTb[0].monthOilYield
+                        tboilYield: data.prsDays.oneTb[0].monthOilYield,
+                        tb2collarUse: data.prsDays.oneTb2[0].collarUseSum,
+                        tb2produce: data.prsDays.oneTb2[0].produceSum,
+                        tb2oneNums: data.prsDays.oneTb2[0].oneNumsSum,
+                        tb2twoNums: data.prsDays.oneTb2[0].twoNumsSum,
+                        tb2threeNums: data.prsDays.oneTb2[0].threeNumsSum,
+                        tb2fourNums: data.prsDays.oneTb2[0].fourNumsSum,
+                        tb2plateNums: data.prsDays.oneTb2[0].plateNumsSum,
+                        tb2oilYield: data.prsDays.oneTb2[0].monthOilYield
                     });
                 }
                 if (data.prsDays.two.length) {

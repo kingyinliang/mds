@@ -12,10 +12,10 @@
                         <el-form-item class="star" label="生产物料：" size="mini">
                             <el-select v-model="headerInfo.headerProdcutMaterial" placeholder="请选择" clearable style="width: 220px;" @change="changeProdcutMaterialOption">
                                 <el-option
-                                    v-for="item in optionsTree"
-                                    :key="item.productMaterialList[0].dictCode"
-                                    :label="item.productMaterialList[0].dictValue"
-                                    :value="item.productMaterialList[0].dictCode"
+                                    v-for="(item, index) in optionsTree"
+                                    :key="index"
+                                    :label="item.productMaterialList[0]? item.productMaterialList[0].dictValue : ''"
+                                    :value="item.productMaterialList[0]? item.productMaterialList[0].dictCode : ''"
                                 />
                             </el-select>
                         </el-form-item>
@@ -39,10 +39,10 @@
                                     <el-form-item prop="feedMaterial">
                                         <el-select v-model="scope.row.feedMaterial" size="small" @change="changeFeedMaterialOption(scope.row)">
                                             <el-option
-                                                v-for="item in findIndex(headerInfo.headerProdcutMaterial)"
-                                                :key="item.dictCode"
-                                                :label="item.dictValue"
-                                                :value="item.dictCode"
+                                                v-for="(item, index) in findIndex(headerInfo.headerProdcutMaterial)"
+                                                :key="index"
+                                                :label="item.dictValue? item.dictValue : ''"
+                                                :value="item.dictCode? item.dictCode : ''"
                                             />
                                         </el-select>
                                     </el-form-item>
@@ -251,7 +251,7 @@
             if (val === '') {
                 return []
             }
-            return this.optionsTree.filter(item => item.productMaterialList[0].dictCode === val)[0].feedMateriallList
+            return this.optionsTree.filter(item => item.productMaterialList.length && item.productMaterialList[0].dictCode === val)[0]?.feedMateriallList
         }
 
         // 入罐

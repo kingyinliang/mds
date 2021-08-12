@@ -26,6 +26,12 @@
             <el-form-item label="发酵超期天数：" prop="outDays">
                 <el-input v-model="dataForm.outDays" placeholder="请输入" />
             </el-form-item>
+            <el-form-item label="默认物料标识：" prop="defaultFlag">
+                <el-select v-model="dataForm.defaultFlag" placeholder="请选择" filterable style="width: 100%;">
+                    <el-option value="1" label="默认" />
+                    <el-option value="0" label="非默认" />
+                </el-select>
+            </el-form-item>
         </el-form>
         <span slot="footer" class="dialog-footer">
             <el-button @click="closeDialog">取消</el-button>
@@ -88,6 +94,13 @@ export default {
                         message: '发酵超期天数不能为空',
                         trigger: 'blur'
                     }
+                ],
+                defaultFlag: [
+                    {
+                        required: true,
+                        message: '默认物料标识不能为空',
+                        trigger: 'blur'
+                    }
                 ]
             }
         };
@@ -104,6 +117,7 @@ export default {
             if (data) {
                 this.dataForm = JSON.parse(JSON.stringify(data));
                 this.id = this.dataForm.id;
+                this.dataForm.defaultFlag = String(this.dataForm.defaultFlag)
             } else {
                 this.dataForm = {};
                 this.id = '';

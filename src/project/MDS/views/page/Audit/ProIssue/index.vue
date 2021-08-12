@@ -112,23 +112,23 @@
                 <el-table-column prop="entryUomName" label="单位" width="50" />
                 <el-table-column label="物料批次" :show-overflow-tooltip="true" width="130">
                     <template slot-scope="scope">
-                        <el-input v-if="scope.row.redact" v-model="scope.row.batch" size="mini" />
-                        <el-input v-else v-model="scope.row.batch" size="mini" disabled />
+                        <el-input v-if="scope.row.redact" v-model="scope.row.batch" />
+                        <el-input v-else v-model="scope.row.batch" disabled />
                     </template>
                 </el-table-column>
                 <el-table-column prop="potNoName" label="领用罐号" :show-overflow-tooltip="true" width="100" />
                 <el-table-column prop="filterDate" label="过滤日期" :show-overflow-tooltip="true" width="100" />
                 <el-table-column label="出库库位" width="78">
                     <template slot-scope="scope">
-                        <el-input v-if="scope.row.redact" v-model="scope.row.stgeLoc" size="mini" />
-                        <el-input v-else v-model="scope.row.stgeLoc" size="mini" disabled />
+                        <el-input v-if="scope.row.redact" v-model="scope.row.stgeLoc" />
+                        <el-input v-else v-model="scope.row.stgeLoc" disabled />
                     </template>
                 </el-table-column>
                 <el-table-column prop="workShopRemark" label="车间备注" :show-overflow-tooltip="true" width="80" />
                 <el-table-column label="移动类型" width="78">
                     <template slot-scope="scope">
-                        <el-input v-if="scope.row.redact" v-model="scope.row.moveType" size="mini" />
-                        <el-input v-else v-model="scope.row.moveType" size="mini" disabled />
+                        <el-input v-if="scope.row.redact" v-model="scope.row.moveType" />
+                        <el-input v-else v-model="scope.row.moveType" disabled />
                     </template>
                 </el-table-column>
                 <el-table-column label="移动原因" width="120">
@@ -137,7 +137,7 @@
                             <el-option label="请选择" value="" />
                             <el-option v-for="(item, index) in MoveReas" :key="index" :label="item.value" :value="item.code" />
                         </el-select>
-                        <el-select v-else v-model="scope.row.moveReas" placeholder="请选择" size="mini" disabled>
+                        <el-select v-else v-model="scope.row.moveReas" placeholder="请选择" disabled>
                             <el-option label="请选择" value="" />
                             <el-option v-for="(item, index) in MoveReas" :key="index" :label="item.value" :value="item.code" />
                         </el-select>
@@ -193,125 +193,126 @@
 </template>
 
 <script>
-    import { BASICDATA_API, AUDIT_API, SYSTEMSETUP_API } from '@/api/api';
-    import { headanimation } from '@/net/validate';
-    export default {
-        name: 'Index',
-        components: {},
-        data() {
-            return {
-                lodingStatus1: false,
-                dataListLoading: false,
-                visible: false,
-                visibleRe: false,
-                ReText: '',
-                reData: {},
-                factory: [],
-                workshop: [],
-                productline: [],
-                Text: '',
-                MoveReas: [],
-                orderTypeList: [],
-                plantListRule: {
-                    pstngDate: [{ required: true, message: '过账日期不能为空', trigger: 'blur' }]
-                },
-                plantList: {
-                    orderNo: '',
-                    factory: '',
-                    workShop: '',
-                    productLine: '',
-                    productDateBegin: new Date(new Date() - 24 * 60 * 60 * 1000).getFullYear().toString() + '-' + (new Date(new Date() - 24 * 60 * 60 * 1000).getMonth() + 1 >= 10 ? (new Date(new Date() - 24 * 60 * 60 * 1000).getMonth() + 1).toString() : '0' + (new Date(new Date() - 24 * 60 * 60 * 1000).getMonth() + 1)) + '-' + (new Date(new Date() - 24 * 60 * 60 * 1000).getDate() >= 10 ? new Date(new Date() - 24 * 60 * 60 * 1000).getDate().toString() : '0' + new Date(new Date() - 24 * 60 * 60 * 1000).getDate()),
-                    productDateEnd: '',
-                    pstngDate: new Date().getFullYear().toString() + '-' + (new Date().getMonth() + 1 >= 10 ? (new Date().getMonth() + 1).toString() : '0' + (new Date().getMonth() + 1)) + '-' + (new Date().getDate() >= 10 ? new Date().getDate().toString() : '0' + new Date().getDate()),
-                    headerTxt: '',
-                    orderType: '',
-                    status: '',
-                    currPage: 1,
-                    pageSize: 10,
-                    totalCount: 0,
-                    materialCode: ''
-                },
-                AuditList: [],
-                multipleSelection: [],
-                materialList: []
-            };
-        },
-        computed: {},
-        watch: {
-            'plantList.factory'(n) {
-                this.plantList.orderType = '';
-                this.Getdeptbyid(n);
-                this.getDictList(n);
-                this.getMaterial(n);
+import { BASICDATA_API, AUDIT_API, SYSTEMSETUP_API } from '@/api/api';
+import { headanimation } from '@/net/validate';
+export default {
+    name: 'Index',
+    components: {},
+    data() {
+        return {
+            lodingStatus1: false,
+            dataListLoading: false,
+            visible: false,
+            visibleRe: false,
+            ReText: '',
+            reData: {},
+            factory: [],
+            workshop: [],
+            productline: [],
+            Text: '',
+            MoveReas: [],
+            orderTypeList: [],
+            plantListRule: {
+                pstngDate: [{ required: true, message: '过账日期不能为空', trigger: 'blur' }]
             },
-            'plantList.workShop'(n) {
-                this.GetParentline(n);
+            plantList: {
+                orderNo: '',
+                factory: '',
+                workShop: '',
+                productLine: '',
+                productDateBegin: new Date(new Date() - 24 * 60 * 60 * 1000).getFullYear().toString() + '-' + (new Date(new Date() - 24 * 60 * 60 * 1000).getMonth() + 1 >= 10 ? (new Date(new Date() - 24 * 60 * 60 * 1000).getMonth() + 1).toString() : '0' + (new Date(new Date() - 24 * 60 * 60 * 1000).getMonth() + 1)) + '-' + (new Date(new Date() - 24 * 60 * 60 * 1000).getDate() >= 10 ? new Date(new Date() - 24 * 60 * 60 * 1000).getDate().toString() : '0' + new Date(new Date() - 24 * 60 * 60 * 1000).getDate()),
+                productDateEnd: '',
+                pstngDate: new Date().getFullYear().toString() + '-' + (new Date().getMonth() + 1 >= 10 ? (new Date().getMonth() + 1).toString() : '0' + (new Date().getMonth() + 1)) + '-' + (new Date().getDate() >= 10 ? new Date().getDate().toString() : '0' + new Date().getDate()),
+                headerTxt: '',
+                orderType: '',
+                status: '',
+                currPage: 1,
+                pageSize: 10,
+                totalCount: 0,
+                materialCode: ''
+            },
+            AuditList: [],
+            multipleSelection: [],
+            materialList: []
+        };
+    },
+    computed: {},
+    watch: {
+        'plantList.factory'(n) {
+            this.plantList.orderType = '';
+            this.Getdeptbyid(n);
+            this.getDictList(n);
+            this.getMaterial(n);
+        },
+        'plantList.workShop'(n) {
+            this.GetParentline(n);
+        }
+    },
+    mounted() {
+        this.Getdeptcode();
+        this.GetMoveReas();
+        headanimation(this.$);
+    },
+    methods: {
+        getMaterial(factory) {
+            this.$http(`${AUDIT_API.AUDIT_ISSUE_MATERIAL_API}`, 'POST', { factory: factory }, false, false, false).then(({ data }) => {
+                if (data.code === 0) {
+                    this.materialList = data.list;
+                } else {
+                    this.$errorToast(data.msg);
+                }
+            });
+        },
+        getDictList(factory) {
+            const params = { types: ['order_type'], factory };
+            this.$http(`${SYSTEMSETUP_API.PARAMETERSLIST_API}`, 'POST', params)
+                .then(({ data }) => {
+                    if (data.code === 0) {
+                        this.orderTypeList = data.dicList[0].prolist;
+                    } else {
+                        this.$errorToast(data.msg);
+                    }
+                })
+                .catch(error => {
+                    console.log('catch data::', error);
+                });
+        },
+        // 获取列表
+        GetAuditList(st) {
+            if (st) {
+                this.plantList.currPage = 1;
             }
-        },
-        mounted() {
-            this.Getdeptcode();
-            this.GetMoveReas();
-            headanimation(this.$);
-        },
-        methods: {
-            getMaterial(factory) {
-                this.$http(`${AUDIT_API.AUDIT_ISSUE_MATERIAL_API}`, 'POST', { factory: factory }, false, false, false).then(({ data }) => {
-                    if (data.code === 0) {
-                        this.materialList = data.list;
-                    } else {
-                        this.$errorToast(data.msg);
-                    }
-                });
-            },
-            getDictList(factory) {
-                const params = { types: ['order_type'], factory };
-                this.$http(`${SYSTEMSETUP_API.PARAMETERSLIST_API}`, 'POST', params)
-                    .then(({ data }) => {
-                        if (data.code === 0) {
-                            this.orderTypeList = data.dicList[0].prolist;
-                        } else {
-                            this.$errorToast(data.msg);
-                        }
-                    })
-                    .catch(error => {
-                        console.log('catch data::', error);
-                    });
-            },
-            // 获取列表
-            GetAuditList(st) {
-                if (st) {
-                    this.plantList.currPage = 1;
+            if (!this.plantList.factory) {
+                this.$warningToast('请选择工厂');
+                return;
+            }
+            this.plantList.headerTxt = '';
+            this.dataListLoading = true;
+            this.GetMoveReas(this.plantList.factory);
+            this.$http(`${AUDIT_API.AUDITISSUELIST_API}`, 'POST', this.plantList).then(({ data }) => {
+                if (data.code === 0) {
+                    this.AuditList = data.page.list;
+                    this.plantList.currPage = data.page.currPage;
+                    this.plantList.pageSize = data.page.pageSize;
+                    this.plantList.totalCount = data.page.totalCount;
+                } else {
+                    this.$errorToast(data.msg);
                 }
-                if (!this.plantList.factory) {
-                    this.$warningToast('请选择工厂');
-                    return;
-                }
-                this.plantList.headerTxt = '';
-                this.dataListLoading = true;
-                this.GetMoveReas(this.plantList.factory);
-                this.$http(`${AUDIT_API.AUDITISSUELIST_API}`, 'POST', this.plantList).then(({ data }) => {
-                    if (data.code === 0) {
-                        this.AuditList = data.page.list;
-                        this.plantList.currPage = data.page.currPage;
-                        this.plantList.pageSize = data.page.pageSize;
-                        this.plantList.totalCount = data.page.totalCount;
-                    } else {
-                        this.$errorToast(data.msg);
-                    }
-                    this.dataListLoading = false;
-                });
-            },
-            // 反审
-            ResetD(row) {
-                this.visibleRe = true;
-                this.reData = row;
-            },
-            ResetIs() {
-                this.$confirm('部分数据已经调用SAP接口已发料，请确认sap冲销，确认要反审？', '反审', {
-                    confirmButtonText: '确定',
-                    cancelButtonText: '取消',
-                    type: 'warning'
-                }).then(() => {
+                this.dataListLoading = false;
+            });
+        },
+        // 反审
+        ResetD(row) {
+            this.visibleRe = true;
+            this.reData = row;
+        },
+        ResetIs() {
+            this.$confirm('部分数据已经调用SAP接口已发料，请确认sap冲销，确认要反审？', '反审', {
+                confirmButtonText: '确定',
+                cancelButtonText: '取消',
+                type: 'warning'
+            })
+                .then(() => {
                     this.reData.status = 'submit';
                     this.reData.memo = this.ReText;
                     this.dataListLoading = true;
@@ -327,131 +328,133 @@
                             this.$warningToast(data.msg);
                         }
                     });
-                }).catch(() => {
+                })
+                .catch(() => {
                     // this.$infoToast('已取消删除');
                 });
-            },
-            // 获取移动原因
-            GetMoveReas() {
-                this.$http(`${SYSTEMSETUP_API.PARAMETERLIST_API}`, 'POST', { type: 'move_reas' }).then(({ data }) => {
+        },
+        // 获取移动原因
+        GetMoveReas() {
+            this.$http(`${SYSTEMSETUP_API.PARAMETERLIST_API}`, 'POST', { type: 'move_reas' }).then(({ data }) => {
+                if (data.code === 0) {
+                    this.MoveReas = data.dicList;
+                } else {
+                    this.$errorToast(data.msg);
+                }
+            });
+        },
+        // 获取工厂
+        Getdeptcode() {
+            this.$http(`${BASICDATA_API.FINDORG_API}?code=factory`, 'POST').then(({ data }) => {
+                if (data.code === 0) {
+                    this.factory = data.typeList;
+                    this.plantList.factory = data.typeList[0].deptId;
+                } else {
+                    this.$warningToast(data.msg);
+                }
+            });
+        },
+        // 获取车间
+        Getdeptbyid(id) {
+            this.plantList.workShop = '';
+            this.plantList.productLine = '';
+            if (id) {
+                this.$http(`${BASICDATA_API.FINDORGBYID_API}`, 'POST', { deptId: id }).then(({ data }) => {
                     if (data.code === 0) {
-                        this.MoveReas = data.dicList;
+                        this.workshop = data.typeList;
+                        if (!this.plantList.workShop && data.typeList.length > 0) {
+                            this.plantList.workShop = data.typeList[0].deptId;
+                        }
                     } else {
                         this.$errorToast(data.msg);
                     }
                 });
-            },
-            // 获取工厂
-            Getdeptcode() {
-                this.$http(`${BASICDATA_API.FINDORG_API}?code=factory`, 'POST').then(({ data }) => {
+            } else {
+                this.workshop = [];
+            }
+        },
+        // 获取产线
+        GetParentline(id) {
+            this.plantList.productLine = '';
+            if (id) {
+                this.$http(`${BASICDATA_API.FINDORGBYPARENTID_API}`, 'POST', { parentId: id }).then(({ data }) => {
                     if (data.code === 0) {
-                        this.factory = data.typeList;
-                        this.plantList.factory = data.typeList[0].deptId;
+                        this.productline = data.childList;
                     } else {
-                        this.$warningToast(data.msg);
+                        this.$errorToast(data.msg);
                     }
                 });
-            },
-            // 获取车间
-            Getdeptbyid(id) {
-                this.plantList.workShop = '';
-                this.plantList.productLine = '';
-                if (id) {
-                    this.$http(`${BASICDATA_API.FINDORGBYID_API}`, 'POST', { deptId: id }).then(({ data }) => {
+            } else {
+                this.productline = [];
+            }
+        },
+        // 表格选中
+        handleSelectionChange(val) {
+            this.multipleSelection = [];
+            val.forEach(item => {
+                this.multipleSelection.push(item);
+            });
+        },
+        // 过账日期
+        SetPostgDate(date) {
+            return date.getFullYear() + '-' + (date.getMonth() + 1) + '-' + date.getDate();
+        },
+        // 审核通过禁用
+        checkboxT(row) {
+            if ((row.status === 'checked' && (row.interfaceReturnStatus === '1' || row.interfaceReturnStatus === null)) || row.status === 'noPass') {
+                return 0;
+            }
+            return 1;
+        },
+        // 编辑
+        redact(row) {
+            if (!row.redact) {
+                row.redact = true;
+                this.AuditList.splice(this.AuditList.length, 0, {});
+                this.AuditList.splice(this.AuditList.length - 1, 1);
+            } else {
+                row.pstngDate = this.plantList.pstngDate;
+                // row.status = '';
+                this.lodingStatus1 = true;
+                this.$http(`${AUDIT_API.AUDITISSUE_SAVE_API}`, 'POST', [row])
+                    .then(({ data }) => {
+                        this.lodingStatus1 = false;
                         if (data.code === 0) {
-                            this.workshop = data.typeList;
-                            if (!this.plantList.workShop && data.typeList.length > 0) {
-                                this.plantList.workShop = data.typeList[0].deptId;
-                            }
+                            this.$notify({ title: '成功', message: '操作成功', type: 'success' });
+                            row.redact = false;
+                            this.AuditList.splice(this.AuditList.length, 0, {});
+                            this.AuditList.splice(this.AuditList.length - 1, 1);
                         } else {
                             this.$errorToast(data.msg);
                         }
+                        this.GetAuditList();
+                    })
+                    .catch(() => {
+                        this.$notify.error({ title: '错误', message: '网络错误' });
+                        this.lodingStatus1 = false;
                     });
-                } else {
-                    this.workshop = [];
-                }
-            },
-            // 获取产线
-            GetParentline(id) {
-                this.plantList.productLine = '';
-                if (id) {
-                    this.$http(`${BASICDATA_API.FINDORGBYPARENTID_API}`, 'POST', { parentId: id }).then(({ data }) => {
-                        if (data.code === 0) {
-                            this.productline = data.childList;
-                        } else {
-                            this.$errorToast(data.msg);
-                        }
-                    });
-                } else {
-                    this.productline = [];
-                }
-            },
-            // 表格选中
-            handleSelectionChange(val) {
-                this.multipleSelection = [];
-                val.forEach((item) => {
-                    this.multipleSelection.push(item);
-                });
-            },
-            // 过账日期
-            SetPostgDate(date) {
-                return date.getFullYear() + '-' + (date.getMonth() + 1) + '-' + date.getDate();
-            },
-            // 审核通过禁用
-            checkboxT(row) {
-                if ((row.status === 'checked' && (row.interfaceReturnStatus === '1' || row.interfaceReturnStatus === null)) || row.status === 'noPass') {
-                    return 0;
-                }
-                return 1;
-            },
-            // 编辑
-            redact(row) {
-                if (!row.redact) {
-                    row.redact = true;
-                    this.AuditList.splice(this.AuditList.length, 0, {});
-                    this.AuditList.splice(this.AuditList.length - 1, 1);
-                } else {
-                    row.pstngDate = this.plantList.pstngDate;
-                    // row.status = '';
-                    this.lodingStatus1 = true;
-                    this.$http(`${AUDIT_API.AUDITISSUE_SAVE_API}`, 'POST', [row])
-                        .then(({ data }) => {
-                            this.lodingStatus1 = false;
-                            if (data.code === 0) {
-                                this.$notify({ title: '成功', message: '操作成功', type: 'success' });
-                                row.redact = false;
-                                this.AuditList.splice(this.AuditList.length, 0, {});
-                                this.AuditList.splice(this.AuditList.length - 1, 1);
-                            } else {
-                                this.$errorToast(data.msg);
-                            }
-                            this.GetAuditList();
+            }
+        },
+        // 审核拒绝
+        repulseAutios() {
+            if (this.multipleSelection.length <= 0) {
+                this.$warningToast('请选择订单');
+            } else {
+                this.visible = true;
+            }
+        },
+        repulseAutio() {
+            if (this.Text.length <= 0) {
+                this.$warningToast('请填写不通过原因');
+            } else {
+                this.$refs.pstngDate.validate(valid => {
+                    if (valid) {
+                        this.$confirm('确认审核不通过, 是否继续?', '审核不通过', {
+                            confirmButtonText: '确定',
+                            cancelButtonText: '取消',
+                            type: 'warning'
                         })
-                        .catch(() => {
-                            this.$notify.error({ title: '错误', message: '网络错误' });
-                            this.lodingStatus1 = false;
-                        });
-                }
-            },
-            // 审核拒绝
-            repulseAutios() {
-                if (this.multipleSelection.length <= 0) {
-                    this.$warningToast('请选择订单');
-                } else {
-                    this.visible = true;
-                }
-            },
-            repulseAutio() {
-                if (this.Text.length <= 0) {
-                    this.$warningToast('请填写不通过原因');
-                } else {
-                    this.$refs.pstngDate.validate(valid => {
-                        if (valid) {
-                            this.$confirm('确认审核不通过, 是否继续?', '审核不通过', {
-                                confirmButtonText: '确定',
-                                cancelButtonText: '取消',
-                                type: 'warning'
-                            }).then(() => {
+                            .then(() => {
                                 this.multipleSelection.forEach(item => {
                                     item.status = 'noPass';
                                     item.memo = this.Text;
@@ -473,25 +476,27 @@
                                         this.$notify.error({ title: '错误', message: '网络错误' });
                                         this.lodingStatus1 = false;
                                     });
-                            }).catch(() => {
+                            })
+                            .catch(() => {
                                 // this.$infoToast('已取消删除');
                             });
-                        }
-                    });
-                }
-            },
-            // 审核通过
-            subAutio() {
-                if (this.multipleSelection.length <= 0) {
-                    this.$warningToast('请选择订单');
-                } else {
-                    this.$refs.pstngDate.validate(valid => {
-                        if (valid) {
-                            this.$confirm('确认审核通过, 是否继续?', '审核通过', {
-                                confirmButtonText: '确定',
-                                cancelButtonText: '取消',
-                                type: 'warning'
-                            }).then(() => {
+                    }
+                });
+            }
+        },
+        // 审核通过
+        subAutio() {
+            if (this.multipleSelection.length <= 0) {
+                this.$warningToast('请选择订单');
+            } else {
+                this.$refs.pstngDate.validate(valid => {
+                    if (valid) {
+                        this.$confirm('确认审核通过, 是否继续?', '审核通过', {
+                            confirmButtonText: '确定',
+                            cancelButtonText: '取消',
+                            type: 'warning'
+                        })
+                            .then(() => {
                                 this.multipleSelection.forEach(item => {
                                     item.status = 'checked';
                                     item.memo = '审核通过';
@@ -514,68 +519,68 @@
                                         this.$notify.error({ title: '错误', message: '网络错误' });
                                         this.lodingStatus1 = false;
                                     });
-                            }).catch(() => {
+                            })
+                            .catch(() => {
                                 // this.$infoToast('已取消删除');
                             });
-                        }
-                    });
-                }
-            },
-            // 改变每页条数
-            handleSizeChange(val) {
-                this.plantList.pageSize = val;
-                this.GetAuditList();
-            },
-            // 跳转页数
-            handleCurrentChange(val) {
-                this.plantList.currPage = val;
-                this.GetAuditList();
+                    }
+                });
             }
+        },
+        // 改变每页条数
+        handleSizeChange(val) {
+            this.plantList.pageSize = val;
+            this.GetAuditList();
+        },
+        // 跳转页数
+        handleCurrentChange(val) {
+            this.plantList.currPage = val;
+            this.GetAuditList();
         }
-    };
+    }
+};
 </script>
 
 <style lang="scss" scoped>
-    .searchCard {
-        margin-bottom: 0;
+.searchCard {
+    margin-bottom: 0;
+}
+.switching .el-card__body {
+    padding-bottom: 0;
+}
+.searchCard,
+.tableCard {
+    position: relative;
+    .toggleSearchTop {
+        position: absolute;
+        top: 0;
+        left: 0;
+        display: none;
+        width: 100%;
+        text-align: center;
+        cursor: pointer;
     }
-    .switching .el-card__body {
-        padding-bottom: 0;
+    .toggleSearchBottom {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        text-align: center;
+        cursor: pointer;
     }
-    .searchCard,
-    .tableCard {
-        position: relative;
-        .toggleSearchTop {
-            position: absolute;
-            top: 0;
-            left: 0;
-            display: none;
-            width: 100%;
-            text-align: center;
-            cursor: pointer;
-        }
-        .toggleSearchBottom {
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            width: 100%;
-            text-align: center;
-            cursor: pointer;
-        }
-        .el-icon-caret-top::before,
-        .el-icon-caret-bottom::before {
-            color: #dcdfe6;
+    .el-icon-caret-top::before,
+    .el-icon-caret-bottom::before {
+        color: #dcdfe6;
+    }
+}
+.topforms {
+    .el-date-editor.el-input {
+        width: auto;
+    }
+    .formtextarea {
+        .el-form-item__content {
+            width: 500px;
         }
     }
-    .topforms {
-        .el-date-editor.el-input {
-            width: auto;
-        }
-        .formtextarea {
-            .el-form-item__content {
-                width: 500px;
-            }
-        }
-    }
-
+}
 </style>

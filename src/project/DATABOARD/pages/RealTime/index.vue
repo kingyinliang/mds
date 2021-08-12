@@ -226,6 +226,7 @@ export default {
                 key = 2;
             }
             const wsObject = [
+                // TODOS DFMDS-4528
                 {
                     url: 'wss://23kdu5ymdj.execute-api.cn-north-1.amazonaws.com.cn/pre',
                     appid: 'df-mds-dev',

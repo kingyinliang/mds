@@ -425,7 +425,46 @@ export default class Equipment extends Vue {
                 return false
             }
         }
+        if (!this.dateRule()) {
+            return false
+        }
         return true
+    }
+
+    dateRule() {
+        const arr = this.secondFormDataGroup.filter(it => it.delFlag !== 1 && it.stopMode === 'CONTINUE_HALT')
+        for (let index = 0; index < arr.length; index++) {
+            const item = arr[index]
+            if (index !== arr.length - 1) {
+                for (let i = index + 1; i < arr.length; i++) {
+                    if (this.isDateIntersection(item.startDate, item.endDate, arr[i].startDate, arr[i].endDate) === true) {
+                        this.$warningToast('有重复时间段');
+                        return false
+                    }
+                }
+            }
+        }
+        return true
+    }
+
+    isDateIntersection(start1, end1, start2, end2) {
+        const startdate1 = new Date(start1.replace('-', '/').replace('-', '/'));
+        const enddate1 = new Date(end1.replace('-', '/').replace('-', '/'));
+        const startdate2 = new Date(start2.replace('-', '/').replace('-', '/'));
+        const enddate2 = new Date(end2.replace('-', '/').replace('-', '/'));
+        if (startdate1 >= startdate2 && startdate1 <= enddate2) {
+            return true;
+        }
+        if (enddate1 >= startdate2 && enddate1 <= enddate2) {
+            return true;
+        }
+        if (startdate1 <= startdate2 && enddate1 >= enddate2) {
+            return true;
+        }
+        if (startdate1 >= startdate2 && enddate1 <= enddate2) {
+            return true;
+        }
+        return false
     }
 
     savedData(formHeader) {

@@ -21,7 +21,7 @@
                             class="delBtn"
                             @click="delLine(scope.row)"
                         >
-                            删除
+                            <span style="font-size: 14px;">删除</span>
                         </el-button>
                         <el-button
                             v-else
@@ -30,7 +30,7 @@
                             size="small"
                             @click="spliteLine(scope.row, scope.$index)"
                         >
-                            <i class="icons iconfont factory-chaifen" /> 拆分
+                            <i class="icons iconfont factory-chaifen" /><span style="font-size: 14px;">拆分</span>
                         </el-button>
                     </template>
                 </el-table-column>
@@ -166,18 +166,21 @@
                         </div>
                     </template>
                 </el-table-column>
-                <el-table-column width="250" label="换罐时间">
+                <el-table-column width="250" label="开始使用时间">
                     <template slot-scope="scope">
-                        <el-date-picker
-                            v-if="isRedact && (Sapstatus === 'noPass' || Sapstatus === 'saved' || Sapstatus === '') && scope.row.status !== 'submit' && scope.row.status !== 'checked'"
-                            v-model="scope.row.changePotDate"
-                            type="datetime"
-                            size="small"
-                            value-format="yyyy-MM-dd HH:mm:ss"
-                            format="yyyy.MM.dd HH:mm"
-                            placeholder="请选择"
-                        />
-                        <el-date-picker v-else v-model="scope.row.changePotDate" type="datetime" size="small" value-format="yyyy-MM-dd HH:mm:ss" format="yyyy.MM.dd HH:mm" placeholder="请选择" disabled />
+                        <div class="required">
+                            <i class="reqI">*</i>
+                            <el-date-picker
+                                v-if="isRedact && (Sapstatus === 'noPass' || Sapstatus === 'saved' || Sapstatus === '') && scope.row.status !== 'submit' && scope.row.status !== 'checked'"
+                                v-model="scope.row.changePotDate"
+                                type="datetime"
+                                size="small"
+                                value-format="yyyy-MM-dd HH:mm:ss"
+                                format="yyyy.MM.dd HH:mm"
+                                placeholder="请选择"
+                            />
+                            <el-date-picker v-else v-model="scope.row.changePotDate" type="datetime" size="small" value-format="yyyy-MM-dd HH:mm:ss" format="yyyy.MM.dd HH:mm" placeholder="请选择" disabled />
+                        </div>
                     </template>
                 </el-table-column>
                 <el-table-column width="250" label="用完时间">
@@ -440,7 +443,7 @@ export default {
                         //     this.$warningToast('物料必填项未填');
                         //     return false;
                         // }
-                        if (it.productUseNum === '' || (it.materialTypeCode !== 'ZERS' && !it.batch)) {
+                        if (it.productUseNum === '' || it.productUseNum === 0 || it.productUseNum === '0' || (it.materialTypeCode !== 'ZERS' && !it.batch)) {
                             ty = false;
                             this.$warningToast('物料必填项未填');
                             return false;
@@ -458,6 +461,23 @@ export default {
                 //         }
                 //     }
                 // });
+                if (this.order.properties !== '二合一&礼盒产线') {
+                  for (const itema of this.listbomS) {
+                    if (itema.delFlag !== '1') {
+                      if (itema.potNo && itema.filterDate && itema.productUseNum && itema.batch) {
+                        if (!itema.useUsage && this.order.factoryCode !== '6010') {
+                          ty = false
+                          this.$warningToast('物料半成品必填项未填')
+                          return false
+                        }
+                      } else {
+                        ty = false
+                        this.$warningToast('物料半成品必填项未填')
+                        return false
+                      }
+                    }
+                  }
+                }
                 // if (this.order.properties !== '二合一&礼盒产线') {
                 //   for (var itema of this.listbomS) {
                 //     if (itema.delFlag !== '1') {
@@ -512,7 +532,7 @@ export default {
         },
         ListbomsAllMustFill(item) {
             let ty = true;
-            if (item.potNo && item.filterDate && item.productUseNum && item.batch) {
+            if (item.potNo && item.filterDate && item.productUseNum && item.batch && item.changePotDate) {
                 if (!item.useUsage && this.order.factoryCode !== '6010') {
                     ty = false;
                     this.$warningToast('物料半成品必填项未填');

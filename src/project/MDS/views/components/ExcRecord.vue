@@ -65,6 +65,10 @@
                 </template>
             </el-table-column>
             <el-table-column label="设备" width="120">
+                <template slot="header">
+                    <em class="reqI">*</em>
+                    <span>设备</span>
+                </template>
                 <template slot-scope="scope">
                     <el-select v-model="scope.row.deviceId" filterable placeholder="设备" size="small" :disabled="!(isRedact && (scope.row.expCode === '001' || scope.row.expCode === '002'))">
                         <el-option v-for="(item, index) in equipmentType" :key="index" :label="item.deviceName" :value="item.deviceNo" />

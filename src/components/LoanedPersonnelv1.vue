@@ -73,6 +73,8 @@ export default {
             this.visible = true;
             this.selctId = userIdTemp; // 已选
             this.userlist = []; // 可选
+            this.arrList = [this.orgTree[0].id];
+            this.setdetail(this.orgTree[0])
 
             // 预设选取该车间
             COMMON_API.ORG_QUERY_WORKSHOP_API({
