@@ -425,12 +425,6 @@ export default class Equipment extends Vue {
                 return false
             }
         }
-        for (const item of this.secondFormDataGroup.filter(it => it.delFlag !== 1 && it.stopMode === 'CONTINUE_HALT')) {
-            if (item.stopMode === 'CONTINUE_HALT') {
-                this.$warningToast('请填写停机情况必填项');
-                return false
-            }
-        }
         if (!this.dateRule()) {
             return false
         }
