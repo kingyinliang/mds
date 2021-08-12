@@ -140,7 +140,7 @@
                     <span>{{ allocateSequence }}</span>
                 </el-form-item>
             </el-form>
-            <el-table style="margin-bottom: 20px;" :data="ItemList" border header-row-class-name="tableHead" :row-class-name="RowDelFlag1">
+            <el-table style="margin-bottom: 20px;" :data="ItemList" :span-method="spanMethod" border header-row-class-name="tableHead" :row-class-name="RowDelFlag1">
                 <el-table-column label="物料" :show-overflow-tooltip="true" width="180">
                     <template slot-scope="scope">
                         {{ scope.row.materialName }}
@@ -431,7 +431,8 @@ export default {
             strList1: [],
             strList2: [],
             Tdata: '',
-            batchList: []
+            batchList: [],
+            spanOneArr: []
         };
     },
     watch: {
@@ -452,6 +453,34 @@ export default {
         this.GetHolderStatusList();
     },
     methods: {
+        // 合并行
+        spanMethod({ rowIndex, columnIndex }) {
+            if (columnIndex <= 4) {
+                return {
+                    rowspan: this.spanOneArr[rowIndex],
+                    colspan: this.spanOneArr[rowIndex] > 0 ? 1 : 0
+                };
+            }
+        },
+        // 设置合并行
+        merge(tableData) {
+            const spanOneArr = [];
+            let concatOne = 0;
+            tableData.forEach((item, index) => {
+                if (index === 0) {
+                    spanOneArr.push(1);
+                } else if (item.materialCode === tableData[index - 1].materialCode) {
+                    if (item.delFlag !== 1) {
+                        spanOneArr[concatOne] += 1;
+                    }
+                    spanOneArr.push(0);
+                } else {
+                    spanOneArr.push(1);
+                    concatOne = index;
+                }
+            });
+            return spanOneArr;
+        },
         GetInfo(row) {
             this.$http(`${STERILIZED_API.DODEPLOYMENTALLOCATELIST}`, 'POST', {
                 orderNo: row.id
@@ -630,6 +659,7 @@ export default {
                             item.receiveAmount = item.planAmount;
                         }
                     });
+                    this.spanOneArr = this.merge(this.ItemList);
                     this.dialogTableVisible = true;
                     this.lineStatus = row.status;
                     this.ID = row.id;
@@ -660,6 +690,7 @@ export default {
                 delFlag: '0',
                 id: ''
             });
+            this.spanOneArr = this.merge(this.ItemList);
         },
         // 调配 确定
         SaveSplit() {

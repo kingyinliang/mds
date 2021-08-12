@@ -111,10 +111,10 @@
                     <el-table-column label="出油率/%" prop="tboilYield" width="120" />
                     <el-table-column label="名称" prop="tb2days" show-overflow-tooltip />
                     <el-table-column label="领用/方">
-                        <el-table-column label="JYTB酱醪" prop="tb2collarUse" />
+                        <el-table-column label="丸大豆酱醪" prop="tb2collarUse" />
                     </el-table-column>
                     <el-table-column label="产出/方">
-                        <el-table-column label="TB原汁" prop="tb2produce" />
+                        <el-table-column label="丸大豆原汁" prop="tb2produce" />
                     </el-table-column>
                     <el-table-column label="生产笼数/笼">
                         <el-table-column label="一期" prop="tb2oneNums" />
