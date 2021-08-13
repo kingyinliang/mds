@@ -218,7 +218,7 @@ export default class PickingMaterialDetail extends Vue {
                     item.stoPackageMaterialStorageResponseDtoList = [];
                     // 如果选了批次，当前库存展示当前批次的，如果没有批次，当前库存展示所有批次的总和
                     if (item.batch) {
-                        if (item.stgeLocList.length > 0) {
+                        if (item.stgeLocList.length > 0 && item.stgeLoc) {
                             const stgeLocList = item.stgeLocList.find(list => list.stgeLoc === item.stgeLoc);
                             const obj = stgeLocList.stoPackageMaterialStorageResponseDtoList.find(row => row.batch === item.batch);
                             item.storage = obj?.currentAmount;
