@@ -1530,7 +1530,7 @@ export const FERMENTATION_API = {
      */
     FER_LIST_API: HOST + '/fer/holderManage/list', // 列表
     FER_DETAIL_API: HOST + '/fer/holderManage/detail', // 详情
-    FER_HALF_LIST_API: HOST + '/fer/holderManage/halfList', // 获取半成品
+    FER_HALF_LIST_API: HOST + '/fer/sort/dropDown', // 获取半成品
     FER_HOLDER_STATUS_API: HOST + '/fer/holderManage/ferHolderStatusList', // 发酵罐状态
     FER_RINSE_API: HOST + '/fer/clean/save', // 清洗
     FER_REPORT_LIST: HOST + '/report/production/fermentation', // 发酵一览表,

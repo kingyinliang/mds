@@ -22,7 +22,7 @@
                 <el-form-item label="类别：" label-width="50px">
                     <el-select v-model="formHeader.halfType" placeholder="请选择" style="width: 140px;">
                         <el-option label="请选择" value="" />
-                        <el-option v-for="(item, index) in halfList" :key="index" :label="item.value" :value="item.value" />
+                        <el-option v-for="(item, index) in halfList" :key="index" :label="item.halfName" :value="item.halfType" />
                     </el-select>
                 </el-form-item>
                 <el-form-item label="状态：" label-width="50px">
@@ -573,9 +573,9 @@ export default {
         // 获取半成品
         GetHalfList(id) {
             if (id) {
-                this.$http(`${FERMENTATION_API.FER_HALF_LIST_API}`, 'POST', { factory: this.formHeader.factory, workShop: id }, false, false, false).then(({ data }) => {
+                this.$http(`${FERMENTATION_API.FER_HALF_LIST_API}`, 'GET').then(({ data }) => {
                     if (data.code === 0) {
-                        this.halfList = data.halfList;
+                        this.halfList = data.data;
                     } else {
                         this.$errorToast(data.msg);
                     }
