@@ -46,6 +46,7 @@ export default {
                     type: 'select',
                     label: '发酵罐',
                     prop: 'inPotNo',
+                    filterable: true,
                     optionsFn: val => {
                         const workShopName = this.$refs.queryTable.optionLists.workshop.find(item => item.deptId === val)['deptName'];
                         return this.$http(`${BASICDATA_API.CONTAINERLIST_API}`, 'POST', {
@@ -133,14 +134,19 @@ export default {
                     minwidth: '100'
                 },
                 {
+                    prop: 'inKjmDate',
+                    label: '入曲日期',
+                    minwidth: '110'
+                },
+                {
                     prop: 'canningDate',
                     label: '投罐日期',
-                    minwidth: '100'
+                    minwidth: '110'
                 },
                 {
                     prop: 'canfulDate',
                     label: '满罐日期',
-                    minwidth: '100'
+                    minwidth: '110'
                 },
                 {
                     prop: 'oheDate',

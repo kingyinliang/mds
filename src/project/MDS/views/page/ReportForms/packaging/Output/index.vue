@@ -23,7 +23,7 @@ export default {
                         label: ['deptName'],
                         value: 'deptId'
                     },
-                    linkageProp: ['workshop']
+                    linkageProp: ['workshop', 'materialCode']
                 },
                 {
                     type: 'select',
@@ -67,12 +67,12 @@ export default {
                     filterable: true,
                     resVal: {
                         resData: 'list',
-                        label: ['sapName', 'itemCode'],
+                        label: ['itemName', 'sapCode'],
                         value: 'sapCode'
                     },
                     defaultValue: '',
-                    defaultOptionsFn: () => {
-                        return this.$http(`${BASICDATA_API.FINDSAP_API}`, 'POST', { params: '' }, false, false, false);
+                    optionsFn: val => {
+                        return this.$http(`${BASICDATA_API.FINDSAP_API}`, 'POST', { factory: val, params: '' });
                     }
                 },
                 {

@@ -1,7 +1,7 @@
 <template>
     <div>
         <mds-card title="布浆总量" name="SumDate">
-            <el-table ref="table1" class="newTable borderTable" header-row-class-name="tableHead" :data="SumDate" :row-class-name="RowDelFlag" @row-dblclick="GetLog">
+            <el-table ref="table1" class="newTable borderTable" header-row-class-name="tableHead" :data="SumDate" :row-class-name="RowDelFlag" :span-method="spanMethod" @row-dblclick="GetLog">
                 <el-table-column label="原汁信息">
                     <el-table-column label="状态" width="95">
                         <template slot-scope="scope">
@@ -141,6 +141,7 @@ export default {
     },
     data() {
         return {
+            spanArr: [],
             SumDate: [],
             materialDate: [],
             sumAmount1: {},
@@ -194,6 +195,33 @@ export default {
         }
     },
     methods: {
+        // 合并行
+        spanMethod({ rowIndex, columnIndex }) {
+            if (columnIndex <= 10) {
+                return {
+                    rowspan: this.spanArr[rowIndex],
+                    colspan: this.spanArr[rowIndex] > 0 ? 1 : 0
+                };
+            }
+        },
+        merge(tableData) {
+            const spanOneArr = [];
+            let concatOne = 0;
+            tableData.forEach((item, index) => {
+                if (index === 0) {
+                    spanOneArr.push(1);
+                } else if (item.fumet.materialCode === tableData[index - 1].fumet.materialCode) {
+                    if (item.delFlag !== '1') {
+                        spanOneArr[concatOne] += 1;
+                    }
+                    spanOneArr.push(0);
+                } else {
+                    spanOneArr.push(1);
+                    concatOne = index;
+                }
+            });
+            return spanOneArr;
+        },
         // 获取酱醪领用
         getMaterialList(formHeader, resolve, reject) {
             this.$http(`${SQU_API.SUM_MATERIAL_LIST_API}`, 'POST', {
@@ -426,6 +454,7 @@ export default {
                     isDropDown: '1'
                 }
             });
+            this.spanArr = this.merge(this.SumDate);
         },
         // 删除
         dellist(row) {
@@ -552,6 +581,7 @@ export default {
                     }
                 });
             }
+            this.spanArr = this.merge(this.SumDate)
         },
         GetOldAmount(row) {
             this.oldChildUsedAmount = row.material.childUsedAmount;
