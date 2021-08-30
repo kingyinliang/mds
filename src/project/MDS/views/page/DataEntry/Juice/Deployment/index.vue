@@ -730,6 +730,17 @@ export default {
                     //     return false
                     //   }
                     // }
+                    if (item.materialName.indexOf('原汁') === -1 && item.delFlag === '0') {
+                        const amount = this.ItemList.filter(it => it.materialName.indexOf('原汁') === -1 && it.delFlag === '0' && it.materialCode === item.materialCode).reduce((pre, cur) => {
+                            return accAdd(pre, cur.receiveAmount)
+                        }, 0)
+                        console.log(amount);
+                        console.log(item.planAmount);
+                        if (Number(item.planAmount) !== amount) {
+                            this.$warningToast('实际领料数总和应等于计划领用数');
+                            return false;
+                        }
+                    }
                 }
             }
             // 实际领用数应小于计划领料
@@ -815,11 +826,11 @@ export default {
                         this.SearchList();
                         // this.ThrowHolder(this.formHeader.workShop)
                         this.dialogTableVisible = false;
-                    } else if (data.mes.length === 0) {
-                            this.$errorToast(data.msg);
-                        } else {
-                            this.$errorToast(data.mes.join(','));
-                        }
+                    } else if (data.mes && data.mes.length > 0) {
+                        this.$errorToast(data.mes.join(','));
+                    } else {
+                        this.$errorToast(data.msg);
+                    }
                 });
             } else {
                 this.$notify({
