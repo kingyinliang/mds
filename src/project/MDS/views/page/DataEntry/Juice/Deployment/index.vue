@@ -469,8 +469,10 @@ export default {
             tableData.forEach((item, index) => {
                 if (index === 0) {
                     spanOneArr.push(1);
-                } else if (item.materialCode === tableData[index - 1].materialCode) {
-                    if (item.delFlag !== 1) {
+                } else if (item.delFlag === '1' || item.materielType === 'BL_LY') {
+                    spanOneArr.push(0);
+                } else if (item.materialCode === tableData[concatOne].materialCode && tableData[concatOne].isSplit === '1' && item.isSplit === '1') {
+                    if (item.delFlag !== '1' && item.materielType !== 'BL_LY') {
                         spanOneArr[concatOne] += 1;
                     }
                     spanOneArr.push(0);
@@ -479,6 +481,7 @@ export default {
                     concatOne = index;
                 }
             });
+            console.log(spanOneArr)
             return spanOneArr;
         },
         GetInfo(row) {
@@ -929,6 +932,7 @@ export default {
                 type: 'warning'
             }).then(() => {
                 row.delFlag = '1';
+                this.spanOneArr = this.merge(this.ItemList);
                 // this.ItemList.splice(this.ItemList.indexOf(row), 1)
             }).catch(() => {
                 // this.$infoToast('已取消删除');
