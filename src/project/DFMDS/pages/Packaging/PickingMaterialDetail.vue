@@ -378,7 +378,7 @@ export default class PickingMaterialDetail extends Vue {
         }
 
         const delIds: string[] = [];
-        let insertDto: DataObj[] = [];
+        const insertDto: DataObj[] = [];
         const updateDto = [];
 
         // this.tableData.forEach(item => {
@@ -394,7 +394,6 @@ export default class PickingMaterialDetail extends Vue {
             const element = insertDto[index];
             delete element.stoPackageMaterialStorageResponseDtoList;
         }
-        insertDto = insertDto.filter(item => item.useAmount !== '0' && item.useAmount !== 0)
 
         const params = {
             workShop: this.formHeader['workShop'],
