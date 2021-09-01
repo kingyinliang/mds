@@ -19,6 +19,11 @@
                         <el-option label="审核不通过" value="noPass" />
                     </el-select>
                 </el-form-item>
+                <el-form-item label="领用日期：">
+                    <el-date-picker v-model="formHeader.productDateBegin" type="date" placeholder="请选择" value-format="yyyy-MM-dd" style="width: 135px;" />
+                    -
+                    <el-date-picker v-model="formHeader.productDateEnd" type="date" placeholder="请选择" value-format="yyyy-MM-dd" style="width: 135px;" />
+                </el-form-item>
                 <el-form-item class="floatr">
                     <template style="float: right; margin-left: 10px;">
                         <el-button v-if="isAuth('gra:dept:list')" type="primary" size="small" @click="getDataList(true)">
@@ -177,6 +182,7 @@ export default {
             isRedact: false,
             factoryList: [],
             formHeader: {
+                factoryIDValue: '',
                 batch: '',
                 status: '',
                 currPage: 1,

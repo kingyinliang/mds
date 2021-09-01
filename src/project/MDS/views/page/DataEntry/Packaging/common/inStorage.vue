@@ -588,6 +588,11 @@ export default {
                     //   this.$message.error('生产入库单位未获取')
                     //   return false
                     // }
+                    if (item.sample === 0 || item.sample === '0') {
+                      ty = false
+                      this.$message.error('样品为0，需经过确认再提交。')
+                      return false
+                    }
                     if (item.batch) {
                         // if (item.batch.length !== 10) {
                         //   ty = false
