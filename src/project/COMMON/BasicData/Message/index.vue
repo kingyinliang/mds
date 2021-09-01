@@ -2,16 +2,6 @@
     <div class="header_main">
         <el-card class="box-card">
             <el-form inline :model="formModel" size="small" label-suffix="：">
-                <el-form-item label="工厂" prop="factory">
-                    <el-select v-model="formModel.factory" clearable @change="factoryChangeHandler">
-                        <el-option v-for="item in dropObj.factoryList" :key="item.id" :label="item.deptName" :value="item.id" />
-                    </el-select>
-                </el-form-item>
-                <!-- <el-form-item label="车间" prop="workShop">
-                  <el-select v-model="formModel.workShop" clearable>
-                    <el-option v-for="item in dropObj.workShopList" :key="item.id" :label="item.deptName" :value="item.id" />
-                  </el-select>
-                </el-form-item> -->
                 <el-form-item label="业务类型" prop="businessType">
                     <el-select v-model="formModel.businessType" clearable>
                         <el-option v-for="item in dropObj.businessTypeList" :key="item.dictCode" :label="item.dictValue" :value="item.dictCode" />
@@ -27,6 +17,14 @@
                         <el-option v-for="item in dropObj.msgTypeList" :key="item.dictCode" :label="item.dictValue" :value="item.dictCode" />
                     </el-select>
                 </el-form-item>
+                <el-form-item label="处理结果" prop="msgType">
+                    <el-select v-model="formModel.operationFlag" clearable>
+                        <el-option v-for="item in dropObj.operationList" :key="item.dictCode" :label="item.dictValue" :value="item.dictCode" />
+                    </el-select>
+                </el-form-item>
+                <el-form-item label="备注" prop="msgType">
+                    <el-input v-model="formModel.remark" size="small" clearable />
+                </el-form-item>
                 <el-form-item>
                     <el-button type="primary" icon="el-icon-search" @click="searchHandler()">
                         搜索
@@ -37,13 +35,17 @@
         <mds-card title="内容标题" name="message" :pack-up="false" style=" margin-top: 10px; background: #fff;">
             <el-table ref="table1" class="newTable" border header-row-class-name="tableHead" :data="messageList" tooltip-effect="dark" height="400px">
                 <el-table-column type="index" label="序号" :index="(index) => index + 1 + (Number(pageOption.current) - 1) * (Number(pageOption.size))" width="55" fixed />
-                <el-table-column label="生产工厂" prop="factory" :show-overflow-tooltip="true" />
                 <!-- 操作类型（消息类型） -->
-                <el-table-column label="操作类型" prop="msgType" :show-overflow-tooltip="true" />
+                <el-table-column label="消息类型" prop="msgType" :show-overflow-tooltip="true" />
                 <el-table-column label="业务类型" prop="businessType" :show-overflow-tooltip="true" />
-                <el-table-column label="失败类型" prop="failType" :show-overflow-tooltip="true" />
-                <el-table-column label="操作人" prop="changer" :show-overflow-tooltip="true" />
-                <el-table-column label="操作时间" prop="changed" :show-overflow-tooltip="true" />
+                <el-table-column label="失败类型" prop="failType" :show-overflow-tooltip="true">
+                    <template slot-scope="scope">
+                        {{ scope.row.failType === ''? '正常' : scope.row.failType }}
+                    </template>
+                </el-table-column>
+                <el-table-column label="处理结果" prop="operationFlag" :show-overflow-tooltip="true" />
+                <el-table-column label="操作时间" prop="created" :show-overflow-tooltip="true" />
+                <el-table-column label="备注" prop="remark" />
                 <el-table-column label="操作" width="80px" :show-overflow-tooltip="true">
                     <template v-slot="scope">
                         <el-button type="text" size="small" icon="el-icon-d-arrow-left" @click="detailHandler(scope.row)">
@@ -63,13 +65,13 @@
             />
         </mds-card>
         <el-dialog
-            v-model="dialogVisible"
+            :visible.sync="dialogVisible"
             title="详情描述"
             width="600px"
             :close-on-click-modal="false"
         >
-            <div class="dialog-body">
-                {{ messageStr }}
+            <div class="dialog-body" style="overflow: scroll;">
+                <pre>{{ messageData }}</pre>
             </div>
             <template #footer class="dialog-footer">
                 <el-button size="small" @click="dialogVisible = false">
@@ -101,6 +103,7 @@
 
     interface MessageType {
         id?: string;
+        msgId?: string;
         workShop?: string;
         type?: string;
     }
@@ -111,15 +114,23 @@
     })
     export default class Message extends Vue {
         messageStr = ''
+        messageData = {}
         dialogVisible = false
         currentRow: MessageType | null = null
-        formModel: FormModelType = {}
+        formModel = {
+            businessType: '',
+            failType: '',
+            msgType: '',
+            operationFlag: '',
+            remark: ''
+        }
+
         messageList: FormModelType[] = []
         dropObj = {
-            factoryList: [],
             businessTypeList: [],
             msgTypeList: [],
-            failTypeList: []
+            failTypeList: [],
+            operationList: []
         }
 
         pageOption: PageOptionType = {
@@ -129,20 +140,14 @@
         }
 
         mounted() {
-            this.factoryChangeHandler('1')
-            this.getFactoryDrop()
+            this.factoryChangeHandler()
         }
 
-        factoryChangeHandler(val: string) {
-            console.log(val)
+        factoryChangeHandler() {
             this.getDrop('MSG_BUSINESS_TYPE', 'businessTypeList')
             this.getDrop('MSG_TYPE', 'msgTypeList')
             this.getDrop('MSG_FAIL_TYPE', 'failTypeList')
-        }
-
-        async getFactoryDrop() {
-            const res = await COMMON_API.ORG_QUERY_WORKSHOP_API({ deptType: ['factory'] })
-            this.dropObj.factoryList = res.data.data
+            this.getDrop('MSG_OPERATION_FLAG', 'operationList')
         }
 
         async getDrop(dictType: string, dropObj: string) {
@@ -162,6 +167,7 @@
         async getDetail(id: string) {
             const res = await BASIC_API.MSG_INFO_GET_BY_ID({ id })
             this.messageStr = res.data.data.message
+            this.messageData = JSON.parse(res.data.data.message)
         }
 
         searchHandler() {
@@ -172,12 +178,12 @@
         detailHandler(row: MessageType) {
             this.currentRow = row
             // eslint-disable-next-line
-            this.getDetail(row.id!)
+            this.getDetail(row.msgId!)
             this.dialogVisible = true
         }
 
         async retryHandler() {
-            const res = await BASIC_API.MSG_INFO_RETRY({ id: this.currentRow?.id })
+            const res = await BASIC_API.MSG_INFO_RETRY({ id: this.currentRow?.msgId })
             if (res.data.code) {
                 this.$successToast(res.data.msg)
                 this.dialogVisible = false
