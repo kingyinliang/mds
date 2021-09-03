@@ -86,6 +86,10 @@ const STE_API = {
      */
     STE_DISSOLUTIONBUCKET_QUERY_API: params => httpProxy('/steDissolutionPot/query', 'POST', params),
     /**
+     * @property {string} STE_DISSOLUTIONBUCKET_QUERY_API 杀菌车间-溶解罐管理-查询
+     */
+    STE_DISSOLUTIONBUCKET_DROPDOWN_API: params => httpProxy('/steDissolutionPot/notEmpty/dropDown', 'POST', params),
+    /**
      * @property {string} STE_DISSOLUTIONBUCKET_ITEM_QUERY_API 杀菌车间-溶解罐管理-详情查询
      */
     STE_DISSOLUTIONBUCKET_ITEM_QUERY_API: params => httpProxy('/steDissolutionPot/item/query', 'POST', params),

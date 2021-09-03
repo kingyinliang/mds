@@ -363,7 +363,7 @@ export default class CookingDetail extends Vue {
         } else {
             pM = this.formHeaders.productMaterial;
         }
-        STE_API.STE_DISSOLUTIONBUCKET_QUERY_API({ workShop: this.formHeaders.workShop, potStatus: ['M', 'U'], potNo: '', materialCode: pM }).then(({ data }) => {
+        STE_API.STE_DISSOLUTIONBUCKET_DROPDOWN_API({ workShop: this.formHeaders.workShop, potStatus: ['M', 'U'], potNo: '', materialCode: pM }).then(({ data }) => {
             this.dissolutionPot = data.data;
         })
     }
