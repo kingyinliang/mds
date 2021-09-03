@@ -74,6 +74,7 @@ http.interceptors.response.use(
         }
         if (response.data && response.data.code === 110) {
             Vue.prototype.$warningToast(response.data.msg);
+            tryHideFullScreenLoading(); // 关闭遮罩
             return Promise.reject(response);
         }
         tryHideFullScreenLoading(); // 关闭遮罩
