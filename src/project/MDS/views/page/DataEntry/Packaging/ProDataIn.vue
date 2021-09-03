@@ -356,6 +356,20 @@ export default {
             if (!this.$refs.instorage.inrul()) {
                 return false;
             }
+            if (this.$refs.instorage.InDate.filter(item => item.sample === 0 || item.sample === '0').length > 0) {
+                this.$confirm('样品为0，需经过确认再提交。', '提示', {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    type: 'warning'
+                }).then(() => {
+                    this.SubmitFn()
+                })
+            } else {
+                this.SubmitFn()
+            }
+
+        },
+        SubmitFn() {
             if (this.submitRadio === '2') {
                 this.formHeader.isUrgent = '0';
                 this.savedOrSubmitForm('submit');
