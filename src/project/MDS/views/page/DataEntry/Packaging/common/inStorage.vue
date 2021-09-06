@@ -39,9 +39,13 @@
                                 <el-input v-model="scope.row.manPacking" placeholder="手工录入" size="small" :disabled="!(isRedact && scope.row.status !== 'submit' && scope.row.status !== 'checked' && scope.row.isZ === '0')" />
                             </template>
                         </el-table-column>
-                        <el-table-column label="单位" min-width="60">
+                        <el-table-column label="单位" min-width="70">
                             <template slot-scope="scope">
-                                <span>{{ (scope.row.manPackingUnitName = ratio.basicUnitName) }}</span>
+                                <el-select v-model="scope.row.manPackingUnit" :disabled="!(isRedact && scope.row.status !== 'submit' && scope.row.status !== 'checked' && scope.row.isZ === '0')" @change="val => scope.row.manPackingUnitName = unitChange(val)">
+                                    <el-option :label="ratio.basicUnitName" :value="ratio.basicUnit" />
+                                    <el-option :label="ratio.productUnitName" :value="ratio.productUnit" />
+                                </el-select>
+                                <!--<span>{{ (scope.row.manPackingUnitName = ratio.basicUnitName) }}</span>-->
                             </template>
                         </el-table-column>
                         <el-table-column v-if="order.workShopName === '包装三车间'" label="自动码垛-包材库" min-width="140">
@@ -49,9 +53,13 @@
                                 <el-input v-model="scope.row.aiPacking" placeholder="手工录入" size="small" :disabled="!(isRedact && scope.row.status !== 'submit' && scope.row.status !== 'checked' && scope.row.isZ === '0')" />
                             </template>
                         </el-table-column>
-                        <el-table-column v-if="order.workShopName === '包装三车间'" label="单位" min-width="60">
+                        <el-table-column v-if="order.workShopName === '包装三车间'" label="单位" min-width="70">
                             <template slot-scope="scope">
-                                <span>{{ (scope.row.aiPackingUnitName = ratio.basicUnitName) }}</span>
+                                <el-select v-model="scope.row.aiPackingUnit" :disabled="!(isRedact && scope.row.status !== 'submit' && scope.row.status !== 'checked' && scope.row.isZ === '0')" @change="val => scope.row.aiPackingUnitName = unitChange(val)">
+                                    <el-option :label="ratio.basicUnitName" :value="ratio.basicUnit" />
+                                    <el-option :label="ratio.productUnitName" :value="ratio.productUnit" />
+                                </el-select>
+                                <!--<span>{{ (scope.row.aiPackingUnitName = ratio.basicUnitName) }}</span>-->
                             </template>
                         </el-table-column>
                         <el-table-column label="人工码垛-立体库" min-width="140">
@@ -59,9 +67,13 @@
                                 <el-input v-model="scope.row.manSolid" placeholder="手工录入" size="small" :disabled="!(isRedact && scope.row.status !== 'submit' && scope.row.status !== 'checked' && scope.row.isL === '0')" />
                             </template>
                         </el-table-column>
-                        <el-table-column label="单位" min-width="60">
+                        <el-table-column label="单位" min-width="70">
                             <template slot-scope="scope">
-                                <span>{{ (scope.row.manSolidUnitName = ratio.productUnitName) }}</span>
+                                <el-select v-model="scope.row.manSolidUnit" :disabled="!(isRedact && scope.row.status !== 'submit' && scope.row.status !== 'checked' && scope.row.isL === '0')" @change="val => scope.row.manSolidUnitName = unitChange(val)">
+                                    <el-option :label="ratio.basicUnitName" :value="ratio.basicUnit" />
+                                    <el-option :label="ratio.productUnitName" :value="ratio.productUnit" />
+                                </el-select>
+                                <!--<span>{{ (scope.row.manSolidUnitName = ratio.productUnitName) }}</span>-->
                             </template>
                         </el-table-column>
                         <el-table-column v-if="order.workShopName === '包装三车间'" label="自动码垛-立体库" min-width="120">
@@ -69,9 +81,13 @@
                                 <el-input v-model="scope.row.aiSolid" placeholder="手工录入" size="small" :disabled="!(isRedact && scope.row.status !== 'submit' && scope.row.status !== 'checked' && scope.row.isL === '0')" />
                             </template>
                         </el-table-column>
-                        <el-table-column v-if="order.workShopName === '包装三车间'" label="单位" min-width="60">
+                        <el-table-column v-if="order.workShopName === '包装三车间'" label="单位" min-width="70">
                             <template slot-scope="scope">
-                                <span>{{ (scope.row.aiSolidUnitName = ratio.productUnitName) }}</span>
+                                <el-select v-model="scope.row.aiSolidUnit" :disabled="!(isRedact && scope.row.status !== 'submit' && scope.row.status !== 'checked' && scope.row.isL === '0')" @change="val => scope.row.aiSolidUnitName = unitChange(val)">
+                                    <el-option :label="ratio.basicUnitName" :value="ratio.basicUnit" />
+                                    <el-option :label="ratio.productUnitName" :value="ratio.productUnit" />
+                                </el-select>
+                                <!--<span>{{ (scope.row.aiSolidUnitName = ratio.productUnitName) }}</span>-->
                             </template>
                         </el-table-column>
                         <el-table-column v-if="order.workShopName !== '包装三车间'" label="自动上架-立体库" min-width="140">
@@ -79,9 +95,13 @@
                                 <el-input v-model="scope.row.aiShelves" type="number" min="0" placeholder="手工录入" size="small" :disabled="!(isRedact && scope.row.status !== 'submit' && scope.row.status !== 'checked' && scope.row.isL === '0')" />
                             </template>
                         </el-table-column>
-                        <el-table-column v-if="order.workShopName !== '包装三车间'" label="单位" min-width="60">
+                        <el-table-column v-if="order.workShopName !== '包装三车间'" label="单位" min-width="70">
                             <template slot-scope="scope">
-                                <span>{{ (scope.row.aiShelvesUnitName = ratio.productUnitName) }}</span>
+                                <el-select v-model="scope.row.aiShelvesUnit" :disabled="!(isRedact && scope.row.status !== 'submit' && scope.row.status !== 'checked' && scope.row.isL === '0')" @change="val => scope.row.aiShelvesUnitName = unitChange(val)">
+                                    <el-option :label="ratio.basicUnitName" :value="ratio.basicUnit" />
+                                    <el-option :label="ratio.productUnitName" :value="ratio.productUnit" />
+                                </el-select>
+                                <!--<span>{{ (scope.row.aiShelvesUnitName = ratio.productUnitName) }}</span>-->
                             </template>
                         </el-table-column>
                         <el-table-column label="不良品" min-width="120">
@@ -89,9 +109,13 @@
                                 <el-input v-model="scope.row.bad" placeholder="手工录入" size="small" :disabled="!(isRedact && scope.row.status !== 'submit' && scope.row.status !== 'checked')" />
                             </template>
                         </el-table-column>
-                        <el-table-column label="单位" min-width="60">
+                        <el-table-column label="单位" min-width="70">
                             <template slot-scope="scope">
-                                <span>{{ (scope.row.badUnitName = ratio.basicUnitName) }}</span>
+                                <el-select v-model="scope.row.badUnit" :disabled="!(isRedact && scope.row.status !== 'submit' && scope.row.status !== 'checked')" @change="val => scope.row.badUnitName = unitChange(val)">
+                                    <el-option :label="ratio.basicUnitName" :value="ratio.basicUnit" />
+                                    <el-option :label="ratio.productUnitName" :value="ratio.productUnit" />
+                                </el-select>
+                                <!--<span>{{ (scope.row.badUnitName = ratio.basicUnitName) }}</span>-->
                             </template>
                         </el-table-column>
                         <el-table-column label="样品" min-width="120">
@@ -99,19 +123,28 @@
                                 <el-input v-model="scope.row.sample" placeholder="手工录入" size="small" :disabled="!(isRedact && scope.row.status !== 'submit' && scope.row.status !== 'checked' && scope.row.isS === '0')" />
                             </template>
                         </el-table-column>
-                        <el-table-column label="单位" min-width="60">
+                        <el-table-column label="单位" min-width="70">
                             <template slot-scope="scope">
-                                <span>{{ (scope.row.sampleUnitName = ratio.basicUnitName) }}</span>
+                                <el-select v-model="scope.row.sampleUnit" :disabled="!(isRedact && scope.row.status !== 'submit' && scope.row.status !== 'checked' && scope.row.isS === '0')" @change="val => scope.row.sampleUnitName = unitChange(val)">
+                                    <el-option :label="ratio.basicUnitName" :value="ratio.basicUnit" />
+                                    <el-option :label="ratio.productUnitName" :value="ratio.productUnit" />
+                                </el-select>
+                                <!--<span>{{ (scope.row.sampleUnitName = ratio.basicUnitName) }}</span>-->
                             </template>
                         </el-table-column>
                         <el-table-column label="产出数" min-width="120">
                             <template slot-scope="scope">
-                                <span v-if="order.workShopName === '包装三车间'">{{ (scope.row.output = (scope.row.manPacking * 1 + scope.row.aiPacking * 1 + scope.row.manSolid * 1 * (ratio.ratio * 1) + scope.row.aiSolid * 1 * (ratio.ratio * 1) + scope.row.sample * 1).toFixed(2) * 1) }}</span>
-                                <span v-else>{{ scope.row.ratio }}{{ (scope.row.output = (scope.row.manPacking * 1 + scope.row.manSolid * 1 * (ratio.ratio * 1) + scope.row.aiShelves * 1 * (ratio.ratio * 1) + scope.row.sample * 1).toFixed(2) * 1) }}</span>
+                                <span>{{ scope.row.output = getOutPut(scope.row) }}</span>
+                                <!--<span v-if="order.workShopName === '包装三车间'">{{ (scope.row.output = (scope.row.manPacking * 1 + scope.row.aiPacking * 1 + scope.row.manSolid * 1 * (ratio.ratio * 1) + scope.row.aiSolid * 1 * (ratio.ratio * 1) + scope.row.sample * 1).toFixed(2) * 1) }}</span>-->
+                                <!--<span v-else>{{ scope.row.ratio }}{{ (scope.row.output = (scope.row.manPacking * 1 + scope.row.manSolid * 1 * (ratio.ratio * 1) + scope.row.aiShelves * 1 * (ratio.ratio * 1) + scope.row.sample * 1).toFixed(2) * 1) }}</span>-->
                             </template>
                         </el-table-column>
-                        <el-table-column label="单位" min-width="60">
+                        <el-table-column label="单位" min-width="70">
                             <template slot-scope="scope">
+                                <!--<el-select v-model="scope.row.outputUnit" @change="val => scope.row.outputUnitName = unitChange(val)" :disabled="!(isRedact && scope.row.status !== 'submit' && scope.row.status !== 'checked')">
+                                    <el-option :label="ratio.basicUnitName" :value="ratio.basicUnit" />
+                                    <el-option :label="ratio.productUnitName" :value="ratio.productUnit" />
+                                </el-select>-->
                                 <span>{{ (scope.row.outputUnitName = ratio.basicUnitName) }}</span>
                             </template>
                         </el-table-column>
@@ -165,9 +198,13 @@
                                 <el-input v-model="scope.row.manSolid" placeholder="手工录入" size="small" :disabled="!(isRedact && scope.row.status !== 'submit' && scope.row.status !== 'checked' && scope.row.isL === '0')" />
                             </template>
                         </el-table-column>
-                        <el-table-column label="单位" min-width="50">
+                        <el-table-column label="单位" min-width="70">
                             <template slot-scope="scope">
-                                <span>{{ order.workShopName === '组装车间2（礼盒）' ? (scope.row.manSolidUnitName = ratio.basicUnitName) : ratio.productUnitName ? (scope.row.manSolidUnitName = ratio.productUnitName) : (scope.row.manSolidUnitName = ratio.basicUnitName) }}</span>
+                                <el-select v-model="scope.row.manSolidUnit" :disabled="!(isRedact && scope.row.status !== 'submit' && scope.row.status !== 'checked' && scope.row.isL === '0')" @change="val => scope.row.manSolidUnitName = unitChange(val)">
+                                    <el-option :label="ratio.basicUnitName" :value="ratio.basicUnit" />
+                                    <el-option :label="ratio.productUnitName" :value="ratio.productUnit" />
+                                </el-select>
+                                <!--<span>{{ order.workShopName === '组装车间2（礼盒）' ? (scope.row.manSolidUnitName = ratio.basicUnitName) : ratio.productUnitName ? (scope.row.manSolidUnitName = ratio.productUnitName) : (scope.row.manSolidUnitName = ratio.basicUnitName) }}</span>-->
                             </template>
                         </el-table-column>
                         <el-table-column label="不良品" min-width="90">
@@ -175,9 +212,13 @@
                                 <el-input v-model="scope.row.bad" placeholder="手工录入" size="small" :disabled="!(isRedact && scope.row.status !== 'submit' && scope.row.status !== 'checked')" />
                             </template>
                         </el-table-column>
-                        <el-table-column label="单位" min-width="50">
+                        <el-table-column label="单位" min-width="70">
                             <template slot-scope="scope">
-                                <span>{{ (scope.row.badUnitName = ratio.basicUnitName) }}</span>
+                                <el-select v-model="scope.row.badUnit" :disabled="!(isRedact && scope.row.status !== 'submit' && scope.row.status !== 'checked')" @change="val => scope.row.badUnitName = unitChange(val)">
+                                    <el-option :label="ratio.basicUnitName" :value="ratio.basicUnit" />
+                                    <el-option :label="ratio.productUnitName" :value="ratio.productUnit" />
+                                </el-select>
+                                <!--<span>{{ (scope.row.badUnitName = ratio.basicUnitName) }}</span>-->
                             </template>
                         </el-table-column>
                         <el-table-column label="样品" min-width="90">
@@ -185,14 +226,19 @@
                                 <el-input v-model="scope.row.sample" placeholder="手工录入" size="small" :disabled="!(isRedact && scope.row.status !== 'submit' && scope.row.status !== 'checked' && scope.row.isS === '0')" />
                             </template>
                         </el-table-column>
-                        <el-table-column label="单位" min-width="50">
+                        <el-table-column label="单位" min-width="70">
                             <template slot-scope="scope">
-                                <span>{{ (scope.row.sampleUnitName = ratio.basicUnitName) }}</span>
+                                <el-select v-model="scope.row.sampleUnit" :disabled="!(isRedact && scope.row.status !== 'submit' && scope.row.status !== 'checked' && scope.row.isS === '0')" @change="val => scope.row.sampleUnitName = unitChange(val)">
+                                    <el-option :label="ratio.basicUnitName" :value="ratio.basicUnit" />
+                                    <el-option :label="ratio.productUnitName" :value="ratio.productUnit" />
+                                </el-select>
+                                <!--<span>{{ (scope.row.sampleUnitName = ratio.basicUnitName) }}</span>-->
                             </template>
                         </el-table-column>
                         <el-table-column label="产出数" min-width="90">
                             <template slot-scope="scope">
-                                {{ order.workShopName === '组装车间2（礼盒）' ? (scope.row.output = scope.row.manSolid * 1 + scope.row.sample * 1) : (scope.row.output = (scope.row.manSolid * 1 * (ratio.ratio * 1) + scope.row.sample * 1).toFixed(2) * 1) }}
+                                <span>{{ scope.row.output = getOutPut(scope.row) }}</span>
+                                <!--<span>{{ order.workShopName === '组装车间2（礼盒）' ? (scope.row.output = scope.row.manSolid * 1 + scope.row.sample * 1) : (scope.row.output = (scope.row.manSolid * 1 * (ratio.ratio * 1) + scope.row.sample * 1).toFixed(2) * 1) }}</span>-->
                             </template>
                         </el-table-column>
                         <el-table-column label="单位" min-width="50">
@@ -284,7 +330,11 @@
                     </el-table-column>
                     <el-table-column label="单位" min-width="90">
                         <template slot-scope="scope">
-                            <span>{{ (scope.row.manSolidUnitName = ratio.basicUnitName) }}</span>
+                            <el-select v-model="scope.row.manSolidUnit" :disabled="!(isRedact && scope.row.status !== 'submit' && scope.row.status !== 'checked' && scope.row.isL === '0')" @change="val => scope.row.manSolidUnitName = unitChange(val)">
+                                <el-option :label="ratio.basicUnitName" :value="ratio.basicUnit" />
+                                <el-option :label="ratio.productUnitName" :value="ratio.productUnit" />
+                            </el-select>
+                            <!--<span>{{ (scope.row.manSolidUnitName = ratio.productUnitName) }}</span>-->
                         </template>
                     </el-table-column>
                     <el-table-column label="需整理品" min-width="140">
@@ -294,7 +344,11 @@
                     </el-table-column>
                     <el-table-column label="单位" min-width="90">
                         <template slot-scope="scope">
-                            <span>{{ (scope.row.manPackingUnitName = ratio.basicUnitName) }}</span>
+                            <el-select v-model="scope.row.manPackingUnit" :disabled="!(isRedact && scope.row.status !== 'submit' && scope.row.status !== 'checked' && scope.row.isZ === '0')" @change="val => scope.row.manPackingUnitName = unitChange(val)">
+                                <el-option :label="ratio.basicUnitName" :value="ratio.basicUnit" />
+                                <el-option :label="ratio.productUnitName" :value="ratio.productUnit" />
+                            </el-select>
+                            <!--<span>{{ (scope.row.manPackingUnitName = ratio.basicUnitName) }}</span>-->
                         </template>
                     </el-table-column>
                     <el-table-column label="不良品" min-width="120">
@@ -304,7 +358,11 @@
                     </el-table-column>
                     <el-table-column label="单位" min-width="90">
                         <template slot-scope="scope">
-                            <span>{{ (scope.row.badUnitName = ratio.basicUnitName) }}</span>
+                            <el-select v-model="scope.row.badUnit" :disabled="!(isRedact && scope.row.status !== 'submit' && scope.row.status !== 'checked')" @change="val => scope.row.badUnitName = unitChange(val)">
+                                <el-option :label="ratio.basicUnitName" :value="ratio.basicUnit" />
+                                <el-option :label="ratio.productUnitName" :value="ratio.productUnit" />
+                            </el-select>
+                            <!--<span>{{ (scope.row.badUnitName = ratio.basicUnitName) }}</span>-->
                         </template>
                     </el-table-column>
                     <el-table-column label="样品" min-width="120">
@@ -314,12 +372,17 @@
                     </el-table-column>
                     <el-table-column label="单位" min-width="90">
                         <template slot-scope="scope">
-                            <span>{{ (scope.row.sampleUnitName = ratio.basicUnitName) }}</span>
+                            <el-select v-model="scope.row.sampleUnit" :disabled="!(isRedact && scope.row.status !== 'submit' && scope.row.status !== 'checked' && scope.row.isS === '0')" @change="val => scope.row.sampleUnitName = unitChange(val)">
+                                <el-option :label="ratio.basicUnitName" :value="ratio.basicUnit" />
+                                <el-option :label="ratio.productUnitName" :value="ratio.productUnit" />
+                            </el-select>
+                            <!--<span>{{ (scope.row.sampleUnitName = ratio.basicUnitName) }}</span>-->
                         </template>
                     </el-table-column>
                     <el-table-column label="产出数" min-width="120">
                         <template slot-scope="scope">
-                            <span>{{
+                            <span>{{ scope.row.output = getOutPut(scope.row) }}</span>
+                            <!--<span>{{
                                 (scope.row.output =
                                     (
                                         scope.row.aiShelves * 1 * (scope.row.aiShelvesUnit === ratio.productUnit ? ratio.ratio * 1 : 1) +
@@ -327,7 +390,7 @@
                                         scope.row.manPacking * 1 * (scope.row.manPackingUnit === ratio.productUnit ? ratio.ratio * 1 : 1) +
                                         scope.row.sample * 1 * (scope.row.sampleUnit === ratio.productUnit ? ratio.ratio * 1 : 1)
                                     ).toFixed(2) * 1)
-                            }}</span>
+                            }}</span>-->
                         </template>
                     </el-table-column>
                     <el-table-column label="单位" min-width="60">
@@ -435,6 +498,45 @@ export default {
         // this.GetProductShift()
     },
     methods: {
+        unitChange(val) {
+            if (val === this.ratio.basicUnit) {
+                return this.ratio.basicUnitName
+            }
+            return this.ratio.productUnitName
+        },
+        getOutPut(row) {
+            let outPut = 0
+            if (this.order.factoryCode !== '6010' && this.order.properties && this.order.properties !== '二合一&礼盒产线' && this.order.workShopName === '包装三车间') {
+                outPut = this.getNumber(row.manPackingUnit, row.manPacking) +
+                    this.getNumber(row.aiPackingUnit, row.aiPacking) +
+                    this.getNumber(row.manSolidUnit, row.manSolid) +
+                    this.getNumber(row.aiSolidUnit, row.aiSolid) +
+                    this.getNumber(row.sampleUnit, row.sample)
+            } else if (this.order.factoryCode !== '6010' && this.order.properties && this.order.properties !== '二合一&礼盒产线' && this.order.workShopName !== '包装三车间') {
+                outPut = this.getNumber(row.manPackingUnit, row.manPacking) +
+                    this.getNumber(row.manSolidUnit, row.manSolid) +
+                    this.getNumber(row.aiShelvesUnit, row.aiShelves) +
+                    this.getNumber(row.sampleUnit, row.sample)
+            } else if (this.order.factoryCode !== '6010' && this.order.properties && this.order.properties === '二合一&礼盒产线') {
+                outPut = this.getNumber(row.manSolidUnit, row.manSolid) +
+                    this.getNumber(row.sampleUnit, row.sample)
+            } else if (this.order.factoryCode === '6010') {
+                outPut = this.getNumber(row.aiShelvesUnit, row.aiShelves) +
+                    this.getNumber(row.manSolidUnit, row.manSolid) +
+                    this.getNumber(row.manPackingUnit, row.manPacking) +
+                    this.getNumber(row.sampleUnit, row.sample)
+            }
+            if (row.outputUnit === this.ratio.basicUnit) {
+                return Number(outPut.toFixed(2))
+            }
+            return Number((outPut / this.ratio.ratio).toFixed(2))
+        },
+        getNumber(unit, num) {
+            if (unit === this.ratio.basicUnit) {
+                return Number(num)
+            }
+            return Number(num) * this.ratio.ratio
+        },
         // 修改生产入库
         UpdateIn(id, str, resolve) {
             if (this.InDate.length > 0) {
