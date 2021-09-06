@@ -340,9 +340,11 @@ export default {
                     if (resolve) {
                         resolve('resolve');
                     }
+                } else if (data.code === 110 && reject) {
+                    resolve('resolve');
                 } else if (reject) {
-                        reject('工艺保存' + data.msg);
-                    }
+                    reject('工艺保存' + data.msg);
+                }
             });
         },
         // 工艺提交
@@ -356,9 +358,11 @@ export default {
                     if (resolve) {
                         resolve('resolve');
                     }
+                } else if (data.code === 110 && reject) {
+                    resolve('resolve');
                 } else if (reject) {
-                        reject('工艺保存' + data.msg);
-                    }
+                    reject('工艺保存' + data.msg);
+                }
             });
         },
         // 校验
@@ -484,9 +488,11 @@ export default {
                     if (resolve) {
                         resolve('resolve');
                     }
+                } else if (data.code === 110 && reject) {
+                    resolve('resolve');
                 } else if (reject) {
-                        reject('工艺保存' + data.msg);
-                    }
+                    reject('工艺保存' + data.msg);
+                }
             });
         },
         /* eslint-disable @typescript-eslint/camelcase */
