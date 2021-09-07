@@ -92,6 +92,41 @@
                     </el-table-column>
                 </el-table>
             </el-tab-pane>
+            <el-tab-pane name="3">
+                <span slot="label" class="spanview">
+                    历史库存信息
+                </span>
+                <el-table header-row-class-name="" :data="historyList" border tooltip-effect="dark" class="newTable">
+                    <el-table-column type="index" label="序号" width="55" align="center" fixed />
+                    <el-table-column label="物料" :show-overflow-tooltip="true">
+                        <template slot-scope="scope">
+                            {{ scope.row.materialName + ' ' + scope.row.materialCode }}
+                        </template>
+                    </el-table-column>
+                    <el-table-column label="批次" :show-overflow-tooltip="true">
+                        <template slot-scope="scope">
+                            {{ scope.row.batch }}
+                        </template>
+                    </el-table-column>
+                    <el-table-column label="入库日期" :show-overflow-tooltip="true">
+                        <template slot-scope="scope">
+                            {{ scope.row.postingDate }}
+                        </template>
+                    </el-table-column>
+                    <el-table-column label="入库数量" :show-overflow-tooltip="true" align="right">
+                        <template slot-scope="scope">
+                            {{ scope.row.quantity }}
+                        </template>
+                    </el-table-column>
+                    <el-table-column label="操作" width="150" align="center">
+                        <template slot-scope="scope">
+                            <el-button type="text" size="small" @click="showMoreDetail(scope.row.batch)">
+                                <em class="iconfont factory-fangdajing-copy" style=" margin-right: 5px; font-size: 12px;" />查看
+                            </el-button>
+                        </template>
+                    </el-table-column>
+                </el-table>
+            </el-tab-pane>
             <el-tab-pane name="2">
                 <span slot="label" class="spanview">
                     调整信息记录
@@ -156,6 +191,11 @@
                 <el-tab-pane label="入罐信息" name="inStorage">
                     <el-table header-row-class-name="" :data="applyInStorageList" border tooltip-effect="dark" class="newTable">
                         <el-table-column type="index" label="序号" width="55" align="center" fixed />
+                        <el-table-column label="状态" :show-overflow-tooltip="true">
+                            <template slot-scope="scope">
+                                {{ scope.row.status }}
+                            </template>
+                        </el-table-column>
                         <el-table-column label="物料" :show-overflow-tooltip="true" width="160">
                             <template slot-scope="scope">
                                 {{ scope.row.materialName + ' ' + scope.row.materialCode }}
@@ -306,7 +346,7 @@
 
 <script lang="ts">
 import { Vue, Component } from 'vue-property-decorator';
-import { MEASUREBARN_BEAN_API } from '@/api/api';
+import { MEASUREBARN_BEAN_API, INVENTORY_API } from '@/api/api';
 import { deepCopy } from '@/assets/js/util.js';
 import MSG from '@/assets/js/hint-msg';
 @Component({
@@ -321,6 +361,7 @@ export default class Index extends Vue {
     activeName = '1';
     // 批次数据
     dataList: any = [];
+    historyList: any = [];
     totalDataList = [];
     dataCurrPage = 1;
     dataPageSize = 10;
@@ -348,6 +389,7 @@ export default class Index extends Vue {
     formData = {
         area: '',
         capacity: '',
+        holderId: '',
         factory: '',
         factoryName: '',
         holderNo: '',
@@ -408,6 +450,7 @@ export default class Index extends Vue {
         // })
         // 调整信息记录
         this.retrieveAdjustList();
+        this.getHistoryList();
     }
 
     validatePassAdjustNum = (rule, value, callback) => {
@@ -417,6 +460,21 @@ export default class Index extends Vue {
             return callback();
 
     };
+
+    // 历史库存信息
+    getHistoryList() {
+        Vue.prototype.$http(`${INVENTORY_API.Y010_INVENTORY_HISTORY_LIST_API}`, `POST`, {
+            holderId: this.formData.holderId
+        }).then(({ data }) => {
+            if (data.code === 0) {
+                if (data.info.length !== 0) {
+                    this.historyList = data.info;
+                }
+            } else {
+                this.$errorToast(data.msg);
+            }
+        });
+    }
 
     showMoreDetail(batch) {
         this.retrieveLogList(batch);
