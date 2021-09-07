@@ -24,7 +24,7 @@ export default {
                         label: ['deptName'],
                         value: 'deptId'
                     },
-                    linkageProp: ['workshop']
+                    linkageProp: ['workshop', 'materialCode']
                 },
                 {
                     type: 'select',
@@ -67,8 +67,8 @@ export default {
                         value: 'sapCode'
                     },
                     defaultValue: '',
-                    defaultOptionsFn: () => {
-                        return this.$http(`${BASICDATA_API.FINDSAP_API}`, 'POST', { params: '' });
+                    optionsFn: val => {
+                        return this.$http(`${BASICDATA_API.FINDSAP_API}`, 'POST', { factory: val, params: '' });
                     }
                 },
                 {

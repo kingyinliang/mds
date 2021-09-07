@@ -32,24 +32,28 @@
                         导出
                     </el-button>
                 </div>
+                <!--                <el-table class="newTable" :data="headerInfo" border header-row-class-name="tableHead" style="margin-top: 10px;">-->
+                <!--                    <el-table-column label="区域" show-overflow-tooltip prop="holderArea" />-->
+                <!--                    <el-table-column label="空罐" show-overflow-tooltip prop="empty" />-->
+                <!--                    <el-table-column label="投料中" show-overflow-tooltip prop="feeding" />-->
+                <!--                    <el-table-column label="发酵中" show-overflow-tooltip prop="fermentation" />-->
+                <!--                    <el-table-column label="领用中" show-overflow-tooltip prop="collarUse" />-->
+                <!--                    <el-table-column label="其他占用罐" show-overflow-tooltip prop="other" />-->
+                <!--                    <el-table-column label="味极鲜罐数" show-overflow-tooltip prop="weijixian" />-->
+                <!--                    <el-table-column label="六月鲜罐数" show-overflow-tooltip prop="liuyuexian" />-->
+                <!--                    <el-table-column label="TB罐数" show-overflow-tooltip prop="tb" />-->
+                <!--                    <el-table-column label="JYTB罐数" show-overflow-tooltip prop="jytb" />-->
+                <!--                    <el-table-column label="JY罐数" show-overflow-tooltip prop="jy" />-->
+                <!--                    <el-table-column label="发酵一总罐数" show-overflow-tooltip prop="sum" width="110" />-->
+                <!--                </el-table>-->
                 <el-table class="newTable" :data="headerInfo" border header-row-class-name="tableHead" style="margin-top: 10px;">
-                    <el-table-column label="区域" show-overflow-tooltip prop="holderArea" />
-                    <el-table-column label="空罐" show-overflow-tooltip prop="empty" />
-                    <el-table-column label="投料中" show-overflow-tooltip prop="feeding" />
-                    <el-table-column label="发酵中" show-overflow-tooltip prop="fermentation" />
-                    <el-table-column label="领用中" show-overflow-tooltip prop="collarUse" />
-                    <el-table-column label="其他占用罐" show-overflow-tooltip prop="other" />
-                    <el-table-column label="味极鲜罐数" show-overflow-tooltip prop="weijixian" />
-                    <el-table-column label="六月鲜罐数" show-overflow-tooltip prop="liuyuexian" />
-                    <el-table-column label="TB罐数" show-overflow-tooltip prop="tb" />
-                    <el-table-column label="JYTB罐数" show-overflow-tooltip prop="jytb" />
-                    <el-table-column label="JY罐数" show-overflow-tooltip prop="jy" />
-                    <el-table-column label="发酵一总罐数" show-overflow-tooltip prop="sum" width="110" />
+                    <el-table-column v-for="(item, index) in header" :key="index" :label="item.label" :prop="item.label" show-overflow-tooltip />
                 </el-table>
                 <div class="titleLeft" style="margin-top: 15px;">
                     <em class="iconfont factory-icon_function_keyongkucun" style=" margin-right: 10px; color: #666;" />发酵总库存列表
                 </div>
                 <el-table class="newTable" :data="dataList" border header-row-class-name="tableHead" style="margin-top: 10px;">
+                    <el-table-column label="车间" show-overflow-tooltip prop="workShop" width="100" />
                     <el-table-column label="罐号" show-overflow-tooltip prop="holderNo" width="50" />
                     <el-table-column label="状态" show-overflow-tooltip prop="holderStatus" width="70" />
                     <el-table-column label="投料数(M³)" show-overflow-tooltip prop="realInAmount" min-width="75" />
@@ -113,6 +117,7 @@ export default {
             currentPage: 1,
             pageSize: 10,
             total: 0,
+            header: [],
             headerInfo: [],
             dataList: [],
             dataListAll: [],
@@ -133,9 +138,14 @@ export default {
             }).then(({ data }) => {
                 if (data.code === 0) {
                     // this.headerInfo = data.returnMap.head
-                    data.returnMap.head.map(item => {
-                        this.headerInfo.push(item);
-                    });
+                    if (data.returnMap.head.length) {
+                        for (const key in data.returnMap.head[0]) {
+                            this.header.push({
+                                label: key
+                            })
+                        }
+                    }
+                    this.headerInfo = data.returnMap.head
                     this.dataListAll = data.returnMap.info;
                     this.total = data.returnMap.info.length;
                     this.changeList();

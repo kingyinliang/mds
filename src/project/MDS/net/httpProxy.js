@@ -45,6 +45,49 @@ export function tryHideFullScreenLoading() {
     }
 }
 
+/**
+ * 请求拦截
+ */
+http.interceptors.request.use(
+    config => {
+        config.headers['Authorization'] = Vue.cookie.get('token'); // 请求头带上token
+        showFullScreenLoading(); // 显示遮罩
+        return config;
+    },
+    error => {
+        return Promise.reject(error);
+    }
+);
+/**
+ * 响应拦截
+ */
+http.interceptors.response.use(
+    response => {
+        if (response.data && response.data.code === 401) {
+            // 401, token失效
+            Vue.cookie.delete('token');
+            router.options.isAddDynamicMenuRoutes = false;
+            window.location.href = `${process.env.VUE_APP_HOST}`;
+        }
+        if (response.data && response.data.code === 500) {
+            // Vue.prototype.$log.writeErrorLog(new Error(`接口错误：${url}`), `msg:${response.data.msg},data: ${JSON.stringify(data)}`)
+        }
+        if (response.data && response.data.code === 110) {
+            Vue.prototype.$warningToast(response.data.msg);
+            tryHideFullScreenLoading(); // 关闭遮罩
+            return Promise.resolve(response);
+        }
+        tryHideFullScreenLoading(); // 关闭遮罩
+        return response;
+    },
+    error => {
+        // Vue.prototype.$log.writeErrorLog(new Error(`网络请求失败，接口：${url}`), `${error}`)
+        Notification({ title: '服务器错误', message: '网络连接请求失败，请稍后刷新重试', type: 'error' });
+        endLoading(); // 关闭遮罩
+        return Promise.reject(error);
+    }
+);
+
 /*
  * @method httpProxy
  * @param {string} url{string} api地址 data{object} 参数 ContentType{boole} post拼接路径 responseType{boole}下载文件流 londingstatus{boole}加载遮罩
@@ -80,43 +123,7 @@ export default (url, method = HTTP_METHOD.GET, data = {}, ContentType = false, r
         // }]
     }
     Vue.prototype.lodingState = londingstatus;
-    /**
-     * 请求拦截
-     */
-    http.interceptors.request.use(
-        config => {
-            config.headers['Authorization'] = Vue.cookie.get('token'); // 请求头带上token
-            showFullScreenLoading(); // 显示遮罩
-            return config;
-        },
-        error => {
-            return Promise.reject(error);
-        }
-    );
-    /**
-     * 响应拦截
-     */
-    http.interceptors.response.use(
-        response => {
-            if (response.data && response.data.code === 401) {
-                // 401, token失效
-                Vue.cookie.delete('token');
-                router.options.isAddDynamicMenuRoutes = false;
-                window.location.href = `${process.env.VUE_APP_HOST}`;
-            }
-            if (response.data && response.data.code === 500) {
-                // Vue.prototype.$log.writeErrorLog(new Error(`接口错误：${url}`), `msg:${response.data.msg},data: ${JSON.stringify(data)}`)
-            }
-            tryHideFullScreenLoading(); // 关闭遮罩
-            return response;
-        },
-        error => {
-            // Vue.prototype.$log.writeErrorLog(new Error(`网络请求失败，接口：${url}`), `${error}`)
-            Notification({ title: '服务器错误', message: '网络连接请求失败，请稍后刷新重试', type: 'error' });
-            endLoading(); // 关闭遮罩
-            return Promise.reject(error);
-        }
-    );
+
     if (method !== HTTP_METHOD.GET) {
         options.data = data;
     }

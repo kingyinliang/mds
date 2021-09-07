@@ -469,8 +469,10 @@ export default {
             tableData.forEach((item, index) => {
                 if (index === 0) {
                     spanOneArr.push(1);
-                } else if (item.materialCode === tableData[index - 1].materialCode) {
-                    if (item.delFlag !== 1) {
+                } else if (item.delFlag === '1' || item.materielType === 'BL_LY') {
+                    spanOneArr.push(0);
+                } else if (item.materialCode === tableData[concatOne].materialCode && tableData[concatOne].isSplit === '1' && item.isSplit === '1') {
+                    if (item.delFlag !== '1' && item.materielType !== 'BL_LY') {
                         spanOneArr[concatOne] += 1;
                     }
                     spanOneArr.push(0);
@@ -479,6 +481,7 @@ export default {
                     concatOne = index;
                 }
             });
+            console.log(spanOneArr)
             return spanOneArr;
         },
         GetInfo(row) {
@@ -730,6 +733,17 @@ export default {
                     //     return false
                     //   }
                     // }
+                    if (item.materialName.indexOf('原汁') === -1 && item.delFlag === '0') {
+                        const amount = this.ItemList.filter(it => it.materialName.indexOf('原汁') === -1 && it.delFlag === '0' && it.materialCode === item.materialCode).reduce((pre, cur) => {
+                            return accAdd(pre, cur.receiveAmount)
+                        }, 0)
+                        console.log(amount);
+                        console.log(item.planAmount);
+                        if (Number(item.planAmount) !== amount) {
+                            this.$warningToast('实际领料数总和应等于计划领用数');
+                            return false;
+                        }
+                    }
                 }
             }
             // 实际领用数应小于计划领料
@@ -815,11 +829,11 @@ export default {
                         this.SearchList();
                         // this.ThrowHolder(this.formHeader.workShop)
                         this.dialogTableVisible = false;
-                    } else if (data.mes.length === 0) {
-                            this.$errorToast(data.msg);
-                        } else {
-                            this.$errorToast(data.mes.join(','));
-                        }
+                    } else if (data.mes && data.mes.length > 0) {
+                        this.$errorToast(data.mes.join(','));
+                    } else {
+                        this.$errorToast(data.msg);
+                    }
                 });
             } else {
                 this.$notify({
@@ -918,6 +932,7 @@ export default {
                 type: 'warning'
             }).then(() => {
                 row.delFlag = '1';
+                this.spanOneArr = this.merge(this.ItemList);
                 // this.ItemList.splice(this.ItemList.indexOf(row), 1)
             }).catch(() => {
                 // this.$infoToast('已取消删除');

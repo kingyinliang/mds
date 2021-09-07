@@ -269,8 +269,8 @@ export default class PickingMaterialDetail extends Vue {
     useAmountBlurHandler(val, row) {
         if (!row.id) {
             if (val === '0' && row.isFirst) {
-                row.batch = row.stoPackageMaterialStorageResponseDtoList[0]?.batch;
-                this.batchChange(row, row.batch);
+                // row.batch = row.stoPackageMaterialStorageResponseDtoList.length? row.stoPackageMaterialStorageResponseDtoList[0]?.batch : '';
+                // this.batchChange(row, row.batch);
             }
             if (val) {
                 row.isFirst = false;
@@ -360,11 +360,13 @@ export default class PickingMaterialDetail extends Vue {
     //保存校验
     ruleFn(): boolean {
         for (const item of this.tableData.filter(it => it.delFlag !== 1)) {
-            if (!item.useType || item.useAmount === '' || item.useAmount === null || !item.batch || !item.manufactor) {
-                this.$warningToast('请填写必填项');
-                console.log(item);
-                return false;
-            }
+            if (item.useAmount === '0' || item.useAmount === 0) {
+                console.log(item.useAmount);
+            } else if (!item.useType || item.useAmount === '' || item.useAmount === null || !item.batch || !item.manufactor) {
+                    this.$warningToast('请填写必填项');
+                    console.log(item);
+                    return false;
+                }
         }
         return true;
     }
@@ -485,7 +487,7 @@ interface DataObj {
     needNum?: string;
     storage?: string;
     useType?: string;
-    useAmount?: string;
+    useAmount?: string|number;
     batch?: string;
     manufactor?: string;
     splitFlag?: string;

@@ -72,7 +72,7 @@ export default {
     methods: {
         //组计数器 验证
         changeGroupCounter(val) {
-            val.groupCounter = val.groupCounter.match(/^[1-9]\d{0,4}$/) ? val.groupCounter.match(/^[1-9]\d{0,4}$/)[0] : '';
+            val.groupCounter = val.groupCounter.match(/^[0-9]\d{0,4}$/) ? val.groupCounter.match(/^[0-9]\d{0,4}$/)[0] : '';
         },
         //任务清单组码 验证
         changeTaskInventoryCode(val) {

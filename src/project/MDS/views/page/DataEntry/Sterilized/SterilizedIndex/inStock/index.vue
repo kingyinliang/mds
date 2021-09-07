@@ -460,6 +460,8 @@ export default {
                     if (resolve) {
                         resolve('resolve');
                     }
+                } else if (data.code === 110 && reject) {
+                    resolve('resolve');
                 } else if (reject) {
                     reject('杀菌入库' + data.msg);
                 }
@@ -483,6 +485,8 @@ export default {
                     if (resolve) {
                         resolve('resolve');
                     }
+                } else if (data.code === 110 && reject) {
+                    resolve('resolve');
                 } else if (reject) {
                     reject('杀菌入库' + data.msg);
                 }
