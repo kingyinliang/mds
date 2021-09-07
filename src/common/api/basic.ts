@@ -2,6 +2,18 @@ import httpProxy from 'utils/net/httpProxy';
 
 const BASIC_API = {
     /**
+     * @property {string} CRAFT_LIST_API 消息
+     */
+    MSG_INFO_PAGE_QUERY: params => httpProxy('/msgInfo/pageQuery', 'POST', params),
+    /**
+     * @property {string} CRAFT_LIST_API 消息
+     */
+    MSG_INFO_GET_BY_ID: params => httpProxy('/msgInfo/getById', 'GET', params),
+    /**
+     * @property {string} CRAFT_LIST_API 消息
+     */
+    MSG_INFO_RETRY: params => httpProxy('/msgInfo/retry', 'GET', params),
+    /**
      * @property {string} CRAFT_LIST_API 工艺标准-查询
      */
     CRAFT_LIST_API: params => httpProxy('/steProcess/query', 'POST', params),
