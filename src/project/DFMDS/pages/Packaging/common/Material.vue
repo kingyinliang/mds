@@ -97,6 +97,14 @@
                 </el-table-column>
             </el-table>
         </mds-card>
+        <el-checkbox-group v-model="bottleLine">
+            <el-checkbox v-for="(item, index) in bottleLineNum" :key="index" :label="item">
+                灌装线{{ item }}
+            </el-checkbox>
+        </el-checkbox-group>
+        <el-button size="mini" @click="consoleData()">
+            删除
+        </el-button>
         <mds-card v-for="(item, index) in materialSArr" :key="index" :title="'灌装线' + (index + 1)" :name="'materialS' + index">
             <el-table ref="materialS" header-row-class-name="tableHead" class="newTable" max-height="267" :data="item.data" :row-class-name="rowDelFlag" border tooltip-effect="dark">
                 <el-table-column type="index" label="序号" width="50px" />
@@ -197,6 +205,7 @@ export default class Material extends Vue {
         materialS: HTMLFormElement;
     };
 
+    bottleLine: number[] = [];
     MaterialAudit = [];
     formHeader: OrderData = {};
     batch = [];
@@ -211,6 +220,11 @@ export default class Material extends Vue {
     orgDataTable: MaterialMap[] = [];
 
     spanOneArr: number[] = [];
+
+    consoleData() {
+        console.log(this.bottleLine)
+    }
+
     // 编辑领用数量  实际损耗 不合格数时  获取未变化时数据
     getOldCurrentDataTable(id): MaterialMap | undefined {
         for (let index = 0; index < this.oldCurrentDataTable.length; index++) {
@@ -554,7 +568,11 @@ export default class Material extends Vue {
             COMMON_API.ORGDETAIL_API({
                 id: formHeader.productLine
             }).then(({ data }) => {
-                this.bottleLineNum = Number(data.data.bottleLineNum);
+                this.bottleLineNum = Number(data.data.bottleLineNum) + 1;
+                this.bottleLine = []
+                for (let i = 0; i < this.bottleLineNum; i++) {
+                    this.bottleLine.push(i + 1)
+                }
                 this.getMaterialS(formHeader, true);
             });
         } else {
