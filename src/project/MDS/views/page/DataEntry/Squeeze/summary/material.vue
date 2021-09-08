@@ -210,7 +210,7 @@ export default {
             tableData.forEach((item, index) => {
                 if (index === 0) {
                     spanOneArr.push(1);
-                } else if (item.fumet.materialCode === tableData[index - 1].fumet.materialCode) {
+                } else if (item.fumet.id === tableData[index - 1].fumet.id) {
                     if (item.delFlag !== '1') {
                         spanOneArr[concatOne] += 1;
                     }
