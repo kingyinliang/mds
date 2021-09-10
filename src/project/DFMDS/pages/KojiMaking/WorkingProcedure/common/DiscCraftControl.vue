@@ -177,9 +177,15 @@
                             placeholder="请输入"
                             :disabled="!(isRedact&& isStatus !== 'C' && isStatus !== 'D' && isStatus !== 'P' && scope.row.status !== 'C' && scope.row.status !== 'D' && scope.row.status !== 'P')"
                             @input="(val)=>oninput(val,scope.row,'windSpeed')"
-                        >
-                            <span slot="suffix">r/min</span>
-                        </el-input>
+                        />
+                    </template>
+                </el-table-column>
+                <el-table-column label="单位" prop="windSpeedUnit" width="100" :show-overflow-tooltip="true">
+                    <template slot-scope="scope">
+                        <el-select v-model="scope.row.windSpeedUnit" placeholder="请选择" size="small" :disabled="!(isRedact&& isStatus !== 'C' && isStatus !== 'D' && isStatus !== 'P' && scope.row.status !== 'C' && scope.row.status !== 'D' && scope.row.status !== 'P')">
+                            <el-option value="r/min" label="r/min" />
+                            <el-option value="HZ" label="HZ" />
+                        </el-select>
                     </template>
                 </el-table-column>
                 <el-table-column label="品温" :show-overflow-tooltip="true" width="140">
@@ -1128,6 +1134,7 @@
                 testTempTwo: null,
                 windDoor: null,
                 windSpeed: null,
+                windSpeedUnit: 'HZ',
                 windTemp: null,
                 delFlag: 0
             }
@@ -1462,6 +1469,7 @@ interface KojiGuard{
     testTempTwo?: number| null;
     windDoor?: number | null;
     windSpeed?: number | null;
+    windSpeedUnit?: string | null;
     windTemp?: number| null;
     delFlag?: number;
 }
