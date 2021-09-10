@@ -270,17 +270,19 @@
                 }
             }
             for (const item of steAccessoriesConsume) {
-                if (!item.useAmount || item.useAmount === '0') {
-                    this.$warningToast('请填写辅料领用领用数量');
-                    return false
-                }
-                if (!item.addDate || !item.useBatch) {
-                    this.$warningToast('请填写辅料领用必填项');
-                    return false
-                }
-                if (item.useBatch.length !== 10) {
-                    this.$warningToast('请填写辅料领用10位批次');
-                    return false
+                if (item.useAmount !== '0' && item.useAmount !== 0) {
+                    if (!item.useAmount) {
+                        this.$warningToast('请填写辅料领用领用数量');
+                        return false
+                    }
+                    if (!item.addDate || !item.useBatch) {
+                        this.$warningToast('请填写辅料领用必填项');
+                        return false
+                    }
+                    if (item.useBatch.length !== 10) {
+                        this.$warningToast('请填写辅料领用10位批次');
+                        return false
+                    }
                 }
             }
             for (const item of newSteAccessoriesConsume) {
@@ -587,7 +589,7 @@
         potOrderId?: string;
         useMaterialCode?: string;
         useMaterialName?: string;
-        useAmount?: string;
+        useAmount?: string|number;
         useBatch?: string;
         addDate?: string;
         useUnit?: string;
