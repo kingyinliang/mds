@@ -183,6 +183,39 @@
                     label: ['materialName', 'materialCode'],
                     value: 'materialCode'
                 }
+            },
+            {
+                type: 'select',
+                label: '移动原因',
+                prop: 'moveReason',
+                defaultValue: '',
+                filterable: true,
+                labelWidth: '100',
+                defaultOptionsFn: () => {
+                    return COMMON_API.DICTIONARY_ITEM_DROPDOWN_POST_API({
+                        factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
+                        dictType: 'move_reas'
+                    })
+                },
+                resVal: {
+                    resData: 'data',
+                    label: ['dictValue'],
+                    value: 'dictCode'
+                }
+            },
+            {
+                type: 'input',
+                labelWidth: '100',
+                label: '批次',
+                prop: 'batch'
+            },
+            {
+                type: 'date-interval',
+                label: '过账日期',
+                labelWidth: '100',
+                defaultValue: dateFormat(new Date(), 'yyyy-MM-dd'),
+                prop: 'commitStartDate',
+                propTwo: 'commitEndDate'
             }
         ]
 
