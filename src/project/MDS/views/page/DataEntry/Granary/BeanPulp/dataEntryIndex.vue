@@ -191,7 +191,7 @@
                     <el-table-column type="index" label="序号" width="55" align="center" fixed />
                     <el-table-column label="状态" :show-overflow-tooltip="true">
                         <template slot-scope="scope">
-                            {{ scope.row.status }}
+                            {{ scope.row.statusName }}
                         </template>
                     </el-table-column>
                     <el-table-column label="物料" :show-overflow-tooltip="true" width="160">
