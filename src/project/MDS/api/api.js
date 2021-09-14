@@ -1898,6 +1898,11 @@ export const INVENTORY_API = {
     Y010_INVENTORY_MOVE_LIST_API: HOST + '/alcohol/getMoveDetail', // 当前库存明细
     Y010_INVENTPRY_ADJUST_API: HOST + '/alcohol/insertAdjust', // 调整
     Y010_INVENTORY_HISTORY_LIST_API: HOST + '/alcohol/getAlcoholHistoryInfo', // 历史库存信息
+    KJM_INVENTORY_HISTORY_LIST_API: HOST + '/kjm/saltPage/historyList', // 盐水历史库存信息
+    GRA_INVENTORY_HISTORY_LIST_API: HOST + '/gra/material/historyList', // 粮仓历史库存信息
+    WHEAT_INVENTORY_HISTORY_LIST_API: HOST + '/realTime/wheat/wheatMeasuringBinHistory', // 麦粉计量仓历史库存信息
+    PULP_INVENTORY_HISTORY_LIST_API: HOST + '/realTime/pulp/pulpMeasuringBinHistory', // 麦粉计量仓历史库存信息
+    INVENTORY_HISTORY_LIST_API: HOST + '/kjm/saltPage/historyList', // 历史库存信息
     Y010_INVENTORY_JUST_LIST_API: HOST + '/alcohol/getAlcoholAdjustInfo', // 调整信息记录
     Y010_INVENTORY_DEPT_LIST_API: HOST + '/gra/dept/list', // 部门领用查询
     Y010_INVENTORY_DEPT_DELETE_API: HOST + '/gra/dept/delete', // 部门领用删除

@@ -471,13 +471,13 @@ export default class Index extends Vue {
 
     // 历史库存信息
     getHistoryList() {
-        Vue.prototype.$http(`${INVENTORY_API.Y010_INVENTORY_HISTORY_LIST_API}`, `POST`, {
-            holderId: this.formData.holderId
+        Vue.prototype.$http(`${INVENTORY_API.WHEAT_INVENTORY_HISTORY_LIST_API}`, `POST`, {
+            factory: this.factoryId,
+            holderId: this.holderId
         }).then(({ data }) => {
             if (data.code === 0) {
-                if (data.info.length !== 0) {
-                    this.historyList = data.info;
-                }
+                this.historyList = data.infoList[0].wheatList
+                console.log(this.historyList)
             } else {
                 this.$errorToast(data.msg);
             }

@@ -94,6 +94,41 @@
                     </el-table-column>
                 </el-table>
             </el-tab-pane>
+            <el-tab-pane name="3">
+                <span slot="label" class="spanview">
+                    历史库存信息
+                </span>
+                <el-table header-row-class-name="" :data="historyList" border tooltip-effect="dark" class="newTable">
+                    <el-table-column type="index" label="序号" width="55" align="center" fixed />
+                    <el-table-column label="物料" :show-overflow-tooltip="true">
+                        <template slot-scope="scope">
+                            {{ scope.row.materialName + ' ' + scope.row.materialCode }}
+                        </template>
+                    </el-table-column>
+                    <el-table-column label="批次" :show-overflow-tooltip="true">
+                        <template slot-scope="scope">
+                            {{ scope.row.batch }}
+                        </template>
+                    </el-table-column>
+                    <el-table-column label="入库日期" :show-overflow-tooltip="true">
+                        <template slot-scope="scope">
+                            {{ scope.row.postingDate }}
+                        </template>
+                    </el-table-column>
+                    <el-table-column label="入库数量" :show-overflow-tooltip="true" align="right">
+                        <template slot-scope="scope">
+                            {{ scope.row.quantity }}
+                        </template>
+                    </el-table-column>
+                    <el-table-column label="操作" width="150" align="center">
+                        <template slot-scope="scope">
+                            <el-button type="text" size="small" @click="showMoreDetail(scope.row.batch)">
+                                <em class="iconfont factory-fangdajing-copy" style=" margin-right: 5px; font-size: 12px;" />查看
+                            </el-button>
+                        </template>
+                    </el-table-column>
+                </el-table>
+            </el-tab-pane>
             <el-tab-pane name="2">
                 <span slot="label" class="spanview">
                     调整信息记录
@@ -274,6 +309,7 @@ export default class Index extends Vue {
     adjustPageSize = 10;
     adjustTotalCount = 0;
     // 入库数据
+    historyList: any = [];
     applyInStorageList: any = [];
     isShowMessageBoxAdjust = false;
     isShowMessageBoxCheck = false;
@@ -333,6 +369,7 @@ export default class Index extends Vue {
         this.dataTotalCount = 0;
         this.dataCurrPage = 1;
         this.dataPageSize = 10;
+        this.getHistoryList()
         Vue.prototype
             .$http(`${INVENTORY_API.BRINE_INVENTPRY_DETAIL_API}`, `POST`, {
                 factory: this.formData.factoryId,
@@ -349,6 +386,20 @@ export default class Index extends Vue {
                     this.$errorToast(data.msg);
                 }
             });
+    }
+
+    // 历史库存信息
+    getHistoryList() {
+        Vue.prototype.$http(`${INVENTORY_API.KJM_INVENTORY_HISTORY_LIST_API}`, `POST`, {
+            factory: this.formData.factoryId,
+            location: this.formData.location
+        }).then(({ data }) => {
+            if (data.code === 0) {
+                this.historyList = data.data;
+            } else {
+                this.$errorToast(data.msg);
+            }
+        });
     }
 
     handleAdjustSizeChange(val: number) {
