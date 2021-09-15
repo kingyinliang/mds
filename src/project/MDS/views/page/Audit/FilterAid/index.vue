@@ -15,7 +15,7 @@
                     </el-select>
                 </el-form-item>
                 <el-form-item label="生产日期：">
-                    <el-date-picker v-model="formHeader.productDate" type="date" placeholder="请选择" value-format="yyyy-MM-dd" style="width: 135px;" />
+                    <el-date-picker v-model="formHeader.productDateBegin" type="date" placeholder="请选择" value-format="yyyy-MM-dd" style="width: 135px;" />
                     -
                     <el-date-picker v-model="formHeader.productDateEnd" type="date" placeholder="请选择" value-format="yyyy-MM-dd" style="width: 135px;" />
                 </el-form-item>
@@ -168,7 +168,8 @@ export default {
             formHeader: {
                 factory: '',
                 workShop: '',
-                productDate: dateFormat(new Date(), 'yyyy-MM-dd hh:mm:ss'),
+                productDateBegin: dateFormat(new Date(), 'yyyy-MM-dd hh:mm:ss'),
+                productDateEnd: '',
                 pstngDate: new Date().getFullYear().toString() + '-' + (new Date().getMonth() + 1 >= 10 ? (new Date().getMonth() + 1).toString() : '0' + (new Date().getMonth() + 1)) + '-' + (new Date().getDate() >= 10 ? new Date().getDate().toString() : '0' + new Date().getDate()),
                 headerTxt: '',
                 orderNo: '',

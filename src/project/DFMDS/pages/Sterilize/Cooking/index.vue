@@ -52,12 +52,12 @@
             <el-table ref="table" class="newTable" :data="dataList" border tooltip-effect="dark" header-row-class-name="tableHead" style="width: 100%; margin-bottom: 20px;">
                 <el-table-column type="index" label="序号" fixed="left" width="55" />
                 <el-table-column label="状态" min-width="70" show-overflow-tooltip prop="potStatusName" />
-                <el-table-column label="煮料锅序/混合罐序" min-width="150" show-overflow-tooltip>
+                <el-table-column label="煮料锅序/混合罐序" min-width="140" show-overflow-tooltip>
                     <template slot-scope="scope">
                         {{ scope.row.potOrder ? `第`+scope.row.potOrder+`锅` : '' }}
                     </template>
                 </el-table-column>
-                <el-table-column label="煮料单号" min-width="145">
+                <el-table-column label="煮料单号" min-width="170">
                     <template slot-scope="scope">
                         <a @click="goDetail(scope.row)">{{ scope.row.cookingNo }}</a>
                     </template>
@@ -69,13 +69,17 @@
                         {{ scope.row.productMaterialName }} {{ scope.row.productMaterial }}
                     </template>
                 </el-table-column>
-                <el-table-column label="配置日期" min-width="140" prop="configStartDate" />
-                <el-table-column label="使用日期" min-width="100" prop="useDate" />
+                <el-table-column label="配置日期" min-width="140" prop="configStartDate" show-overflow-tooltip />
+                <el-table-column label="使用日期" min-width="180" prop="useDate" show-overflow-tooltip>
+                    <template slot-scope="scope">
+                        {{ scope.row.useDate }}/{{ scope.row.useDateEnd }}
+                    </template>
+                </el-table-column>
                 <el-table-column label="配置锅数" min-width="80" prop="configPotCount" />
                 <el-table-column label="使用锅数" min-width="80" prop="usePotCount" />
                 <el-table-column label="剩余库存" min-width="80" prop="remainder" />
-                <el-table-column label="操作人" width="150" prop="changer" />
-                <el-table-column label="操作时间" width="160" prop="changed" />
+                <el-table-column label="操作人" width="150" prop="changer" show-overflow-tooltip />
+                <el-table-column label="操作时间" width="160" prop="changed" show-overflow-tooltip />
                 <el-table-column label="操作" width="60" fixed="right">
                     <template slot-scope="scope">
                         <el-button v-if="isAuth('steCookClean')" type="text" size="small" :disabled="(scope.row.clear <= 2 ? false : true) || scope.row.potStatus === 'S' || scope.row.remainder === 0" @click="clearHolder(scope.row)">

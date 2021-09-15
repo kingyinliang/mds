@@ -56,7 +56,7 @@
                         </template>
                         <el-date-picker v-model="formHeaders.useDate" type="date" placeholder="请选择" value-format="yyyy-MM-dd" format="yyyy-MM-dd" style="width: 180px;" :disabled="!isRedact" />
                         -
-                        <el-date-picker v-model="formHeaders.useDate1" type="date" placeholder="请选择" value-format="yyyy-MM-dd" format="yyyy-MM-dd" style="width: 180px;" :disabled="!isRedact" />
+                        <el-date-picker v-model="formHeaders.useDateEnd" type="date" placeholder="请选择" value-format="yyyy-MM-dd" format="yyyy-MM-dd" style="width: 180px;" :disabled="!isRedact" />
                     </el-form-item>
                     <el-form-item label="煮料锅序：">
                         <template slot="label">

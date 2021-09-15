@@ -101,7 +101,7 @@
                 </el-table-column>
                 <el-table-column label="领用时间" min-width="110" prop="productDate" :show-overflow-tooltip="true" />
                 <el-table-column label="记账日期" min-width="80" prop="pstngDate" :show-overflow-tooltip="true" />
-                <el-table-column label="操作" width="150" fixed="right">
+                <el-table-column label="操作" width="160" fixed="right">
                     <template slot-scope="scope">
                         <el-button type="text" size="small" @click="showMoreDetail(scope.row)">
                             <em class="iconfont factory-fangdajing-copy" style="margin-right: 5px; font-size: 12px;" />审核日志
@@ -184,6 +184,8 @@ export default {
             formHeader: {
                 factoryIDValue: '',
                 batch: '',
+                productDateBegin: '',
+                productDateEnd: '',
                 status: '',
                 currPage: 1,
                 pageSize: 10,
