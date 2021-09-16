@@ -61,12 +61,12 @@
                 </div>
             </template>
             <template slot="operation_column" slot-scope="{ scope }">
-                <!-- <el-button v-if="!scope.row.redact" type="text" size="small" @click="editHandler(scope.row)">
+                <el-button v-if="!scope.row.redact" type="text" size="small" @click="editHandler(scope.row)">
                     编辑
                 </el-button>
                 <el-button v-else type="text" size="small" @click="saveHandler(scope.row)">
                     保存
-                </el-button> -->
+                </el-button>
                 <el-button type="text" size="small" @click="AuditLog(scope.row)">
                     日志
                 </el-button>
@@ -277,6 +277,9 @@
                 }
             },
             {
+                type: 'input',
+                redact: true,
+                header: true,
                 prop: 'stgeLoc',
                 label: '出库库位',
                 minwidth: '100'
@@ -284,15 +287,7 @@
             {
                 prop: 'moveType',
                 label: '移动类型',
-                minwidth: '160',
-                type: 'input',
-                redact: true,
-                header: true,
-                resVal: {
-                    resData: 'data',
-                    label: 'dictValue',
-                    value: 'dictCode'
-                }
+                minwidth: '160'
             },
             {
                 prop: 'moveReason',
@@ -372,11 +367,15 @@
         }
 
         editHandler(row) {
-            row.redact = true
+            this.$set(row, 'redact', true)
         }
 
         saveHandler(row) {
-            row.redact = false
+            if (!row.stgeLoc || !/^[0-9A-Z]{4}$/.test(row.stgeLoc)) {
+                this.$warningToast('请检查出库库位')
+                return
+            }
+            this.$set(row, 'redact', false)
         }
 
         // 审核日志
