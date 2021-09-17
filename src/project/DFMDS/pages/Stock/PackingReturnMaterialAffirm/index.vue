@@ -189,18 +189,14 @@
                 label: '移动原因',
                 prop: 'moveReason',
                 defaultValue: '',
-                filterable: true,
+                options: [
+                    { label: '正常退料', value: 'NORMAL_REJECTED' },
+                    { label: '不良退料', value: 'BAD_REJECTED' }
+                ],
                 labelWidth: '100',
-                defaultOptionsFn: () => {
-                    return COMMON_API.DICTIONARY_ITEM_DROPDOWN_POST_API({
-                        factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
-                        dictType: 'move_reas'
-                    })
-                },
                 resVal: {
-                    resData: 'data',
-                    label: ['dictValue'],
-                    value: 'dictCode'
+                    label: ['label'],
+                    value: 'value'
                 }
             },
             {
