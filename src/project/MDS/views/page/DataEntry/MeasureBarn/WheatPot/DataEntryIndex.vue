@@ -242,6 +242,11 @@
                 <el-tab-pane label="领用信息" name="receive">
                     <el-table header-row-class-name="" :data="applyReceiveList" border tooltip-effect="dark" class="newTable">
                         <el-table-column type="index" label="序号" width="55" align="center" fixed />
+                        <el-table-column label="状态" :show-overflow-tooltip="true">
+                            <template slot-scope="scope">
+                                {{ scope.row.statusName }}
+                            </template>
+                        </el-table-column>
                         <el-table-column label="物料" :show-overflow-tooltip="true" width="160">
                             <template slot-scope="scope">
                                 {{ scope.row.materialName + ' ' + scope.row.materialCode }}

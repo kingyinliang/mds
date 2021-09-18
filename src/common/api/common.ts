@@ -230,23 +230,23 @@ const COMMON_API = {
     /**
      * @property {string} UPLOADFILE_API 上传文件
      */
-    APPSAVE_API: params => httpProxy('/sysApp/save', 'POST', params),
+    APPSAVE_API: params => httpProxy('/sysApp/save', 'POST', params, 'SYS'),
     /**
      * @property {string} UPLOADFILE_API 上传文件
      */
-    UPLOADFILE_API: params => httpProxy('/sysFile/upload', 'GET', params),
+    UPLOADFILE_API: params => httpProxy('/sysFile/upload', 'GET', params, 'SYS'),
     /**
      * @property {string} UPLOADFILE_API 上传文件
      */
-    APP_VERSION_API: params => httpProxy('/sysApp/getLastedVersion', 'GET', params),
+    APP_VERSION_API: params => httpProxy('/sysApp/getLastedVersion', 'GET', params, 'SYS'),
     /**
      * @property {string} UPLOADFILE_API 上传APK
      */
-    UPLOADAPK_API: params => httpProxy('/sysApp/getUploadUrl', 'GET', params),
+    UPLOADAPK_API: params => httpProxy('/sysApp/getUploadUrl', 'GET', params, 'SYS'),
     /**
      * @property {string} DOWNLOADFILE_API 下载文件
      */
-    DOWNLOADFILE_API: params => httpProxy('/sysFile/download', 'GET', params),
+    DOWNLOADFILE_API: params => httpProxy('/sysFile/download', 'GET', params, 'SYS'),
     /**
      * @property {string} CAPACITYLIST_API 产能管理列表
      */

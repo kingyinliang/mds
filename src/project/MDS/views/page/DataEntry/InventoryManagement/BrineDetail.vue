@@ -191,6 +191,11 @@
             </div>
             <el-table header-row-class-name="" :data="applyInStorageList" border tooltip-effect="dark" class="newTable">
                 <el-table-column type="index" label="序号" width="55" align="center" fixed />
+                <el-table-column label="状态" :show-overflow-tooltip="true">
+                    <template slot-scope="scope">
+                        {{ scope.row.statusName }}
+                    </template>
+                </el-table-column>
                 <el-table-column label="物料" :show-overflow-tooltip="true" width="190">
                     <template slot-scope="scope">
                         {{ scope.row.materialName + ' ' + scope.row.materialCode }}
