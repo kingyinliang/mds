@@ -39,7 +39,7 @@
                                 <el-input v-model="scope.row.manPacking" placeholder="手工录入" size="small" :disabled="!(isRedact && scope.row.status !== 'submit' && scope.row.status !== 'checked' && scope.row.isZ === '0')" />
                             </template>
                         </el-table-column>
-                        <el-table-column label="单位" min-width="70">
+                        <el-table-column label="单位" min-width="83">
                             <template slot-scope="scope">
                                 <el-select v-model="scope.row.manPackingUnit" :disabled="!(isRedact && scope.row.status !== 'submit' && scope.row.status !== 'checked' && scope.row.isZ === '0')" @change="val => scope.row.manPackingUnitName = unitChange(val)">
                                     <el-option :label="ratio.basicUnitName" :value="ratio.basicUnit" />
@@ -53,7 +53,7 @@
                                 <el-input v-model="scope.row.aiPacking" placeholder="手工录入" size="small" :disabled="!(isRedact && scope.row.status !== 'submit' && scope.row.status !== 'checked' && scope.row.isZ === '0')" />
                             </template>
                         </el-table-column>
-                        <el-table-column v-if="order.workShopName === '包装三车间'" label="单位" min-width="70">
+                        <el-table-column v-if="order.workShopName === '包装三车间'" label="单位" min-width="83">
                             <template slot-scope="scope">
                                 <el-select v-model="scope.row.aiPackingUnit" :disabled="!(isRedact && scope.row.status !== 'submit' && scope.row.status !== 'checked' && scope.row.isZ === '0')" @change="val => scope.row.aiPackingUnitName = unitChange(val)">
                                     <el-option :label="ratio.basicUnitName" :value="ratio.basicUnit" />
@@ -67,7 +67,7 @@
                                 <el-input v-model="scope.row.manSolid" placeholder="手工录入" size="small" :disabled="!(isRedact && scope.row.status !== 'submit' && scope.row.status !== 'checked' && scope.row.isL === '0')" />
                             </template>
                         </el-table-column>
-                        <el-table-column label="单位" min-width="70">
+                        <el-table-column label="单位" min-width="83">
                             <template slot-scope="scope">
                                 <el-select v-model="scope.row.manSolidUnit" :disabled="!(isRedact && scope.row.status !== 'submit' && scope.row.status !== 'checked' && scope.row.isL === '0')" @change="val => scope.row.manSolidUnitName = unitChange(val)">
                                     <el-option :label="ratio.basicUnitName" :value="ratio.basicUnit" />
@@ -81,7 +81,7 @@
                                 <el-input v-model="scope.row.aiSolid" placeholder="手工录入" size="small" :disabled="!(isRedact && scope.row.status !== 'submit' && scope.row.status !== 'checked' && scope.row.isL === '0')" />
                             </template>
                         </el-table-column>
-                        <el-table-column v-if="order.workShopName === '包装三车间'" label="单位" min-width="70">
+                        <el-table-column v-if="order.workShopName === '包装三车间'" label="单位" min-width="83">
                             <template slot-scope="scope">
                                 <el-select v-model="scope.row.aiSolidUnit" :disabled="!(isRedact && scope.row.status !== 'submit' && scope.row.status !== 'checked' && scope.row.isL === '0')" @change="val => scope.row.aiSolidUnitName = unitChange(val)">
                                     <el-option :label="ratio.basicUnitName" :value="ratio.basicUnit" />
@@ -95,7 +95,7 @@
                                 <el-input v-model="scope.row.aiShelves" type="number" min="0" placeholder="手工录入" size="small" :disabled="!(isRedact && scope.row.status !== 'submit' && scope.row.status !== 'checked' && scope.row.isL === '0')" />
                             </template>
                         </el-table-column>
-                        <el-table-column v-if="order.workShopName !== '包装三车间'" label="单位" min-width="70">
+                        <el-table-column v-if="order.workShopName !== '包装三车间'" label="单位" min-width="83">
                             <template slot-scope="scope">
                                 <el-select v-model="scope.row.aiShelvesUnit" :disabled="!(isRedact && scope.row.status !== 'submit' && scope.row.status !== 'checked' && scope.row.isL === '0')" @change="val => scope.row.aiShelvesUnitName = unitChange(val)">
                                     <el-option :label="ratio.basicUnitName" :value="ratio.basicUnit" />
@@ -109,7 +109,7 @@
                                 <el-input v-model="scope.row.bad" placeholder="手工录入" size="small" :disabled="!(isRedact && scope.row.status !== 'submit' && scope.row.status !== 'checked')" />
                             </template>
                         </el-table-column>
-                        <el-table-column label="单位" min-width="70">
+                        <el-table-column label="单位" min-width="83">
                             <template slot-scope="scope">
                                 <el-select v-model="scope.row.badUnit" :disabled="!(isRedact && scope.row.status !== 'submit' && scope.row.status !== 'checked')" @change="val => scope.row.badUnitName = unitChange(val)">
                                     <el-option :label="ratio.basicUnitName" :value="ratio.basicUnit" />
@@ -123,7 +123,7 @@
                                 <el-input v-model="scope.row.sample" placeholder="手工录入" size="small" :disabled="!(isRedact && scope.row.status !== 'submit' && scope.row.status !== 'checked' && scope.row.isS === '0')" />
                             </template>
                         </el-table-column>
-                        <el-table-column label="单位" min-width="70">
+                        <el-table-column label="单位" min-width="83">
                             <template slot-scope="scope">
                                 <el-select v-model="scope.row.sampleUnit" :disabled="!(isRedact && scope.row.status !== 'submit' && scope.row.status !== 'checked' && scope.row.isS === '0')" @change="val => scope.row.sampleUnitName = unitChange(val)">
                                     <el-option :label="ratio.basicUnitName" :value="ratio.basicUnit" />
@@ -198,7 +198,7 @@
                                 <el-input v-model="scope.row.manSolid" placeholder="手工录入" size="small" :disabled="!(isRedact && scope.row.status !== 'submit' && scope.row.status !== 'checked' && scope.row.isL === '0')" />
                             </template>
                         </el-table-column>
-                        <el-table-column label="单位" min-width="70">
+                        <el-table-column label="单位" min-width="83">
                             <template slot-scope="scope">
                                 <el-select v-model="scope.row.manSolidUnit" :disabled="!(isRedact && scope.row.status !== 'submit' && scope.row.status !== 'checked' && scope.row.isL === '0')" @change="val => scope.row.manSolidUnitName = unitChange(val)">
                                     <el-option :label="ratio.basicUnitName" :value="ratio.basicUnit" />
@@ -212,7 +212,7 @@
                                 <el-input v-model="scope.row.bad" placeholder="手工录入" size="small" :disabled="!(isRedact && scope.row.status !== 'submit' && scope.row.status !== 'checked')" />
                             </template>
                         </el-table-column>
-                        <el-table-column label="单位" min-width="70">
+                        <el-table-column label="单位" min-width="83">
                             <template slot-scope="scope">
                                 <el-select v-model="scope.row.badUnit" :disabled="!(isRedact && scope.row.status !== 'submit' && scope.row.status !== 'checked')" @change="val => scope.row.badUnitName = unitChange(val)">
                                     <el-option :label="ratio.basicUnitName" :value="ratio.basicUnit" />
@@ -226,7 +226,7 @@
                                 <el-input v-model="scope.row.sample" placeholder="手工录入" size="small" :disabled="!(isRedact && scope.row.status !== 'submit' && scope.row.status !== 'checked' && scope.row.isS === '0')" />
                             </template>
                         </el-table-column>
-                        <el-table-column label="单位" min-width="70">
+                        <el-table-column label="单位" min-width="83">
                             <template slot-scope="scope">
                                 <el-select v-model="scope.row.sampleUnit" :disabled="!(isRedact && scope.row.status !== 'submit' && scope.row.status !== 'checked' && scope.row.isS === '0')" @change="val => scope.row.sampleUnitName = unitChange(val)">
                                     <el-option :label="ratio.basicUnitName" :value="ratio.basicUnit" />
@@ -690,11 +690,6 @@ export default {
                     //   this.$message.error('生产入库单位未获取')
                     //   return false
                     // }
-                    if (item.sample === 0 || item.sample === '0') {
-                      ty = false
-                      this.$message.error('样品为0，需经过确认再提交。')
-                      return false
-                    }
                     if (item.batch) {
                         // if (item.batch.length !== 10) {
                         //   ty = false
