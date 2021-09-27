@@ -97,7 +97,7 @@
                 </el-table-column>
             </el-table>
         </mds-card>
-        <el-checkbox-group v-model="bottleLine" :min="1" @change="bottleLineChange">
+        <el-checkbox-group v-model="bottleLine" :min="1" :disabled="!(isRedact && status !== 'C' && status !== 'D' && status !== 'P')" @change="bottleLineChange">
             <el-checkbox v-for="(item, index) in bottleLineNum" :key="index" :label="item">
                 灌装线{{ item }}
             </el-checkbox>
@@ -221,6 +221,7 @@ export default class Material extends Vue {
     spanOneArr: number[] = [];
 
     bottleLineChange() {
+        console.log(this.bottleLine);
         for (let i = 1; i <= this.bottleLineNum; i++) {
             if (this.bottleLine.indexOf(i) === -1) {
                 // 删掉灌装线
@@ -276,7 +277,13 @@ export default class Material extends Vue {
                 })
             }
         }
-        console.log(this.materialSArr);
+        this.materialSArr.splice(this.materialSArr.length, 0, {
+            data: [],
+            delFlag: true,
+            bottleLine: 999,
+            spanArr: []
+        });
+        this.materialSArr.splice(this.materialSArr.length - 1, 1);
     }
 
     // 编辑领用数量  实际损耗 不合格数时  获取未变化时数据
