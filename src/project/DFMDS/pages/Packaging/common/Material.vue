@@ -660,7 +660,7 @@ export default class Material extends Vue {
         })
         const MaterialS = this.processData(materialRes.data.data, 'materialS');
         const lineRes = await COMMON_API.ORGDETAIL_API({ id: formHeader.productLine })
-        this.bottleLineNum = Number(lineRes.data.data.bottleLineNum) + 3;
+        this.bottleLineNum = Number(lineRes.data.data.bottleLineNum);
         this.bottleLine = []
         this.materialSArr = []
         if (formHeader.orderStatus === 'T') {
