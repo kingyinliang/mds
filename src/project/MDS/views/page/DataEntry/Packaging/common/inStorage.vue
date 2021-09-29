@@ -645,7 +645,7 @@ export default {
                 types = 'isPkgThree';
             }
             this.InDate.forEach(item => {
-                this.SetUnit(item);
+                // this.SetUnit(item);
                 this.isSt(item);
                 item.orderId = id;
                 if (item.status) {
