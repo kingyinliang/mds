@@ -70,7 +70,7 @@
             width="600px"
             :close-on-click-modal="false"
         >
-            <div class="dialog-body" style="overflow: scroll;">
+            <div class="dialog-body" style="height: 600px; overflow: scroll;">
                 <pre>{{ messageData }}</pre>
             </div>
             <template #footer class="dialog-footer">
