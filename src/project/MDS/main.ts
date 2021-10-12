@@ -12,6 +12,7 @@ import 'element-ui/lib/theme-chalk/index.css';
 import httpProxy from '@/net/httpProxy';
 import { isAuth } from '@/net/validate';
 // import SentryUtil from '@/net/sentryUtil'
+import '@/assets/scss/_common.scss'
 import 'common/scss/index.scss';
 
 import App from './App.vue';

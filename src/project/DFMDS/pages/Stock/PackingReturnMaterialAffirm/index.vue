@@ -61,12 +61,12 @@
                 </div>
             </template>
             <template slot="operation_column" slot-scope="{ scope }">
-                <!-- <el-button v-if="!scope.row.redact" type="text" size="small" @click="editHandler(scope.row)">
+                <el-button v-if="!scope.row.redact" type="text" size="small" @click="editHandler(scope.row)">
                     编辑
                 </el-button>
                 <el-button v-else type="text" size="small" @click="saveHandler(scope.row)">
                     保存
-                </el-button> -->
+                </el-button>
                 <el-button type="text" size="small" @click="AuditLog(scope.row)">
                     日志
                 </el-button>
@@ -183,6 +183,35 @@
                     label: ['materialName', 'materialCode'],
                     value: 'materialCode'
                 }
+            },
+            {
+                type: 'select',
+                label: '移动原因',
+                prop: 'moveReason',
+                defaultValue: '',
+                options: [
+                    { label: '正常退料', value: 'NORMAL_REJECTED' },
+                    { label: '不良退料', value: 'BAD_REJECTED' }
+                ],
+                labelWidth: '100',
+                resVal: {
+                    label: ['label'],
+                    value: 'value'
+                }
+            },
+            {
+                type: 'input',
+                labelWidth: '100',
+                label: '批次',
+                prop: 'batch'
+            },
+            {
+                type: 'date-interval',
+                label: '过账日期',
+                labelWidth: '100',
+                defaultValue: dateFormat(new Date(), 'yyyy-MM-dd'),
+                prop: 'pstngDateBegin',
+                propTwo: 'pstngDateEnd'
             }
         ]
 
@@ -251,15 +280,7 @@
             {
                 prop: 'moveType',
                 label: '移动类型',
-                minwidth: '160',
-                type: 'input',
-                redact: true,
-                header: true,
-                resVal: {
-                    resData: 'data',
-                    label: 'dictValue',
-                    value: 'dictCode'
-                }
+                minwidth: '160'
             },
             {
                 prop: 'moveReason',
@@ -267,9 +288,17 @@
                 minwidth: '120'
             },
             {
+                type: 'select',
                 prop: 'receiptLoc',
+                redact: true,
+                header: true,
                 label: '收货库位',
-                minwidth: '100'
+                minwidth: '100',
+                resVal: {
+                    resData: 'data',
+                    label: 'storageLocation',
+                    value: 'storageLocation'
+                }
             },
             {
                 prop: 'receiptBatch',
@@ -339,11 +368,18 @@
         }
 
         editHandler(row) {
-            row.redact = true
+            this.$set(row, 'redact', true)
         }
 
         saveHandler(row) {
-            row.redact = false
+            if (!row.receiptLoc || !/^[0-9A-Z]{4}$/.test(row.receiptLoc)) {
+                this.$warningToast('请检查出库库位')
+                return
+            }
+            PKG_API.VERIFY_STORAGE_RETURN_SAVE_API(row).then(({ data }) => {
+                this.$successToast('操作成功')
+                this.$set(row, 'redact', false)
+            })
         }
 
         // 审核日志
@@ -371,6 +407,12 @@
         }
 
         getDict() {
+            PKG_API.VERIFY_STORAGE_RETURN_STORAGE_API({
+                materialTypeCodeSet: ['ZVER'],
+                materialUseCodeSet: ['R']
+            }).then(({ data }) => {
+                this.$refs.queryTable.optionLists.receiptLoc = data.data
+            })
             COMMON_API.DICTIONARY_ITEM_DROPDOWN_POST_API({
                 factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
                 dictType: 'ORDER_TYPE' // 字典类型
@@ -553,12 +595,15 @@
             this.$refs.postFormRef.validate(valid => {
                 if (valid) {
                     const params = {
-                        idSet: [] as string[],
+                        verifyStorageReturnUpdateDtoList: [] as any[],
                         pstngDate: this.postForm.pstngDate,
                         headerText: this.postForm.headerText
                     }
                     arr.map((item: OrderObj) => {
-                        params.idSet.push(item.id)
+                        params.verifyStorageReturnUpdateDtoList.push({
+                            id: item.id,
+                            receiptLoc: item.receiptLoc
+                        })
                     });
                     PKG_API.VERIFY_STORAGE_RETURN_PASS_API(params).then(res => {
                         this.$successToast(res.data.msg);
@@ -574,6 +619,8 @@
     }
     interface OrderObj {
         id: string;
+        receiptLoc?: string;
+        stgeLoc?: string;
         orderType: string;
         ver: string;
     }

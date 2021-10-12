@@ -425,9 +425,9 @@ export default class Equipment extends Vue {
                 return false
             }
         }
-        if (!this.dateRule()) {
-            return false
-        }
+        // if (!this.dateRule()) {
+        //     return false
+        // }
         return true
     }
 

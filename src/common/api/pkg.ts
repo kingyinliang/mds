@@ -174,6 +174,14 @@ const PKG_API = {
      */
     VERIFY_STORAGE_RETURN_PASS_API: params => httpProxy('/verifyStorageReturn/pass', 'POST', params),
     /**
+     * @property {string}  VERIFY_STORAGE_RETURN_PASS_API 库存退料库位下拉
+     */
+    VERIFY_STORAGE_RETURN_STORAGE_API: params => httpProxy('/sysStorage/listStorage', 'POST', params),
+    /**
+     * @property {string}  VERIFY_STORAGE_RETURN_PASS_API 库存退料审核保存
+     */
+    VERIFY_STORAGE_RETURN_SAVE_API: params => httpProxy('/verifyStorageReturn/update', 'POST', params),
+    /**
      * @property {string}  VERIFY_STORAGE_RETURN_RETURNED_API 库存退料审核退回
      */
     VERIFY_STORAGE_RETURN_RETURNED_API: params => httpProxy('/verifyStorageReturn/returned', 'POST', params),

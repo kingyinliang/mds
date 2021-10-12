@@ -1,7 +1,7 @@
 <template>
     <div>
         <el-dialog title="面粉领用" width="458px" :close-on-click-modal="false" :visible.sync="visible">
-            <el-form ref="dataForm" :model="dataForm" status-icon :rules="dataRule" label-width="125px" size="small" @keyup.enter.native="dataFormSubmit()">
+            <el-form ref="dataForm" class="dataForm" :model="dataForm" status-icon :rules="dataRule" label-width="125px" size="small" @keyup.enter.native="dataFormSubmit()">
                 <el-form-item label="领用库位：">
                     <el-input v-model="dataForm.materialHL" placeholder="NA" disabled />
                 </el-form-item>
@@ -35,8 +35,9 @@
                         </div>
                     </el-tooltip>
                 </el-form-item>
-                <el-form-item label="杂质数量：" prop="impurityAmount">
-                    <el-input v-model.number="dataForm.impurityAmount" placeholder="手动输入" />
+                <el-form-item label="杂质数量：">
+                    <!--                    <el-input v-model.number="dataForm.impurityAmount" placeholder="手动输入" />-->
+                    <el-input-number v-model.number="dataForm.impurityAmount" :controls="false" :precision="2" placeholder="手动输入" style="width: 100%;" />
                 </el-form-item>
                 <el-form-item label="备注：" prop="remark">
                     <el-tooltip :disabled="!dataForm.remark" effect="dark" :content="dataForm.remark" placement="top">
@@ -97,19 +98,7 @@
                 { type: 'number', message: '必须为数字值' }
             ],
             batch: [{ required: true, message: '请选择领用批次', trigger: 'change' }],
-            operationMans: [{ required: true, message: '请选择上面人', trigger: 'change' }],
-            impurityAmount: [
-                {
-                    validator: (rule, value, callBack) => {
-                        if (value === '' || /^\d{1,}$/.test(value)) {
-                            callBack();
-                        } else {
-                            callBack(new Error('必须为数字值'));
-                        }
-                    },
-                    trigger: 'blur'
-                }
-            ]
+            operationMans: [{ required: true, message: '请选择上面人', trigger: 'change' }]
         };
 
         // 表单对象
@@ -337,6 +326,11 @@
     }
 </script>
 <style lang="scss" scoped>
+    .dataForm {
+        ::v-deep .el-input-number .el-input__inner { /* stylelint-disable-line */
+            text-align: left !important;
+        }
+    }
     .koji-control-form_select {
         min-width: 200px;
         max-width: 300px;

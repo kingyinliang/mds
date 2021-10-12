@@ -484,10 +484,10 @@
         // 提交时字段校验
         ruleSubmit() {
             // /(?:^[1-9]([0-9])?(?:\.[0-9]{1})?$)|(?:^(?:0){1}$)|(?:^[0-9]\.[0-9]$)/
-            if (!this.craftSteamFlourInfo.steamPacketPressure || !this.craftSteamFlourInfo.steamFlourSpeed || !this.craftSteamFlourInfo.steamFlourMans) {
-                this.$warningToast('请填写工艺控制页签"蒸面记录"必填项');
-                return false;
-            }
+            // if (!this.craftSteamFlourInfo.steamPacketPressure || !this.craftSteamFlourInfo.steamFlourSpeed || !this.craftSteamFlourInfo.steamFlourMans) {
+            //     this.$warningToast('请填写工艺控制页签"蒸面记录"必填项');
+            //     return false;
+            // }
 
             if (this.craftSteamBeanTable.filter(it => it.delFlag !== 1).length === 0) {
                 this.$warningToast('请填写工艺控制页签"蒸豆记录"');

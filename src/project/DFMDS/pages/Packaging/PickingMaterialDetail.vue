@@ -39,7 +39,7 @@
                                 <span class="notNull">* </span>领用库位
                             </template>
                             <template slot-scope="scope">
-                                <el-select v-model="scope.row.stgeLoc" :disabled="!(isRedact)" placeholder="请选择" size="small">
+                                <el-select v-model="scope.row.stgeLoc" :disabled="!(isRedact)" placeholder="请选择" size="small" @change="() => scope.row.batch = ''">
                                     <el-option v-for="(list,index) in scope.row.stgeLocList" :key="index" :label="list.stgeLoc" :value="list.stgeLoc" />
                                 </el-select>
                             </template>
