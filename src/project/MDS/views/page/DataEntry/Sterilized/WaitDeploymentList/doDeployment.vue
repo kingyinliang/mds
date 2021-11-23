@@ -74,8 +74,8 @@
                 <el-button type="primary" size="small" :disabled="!isRedact" style="float: right;" @click="AddOrderNo">
                     新增
                 </el-button>
-                <el-button v-if="typeString === '调配'" type="primary" size="small" :disabled="!isRedact" style="float: right; margin-right: 20px;" @click="materialDetail">
-                    调配详情
+                <el-button type="primary" size="small" :disabled="!isRedact" style="float: right; margin-right: 20px;" @click="materialDetail">
+                    备料详情
                 </el-button>
             </template>
             <el-table :data="orderList" border class="newTable" header-row-class-name="tableHead">
@@ -201,14 +201,14 @@
                 <el-button v-if="isAuth('ste:allocate:allocateOrderSave')" type="primary" size="small" :disabled="formHeaders.STATUS !== '已保存' && formHeaders.STATUS !== ''" @click="isRedact = !isRedact">
                     {{ isRedact === false ? '编辑' : '取消' }}
                 </el-button>
-                <el-button type="primary" size="small" :disabled="revocation === 1" @click="ReCall(true)">
-                    撤回
-                </el-button>
-                <template v-if="isRedact">
-                    <el-button type="primary" size="small" @click="CreateOrder(true)">
-                        生成
-                    </el-button>
-                </template>
+                <!--                <el-button type="primary" size="small" :disabled="revocation === 1" @click="ReCall(true)">-->
+                <!--                    撤回-->
+                <!--                </el-button>-->
+                <!--                <template v-if="isRedact">-->
+                <!--                    <el-button type="primary" size="small" @click="CreateOrder(true)">-->
+                <!--                        生成-->
+                <!--                    </el-button>-->
+                <!--                </template>-->
             </template>
         </redact-box>
     </div>
@@ -308,28 +308,46 @@ export default {
     },
     methods: {
         materialDetail() {
-            this.materialVisible = true
-            this.$http(`${STERILIZED_API.NEW_WAITDEPLOYMENT_MATERIAL_LIST_API}`, 'POST', {
-                factory: this.formHeaders.FACTORY,
-                orderNoList: this.orderArray
-            }).then(({ data }) => {
-                if (data.code === 0) {
-                    this.materialList = []
-                    this.prepareMaterialList = []
-                    data.data.forEach(it => {
-                        if (it.type === 'BL') {
-                            if (it.distributeAmount === '' || it.distributeAmount === null) {
-                                it.distributeAmount = it.planAmount
-                            }
-                            this.materialList.push(it)
-                        } else {
-                            this.prepareMaterialList.push(it)
-                        }
-                    })
-                } else {
-                    this.$warningToast(data.msg);
-                }
-            })
+            const detail = {
+                ...this.formHeaders,
+                ID: this.allocateId,
+                PLAN_AMOUNT: this.planOutputTotal,
+                remark: this.remark,
+                orderArray: this.orderArray,
+                orderList: this.orderList,
+                typeString: this.typeString,
+                revocation: this.revocation
+            }
+            this.$store.commit('common/updateSterilizedDoDeploymentDetail', detail);
+            this.mainTabs = this.mainTabs.filter(item => item.name !== 'MDS-views-page-DataEntry-Sterilized-WaitDeploymentList-doDeploymentDetail');
+            setTimeout(() => {
+                this.$router.push({
+                    name: `MDS-views-page-DataEntry-Sterilized-WaitDeploymentList-doDeploymentDetail`
+                });
+            }, 100);
+
+            // this.materialVisible = true
+            // this.$http(`${STERILIZED_API.NEW_WAITDEPLOYMENT_MATERIAL_LIST_API}`, 'POST', {
+            //     factory: this.formHeaders.FACTORY,
+            //     orderNoList: this.orderArray
+            // }).then(({ data }) => {
+            //     if (data.code === 0) {
+            //         this.materialList = []
+            //         this.prepareMaterialList = []
+            //         data.data.forEach(it => {
+            //             if (it.type === 'BL') {
+            //                 if (it.distributeAmount === '' || it.distributeAmount === null) {
+            //                     it.distributeAmount = it.planAmount
+            //                 }
+            //                 this.materialList.push(it)
+            //             } else {
+            //                 this.prepareMaterialList.push(it)
+            //             }
+            //         })
+            //     } else {
+            //         this.$warningToast(data.msg);
+            //     }
+            // })
         },
         determine() {
             if (!this.formHeaders.ALLOCATE_SEQUENCE) {

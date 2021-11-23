@@ -56,7 +56,7 @@
                 <mds-card title="推荐列表" name="dataList" :pack-up="false">
                     <template slot="titleBtn">
                         <el-button type="primary" style="float: right;" size="small" @click="DoDeploy">
-                            调配
+                            备料
                         </el-button>
                     </template>
                     <el-table :data="dataList" class="newTable" border header-row-class-name="tableHead" style="margin-top: 10px;">
@@ -121,7 +121,7 @@
                 <mds-card title="推荐列表" name="dataList" :pack-up="false">
                     <template slot="titleBtn">
                         <el-button type="primary" style="float: right;" size="small" @click="DoDeploy">
-                            分配
+                            备料
                         </el-button>
                     </template>
                     <el-table :data="dataList" class="newTable" border header-row-class-name="tableHead" style="margin-top: 10px;">
