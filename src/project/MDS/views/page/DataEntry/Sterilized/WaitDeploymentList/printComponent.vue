@@ -148,8 +148,7 @@ export default {
 <style lang="scss" media="print" scoped>
     @media print {
         @page {
-            margin: 3cm auto 0;
-            margin-bottom: 0;
+            margin: auto;
             size: a4 landscape;
         }
         .none_ele {
