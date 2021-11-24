@@ -308,6 +308,10 @@ export default {
     },
     methods: {
         materialDetail() {
+            if (!this.orderList.length) {
+                this.$warningToast('请添加订单后进入详情');
+                return
+            }
             const detail = {
                 ...this.formHeaders,
                 ID: this.allocateId,

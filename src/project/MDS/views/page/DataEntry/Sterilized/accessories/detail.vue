@@ -69,7 +69,7 @@
                             删除
                         </el-button>
                         <span v-else-if="scope.$index === accessoriesDetailList.length-1">{{ scope.row[index] }}</span>
-                        <el-input v-else-if="index === accessoriesHead.length-1" v-model="scope.row[index]" :disabled="!isRedact" size="small" style="width: 150px;" />
+                        <el-input v-else-if="index === accessoriesHead.length-1" v-model="scope.row[index]" :disabled="!isRedact" maxlength="10" size="small" style="width: 150px;" />
                         <span v-else>{{ scope.row[index] }}</span>
                     </template>
                 </el-table-column>
