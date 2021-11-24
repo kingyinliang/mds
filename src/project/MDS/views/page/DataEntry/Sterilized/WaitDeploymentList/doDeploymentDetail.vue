@@ -134,7 +134,7 @@
                     {{ isRedact === false ? '编辑' : '取消' }}
                 </el-button>
                 <template v-if="isRedact">
-                    <el-button type="primary" size="small" @click="savedForm(true)">
+                    <el-button v-if="typeString !== '分配'" type="primary" size="small" @click="savedForm(true)">
                         保存
                     </el-button>
                     <el-button v-if="revocation === 1" type="primary" size="small" @click="CreateOrder(true)">
@@ -301,7 +301,7 @@ export default {
         },
         // 生成
         CreateOrder() {
-            if (!this.formHeader.ALLOCATE_SEQUENCE) {
+            if (this.typeString !== '分配' && !this.formHeader.ALLOCATE_SEQUENCE) {
                 this.$warningToast('请填写必填项')
                 return
             }
