@@ -69,7 +69,7 @@
                 <template slot="titleBtn">
                     <div style="float: right;">
                         <span style="color: red;">*</span><span>调配顺序：</span>
-                        <el-input v-model="formHeader.ALLOCATE_SEQUENCE" type="number" size="small" placeholder="调配顺序" style="width: 160px;" />
+                        <el-input v-model="formHeader.ALLOCATE_SEQUENCE" :disabled="!isRedact" type="number" size="small" placeholder="调配顺序" style="width: 160px;" />
                     </div>
                 </template>
                 <el-table :data="materialList" border class="newTable" header-row-class-name="tableHead">
@@ -89,12 +89,12 @@
                             <span>实际调配量</span>
                         </template>
                         <template slot-scope="scope">
-                            <el-input v-model="scope.row.distributeAmount" size="small" />
+                            <el-input v-model="scope.row.distributeAmount" :disabled="!isRedact" size="small" />
                         </template>
                     </el-table-column>
                     <el-table-column label="备注" prop="remark">
                         <template slot-scope="scope">
-                            <el-input v-model="scope.row.remark" size="small" />
+                            <el-input v-model="scope.row.remark" :disabled="!isRedact" size="small" />
                         </template>
                     </el-table-column>
                 </el-table>
@@ -301,7 +301,7 @@ export default {
         },
         // 生成
         CreateOrder() {
-            if (!this.formHeaders.ALLOCATE_SEQUENCE) {
+            if (!this.formHeader.ALLOCATE_SEQUENCE) {
                 this.$warningToast('请填写必填项')
                 return
             }
