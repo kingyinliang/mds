@@ -74,7 +74,7 @@
                 <el-button type="primary" size="small" :disabled="!isRedact" style="float: right;" @click="AddOrderNo">
                     新增
                 </el-button>
-                <el-button type="primary" size="small" :disabled="!isRedact" style="float: right; margin-right: 20px;" @click="materialDetail">
+                <el-button type="primary" size="small" style="float: right; margin-right: 20px;" @click="materialDetail">
                     备料详情
                 </el-button>
             </template>

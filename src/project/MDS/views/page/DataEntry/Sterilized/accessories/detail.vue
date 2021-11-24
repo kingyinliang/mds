@@ -114,6 +114,7 @@ export default {
         getDetail() {
             this.$http(`${STERILIZED_API.ACCESSORIES_DETAIL}`, 'GET', { allocateId: this.$store.state.common.accessories.id }).then(({ data }) => {
                 if (data.code === 0) {
+                    this.formHeader = data.allocate
                     if (data.data && data.data.length) {
                         this.accessoriesHead = data.data[0]
                         this.accessoriesDetailList = data.data.splice(1, data.data.length)
@@ -182,6 +183,17 @@ export default {
                     prepStatus
                 }
             })
+            console.log(formDataList);
+            for (const item of formDataList) {
+                if (!item.batch) {
+                    this.$warningToast('请填写批次')
+                    return
+                }
+                if (item.batch.length !== 10) {
+                    this.$warningToast('批次必须10位')
+                    return
+                }
+            }
             this.$http(`${STERILIZED_API.ACCESSORIES_DETAIL_SAVED_SUBMIT}`, 'POST', formDataList).then(({ data }) => {
                 if (data.code === 0) {
                     this.$notify({ title: '成功', message: '操作成功', type: 'success' });

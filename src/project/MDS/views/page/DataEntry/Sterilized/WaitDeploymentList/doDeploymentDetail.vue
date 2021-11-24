@@ -140,10 +140,10 @@
                     <el-button v-if="revocation === 1" type="primary" size="small" @click="CreateOrder(true)">
                         生成
                     </el-button>
-                    <el-button v-else type="primary" size="small" @click="ReCall(true)">
-                        撤回
-                    </el-button>
                 </template>
+                <el-button v-if="revocation !== 1" type="primary" size="small" @click="ReCall(true)">
+                    撤回
+                </el-button>
             </template>
         </redact-box>
     </div>
@@ -279,7 +279,7 @@ export default {
                 steAllocateOrders: steAllocateOrders
             }).then(({ data }) => {
                 if (data.code === 0) {
-                    this.$notify({ title: '成功', message: '生成成功', type: 'success' });
+                    this.$notify({ title: '成功', message: '保存成功', type: 'success' });
                     this.isRedact = false;
                     this.GetInfo(data.allocateId);
                 } else {
