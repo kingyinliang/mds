@@ -312,24 +312,32 @@ export default {
                 this.$warningToast('请添加订单后进入详情');
                 return
             }
-            const detail = {
-                ...this.formHeaders,
-                ID: this.allocateId,
-                PLAN_AMOUNT: this.planOutputTotal,
-                remark: this.remark,
-                orderArray: this.orderArray,
-                orderList: this.orderList,
-                typeString: this.typeString,
-                revocation: this.revocation
-            }
-            this.$store.commit('common/updateSterilizedDoDeploymentDetail', detail);
-            this.mainTabs = this.mainTabs.filter(item => item.name !== 'MDS-views-page-DataEntry-Sterilized-WaitDeploymentList-doDeploymentDetail');
-            setTimeout(() => {
-                this.$router.push({
-                    name: `MDS-views-page-DataEntry-Sterilized-WaitDeploymentList-doDeploymentDetail`
-                });
-            }, 100);
-
+            const steAllocateOrders = this.orderList.map(it => {
+                return it.orderNo
+            })
+            this.$http(`${STERILIZED_API.ORDER_CREATED}`, 'POST', steAllocateOrders).then(({ data }) => {
+                if (data.code === 0) {
+                    const detail = {
+                        ...this.formHeaders,
+                        ID: this.allocateId,
+                        PLAN_AMOUNT: this.planOutputTotal,
+                        remark: this.remark,
+                        orderArray: this.orderArray,
+                        orderList: this.orderList,
+                        typeString: this.typeString,
+                        revocation: this.revocation
+                    }
+                    this.$store.commit('common/updateSterilizedDoDeploymentDetail', detail);
+                    this.mainTabs = this.mainTabs.filter(item => item.name !== 'MDS-views-page-DataEntry-Sterilized-WaitDeploymentList-doDeploymentDetail');
+                    setTimeout(() => {
+                        this.$router.push({
+                            name: `MDS-views-page-DataEntry-Sterilized-WaitDeploymentList-doDeploymentDetail`
+                        });
+                    }, 100);
+                } else {
+                    this.$warningToast(data.msg);
+                }
+            })
             // this.materialVisible = true
             // this.$http(`${STERILIZED_API.NEW_WAITDEPLOYMENT_MATERIAL_LIST_API}`, 'POST', {
             //     factory: this.formHeaders.FACTORY,

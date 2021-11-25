@@ -227,14 +227,14 @@ export default {
                 orderNo: id
             }).then(({ data }) => {
                 if (data.code === 0) {
-                    this.orderArray = [];
                     this.formHeader = data.allocateInfo;
                     this.revocation = data.revocation;
                     this.remark = this.formHeader.REMARK;
-                    this.orderList = data.allocateInfo.orderInfo;
-                    data.allocateInfo.orderInfo.map(item => {
-                        this.orderArray.push(item.orderNo);
-                    });
+                    // this.orderArray = [];
+                    // this.orderList = data.allocateInfo.orderInfo;
+                    // data.allocateInfo.orderInfo.map(item => {
+                    //     this.orderArray.push(item.orderNo);
+                    // });
 
                     const detail = {
                         ...this.formHeader,

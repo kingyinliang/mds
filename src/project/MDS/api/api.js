@@ -1679,6 +1679,7 @@ export const STERILIZED_API = {
     JUICEDEPLOYMENTCREATETP: HOST + '/ste/allocate/allocateCreateTp',
     PREPARED_LIST: HOST + '/ste/allocate/accessories/preparedAllocateList/v2',
     PENDING_LIST: HOST + '/ste/allocate/accessories/pendingAllocateList/v2',
+    ORDER_CREATED: HOST + '/ste/allocate/judgeOrderCreatedAllocate/v2',
     ACCESSORIES_DETAIL: HOST + '/ste/allocate/accessories/allocateAccessoriesList/v2',
     ACCESSORIES_DETAIL_SAVED_SUBMIT: HOST + '/ste/allocate/accessories/saveOrSubmit/v2',
     /**
