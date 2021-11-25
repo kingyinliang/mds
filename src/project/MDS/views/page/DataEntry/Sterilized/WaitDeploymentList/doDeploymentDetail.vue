@@ -14,7 +14,7 @@
                         {{ formHeader.WORK_SHOPNAME }}
                     </p>
                 </el-form-item>
-                <el-form-item :label="typeString + '单号：'">
+                <el-form-item label="备料单号：">
                     <p class="input_bottom">
                         {{ formHeader.ORDER_NO }}
                     </p>
@@ -27,18 +27,19 @@
                     </el-tooltip>
                 </el-form-item>
                 <el-form-item>
-                    <span v-if="typeString === '调配'" style=" float: left; margin-left: 5px; color: #606266;">计划BL原汁总量（L）：</span>
-                    <span v-else style=" float: left; margin-left: 5px; color: #606266;">原汁总量（L）：</span>
+                    <span style=" float: left; margin-left: 5px; color: #606266;">
+                        计划原汁数量：
+                    </span>
                     <p style="float: left;" class="input_bottom">
                         {{ formHeader.PLAN_AMOUNT }}
                     </p>
                 </el-form-item>
-                <el-form-item v-if="typeString === '调配'" :label="typeString + '罐号：'">
+                <el-form-item label="调配罐号：">
                     <p class="input_bottom">
                         {{ formHeader.HOLDER_ID }}
                     </p>
                 </el-form-item>
-                <el-form-item :label="typeString + '日期：'">
+                <el-form-item label="备料日期：">
                     <p class="input_bottom">
                         {{ formHeader.ALLOCATE_DATE }}
                     </p>
@@ -162,7 +163,7 @@ export default {
         return {
             isRedact: false,
             activeName: '调配',
-            typeString: this.$store.state.common.sterilizedDoDeploymentDetail.typeString || '调配',
+            typeString: '调配',
             revocation: this.$store.state.common.sterilizedDoDeploymentDetail.revocation || 0,
             orderArray: this.$store.state.common.sterilizedDoDeploymentDetail.orderArray || [],
             orderList: this.$store.state.common.sterilizedDoDeploymentDetail.orderList || [],
@@ -192,16 +193,21 @@ export default {
                 if (data.code === 0) {
                     this.materialList = []
                     this.prepareMaterialList = []
-                    data.data.forEach(it => {
-                        if (it.type === 'BL') {
-                            if (it.distributeAmount === '' || it.distributeAmount === null) {
-                                it.distributeAmount = it.planAmount
+                    if (data.data && data.data.length) {
+                        this.typeString = '调配'
+                        data.data.forEach(it => {
+                            if (it.type === 'BL') {
+                                if (it.distributeAmount === '' || it.distributeAmount === null) {
+                                    it.distributeAmount = it.planAmount
+                                }
+                                this.materialList.push(it)
+                            } else {
+                                this.prepareMaterialList.push(it)
                             }
-                            this.materialList.push(it)
-                        } else {
-                            this.prepareMaterialList.push(it)
-                        }
-                    })
+                        })
+                    } else {
+                        this.typeString = '分配'
+                    }
                     if (data.accessories && data.accessories.length) {
                         this.accessoriesHead = data.accessories[0]
                         this.accessoriesList = data.accessories.splice(1, data.accessories.length)
@@ -213,8 +219,6 @@ export default {
                             it.splice(0, 0, index + 1)
                             it.splice(3, 0, '')
                         })
-                        console.log(this.printHead);
-                        console.log(this.printData);
                     }
                 } else {
                     this.$warningToast(data.msg);
@@ -230,17 +234,11 @@ export default {
                     this.formHeader = data.allocateInfo;
                     this.revocation = data.revocation;
                     this.remark = this.formHeader.REMARK;
-                    // this.orderArray = [];
-                    // this.orderList = data.allocateInfo.orderInfo;
-                    // data.allocateInfo.orderInfo.map(item => {
-                    //     this.orderArray.push(item.orderNo);
-                    // });
 
                     const detail = {
                         ...this.formHeader,
                         orderArray: this.orderArray,
                         orderList: this.orderList,
-                        typeString: this.typeString,
                         revocation: this.revocation
                     }
                     this.$store.commit('common/updateSterilizedDoDeploymentDetail', detail);
@@ -293,6 +291,7 @@ export default {
                 id: this.formHeader.ID
             }).then(({ data }) => {
                 if (data.code === 0) {
+                    this.$notify({ title: '成功', message: '撤回成功', type: 'success' });
                     this.GetInfo(this.formHeader.ID);
                 } else {
                     this.$warningToast(data.msg);
@@ -306,7 +305,6 @@ export default {
                 return
             }
             for (const item of this.materialList) {
-                console.log(item.distributeAmount)
                 if (item.distributeAmount === '' || item.distributeAmount === null) {
                     this.$warningToast('请填写必填项')
                     return
