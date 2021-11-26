@@ -58,10 +58,9 @@
                                 <em class="reqI">*</em><span>批次</span>
                             </template>
                             <template slot-scope="scope">
-                                <el-select v-if="scope.row.materialName === 'Y010'" v-model="scope.row.batch" value-key="batch" placeholder="请选择" :disabled="!(isRedact && (scope.row.status === 'noPass' || (isRedact && scope.row.status !== 'submit' && scope.row.status !== 'checked' && scope.row.addStatus !== '已添加')))" size="small" @change="changeBatch($event, scope.row)">
+                                <el-select v-model="scope.row.batch" value-key="batch" placeholder="请选择" :disabled="!(isRedact && (scope.row.status === 'noPass' || (isRedact && scope.row.status !== 'submit' && scope.row.status !== 'checked' && scope.row.addStatus !== '已添加')))" size="small" @change="changeBatch($event, scope.row)">
                                     <el-option v-for="(item, index) in batchList" :key="index" :label="item.batch" :value="item.batch" />
                                 </el-select>
-                                <el-input v-else v-model="scope.row.batch" :disabled="!(isRedact && (scope.row.status === 'noPass' || (isRedact && scope.row.status !== 'submit' && scope.row.status !== 'checked' && scope.row.addStatus !== '已添加')))" placeholder="请输入" maxlength="10" size="mini" />
                             </template>
                         </el-table-column>
                         <el-table-column label="Y010库存" prop="currentQuantity" width="100" />
@@ -124,9 +123,10 @@
                                 <em class="reqI">*</em><span>批次</span>
                             </template>
                             <template slot-scope="scope">
-                                <el-select v-model="scope.row.batch" value-key="batch" placeholder="请选择" :disabled="!(isRedact && (scope.row.status === 'noPass' || (isRedact && scope.row.status !== 'submit' && scope.row.status !== 'checked' && scope.row.addStatus !== '已添加')))" size="small" @change="changeBatch($event, scope.row)">
+                                <el-select v-if="scope.row.materialName === 'Y010'" v-model="scope.row.batch" value-key="batch" placeholder="请选择" :disabled="!(isRedact && (scope.row.status === 'noPass' || (isRedact && scope.row.status !== 'submit' && scope.row.status !== 'checked' && scope.row.addStatus !== '已添加')))" size="small" @change="changeBatch($event, scope.row)">
                                     <el-option v-for="(item, index) in batchList" :key="index" :label="item.batch" :value="item.batch" />
                                 </el-select>
+                                <el-input v-else v-model="scope.row.batch" :disabled="!(isRedact && (scope.row.status === 'noPass' || (isRedact && scope.row.status !== 'submit' && scope.row.status !== 'checked' && scope.row.addStatus !== '已添加')))" placeholder="请输入" maxlength="10" size="mini" />
                             </template>
                         </el-table-column>
                         <el-table-column label="Y010库存" prop="currentQuantity" width="100" />

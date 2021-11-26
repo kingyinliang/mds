@@ -184,14 +184,16 @@ export default {
                 }
             })
             console.log(formDataList);
-            for (const item of formDataList) {
-                if (!item.batch) {
-                    this.$warningToast('请填写批次')
-                    return
-                }
-                if (item.batch.length !== 10) {
-                    this.$warningToast('批次必须10位')
-                    return
+            if (prepStatus === 'PREPARED') {
+                for (const item of formDataList) {
+                    if (!item.batch) {
+                        this.$warningToast('请填写批次')
+                        return
+                    }
+                    if (item.batch.length !== 10) {
+                        this.$warningToast('批次必须10位')
+                        return
+                    }
                 }
             }
             this.$http(`${STERILIZED_API.ACCESSORIES_DETAIL_SAVED_SUBMIT}`, 'POST', formDataList).then(({ data }) => {
