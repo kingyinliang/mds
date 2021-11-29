@@ -61,7 +61,7 @@
                                 <el-select v-if="scope.row.materialName === 'Y010'" v-model="scope.row.batch" value-key="batch" placeholder="请选择" :disabled="!(isRedact && (scope.row.status === 'noPass' || (isRedact && scope.row.status !== 'submit' && scope.row.status !== 'checked' && scope.row.addStatus !== '已添加')))" size="small" @change="changeBatch($event, scope.row)">
                                     <el-option v-for="(item, index) in batchList" :key="index" :label="item.batch" :value="item.batch" />
                                 </el-select>
-                                <el-select v-else value-key="batch" placeholder="请选择" :disabled="!(isRedact && (scope.row.status === 'noPass' || (isRedact && scope.row.status !== 'submit' && scope.row.status !== 'checked' && scope.row.addStatus !== '已添加')))" size="small" @change="changeBatch($event, scope.row)">
+                                <el-select v-else v-model="scope.row.batch" value-key="batch" placeholder="请选择" :disabled="!(isRedact && (scope.row.status === 'noPass' || (isRedact && scope.row.status !== 'submit' && scope.row.status !== 'checked' && scope.row.addStatus !== '已添加')))" size="small" @change="changeBatch($event, scope.row)">
                                     <el-option v-for="(item, index) in scope.row.batchList" :key="index" :label="item" :value="item" />
                                 </el-select>
                             </template>
