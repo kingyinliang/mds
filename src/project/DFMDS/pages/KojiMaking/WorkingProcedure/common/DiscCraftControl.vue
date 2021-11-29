@@ -1134,7 +1134,7 @@
                 testTempTwo: null,
                 windDoor: null,
                 windSpeed: null,
-                windSpeedUnit: 'HZ',
+                windSpeedUnit: 'r/min',
                 windTemp: null,
                 delFlag: 0
             }
