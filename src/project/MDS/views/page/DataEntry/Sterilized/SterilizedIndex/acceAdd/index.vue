@@ -303,6 +303,11 @@
                         if (data.steSupMaterialBean.supList) {
                             this.SupDate = data.steSupMaterialBean.supList;
                         }
+                        this.AddSupDate.forEach(item => {
+                            if (item.materialName !== 'Y010' && (item.batch === '' || item.batch === null) && item.batchList.length) {
+                                item.batch = item.batchList[0]
+                            }
+                        })
                         const c = this.AddSupDate.concat(this.SupDate);
                         this.DataAudit = data.vList;
                         this.supStatus = true;
@@ -339,6 +344,7 @@
                     adjustAmountPro: row.adjustAmountPro,
                     batch: '',
                     delFlag: '0',
+                    batchList: row.batchList,
                     diffAmount: row.diffAmount,
                     id: '',
                     isOperation: row.isOperation,
