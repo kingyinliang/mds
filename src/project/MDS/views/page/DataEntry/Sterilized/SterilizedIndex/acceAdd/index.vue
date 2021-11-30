@@ -61,7 +61,9 @@
                                 <el-select v-if="scope.row.materialName === 'Y010'" v-model="scope.row.batch" value-key="batch" placeholder="请选择" :disabled="!(isRedact && (scope.row.status === 'noPass' || (isRedact && scope.row.status !== 'submit' && scope.row.status !== 'checked' && scope.row.addStatus !== '已添加')))" size="small" @change="changeBatch($event, scope.row)">
                                     <el-option v-for="(item, index) in batchList" :key="index" :label="item.batch" :value="item.batch" />
                                 </el-select>
-                                <el-input v-else v-model="scope.row.batch" :disabled="!(isRedact && (scope.row.status === 'noPass' || (isRedact && scope.row.status !== 'submit' && scope.row.status !== 'checked' && scope.row.addStatus !== '已添加')))" placeholder="请输入" maxlength="10" size="mini" />
+                                <el-select v-else v-model="scope.row.batch" value-key="batch" placeholder="请选择" :disabled="!(isRedact && (scope.row.status === 'noPass' || (isRedact && scope.row.status !== 'submit' && scope.row.status !== 'checked' && scope.row.addStatus !== '已添加')))" size="small" @change="changeBatch($event, scope.row)">
+                                    <el-option v-for="(item, index) in scope.row.batchList" :key="index" :label="item" :value="item" />
+                                </el-select>
                             </template>
                         </el-table-column>
                         <el-table-column label="Y010库存" prop="currentQuantity" width="100" />
@@ -263,9 +265,11 @@
                 });
             },
             changeBatch(val, row) {
-                const batchSole = this.batchList.find(item => (item.batch === val));
-                row['currentQuantity'] = batchSole['currentQuantity'];
-                row['holderId'] = batchSole['holderId'];
+                if (row.materialName === 'Y010') {
+                    const batchSole = this.batchList.find(item => (item.batch === val));
+                    row['currentQuantity'] = batchSole['currentQuantity'];
+                    row['holderId'] = batchSole['holderId'];
+                }
             },
             Refresh() {
                 this.GetOrderHead();
@@ -299,6 +303,11 @@
                         if (data.steSupMaterialBean.supList) {
                             this.SupDate = data.steSupMaterialBean.supList;
                         }
+                        this.AddSupDate.forEach(item => {
+                            if (item.materialName !== 'Y010' && (item.batch === '' || item.batch === null) && item.batchList.length) {
+                                item.batch = item.batchList[0]
+                            }
+                        })
                         const c = this.AddSupDate.concat(this.SupDate);
                         this.DataAudit = data.vList;
                         this.supStatus = true;
@@ -335,6 +344,7 @@
                     adjustAmountPro: row.adjustAmountPro,
                     batch: '',
                     delFlag: '0',
+                    batchList: row.batchList,
                     diffAmount: row.diffAmount,
                     id: '',
                     isOperation: row.isOperation,

@@ -232,6 +232,8 @@ export default {
             type: '',
             isRedact: ''
         },
+        sterilizedDoDeploymentDetail: {},
+        accessories: {},
         /**
          * 过滤车间
          */
@@ -466,6 +468,12 @@ export default {
         },
         updateSterilized(state, params) {
             state.Sterilized = params;
+        },
+        updateSterilizedDoDeploymentDetail(state, params) {
+            state.sterilizedDoDeploymentDetail = params;
+        },
+        updateAccessories(state, params) {
+            state.accessories = params;
         },
         updateBottle(state, params) {
             state.Bottle = params;
